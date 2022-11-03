@@ -8,7 +8,7 @@
     "prepare": "husky install"
   },
   "lint-staged": {
-    "./**/*.{py}": []
+    "./**/*.{py,md}": []
   },
   "config": {
     "commitizen": {
