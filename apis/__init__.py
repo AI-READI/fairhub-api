@@ -4,9 +4,9 @@ from .cats import api as cats
 from .root import api as root
 
 api = Api(
-    title="Flask RestX Demo",
-    version="1.0",
-    description="A demo of Flask RestX deployed on Azure App Service",
+    title="fairhub.io API",
+    version="0.1",
+    description="Data storage, access and retrieval API for fairhub.io",
 )
 
 
