@@ -1,0 +1,46 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - "main"
+
+jobs:
+  run-linters:
+    name: Run linters
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.10.4
+
+      - name: Install Python dependencies
+        run: pip install black flake8
+
+      - name: Run Black
+        uses: wearerequired/lint-action@v2
+        with:
+          black: true
+          auto_fix: true
+          commit_message: "style: 🎨 fix code style issues with ${linter}"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Flake8
+        uses: wearerequired/lint-action@v2
+        with:
+          flake8: true
+          flake8_dir: "./src/pyflask"
+          flake8_args: "--max-line-length=88"
