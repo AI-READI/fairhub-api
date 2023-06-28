@@ -1,10 +1,11 @@
 from __main__ import app
-
-
+from flask import jsonify
 from faker import Faker
+from flask import request
 
-@app.route('/participants', methods=['GET'])
-def get_participants():
+
+@app.route('/study/<studyId>/participants', methods=['GET'])
+def get_participants(studyId):
     fake = Faker()
     data = [
         {
@@ -17,3 +18,11 @@ def get_participants():
     ]
 
     return data
+
+
+@app.route('/study/<studyId>/participants/add', methods=['POST'])
+def add_participants(studyId):
+    data = request.json
+    return jsonify(data)
+
+
