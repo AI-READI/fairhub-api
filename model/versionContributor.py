@@ -1,11 +1,10 @@
-
 from sqlalchemy import String
 from __main__ import db
 from sqlalchemy.dialects.postgresql import ARRAY
 
 
 class VersionContributor(db.Model):
-    __tablename__ = 'version_contributor'
+    __tablename__ = "version_contributor"
     id = db.Column(db.Integer, primary_key=True)
     affiliations = db.Column(ARRAY(String), nullable=False)
     email = db.Column(db.String)
@@ -16,4 +15,6 @@ class VersionContributor(db.Model):
     status = db.Column(db.String)
 
     datasetVersion_id = db.Column(db.Integer, db.ForeignKey("datasetVersion.id"))
-    datasetVersion = db.relationship("VersionContributor", back_populates="datasetVersion")
+    datasetVersion = db.relationship(
+        "VersionContributor", back_populates="datasetVersion"
+    )

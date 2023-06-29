@@ -4,7 +4,7 @@ from sqlalchemy.dialects.postgresql import ARRAY
 
 
 class StudyContributor(db.Model):
-    __tablename__ = 'study_contributor'
+    __tablename__ = "study_contributor"
     id = db.Column(db.Integer, primary_key=True)
     affiliations = db.Column(ARRAY(String), nullable=False)
     email = db.Column(db.String)

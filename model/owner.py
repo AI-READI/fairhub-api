@@ -6,4 +6,3 @@ class Owner:
     name: str
     age: str
     address: str
-
