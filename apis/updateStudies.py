@@ -3,6 +3,13 @@ from flask import request
 from flask import jsonify
 
 
+@app.route("/addStudy", methods=["POST"])
+def getStudies():
+    data = request.json
+    data["id"] = 3
+    return jsonify(data), 201
+
+
 @app.route("/viewProfile", methods=["POST"])
 def updateviewProfile():
     data = request.json
