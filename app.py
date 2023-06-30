@@ -1,6 +1,6 @@
 from flask import Flask
-
 from flask_cors import CORS
+
 from apis import api
 
 app = Flask(__name__)
@@ -8,7 +8,7 @@ api.init_app(app)
 CORS(app)
 
 
-from apis import getStudies, updateStudies, participants
+# from apis import getStudies, updateStudies, participants
 
 # db = SQLAlchemy(app)
 # app.config.from_object('fairdata.default_settings')
