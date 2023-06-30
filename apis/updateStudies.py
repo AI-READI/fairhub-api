@@ -4,7 +4,7 @@ from flask import jsonify
 
 
 @app.route("/addStudy", methods=["POST"])
-def getStudies():
+def addStudy():
     data = request.json
     data["id"] = 3
     return jsonify(data), 201
