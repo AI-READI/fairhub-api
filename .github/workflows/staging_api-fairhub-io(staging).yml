@@ -64,4 +64,4 @@ jobs:
         with:
           app-name: "api-fairhub-io"
           slot-name: "staging"
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6C6B1227CD464BFDBC9173E57CDEEC65 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_STAGING }}
