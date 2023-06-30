@@ -1,10 +1,9 @@
-from sqlalchemy import String
-
-from sqlalchemy.orm import composite
 from __main__ import db
-from owner import Owner
-from sqlalchemy.dialects.postgresql import ARRAY
 from datasetVersion import DatasetVersion
+from owner import Owner
+from sqlalchemy import String
+from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy.orm import composite
 
 
 class Study(db.Model):

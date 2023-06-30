@@ -1,7 +1,6 @@
 from __main__ import app
-from flask import jsonify
 from faker import Faker
-from flask import request
+from flask import jsonify, request
 
 
 @app.route("/study/<studyId>/participants", methods=["GET"])

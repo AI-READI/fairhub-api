@@ -1,6 +1,5 @@
 from __main__ import app
-from flask import request
-from flask import jsonify
+from flask import jsonify, request
 
 
 @app.route("/addStudy", methods=["POST"])

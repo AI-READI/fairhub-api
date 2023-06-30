@@ -1,5 +1,5 @@
-from sqlalchemy import String
 from __main__ import db
+from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 
 

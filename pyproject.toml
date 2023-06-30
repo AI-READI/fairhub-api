@@ -1,0 +1,120 @@
+[tool.poetry]
+
+name = "api-fairhub-io"
+version = "0.1.0"
+description = "API for fairhub.io"
+
+license = "MIT"
+authors = ["FAIR Data Innovations Hub <contact@fairdataihub.org>"]
+
+readme = "README.md"
+homepage = "https://pypi.org/project/pyfairdatatools"
+documentation = "https://pyfairdatatools.readthedocs.io"
+repository = "https://github.com/AI-READI/pyfairdatatools"
+
+
+
+keywords = [
+]
+classifiers = [
+    # TODO: update this list to match your application: https://pypi.org/pypi?%3Aaction=list_classifiers
+    "Development Status :: 1 - Planning",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+]
+
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+Flask = "^2.3.2"
+Flask-Cors = "^4.0.0"
+flask-restx = "^1.1.0"
+flask-sqlalchemy = "^3.0.5"
+
+minilog = "*"
+art = "^6.0"
+jsonschema = "^4.17.3"
+dicttoxml = "^1.7.16"
+types-requests = "^2.30.0.0"
+
+pyflakes = "^3.0.1"
+requests = "^2.31.0"
+faker = "^18.11.2"
+
+
+[tool.poetry.group.dev.dependencies]
+
+# Formatters
+black = "^23.3.0"
+tomli = "^2.0.1"
+isort = "^5.12.0"
+
+# Linters
+mypy = "^1.4.1"
+pydocstyle = "^6.3.0"
+pylint = "^2.17.4"
+
+# Reports
+coveragespace = "^6.0"
+
+# Documentation
+mkdocs = "~1.3"
+pygments = "^2.11.1"
+
+# Scripting
+poethepoet = "^0.20.0"
+
+# Jupyter
+jupyter = "^1.0.0"
+flake8 = "^6.0.0"
+
+[tool.poe.tasks]
+
+dev = "python app.py"
+
+freeze_dependencies = "pip list --format=freeze > requirements.txt"
+
+docs = "mkdocs serve"
+
+flake8 = "flake8 apis core model"
+
+format_with_isort = "isort apis core model"
+format_with_black = "black apis core model"
+
+format = ["format_with_isort", "format_with_black"]
+
+typecheck = "mypy apis core model"
+
+pylint = "pylint apis core model --rcfile=.pylint.ini"
+
+precommit = ["format", "typecheck", "pylint"]
+
+jupyter = "jupyter notebook"
+
+[tool.black]
+
+quiet = true
+
+[tool.isort]
+
+profile = "black"
+
+[tool.mypy]
+
+ignore_missing_imports = true
+no_implicit_optional = true
+check_untyped_defs = true
+
+cache_dir = ".cache/mypy/"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
