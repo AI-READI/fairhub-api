@@ -91,7 +91,7 @@ def getStudies():
             ],
             "description": "Study 2 description",
             "image": f"https://api.dicebear.com/5.x/shapes/svg?seed="
-                     f"{str(random.randint(0, 1000))}",
+            f"{str(random.randint(0, 1000))}",
             "lastUpdated": "2023-02-05",
             "owner": {
                 "name": "Sanjay Soundarajan",
@@ -206,7 +206,7 @@ def getStudy(studyId):
             ],
             "description": "Study 2 description",
             "image": f"https://api.dicebear.com/5.x/shapes/svg?seed="
-                     f"{str(random.randint(0, 1000))}",
+            f"{str(random.randint(0, 1000))}",
             "lastUpdated": "2023-02-05",
             "owner": {
                 "name": "Sanjay Soundarajan",
@@ -424,7 +424,7 @@ def viewProfile():
         "email": "aydan.gasimova2@gmail.com",
         "fullname": "Aydan Gasimova",
         "image": f" https://api.dicebear.com/5.x/shapes/svg?seed=$"
-                 f"{str(random.randint(0,1000))}",
+        f"{str(random.randint(0,1000))}",
         "institution": "CALMI2",
         "location": "San Diego, CA",
         "password": "admin",
