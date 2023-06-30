@@ -3,54 +3,73 @@ from flask import jsonify, request
 
 
 @app.route("/addStudy", methods=["POST"])
-def addStudy():
+def add_study():
     data = request.json
-    data["id"] = 3
+
+    if data is not None:
+        data["id"] = 3
+
     return jsonify(data), 201
 
 
 @app.route("/viewProfile", methods=["POST"])
-def updateviewProfile():
+def update_view_profile():
     data = request.json
-    data["id"] = 3
+
+    if data is not None:
+        data["id"] = 3
+
     return jsonify(data), 201
 
 
 @app.route("/study", methods=["POST"])
-def updateStudies():
+def update_studies():
     data = request.json
-    data["id"] = 3
+
+    if data is not None:
+        data["id"] = 3
+
     return jsonify(data), 201
 
 
 @app.route("/study/<studyId>", methods=["POST"])
-def updateStudy(studyId):
+def update_study(studyId):
     data = request.json
     return jsonify(data), 200
 
 
 @app.route("/study/<studyId>/dataset", methods=["POST"])
-def updateDatesets():
+def update_datesets():
     data = request.json
-    data["id"] = 3
+
+    if data is not None:
+        data["id"] = 3
+
     return jsonify(data), 201
 
 
 @app.route("/study/<studyId>/dataset/<datasetId>", methods=["POST"])
-def updateDataset(studyId, datasetId):
+def update_dataset(studyId, datasetId):
     data = request.json
+
     return jsonify(data), 200
 
 
 @app.route("/study/<studyId>/dataset/<datasetId>/version", methods=["POST"])
-def updateDatesetVersions(studyId, datasetId):
+def update_dateset_versions(studyId, datasetId):
     data = request.json
-    data["id"] = 3
+
+    if data is not None:
+        data["id"] = 3
+
     return jsonify(data), 201
 
 
 @app.route("/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["POST"])
-def updateDatesetVersion(studyId, datasetId, versionId):
+def update_dateset_version(studyId, datasetId, versionId):
     data = request.json
-    data["id"] = 3
+
+    if data is not None:
+        data["id"] = 3
+
     return jsonify(data), 201

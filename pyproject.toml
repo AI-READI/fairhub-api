@@ -83,18 +83,20 @@ freeze_dependencies = "pip list --format=freeze > requirements.txt"
 
 docs = "mkdocs serve"
 
-flake8 = "flake8 apis core model"
+flake8 = "flake8 apis core model app.py"
 
-format_with_isort = "isort apis core model"
-format_with_black = "black apis core model"
+format_with_isort = "isort apis core model app.py"
+format_with_black = "black apis core model app.py"
 
 format = ["format_with_isort", "format_with_black"]
 
-typecheck = "mypy apis core model"
+typecheck = "mypy apis core model app.py"
 
-pylint = "pylint apis core model --rcfile=.pylint.ini"
+pylint = "pylint apis core model app.py --rcfile=.pylint.ini"
 
-precommit = ["format", "typecheck", "pylint"]
+lint = ["flake8", "typecheck", "pylint"]
+
+precommit = ["format", "flake8", "typecheck", "pylint"]
 
 jupyter = "jupyter notebook"
 
