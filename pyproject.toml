@@ -26,12 +26,12 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.8",
 ]
 
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.8.16"
 
 Flask = "^2.3.2"
 Flask-Cors = "^4.0.0"
