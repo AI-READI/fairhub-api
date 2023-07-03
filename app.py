@@ -1,15 +1,15 @@
 from flask import Flask
 from flask_cors import CORS
 
-from apis import api
+from apis.getStudies import bp
 
 app = Flask(__name__)
-api.init_app(app)
+
+app.register_blueprint(bp)
 CORS(app)
 
 
 # from apis import getStudies, updateStudies, participants
-
 # db = SQLAlchemy(app)
 # app.config.from_object('fairdata.default_settings')
 # app.config.from_envvar('FAIRDATA_SETTINGS')
