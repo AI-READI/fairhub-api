@@ -1,10 +1,13 @@
+from flask import Blueprint
 import random
+from flask import jsonify, request
+from faker import Faker
 
-from __main__ import app
-from flask import jsonify
+
+bp = Blueprint('bp', __name__)
 
 
-@app.route("/study", methods=["GET"])
+@bp.route("/study", methods=["GET"])
 def getStudies():
     return [
         {
@@ -104,7 +107,7 @@ def getStudies():
     ]
 
 
-@app.route("/study/<studyId>", methods=["GET"])
+@bp.route("/study/<studyId>", methods=["GET"])
 def getStudy(studyId):
     dic = {
         1: {
@@ -222,7 +225,7 @@ def getStudy(studyId):
     return jsonify(dic[int(studyId)])
 
 
-@app.route("/study/<studyId>/dataset", methods=["GET"])
+@bp.route("/study/<studyId>/dataset", methods=["GET"])
 def getDatasets(studyId):
     datasets = {
         1: [
@@ -268,7 +271,7 @@ def getDatasets(studyId):
     return jsonify(datasets[int(studyId)])
 
 
-@app.route("/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["GET"])
+@bp.route("/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["GET"])
 def getDatasetVersion(studyId, datasetId, versionId):
     dic = {
         # Study 1
@@ -418,7 +421,7 @@ def getDatasetVersion(studyId, datasetId, versionId):
     return jsonify(dic[int(studyId)][int(datasetId)][int(versionId)])
 
 
-@app.route("/viewProfile", methods=["GET"])
+@bp.route("/viewProfile", methods=["GET"])
 def viewProfile():
     dic = {
         "username": "admin",
@@ -432,3 +435,22 @@ def viewProfile():
         "timezone": "(GMT-11:00) Midway Island",
     }
     return jsonify(dic)
+
+
+
+@bp.route("/study/<studyId>/participants", methods=["GET"])
+def get_participants(studyId):
+    fake = Faker()
+    data = [
+        {
+            "participant_id": _ + 1,
+            "name": fake.name(),
+            "address": fake.street_address(),
+            "age": fake.random_int(min=1, max=99),
+        }
+        for _ in range(30)
+    ]
+
+    return data
+
+
