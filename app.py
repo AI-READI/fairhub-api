@@ -2,7 +2,6 @@ from flask import Flask
 from flask_cors import CORS
 
 from apis.getStudies import bp
-from apis.participants import participants_bp
 
 app = Flask(__name__)
 

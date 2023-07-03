@@ -1,9 +1,9 @@
 from flask import jsonify, request, Blueprint
+from __main__ import app
 
-update_bp = Blueprint("update_bp", __name__)
 
 
-@update_bp.route("/addStudy", methods=["POST"])
+@app.route("/addStudy", methods=["POST"])
 def add_study():
     data = request.json
 
@@ -13,7 +13,7 @@ def add_study():
     return jsonify(data), 201
 
 
-@update_bp.route("/viewProfile", methods=["POST"])
+@app.route("/viewProfile", methods=["POST"])
 def update_view_profile():
     data = request.json
 
@@ -23,7 +23,7 @@ def update_view_profile():
     return jsonify(data), 201
 
 
-@update_bp.route("/study", methods=["POST"])
+@app.route("/study", methods=["POST"])
 def update_studies():
     data = request.json
 
@@ -33,13 +33,13 @@ def update_studies():
     return jsonify(data), 201
 
 
-@update_bp.route("/study/<studyId>", methods=["POST"])
+@app.route("/study/<studyId>", methods=["POST"])
 def update_study(studyId):
     data = request.json
     return jsonify(data), 200
 
 
-@update_bp.route("/study/<studyId>/dataset", methods=["POST"])
+@app.route("/study/<studyId>/dataset", methods=["POST"])
 def update_datesets():
     data = request.json
 
@@ -49,14 +49,14 @@ def update_datesets():
     return jsonify(data), 201
 
 
-@update_bp.route("/study/<studyId>/dataset/<datasetId>", methods=["POST"])
+@app.route("/study/<studyId>/dataset/<datasetId>", methods=["POST"])
 def update_dataset(studyId, datasetId):
     data = request.json
 
     return jsonify(data), 200
 
 
-@update_bp.route("/study/<studyId>/dataset/<datasetId>/version", methods=["POST"])
+@app.route("/study/<studyId>/dataset/<datasetId>/version", methods=["POST"])
 def update_dateset_versions(studyId, datasetId):
     data = request.json
 
@@ -66,7 +66,7 @@ def update_dateset_versions(studyId, datasetId):
     return jsonify(data), 201
 
 
-@update_bp.route(
+@app.route(
     "/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["POST"]
 )
 def update_dateset_version(studyId, datasetId, versionId):
@@ -78,7 +78,7 @@ def update_dateset_version(studyId, datasetId, versionId):
     return jsonify(data), 201
 
 
-@update_bp.route("/study/<studyId>/participants/add", methods=["POST"])
+@app.route("/study/<studyId>/participants/add", methods=["POST"])
 def add_participants(studyId):
     data = request.json
     return jsonify(data)

@@ -1,6 +1,6 @@
 from flask import Blueprint
 import random
-from flask import jsonify, request
+from flask import jsonify
 from faker import Faker
 
 
