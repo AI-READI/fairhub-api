@@ -4,7 +4,7 @@ from flask import jsonify, request
 from faker import Faker
 
 
-bp = Blueprint('bp', __name__)
+bp = Blueprint("bp", __name__)
 
 
 @bp.route("/study", methods=["GET"])
@@ -437,7 +437,6 @@ def viewProfile():
     return jsonify(dic)
 
 
-
 @bp.route("/study/<studyId>/participants", methods=["GET"])
 def get_participants(studyId):
     fake = Faker()
@@ -452,5 +451,3 @@ def get_participants(studyId):
     ]
 
     return data
-
-

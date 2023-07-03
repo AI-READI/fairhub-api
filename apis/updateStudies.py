@@ -1,6 +1,6 @@
 from flask import jsonify, request, Blueprint
 
-update_bp = Blueprint('update_bp', __name__)
+update_bp = Blueprint("update_bp", __name__)
 
 
 @update_bp.route("/addStudy", methods=["POST"])
@@ -66,7 +66,9 @@ def update_dateset_versions(studyId, datasetId):
     return jsonify(data), 201
 
 
-@update_bp.route("/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["POST"])
+@update_bp.route(
+    "/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["POST"]
+)
 def update_dateset_version(studyId, datasetId, versionId):
     data = request.json
 
