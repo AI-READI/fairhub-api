@@ -1,6 +1,5 @@
 from flask_restx import Api
 
-from .cats import api as cats
 from .root import api as root
 
 api = Api(
@@ -10,7 +9,6 @@ api = Api(
 )
 
 
-api.add_namespace(cats)
 api.add_namespace(root)
 
 # Another way of doing it:

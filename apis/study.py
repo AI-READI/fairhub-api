@@ -1,13 +1,26 @@
-from flask import Blueprint
 import random
-from flask import jsonify
-from faker import Faker
+from flask import jsonify, request, Blueprint
+
+study = Blueprint("study", __name__)
 
 
-bp = Blueprint("bp", __name__)
+@study.route("/viewProfile", methods=["GET"])
+def viewProfile():
+    dic = {
+        "username": "admin",
+        "email": "aydan.gasimova2@gmail.com",
+        "fullname": "Aydan Gasimova",
+        "image": f" https://api.dicebear.com/5.x/shapes/svg?seed=$"
+        f"{str(random.randint(0,1000))}",
+        "institution": "CALMI2",
+        "location": "San Diego, CA",
+        "password": "admin",
+        "timezone": "(GMT-11:00) Midway Island",
+    }
+    return jsonify(dic)
 
 
-@bp.route("/study", methods=["GET"])
+@study.route("/study", methods=["GET"])
 def getStudies():
     return [
         {
@@ -107,7 +120,7 @@ def getStudies():
     ]
 
 
-@bp.route("/study/<studyId>", methods=["GET"])
+@study.route("/study/<studyId>", methods=["GET"])
 def getStudy(studyId):
     dic = {
         1: {
@@ -225,229 +238,37 @@ def getStudy(studyId):
     return jsonify(dic[int(studyId)])
 
 
-@bp.route("/study/<studyId>/dataset", methods=["GET"])
-def getDatasets(studyId):
-    datasets = {
-        1: [
-            {
-                "id": 1,
-                "name": "AI-READI",
-                "publishedVersion": 1,
-                "latestVersion": 2,
-                "lastModified": "2023-03-21",
-                "lastPublished": "2023-01-20",
-            },
-            {
-                "id": 2,
-                "name": "AI-READI2",
-                "publishedVersion": 2,
-                "latestVersion": 2,
-                "lastModified": "2023-01-20",
-                "lastPublished": "2023-01-20",
-            },
-        ],
-        2: [
-            {
-                "id": 1,
-                "name": "AI-READI3",
-                "publishedVersion": 2,
-                "latestVersion": 2,
-                "lastModified": "2023-01-20",
-                "lastPublished": "2023-01-20",
-            },
-            {
-                "id": 2,
-                "name": "AI-READI4",
-                "publishedVersion": 2,
-                "latestVersion": 2,
-                "lastModified": "2023-01-20",
-                "lastPublished": "2023-01-20",
-            },
-        ],
-    }
+@study.route("/study/add", methods=["POST"])
+def add_study():
+    data = request.json
 
-    if int(studyId) not in datasets:
-        return "not found", 404
-    return jsonify(datasets[int(studyId)])
+    if data is not None:
+        data["id"] = 3
+
+    return jsonify(data), 201
 
 
-@bp.route("/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["GET"])
-def getDatasetVersion(studyId, datasetId, versionId):
-    dic = {
-        # Study 1
-        1: {
-            # Dataset 1
-            1: {
-                # Version 1
-                1: {
-                    "id": 1,
-                    "contributors": [
-                        {
-                            "affiliations": ["Manager"],
-                            "firstname": "Dolores",
-                            "lastname": "Chambers",
-                            "ORCID": "https://orcid.org/0000-0001-7032-2732",
-                            "roles": ["editor", "owner", "viewer"],
-                            "email": "dolores.chambers@email.org",
-                            "status": "invited",
-                        },
-                        {
-                            "affiliations": ["Manager"],
-                            "firstname": "Bhavesh",
-                            "lastname": " Patel",
-                            "ORCID": "https://orcid.org/0000-0001-7032-2732",
-                            "roles": ["editor", "owner"],
-                            "email": "bpatel@email.org",
-                            "status": "active",
-                        },
-                    ],
-                    "title": "AI-READI",
-                    "description": "AI model for diabetics",
-                    "keywords": ["AI model"],
-                    "primaryLanguage": "english",
-                    "selectedParticipants": [],
-                    "published": True,
-                },
-                # Version 2
-                2: {
-                    "id": 2,
-                    "contributors": [
-                        {
-                            "affiliations": ["Manager"],
-                            "firstname": "Dolores",
-                            "lastname": "Chambers",
-                            "ORCID": "https://orcid.org/0000-0001-7032-2732",
-                            "roles": ["editor", "owner", "viewer"],
-                            "email": "dolores.chambers@email.org",
-                            "status": "invited",
-                        },
-                        {
-                            "affiliations": ["Manager"],
-                            "firstname": "Bhavesh",
-                            "lastname": " Patel",
-                            "ORCID": "https://orcid.org/0000-0001-7032-2732",
-                            "roles": ["editor", "owner"],
-                            "email": "bpatel@email.org",
-                            "status": "active",
-                        },
-                    ],
-                    "title": "AI-READI",
-                    "description": "AI model for diabetics",
-                    "keywords": ["AI model"],
-                    "primaryLanguage": "english",
-                    "selectedParticipants": [],
-                    "published": False,
-                },
-            },
-            # Dataset 2
-            2: {
-                # Version 2
-                2: {
-                    "id": 2,
-                    "contributors": [
-                        {
-                            "affiliations": ["Manager"],
-                            "firstname": "Bhavesh",
-                            "lastname": "Patel",
-                            "ORCID": "https://orcid.org/0000-0001-7032-2732",
-                            "roles": ["Developer"],
-                            "email": "bpatel@calmi2.org",
-                            "status": "invited",
-                        }
-                    ],
-                    "title": "AI-READI",
-                    "description": "AI model for diabetics",
-                    "keywords": ["AI model"],
-                    "primaryLanguage": "english",
-                    "selectedParticipants": [],
-                    "published": True,
-                }
-            },
-        },
-        # Study 2
-        2: {
-            # Dataset 1
-            1: {
-                # Version 2
-                2: {
-                    "id": 2,
-                    "contributors": [
-                        {
-                            "affiliations": ["Manager"],
-                            "firstname": "Bhavesh",
-                            "lastname": "Patel",
-                            "ORCID": "https://orcid.org/0000-0001-7032-2732",
-                            "roles": ["Developer"],
-                            "email": "bpatel@calmi2.org",
-                            "status": "invited",
-                        }
-                    ],
-                    "title": "AI-READI",
-                    "description": "AI model",
-                    "keywords": ["AI model", "diabetics"],
-                    "primaryLanguage": "english",
-                    "selectedParticipants": [],
-                    "published": True,
-                }
-            },
-            # Dataset 2
-            2: {
-                # Version 2
-                2: {
-                    "id": 2,
-                    "contributors": [
-                        {
-                            "affiliations": ["Manager"],
-                            "firstname": "Bhavesh",
-                            "lastname": "Patel",
-                            "ORCID": "https://orcid.org/0000-0001-7032-2732",
-                            "roles": ["Developer"],
-                            "email": "bpatel@calmi2.org",
-                            "status": "invited",
-                        }
-                    ],
-                    "title": "AI-READI",
-                    "description": "AI model",
-                    "keywords": ["diabetics"],
-                    "primaryLanguage": "english",
-                    "selectedParticipants": [],
-                    "published": True,
-                }
-            },
-        },
-    }
-    if int(studyId) not in dic:
-        return "not found", 404
-    return jsonify(dic[int(studyId)][int(datasetId)][int(versionId)])
+@study.route("/viewProfile", methods=["POST"])
+def update_view_profile():
+    data = request.json
+
+    if data is not None:
+        data["id"] = 3
+
+    return jsonify(data), 201
 
 
-@bp.route("/viewProfile", methods=["GET"])
-def viewProfile():
-    dic = {
-        "username": "admin",
-        "email": "aydan.gasimova2@gmail.com",
-        "fullname": "Aydan Gasimova",
-        "image": f" https://api.dicebear.com/5.x/shapes/svg?seed=$"
-        f"{str(random.randint(0,1000))}",
-        "institution": "CALMI2",
-        "location": "San Diego, CA",
-        "password": "admin",
-        "timezone": "(GMT-11:00) Midway Island",
-    }
-    return jsonify(dic)
+@study.route("/study", methods=["POST"])
+def update_studies():
+    data = request.json
+
+    if data is not None:
+        data["id"] = 3
+
+    return jsonify(data), 201
 
 
-@bp.route("/study/<studyId>/participants", methods=["GET"])
-def get_participants(studyId):
-    fake = Faker()
-    data = [
-        {
-            "participant_id": _ + 1,
-            "name": fake.name(),
-            "address": fake.street_address(),
-            "age": fake.random_int(min=1, max=99),
-        }
-        for _ in range(30)
-    ]
-
-    return data
+@study.route("/study/<studyId>", methods=["POST"])
+def update_study(studyId):
+    data = request.json
+    return jsonify(data), 200
