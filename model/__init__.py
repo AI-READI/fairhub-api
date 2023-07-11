@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+
 db = SQLAlchemy()
 from .study import Study
 from .dataset import Dataset

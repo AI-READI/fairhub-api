@@ -20,14 +20,13 @@ class VersionContributor(db.Model):
     )
 
     def to_dict(self):
-        return \
-            {
-                "id": self.id,
-                "affiliations": self.affiliations,
-                "email": self.email,
-                "firstname": self.firstname,
-                "lastname": self.lastname,
-                "ORCID": self.ORCID,
-                "roles": self.roles,
-                "status": self.status
-            }
+        return {
+            "id": self.id,
+            "affiliations": self.affiliations,
+            "email": self.email,
+            "firstname": self.firstname,
+            "lastname": self.lastname,
+            "ORCID": self.ORCID,
+            "roles": self.roles,
+            "status": self.status,
+        }

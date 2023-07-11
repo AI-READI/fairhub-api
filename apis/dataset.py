@@ -4,6 +4,7 @@ from flask import jsonify
 from faker import Faker
 from model import Dataset
 from model import DatasetVersions
+
 dataset = Blueprint("dataset", __name__)
 
 
@@ -55,7 +56,9 @@ def getDatasets(studyId):
     return jsonify([d.to_dict() for d in datasets])
 
 
-@dataset.route("/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["GET"])
+@dataset.route(
+    "/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["GET"]
+)
 def getDatasetVersion(studyId, datasetId, versionId):
     # dic = {
     #     # Study 1
@@ -204,8 +207,8 @@ def getDatasetVersion(studyId, datasetId, versionId):
     #     return "not found", 404
     # return jsonify(dic[int(studyId)][int(datasetId)][int(versionId)])
     pass
-    lastPublished= DatasetVersions.query.order_by('lastPublished').limit(1)
-    lastModified= DatasetVersions.query.order_by('lastModified').limit(1)
+    lastPublished = DatasetVersions.query.order_by("lastPublished").limit(1)
+    lastModified = DatasetVersions.query.order_by("lastModified").limit(1)
 
 
 @dataset.route("/study/<studyId>/dataset/<datasetId>", methods=["POST"])
@@ -235,7 +238,9 @@ def update_dateset_versions(studyId, datasetId):
     return jsonify(data), 201
 
 
-@dataset.route("/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["POST"])
+@dataset.route(
+    "/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["POST"]
+)
 def update_dateset_version(studyId, datasetId, versionId):
     data = request.json
 

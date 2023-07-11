@@ -1,5 +1,6 @@
 from . import db
 
+
 class Participant(db.Model):
     __tablename__ = "participant"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -10,12 +11,10 @@ class Participant(db.Model):
     study_id = db.Column(db.Integer, db.ForeignKey("study.id"))
     study = db.relationship("Study")
 
-
     def to_dict(self):
-        return \
-            {
-                "id": self.id,
-                "name": self.name,
-                "address": self.address,
-                "age": self.age,
-            }
+        return {
+            "id": self.id,
+            "name": self.name,
+            "address": self.address,
+            "age": self.age,
+        }

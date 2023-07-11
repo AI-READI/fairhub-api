@@ -33,7 +33,7 @@ def echo():
 
 @app.route("/", methods=["GET"])
 def home():
-    return 'Home page'
+    return "Home page"
 
 
 if __name__ == "__main__":

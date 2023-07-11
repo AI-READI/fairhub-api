@@ -9,7 +9,6 @@ class Dataset(db.Model):
     study = db.relationship("Study", back_populates="datasets")
 
     def to_dict(self):
-        return \
-            {
-                "id": self.id,
-            }
+        return {
+            "id": self.id,
+        }

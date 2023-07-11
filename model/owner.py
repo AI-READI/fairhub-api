@@ -8,12 +8,9 @@ class Owner:
     name: str
     email: str
 
-
     def to_dict(self):
-        return \
-            {
-                "ORCID": self.ORCID,
-                'name': self.name,
-                "email": self.email,
-
-            }
+        return {
+            "ORCID": self.ORCID,
+            "name": self.name,
+            "email": self.email,
+        }

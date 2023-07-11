@@ -19,15 +19,14 @@ class StudyContributor(db.Model):
     study = db.relationship("Study", back_populates="contributors")
 
     def to_dict(self):
-        return \
-            {
-             'id': self.id,
-             "affiliations": self.affiliations,
-             "email": self.email,
-             "firstname": self.firstname,
-             "lastname": self.lastname,
-             "ORCID": self.ORCID,
-             "roles": self.roles,
-             "permission": self.permission,
-             "status":  self.status,
-            }
+        return {
+            "id": self.id,
+            "affiliations": self.affiliations,
+            "email": self.email,
+            "firstname": self.firstname,
+            "lastname": self.lastname,
+            "ORCID": self.ORCID,
+            "roles": self.roles,
+            "permission": self.permission,
+            "status": self.status,
+        }

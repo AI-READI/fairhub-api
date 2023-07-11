@@ -1,8 +1,11 @@
 import random
 from flask import jsonify, request, Blueprint
+
 # from faker import Faker
 from model import Participant
+
 participant = Blueprint("participant", __name__)
+
 
 @participant.route("/study/<studyId>/participants", methods=["GET"])
 def get_participants(studyId):
