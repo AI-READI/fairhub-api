@@ -1,15 +1,6 @@
 # Temporary Example Data
 REDCAP_DATA = [
-    {
-        "meow": "cat1",
-        "moo": "cow1",
-        "oink": "pig1"
-    },
-    {
-        "meow": "cat2",
-        "moo": "cow2",
-        "oink": "pig2"
-    }
+
 ]
 #
 
@@ -41,12 +32,12 @@ redcapDataModel = api.model(
 # REDCap Endpoints
 #
 
-@api.route("/<project_id>", methods=["GET"])
-class REDCapDataByProjectID(Resource):
-    @api.doc("get_redcap_data_by_project_id")
+@api.route("/<dm>", methods=["GET"])
+class REDCapDataByDM(Resource):
+    @api.doc("get_redcap_data_by_dm")
     @api.marshal_list_with(redcapDataModel)
     def get(self):
         """
-        Get REDCap data pull
+        Get REDCap data pull by approved for Fairhub.io status
         """
         return REDCAP_DATA
