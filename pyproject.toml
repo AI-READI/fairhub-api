@@ -47,6 +47,9 @@ types-requests = "^2.30.0.0"
 pyflakes = "^3.0.1"
 requests = "^2.31.0"
 faker = "^18.11.2"
+redis = "^4.6.0"
+redis-om = "^0.1.2"
+python-dotenv = "^1.0.0"
 
 
 [tool.poetry.group.dev.dependencies]

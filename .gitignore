@@ -30,3 +30,5 @@ coverage
 # API Platform specific files
 *.pyc
 /settings.cfg
+.env
+.flaskenv

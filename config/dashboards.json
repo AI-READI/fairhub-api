@@ -1,0 +1,9 @@
+{
+    "dashboards": [
+        {
+            "name": "Study Dashboard",
+            "namespace": "/dashboards",
+            "endpoint": "/study_dashboard"
+        }
+    ]
+}
