@@ -33,6 +33,6 @@ cache = redis.Redis(
 )
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=os.environ["FLASK_PORT"] if "FLASK_PORT" in os.environ else 5000)
 else:
     pass

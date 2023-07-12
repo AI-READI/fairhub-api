@@ -1,3 +1,4 @@
 from .dashboard import DashboardModel
-from .studyDashboardData import StudyDashboardDataModel
-from .redcapData import REDCapDataModel
+from .fairhubStudyDashboardData import FairhubStudyDashboardDataModel
+from .redcapProjectData import REDCapProjectDataModel
+from .redcapStudyDashboardData import REDCapReportStudyDashboardDataModel

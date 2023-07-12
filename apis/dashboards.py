@@ -47,7 +47,7 @@ STUDY_DASHBOARD = {
 from flask_restx import Namespace, Resource, fields
 from core import utils
 from .models import DashboardModel
-from .models import StudyDashboardDataModel
+from .models import FairhubStudyDashboardDataModel
 
 # Get Environment Variables
 DASHBOARDS_CONFIG   = utils.load_json("config/dashboards.json")
@@ -63,13 +63,13 @@ dashboardModel = api.model(
     "Dashboard", DashboardModel
 )
 
-studyDashboardDataModel = api.model(
-    "StudyDashboardData", StudyDashboardDataModel
+fairhubStudyDashboardDataModel = api.model(
+    "FairhubStudyDashboardData", FairhubStudyDashboardDataModel
 )
 
-studyDashboardModel = api.inherit(
-    "StudyDashboard", dashboardModel, {
-        "data": fields.List(fields.Nested(studyDashboardDataModel))
+fairhubStudyDashboardModel = api.inherit(
+    "FairhubStudyDashboard", dashboardModel, {
+        "data": fields.List(fields.Nested(fairhubStudyDashboardDataModel))
     }
 )
 
@@ -94,7 +94,7 @@ class DashboardsList(Resource):
 @api.route("/study-dashboard")
 class StudyDashboard(Resource):
     @api.doc("get_study_dashboard")
-    @api.marshal_with(studyDashboardModel)
+    @api.marshal_with(fairhubStudyDashboardModel)
     def get(self):
         """
         Get study dashboard
@@ -107,7 +107,7 @@ class StudyDashboard(Resource):
 @api.response(404, "No visualization module with that name found.")
 class StudyDashboardModuleByName(Resource):
     @api.doc("get_study_dashboard_module_by_name")
-    @api.marshal_with(studyDashboardDataModel)
+    @api.marshal_with(fairhubStudyDashboardDataModel)
     def get(self, module_name):
         """
         Get study dashboard visualization module data by name

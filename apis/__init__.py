@@ -1,7 +1,6 @@
 from flask_restx import Api
 
 from .root import api as root
-from .cats import api as cats
 from .redcap import api as redcap
 from .dashboards import api as dashboards
 
@@ -12,7 +11,6 @@ api = Api(
 )
 
 api.add_namespace(root)
-api.add_namespace(cats)
 api.add_namespace(redcap)
 api.add_namespace(dashboards)
 

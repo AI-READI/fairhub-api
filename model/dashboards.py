@@ -5,6 +5,7 @@ from pydantic import EmailStr
 from redis_om import HashModel
 
 class StudyDashboard(HashModel):
+
     gender              : str
     sex                 : str
     race                : str
