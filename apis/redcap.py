@@ -1,9 +1,3 @@
-# Temporary Example Data
-REDCAP_DATA = [
-
-]
-#
-
 from flask_restx import Namespace, Resource, fields
 from flask import request
 import requests
