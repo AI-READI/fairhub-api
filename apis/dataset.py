@@ -55,7 +55,9 @@ def getDatasets(studyId):
     return jsonify([d.to_dict() for d in datasets])
 
 
-@dataset.route("/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["GET"])
+@dataset.route(
+    "/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["GET"]
+)
 def getDatasetVersion(studyId, datasetId, versionId):
     # dic = {
     #     # Study 1
@@ -209,6 +211,7 @@ def getDatasetVersion(studyId, datasetId, versionId):
     return jsonify(datasetVersion.to_dict())
 
     return
+
 
 @dataset.route("/study/<studyId>/dataset/<datasetId>", methods=["POST"])
 def update_dataset(studyId, datasetId):

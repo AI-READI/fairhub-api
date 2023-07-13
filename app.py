@@ -20,6 +20,8 @@ app.register_blueprint(participant)
 CORS(app)
 
 print(__version__)
+
+
 @app.cli.command("echo")
 @click.argument("message")
 def echo(message):

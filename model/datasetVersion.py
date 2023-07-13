@@ -34,5 +34,4 @@ class DatasetVersion(db.Model):
             ],
             "DOI": self.DOI,
             "name": self.name,
-
         }
