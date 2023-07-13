@@ -2,6 +2,7 @@ import random
 from flask import jsonify, request, Blueprint
 
 from model import Study
+
 study = Blueprint("study", __name__)
 
 
