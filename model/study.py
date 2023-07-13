@@ -3,7 +3,6 @@ from .owner import Owner
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import composite
-import json
 
 
 class Study(db.Model):
@@ -23,7 +22,7 @@ class Study(db.Model):
     )
 
     contributors = db.relationship("StudyContributor", back_populates="study")
-    datasets = db.relationship("Dataset", back_populates="study")
+    dataset = db.relationship("Dataset", back_populates="study")
 
     def to_dict(self):
         return {

@@ -9,13 +9,16 @@ class DatasetVersion(db.Model):
     keywords = db.Column(db.String, nullable=False)
     primaryLanguage = db.Column(db.String, nullable=False)
     selectedParticipants = db.Column(db.String, nullable=False)
-
+    modified = db.Column(db.DateTime, nullable=True)
+    published = db.Column(db.Boolean, nullable=False)
+    DOI = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=False)
     versionContributors = db.relationship(
         "VersionContributor", back_populates="datasetVersion"
     )
 
     dataset_id = db.Column(db.Integer, db.ForeignKey("dataset.id"))
-    dataset = db.relationship("Dataset")
+    dataset = db.relationship("Dataset", back_populates="datasetVersions")
 
     def to_dict(self):
         return {
@@ -29,4 +32,7 @@ class DatasetVersion(db.Model):
                 versionContributor.to_dict()
                 for versionContributor in self.versionContributors
             ],
+            "DOI": self.DOI,
+            "name": self.name,
+
         }
