@@ -1,10 +1,9 @@
 from flask_restx import Namespace, Resource, fields
 from flask import request
-import requests
 from core import utils
 from .models import REDCapProjectDataModel
 from .models import REDCapReportStudyDashboardDataModel
-import os
+import os, requests
 
 # Get Environment Variables
 REDCAP_CONFIG               = utils.load_json("config/redcap.json")
@@ -41,7 +40,7 @@ class REDCapProjectData(Resource):
     @api.marshal_with(redcapProjectDataModel)
     def get(self):
         """
-        Get REDCap data pull by approved for Fairhub.io status
+        Get REDCap project
         """
         response = requests.post(
             REDCAP_API_URL, data = {
@@ -59,7 +58,7 @@ class REDCapReportStudyDashboardData(Resource):
     @api.marshal_list_with(redcapReportStudyDashboardDataModel)
     def get(self):
         """
-        Get REDCap report for study dashboard Fairhub.io status
+        Get REDCap report for study dashboard Fairhub.io
         """
         response = requests.post(
             REDCAP_API_URL, data = {
@@ -82,7 +81,7 @@ class REDCapReportStudyDashboardDataByDM(Resource):
     @api.marshal_list_with(redcapReportStudyDashboardDataModel)
     def get(self, dm):
         """
-        Get REDCap data pull by approved for Fairhub.io status
+        Get REDCap report records by data manager sign-off status
         """
         response = requests.post(
             REDCAP_API_URL, data = {
@@ -105,7 +104,7 @@ class REDCapReportStudyDashboardDataBySiteid(Resource):
     @api.marshal_list_with(redcapReportStudyDashboardDataModel)
     def get(self, siteid):
         """
-        Get REDCap data pull by approved for Fairhub.io status
+        Get REDCap report records by data generation site id
         """
         response = requests.post(
             REDCAP_API_URL, data = {
@@ -128,7 +127,7 @@ class REDCapReportStudyDashboardDataByRecordid(Resource):
     @api.marshal_list_with(redcapReportStudyDashboardDataModel)
     def get(self, recordid):
         """
-        Get REDCap data pull by approved for Fairhub.io status
+        Get REDCap report records by record id
         """
         response = requests.post(
             REDCAP_API_URL, data = {

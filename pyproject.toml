@@ -2,7 +2,7 @@
 
 name = "api-fairhub-io"
 version = "0.1.0"
-description = "API for fairhub.io"
+description = "API for Fairhub.io"
 
 license = "MIT"
 authors = ["FAIR Data Innovations Hub <contact@fairdataihub.org>"]

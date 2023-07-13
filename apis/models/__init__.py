@@ -1,3 +1,4 @@
+from .fairhubAPI import FairhubAPIModel
 from .dashboard import DashboardModel
 from .fairhubStudyDashboardData import FairhubStudyDashboardDataModel
 from .redcapProjectData import REDCapProjectDataModel
