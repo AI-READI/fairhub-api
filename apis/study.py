@@ -1,8 +1,8 @@
 import random
 from flask import jsonify, request, Blueprint
 
-study = Blueprint("study", __name__)
 from model import Study
+study = Blueprint("study", __name__)
 
 
 @study.route("/viewProfile", methods=["GET"])
@@ -50,9 +50,10 @@ def getStudies():
     #                 "status": "active",
     #             },
     #         ],
-    #         "description": "The AI-READI project seeks to create and share a flagship "
+    #         "description": "The AI-READI project
+    #         seeks to create and share a flagship "
     #         "ethically-sourced dataset of type 2 diabetes.",
-    #         "image": "https://fairdataihub.org/images/hero/aireadi-logo.png",
+    #         "image": "",
     #         "lastPublished": {
     #             "date": "2023-01-13",
     #             "doi": "10.1234/1234",
@@ -167,9 +168,9 @@ def getStudy(studyId):
     #                 "status": "active",
     #             },
     #         ],
-    #         "description": "The AI-READI project seeks to create and share a flagship "
+    #         "description": "The and share a flagship "
     #         "ethically-sourced dataset of type 2 diabetes.",
-    #         "image": "https://fairdataihub.org/images/hero/aireadi-logo.png",
+    #         "image": "",
     #         "lastPublished": {
     #             "date": "2023-01-13",
     #             "doi": "10.1234/1234",
