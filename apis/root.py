@@ -2,8 +2,6 @@ from flask_restx import Namespace, Resource
 from .models import FairhubAPIModel
 import os
 
-print(os.environ)
-
 api = Namespace("/", description="Root level operations")
 
 #

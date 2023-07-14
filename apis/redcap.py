@@ -1,9 +1,9 @@
-from flask_restx import Namespace, Resource, fields
 from flask import request
+from flask_restx import Namespace, Resource, fields
 from core import utils
 from .models import REDCapProjectDataModel
 from .models import REDCapReportStudyDashboardDataModel
-import os, requests
+import os, requests, redis
 
 # Get Environment Variables
 REDCAP_CONFIG               = utils.load_json("config/redcap.json")
@@ -52,7 +52,7 @@ class REDCapProjectData(Resource):
         )
         return response.json()
 
-@api.route("/report/study-dashboard", methods=["GET"])
+@api.route("/reports/study-dashboard", methods=["GET"])
 class REDCapReportStudyDashboardData(Resource):
     @api.doc("get_redcap_report_study_dashboard")
     @api.marshal_list_with(redcapReportStudyDashboardDataModel)
@@ -74,7 +74,7 @@ class REDCapReportStudyDashboardData(Resource):
         )
         return response.json()
 
-@api.route("/report/study-dashboard/dm/<dm>", methods=["GET"])
+@api.route("/reports/study-dashboard/dm/<dm>", methods=["GET"])
 @api.param("dm", "The REDCap dm field value")
 class REDCapReportStudyDashboardDataByDM(Resource):
     @api.doc("get_redcap_report_study_dashboard_by_dm")
@@ -97,7 +97,7 @@ class REDCapReportStudyDashboardDataByDM(Resource):
         )
         return [row for row in response.json() if row["dm"] == dm]
 
-@api.route("/report/study-dashboard/siteid/<siteid>", methods=["GET"])
+@api.route("/reports/study-dashboard/siteid/<siteid>", methods=["GET"])
 @api.param("siteid", "The REDCap siteid field value")
 class REDCapReportStudyDashboardDataBySiteid(Resource):
     @api.doc("get_redcap_report_study_dashboard_by_siteid")
@@ -120,7 +120,7 @@ class REDCapReportStudyDashboardDataBySiteid(Resource):
         )
         return [row for row in response.json() if row["siteid"] == siteid]
 
-@api.route("/report/study-dashboard/recordid/<recordid>", methods=["GET"])
+@api.route("/reports/study-dashboard/recordid/<recordid>", methods=["GET"])
 @api.param("recordid", "The REDCap record_id field value")
 class REDCapReportStudyDashboardDataByRecordid(Resource):
     @api.doc("get_redcap_report_study_dashboard_by_recordid")
