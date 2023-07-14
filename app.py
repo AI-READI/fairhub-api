@@ -1,10 +1,11 @@
 from flask import Flask
-from model import db
+from model import *
 from flask_cors import CORS
 from apis.study import study
 from apis.dataset import dataset
 from apis.participant import participant
 from pyfairdatatools import __version__
+import click
 
 app = Flask(__name__)
 app.config.from_prefixed_env("FAIRDATA")
@@ -19,10 +20,14 @@ app.register_blueprint(participant)
 CORS(app)
 
 print(__version__)
+@app.cli.command("echo")
+@click.argument("message")
+def echo(message):
+    print(message)
 
 
 @app.cli.command("create-schema")
-def db_create():
+def echo():
     db.create_all()
 
 
