@@ -16,8 +16,8 @@ class Owner:
 
     @staticmethod
     def from_data(data):
-        owner=Owner('ORCID', 'name', 'email')
-        owner.ORCID = data['ORCID']
-        owner.name=data['name']
-        owner.email = data['email']
+        owner = Owner("ORCID", "name", "email")
+        owner.ORCID = data["ORCID"]
+        owner.name = data["name"]
+        owner.email = data["email"]
         return owner

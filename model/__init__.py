@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+
 db = SQLAlchemy()
 
 from .study import Study
@@ -10,5 +11,14 @@ from .version_contributor import VersionContributor
 from .owner import Owner
 from .participant import Participant
 
-__all__ = ["Study", "Dataset",'DatasetVersions','DatasetVersion','StudyContributor', 'VersionContributor','Owner',
-           'Participant', "db" ]
+__all__ = [
+    "Study",
+    "Dataset",
+    "DatasetVersions",
+    "DatasetVersion",
+    "StudyContributor",
+    "VersionContributor",
+    "Owner",
+    "Participant",
+    "db",
+]

@@ -257,6 +257,7 @@ def add_study():
 
     return jsonify(addStudy.to_dict()), 201
 
+
 @study.route("/viewProfile", methods=["POST"])
 def update_view_profile():
     data = request.json
@@ -271,7 +272,7 @@ def update_view_profile():
 def update_studies():
     queryStudy = Study.from_data(request.json)
     if not queryStudy.valid():
-        return 'error', 422
+        return "error", 422
 
     db.session.add(queryStudy)
     db.session.commit()
@@ -281,8 +282,7 @@ def update_studies():
 def update_study(studyId):
     updateStudy = Study.from_data(request.json)
     if not updateStudy.valid():
-        return 'error', 422
+        return "error", 422
 
     db.session.add(updateStudy)
     db.session.commit()
-

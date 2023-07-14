@@ -43,15 +43,16 @@ class Study(db.Model):
 
     @staticmethod
     def from_data(data):
-
         study = Study()
-        study.title = data['title']
-        study.description = data['description']
-        study.image = data['image']
-        study.keywords = data['keywords']
-        study.lastUpdated = data['lastUpdated']
-        study.owner = Owner.from_data(data['owner'])
-        study.contributors = [StudyContributor.from_data(c) for c in data['contributors']]
+        study.title = data["title"]
+        study.description = data["description"]
+        study.image = data["image"]
+        study.keywords = data["keywords"]
+        study.lastUpdated = data["lastUpdated"]
+        study.owner = Owner.from_data(data["owner"])
+        study.contributors = [
+            StudyContributor.from_data(c) for c in data["contributors"]
+        ]
         return study
 
     def validate(self):
