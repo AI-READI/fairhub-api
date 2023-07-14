@@ -2,6 +2,7 @@ import random
 from flask import jsonify, request, Blueprint
 
 from model import Study
+from model import db
 
 study = Blueprint("study", __name__)
 
@@ -248,13 +249,13 @@ def getStudy(studyId):
 
 @study.route("/study/add", methods=["POST"])
 def add_study():
-    data = request.json
+    addStudy = Study.from_data(request.json)
+    # if not addStudy.validate():
+    #     return 'error', 422
+    db.session.add(addStudy)
+    db.session.commit()
 
-    if data is not None:
-        data["id"] = 3
-
-    return jsonify(data), 201
-
+    return jsonify(addStudy.to_dict()), 201
 
 @study.route("/viewProfile", methods=["POST"])
 def update_view_profile():
@@ -268,15 +269,20 @@ def update_view_profile():
 
 @study.route("/study", methods=["POST"])
 def update_studies():
-    data = request.json
+    queryStudy = Study.from_data(request.json)
+    if not queryStudy.valid():
+        return 'error', 422
 
-    if data is not None:
-        data["id"] = 3
-
-    return jsonify(data), 201
+    db.session.add(queryStudy)
+    db.session.commit()
 
 
 @study.route("/study/<studyId>", methods=["POST"])
 def update_study(studyId):
-    data = request.json
-    return jsonify(data), 200
+    updateStudy = Study.from_data(request.json)
+    if not updateStudy.valid():
+        return 'error', 422
+
+    db.session.add(updateStudy)
+    db.session.commit()
+

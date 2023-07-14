@@ -1,5 +1,6 @@
 from . import db
 from .owner import Owner
+from .study_contributor import StudyContributor
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import composite
@@ -39,3 +40,24 @@ class Study(db.Model):
         }
         # print(json.dumps(list(properties.keys()), indent=4))
         # exit()
+
+    @staticmethod
+    def from_data(data):
+
+        study = Study()
+        study.title = data['title']
+        study.description = data['description']
+        study.image = data['image']
+        study.keywords = data['keywords']
+        study.lastUpdated = data['lastUpdated']
+        study.owner = Owner.from_data(data['owner'])
+        study.contributors = [StudyContributor.from_data(c) for c in data['contributors']]
+        return study
+
+    def validate(self):
+        violations = []
+        # if self.description.trim() == "":
+        #     violations.push("A description is required")
+        # if self.keywords.length < 1:
+        #     violations.push("At least one keyword must be specified")
+        return violations

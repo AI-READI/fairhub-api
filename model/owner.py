@@ -1,4 +1,3 @@
-from . import db
 import dataclasses
 
 
@@ -14,3 +13,11 @@ class Owner:
             "name": self.name,
             "email": self.email,
         }
+
+    @staticmethod
+    def from_data(data):
+        owner=Owner('ORCID', 'name', 'email')
+        owner.ORCID = data['ORCID']
+        owner.name=data['name']
+        owner.email = data['email']
+        return owner
