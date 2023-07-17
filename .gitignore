@@ -29,4 +29,4 @@ coverage
 
 # API Platform specific files
 *.pyc
-/settings.cfg
+/config.ps1
