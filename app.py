@@ -1,11 +1,11 @@
 from flask import Flask
-import model
 from flask_cors import CORS
-from apis.study import study
-from apis.dataset import dataset
-from apis.participant import participant
 from pyfairdatatools import __version__
 
+import model
+from apis.dataset import dataset
+from apis.participant import participant
+from apis.study import study
 
 app = Flask(__name__)
 app.config.from_prefixed_env("FAIRDATA")

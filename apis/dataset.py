@@ -1,7 +1,6 @@
-from flask import request, Blueprint
-from flask import jsonify
-from model import Dataset
-from model import DatasetVersion
+from flask import Blueprint, jsonify, request
+
+from model import Dataset, DatasetVersion
 
 dataset = Blueprint("dataset", __name__)
 

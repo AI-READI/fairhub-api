@@ -1,4 +1,4 @@
-from flask import jsonify, request, Blueprint
+from flask import Blueprint, jsonify, request
 
 # from faker import Faker
 from model import Participant

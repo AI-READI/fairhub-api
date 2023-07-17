@@ -1,9 +1,10 @@
-from .db import db
-from .owner import Owner
-from .study_contributor import StudyContributor
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import composite
+
+from .db import db
+from .owner import Owner
+from .study_contributor import StudyContributor
 
 
 class Study(db.Model):

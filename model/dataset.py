@@ -1,7 +1,8 @@
-from .db import db
+from sqlalchemy.sql.expression import true
 
 import model
-from sqlalchemy.sql.expression import true
+
+from .db import db
 
 
 class Dataset(db.Model):
