@@ -1,7 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
-
+from .db import db
 from .study import Study
 from .dataset import Dataset
 from .datasetVersion import DatasetVersion

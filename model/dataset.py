@@ -1,4 +1,5 @@
-from . import db
+from .db import db
+
 import model
 from sqlalchemy.sql.expression import true
 

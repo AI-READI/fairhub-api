@@ -1,4 +1,4 @@
-from . import db
+from .db import db
 from .owner import Owner
 from .study_contributor import StudyContributor
 from sqlalchemy import String
