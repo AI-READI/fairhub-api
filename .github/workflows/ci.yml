@@ -28,10 +28,10 @@ jobs:
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
 
       - name: Lint with flake8
-        run: poe flake8
+        run: poetry run flake8 apis core model app.py
 
       - name: Type check with mypy
-        run: poe typecheck
+        run: poetry run mypy apis core model app.py
 
       - name: Link with pylint
-        run: poe pylint
+        run: poetry run pylint apis core model app.py --rcfile=.pylint.ini
