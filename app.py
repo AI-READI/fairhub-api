@@ -12,8 +12,8 @@ from core import config
 app = Flask(__name__)
 app.config.from_prefixed_env("FAIRHUB")
 
-if "FAIRHUB_DATABASE_URL" in app.config:
-    app.config["SQLALCHEMY_DATABASE_URI"] = app.config["FAIRHUB_DATABASE_URL"]
+if "DATABASE_URL" in app.config:
+    app.config["SQLALCHEMY_DATABASE_URI"] = app.config["DATABASE_URL"]
 else:
     app.config["SQLALCHEMY_DATABASE_URI"] = config.FAIRHUB_DATABASE_URL
 
