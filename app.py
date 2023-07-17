@@ -7,9 +7,11 @@ from apis.dataset import dataset
 from apis.participant import participant
 from apis.study import study
 
+from core import config
+
 app = Flask(__name__)
 app.config.from_prefixed_env("FAIRDATA")
-app.config["SQLALCHEMY_DATABASE_URI"] = app.config["DATABASE_URL"]
+app.config["SQLALCHEMY_DATABASE_URI"] = config.FLASK_APP_DATABASE_URL
 
 
 model.db.init_app(app)

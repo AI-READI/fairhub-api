@@ -76,6 +76,9 @@ poethepoet = "^0.20.0"
 jupyter = "^1.0.0"
 flake8 = "^6.0.0"
 
+# Environment
+python-dotenv = "^1.0.0"
+
 [tool.poe.tasks]
 
 dev = "python app.py"
