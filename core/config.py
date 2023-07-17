@@ -1,8 +1,9 @@
 """Configuration for the application."""
 
+import os
 from dotenv import dotenv_values
 
-FLASK_APP_DATABASE_URL = "sqlite:///./app.db"
+FLASK_APP_DATABASE_URL = os.environ.get("FLASK_APP_DATABASE_URL")
 
 # take environment variables from .env.local
 envcfg = dotenv_values(".env.local")
