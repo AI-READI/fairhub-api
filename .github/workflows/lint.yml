@@ -1,39 +1,38 @@
 name: Lint
 
-on:
-  push:
-    branches:
-      - "**"
-  pull_request:
-    branches:
-      - "main"
+on: [push]
 
 jobs:
-  run-linters:
+  lint:
     name: Run linters
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8"]
 
     steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
         with:
-          node-version: 16
+          python-version: ${{ matrix.python-version }}
 
-      - name: Set up Python
-        uses: actions/setup-python@v3
+      - uses: Gr1N/setup-poetry@v8
+
+      - name: Install dependencies
+        run: poetry install
+
+      - uses: actions/cache@v2
         with:
-          python-version: 3.10.4
+          path: .venv
+          key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
 
-      - name: Install Python dependencies
-        run: pip install black flake8
+      - name: Lint with flake8
+        run: poetry run flake8 apis core model app.py
 
-      - name: Run Black
-        uses: wearerequired/lint-action@v2
-        with:
-          black: true
-          auto_fix: true
-          commit_message: "style: 🎨 fix code style issues with ${linter}"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Type check with mypy
+        run: poetry run mypy apis core model app.py
+
+      - name: Lint with pylint
+        run: poetry run pylint apis core model app.py --rcfile=.pylint.ini
