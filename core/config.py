@@ -10,5 +10,3 @@ envcfg = dotenv_values(".env")
 
 if "FAIRHUB_DATABASE_URL" in envcfg:
     FAIRHUB_DATABASE_URL = envcfg["FAIRHUB_DATABASE_URL"]
-
-print(f"FAIRHUB_DATABASE_URL: {FAIRHUB_DATABASE_URL}")
