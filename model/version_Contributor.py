@@ -1,6 +1,7 @@
-from .db import db
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
+
+from .db import db
 
 
 class VersionContributor(db.Model):
@@ -30,3 +31,15 @@ class VersionContributor(db.Model):
             "roles": self.roles,
             "status": self.status,
         }
+
+    def from_data(data):
+        versionContributor = VersionContributor()
+        versionContributor.id = data["id"]
+        versionContributor.affiliations = data["affiliations"]
+        versionContributor.email = data["email"]
+        versionContributor.firstname = data["firstname"]
+        versionContributor.lastname = data["lastname"]
+        versionContributor.ORCID = data["ORCID"]
+        versionContributor.roles = data["roles"]
+        versionContributor.status = data["status"]
+        return versionContributor

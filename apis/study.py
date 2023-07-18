@@ -1,8 +1,8 @@
 import random
-from flask import jsonify, request, Blueprint
 
-from model import Study
-from model import db
+from flask import Blueprint, jsonify, request
+
+from model import Study, db
 
 study = Blueprint("study", __name__)
 
