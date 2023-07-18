@@ -20,8 +20,9 @@ STUDY_DASHBOARD = {
             "device_status_cgm": "device_status_cgm",
             "device_status_amw": "device_status_amw",
             "device_status_all": "device_status_all",
-            "intervention_status": "intervention_status"
-        }, {
+            "intervention_status": "intervention_status",
+        },
+        {
             "module_name": "participant",
             "gender": "gender",
             "sex": "female",
@@ -37,9 +38,9 @@ STUDY_DASHBOARD = {
             "device_status_cgm": "device_status_cgm",
             "device_status_amw": "device_status_amw",
             "device_status_all": "device_status_all",
-            "intervention_status": "intervention_status"
-        }
-    ]
+            "intervention_status": "intervention_status",
+        },
+    ],
 }
 #
 
@@ -50,7 +51,7 @@ from .models import DashboardModel
 from .models import FairhubStudyDashboardDataModel
 
 # Get Environment Variables
-DASHBOARDS_CONFIG   = utils.load_json("config/dashboards.json")
+DASHBOARDS_CONFIG = utils.load_json("config/dashboards.json")
 
 # Set API Namespace
 api = Namespace("dashboards", description="Dashboard related operations")
@@ -59,23 +60,22 @@ api = Namespace("dashboards", description="Dashboard related operations")
 # Register API Models
 #
 
-dashboardModel = api.model(
-    "Dashboard", DashboardModel
-)
+dashboardModel = api.model("Dashboard", DashboardModel)
 
 fairhubStudyDashboardDataModel = api.model(
     "FairhubStudyDashboardData", FairhubStudyDashboardDataModel
 )
 
 fairhubStudyDashboardModel = api.inherit(
-    "FairhubStudyDashboard", dashboardModel, {
-        "data": fields.List(fields.Nested(fairhubStudyDashboardDataModel))
-    }
+    "FairhubStudyDashboard",
+    dashboardModel,
+    {"data": fields.List(fields.Nested(fairhubStudyDashboardDataModel))},
 )
 
 #
 # Dashboard Endpoints
 #
+
 
 @api.route("/")
 class DashboardsList(Resource):
@@ -87,9 +87,11 @@ class DashboardsList(Resource):
         """
         return DASHBOARDS_CONFIG["dashboards"]
 
+
 #
 # Study Dashboard Endpoints
 #
+
 
 @api.route("/study-dashboard")
 class StudyDashboard(Resource):

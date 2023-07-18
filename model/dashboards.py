@@ -3,6 +3,7 @@ from __main__ import cache
 from typing import Optional
 from redis_om import HashModel
 
+
 class ProjectCache(HashModel):
     project_id: str
     project_title: str
@@ -31,6 +32,7 @@ class ProjectCache(HashModel):
     external_modules: str
     bypass_branching_erase_field_prompt: str
 
+
 class DashboardCache(HashModel):
     name: str
     namespace: str
@@ -38,20 +40,19 @@ class DashboardCache(HashModel):
 
 
 class StudyDashboardCache(DashboardCache):
-
-    gender              : str
-    sex                 : str
-    race                : str
-    ethnicity           : str
-    ancestry            : str
-    phenotype           : str
-    a1c                 : str
-    recruitment_status  : str
-    consent_status      : str
-    survey_status       : str
+    gender: str
+    sex: str
+    race: str
+    ethnicity: str
+    ancestry: str
+    phenotype: str
+    a1c: str
+    recruitment_status: str
+    consent_status: str
+    survey_status: str
     communication_status: str
-    device_status_es    : str
-    device_status_cgm   : str
-    device_status_amw   : str
-    device_status_all   : str
-    intervention_status : str
+    device_status_es: str
+    device_status_cgm: str
+    device_status_amw: str
+    device_status_all: str
+    intervention_status: str

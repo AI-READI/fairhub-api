@@ -10,7 +10,9 @@ dotenv.load_dotenv()
 pyproject_metadata = toml.load("pyproject.toml")
 os.environ["FLASK_APP_NAME"] = pyproject_metadata["tool"]["poetry"]["name"]
 os.environ["FLASK_APP_VERSION"] = pyproject_metadata["tool"]["poetry"]["version"]
-os.environ["FLASK_APP_DESCRIPTION"] = pyproject_metadata["tool"]["poetry"]["description"]
+os.environ["FLASK_APP_DESCRIPTION"] = pyproject_metadata["tool"]["poetry"][
+    "description"
+]
 os.environ["FLASK_APP_LICENSE"] = pyproject_metadata["tool"]["poetry"]["license"]
 
 # Cache Imports
@@ -22,7 +24,7 @@ cache = redis.Redis(
     port=os.environ["REDIS_CACHE_PORT"],
     db=os.environ["REDIS_CACHE_DB"],
     encoding=os.environ["REDIS_CACHE_ENCODING"],
-    decode_responses=True
+    decode_responses=True,
 )
 
 # Flask API Imports
@@ -44,7 +46,6 @@ CORS(app)
 # db.init_app(app)
 
 if __name__ == "__main__":
-
     # Default to port 5000 if FLASK_PORT isn't specified in .flaskenv
     # Using a different port gets around an issue on MacOS where port
     # 5000 is used by and the OS and Flask, which leads to a Heisenbug

@@ -9,13 +9,13 @@ from apis.models import REDCapReportStudyDashboardDataModel
 from __main__ import cache
 
 # Get Environment Variables
-REDCAP_CONFIG               = utils.load_json("config/redcap.json")
-REDCAP_API_TOKEN            = os.environ["REDCAP_API_TOKEN"]
-REDCAP_API_URL              = os.environ["REDCAP_API_URL"]
-REDCAP_API_FORMAT           = os.environ["REDCAP_API_FORMAT"]
-REDCAP_PROJECT_NAME         = os.environ["REDCAP_PROJECT_NAME"]
-REDCAP_PROJECT_ID           = os.environ["REDCAP_PROJECT_ID"]
-REDCAP_DASHBOARD_REPORT_ID  = os.environ["REDCAP_DASHBOARD_REPORT_ID"]
+REDCAP_CONFIG = utils.load_json("config/redcap.json")
+REDCAP_API_TOKEN = os.environ["REDCAP_API_TOKEN"]
+REDCAP_API_URL = os.environ["REDCAP_API_URL"]
+REDCAP_API_FORMAT = os.environ["REDCAP_API_FORMAT"]
+REDCAP_PROJECT_NAME = os.environ["REDCAP_PROJECT_NAME"]
+REDCAP_PROJECT_ID = os.environ["REDCAP_PROJECT_ID"]
+REDCAP_DASHBOARD_REPORT_ID = os.environ["REDCAP_DASHBOARD_REPORT_ID"]
 
 # Set API Namespace
 api = Namespace("redcap", description="REDCap API methods")
@@ -24,20 +24,17 @@ api = Namespace("redcap", description="REDCap API methods")
 # Register API Models
 #
 
-redcapProjectDataModel = api.model(
-    "REDCapProjectData",
-    REDCapProjectDataModel
-)
+redcapProjectDataModel = api.model("REDCapProjectData", REDCapProjectDataModel)
 redcapReportStudyDashboardDataModel = api.model(
-    "REDCapReportStudyDashboardData",
-    REDCapReportStudyDashboardDataModel
+    "REDCapReportStudyDashboardData", REDCapReportStudyDashboardDataModel
 )
 
 #
 # REDCap Endpoints
 #
 
-@api.route("/project", methods=['GET'])
+
+@api.route("/project", methods=["GET"])
 class REDCapProjectData(Resource):
     @api.doc("get_redcap_project")
     @api.marshal_with(redcapProjectDataModel)
@@ -46,14 +43,16 @@ class REDCapProjectData(Resource):
         Get REDCap project
         """
         response = requests.post(
-            REDCAP_API_URL, data = {
-                'token': REDCAP_API_TOKEN,
-                'content': 'project',
-                'format': REDCAP_API_FORMAT,
-                'returnFormat': REDCAP_API_FORMAT
-            }
+            REDCAP_API_URL,
+            data={
+                "token": REDCAP_API_TOKEN,
+                "content": "project",
+                "format": REDCAP_API_FORMAT,
+                "returnFormat": REDCAP_API_FORMAT,
+            },
         )
         return response.json()
+
 
 @api.route("/reports/study-dashboard", methods=["GET"])
 class REDCapReportStudyDashboardData(Resource):
@@ -64,18 +63,20 @@ class REDCapReportStudyDashboardData(Resource):
         Get REDCap report for study dashboard Fairhub.io
         """
         response = requests.post(
-            REDCAP_API_URL, data = {
-                'token': REDCAP_API_TOKEN,
-                'format': REDCAP_API_FORMAT,
-                'returnFormat': REDCAP_API_FORMAT,
-                'report_id': REDCAP_DASHBOARD_REPORT_ID,
-                'content': 'report',
-                'rawOrLabel': 'raw',
-                'rawOrLabelHeaders': 'raw',
-                'exportCheckboxLabel': 'true'
-            }
+            REDCAP_API_URL,
+            data={
+                "token": REDCAP_API_TOKEN,
+                "format": REDCAP_API_FORMAT,
+                "returnFormat": REDCAP_API_FORMAT,
+                "report_id": REDCAP_DASHBOARD_REPORT_ID,
+                "content": "report",
+                "rawOrLabel": "raw",
+                "rawOrLabelHeaders": "raw",
+                "exportCheckboxLabel": "true",
+            },
         )
         return response.json()
+
 
 @api.route("/reports/study-dashboard/dm/<dm>", methods=["GET"])
 @api.param("dm", "The REDCap dm field value")
@@ -87,18 +88,20 @@ class REDCapReportStudyDashboardDataByDM(Resource):
         Get REDCap report records by data manager sign-off status
         """
         response = requests.post(
-            REDCAP_API_URL, data = {
-                'token': REDCAP_API_TOKEN,
-                'format': REDCAP_API_FORMAT,
-                'returnFormat': REDCAP_API_FORMAT,
-                'report_id': REDCAP_DASHBOARD_REPORT_ID,
-                'content': 'report',
-                'rawOrLabel': 'raw',
-                'rawOrLabelHeaders': 'raw',
-                'exportCheckboxLabel': 'true'
-            }
+            REDCAP_API_URL,
+            data={
+                "token": REDCAP_API_TOKEN,
+                "format": REDCAP_API_FORMAT,
+                "returnFormat": REDCAP_API_FORMAT,
+                "report_id": REDCAP_DASHBOARD_REPORT_ID,
+                "content": "report",
+                "rawOrLabel": "raw",
+                "rawOrLabelHeaders": "raw",
+                "exportCheckboxLabel": "true",
+            },
         )
         return [row for row in response.json() if row["dm"] == dm]
+
 
 @api.route("/reports/study-dashboard/siteid/<siteid>", methods=["GET"])
 @api.param("siteid", "The REDCap siteid field value")
@@ -110,18 +113,20 @@ class REDCapReportStudyDashboardDataBySiteid(Resource):
         Get REDCap report records by data generation site id
         """
         response = requests.post(
-            REDCAP_API_URL, data = {
-                'token': REDCAP_API_TOKEN,
-                'format': REDCAP_API_FORMAT,
-                'returnFormat': REDCAP_API_FORMAT,
-                'report_id': REDCAP_DASHBOARD_REPORT_ID,
-                'content': 'report',
-                'rawOrLabel': 'raw',
-                'rawOrLabelHeaders': 'raw',
-                'exportCheckboxLabel': 'true'
-            }
+            REDCAP_API_URL,
+            data={
+                "token": REDCAP_API_TOKEN,
+                "format": REDCAP_API_FORMAT,
+                "returnFormat": REDCAP_API_FORMAT,
+                "report_id": REDCAP_DASHBOARD_REPORT_ID,
+                "content": "report",
+                "rawOrLabel": "raw",
+                "rawOrLabelHeaders": "raw",
+                "exportCheckboxLabel": "true",
+            },
         )
         return [row for row in response.json() if row["siteid"] == siteid]
+
 
 @api.route("/reports/study-dashboard/recordid/<recordid>", methods=["GET"])
 @api.param("recordid", "The REDCap record_id field value")
@@ -133,15 +138,16 @@ class REDCapReportStudyDashboardDataByRecordid(Resource):
         Get REDCap report records by record id
         """
         response = requests.post(
-            REDCAP_API_URL, data = {
-                'token': REDCAP_API_TOKEN,
-                'format': REDCAP_API_FORMAT,
-                'returnFormat': REDCAP_API_FORMAT,
-                'report_id': REDCAP_DASHBOARD_REPORT_ID,
-                'content': 'report',
-                'rawOrLabel': 'raw',
-                'rawOrLabelHeaders': 'raw',
-                'exportCheckboxLabel': 'true'
-            }
+            REDCAP_API_URL,
+            data={
+                "token": REDCAP_API_TOKEN,
+                "format": REDCAP_API_FORMAT,
+                "returnFormat": REDCAP_API_FORMAT,
+                "report_id": REDCAP_DASHBOARD_REPORT_ID,
+                "content": "report",
+                "rawOrLabel": "raw",
+                "rawOrLabelHeaders": "raw",
+                "exportCheckboxLabel": "true",
+            },
         )
         return [row for row in response.json() if row["record_id"] == recordid]
