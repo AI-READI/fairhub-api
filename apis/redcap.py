@@ -1,9 +1,12 @@
+import os
+import requests
 from flask import request
 from flask_restx import Namespace, Resource, fields
 from core import utils
-from .models import REDCapProjectDataModel
-from .models import REDCapReportStudyDashboardDataModel
-import os, requests, redis
+from model.dashboards import ProjectCache, DashboardCache, StudyDashboardCache
+from apis.models import REDCapProjectDataModel
+from apis.models import REDCapReportStudyDashboardDataModel
+from __main__ import cache
 
 # Get Environment Variables
 REDCAP_CONFIG               = utils.load_json("config/redcap.json")

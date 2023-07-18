@@ -32,3 +32,4 @@ coverage
 /settings.cfg
 .env
 .flaskenv
+*.rdb
