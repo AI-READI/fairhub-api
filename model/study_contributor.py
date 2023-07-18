@@ -1,6 +1,7 @@
-from .db import db
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
+
+from .db import db
 
 
 class StudyContributor(db.Model):
