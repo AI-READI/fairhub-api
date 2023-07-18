@@ -1,9 +1,12 @@
-from .db import db
-from .owner import Owner
-from .study_contributor import StudyContributor
+from datetime import datetime
+
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import composite
+
+from .db import db
+from .owner import Owner
+from .study_contributor import StudyContributor
 
 
 class Study(db.Model):
@@ -48,7 +51,7 @@ class Study(db.Model):
         study.description = data["description"]
         study.image = data["image"]
         study.keywords = data["keywords"]
-        study.lastUpdated = data["lastUpdated"]
+        study.lastUpdated = datetime.now()
         study.owner = Owner.from_data(data["owner"])
         study.contributors = [
             StudyContributor.from_data(c) for c in data["contributors"]
