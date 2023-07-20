@@ -46,4 +46,6 @@ class Dataset(db.Model):
     def from_data(data):
         dataset = Dataset()
         # dataset.id = data["id"]
+        for i in data.values():
+            print(i)
         return dataset
