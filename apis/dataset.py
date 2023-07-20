@@ -1,7 +1,6 @@
-from flask import request, Blueprint
-from flask import jsonify
-from model import Dataset
-from model import DatasetVersion
+from flask import Blueprint, jsonify, request
+
+from model import Dataset, DatasetVersion, db, Study
 
 dataset = Blueprint("dataset", __name__)
 
@@ -209,43 +208,55 @@ def getDatasetVersion(studyId, datasetId, versionId):
     datasetVersion = DatasetVersion.query.get(versionId)
     return jsonify(datasetVersion.to_dict())
 
-    return
-
-
-@dataset.route("/study/<studyId>/dataset/<datasetId>", methods=["POST"])
-def update_dataset(studyId, datasetId):
-    data = request.json
-
-    return jsonify(data), 200
-
 
 @dataset.route("/study/<studyId>/dataset", methods=["POST"])
-def update_datesets():
-    data = request.json
+def add_datesets(studyId):
+    study = Study.query.get(studyId)
+    dataset_obj = Dataset(study)
+    datasetVersion = DatasetVersion.from_data(dataset_obj, request.json)
+    db.session.add(dataset_obj)
+    db.session.add(datasetVersion)
+    db.session.commit()
 
-    if data is not None:
-        data["id"] = 3
+    return jsonify(datasetVersion.to_dict()), 201
 
-    return jsonify(data), 201
 
+# @dataset.route("/study/<studyId>/dataset/<datasetId>", methods=["POST"])
+# def update_dataset(studyId, datasetId):
+#     study = Study.query.get(studyId)
+#     data_id = Dataset.query.get(datasetId)
+#     dataset_obj = Dataset(study)
+#     dataset_ids = DatasetVersion(data_id)
+#     datasetVersion = DatasetVersion.from_data(dataset_obj, dataset_ids, request.json)
+#     db.session.add(dataset_obj)
+#     db.session.add(datasetVersion)
+#     db.session.commit()
+#
+#     return jsonify(datasetVersion.to_dict()), 201
+#
 
 @dataset.route("/study/<studyId>/dataset/<datasetId>/version", methods=["POST"])
 def update_dateset_versions(studyId, datasetId):
-    data = request.json
+    study = Study.query.get(studyId)
+    data_id = Dataset.query.get(datasetId)
+    dataset_obj = Dataset(study)
+    dataset_ids = DatasetVersion(data_id)
+    datasetVersion = DatasetVersion.from_data(dataset_obj, dataset_ids, request.json)
+    db.session.add(dataset_obj)
+    db.session.add(datasetVersion)
+    db.session.commit()
 
-    if data is not None:
-        data["id"] = 3
+    return jsonify(datasetVersion.to_dict()), 201
 
-    return jsonify(data), 201
-
-
-@dataset.route(
-    "/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["POST"]
-)
+@dataset.route("/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["POST"])
 def update_dateset_version(studyId, datasetId, versionId):
-    data = request.json
+    study = Study.query.get(studyId)
+    data_id = Dataset.query.get(datasetId)
+    dataset_obj = Dataset(study)
+    dataset_ids = DatasetVersion(data_id)
+    datasetVersion = DatasetVersion.from_data(dataset_obj, dataset_ids, request.json)
+    db.session.add(dataset_obj)
+    db.session.add(datasetVersion)
+    db.session.commit()
 
-    if data is not None:
-        data["id"] = 3
-
-    return jsonify(data), 201
+    return jsonify(datasetVersion.to_dict()), 201

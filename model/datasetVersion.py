@@ -1,7 +1,10 @@
 from .db import db
+from .version_contributor import VersionContributor
 
 
 class DatasetVersion(db.Model):
+    def __init__(self, dataset):
+        self.dataset=dataset
     __tablename__ = "datasetVersion"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String, nullable=False)
@@ -28,6 +31,8 @@ class DatasetVersion(db.Model):
             "keywords": self.keywords,
             "primaryLanguage": self.primaryLanguage,
             "selectedParticipants": self.selectedParticipants,
+            "modified": self.modified,
+            "published": self.published,
             "versionContributors": [
                 versionContributor.to_dict()
                 for versionContributor in self.versionContributors
@@ -35,3 +40,20 @@ class DatasetVersion(db.Model):
             "DOI": self.DOI,
             "name": self.name,
         }
+    @staticmethod
+    def from_data(dataset, data):
+        datasetVersion_obj = DatasetVersion(dataset)
+        # datasetVersion_obj.id = data['id']
+        datasetVersion_obj.title = data["title"]
+        datasetVersion_obj.description = data["description"]
+        datasetVersion_obj.keywords = data["keywords"]
+        datasetVersion_obj.primaryLanguage = data["primaryLanguage"]
+        datasetVersion_obj.selectedParticipants = data["selectedParticipants"]
+        datasetVersion_obj.modified = data["modified"]
+        datasetVersion_obj.published = data["published"]
+        datasetVersion_obj.versionContributors = [
+            VersionContributor.from_data(c) for c in data["versionContributors"]
+        ]
+        datasetVersion_obj.DOI = data["DOI"]
+        datasetVersion_obj.name = data["name"]
+        return datasetVersion_obj

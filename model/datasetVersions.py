@@ -25,3 +25,13 @@ class DatasetVersions:
             "name": self.name,
             "id": self.id,
         }
+
+    def from_data(data):
+        datasetVersions = DatasetVersions()
+        datasetVersions.id = data["id"]
+        datasetVersions.latestVersion = data["latestVersion"]
+        datasetVersions.lastModified = data["lastModified"]
+        datasetVersions.lastPublished = data["lastPublished"]
+        datasetVersions.name = data["name"]
+        datasetVersions.publishedVersion = data["publishedVersion"]
+        return datasetVersions
