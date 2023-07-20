@@ -1,4 +1,6 @@
 from sqlalchemy import String
+from datetime import datetime
+
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import composite
 
@@ -45,16 +47,20 @@ class Study(db.Model):
     @staticmethod
     def from_data(data):
         study = Study()
-        study.title = data["title"]
-        study.description = data["description"]
-        study.image = data["image"]
-        study.keywords = data["keywords"]
-        study.lastUpdated = data["lastUpdated"]
-        study.owner = Owner.from_data(data["owner"])
-        study.contributors = [
+        study.update(data)
+
+        return study
+
+    def update(self, data):
+        self.title = data["title"]
+        self.description = data["description"]
+        self.image = data["image"]
+        self.keywords = data["keywords"]
+        self.lastUpdated = datetime.now()
+        self.owner = Owner.from_data(data["owner"])
+        self.contributors = [
             StudyContributor.from_data(c) for c in data["contributors"]
         ]
-        return study
 
     def validate(self):
         violations = []

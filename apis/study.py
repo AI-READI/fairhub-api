@@ -280,9 +280,11 @@ def update_studies():
 
 @study.route("/study/<studyId>", methods=["POST"])
 def update_study(studyId):
-    updateStudy = Study.from_data(request.json)
-    if not updateStudy.valid():
-        return "error", 422
-
-    db.session.add(updateStudy)
+    updateStudy = Study.query.get(studyId)
+    # if not addStudy.validate():
+    #     return 'error', 422
+    updateStudy.update(request.json)
+    db.session.update(updateStudy)
     db.session.commit()
+
+    return jsonify(updateStudy.to_dict()), 201
