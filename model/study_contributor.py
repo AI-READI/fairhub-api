@@ -37,7 +37,7 @@ class StudyContributor(db.Model):
         study_contributor = StudyContributor()
         for i in data.values():
             print(i)
-        study_contributor.id = data["id"]
+        # study_contributor.id = data["id"]
         study_contributor.affiliations = data["affiliations"]
         study_contributor.email = data["email"]
         study_contributor.firstname = data["firstname"]

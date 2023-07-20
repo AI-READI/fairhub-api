@@ -18,3 +18,13 @@ class Participant(db.Model):
             "address": self.address,
             "age": self.age,
         }
+
+    @staticmethod
+    def from_data(data):
+        participant = Participant()
+        participant.id = data["title"]
+        participant.name = data["description"]
+        participant.address = data["image"]
+        participant.age = data["age"]
+
+        return participant

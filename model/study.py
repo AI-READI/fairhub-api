@@ -9,9 +9,9 @@ from .owner import Owner
 from .study_contributor import StudyContributor
 
 
+
 class Study(db.Model):
     __tablename__ = "study"
-
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
@@ -44,19 +44,24 @@ class Study(db.Model):
         # print(json.dumps(list(properties.keys()), indent=4))
         # exit()
 
+
     @staticmethod
     def from_data(data):
         study = Study()
-        study.title = data["title"]
-        study.description = data["description"]
-        study.image = data["image"]
-        study.keywords = data["keywords"]
-        study.lastUpdated = datetime.now()
-        study.owner = Owner.from_data(data["owner"])
-        study.contributors = [
+        study.update(data)
+
+        return study
+
+    def update(self, data):
+        self.title = data["title"]
+        self.description = data["description"]
+        self.image = data["image"]
+        self.keywords = data["keywords"]
+        self.lastUpdated = datetime.now()
+        self.owner = Owner.from_data(data["owner"])
+        self.contributors = [
             StudyContributor.from_data(c) for c in data["contributors"]
         ]
-        return study
 
     def validate(self):
         violations = []

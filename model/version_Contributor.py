@@ -31,10 +31,10 @@ class VersionContributor(db.Model):
             "roles": self.roles,
             "status": self.status,
         }
-
+    @staticmethod
     def from_data(data):
         versionContributor = VersionContributor()
-        versionContributor.id = data["id"]
+        # versionContributor.id = data["id"]
         versionContributor.affiliations = data["affiliations"]
         versionContributor.email = data["email"]
         versionContributor.firstname = data["firstname"]
