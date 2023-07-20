@@ -30,3 +30,6 @@ coverage
 # API Platform specific files
 *.pyc
 /config.ps1
+
+# Environment variables
+.env

@@ -1,6 +1,6 @@
+from sqlalchemy import String
 from datetime import datetime
 
-from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import composite
 
@@ -11,6 +11,7 @@ from .study_contributor import StudyContributor
 
 class Study(db.Model):
     __tablename__ = "study"
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
