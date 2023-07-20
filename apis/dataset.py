@@ -213,9 +213,7 @@ def getDatasetVersion(studyId, datasetId, versionId):
 
 @dataset.route("/study/<studyId>/dataset/<datasetId>", methods=["POST"])
 def update_dataset(studyId, datasetId):
-    data = request.json
-
-    return jsonify(data), 200
+    pass
 
 
 @dataset.route("/study/<studyId>/dataset", methods=["POST"])
@@ -229,8 +227,6 @@ def add_datesets(studyId):
     # print(request.json)
     return jsonify(datasetVersion.to_dict()), 201
 
-    if data is not None:
-        data["id"] = 3
 
 # @dataset.route("/study/<studyId>/dataset/<datasetId>", methods=["POST"])
 # def update_dataset(studyId, datasetId):

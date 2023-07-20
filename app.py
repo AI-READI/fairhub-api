@@ -1,5 +1,4 @@
 from flask import Flask
-import model
 from flask_cors import CORS
 from pyfairdatatools import __version__
 
