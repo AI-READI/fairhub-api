@@ -288,8 +288,3 @@ def update_study(studyId):
     db.session.commit()
 
     return jsonify(updateStudy.to_dict()), 201
-
-
-
-
-

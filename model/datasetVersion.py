@@ -4,7 +4,8 @@ from .version_contributor import VersionContributor
 
 class DatasetVersion(db.Model):
     def __init__(self, dataset):
-        self.dataset=dataset
+        self.dataset = dataset
+
     __tablename__ = "datasetVersion"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String, nullable=False)
@@ -40,6 +41,7 @@ class DatasetVersion(db.Model):
             "DOI": self.DOI,
             "name": self.name,
         }
+
     @staticmethod
     def from_data(dataset, data):
         datasetVersion_obj = DatasetVersion(dataset)

@@ -9,7 +9,6 @@ from .owner import Owner
 from .study_contributor import StudyContributor
 
 
-
 class Study(db.Model):
     __tablename__ = "study"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -43,7 +42,6 @@ class Study(db.Model):
         }
         # print(json.dumps(list(properties.keys()), indent=4))
         # exit()
-
 
     @staticmethod
     def from_data(data):

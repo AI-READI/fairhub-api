@@ -8,6 +8,7 @@ from .db import db
 class Dataset(db.Model):
     def __init__(self, study):
         self.study = study
+
     __tablename__ = "dataset"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
@@ -22,7 +23,10 @@ class Dataset(db.Model):
         lastModified = self.lastModified()
         return (
             model.DatasetVersions(
-                lastPublished, lastModified, lastPublished.name if lastPublished else lastModified.name, self.id
+                lastPublished,
+                lastModified,
+                lastPublished.name if lastPublished else lastModified.name,
+                self.id,
             )
         ).to_dict()
 

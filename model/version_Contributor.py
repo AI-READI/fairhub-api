@@ -31,6 +31,7 @@ class VersionContributor(db.Model):
             "roles": self.roles,
             "status": self.status,
         }
+
     @staticmethod
     def from_data(data):
         versionContributor = VersionContributor()
