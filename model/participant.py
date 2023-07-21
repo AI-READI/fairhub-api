@@ -4,7 +4,8 @@ from .db import db
 class Participant(db.Model):
     __tablename__ = "participant"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String, nullable=False)
+    firstname = db.Column(db.String, nullable=False)
+    lastname = db.Column(db.String, nullable=False)
     address = db.Column(db.String, nullable=False)
     age = db.Column(db.String, nullable=False)
 
@@ -14,7 +15,8 @@ class Participant(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "name": self.name,
+            "firstname": self.firstname,
+            "lastname": self.lastname,
             "address": self.address,
             "age": self.age,
         }
@@ -22,9 +24,11 @@ class Participant(db.Model):
     @staticmethod
     def from_data(data):
         participant = Participant()
-        participant.id = data["title"]
-        participant.name = data["description"]
-        participant.address = data["image"]
+        # participant.id = data["id"]
+        participant.firstname = data["firstname"]
+        participant.lastname = data["lastname"]
+        participant.address = data["address"]
+
         participant.age = data["age"]
 
         return participant

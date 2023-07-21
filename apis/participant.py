@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 
 # from faker import Faker
-from model import Participant
+from model import Participant, db
 
 participant = Blueprint("participant", __name__)
 
@@ -24,5 +24,18 @@ def get_participants(studyId):
 
 @participant.route("/study/<studyId>/participants/add", methods=["POST"])
 def add_participants(studyId):
-    data = request.json
-    return jsonify(data)
+    addParticipant = Participant.from_data(request.json)
+    db.session.add(addParticipant)
+    db.session.commit()
+    return jsonify(addParticipant.to_dict()), 201
+
+
+# in progress update participants
+@participant.route("/study/<studyId>/participants/update", methods=["POST"])
+def update_participants(studyId):
+    updateParticipant = Participant.query.get(studyId)
+    # if not addStudy.validate():
+    #     return 'error', 422
+    updateParticipant.update(request.json)
+    db.session.commit()
+    return jsonify(updateParticipant.to_dict()), 201
