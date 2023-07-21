@@ -259,7 +259,7 @@ def add_study():
 
 
 @study.route("/viewProfile", methods=["POST"])
-def update_view_profile():
+def update_user_profile():
     data = request.json
 
     if data is not None:
@@ -284,7 +284,7 @@ def update_study(studyId):
     # if not addStudy.validate():
     #     return 'error', 422
     updateStudy.update(request.json)
-    db.session.update(updateStudy)
+
     db.session.commit()
 
     return jsonify(updateStudy.to_dict()), 201
