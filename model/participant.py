@@ -1,15 +1,19 @@
 from .db import db
-
+import uuid
 
 class Participant(db.Model):
+    def __init__(self, study):
+        self.study = study
+        self.id = str(uuid.uuid4())
+
     __tablename__ = "participant"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.CHAR(36), primary_key=True)
     firstname = db.Column(db.String, nullable=False)
     lastname = db.Column(db.String, nullable=False)
     address = db.Column(db.String, nullable=False)
     age = db.Column(db.String, nullable=False)
 
-    study_id = db.Column(db.Integer, db.ForeignKey("study.id"))
+    study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
     study = db.relationship("Study")
 
     def to_dict(self):
@@ -22,13 +26,15 @@ class Participant(db.Model):
         }
 
     @staticmethod
-    def from_data(data):
-        participant = Participant()
-        # participant.id = data["id"]
-        participant.firstname = data["firstname"]
-        participant.lastname = data["lastname"]
-        participant.address = data["address"]
-
-        participant.age = data["age"]
-
+    def from_data(data, study):
+        participant = Participant(study)
+        participant.update(data)
         return participant
+
+    def update(self, data):
+        # participant.id = data["id"]
+        self.firstname = data["firstname"]
+        self.lastname = data["lastname"]
+        self.address = data["address"]
+        self.age = data["age"]
+

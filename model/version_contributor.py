@@ -1,12 +1,14 @@
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
-
+import uuid
 from .db import db
 
 
 class VersionContributor(db.Model):
+    def __init__(self):
+        self.id = str(uuid.uuid4())
     __tablename__ = "version_contributor"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.CHAR(36), primary_key=True)
     affiliations = db.Column(ARRAY(String), nullable=False)
     email = db.Column(db.String, nullable=False)
     firstname = db.Column(db.String, nullable=False)
@@ -15,7 +17,7 @@ class VersionContributor(db.Model):
     roles = db.Column(ARRAY(String), nullable=False)
     status = db.Column(db.String, nullable=False)
 
-    datasetVersion_id = db.Column(db.Integer, db.ForeignKey("datasetVersion.id"))
+    datasetVersion_id = db.Column(db.CHAR(36), db.ForeignKey("datasetVersion.id"))
     datasetVersion = db.relationship(
         "DatasetVersion", back_populates="versionContributors"
     )

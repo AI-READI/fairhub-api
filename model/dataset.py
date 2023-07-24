@@ -1,5 +1,5 @@
 from sqlalchemy.sql.expression import true
-
+import uuid
 import model
 
 from .db import db
@@ -8,11 +8,11 @@ from .db import db
 class Dataset(db.Model):
     def __init__(self, study):
         self.study = study
-
+        self.id = str(uuid.uuid4())
     __tablename__ = "dataset"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.CHAR(36), primary_key=True)
 
-    study_id = db.Column(db.Integer, db.ForeignKey("study.id"))
+    study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
     study = db.relationship("Study", back_populates="dataset")
     datasetVersions = db.relationship(
         "DatasetVersion", back_populates="dataset", lazy="dynamic"
@@ -49,3 +49,5 @@ class Dataset(db.Model):
         for i in data.values():
             print(i)
         return dataset
+
+

@@ -1,12 +1,14 @@
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
-
+import uuid
 from .db import db
 
 
 class StudyContributor(db.Model):
+    def __init__(self):
+        self.id = str(uuid.uuid4())
     __tablename__ = "study_contributor"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.CHAR(36), primary_key=True)
     affiliations = db.Column(ARRAY(String), nullable=False)
     email = db.Column(db.String, nullable=False)
     firstname = db.Column(db.String, nullable=False)
@@ -16,7 +18,7 @@ class StudyContributor(db.Model):
     permission = db.Column(db.String, nullable=False)
     status = db.Column(db.String, nullable=False)
 
-    study_id = db.Column(db.Integer, db.ForeignKey("study.id"))
+    study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
     study = db.relationship("Study", back_populates="contributors")
 
     def to_dict(self):
