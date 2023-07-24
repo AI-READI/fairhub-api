@@ -49,13 +49,13 @@ def getDatasets(studyId):
     # if int(studyId) not in datasets:
     #     return "not found", 404
     # return jsonify(datasets[int(studyId)])
-    datasets = Dataset.query.all()
+    study = Study.query.get(studyId)
+    datasets = Dataset.query.filter_by(study=study)
     return jsonify([d.to_dict() for d in datasets])
 
 
 @dataset.route(
-    "/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["GET"]
-)
+    "/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["GET"])
 def getDatasetVersion(studyId, datasetId, versionId):
     # dic = {
     #     # Study 1
@@ -208,12 +208,6 @@ def getDatasetVersion(studyId, datasetId, versionId):
     datasetVersion = DatasetVersion.query.get(versionId)
     return jsonify(datasetVersion.to_dict())
 
-    return
-
-
-@dataset.route("/study/<studyId>/dataset/<datasetId>", methods=["POST"])
-def update_dataset(studyId, datasetId):
-    pass
 
 
 @dataset.route("/study/<studyId>/dataset", methods=["POST"])
@@ -228,46 +222,28 @@ def add_datesets(studyId):
     return jsonify(datasetVersion.to_dict()), 201
 
 
-# @dataset.route("/study/<studyId>/dataset/<datasetId>", methods=["POST"])
-# def update_dataset(studyId, datasetId):
-#     study = Study.query.get(studyId)
-#     data_id = Dataset.query.get(datasetId)
-#     dataset_obj = Dataset(study)
-#     dataset_ids = DatasetVersion(data_id)
-#     datasetVersion = DatasetVersion.from_data(dataset_obj, dataset_ids, request.json)
-#     db.session.add(dataset_obj)
-#     db.session.add(datasetVersion)
-#     db.session.commit()
-#
-#     return jsonify(datasetVersion.to_dict()), 201
-#
+@dataset.route("/study/<studyId>/dataset/<datasetId>", methods=["POST"])
+def update_dataset(studyId, datasetId):
+    pass
 
 
 @dataset.route("/study/<studyId>/dataset/<datasetId>/version", methods=["POST"])
-def update_dateset_versions(studyId, datasetId):
-    study = Study.query.get(studyId)
-    data_id = Dataset.query.get(datasetId)
-    dataset_obj = Dataset(study)
-    dataset_ids = DatasetVersion(data_id)
-    datasetVersion = DatasetVersion.from_data(dataset_obj, dataset_ids, request.json)
-    db.session.add(dataset_obj)
-    db.session.add(datasetVersion)
+def add_dateset_version(studyId, datasetId):
+    data_obj = Dataset.query.get(datasetId)
+    dataset_version = DatasetVersion.from_data(request.json, data_obj)
+    db.session.add(dataset_version)
     db.session.commit()
 
-    return jsonify(datasetVersion.to_dict()), 201
+    return jsonify(dataset_version.to_dict()), 201
 
 
 @dataset.route(
     "/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["POST"]
 )
-def update_dateset_version(studyId, datasetId, versionId):
-    study = Study.query.get(studyId)
-    data_id = Dataset.query.get(datasetId)
-    dataset_obj = Dataset(study)
-    dataset_ids = DatasetVersion(data_id)
-    datasetVersion = DatasetVersion.from_data(dataset_obj, dataset_ids, request.json)
-    db.session.add(dataset_obj)
-    db.session.add(datasetVersion)
+def modify_dateset_version(studyId, datasetId, versionId):
+    dataversion_obj = DatasetVersion.query.get(versionId)
+    dataversion_obj.update(request.json)
     db.session.commit()
+    return jsonify(dataversion_obj.to_dict()), 201
 
-    return jsonify(datasetVersion.to_dict()), 201
+

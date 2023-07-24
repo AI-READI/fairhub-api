@@ -1,6 +1,8 @@
 from flask import Flask
 from flask_cors import CORS
 from pyfairdatatools import __version__
+from flask_restx import Api, Resource, reqparse
+
 
 import model
 from apis.dataset import dataset
@@ -32,7 +34,7 @@ print(__version__)
 
 
 @app.cli.command("create-schema")
-def echo():
+def create_schema():
     model.db.create_all()
 
 

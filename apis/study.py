@@ -268,23 +268,12 @@ def update_user_profile():
     return jsonify(data), 201
 
 
-@study.route("/study", methods=["POST"])
-def update_studies():
-    queryStudy = Study.from_data(request.json)
-    if not queryStudy.valid():
-        return "error", 422
-
-    db.session.add(queryStudy)
-    db.session.commit()
-
-
 @study.route("/study/<studyId>", methods=["POST"])
 def update_study(studyId):
     updateStudy = Study.query.get(studyId)
     # if not addStudy.validate():
     #     return 'error', 422
     updateStudy.update(request.json)
-
     db.session.commit()
 
     return jsonify(updateStudy.to_dict()), 201
