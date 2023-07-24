@@ -7,6 +7,7 @@ from .db import db
 class VersionContributor(db.Model):
     def __init__(self):
         self.id = str(uuid.uuid4())
+
     __tablename__ = "version_contributor"
     id = db.Column(db.CHAR(36), primary_key=True)
     affiliations = db.Column(ARRAY(String), nullable=False)

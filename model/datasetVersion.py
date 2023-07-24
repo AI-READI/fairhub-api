@@ -1,4 +1,5 @@
 from .db import db
+
 # from .version_contributor import VersionContributor
 import uuid
 
@@ -6,7 +7,9 @@ import uuid
 version_contributors = db.Table(
     "version_contributors",
     db.Model.metadata,
-    db.Column("datasetVersion_id", db.ForeignKey("datasetVersion.id"), primary_key=True),
+    db.Column(
+        "datasetVersion_id", db.ForeignKey("datasetVersion.id"), primary_key=True
+    ),
     db.Column("user_id", db.ForeignKey("user.id"), primary_key=True),
 )
 
@@ -14,14 +17,18 @@ version_contributors = db.Table(
 version_participants = db.Table(
     "version_participants",
     db.Model.metadata,
-    db.Column("datasetVersion_id", db.ForeignKey("datasetVersion.id"), primary_key=True),
+    db.Column(
+        "datasetVersion_id", db.ForeignKey("datasetVersion.id"), primary_key=True
+    ),
     db.Column("participant_id", db.ForeignKey("participant.id"), primary_key=True),
 )
+
 
 class DatasetVersion(db.Model):
     def __init__(self, dataset):
         self.dataset = dataset
         self.id = str(uuid.uuid4())
+
     __tablename__ = "datasetVersion"
     id = db.Column(db.CHAR(36), primary_key=True)
     title = db.Column(db.String, nullable=False)
@@ -33,11 +40,11 @@ class DatasetVersion(db.Model):
     published = db.Column(db.Boolean, nullable=False)
     DOI = db.Column(db.String, nullable=False)
     name = db.Column(db.String, nullable=False)
-    contributors = db.relationship('User', secondary=version_contributors)
+    contributors = db.relationship("User", secondary=version_contributors)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
     dataset = db.relationship("Dataset", back_populates="datasetVersions")
-    participants = db.relationship('Participant', secondary=version_participants)
+    participants = db.relationship("Participant", secondary=version_participants)
 
     def to_dict(self):
         return {
@@ -49,10 +56,7 @@ class DatasetVersion(db.Model):
             "selectedParticipants": self.selectedParticipants,
             "modified": self.modified,
             "published": self.published,
-             "contributors": [
-                 user.to_dict()
-                 for user in self.contributors
-            ],
+            "contributors": [user.to_dict() for user in self.contributors],
             "DOI": self.DOI,
             "name": self.name,
         }

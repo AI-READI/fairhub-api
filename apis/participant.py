@@ -36,5 +36,3 @@ def update_participants(studyId, participantId):
     update_participant.update(request.json)
     db.session.commit()
     return jsonify(update_participant.to_dict()), 201
-
-

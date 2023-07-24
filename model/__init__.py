@@ -5,6 +5,7 @@ from .db import db
 from .owner import Owner
 from .participant import Participant
 from .study import Study
+
 # from .study_contributor import StudyContributor
 # from .version_contributor import VersionContributor
 from .user import User
@@ -19,5 +20,5 @@ __all__ = [
     "Owner",
     "Participant",
     "db",
-    "User"
+    "User",
 ]

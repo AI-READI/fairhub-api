@@ -9,6 +9,7 @@ class Dataset(db.Model):
     def __init__(self, study):
         self.study = study
         self.id = str(uuid.uuid4())
+
     __tablename__ = "dataset"
     id = db.Column(db.CHAR(36), primary_key=True)
 
@@ -49,5 +50,3 @@ class Dataset(db.Model):
         for i in data.values():
             print(i)
         return dataset
-
-

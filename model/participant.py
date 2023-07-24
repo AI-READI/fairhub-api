@@ -1,6 +1,7 @@
 from .db import db
 import uuid
 
+
 class Participant(db.Model):
     def __init__(self, study):
         self.study = study
@@ -37,4 +38,3 @@ class Participant(db.Model):
         self.lastname = data["lastname"]
         self.address = data["address"]
         self.age = data["age"]
-
