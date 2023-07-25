@@ -3,6 +3,7 @@ from datetime import datetime
 from sqlalchemy.dialects.postgresql import ARRAY
 import model
 from .db import db
+
 # from .study_contributor import StudyContributor
 import uuid
 
@@ -46,7 +47,7 @@ class Study(db.Model):
             # "contributors": [
             #     contributor.to_dict() for contributor in self.contributors
             # ],
-            "owner": self.owner.to_dict()
+            "owner": self.owner.to_dict(),
         }
 
     @staticmethod

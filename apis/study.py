@@ -24,14 +24,12 @@ def viewProfile():
 
 @study.route("/study", methods=["GET"])
 def getStudies():
-
     studies = Study.query.all()
     return jsonify([s.to_dict() for s in studies])
 
 
 @study.route("/study/<studyId>", methods=["GET"])
 def getStudy(studyId):
-
     study1 = Study.query.get(studyId)
     return jsonify(study1.to_dict())
 
