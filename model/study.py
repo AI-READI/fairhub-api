@@ -3,9 +3,9 @@ from datetime import datetime
 from sqlalchemy.dialects.postgresql import ARRAY
 
 from .db import db
+
 # from .study_contributor import StudyContributor
 import uuid
-
 
 
 study_contributors = db.Table(
@@ -15,9 +15,11 @@ study_contributors = db.Table(
     db.Column("user_id", db.ForeignKey("user.id"), primary_key=True),
 )
 
+
 class Study(db.Model):
     def __init__(self):
         self.id = str(uuid.uuid4())
+
     __tablename__ = "study"
 
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -31,9 +33,7 @@ class Study(db.Model):
 
     owner = db.relationship("User")
     owner_id = db.Column(db.CHAR(36), db.ForeignKey("user.id"))
-    contributors = db.relationship('User', secondary=study_contributors)
-
-
+    contributors = db.relationship("User", secondary=study_contributors)
 
     def to_dict(self):
         return {
@@ -65,7 +65,6 @@ class Study(db.Model):
         self.keywords = data["keywords"]
         self.last_updated = datetime.now()
         # self.owner = User.from_data(data["owner"])
-
 
     def validate(self):
         violations = []
