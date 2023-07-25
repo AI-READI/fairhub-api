@@ -7,7 +7,7 @@ import model
 from apis.dataset import dataset
 from apis.participant import participant
 from apis.study import study
-
+from apis.contributor import contributor
 from core import config
 
 app = Flask(__name__)
@@ -36,6 +36,8 @@ model.db.init_app(app)
 app.register_blueprint(study)
 app.register_blueprint(dataset)
 app.register_blueprint(participant)
+app.register_blueprint(contributor)
+
 
 CORS(app)
 
