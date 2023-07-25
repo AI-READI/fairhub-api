@@ -1,9 +1,8 @@
 from sqlalchemy import String
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import ARRAY
-
+import model
 from .db import db
-
 # from .study_contributor import StudyContributor
 import uuid
 
@@ -44,9 +43,10 @@ class Study(db.Model):
             "keywords": self.keywords,
             "last_updated": self.last_updated,
             "size": self.size,
-            "contributors": [
-                contributor.to_dict() for contributor in self.contributors
-            ],
+            # "contributors": [
+            #     contributor.to_dict() for contributor in self.contributors
+            # ],
+            "owner": self.owner.to_dict()
         }
 
     @staticmethod
@@ -63,7 +63,7 @@ class Study(db.Model):
         self.size = data["size"]
         self.keywords = data["keywords"]
         self.last_updated = datetime.now()
-        # self.owner = User.from_data(data["owner"])
+        self.owner = model.User.from_data(data["owner"])
 
     def validate(self):
         violations = []

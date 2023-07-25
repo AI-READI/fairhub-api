@@ -12,9 +12,9 @@ class VersionContributor(db.Model):
     id = db.Column(db.CHAR(36), primary_key=True)
     affiliations = db.Column(ARRAY(String), nullable=False)
     email = db.Column(db.String, nullable=False)
-    firstname = db.Column(db.String, nullable=False)
-    lastname = db.Column(db.String, nullable=False)
-    ORCID = db.Column(db.String, nullable=False)
+    first_name = db.Column(db.String, nullable=False)
+    last_name = db.Column(db.String, nullable=False)
+    orcid = db.Column(db.String, nullable=False)
     roles = db.Column(ARRAY(String), nullable=False)
     status = db.Column(db.String, nullable=False)
 
@@ -28,9 +28,9 @@ class VersionContributor(db.Model):
             "id": self.id,
             "affiliations": self.affiliations,
             "email": self.email,
-            "firstname": self.firstname,
-            "lastname": self.lastname,
-            "ORCID": self.ORCID,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "orcid": self.ORCID,
             "roles": self.roles,
             "status": self.status,
         }
@@ -41,9 +41,9 @@ class VersionContributor(db.Model):
         # versionContributor.id = data["id"]
         version_contributor.affiliations = data["affiliations"]
         version_contributor.email = data["email"]
-        version_contributor.firstname = data["firstname"]
-        version_contributor.lastname = data["lastname"]
-        version_contributor.ORCID = data["ORCID"]
+        version_contributor.first_name = data["first_name"]
+        version_contributor.last_name = data["last_name"]
+        version_contributor.orcid = data["orcid"]
         version_contributor.roles = data["roles"]
         version_contributor.status = data["status"]
         return version_contributor

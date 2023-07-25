@@ -12,9 +12,9 @@ class StudyContributor(db.Model):
     id = db.Column(db.CHAR(36), primary_key=True)
     affiliations = db.Column(ARRAY(String), nullable=False)
     email = db.Column(db.String, nullable=False)
-    firstname = db.Column(db.String, nullable=False)
-    lastname = db.Column(db.String, nullable=False)
-    ORCID = db.Column(db.String, nullable=False)
+    first_name = db.Column(db.String, nullable=False)
+    last_name = db.Column(db.String, nullable=False)
+    orcid = db.Column(db.String, nullable=False)
     roles = db.Column(ARRAY(String), nullable=False)
     permission = db.Column(db.String, nullable=False)
     status = db.Column(db.String, nullable=False)
@@ -27,9 +27,9 @@ class StudyContributor(db.Model):
             "id": self.id,
             "affiliations": self.affiliations,
             "email": self.email,
-            "firstname": self.firstname,
-            "lastname": self.lastname,
-            "ORCID": self.ORCID,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "orcid": self.orcid,
             "roles": self.roles,
             "permission": self.permission,
             "status": self.status,
@@ -43,9 +43,9 @@ class StudyContributor(db.Model):
         # study_contributor.id = data["id"]
         study_contributor.affiliations = data["affiliations"]
         study_contributor.email = data["email"]
-        study_contributor.firstname = data["firstname"]
-        study_contributor.lastname = data["lastname"]
-        study_contributor.ORCID = data["ORCID"]
+        study_contributor.first_name = data["first_name"]
+        study_contributor.last_name = data["last_name"]
+        study_contributor.orcid = data["orcid"]
         study_contributor.roles = data["roles"]
         study_contributor.permission = data["permission"]
         study_contributor.status = data["status"]

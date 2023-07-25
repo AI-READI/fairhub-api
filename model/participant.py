@@ -9,8 +9,8 @@ class Participant(db.Model):
 
     __tablename__ = "participant"
     id = db.Column(db.CHAR(36), primary_key=True)
-    firstname = db.Column(db.String, nullable=False)
-    lastname = db.Column(db.String, nullable=False)
+    first_name = db.Column(db.String, nullable=False)
+    last_name = db.Column(db.String, nullable=False)
     address = db.Column(db.String, nullable=False)
     age = db.Column(db.String, nullable=False)
 
@@ -20,8 +20,8 @@ class Participant(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "firstname": self.firstname,
-            "lastname": self.lastname,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
             "address": self.address,
             "age": self.age,
         }
@@ -34,7 +34,7 @@ class Participant(db.Model):
 
     def update(self, data):
         # participant.id = data["id"]
-        self.firstname = data["firstname"]
-        self.lastname = data["lastname"]
+        self.first_name = data["first_name"]
+        self.last_name = data["last_name"]
         self.address = data["address"]
         self.age = data["age"]

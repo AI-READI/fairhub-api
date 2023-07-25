@@ -1,6 +1,6 @@
 from .db import db
 import uuid
-
+from flask import request
 
 version_contributors = db.Table(
     "version_contributors",
@@ -33,10 +33,9 @@ class DatasetVersion(db.Model):
     description = db.Column(db.String, nullable=False)
     keywords = db.Column(db.String, nullable=False)
     primary_language = db.Column(db.String, nullable=False)
-    selected_participants = db.Column(db.String, nullable=False)
     modified = db.Column(db.DateTime, nullable=True)
     published = db.Column(db.Boolean, nullable=False)
-    DOI = db.Column(db.String, nullable=False)
+    doi = db.Column(db.String, nullable=False)
     name = db.Column(db.String, nullable=False)
     contributors = db.relationship("User", secondary=version_contributors)
 
@@ -51,21 +50,21 @@ class DatasetVersion(db.Model):
             "description": self.description,
             "keywords": self.keywords,
             "primary_language": self.primary_language,
-            "selected_participants": self.selected_participants,
             "modified": self.modified,
             "published": self.published,
             "contributors": [user.to_dict() for user in self.contributors],
-            "DOI": self.DOI,
+            "doi": self.doi,
             "name": self.name,
+            "participants": [participants.to_dict() for participants in self.participants]
         }
 
     @staticmethod
     def from_data(data, dataset):
+        data = request.json()
+        data["participants"] = [participant_id for participant_id in data["participants"]]
         dataset_version_obj = DatasetVersion(dataset)
         dataset_version_obj.update(data)
-        # dataset_version_obj.versionContributors = [
-        #     VersionContributor.from_data(c) for c in data["versionContributors"]
-        # ]
+
         return dataset_version_obj
 
     def update(self, data):
@@ -73,9 +72,9 @@ class DatasetVersion(db.Model):
         self.description = data["description"]
         self.keywords = data["keywords"]
         self.primary_language = data["primary_language"]
-        self.selected_participants = data["selected_participants"]
+        # self.selected_participants = data["selected_participants"]
         self.modified = data["modified"]
         self.published = data["published"]
 
-        self.DOI = data["DOI"]
+        self.doi = data["doi"]
         self.name = data["name"]
