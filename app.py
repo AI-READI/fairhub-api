@@ -3,7 +3,6 @@ from flask_cors import CORS
 from pyfairdatatools import __version__
 from flask_restx import Api, Resource, reqparse
 
-
 import model
 from apis.dataset import dataset
 from apis.participant import participant
@@ -22,6 +21,16 @@ else:
     print("FAIRHUB_DATABASE_URL: ", config.FAIRHUB_DATABASE_URL)
     app.config["SQLALCHEMY_DATABASE_URI"] = config.FAIRHUB_DATABASE_URL
 
+api = Api(
+    app,
+    title="FAIRHUB",
+    description="The backend api system for the Vue app",
+    doc="/docs",
+)
+
+
+fhb = api.namespace("fairhub", description="FAIRhub tools")
+
 
 model.db.init_app(app)
 app.register_blueprint(study)
@@ -30,8 +39,6 @@ app.register_blueprint(participant)
 
 CORS(app)
 
-print(__version__)
-
 
 @app.cli.command("create-schema")
 def create_schema():
@@ -39,8 +46,9 @@ def create_schema():
 
 
 @app.route("/", methods=["GET"])
-def home():
-    return "Home page"
+class Home(Resource):
+    def home(self):
+        return "Home page"
 
 
 if __name__ == "__main__":
