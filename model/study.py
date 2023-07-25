@@ -49,7 +49,6 @@ class Study(db.Model):
             ],
         }
 
-
     @staticmethod
     def from_data(data):
         study = Study()
