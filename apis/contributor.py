@@ -6,7 +6,6 @@ contributor = Blueprint("contributor", __name__)
 
 @contributor.route("/study/<studyId>/contributor", methods=["GET"])
 def get_participants(studyId):
-
     contributors = User.query.all()
     return jsonify([c.to_dict() for c in contributors])
 
