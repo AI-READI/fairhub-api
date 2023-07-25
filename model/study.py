@@ -1,7 +1,6 @@
 from sqlalchemy import String
 from datetime import datetime
 from sqlalchemy.dialects.postgresql import ARRAY
-from sqlalchemy.orm import composite
 
 from .db import db
 # from .study_contributor import StudyContributor
@@ -25,8 +24,9 @@ class Study(db.Model):
     title = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
     image = db.Column(db.String, nullable=False)
+    size = db.Column(db.String, nullable=False)
     keywords = db.Column(ARRAY(String), nullable=False)
-    lastUpdated = db.Column(db.DateTime, nullable=False)
+    last_updated = db.Column(db.DateTime, nullable=False)
     dataset = db.relationship("Dataset", back_populates="study")
 
     owner = db.relationship("User")
@@ -42,14 +42,13 @@ class Study(db.Model):
             "description": self.description,
             "image": self.image,
             "keywords": self.keywords,
-            "lastUpdated": self.lastUpdated,
-            # "owner": self.owner.to_dict(),
+            "last_updated": self.last_updated,
+            "size": self.size,
             "contributors": [
                 contributor.to_dict() for contributor in self.contributors
             ],
         }
-        # print(json.dumps(list(properties.keys()), indent=4))
-        # exit()
+
 
     @staticmethod
     def from_data(data):
@@ -62,8 +61,9 @@ class Study(db.Model):
         self.title = data["title"]
         self.description = data["description"]
         self.image = data["image"]
+        self.size = data["size"]
         self.keywords = data["keywords"]
-        self.lastUpdated = datetime.now()
+        self.last_updated = datetime.now()
         # self.owner = User.from_data(data["owner"])
 
 

@@ -206,20 +206,20 @@ def getDatasetVersion(studyId, datasetId, versionId):
     # return jsonify(dic[int(studyId)][int(datasetId)][int(versionId)])
     # lastPublished = DatasetVersions.query.order_by("lastPublished").limit(1)
     # lastModified = DatasetVersions.query.order_by("lastModified").limit(1)
-    datasetVersion = DatasetVersion.query.get(versionId)
-    return jsonify(datasetVersion.to_dict())
+    dataset_version = DatasetVersion.query.get(versionId)
+    return jsonify(dataset_version.to_dict())
 
 
 @dataset.route("/study/<studyId>/dataset", methods=["POST"])
 def add_datesets(studyId):
     study = Study.query.get(studyId)
     dataset_obj = Dataset(study)
-    datasetVersion = DatasetVersion.from_data(dataset_obj, request.json)
+    dataset_version = DatasetVersion.from_data(dataset_obj, request.json)
     db.session.add(dataset_obj)
-    db.session.add(datasetVersion)
+    db.session.add(dataset_version)
     db.session.commit()
     # print(request.json)
-    return jsonify(datasetVersion.to_dict()), 201
+    return jsonify(dataset_version.to_dict()), 201
 
 
 @dataset.route("/study/<studyId>/dataset/<datasetId>", methods=["POST"])
@@ -244,4 +244,4 @@ def modify_dateset_version(studyId, datasetId, versionId):
     dataversion_obj = DatasetVersion.query.get(versionId)
     dataversion_obj.update(request.json)
     db.session.commit()
-    return jsonify(dataversion_obj.to_dict()), 201
+    return jsonify(dataversion_obj.to_dict()), 200

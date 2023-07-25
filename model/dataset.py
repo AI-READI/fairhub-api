@@ -15,31 +15,31 @@ class Dataset(db.Model):
 
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
     study = db.relationship("Study", back_populates="dataset")
-    datasetVersions = db.relationship(
+    dataset_versions = db.relationship(
         "DatasetVersion", back_populates="dataset", lazy="dynamic"
     )
 
     def to_dict(self):
-        lastPublished = self.lastPublished()
-        lastModified = self.lastModified()
+        last_published = self.last_published()
+        last_modified = self.last_modified()
         return (
             model.DatasetVersions(
-                lastPublished,
-                lastModified,
-                lastPublished.name if lastPublished else lastModified.name,
+                last_published,
+                last_modified,
+                last_published.name if last_published else last_modified.name,
                 self.id,
             )
         ).to_dict()
 
-    def lastPublished(self):
+    def last_published(self):
         return (
-            self.datasetVersions.filter(model.DatasetVersion.published == true())
+            self.dataset_versions.filter(model.DatasetVersion.published == true())
             .order_by(model.DatasetVersion.published.desc())
             .first()
         )
 
-    def lastModified(self):
-        return self.datasetVersions.order_by(
+    def last_modified(self):
+        return self.dataset_versions.order_by(
             model.DatasetVersion.modified.desc()
         ).first()
 

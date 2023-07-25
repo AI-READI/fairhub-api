@@ -18,8 +18,8 @@ class VersionContributor(db.Model):
     roles = db.Column(ARRAY(String), nullable=False)
     status = db.Column(db.String, nullable=False)
 
-    datasetVersion_id = db.Column(db.CHAR(36), db.ForeignKey("datasetVersion.id"))
-    datasetVersion = db.relationship(
+    dataset_version_id = db.Column(db.CHAR(36), db.ForeignKey("dataset_version.id"))
+    dataset_version = db.relationship(
         "DatasetVersion", back_populates="versionContributors"
     )
 
@@ -37,13 +37,13 @@ class VersionContributor(db.Model):
 
     @staticmethod
     def from_data(data):
-        versionContributor = VersionContributor()
+        version_contributor = VersionContributor()
         # versionContributor.id = data["id"]
-        versionContributor.affiliations = data["affiliations"]
-        versionContributor.email = data["email"]
-        versionContributor.firstname = data["firstname"]
-        versionContributor.lastname = data["lastname"]
-        versionContributor.ORCID = data["ORCID"]
-        versionContributor.roles = data["roles"]
-        versionContributor.status = data["status"]
-        return versionContributor
+        version_contributor.affiliations = data["affiliations"]
+        version_contributor.email = data["email"]
+        version_contributor.firstname = data["firstname"]
+        version_contributor.lastname = data["lastname"]
+        version_contributor.ORCID = data["ORCID"]
+        version_contributor.roles = data["roles"]
+        version_contributor.status = data["status"]
+        return version_contributor

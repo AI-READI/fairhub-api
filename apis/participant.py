@@ -23,16 +23,16 @@ def get_participants(studyId):
 @participant.route("/study/<studyId>/participants/add", methods=["POST"])
 def add_participants(studyId):
     study = Study.query.get(studyId)
-    addParticipant = Participant.from_data(request.json, study)
-    db.session.add(addParticipant)
+    add_participant = Participant.from_data(request.json, study)
+    db.session.add(add_participant)
     db.session.commit()
-    return jsonify(addParticipant.to_dict()), 201
+    return jsonify(add_participant.to_dict()), 201
 
 
 # in progress update participants
 @participant.route("/study/<studyId>/participants/<participantId>", methods=["POST"])
-def update_participants(studyId, participantId):
-    update_participant = Participant.query.get(participantId)
+def update_participants(studyId, participant_id):
+    update_participant = Participant.query.get(participant_id)
     update_participant.update(request.json)
     db.session.commit()
-    return jsonify(update_participant.to_dict()), 201
+    return jsonify(update_participant.to_dict()), 200
