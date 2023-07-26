@@ -56,19 +56,14 @@ class DatasetVersion(db.Model):
             "doi": self.doi,
             "name": self.name,
             "participants": [
-                participants.to_dict() for participants in self.participants
+                p.id for p in self.participants
             ],
         }
 
     @staticmethod
     def from_data(data, dataset):
-        data = request.json()
-        data["participants"] = [
-            participant_id for participant_id in data["participants"]
-        ]
         dataset_version_obj = DatasetVersion(dataset)
         dataset_version_obj.update(data)
-
         return dataset_version_obj
 
     def update(self, data):
@@ -76,9 +71,8 @@ class DatasetVersion(db.Model):
         self.description = data["description"]
         self.keywords = data["keywords"]
         self.primary_language = data["primary_language"]
-        # self.selected_participants = data["selected_participants"]
         self.modified = data["modified"]
         self.published = data["published"]
-
+        self.participants[:] = data["participants"]
         self.doi = data["doi"]
         self.name = data["name"]

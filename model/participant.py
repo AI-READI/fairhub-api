@@ -23,7 +23,7 @@ class Participant(db.Model):
             "first_name": self.first_name,
             "last_name": self.last_name,
             "address": self.address,
-            "age": self.age,
+            "age": self.age
         }
 
     @staticmethod
@@ -33,7 +33,7 @@ class Participant(db.Model):
         return participant
 
     def update(self, data):
-        # participant.id = data["id"]
+        self.id = data["id"]
         self.first_name = data["first_name"]
         self.last_name = data["last_name"]
         self.address = data["address"]
