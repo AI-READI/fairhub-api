@@ -7,13 +7,14 @@ dataset = Blueprint("dataset", __name__)
 
 @dataset.route("/study/<studyId>/dataset", methods=["GET"])
 def getDatasets(studyId):
-
     study = Study.query.get(studyId)
     datasets = Dataset.query.filter_by(study=study)
     return jsonify([d.to_dict() for d in datasets])
 
 
-@dataset.route("/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["GET"])
+@dataset.route(
+    "/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["GET"]
+)
 def getDatasetVersion(studyId, datasetId, versionId):
     # if int(studyId) not in dic:
     #     return "not found", 404

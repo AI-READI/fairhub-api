@@ -23,7 +23,7 @@ class Participant(db.Model):
             "first_name": self.first_name,
             "last_name": self.last_name,
             "address": self.address,
-            "age": self.age
+            "age": self.age,
         }
 
     @staticmethod

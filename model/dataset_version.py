@@ -55,9 +55,7 @@ class DatasetVersion(db.Model):
             "contributors": [user.to_dict() for user in self.contributors],
             "doi": self.doi,
             "name": self.name,
-            "participants": [
-                p.id for p in self.participants
-            ],
+            "participants": [p.id for p in self.participants],
         }
 
     @staticmethod
