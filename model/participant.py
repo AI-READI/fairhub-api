@@ -15,7 +15,7 @@ class Participant(db.Model):
     age = db.Column(db.String, nullable=False)
 
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
-    study = db.relationship("Study")
+    study = db.relationship("Study", back_populates="participants")
 
     def to_dict(self):
         return {

@@ -1,6 +1,6 @@
 import random
 from flask import Blueprint, jsonify, request
-from model import Study, db, User
+from model import Study, db, User, Participant, Dataset, DatasetVersion
 
 
 study = Blueprint("study", __name__)
@@ -55,7 +55,7 @@ def update_user_profile():
     return jsonify(data), 201
 
 
-@study.route("/study/<studyId>", methods=["POST"])
+@study.route("/study/<studyId>", methods=["PUT"])
 def update_study(studyId):
     update_study = Study.query.get(studyId)
     # if not addStudy.validate():
@@ -64,3 +64,21 @@ def update_study(studyId):
     db.session.commit()
 
     return jsonify(update_study.to_dict()), 200
+
+
+
+@study.route("/study/<studyId>", methods=["DELETE"])
+def delete_study(studyId):
+    delete_study = Study.query.get(studyId)
+    for d in delete_study.dataset:
+        for version in d.dataset_versions:
+            version.participants.clear()
+    for d in delete_study.dataset:
+        for version in d.dataset_versions:
+            db.session.delete(version)
+        db.session.delete(d)
+    for participant in delete_study.participants:
+        db.session.delete(participant)
+    db.session.delete(delete_study)
+    db.session.commit()
+    return "deleted", 204

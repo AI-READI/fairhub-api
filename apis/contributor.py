@@ -11,9 +11,10 @@ def get_participants(studyId):
 
 
 # in progress update participants
-@contributor.route("/study/<studyId>/contributor/<contributor_id>", methods=["POST"])
+
+@contributor.route("/study/<studyId>/contributor/<contributor_id>", methods=["DELETE"])
 def update_participants(studyId, contributor_id):
-    update_contributor = User.query.get(contributor_id)
-    update_contributor.update(request.json)
+    contributors = User.query.get(contributor_id)
+    contributors.update(request.json)
+    db.session.delete(contributors)
     db.session.commit()
-    return jsonify(update_contributor.to_dict()), 200

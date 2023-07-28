@@ -34,6 +34,8 @@ class Study(db.Model):
     owner = db.relationship("User")
     owner_id = db.Column(db.CHAR(36), db.ForeignKey("user.id"))
     contributors = db.relationship("User", secondary=study_contributors)
+    participants = db.relationship(
+        "Participant", back_populates="study")
 
     def to_dict(self):
         return {
