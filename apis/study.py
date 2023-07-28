@@ -66,7 +66,6 @@ def update_study(studyId):
     return jsonify(update_study.to_dict()), 200
 
 
-
 @study.route("/study/<studyId>", methods=["DELETE"])
 def delete_study(studyId):
     delete_study = Study.query.get(studyId)

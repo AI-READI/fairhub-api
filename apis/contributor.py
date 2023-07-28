@@ -12,6 +12,7 @@ def get_participants(studyId):
 
 # in progress update participants
 
+
 @contributor.route("/study/<studyId>/contributor/<contributor_id>", methods=["DELETE"])
 def update_participants(studyId, contributor_id):
     contributors = User.query.get(contributor_id)
