@@ -1,5 +1,6 @@
 from .db import db
 import uuid
+from model import dataset_version
 
 
 class Participant(db.Model):
@@ -16,7 +17,9 @@ class Participant(db.Model):
 
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
     study = db.relationship("Study", back_populates="participants")
-
+    dataset_versions = db.relationship(
+        "DatasetVersion", back_populates="participants", secondary=dataset_version.version_participants
+    )
     def to_dict(self):
         return {
             "id": self.id,

@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, Response
 from model import Participant, db, Study
 
 participant = Blueprint("participant", __name__)
@@ -26,3 +26,11 @@ def update_participants(studyId, participant_id):
     update_participant.update(request.json)
     db.session.commit()
     return jsonify(update_participant.to_dict()), 200
+
+
+@participant.route("/study/<studyId>/participants/<participant_id>", methods=["DELETE"])
+def delete_participants(studyId, participant_id):
+    delete_participant = Participant.query.get(participant_id)
+    db.session.delete(delete_participant)
+    db.session.commit()
+    return Response(status=204)
