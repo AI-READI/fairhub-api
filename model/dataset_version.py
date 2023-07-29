@@ -15,9 +15,7 @@ version_contributors = db.Table(
 version_participants = db.Table(
     "version_participants",
     db.Model.metadata,
-    db.Column(
-        "dataset_version_id", db.ForeignKey("dataset_version.id"), primary_key=True
-    ),
+    db.Column("dataset_version_id", db.ForeignKey("dataset_version.id"), primary_key=True),
     db.Column("participant_id", db.ForeignKey("participant.id"), primary_key=True),
 )
 
@@ -37,10 +35,10 @@ class DatasetVersion(db.Model):
     published = db.Column(db.Boolean, nullable=False)
     doi = db.Column(db.String, nullable=False)
     name = db.Column(db.String, nullable=False)
-    contributors = db.relationship("User", secondary=version_contributors)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
     dataset = db.relationship("Dataset", back_populates="dataset_versions")
+    contributors = db.relationship("User", secondary=version_contributors)
     participants = db.relationship("Participant", secondary=version_participants)
 
     def to_dict(self):

@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, Response
 
 from model import Dataset, DatasetVersion, db, Study, Participant
 
@@ -23,7 +23,7 @@ def getDatasetVersion(studyId, datasetId, versionId):
 
 
 @dataset.route("/study/<studyId>/dataset", methods=["POST"])
-def add_datesets(studyId):
+def add_datasets(studyId):
     study = Study.query.get(studyId)
     dataset_obj = Dataset(study)
     dataset_version = DatasetVersion.from_data(dataset_obj, request.json)
@@ -50,11 +50,22 @@ def add_dataset_version(studyId, datasetId):
     return jsonify(dataset_version.to_dict()), 201
 
 
-@dataset.route(
-    "/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["PUT"]
+@dataset.route( "/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["PUT"]
 )
 def modify_dateset_version(studyId, datasetId, versionId):
-    dataversion_obj = DatasetVersion.query.get(versionId)
-    dataversion_obj.update(request.json)
+    data_version_obj = DatasetVersion.query.get(versionId)
+    data_version_obj.update(request.json)
     db.session.commit()
-    return jsonify(dataversion_obj.to_dict()), 200
+    return jsonify(data_version_obj.to_dict()), 200
+
+
+@dataset.route( "/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["DELETE"])
+def delete_dateset_version(studyId, datasetId, versionId):
+    data_obj = Dataset.query.get(datasetId)
+    for version in data_obj.dataset_versions:
+        db.session.delete(version)
+        db.session.commit()
+    db.session.delete(data_obj)
+    db.session.commit()
+    return Response(status=204)
+
