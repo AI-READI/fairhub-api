@@ -50,7 +50,8 @@ def add_dataset_version(studyId, datasetId):
     return jsonify(dataset_version.to_dict()), 201
 
 
-@dataset.route( "/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["PUT"]
+@dataset.route(
+    "/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["PUT"]
 )
 def modify_dateset_version(studyId, datasetId, versionId):
     data_version_obj = DatasetVersion.query.get(versionId)
@@ -59,7 +60,9 @@ def modify_dateset_version(studyId, datasetId, versionId):
     return jsonify(data_version_obj.to_dict()), 200
 
 
-@dataset.route( "/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["DELETE"])
+@dataset.route(
+    "/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["DELETE"]
+)
 def delete_dateset_version(studyId, datasetId, versionId):
     data_obj = Dataset.query.get(datasetId)
     for version in data_obj.dataset_versions:
@@ -68,4 +71,3 @@ def delete_dateset_version(studyId, datasetId, versionId):
     db.session.delete(data_obj)
     db.session.commit()
     return Response(status=204)
-
