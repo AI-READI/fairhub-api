@@ -28,9 +28,9 @@ def getStudies():
     return jsonify([s.to_dict() for s in studies])
 
 
-# @study.route("/study/<studyId>", methods=["GET"])
-# def getStudy(studyId):
-#     study1 = Study.query.get(studyId)
+# @study.route("/study/<study_id>", methods=["GET"])
+# def getStudy(study_id):
+#     study1 = Study.query.get(study_id)
 #     return jsonify(study1.to_dict())
 #
 #
@@ -55,9 +55,9 @@ def update_user_profile():
     return jsonify(data), 201
 
 
-# @study.route("/study/<studyId>", methods=["PUT"])
-# def update_study(studyId):
-#     update_study = Study.query.get(studyId)
+# @study.route("/study/<study_id>", methods=["PUT"])
+# def update_study(study_id):
+#     update_study = Study.query.get(study_id)
 #     # if not addStudy.validate():
 #     #     return 'error', 422
 #     update_study.update(request.json)
@@ -66,9 +66,9 @@ def update_user_profile():
 #     return jsonify(update_study.to_dict()), 200
 
 
-# @study.route("/study/<studyId>", methods=["DELETE"])
-# def delete_study(studyId):
-#     delete_study = Study.query.get(studyId)
+# @study.route("/study/<study_id>", methods=["DELETE"])
+# def delete_study(study_id):
+#     delete_study = Study.query.get(study_id)
 #     for d in delete_study.dataset:
 #         for version in d.dataset_versions:
 #             version.participants.clear()

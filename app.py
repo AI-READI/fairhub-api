@@ -68,24 +68,24 @@ class GetStudy(Resource):
         return jsonify(add_study.to_dict())
 
 
-@api.route("/study/<studyId>")
+@api.route("/study/<study_id>")
 class UpdateStudy(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def get(self, studyId: int):
-        study1 = Study.query.get(studyId)
+    def get(self, study_id: int):
+        study1 = Study.query.get(study_id)
         return jsonify(study1.to_dict())
 
-    def put(self, studyId:int):
-        update_study = Study.query.get(studyId)
+    def put(self, study_id: int):
+        update_study = Study.query.get(study_id)
         # if not addStudy.validate():
         #     return 'error', 422
         update_study.update(request.json)
         db.session.commit()
         return jsonify(update_study.to_dict())
 
-    def delete(self, studyId: int):
-        delete_study = Study.query.get(studyId)
+    def delete(self, study_id: int):
+        delete_study = Study.query.get(study_id)
         for d in delete_study.dataset:
             for version in d.dataset_versions:
                 version.participants.clear()
@@ -100,34 +100,34 @@ class UpdateStudy(Resource):
         return "", 204
 
 
-@api.route("/study/<studyId>/participants")
+@api.route("/study/<study_id>/participants")
 class AddParticipant(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
 
-    def get(self, studyId: int):
+    def get(self, study_id: int):
         participants = Participant.query.all()
         return jsonify([p.to_dict() for p in participants])
 
-    def post(self, studyId:int):
-        study = Study.query.get(studyId)
+    def post(self, study_id:int):
+        study = Study.query.get(study_id)
         add_participant = Participant.from_data(request.json, study)
         db.session.add(add_participant)
         db.session.commit()
         return jsonify(add_participant.to_dict()), 201
 
 
-@api.route("/study/<studyId>/participants/<participant_id>")
+@api.route("/study/<study_id>/participants/<participant_id>")
 class UpdateParticipant(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def put(self, studyId, participant_id: int):
+    def put(self, study_id, participant_id: int):
         update_participant = Participant.query.get(participant_id)
         update_participant.update(request.json)
         db.session.commit()
         return jsonify(update_participant.to_dict())
 
-    def delete(self, studyId, participant_id: int):
+    def delete(self, study_id, participant_id: int):
         delete_participant = Participant.query.get(participant_id)
         db.session.delete(delete_participant)
         db.session.commit()
@@ -135,17 +135,17 @@ class UpdateParticipant(Resource):
 
 
 
-@api.route("/study/<studyId>/dataset")
+@api.route("/study/<study_id>/dataset")
 class AddDataset(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
-    def get(self, studyId):
-        study = Study.query.get(studyId)
+    def get(self, study_id):
+        study = Study.query.get(study_id)
         datasets = Dataset.query.filter_by(study=study)
         return jsonify([d.to_dict() for d in datasets])
 
-    def post(self, studyId):
-        study = Study.query.get(studyId)
+    def post(self, study_id):
+        study = Study.query.get(study_id)
         dataset_obj = Dataset(study)
         dataset_version = DatasetVersion.from_data(dataset_obj, request.json)
         db.session.add(dataset_obj)
@@ -154,23 +154,22 @@ class AddDataset(Resource):
         return jsonify(dataset_version.to_dict())
 
 
-
-@api.route("/study/<studyId>/dataset/<datasetId>/version/<versionId>")
+@api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>")
 class UpdateDataset(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
-    def get(studyId, datasetId, versionId):
-        # if int(studyId) not in dic:
+    def get(study_id, dataset_id, version_id):
+        # if int(study_id) not in dic:
         #     return "not found", 404
-        dataset_version = DatasetVersion.query.get(versionId)
+        dataset_version = DatasetVersion.query.get(version_id)
         return jsonify(dataset_version.to_dict())
-    def put(self, studyId, datasetId, versionId):
-        data_version_obj = DatasetVersion.query.get(versionId)
+    def put(self, study_id, dataset_id, version_id):
+        data_version_obj = DatasetVersion.query.get(version_id)
         data_version_obj.update(request.json)
         db.session.commit()
         return jsonify(data_version_obj.to_dict())
-    def delete(self, studyId, datasetId, versionId):
-        data_obj = Dataset.query.get(datasetId)
+    def delete(self, study_id, dataset_id, version_id):
+        data_obj = Dataset.query.get(dataset_id)
         for version in data_obj.dataset_versions:
             db.session.delete(version)
             db.session.commit()
@@ -180,14 +179,14 @@ class UpdateDataset(Resource):
 
 
 
-@api.route("/study/<studyId>/dataset/<datasetId>/version")
+@api.route("/study/<study_id>/dataset/<dataset_id>/version")
 @api.response(201, "Success")
 @api.response(400, "Validation Error")
 class PostDataset(Resource):
-    def post(studyId, datasetId):
+    def post(study_id, dataset_id):
         data = request.json
         data["participants"] = [Participant.query.get(i) for i in data["participants"]]
-        data_obj = Dataset.query.get(datasetId)
+        data_obj = Dataset.query.get(dataset_id)
         dataset_version = DatasetVersion.from_data(data, data_obj)
         db.session.add(dataset_version)
         db.session.commit()
