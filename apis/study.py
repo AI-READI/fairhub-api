@@ -28,22 +28,22 @@ def getStudies():
     return jsonify([s.to_dict() for s in studies])
 
 
-@study.route("/study/<studyId>", methods=["GET"])
-def getStudy(studyId):
-    study1 = Study.query.get(studyId)
-    return jsonify(study1.to_dict())
-
-
-@study.route("/study/add", methods=["POST"])
-def add_study():
-    add_study = Study.from_data(request.json)
-    # if not addStudy.validate():
-    #     return 'error', 422
-    db.session.add(add_study)
-    db.session.commit()
-
-    return jsonify(add_study.to_dict()), 201
-
+# @study.route("/study/<studyId>", methods=["GET"])
+# def getStudy(studyId):
+#     study1 = Study.query.get(studyId)
+#     return jsonify(study1.to_dict())
+#
+#
+# @study.route("/study/add", methods=["POST"])
+# def add_study():
+#     add_study = Study.from_data(request.json)
+#     # if not addStudy.validate():
+#     #     return 'error', 422
+#     db.session.add(add_study)
+#     db.session.commit()
+#
+#     return jsonify(add_study.to_dict()), 201
+#
 
 @study.route("/viewProfile", methods=["POST"])
 def update_user_profile():
@@ -55,29 +55,29 @@ def update_user_profile():
     return jsonify(data), 201
 
 
-@study.route("/study/<studyId>", methods=["PUT"])
-def update_study(studyId):
-    update_study = Study.query.get(studyId)
-    # if not addStudy.validate():
-    #     return 'error', 422
-    update_study.update(request.json)
-    db.session.commit()
+# @study.route("/study/<studyId>", methods=["PUT"])
+# def update_study(studyId):
+#     update_study = Study.query.get(studyId)
+#     # if not addStudy.validate():
+#     #     return 'error', 422
+#     update_study.update(request.json)
+#     db.session.commit()
+#
+#     return jsonify(update_study.to_dict()), 200
 
-    return jsonify(update_study.to_dict()), 200
 
-
-@study.route("/study/<studyId>", methods=["DELETE"])
-def delete_study(studyId):
-    delete_study = Study.query.get(studyId)
-    for d in delete_study.dataset:
-        for version in d.dataset_versions:
-            version.participants.clear()
-    for d in delete_study.dataset:
-        for version in d.dataset_versions:
-            db.session.delete(version)
-        db.session.delete(d)
-    for participant in delete_study.participants:
-        db.session.delete(participant)
-    db.session.delete(delete_study)
-    db.session.commit()
-    return "deleted", 204
+# @study.route("/study/<studyId>", methods=["DELETE"])
+# def delete_study(studyId):
+#     delete_study = Study.query.get(studyId)
+#     for d in delete_study.dataset:
+#         for version in d.dataset_versions:
+#             version.participants.clear()
+#     for d in delete_study.dataset:
+#         for version in d.dataset_versions:
+#             db.session.delete(version)
+#         db.session.delete(d)
+#     for participant in delete_study.participants:
+#         db.session.delete(participant)
+#     db.session.delete(delete_study)
+#     db.session.commit()
+#     return "deleted", 204
