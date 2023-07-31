@@ -15,7 +15,9 @@ version_contributors = db.Table(
 version_participants = db.Table(
     "version_participants",
     db.Model.metadata,
-    db.Column("dataset_version_id", db.ForeignKey("dataset_version.id"), primary_key=True),
+    db.Column(
+        "dataset_version_id", db.ForeignKey("dataset_version.id"), primary_key=True
+    ),
     db.Column("participant_id", db.ForeignKey("participant.id"), primary_key=True),
 )
 
