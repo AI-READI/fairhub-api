@@ -45,6 +45,7 @@ def getStudies():
 #     return jsonify(add_study.to_dict()), 201
 #
 
+
 @study.route("/viewProfile", methods=["POST"])
 def update_user_profile():
     data = request.json

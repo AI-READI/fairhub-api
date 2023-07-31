@@ -53,6 +53,7 @@ class Home(Resource):
     def home(self):
         return "Home page"
 
+
 @api.route("/study")
 class GetStudy(Resource):
     @api.response(200, "Success")
@@ -104,12 +105,11 @@ class UpdateStudy(Resource):
 class AddParticipant(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-
     def get(self, study_id: int):
         participants = Participant.query.all()
         return jsonify([p.to_dict() for p in participants])
 
-    def post(self, study_id:int):
+    def post(self, study_id: int):
         study = Study.query.get(study_id)
         add_participant = Participant.from_data(request.json, study)
         db.session.add(add_participant)
@@ -132,7 +132,6 @@ class UpdateParticipant(Resource):
         db.session.delete(delete_participant)
         db.session.commit()
         return Response(status=204)
-
 
 
 @api.route("/study/<study_id>/dataset")
@@ -163,11 +162,13 @@ class UpdateDataset(Resource):
         #     return "not found", 404
         dataset_version = DatasetVersion.query.get(version_id)
         return jsonify(dataset_version.to_dict())
+
     def put(self, study_id, dataset_id, version_id):
         data_version_obj = DatasetVersion.query.get(version_id)
         data_version_obj.update(request.json)
         db.session.commit()
         return jsonify(data_version_obj.to_dict())
+
     def delete(self, study_id, dataset_id, version_id):
         data_obj = Dataset.query.get(dataset_id)
         for version in data_obj.dataset_versions:
@@ -176,7 +177,6 @@ class UpdateDataset(Resource):
         db.session.delete(data_obj)
         db.session.commit()
         return Response(status=204)
-
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version")
@@ -191,6 +191,7 @@ class PostDataset(Resource):
         db.session.add(dataset_version)
         db.session.commit()
         return jsonify(dataset_version.to_dict())
+
 
 if __name__ == "__main__":
     app.run(debug=True)
