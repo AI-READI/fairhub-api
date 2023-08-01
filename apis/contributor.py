@@ -15,10 +15,10 @@ contributor = api.model(
 
 @api.route("/study/<study_id>/contributor")
 class AddParticipant(Resource):
-    @api.doc('contributor list')
+    @api.doc("contributor list")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.param('id', 'The contributor identifier')
+    @api.param("id", "The contributor identifier")
     @api.marshal_with(contributor)
     def get(self, study_id: int):
         contributors = User.query.all()
