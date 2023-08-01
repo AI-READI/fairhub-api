@@ -13,8 +13,7 @@ participants = api.model(
         "last_name": fields.String(required=True),
         "firstname": fields.String(required=True),
         "address": fields.String(required=True),
-        "age": fields.String(required=True)
-
+        "age": fields.String(required=True),
     },
 )
 

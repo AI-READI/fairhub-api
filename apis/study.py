@@ -5,11 +5,11 @@ from model import Study, db, User
 
 api = Namespace("study", description="study operations", path="/")
 
-owner= {
+owner = {
     "id": str,
     "affiliations": str,
     "email": str,
-    "first_name":str,
+    "first_name": str,
     "last_name": str,
     "orcid": str,
     "roles": [],

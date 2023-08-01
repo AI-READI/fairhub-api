@@ -16,8 +16,8 @@ contributor = api.model(
         "orcid": fields.String(required=True),
         "roles": fields.List(fields.String, required=True),
         "status": fields.String(required=True),
-        "permission": fields.String(required=True)
-    }
+        "permission": fields.String(required=True),
+    },
 )
 
 
