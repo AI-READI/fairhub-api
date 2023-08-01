@@ -5,7 +5,7 @@ from flask import jsonify, request
 from model import Study, db, Dataset, DatasetVersion
 from flask_restx import Resource, Namespace
 
-api = Namespace('dataset', description='dataset operations',  path='/')
+api = Namespace("dataset", description="dataset operations", path="/")
 
 
 @api.route("/study/<study_id>/dataset")
@@ -18,12 +18,14 @@ class AddDataset(Resource):
         return jsonify([d.to_dict() for d in datasets])
 
     def post(self, study_id):
-        data=request.json
+        data = request.json
         study = Study.query.get(study_id)
-        #&&study_id
-        #todo if study.participant id== different study Throw error
+        # &&study_id
+        # todo if study.participant id== different study Throw error
         # query based on part id and study id (prolly filter but need to find right syntax)
-        data["participants"] = [Participant.query.get(i).first() for i in data["participants"]]
+        data["participants"] = [
+            Participant.query.get(i).first() for i in data["participants"]
+        ]
         dataset_obj = Dataset(study)
         dataset_version = DatasetVersion.from_data(dataset_obj, data)
         db.session.add(dataset_obj)
@@ -71,9 +73,8 @@ class PostDataset(Resource):
         db.session.commit()
         return jsonify(dataset_version.to_dict())
 
+
 # @dataset.route("/study/<study_id>/dataset/<dataset_id>", methods=["POST"])
 # def update_dataset(study_id, dataset_id):
 #     pass
 #
-
-
