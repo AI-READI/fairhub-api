@@ -1,21 +1,23 @@
-from flask import Blueprint, jsonify, request
-from model import db, User
+from model import User
+from flask_restx import Resource, Namespace, fields
+api = Namespace('contributor', description='contributors',  path='/')
 
-contributor = Blueprint("contributor", __name__)
+contributor = api.model('Contributor', {
+    'id': fields.String(required=True),
+    'firstname': fields.String(required=True),
 
-
-@contributor.route("/study/<study_id>/contributor", methods=["GET"])
-def get_participants(study_id):
-    contributors = User.query.all()
-    return jsonify([c.to_dict() for c in contributors])
-
-
-# in progress update participants
+})
 
 
-@contributor.route("/study/<study_id>/contributor/<contributor_id>", methods=["DELETE"])
-def update_participants(study_id, contributor_id):
-    contributors = User.query.get(contributor_id)
-    contributors.update(request.json)
-    db.session.delete(contributors)
-    db.session.commit()
+@api.route("/study/<study_id>/contributor")
+class AddParticipant(Resource):
+    @api.doc('contributor list')
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    @api.param('id', 'The contributor identifier')
+    @api.marshal_with(contributor)
+    def get(self, study_id: int):
+        contributors = User.query.all()
+        return [c.to_dict() for c in contributors]
+
+

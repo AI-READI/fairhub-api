@@ -1,6 +1,7 @@
 from .db import db
 import uuid
 from flask import request
+from model import Dataset
 
 version_contributors = db.Table(
     "version_contributors",
@@ -50,7 +51,7 @@ class DatasetVersion(db.Model):
             "description": self.description,
             "keywords": self.keywords,
             "primary_language": self.primary_language,
-            "modified": self.modified,
+            "modified": str(self.modified),
             "published": self.published,
             "contributors": [user.to_dict() for user in self.contributors],
             "doi": self.doi,
@@ -59,7 +60,7 @@ class DatasetVersion(db.Model):
         }
 
     @staticmethod
-    def from_data(data, dataset):
+    def from_data(dataset: Dataset, data: dict):
         dataset_version_obj = DatasetVersion(dataset)
         dataset_version_obj.update(data)
         return dataset_version_obj

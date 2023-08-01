@@ -43,7 +43,7 @@ class Study(db.Model):
             "description": self.description,
             "image": self.image,
             "keywords": self.keywords,
-            "last_updated": self.last_updated,
+            "last_updated": str(self.last_updated),
             "size": self.size,
             # "contributors": [
             #     contributor.to_dict() for contributor in self.contributors
