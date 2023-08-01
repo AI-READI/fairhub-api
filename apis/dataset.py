@@ -1,10 +1,19 @@
 from flask import Response, jsonify, request
-from flask_restx import Namespace, Resource
+from flask_restx import Namespace, Resource, fields
 
 from model import Dataset, DatasetVersion, Participant, Study, db
 
 api = Namespace("dataset", description="dataset operations", path="/")
+dataset = api.model(
+    "Dataset",
+    {
+        "id": fields.String(required=True),
+        "name": fields.String(required=True),
+        "title": fields.String(required=True),
+        "description": fields.String(required=True),
 
+    },
+)
 
 @api.route("/study/<study_id>/dataset")
 class AddDataset(Resource):

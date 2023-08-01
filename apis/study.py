@@ -1,10 +1,21 @@
 from flask import request
 from flask_restx import Namespace, Resource, fields
 
-from model import Study, db
+from model import Study, db, User
 
 api = Namespace("study", description="study operations", path="/")
 
+owner= {
+    "id": str,
+    "affiliations": str,
+    "email": str,
+    "first_name":str,
+    "last_name": str,
+    "orcid": str,
+    "roles": [],
+    "permission": str,
+    "status": str,
+}
 study = api.model(
     "Study",
     {
@@ -16,7 +27,7 @@ study = api.model(
         "size": fields.String(required=True),
         "keywords": fields.String(required=True),
         "last_updated": fields.String(required=True),
-        "owner": fields.String(required=True),
+        "owner": fields.Nested(owner, required=True),
     },
 )
 

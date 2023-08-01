@@ -9,7 +9,15 @@ contributor = api.model(
     {
         "id": fields.String(required=True),
         "firstname": fields.String(required=True),
-    },
+        "affiliations": fields.List(fields.String, required=True),
+        "email": fields.String(required=True),
+        "first_name": fields.String(required=True),
+        "last_name": fields.String(required=True),
+        "orcid": fields.String(required=True),
+        "roles": fields.List(fields.String, required=True),
+        "status": fields.String(required=True),
+        "permission": fields.String(required=True)
+    }
 )
 
 

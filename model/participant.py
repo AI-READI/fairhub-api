@@ -1,6 +1,6 @@
 import uuid
 
-from model import Study, dataset_version
+import model
 
 from .db import db
 
@@ -22,7 +22,7 @@ class Participant(db.Model):
     dataset_versions = db.relationship(
         "DatasetVersion",
         back_populates="participants",
-        secondary=dataset_version.version_participants,
+        secondary=model.dataset_version.version_participants,
     )
 
     def to_dict(self):
@@ -35,7 +35,7 @@ class Participant(db.Model):
         }
 
     @staticmethod
-    def from_data(data: dict, study: Study):
+    def from_data(data: dict, study):
         participant = Participant(study)
         participant.update(data)
         return participant

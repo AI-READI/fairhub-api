@@ -1,9 +1,7 @@
-from flask import Response
-from model import Participant
-from flask import jsonify, request
-from model import Study, db
-from flask_restx import Resource, Namespace, fields
+from flask import Response, jsonify, request
+from flask_restx import Namespace, Resource, fields
 
+from model import Participant, Study, db
 
 api = Namespace("participant", description="participant operations", path="/")
 
@@ -11,7 +9,12 @@ participants = api.model(
     "Study",
     {
         "id": fields.String(required=True),
+        "first_name": fields.String(required=True),
+        "last_name": fields.String(required=True),
         "firstname": fields.String(required=True),
+        "address": fields.String(required=True),
+        "age": fields.String(required=True)
+
     },
 )
 
@@ -21,7 +24,7 @@ class AddParticipant(Resource):
     @api.doc("participants")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.param("id", "The study identifier")
+    @api.param("id", "Adding participants")
     @api.marshal_with(participants)
     def get(self, study_id: int):
         participants = Participant.query.all()

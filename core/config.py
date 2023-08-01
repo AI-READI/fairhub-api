@@ -1,6 +1,7 @@
 """Configuration for the application."""
 
 import os
+
 from dotenv import dotenv_values
 
 FAIRHUB_DATABASE_URL = os.environ.get("FAIRHUB_DATABASE_URL")
