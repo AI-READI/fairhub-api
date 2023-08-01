@@ -1,9 +1,12 @@
-from flask_cors import CORS
-from pyfairdatatools import __version__
-import model
-from core import config
 from flask import Flask
+from flask_cors import CORS
+
+import model
 from apis import api
+from core import config
+
+# from pyfairdatatools import __version__
+
 
 app = Flask(__name__)
 
@@ -30,7 +33,7 @@ def create_schema():
 
 #
 # @api.route("/")
-# @api.doc(responses={404: "Todo not found"})
+# @api.doc(responses={404: "not found"})
 # class Home(Resource):
 #     def home(self):
 #         return "Home page"

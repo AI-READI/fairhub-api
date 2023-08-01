@@ -1,6 +1,8 @@
+import uuid
+
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
-import uuid
+
 from .db import db
 
 
@@ -36,7 +38,7 @@ class StudyContributor(db.Model):
         }
 
     @staticmethod
-    def from_data(data):
+    def from_data(data: dict):
         study_contributor = StudyContributor()
         # for i in data.values():
         #     print(i)

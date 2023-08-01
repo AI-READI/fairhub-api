@@ -1,12 +1,13 @@
-from sqlalchemy import String
-from datetime import datetime
-from sqlalchemy.dialects.postgresql import ARRAY
-import model
-from .db import db
-
 # from .study_contributor import StudyContributor
 import uuid
+from datetime import datetime
 
+from sqlalchemy import String
+from sqlalchemy.dialects.postgresql import ARRAY
+
+import model
+
+from .db import db
 
 study_contributors = db.Table(
     "study_contributors",
@@ -52,7 +53,7 @@ class Study(db.Model):
         }
 
     @staticmethod
-    def from_data(data):
+    def from_data(data: dict):
         study = Study()
         study.update(data)
 

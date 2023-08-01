@@ -1,5 +1,7 @@
-from sqlalchemy.sql.expression import true
 import uuid
+
+from sqlalchemy.sql.expression import true
+
 import model
 
 from .db import db
@@ -44,7 +46,7 @@ class Dataset(db.Model):
         ).first()
 
     @staticmethod
-    def from_data(data):
+    def from_data(data: dict):
         dataset = Dataset()
         # dataset.id = data["id"]
         for i in data.values():

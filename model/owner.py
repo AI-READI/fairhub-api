@@ -15,7 +15,7 @@ class Owner:
         }
 
     @staticmethod
-    def from_data(data):
+    def from_data(data: dict):
         owner = Owner("ORCID", "name", "email")
         owner.ORCID = data["ORCID"]
         owner.name = data["name"]

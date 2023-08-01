@@ -7,7 +7,7 @@ class DatasetVersions:
         last_published: model.DatasetVersion,
         last_modified: model.DatasetVersion,
         name: str,
-        id: int,
+        id: str,
     ):
         self.latest_version = last_modified.id
         self.published_version = last_published.id
@@ -26,7 +26,8 @@ class DatasetVersions:
             "id": self.id,
         }
 
-    def from_data(data):
+    @staticmethod
+    def from_data(data: dict):
         dataset_versions = DatasetVersions()
         dataset_versions.id = data["id"]
         dataset_versions.latest_version = data["latest_version"]

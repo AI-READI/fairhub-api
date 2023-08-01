@@ -1,6 +1,8 @@
-from .db import db
 import uuid
-from model import dataset_version
+
+from model import Study, dataset_version
+
+from .db import db
 
 
 class Participant(db.Model):
@@ -33,7 +35,7 @@ class Participant(db.Model):
         }
 
     @staticmethod
-    def from_data(data, study):
+    def from_data(data: dict, study: Study):
         participant = Participant(study)
         participant.update(data)
         return participant

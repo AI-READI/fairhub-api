@@ -1,7 +1,8 @@
-from .db import db
 import uuid
-from flask import request
+
 from model import Dataset
+
+from .db import db
 
 version_contributors = db.Table(
     "version_contributors",

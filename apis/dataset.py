@@ -1,11 +1,9 @@
-from flask import Blueprint
-from flask import Response
-from model import Participant
-from flask import jsonify, request
-from model import Study, db, Dataset, DatasetVersion
-from flask_restx import Resource, Namespace
+from flask import Response, jsonify, request
+from flask_restx import Namespace, Resource
 
-api = Namespace('dataset', description='dataset operations',  path='/')
+from model import Dataset, DatasetVersion, Participant, Study, db
+
+api = Namespace("dataset", description="dataset operations", path="/")
 
 
 @api.route("/study/<study_id>/dataset")
@@ -18,12 +16,14 @@ class AddDataset(Resource):
         return jsonify([d.to_dict() for d in datasets])
 
     def post(self, study_id):
-        data=request.json
+        data = request.json
         study = Study.query.get(study_id)
-        #&&study_id
-        #todo if study.participant id== different study Throw error
+        # &&study_id
+        # todo if study.participant id== different study Throw error
         # query based on part id and study id (prolly filter but need to find right syntax)
-        data["participants"] = [Participant.query.get(i).first() for i in data["participants"]]
+        data["participants"] = [
+            Participant.query.get(i).first() for i in data["participants"]
+        ]
         dataset_obj = Dataset(study)
         dataset_version = DatasetVersion.from_data(dataset_obj, data)
         db.session.add(dataset_obj)
@@ -36,7 +36,7 @@ class AddDataset(Resource):
 class UpdateDataset(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
-    def get(study_id, dataset_id, version_id):
+    def get(self, study_id, dataset_id, version_id):
         # if int(study_id) not in dic:
         #     return "not found", 404
         dataset_version = DatasetVersion.query.get(version_id)
@@ -62,18 +62,17 @@ class UpdateDataset(Resource):
 @api.response(201, "Success")
 @api.response(400, "Validation Error")
 class PostDataset(Resource):
-    def post(study_id, dataset_id):
+    def post(self, study_id: int, dataset_id: int):
         data = request.json
         data["participants"] = [Participant.query.get(i) for i in data["participants"]]
         data_obj = Dataset.query.get(dataset_id)
-        dataset_version = DatasetVersion.from_data(data, data_obj)
+        dataset_version = DatasetVersion.from_data(data_obj, data)
         db.session.add(dataset_version)
         db.session.commit()
         return jsonify(dataset_version.to_dict())
+
 
 # @dataset.route("/study/<study_id>/dataset/<dataset_id>", methods=["POST"])
 # def update_dataset(study_id, dataset_id):
 #     pass
 #
-
-
