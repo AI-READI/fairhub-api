@@ -91,7 +91,7 @@ flake8 = "^6.0.0"
 [tool.poe.tasks]
 
 dev = "flask run --debug"
-dev_docker = "docker run -p 5000:5000 fairhub-flask-api:dev.0"
+dev_docker = "docker run -p 5000:5000 fairhub-flask-api:local"
 
 freeze_dependencies = "pip list --format=freeze > requirements.txt"
 
@@ -118,7 +118,7 @@ test_with_capture = "pytest -s"
 jupyter = "jupyter notebook"
 
 export_requirements = "poetry export -f requirements.txt --output requirements.txt --without-hashes"
-build_docker_image = "docker build --tag fairhub-flask-api:dev.0 ."
+build_docker_image = "docker build --tag fairhub-flask-api:local ."
 
 [tool.black]
 
