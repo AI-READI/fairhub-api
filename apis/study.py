@@ -5,31 +5,35 @@ from model import Study, db
 
 api = Namespace("study", description="study operations", path="/")
 
-# owner= {
-#     "id": str,
-#     "affiliations": str,
-#     "email": str,
-#     "first_name":str,
-#     "last_name": str,
-#     "orcid": str,
-#     "roles": [],
-#     "permission": str,
-#     "status": str,
-# }
-# study = api.model(
-#     "Study",
-#     {
-#         "id": fields.String(required=True),
-#         "name": fields.String(required=True),
-#         "title": fields.String(required=True),
-#         "description": fields.String(required=True),
-#         "image": fields.String(required=True),
-#         "size": fields.String(required=True),
-#         "keywords": fields.String(required=True),
-#         "last_updated": fields.String(required=True),
-#         # "owner": fields.Nested(owner, required=True),
-#     },
-# )
+owner = api.model(
+    "Owner",
+    {
+        "id": fields.String(required=True),
+        "affiliations": fields.String(required=True),
+        "email": fields.String(required=True),
+        "first_name": fields.String(required=True),
+        "last_name": fields.String(required=True),
+        "orcid": fields.String(required=True),
+        "roles": fields.List(fields.String , required=True),
+        "permission": fields.String(required=True),
+        "status":  fields.String(required=True)
+    },
+    )
+
+study = api.model(
+    "Study",
+    {
+        "id": fields.String(required=True),
+        "name": fields.String(required=True),
+        "title": fields.String(required=True),
+        "description": fields.String(required=True),
+        "image": fields.String(required=True),
+        "size": fields.String(required=True),
+        "keywords": fields.String(required=True),
+        "last_updated": fields.String(required=True),
+        "owner": fields.Nested(owner, required=True),
+    },
+)
 
 
 @api.route("/study")

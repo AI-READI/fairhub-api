@@ -4,26 +4,76 @@ from flask_restx import Namespace, Resource, fields
 from model import Dataset, DatasetVersion, Participant, Study, db
 
 api = Namespace("dataset", description="dataset operations", path="/")
-# dataset = api.model(
-#     "Dataset",
-#     {
-#         "id": fields.String(required=True),
-#         "name": fields.String(required=True),
-#         "title": fields.String(required=True),
-#         "description": fields.String(required=True),
-#     },
-# )
+dataset = api.model(
+    "Dataset",
+    {
+        "id": fields.String(required=True),
+        "name": fields.String(required=True),
+        "title": fields.String(required=True),
+        "description": fields.String(required=True),
+    },
+)
 
+contributors = api.model(
+    "DatasetVersion",
+    {
+        "id": fields.String(required=True),
+        "affiliations": fields.String(required=True),
+        "email": fields.String(required=True),
+        "first_name": fields.String(required=True),
+        "last_name": fields.String(required=True),
+        "orcid": fields.String(required=True),
+        "roles": fields.List(fields.String , required=True),
+        "permission": fields.String(required=True),
+        "status":  fields.String(required=True)
+})
+
+participants = api.model(
+    "DatasetVersion",
+    {
+        "id": fields.Boolean(required=True),
+        "first_name": fields.String(required=True),
+        "last_name": fields.String(required=True),
+        "address": fields.String(required=True),
+        "age": fields.String(required=True)
+    }
+    )
+
+
+dataset_version = api.model(
+    "Dataset",
+    {
+        "id": fields.String(required=True),
+        "title": fields.String(required=True),
+        "description": fields.String(required=True),
+        "keywords": fields.String(required=True),
+        "primary_language": fields.String(required=True),
+        "modified": fields.DateTime(required=True),
+        "published": fields.Boolean(required=True),
+        "doi": fields.String(required=True),
+        "name": fields.String(required=True),
+        "contributors": fields.Nested(contributors, required=True),
+        "participants": fields.Nested(participants, required=True),
+    },
+)
 
 @api.route("/study/<study_id>/dataset")
 class AddDataset(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
+    @api.doc("dataset")
+    @api.param("id", "Adding dataset")
+    @api.marshal_with(dataset)
     def get(self, study_id):
         study = Study.query.get(study_id)
         datasets = Dataset.query.filter_by(study=study)
         return jsonify([d.to_dict() for d in datasets])
 
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
+    @api.doc("dataset")
+    @api.param("id", "Adding dataset")
+    @api.marshal_with(dataset)
     def post(self, study_id):
         data = request.json
         study = Study.query.get(study_id)
@@ -45,6 +95,9 @@ class AddDataset(Resource):
 class UpdateDataset(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
+    @api.doc("dataset version")
+    @api.param("id", "Adding version")
+    @api.marshal_with(dataset_version)
     def get(self, study_id, dataset_id, version_id):
         # if int(study_id) not in dic:
         #     return "not found", 404

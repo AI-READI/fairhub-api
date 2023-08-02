@@ -5,17 +5,17 @@ from model import Participant, Study, db
 
 api = Namespace("participant", description="participant operations", path="/")
 
-# participants = api.model(
-#     "Study",
-#     {
-#         "id": fields.String(required=True),
-#         "first_name": fields.String(required=True),
-#         "last_name": fields.String(required=True),
-#         "firstname": fields.String(required=True),
-#         "address": fields.String(required=True),
-#         "age": fields.String(required=True),
-#     },
-# )
+participants = api.model(
+    "Study",
+    {
+        "id": fields.String(required=True),
+        "first_name": fields.String(required=True),
+        "last_name": fields.String(required=True),
+        "firstname": fields.String(required=True),
+        "address": fields.String(required=True),
+        "age": fields.String(required=True),
+    },
+)
 
 
 @api.route("/study/<study_id>/participants")
@@ -24,7 +24,7 @@ class AddParticipant(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.param("id", "Adding participants")
-    # @api.marshal_with(participants)
+    @api.marshal_with(participants)
     def get(self, study_id: int):
         participants = Participant.query.all()
         return [p.to_dict() for p in participants]
