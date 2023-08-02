@@ -11,9 +11,9 @@ dataset = api.model(
         "name": fields.String(required=True),
         "title": fields.String(required=True),
         "description": fields.String(required=True),
-
     },
 )
+
 
 @api.route("/study/<study_id>/dataset")
 class AddDataset(Resource):
