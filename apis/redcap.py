@@ -1,15 +1,21 @@
 import os
 import requests
-from flask import request
+import json
+from flask import jsonify
 from flask_restx import Namespace, Resource, fields
-from core import utils
-from model.dashboards import ProjectCache, DashboardCache, StudyDashboardCache
+from core import transforms
+from model.dashboards import ProjectCache, REDCapReportStudyDashboardCache, DashboardCache, StudyDashboardCache
 from apis.models import REDCapProjectDataModel
 from apis.models import REDCapReportStudyDashboardDataModel
-from __main__ import cache
+from __main__ import MEMORY_CACHE
+
+"""TODO
+Pull from SQL database and get list of redcap projects. We need:
+    - REDCap project/API Key
+    - Modules that need to be loaded for that study
+"""
 
 # Get Environment Variables
-REDCAP_CONFIG = utils.load_json("config/redcap.json")
 REDCAP_API_TOKEN = os.environ["REDCAP_API_TOKEN"]
 REDCAP_API_URL = os.environ["REDCAP_API_URL"]
 REDCAP_API_FORMAT = os.environ["REDCAP_API_FORMAT"]
@@ -53,7 +59,7 @@ class REDCapProjectData(Resource):
         )
         return response.json()
 
-
+# This endpoint pulls the configured REDCap report and caches it
 @api.route("/reports/study-dashboard", methods=["GET"])
 class REDCapReportStudyDashboardData(Resource):
     @api.doc("get_redcap_report_study_dashboard")
@@ -62,9 +68,57 @@ class REDCapReportStudyDashboardData(Resource):
         """
         Get REDCap report for study dashboard Fairhub.io
         """
+        # dashboard_data = {
+        #     "name": "studyDashboard",
+        #     "namespace": "studyDashboard",
+        #     "endpoint": "/study-dashboard",
+        #     "data": [
+        #         {
+        #             "module_name": "overview",
+        #             "gender": "gender",
+        #             "sex": "male",
+        #             "race": "race",
+        #             "ethnicity": "ethnicity",
+        #             "ancestry": "ancestry",
+        #             "phenotype": "phenotype",
+        #             "a1c": "a1c",
+        #             "recruitment_status": "recruitment_status",
+        #             "consent_status": "consent_status",
+        #             "communication_status": "communication_status",
+        #             "device_status_es": "device_status_es",
+        #             "device_status_cgm": "device_status_cgm",
+        #             "device_status_amw": "device_status_amw",
+        #             "device_status_all": "device_status_all",
+        #             "intervention_status": "intervention_status",
+        #         },
+        #         {
+        #             "module_name": "participant",
+        #             "gender": "gender",
+        #             "sex": "female",
+        #             "race": "race",
+        #             "ethnicity": "ethnicity",
+        #             "ancestry": "ancestry",
+        #             "phenotype": "phenotype",
+        #             "a1c": "a1c",
+        #             "recruitment_status": "recruitment_status",
+        #             "consent_status": "consent_status",
+        #             "communication_status": "communication_status",
+        #             "device_status_es": "device_status_es",
+        #             "device_status_cgm": "device_status_cgm",
+        #             "device_status_amw": "device_status_amw",
+        #             "device_status_all": "device_status_all",
+        #             "intervention_status": "intervention_status",
+        #         },
+        #     ],
+        # }
+        # dashboard_data = transforms.redcap_to_redis_study_dashboard(dashboard_data)
+        # MEMORY_CACHE.set(
+        #     "transform_study-dashboard",
+        #     dashboard_data
+        # )
         response = requests.post(
             REDCAP_API_URL,
-            data={
+            data = {
                 "token": REDCAP_API_TOKEN,
                 "format": REDCAP_API_FORMAT,
                 "returnFormat": REDCAP_API_FORMAT,
@@ -75,7 +129,19 @@ class REDCapReportStudyDashboardData(Resource):
                 "exportCheckboxLabel": "true",
             },
         )
-        return response.json()
+        modules = [
+            "overview",
+            "progress",
+            "demographics",
+            "phenotype",
+            "device",
+            "contact"
+        ]
+        transformed_data = {}
+        for module in modules:
+            transformed_data[module] = getattr(transforms, module)
+
+        return transformed_data
 
 
 @api.route("/reports/study-dashboard/dm/<dm>", methods=["GET"])

@@ -28,3 +28,4 @@ class Study(db.Model):
 
     contributors = db.relationship("StudyContributor", back_populates="study")
     dataset = db.relationship("Dataset", back_populates="study")
+    redcapProject = dataset = db.relationship("REDCapProject", back_populates="study")

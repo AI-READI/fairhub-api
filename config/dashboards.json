@@ -2,8 +2,10 @@
     "dashboards": [
         {
             "name": "Study Dashboard",
+            "varname": "study-dashboard",
             "namespace": "/dashboards",
-            "endpoint": "/study_dashboard"
+            "endpoint": "/study-dashboard",
+            "modules": []
         }
     ]
 }

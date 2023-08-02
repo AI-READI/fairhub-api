@@ -1,57 +1,62 @@
 # Temporary Example Data
-STUDY_DASHBOARD = {
-    "name": "studyDashboard",
-    "namespace": "studyDashboard",
-    "endpoint": "/study-dashboard",
-    "data": [
-        {
-            "module_name": "overview",
-            "gender": "gender",
-            "sex": "male",
-            "race": "race",
-            "ethnicity": "ethnicity",
-            "ancestry": "ancestry",
-            "phenotype": "phenotype",
-            "a1c": "a1c",
-            "recruitment_status": "recruitment_status",
-            "consent_status": "consent_status",
-            "communication_status": "communication_status",
-            "device_status_es": "device_status_es",
-            "device_status_cgm": "device_status_cgm",
-            "device_status_amw": "device_status_amw",
-            "device_status_all": "device_status_all",
-            "intervention_status": "intervention_status",
-        },
-        {
-            "module_name": "participant",
-            "gender": "gender",
-            "sex": "female",
-            "race": "race",
-            "ethnicity": "ethnicity",
-            "ancestry": "ancestry",
-            "phenotype": "phenotype",
-            "a1c": "a1c",
-            "recruitment_status": "recruitment_status",
-            "consent_status": "consent_status",
-            "communication_status": "communication_status",
-            "device_status_es": "device_status_es",
-            "device_status_cgm": "device_status_cgm",
-            "device_status_amw": "device_status_amw",
-            "device_status_all": "device_status_all",
-            "intervention_status": "intervention_status",
-        },
-    ],
-}
+# STUDY_DASHBOARD = {
+#     "name": "studyDashboard",
+#     "namespace": "studyDashboard",
+#     "endpoint": "/study-dashboard",
+#     "data": [
+#         {
+#             "module_name": "overview",
+#             "gender": "gender",
+#             "sex": "male",
+#             "race": "race",
+#             "ethnicity": "ethnicity",
+#             "ancestry": "ancestry",
+#             "phenotype": "phenotype",
+#             "a1c": "a1c",
+#             "recruitment_status": "recruitment_status",
+#             "consent_status": "consent_status",
+#             "communication_status": "communication_status",
+#             "device_status_es": "device_status_es",
+#             "device_status_cgm": "device_status_cgm",
+#             "device_status_amw": "device_status_amw",
+#             "device_status_all": "device_status_all",
+#             "intervention_status": "intervention_status",
+#         },
+#         {
+#             "module_name": "participant",
+#             "gender": "gender",
+#             "sex": "female",
+#             "race": "race",
+#             "ethnicity": "ethnicity",
+#             "ancestry": "ancestry",
+#             "phenotype": "phenotype",
+#             "a1c": "a1c",
+#             "recruitment_status": "recruitment_status",
+#             "consent_status": "consent_status",
+#             "communication_status": "communication_status",
+#             "device_status_es": "device_status_es",
+#             "device_status_cgm": "device_status_cgm",
+#             "device_status_amw": "device_status_amw",
+#             "device_status_all": "device_status_all",
+#             "intervention_status": "intervention_status",
+#         },
+#     ],
+# }
 #
 
-
+import json
 from flask_restx import Namespace, Resource, fields
 from core import utils
 from .models import DashboardModel
 from .models import FairhubStudyDashboardDataModel
+from __main__ import DASHBOARDS_CONFIG, MEMORY_CACHE
 
-# Get Environment Variables
-DASHBOARDS_CONFIG = utils.load_json("config/dashboards.json")
+with open("config/simulation.json") as config:
+    STUDY_DASHBOAD = json.load(config)
+
+#
+# Reference Globals
+#
 
 # Set API Namespace
 api = Namespace("dashboards", description="Dashboard related operations")
@@ -76,7 +81,6 @@ fairhubStudyDashboardModel = api.inherit(
 # Dashboard Endpoints
 #
 
-
 @api.route("/")
 class DashboardsList(Resource):
     @api.doc("get_dashboards")
@@ -87,24 +91,24 @@ class DashboardsList(Resource):
         """
         return DASHBOARDS_CONFIG["dashboards"]
 
-
 #
 # Study Dashboard Endpoints
 #
 
-
-@api.route("/study-dashboard")
+@api.route("/study/<study_id>")
 class StudyDashboard(Resource):
     @api.doc("get_study_dashboard")
     @api.marshal_with(fairhubStudyDashboardModel)
-    def get(self):
+    def get(self, study_id):
         """
         Get study dashboard
         """
-        return STUDY_DASHBOARD
+        dashboard_data = MEMORY_CACHE.get(f"transform_study-overview_{study_id}")
+        print(dashboard_data)
+        return dashboard_data
 
 
-@api.route("/study-dashboard/<module_name>")
+@api.route("/study/<study_id>/visualization-module/<module_name>")
 @api.param("module_name", "The name of the visualization module")
 @api.response(404, "No visualization module with that name found.")
 class StudyDashboardModuleByName(Resource):

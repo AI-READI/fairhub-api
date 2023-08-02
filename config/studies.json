@@ -1,0 +1,25 @@
+{"studies": [
+	{
+		"name": "AI-READI",
+		"dashboard-modules": [
+			{
+				"name": "overview"
+			},
+			{
+				"name": "progress"
+			},
+			{
+				"name": "demographics"
+			},
+			{
+				"name": "phenotype"
+			},
+			{
+				"name": "device"
+			},
+			{
+				"name": "contact"
+			}
+		]
+	}
+]}

@@ -1,40 +1,63 @@
-# Environment Imports
+# Environment imports
 import dotenv
 import toml
 import os
+import json
 
-# Load API Metadata from .env
+#
+# Define Globals
+#
+
+global DASHBOARD_CONFIG
+global MEMORY_CACHE
+
+#
+# Load Environment
+#
+
+# Load API metadata from .env
 dotenv.load_dotenv()
 
-# Load API Metadata from pyproject.toml
-pyproject_metadata = toml.load("pyproject.toml")
-os.environ["FLASK_APP_NAME"] = pyproject_metadata["tool"]["poetry"]["name"]
-os.environ["FLASK_APP_VERSION"] = pyproject_metadata["tool"]["poetry"]["version"]
-os.environ["FLASK_APP_DESCRIPTION"] = pyproject_metadata["tool"]["poetry"][
-    "description"
-]
-os.environ["FLASK_APP_LICENSE"] = pyproject_metadata["tool"]["poetry"]["license"]
+# Load API metadata from pyproject.toml
+pyproject_toml = toml.load("pyproject.toml")
+os.environ["FLASK_APP_NAME"] = pyproject_toml["tool"]["poetry"]["name"]
+os.environ["FLASK_APP_VERSION"] = pyproject_toml["tool"]["poetry"]["version"]
+os.environ["FLASK_APP_DESCRIPTION"] = pyproject_toml["tool"]["poetry"]["description"]
+os.environ["FLASK_APP_LICENSE"] = pyproject_toml["tool"]["poetry"]["license"]
 
-# Cache Imports
-import redis
+# Load JSON config files
+with open("config/dashboards.json") as config:
+    DASHBOARDS_CONFIG = json.load(config)
 
-# Init Redis Cache
-cache = redis.Redis(
-    host=os.environ["REDIS_CACHE_HOST"],
-    port=os.environ["REDIS_CACHE_PORT"],
-    db=os.environ["REDIS_CACHE_DB"],
-    encoding=os.environ["REDIS_CACHE_ENCODING"],
-    decode_responses=True,
-)
+#
+# Setup Cache
+#
 
-# Flask API Imports
+# Cache imports
+from flask_caching import Cache
+
+MEMORY_CACHE = Cache(config = {
+    "CACHE_TYPE": "RedisCache",
+    "CACHE_DEFAULT_TIMEOUT": os.environ["CACHE_DEFAULT_TIMEOUT"],
+    "CACHE_KEY_PREFIX": os.environ["CACHE_KEY_PREFIX"],
+    "CACHE_REDIS_HOST": os.environ["CACHE_REDIS_HOST"],
+    "CACHE_REDIS_PORT": os.environ["CACHE_REDIS_PORT"],
+    "CACHE_REDIS_DB": os.environ["CACHE_REDIS_DB"],
+    "CACHE_REDIS_URL": os.environ["CACHE_REDIS_URL"],
+})
+
+#
+# Initialize Flask
+#
+
+# Flask API imports
 from flask import Flask
 from flask_cors import CORS
 from apis import api
 
-# Init Flask
 app = Flask(__name__)
 api.init_app(app)
+MEMORY_CACHE.init_app(app)
 CORS(app)
 
 # from apis import getStudies, updateStudies, participants
