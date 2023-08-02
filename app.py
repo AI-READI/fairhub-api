@@ -29,7 +29,7 @@ def create_app():
 
     app.config.from_prefixed_env("FAIRHUB")
 
-    print(app.config)
+    # print(app.config)
 
     if "DATABASE_URL" in app.config:
         # if "TESTING" in app_config and app_config["TESTING"]:

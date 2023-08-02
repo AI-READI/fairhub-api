@@ -9,7 +9,7 @@ from .study import api as study_api
 
 api = Api(
     title="FAIRHUB",
-    description="The backend api system for the Vue app",
+    description="The backend api system for the fairhub app",
     doc="/docs",
 )
 
