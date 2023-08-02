@@ -1,31 +1,27 @@
 """Entry point for the application."""
 import os
-import logging
 
 from flask import Flask
 from flask_cors import CORS
 
 import model
 from apis import api
-from core import config
+
 
 # from pyfairdatatools import __version__
 
 
-def create_app(app_config):
+def create_app():
     """Initialize the core application."""
+    # create and configure the app
     app = Flask(__name__)
 
-    SECRET_KEY = os.urandom(32)
-    app.config["SECRET_KEY"] = SECRET_KEY
-
-    # full if you want to see all the details
+    # `full` if you want to see all the details
     app.config.SWAGGER_UI_DOC_EXPANSION = "list"
 
-    app.logger.setLevel(logging.DEBUG)
-
-    # print(config)
-    # print(app_config)
+    # Initialize config
+    app.config.from_pyfile("config.py")
+    # app.register_blueprint(api)
 
     # TODO - fix this
     # csrf = CSRFProtect()
@@ -33,18 +29,17 @@ def create_app(app_config):
 
     app.config.from_prefixed_env("FAIRHUB")
 
+    print(app.config)
+
     if "DATABASE_URL" in app.config:
         # if "TESTING" in app_config and app_config["TESTING"]:
         #     pass
         # else:
-        #     print("DATABASE_URL: ", app.config["DATABASE_URL"])
+        #   print("DATABASE_URL: ", app.config["DATABASE_URL"])
         app.config["SQLALCHEMY_DATABASE_URI"] = app.config["DATABASE_URL"]
     else:
-        # if "TESTING" in app_config and app_config["TESTING"]:
-        #     pass
-        # else:
-        # print("FAIRHUB_DATABASE_URL: ", config.FAIRHUB_DATABASE_URL)
-        app.config["SQLALCHEMY_DATABASE_URI"] = config.FAIRHUB_DATABASE_URL
+        # throw error
+        raise RuntimeError("FAIRHUB_DATABASE_URL not set")
 
     model.db.init_app(app)
     api.init_app(app)
@@ -68,5 +63,15 @@ def create_app(app_config):
 
 
 if __name__ == "__main__":
-    flask_app = create_app(config)
-    flask_app.run(debug=True)
+    from argparse import ArgumentParser
+
+    parser = ArgumentParser()
+    parser.add_argument(
+        "-p", "--port", default=5000, type=int, help="port to listen on"
+    )
+    args = parser.parse_args()
+    port = args.port
+
+    app = create_app()
+
+    app.run(host="0.0.0.0", port=port)

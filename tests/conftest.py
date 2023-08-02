@@ -1,5 +1,6 @@
 """Defines fixtures available to all tests."""
 import pytest
+
 from app import create_app
 
 

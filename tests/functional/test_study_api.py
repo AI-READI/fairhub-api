@@ -1,12 +1,8 @@
 """Tests for API endpoints related to studies"""
 import json
-from datetime import datetime
-from app import create_app
 import os
-from core import config
-from model import db
 
-from model.study import Study
+from app import create_app
 
 
 def test_should_return_studies():
@@ -17,8 +13,8 @@ def test_should_return_studies():
     """
 
     # Set the environment to testing
-    os.environ["FAIRHUB_DATABASE_URL"] = config.FAIRHUB_DATABASE_URL
-    flask_app = create_app({"TESTING": True})
+    os.environ["FLASK_ENV"] = "testing"
+    flask_app = create_app()
 
     # Create a test client using the Flask application configured for testing
     with flask_app.test_client() as test_client:

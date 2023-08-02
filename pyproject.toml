@@ -90,22 +90,22 @@ flake8 = "^6.0.0"
 
 [tool.poe.tasks]
 
-dev = "python app.py"
+dev = "flask run --debug"
 
 freeze_dependencies = "pip list --format=freeze > requirements.txt"
 
 docs = "mkdocs serve"
 
-flake8 = "flake8 apis core model app.py"
+flake8 = "flake8 apis core model tests app.py"
 
-format_with_isort = "isort apis core model app.py"
-format_with_black = "black apis core model app.py"
+format_with_isort = "isort apis core tests model app.py"
+format_with_black = "black apis core tests model app.py"
 
 format = ["format_with_isort", "format_with_black"]
 
-typecheck = "mypy apis core model app.py"
+typecheck = "mypy apis core model tests app.py"
 
-pylint = "pylint apis core model app.py --rcfile=.pylint.ini"
+pylint = "pylint apis core model tests app.py --rcfile=.pylint.ini"
 
 lint = ["flake8", "typecheck", "pylint"]
 
