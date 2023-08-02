@@ -1,7 +1,7 @@
 from flask import request
 from flask_restx import Namespace, Resource, fields
 
-from model import Study, db, User
+from model import Study, db
 
 api = Namespace("study", description="study operations", path="/")
 
@@ -16,20 +16,20 @@ api = Namespace("study", description="study operations", path="/")
 #     "permission": str,
 #     "status": str,
 # }
-study = api.model(
-    "Study",
-    {
-        "id": fields.String(required=True),
-        "name": fields.String(required=True),
-        "title": fields.String(required=True),
-        "description": fields.String(required=True),
-        "image": fields.String(required=True),
-        "size": fields.String(required=True),
-        "keywords": fields.String(required=True),
-        "last_updated": fields.String(required=True),
-        # "owner": fields.Nested(owner, required=True),
-    },
-)
+# study = api.model(
+#     "Study",
+#     {
+#         "id": fields.String(required=True),
+#         "name": fields.String(required=True),
+#         "title": fields.String(required=True),
+#         "description": fields.String(required=True),
+#         "image": fields.String(required=True),
+#         "size": fields.String(required=True),
+#         "keywords": fields.String(required=True),
+#         "last_updated": fields.String(required=True),
+#         # "owner": fields.Nested(owner, required=True),
+#     },
+# )
 
 
 @api.route("/study")
@@ -38,7 +38,7 @@ class Studies(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.param("id", "The study identifier")
-    @api.marshal_list_with(study)
+    # @api.marshal_list_with(study)
     def get(self):
         studies = Study.query.all()
         return [s.to_dict() for s in studies]
@@ -56,7 +56,7 @@ class StudyResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.param("id", "The study identifier")
-    @api.marshal_with(study)
+    # @api.marshal_with(study)
     def get(self, study_id: int):
         study1 = Study.query.get(study_id)
         return study1.to_dict()
