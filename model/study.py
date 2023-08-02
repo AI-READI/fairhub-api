@@ -18,6 +18,8 @@ study_contributors = db.Table(
 
 
 class Study(db.Model):
+    """A study is a collection of datasets and participants"""
+
     def __init__(self):
         self.id = str(uuid.uuid4())
 
@@ -38,6 +40,7 @@ class Study(db.Model):
     participants = db.relationship("Participant", back_populates="study")
 
     def to_dict(self):
+        """Converts the study to a dictionary"""
         return {
             "id": self.id,
             "title": self.title,
@@ -46,20 +49,19 @@ class Study(db.Model):
             "keywords": self.keywords,
             "last_updated": str(self.last_updated),
             "size": self.size,
-            # "contributors": [
-            #     contributor.to_dict() for contributor in self.contributors
-            # ],
             "owner": self.owner.to_dict(),
         }
 
     @staticmethod
     def from_data(data: dict):
+        """Creates a new study from a dictionary"""
         study = Study()
         study.update(data)
 
         return study
 
     def update(self, data):
+        """Updates the study from a dictionary"""
         self.title = data["title"]
         self.description = data["description"]
         self.image = data["image"]
@@ -69,6 +71,7 @@ class Study(db.Model):
         self.owner = model.User.from_data(data["owner"])
 
     def validate(self):
+        """Validates the study"""
         violations = []
         # if self.description.trim() == "":
         #     violations.push("A description is required")

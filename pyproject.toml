@@ -112,6 +112,7 @@ lint = ["flake8", "typecheck", "pylint"]
 precommit = ["format", "flake8", "typecheck", "pylint"]
 
 test = "pytest -rx" 
+test_with_capture = "pytest -s"
 
 jupyter = "jupyter notebook"
 
@@ -143,6 +144,11 @@ addopts = """
 --cov-report=term-missing:skip-covered
 --no-cov-on-fail
 """
+
+filterwarnings = [
+    "ignore",
+    "default:::flask_restx.*",
+]
 
 cache_dir = ".cache/pytest/"
 
