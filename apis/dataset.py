@@ -23,10 +23,11 @@ contributors = api.model(
         "first_name": fields.String(required=True),
         "last_name": fields.String(required=True),
         "orcid": fields.String(required=True),
-        "roles": fields.List(fields.String , required=True),
+        "roles": fields.List(fields.String, required=True),
         "permission": fields.String(required=True),
-        "status":  fields.String(required=True)
-})
+        "status": fields.String(required=True),
+    },
+)
 
 participants = api.model(
     "DatasetVersion",
@@ -35,9 +36,9 @@ participants = api.model(
         "first_name": fields.String(required=True),
         "last_name": fields.String(required=True),
         "address": fields.String(required=True),
-        "age": fields.String(required=True)
-    }
-    )
+        "age": fields.String(required=True),
+    },
+)
 
 
 dataset_version = api.model(
@@ -56,6 +57,7 @@ dataset_version = api.model(
         "participants": fields.Nested(participants, required=True),
     },
 )
+
 
 @api.route("/study/<study_id>/dataset")
 class AddDataset(Resource):

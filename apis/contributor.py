@@ -14,10 +14,11 @@ contributors_model = api.model(
         "first_name": fields.String(required=True),
         "last_name": fields.String(required=True),
         "orcid": fields.String(required=True),
-        "roles": fields.List(fields.String , required=True),
+        "roles": fields.List(fields.String, required=True),
         "permission": fields.String(required=True),
-        "status":  fields.String(required=True)
-})
+        "status": fields.String(required=True),
+    },
+)
 
 
 @api.route("/study/<study_id>/contributor")
