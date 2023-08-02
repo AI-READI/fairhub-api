@@ -1,3 +1,7 @@
+"""Entry point for the application."""
+import os
+import logging
+
 from flask import Flask
 from flask_cors import CORS
 
@@ -9,6 +13,18 @@ from core import config
 
 
 app = Flask(__name__)
+
+SECRET_KEY = os.urandom(32)
+app.config["SECRET_KEY"] = SECRET_KEY
+
+# full if you want to see all the details
+app.config.SWAGGER_UI_DOC_EXPANSION = "list"
+
+app.logger.setLevel(logging.DEBUG)
+
+# TODO - fix this
+# csrf = CSRFProtect()
+# csrf.init_app(app)
 
 app.config.from_prefixed_env("FAIRHUB")
 
@@ -23,11 +39,12 @@ else:
 model.db.init_app(app)
 api.init_app(app)
 
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": "True"}})
 
 
 @app.cli.command("create-schema")
 def create_schema():
+    """Create the database schema."""
     model.db.create_all()
 
 

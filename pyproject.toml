@@ -64,6 +64,14 @@ mypy = "^1.4.1"
 pydocstyle = "^6.3.0"
 pylint = "^2.17.4"
 
+# Testing
+pytest = "^7.1"
+pytest-describe = "^2.0"
+pytest-expecter = "^3.0"
+pytest-random = "*"
+pytest-cov = "^3.0"
+freezegun = "*"
+
 # Reports
 coveragespace = "^6.0"
 
@@ -103,6 +111,8 @@ lint = ["flake8", "typecheck", "pylint"]
 
 precommit = ["format", "flake8", "typecheck", "pylint"]
 
+test = "pytest -rx" 
+
 jupyter = "jupyter notebook"
 
 [tool.black]
@@ -121,6 +131,22 @@ check_untyped_defs = true
 
 cache_dir = ".cache/mypy/"
 
+[tool.pytest.ini_options]
+
+addopts = """
+--strict-markers
+
+-r sxX
+--show-capture=log
+
+--cov-report=html
+--cov-report=term-missing:skip-covered
+--no-cov-on-fail
+"""
+
+cache_dir = ".cache/pytest/"
+
+markers = []
 
 [build-system]
 requires = ["poetry-core"]
