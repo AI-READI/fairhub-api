@@ -1,6 +1,4 @@
 """Entry point for the application."""
-import os
-
 from flask import Flask
 from flask_cors import CORS
 
