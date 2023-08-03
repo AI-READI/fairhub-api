@@ -15,7 +15,6 @@ services:
     volumes:
       - ./:/app
     environment:
-      FLASK_ENV: production
       FLASK_DEBUG: 0
       FLASK_APP: ./app.py
       FAIRHUB_DATABASE_URL: "${FAIRHUB_DATABASE_URL:-postgresql://postgres:postgres@database:5432/fairhub}"
