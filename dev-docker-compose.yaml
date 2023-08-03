@@ -10,12 +10,13 @@ services:
       - run
       - --host=0.0.0.0      
       - --port=5000
-      - --debug
     ports:
       - 5000:5000
+    volumes:
+      - ./:/app
     environment:
-      FLASK_DEBUG: 0
-      FLASK_APP: ./app.py
+      FLASK_ENV: development
+      FLASK_DEBUG: 1
       FAIRHUB_DATABASE_URL: "${FAIRHUB_DATABASE_URL:-postgresql://postgres:postgres@database:5432/fairhub}"
 #     database:
 #       image: postgres:15.3
