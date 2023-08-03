@@ -18,6 +18,7 @@ class InvitedStudyContributor(db.Model):
 
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
     study = db.relationship("Study")
+
     def to_dict(self):
         return {
             "id": self.id,
