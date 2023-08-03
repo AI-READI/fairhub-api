@@ -7,10 +7,10 @@ services:
     # image: fairhub-flask-api:local
     entrypoint:
       - flask
-      - --host=0.0.0.0      
-      - --port=5000
       - --debug
       - run
+      - --port=5000
+      - --host=0.0.0.0      
     ports:
       - 5000:5000
     volumes:
