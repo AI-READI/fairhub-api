@@ -1,273 +1,142 @@
-from flask import Blueprint, jsonify, request
+from flask import Response, jsonify, request
+from flask_restx import Namespace, Resource, fields
 
-from model import Dataset, DatasetVersion, db, Study
+from model import Dataset, DatasetVersion, Participant, Study, db
 
-dataset = Blueprint("dataset", __name__)
-
-
-@dataset.route("/study/<studyId>/dataset", methods=["GET"])
-def getDatasets(studyId):
-    # datasets = {
-    #     1: [
-    #         {
-    #             "id": 1,
-    #             "name": "AI-READI",
-    #             "publishedVersion": 1,
-    #             "latestVersion": 2,
-    #             "lastModified": "2023-03-21",
-    #             "lastPublished": "2023-01-20",
-    #         },
-    #         {
-    #             "id": 2,
-    #             "name": "AI-READI2",
-    #             "publishedVersion": 2,
-    #             "latestVersion": 2,
-    #             "lastModified": "2023-01-20",
-    #             "lastPublished": "2023-01-20",
-    #         },
-    #     ],
-    #     2: [
-    #         {
-    #             "id": 1,
-    #             "name": "AI-READI3",
-    #             "publishedVersion": 2,
-    #             "latestVersion": 2,
-    #             "lastModified": "2023-01-20",
-    #             "lastPublished": "2023-01-20",
-    #         },
-    #         {
-    #             "id": 2,
-    #             "name": "AI-READI4",
-    #             "publishedVersion": 2,
-    #             "latestVersion": 2,
-    #             "lastModified": "2023-01-20",
-    #             "lastPublished": "2023-01-20",
-    #         },
-    #     ],
-    # }
-    #
-    # if int(studyId) not in datasets:
-    #     return "not found", 404
-    # return jsonify(datasets[int(studyId)])
-    datasets = Dataset.query.all()
-    return jsonify([d.to_dict() for d in datasets])
-
-
-@dataset.route(
-    "/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["GET"]
+api = Namespace("dataset", description="dataset operations", path="/")
+dataset = api.model(
+    "Dataset",
+    {
+        "id": fields.String(required=True),
+        "name": fields.String(required=True),
+        "title": fields.String(required=True),
+        "description": fields.String(required=True),
+    },
 )
-def getDatasetVersion(studyId, datasetId, versionId):
-    # dic = {
-    #     # Study 1
-    #     1: {
-    #         # Dataset 1
-    #         1: {
-    #             # Version 1
-    #             1: {
-    #                 "id": 1,
-    #                 "contributors": [
-    #                     {
-    #                         "affiliations": ["Manager"],
-    #                         "firstname": "Dolores",
-    #                         "lastname": "Chambers",
-    #                         "ORCID": "https://orcid.org/0000-0001-7032-2732",
-    #                         "roles": ["editor", "owner", "viewer"],
-    #                         "email": "dolores.chambers@email.org",
-    #                         "status": "invited",
-    #                     },
-    #                     {
-    #                         "affiliations": ["Manager"],
-    #                         "firstname": "Bhavesh",
-    #                         "lastname": " Patel",
-    #                         "ORCID": "https://orcid.org/0000-0001-7032-2732",
-    #                         "roles": ["editor", "owner"],
-    #                         "email": "bpatel@email.org",
-    #                         "status": "active",
-    #                     },
-    #                 ],
-    #                 "title": "AI-READI",
-    #                 "description": "AI model for diabetics",
-    #                 "keywords": ["AI model"],
-    #                 "primaryLanguage": "english",
-    #                 "selectedParticipants": [],
-    #                 "published": True,
-    #             },
-    #             # Version 2
-    #             2: {
-    #                 "id": 2,
-    #                 "contributors": [
-    #                     {
-    #                         "affiliations": ["Manager"],
-    #                         "firstname": "Dolores",
-    #                         "lastname": "Chambers",
-    #                         "ORCID": "https://orcid.org/0000-0001-7032-2732",
-    #                         "roles": ["editor", "owner", "viewer"],
-    #                         "email": "dolores.chambers@email.org",
-    #                         "status": "invited",
-    #                     },
-    #                     {
-    #                         "affiliations": ["Manager"],
-    #                         "firstname": "Bhavesh",
-    #                         "lastname": " Patel",
-    #                         "ORCID": "https://orcid.org/0000-0001-7032-2732",
-    #                         "roles": ["editor", "owner"],
-    #                         "email": "bpatel@email.org",
-    #                         "status": "active",
-    #                     },
-    #                 ],
-    #                 "title": "AI-READI",
-    #                 "description": "AI model for diabetics",
-    #                 "keywords": ["AI model"],
-    #                 "primaryLanguage": "english",
-    #                 "selectedParticipants": [],
-    #                 "published": False,
-    #             },
-    #         },
-    #         # Dataset 2
-    #         2: {
-    #             # Version 2
-    #             2: {
-    #                 "id": 2,
-    #                 "contributors": [
-    #                     {
-    #                         "affiliations": ["Manager"],
-    #                         "firstname": "Bhavesh",
-    #                         "lastname": "Patel",
-    #                         "ORCID": "https://orcid.org/0000-0001-7032-2732",
-    #                         "roles": ["Developer"],
-    #                         "email": "bpatel@calmi2.org",
-    #                         "status": "invited",
-    #                     }
-    #                 ],
-    #                 "title": "AI-READI",
-    #                 "description": "AI model for diabetics",
-    #                 "keywords": ["AI model"],
-    #                 "primaryLanguage": "english",
-    #                 "selectedParticipants": [],
-    #                 "published": True,
-    #             }
-    #         },
-    #     },
-    #     # Study 2
-    #     2: {
-    #         # Dataset 1
-    #         1: {
-    #             # Version 2
-    #             2: {
-    #                 "id": 2,
-    #                 "contributors": [
-    #                     {
-    #                         "affiliations": ["Manager"],
-    #                         "firstname": "Bhavesh",
-    #                         "lastname": "Patel",
-    #                         "ORCID": "https://orcid.org/0000-0001-7032-2732",
-    #                         "roles": ["Developer"],
-    #                         "email": "bpatel@calmi2.org",
-    #                         "status": "invited",
-    #                     }
-    #                 ],
-    #                 "title": "AI-READI",
-    #                 "description": "AI model",
-    #                 "keywords": ["AI model", "diabetics"],
-    #                 "primaryLanguage": "english",
-    #                 "selectedParticipants": [],
-    #                 "published": True,
-    #             }
-    #         },
-    #         # Dataset 2
-    #         2: {
-    #             # Version 2
-    #             2: {
-    #                 "id": 2,
-    #                 "contributors": [
-    #                     {
-    #                         "affiliations": ["Manager"],
-    #                         "firstname": "Bhavesh",
-    #                         "lastname": "Patel",
-    #                         "ORCID": "https://orcid.org/0000-0001-7032-2732",
-    #                         "roles": ["Developer"],
-    #                         "email": "bpatel@calmi2.org",
-    #                         "status": "invited",
-    #                     }
-    #                 ],
-    #                 "title": "AI-READI",
-    #                 "description": "AI model",
-    #                 "keywords": ["diabetics"],
-    #                 "primaryLanguage": "english",
-    #                 "selectedParticipants": [],
-    #                 "published": True,
-    #             }
-    #         },
-    #     },
-    # }
-    # if int(studyId) not in dic:
-    #     return "not found", 404
-    # return jsonify(dic[int(studyId)][int(datasetId)][int(versionId)])
-    # lastPublished = DatasetVersions.query.order_by("lastPublished").limit(1)
-    # lastModified = DatasetVersions.query.order_by("lastModified").limit(1)
-    datasetVersion = DatasetVersion.query.get(versionId)
-    return jsonify(datasetVersion.to_dict())
 
-    return
-
-
-@dataset.route("/study/<studyId>/dataset/<datasetId>", methods=["POST"])
-def update_dataset(studyId, datasetId):
-    pass
-
-
-@dataset.route("/study/<studyId>/dataset", methods=["POST"])
-def add_datesets(studyId):
-    study = Study.query.get(studyId)
-    dataset_obj = Dataset(study)
-    datasetVersion = DatasetVersion.from_data(dataset_obj, request.json)
-    db.session.add(dataset_obj)
-    db.session.add(datasetVersion)
-    db.session.commit()
-    # print(request.json)
-    return jsonify(datasetVersion.to_dict()), 201
-
-
-# @dataset.route("/study/<studyId>/dataset/<datasetId>", methods=["POST"])
-# def update_dataset(studyId, datasetId):
-#     study = Study.query.get(studyId)
-#     data_id = Dataset.query.get(datasetId)
-#     dataset_obj = Dataset(study)
-#     dataset_ids = DatasetVersion(data_id)
-#     datasetVersion = DatasetVersion.from_data(dataset_obj, dataset_ids, request.json)
-#     db.session.add(dataset_obj)
-#     db.session.add(datasetVersion)
-#     db.session.commit()
-#
-#     return jsonify(datasetVersion.to_dict()), 201
-#
-
-
-@dataset.route("/study/<studyId>/dataset/<datasetId>/version", methods=["POST"])
-def update_dateset_versions(studyId, datasetId):
-    study = Study.query.get(studyId)
-    data_id = Dataset.query.get(datasetId)
-    dataset_obj = Dataset(study)
-    dataset_ids = DatasetVersion(data_id)
-    datasetVersion = DatasetVersion.from_data(dataset_obj, dataset_ids, request.json)
-    db.session.add(dataset_obj)
-    db.session.add(datasetVersion)
-    db.session.commit()
-
-    return jsonify(datasetVersion.to_dict()), 201
-
-
-@dataset.route(
-    "/study/<studyId>/dataset/<datasetId>/version/<versionId>", methods=["POST"]
+contributors = api.model(
+    "DatasetVersion",
+    {
+        "id": fields.String(required=True),
+        "affiliations": fields.String(required=True),
+        "email": fields.String(required=True),
+        "first_name": fields.String(required=True),
+        "last_name": fields.String(required=True),
+        "orcid": fields.String(required=True),
+        "roles": fields.List(fields.String, required=True),
+        "permission": fields.String(required=True),
+        "status": fields.String(required=True),
+    },
 )
-def update_dateset_version(studyId, datasetId, versionId):
-    study = Study.query.get(studyId)
-    data_id = Dataset.query.get(datasetId)
-    dataset_obj = Dataset(study)
-    dataset_ids = DatasetVersion(data_id)
-    datasetVersion = DatasetVersion.from_data(dataset_obj, dataset_ids, request.json)
-    db.session.add(dataset_obj)
-    db.session.add(datasetVersion)
-    db.session.commit()
 
-    return jsonify(datasetVersion.to_dict()), 201
+participants = api.model(
+    "DatasetVersion",
+    {
+        "id": fields.Boolean(required=True),
+        "first_name": fields.String(required=True),
+        "last_name": fields.String(required=True),
+        "address": fields.String(required=True),
+        "age": fields.String(required=True),
+    },
+)
+
+
+dataset_version = api.model(
+    "Dataset",
+    {
+        "id": fields.String(required=True),
+        "title": fields.String(required=True),
+        "description": fields.String(required=True),
+        "keywords": fields.String(required=True),
+        "primary_language": fields.String(required=True),
+        "modified": fields.DateTime(required=True),
+        "published": fields.Boolean(required=True),
+        "doi": fields.String(required=True),
+        "name": fields.String(required=True),
+        "contributors": fields.Nested(contributors, required=True),
+        "participants": fields.Nested(participants, required=True),
+    },
+)
+
+
+@api.route("/study/<study_id>/dataset")
+class AddDataset(Resource):
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
+    @api.doc("dataset")
+    @api.param("id", "Adding dataset")
+    @api.marshal_with(dataset)
+    def get(self, study_id):
+        study = Study.query.get(study_id)
+        datasets = Dataset.query.filter_by(study=study)
+        return jsonify([d.to_dict() for d in datasets])
+
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
+    @api.doc("dataset")
+    @api.param("id", "Adding dataset")
+    @api.marshal_with(dataset)
+    def post(self, study_id):
+        data = request.json
+        study = Study.query.get(study_id)
+        # &&study_id
+        # todo if study.participant id== different study Throw error
+        # query based on part id and study id (prolly filter but need to find right syntax)
+        data["participants"] = [
+            Participant.query.get(i).first() for i in data["participants"]
+        ]
+        dataset_obj = Dataset(study)
+        dataset_version = DatasetVersion.from_data(dataset_obj, data)
+        db.session.add(dataset_obj)
+        db.session.add(dataset_version)
+        db.session.commit()
+        return dataset_version.to_dict()
+
+
+@api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>")
+class UpdateDataset(Resource):
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
+    @api.doc("dataset version")
+    @api.param("id", "Adding version")
+    @api.marshal_with(dataset_version)
+    def get(self, study_id, dataset_id, version_id):
+        # if int(study_id) not in dic:
+        #     return "not found", 404
+        dataset_version = DatasetVersion.query.get(version_id)
+        return jsonify(dataset_version.to_dict())
+
+    def put(self, study_id, dataset_id, version_id):
+        data_version_obj = DatasetVersion.query.get(version_id)
+        data_version_obj.update(request.json)
+        db.session.commit()
+        return jsonify(data_version_obj.to_dict())
+
+    def delete(self, study_id, dataset_id, version_id):
+        data_obj = Dataset.query.get(dataset_id)
+        for version in data_obj.dataset_versions:
+            db.session.delete(version)
+            db.session.commit()
+        db.session.delete(data_obj)
+        db.session.commit()
+        return Response(status=204)
+
+
+@api.route("/study/<study_id>/dataset/<dataset_id>/version")
+@api.response(201, "Success")
+@api.response(400, "Validation Error")
+class PostDataset(Resource):
+    def post(self, study_id: int, dataset_id: int):
+        data = request.json
+        data["participants"] = [Participant.query.get(i) for i in data["participants"]]
+        data_obj = Dataset.query.get(dataset_id)
+        dataset_version = DatasetVersion.from_data(data_obj, data)
+        db.session.add(dataset_version)
+        db.session.commit()
+        return jsonify(dataset_version.to_dict())
+
+
+# @dataset.route("/study/<study_id>/dataset/<dataset_id>", methods=["POST"])
+# def update_dataset(study_id, dataset_id):
+#     pass
+#

@@ -1,68 +1,77 @@
-from sqlalchemy import String
+# from .study_contributor import StudyContributor
+import uuid
 from datetime import datetime
 
+from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
-from sqlalchemy.orm import composite
+
+import model
 
 from .db import db
-from .owner import Owner
-from .study_contributor import StudyContributor
+
+study_contributors = db.Table(
+    "study_contributors",
+    db.Model.metadata,
+    db.Column("study_id", db.ForeignKey("study.id"), primary_key=True),
+    db.Column("user_id", db.ForeignKey("user.id"), primary_key=True),
+)
 
 
 class Study(db.Model):
+    """A study is a collection of datasets and participants"""
+
+    def __init__(self):
+        self.id = str(uuid.uuid4())
+
     __tablename__ = "study"
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = db.Column(db.CHAR(36), primary_key=True)
     title = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
     image = db.Column(db.String, nullable=False)
+    size = db.Column(db.String, nullable=False)
     keywords = db.Column(ARRAY(String), nullable=False)
-    lastUpdated = db.Column(db.DateTime, nullable=False)
-    owner = composite(
-        Owner,
-        db.Column("owner_ORCID", db.String(128), nullable=False),
-        db.Column("owner_email", db.String(128), nullable=False),
-        db.Column("owner_name", db.String(128), nullable=False),
-    )
-
-    contributors = db.relationship("StudyContributor", back_populates="study")
+    last_updated = db.Column(db.DateTime, nullable=False)
     dataset = db.relationship("Dataset", back_populates="study")
 
+    owner = db.relationship("User")
+    owner_id = db.Column(db.CHAR(36), db.ForeignKey("user.id"))
+    contributors = db.relationship("User", secondary=study_contributors)
+    participants = db.relationship("Participant", back_populates="study")
+
     def to_dict(self):
+        """Converts the study to a dictionary"""
         return {
             "id": self.id,
             "title": self.title,
             "description": self.description,
             "image": self.image,
             "keywords": self.keywords,
-            "lastUpdated": self.lastUpdated,
+            "last_updated": str(self.last_updated),
+            "size": self.size,
             "owner": self.owner.to_dict(),
-            "contributors": [
-                contributor.to_dict() for contributor in self.contributors
-            ],
         }
-        # print(json.dumps(list(properties.keys()), indent=4))
-        # exit()
 
     @staticmethod
-    def from_data(data):
+    def from_data(data: dict):
+        """Creates a new study from a dictionary"""
         study = Study()
         study.update(data)
 
         return study
 
     def update(self, data):
+        """Updates the study from a dictionary"""
         self.title = data["title"]
         self.description = data["description"]
         self.image = data["image"]
+        self.size = data["size"]
         self.keywords = data["keywords"]
-        self.lastUpdated = datetime.now()
-        self.owner = Owner.from_data(data["owner"])
-        self.contributors = [
-            StudyContributor.from_data(c) for c in data["contributors"]
-        ]
+        self.last_updated = datetime.now()
+        self.owner = model.User.from_data(data["owner"])
 
     def validate(self):
+        """Validates the study"""
         violations = []
         # if self.description.trim() == "":
         #     violations.push("A description is required")

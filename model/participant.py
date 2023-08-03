@@ -1,34 +1,48 @@
+import uuid
+
+import model
+
 from .db import db
 
 
 class Participant(db.Model):
+    def __init__(self, study):
+        self.study = study
+        self.id = str(uuid.uuid4())
+
     __tablename__ = "participant"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    firstname = db.Column(db.String, nullable=False)
-    lastname = db.Column(db.String, nullable=False)
+    id = db.Column(db.CHAR(36), primary_key=True)
+    first_name = db.Column(db.String, nullable=False)
+    last_name = db.Column(db.String, nullable=False)
     address = db.Column(db.String, nullable=False)
     age = db.Column(db.String, nullable=False)
 
-    study_id = db.Column(db.Integer, db.ForeignKey("study.id"))
-    study = db.relationship("Study")
+    study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
+    study = db.relationship("Study", back_populates="participants")
+    dataset_versions = db.relationship(
+        "DatasetVersion",
+        back_populates="participants",
+        secondary=model.dataset_version.version_participants,
+    )
 
     def to_dict(self):
         return {
             "id": self.id,
-            "firstname": self.firstname,
-            "lastname": self.lastname,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
             "address": self.address,
             "age": self.age,
         }
 
     @staticmethod
-    def from_data(data):
-        participant = Participant()
-        # participant.id = data["id"]
-        participant.firstname = data["firstname"]
-        participant.lastname = data["lastname"]
-        participant.address = data["address"]
-
-        participant.age = data["age"]
-
+    def from_data(data: dict, study):
+        participant = Participant(study)
+        participant.update(data)
         return participant
+
+    def update(self, data):
+        # self.id = data["id"]
+        self.first_name = data["first_name"]
+        self.last_name = data["last_name"]
+        self.address = data["address"]
+        self.age = data["age"]

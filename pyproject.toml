@@ -64,6 +64,14 @@ mypy = "^1.4.1"
 pydocstyle = "^6.3.0"
 pylint = "^2.17.4"
 
+# Testing
+pytest = "^7.1"
+pytest-describe = "^2.0"
+pytest-expecter = "^3.0"
+pytest-random = "*"
+pytest-cov = "^3.0"
+freezegun = "*"
+
 # Reports
 coveragespace = "^6.0"
 
@@ -82,28 +90,35 @@ flake8 = "^6.0.0"
 
 [tool.poe.tasks]
 
-dev = "python app.py"
+dev = "flask run --debug"
+dev_docker = "docker run -p 5000:5000 fairhub-flask-api:local"
 
 freeze_dependencies = "pip list --format=freeze > requirements.txt"
 
 docs = "mkdocs serve"
 
-flake8 = "flake8 apis core model app.py"
+flake8 = "flake8 apis core model tests app.py"
 
-format_with_isort = "isort apis core model app.py"
-format_with_black = "black apis core model app.py"
+format_with_isort = "isort apis core tests model app.py"
+format_with_black = "black apis core tests model app.py"
 
 format = ["format_with_isort", "format_with_black"]
 
-typecheck = "mypy apis core model app.py"
+typecheck = "mypy apis core model tests app.py"
 
-pylint = "pylint apis core model app.py --rcfile=.pylint.ini"
+pylint = "pylint apis core model tests app.py --rcfile=.pylint.ini"
 
 lint = ["flake8", "typecheck", "pylint"]
 
 precommit = ["format", "flake8", "typecheck", "pylint"]
 
+test = "pytest -rx" 
+test_with_capture = "pytest -s"
+
 jupyter = "jupyter notebook"
+
+export_requirements = "poetry export -f requirements.txt --output requirements.txt --without-hashes"
+build_docker_image = "docker build --tag fairhub-flask-api:local ."
 
 [tool.black]
 
@@ -121,7 +136,28 @@ check_untyped_defs = true
 
 cache_dir = ".cache/mypy/"
 
+[tool.pytest.ini_options]
+
+addopts = """
+--strict-markers
+
+-r sxX
+--show-capture=log
+
+--cov-report=html
+--cov-report=term-missing:skip-covered
+--no-cov-on-fail
+"""
+
+filterwarnings = [
+    "ignore",
+    "default:::flask_restx.*",
+]
+
+cache_dir = ".cache/pytest/"
+
+markers = []
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=1.3.2"]
 build-backend = "poetry.core.masonry.api"

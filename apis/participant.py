@@ -1,41 +1,54 @@
-from flask import Blueprint, jsonify, request
+from flask import Response, jsonify, request
+from flask_restx import Namespace, Resource, fields
 
-# from faker import Faker
-from model import Participant, db
+from model import Participant, Study, db
 
-participant = Blueprint("participant", __name__)
+api = Namespace("participant", description="participant operations", path="/")
 
-
-@participant.route("/study/<studyId>/participants", methods=["GET"])
-def get_participants(studyId):
-    # fake = Faker()
-    # data = [
-    #     {
-    #         "participant_id": _ + 1,
-    #         "name": fake.name(),
-    #         "address": fake.street_address(),
-    #         "age": fake.random_int(min=1, max=99),
-    #     }
-    #     for _ in range(30)
-    # ]
-    participants = Participant.query.all()
-    return jsonify([p.to_dict() for p in participants])
+participants = api.model(
+    "Study",
+    {
+        "id": fields.String(required=True),
+        "first_name": fields.String(required=True),
+        "last_name": fields.String(required=True),
+        "firstname": fields.String(required=True),
+        "address": fields.String(required=True),
+        "age": fields.String(required=True),
+    },
+)
 
 
-@participant.route("/study/<studyId>/participants/add", methods=["POST"])
-def add_participants(studyId):
-    addParticipant = Participant.from_data(request.json)
-    db.session.add(addParticipant)
-    db.session.commit()
-    return jsonify(addParticipant.to_dict()), 201
+@api.route("/study/<study_id>/participants")
+class AddParticipant(Resource):
+    @api.doc("participants")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    @api.param("id", "Adding participants")
+    @api.marshal_with(participants)
+    def get(self, study_id: int):
+        participants = Participant.query.all()
+        return [p.to_dict() for p in participants]
+
+    def post(self, study_id: int):
+        study = Study.query.get(study_id)
+        add_participant = Participant.from_data(request.json, study)
+        db.session.add(add_participant)
+        db.session.commit()
+        return jsonify(add_participant.to_dict()), 201
 
 
-# in progress update participants
-@participant.route("/study/<studyId>/participants/update", methods=["POST"])
-def update_participants(studyId):
-    updateParticipant = Participant.query.get(studyId)
-    # if not addStudy.validate():
-    #     return 'error', 422
-    updateParticipant.update(request.json)
-    db.session.commit()
-    return jsonify(updateParticipant.to_dict()), 201
+@api.route("/study/<study_id>/participants/<participant_id>")
+class UpdateParticipant(Resource):
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    def put(self, study_id, participant_id: int):
+        update_participant = Participant.query.get(participant_id)
+        update_participant.update(request.json)
+        db.session.commit()
+        return jsonify(update_participant.to_dict())
+
+    def delete(self, study_id, participant_id: int):
+        delete_participant = Participant.query.get(participant_id)
+        db.session.delete(delete_participant)
+        db.session.commit()
+        return Response(status=204)

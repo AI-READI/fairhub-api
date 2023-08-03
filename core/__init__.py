@@ -1,3 +1,4 @@
 """Core package for the application."""
 
-from . import config, utils  # noqa: F401
+
+from . import utils  # noqa: F401
