@@ -6,11 +6,11 @@ from sqlalchemy.dialects.postgresql import ARRAY
 from .db import db
 
 
-class StudyContributor(db.Model):
+class VersionContributor(db.Model):
     def __init__(self):
         self.id = str(uuid.uuid4())
 
-    __tablename__ = "study_contributor"
+    __tablename__ = "version_contributor"
     id = db.Column(db.CHAR(36), primary_key=True)
     affiliations = db.Column(ARRAY(String), nullable=False)
     email = db.Column(db.String, nullable=False)
@@ -18,11 +18,12 @@ class StudyContributor(db.Model):
     last_name = db.Column(db.String, nullable=False)
     orcid = db.Column(db.String, nullable=False)
     roles = db.Column(ARRAY(String), nullable=False)
-    permission = db.Column(db.String, nullable=False)
     status = db.Column(db.String, nullable=False)
 
-    study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
-    study = db.relationship("Study", back_populates="contributors")
+    dataset_version_id = db.Column(db.CHAR(36), db.ForeignKey("dataset_version.id"))
+    dataset_version = db.relationship(
+        "DatasetVersion", back_populates="versionContributors"
+    )
 
     def to_dict(self):
         return {
@@ -31,24 +32,20 @@ class StudyContributor(db.Model):
             "email": self.email,
             "first_name": self.first_name,
             "last_name": self.last_name,
-            "orcid": self.orcid,
+            "orcid": self.ORCID,
             "roles": self.roles,
-            "permission": self.permission,
             "status": self.status,
         }
 
     @staticmethod
     def from_data(data: dict):
-        study_contributor = StudyContributor()
-        # for i in data.values():
-        #     print(i)
-        # study_contributor.id = data["id"]
-        study_contributor.affiliations = data["affiliations"]
-        study_contributor.email = data["email"]
-        study_contributor.first_name = data["first_name"]
-        study_contributor.last_name = data["last_name"]
-        study_contributor.orcid = data["orcid"]
-        study_contributor.roles = data["roles"]
-        study_contributor.permission = data["permission"]
-        study_contributor.status = data["status"]
-        return study_contributor
+        version_contributor = VersionContributor()
+        # versionContributor.id = data["id"]
+        version_contributor.affiliations = data["affiliations"]
+        version_contributor.email = data["email"]
+        version_contributor.first_name = data["first_name"]
+        version_contributor.last_name = data["last_name"]
+        version_contributor.orcid = data["orcid"]
+        version_contributor.roles = data["roles"]
+        version_contributor.status = data["status"]
+        return version_contributor

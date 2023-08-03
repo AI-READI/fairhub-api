@@ -7,11 +7,11 @@ name: Build and deploy Python app to Azure Web App - api-fairhub-io
 on:
   push:
     branches:
-      - staging
+      - main
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
-      - staging
+      - main
   workflow_dispatch:
 
 jobs:
@@ -63,5 +63,5 @@ jobs:
         id: deploy-to-webapp
         with:
           app-name: "api-fairhub-io"
-          slot-name: "staging"
+          slot-name: "main"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6C6B1227CD464BFDBC9173E57CDEEC65 }}

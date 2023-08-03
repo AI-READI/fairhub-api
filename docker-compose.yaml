@@ -1,0 +1,32 @@
+version: '3'
+services:
+  flask-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # image: fairhub-flask-api:local
+    entrypoint:
+      - flask
+      - run
+      - --host=0.0.0.0      
+      - --port=5000
+      - --debug
+    ports:
+      - 5000:5000
+    environment:
+      FLASK_DEBUG: 0
+      FLASK_APP: ./app.py
+      FAIRHUB_DATABASE_URL: "${FAIRHUB_DATABASE_URL:-postgresql://postgres:postgres@database:5432/fairhub}"
+#     database:
+#       image: postgres:15.3
+#       environment:
+#         - POSTGRES_USER=POSTGRES_USER
+#         - POSTGRES_PASSWORD=POSTGRES_PASSWORD
+#         - POSTGRES_DB=POSTGRES_DB
+#       ports:
+#         - 5432:5432
+#       restart: always
+#       volumes:
+#         - db-data:/var/lib/postgresql/data
+# volumes:
+#   db-data:

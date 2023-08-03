@@ -6,11 +6,11 @@ from sqlalchemy.dialects.postgresql import ARRAY
 from .db import db
 
 
-class StudyContributor(db.Model):
+class User(db.Model):
     def __init__(self):
         self.id = str(uuid.uuid4())
 
-    __tablename__ = "study_contributor"
+    __tablename__ = "user"
     id = db.Column(db.CHAR(36), primary_key=True)
     affiliations = db.Column(ARRAY(String), nullable=False)
     email = db.Column(db.String, nullable=False)
@@ -20,9 +20,6 @@ class StudyContributor(db.Model):
     roles = db.Column(ARRAY(String), nullable=False)
     permission = db.Column(db.String, nullable=False)
     status = db.Column(db.String, nullable=False)
-
-    study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
-    study = db.relationship("Study", back_populates="contributors")
 
     def to_dict(self):
         return {
@@ -39,16 +36,13 @@ class StudyContributor(db.Model):
 
     @staticmethod
     def from_data(data: dict):
-        study_contributor = StudyContributor()
-        # for i in data.values():
-        #     print(i)
-        # study_contributor.id = data["id"]
-        study_contributor.affiliations = data["affiliations"]
-        study_contributor.email = data["email"]
-        study_contributor.first_name = data["first_name"]
-        study_contributor.last_name = data["last_name"]
-        study_contributor.orcid = data["orcid"]
-        study_contributor.roles = data["roles"]
-        study_contributor.permission = data["permission"]
-        study_contributor.status = data["status"]
-        return study_contributor
+        user = User()
+        user.affiliations = data["affiliations"]
+        user.email = data["email"]
+        user.first_name = data["first_name"]
+        user.last_name = data["last_name"]
+        user.orcid = data["orcid"]
+        user.roles = data["roles"]
+        user.permission = data["permission"]
+        user.status = data["status"]
+        return user
