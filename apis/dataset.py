@@ -79,9 +79,11 @@ class AddDataset(Resource):
     def post(self, study_id):
         data = request.json
         study = Study.query.get(study_id)
-        # &&study_id
+        # study_id
         # todo if study.participant id== different study Throw error
         # query based on part id and study id (prolly filter but need to find right syntax)
+        # data["participants"] = [(Participant.filter_by(i="study_id".first()),Participant.filter_by
+        # (i="participant_id".first()) )for i in data["participants"]]
         data["participants"] = [
             Participant.query.get(i).first() for i in data["participants"]
         ]
@@ -101,8 +103,6 @@ class UpdateDataset(Resource):
     @api.param("id", "Adding version")
     @api.marshal_with(dataset_version)
     def get(self, study_id, dataset_id, version_id):
-        # if int(study_id) not in dic:
-        #     return "not found", 404
         dataset_version = DatasetVersion.query.get(version_id)
         return jsonify(dataset_version.to_dict())
 
@@ -125,7 +125,7 @@ class UpdateDataset(Resource):
 @api.route("/study/<study_id>/dataset/<dataset_id>/version")
 @api.response(201, "Success")
 @api.response(400, "Validation Error")
-class PostDataset(Resource):
+class PostDatasetVersion(Resource):
     def post(self, study_id: int, dataset_id: int):
         data = request.json
         data["participants"] = [Participant.query.get(i) for i in data["participants"]]
@@ -136,7 +136,16 @@ class PostDataset(Resource):
         return jsonify(dataset_version.to_dict())
 
 
-# @dataset.route("/study/<study_id>/dataset/<dataset_id>", methods=["POST"])
-# def update_dataset(study_id, dataset_id):
-#     pass
-#
+@api.route("/study/<study_id>/dataset/<dataset_id>")
+@api.response(201, "Success")
+@api.response(400, "Validation Error")
+class PostDataset(Resource):
+    def put(study_id, dataset_id):
+        data = request.json
+        data["participants"] = [Participant.query.get(i) for i in data["participants"]]
+        data_obj = Dataset.query.get(dataset_id)
+        dataset_ = Dataset.from_data(data_obj, data)
+        db.session.add(dataset_)
+        db.session.commit()
+        return jsonify(dataset_.to_dict())
+

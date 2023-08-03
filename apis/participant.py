@@ -39,8 +39,11 @@ class AddParticipant(Resource):
 
 @api.route("/study/<study_id>/participants/<participant_id>")
 class UpdateParticipant(Resource):
+    @api.doc("participants")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
+    @api.param("id", "Adding participants")
+    @api.marshal_with(participants)
     def put(self, study_id, participant_id: int):
         update_participant = Participant.query.get(participant_id)
         update_participant.update(request.json)

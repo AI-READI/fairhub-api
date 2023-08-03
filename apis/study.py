@@ -42,7 +42,7 @@ class Studies(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.param("id", "The study identifier")
-    # @api.marshal_list_with(study)
+    @api.marshal_list_with(study)
     def get(self):
         studies = Study.query.all()
         return [s.to_dict() for s in studies]
@@ -56,10 +56,11 @@ class Studies(Resource):
 
 @api.route("/study/<study_id>")
 class StudyResource(Resource):
-    @api.doc("update study")
+    @api.doc("get study")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.param("id", "The study identifier")
+    @api.marshal_list_with(study)
     # @api.marshal_with(study)
     def get(self, study_id: int):
         study1 = Study.query.get(study_id)
