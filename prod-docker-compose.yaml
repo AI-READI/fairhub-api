@@ -12,8 +12,6 @@ services:
       - --port=5000
     ports:
       - 5000:5000
-    volumes:
-      - ./:/app
     environment:
       FLASK_DEBUG: 0
       FLASK_APP: ./app.py
