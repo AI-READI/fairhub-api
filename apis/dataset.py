@@ -65,7 +65,7 @@ dataset_version = api.model(
 class AddDataset(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
-    @api.doc("add dataset", params={'id': 'An ID'})
+    @api.doc("add dataset", params={"id": "An ID"})
     # @api.marshal_list_with(dataset)
     # @api.expect(body=dataset)
     def get(self, study_id):
@@ -76,7 +76,6 @@ class AddDataset(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
     @api.doc("update dataset")
-
     def post(self, study_id):
         data = request.json
         study = Study.query.get(study_id)
@@ -137,7 +136,7 @@ class PostDatasetVersion(Resource):
         return jsonify(dataset_version.to_dict())
 
 
-#TODO not finalized endpoint. have to set functionality
+# TODO not finalized endpoint. have to set functionality
 @api.route("/study/<study_id>/dataset/<dataset_id>")
 @api.response(201, "Success")
 @api.response(400, "Validation Error")

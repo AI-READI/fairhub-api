@@ -25,7 +25,6 @@ class InvitedStudyContributor(db.Model):
             "date": self.email,
             "invited_on": self.first_name,
             "orcid": self.ORCID,
-
         }
 
     @staticmethod
