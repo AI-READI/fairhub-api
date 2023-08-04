@@ -11,23 +11,20 @@ class InvitedStudyContributor(db.Model):
         self.id = str(uuid.uuid4())
 
     __tablename__ = "invited_study_contributor"
-    email_address = db.Column(ARRAY(String), nullable=False)
+    email_address = db.Column(String, nullable=False)
     permission = db.Column(db.String, nullable=False)
-    date = db.Column(db.String, nullable=False)
-    last_name = db.Column(db.String, nullable=False)
+    invited_on = db.Column(db.DateTime, nullable=False)
 
-    study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
+    study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"), primary_key=True)
     study = db.relationship("Study")
     def to_dict(self):
         return {
-            "id": self.id,
-            "affiliations": self.affiliations,
-            "email": self.email,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
+            "email_address": self.id,
+            "permission": self.affiliations,
+            "date": self.email,
+            "invited_on": self.first_name,
             "orcid": self.ORCID,
-            "roles": self.roles,
-            "status": self.status,
+
         }
 
     @staticmethod
@@ -38,6 +35,4 @@ class InvitedStudyContributor(db.Model):
         version_contributor.first_name = data["first_name"]
         version_contributor.last_name = data["last_name"]
         version_contributor.orcid = data["orcid"]
-        version_contributor.roles = data["roles"]
-        version_contributor.status = data["status"]
         return version_contributor

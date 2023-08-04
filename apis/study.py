@@ -42,7 +42,7 @@ class Studies(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.param("id", "The study identifier")
-    @api.marshal_list_with(study)
+    # @api.marshal_with(study)
     def get(self):
         studies = Study.query.all()
         return [s.to_dict() for s in studies]
@@ -60,7 +60,6 @@ class StudyResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.param("id", "The study identifier")
-    @api.marshal_list_with(study)
     # @api.marshal_with(study)
     def get(self, study_id: int):
         study1 = Study.query.get(study_id)
@@ -68,8 +67,6 @@ class StudyResource(Resource):
 
     def put(self, study_id: int):
         update_study = Study.query.get(study_id)
-        # if not addStudy.validate():
-        #     return 'error', 422
         update_study.update(request.json)
         db.session.commit()
         return update_study.to_dict()

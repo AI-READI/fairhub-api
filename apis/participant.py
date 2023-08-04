@@ -24,7 +24,7 @@ class AddParticipant(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.param("id", "Adding participants")
-    @api.marshal_with(participants)
+    # @api.marshal_with(participants)
     def get(self, study_id: int):
         participants = Participant.query.all()
         return [p.to_dict() for p in participants]
@@ -43,7 +43,7 @@ class UpdateParticipant(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.param("id", "Adding participants")
-    @api.marshal_with(participants)
+    # @api.marshal_with(participants)
     def put(self, study_id, participant_id: int):
         update_participant = Participant.query.get(participant_id)
         update_participant.update(request.json)

@@ -4,18 +4,22 @@ from flask_restx import Namespace, Resource, fields
 from model import Dataset, DatasetVersion, Participant, Study, db
 
 api = Namespace("dataset", description="dataset operations", path="/")
+
+
 dataset = api.model(
     "Dataset",
     {
         "id": fields.String(required=True),
+        "last_modified": fields.String(required=True),
+        "last_published": fields.String(required=True),
+        "latest_version": fields.String(required=True),
         "name": fields.String(required=True),
-        "title": fields.String(required=True),
-        "description": fields.String(required=True),
+        "published_version": fields.String(required=True),
     },
 )
 
 contributors = api.model(
-    "DatasetVersion",
+    "Contributors",
     {
         "id": fields.String(required=True),
         "affiliations": fields.String(required=True),
@@ -30,7 +34,7 @@ contributors = api.model(
 )
 
 participants = api.model(
-    "DatasetVersion",
+    "Participants",
     {
         "id": fields.Boolean(required=True),
         "first_name": fields.String(required=True),
@@ -42,7 +46,7 @@ participants = api.model(
 
 
 dataset_version = api.model(
-    "Dataset",
+    "DatasetVersion",
     {
         "id": fields.String(required=True),
         "title": fields.String(required=True),
@@ -53,8 +57,6 @@ dataset_version = api.model(
         "published": fields.Boolean(required=True),
         "doi": fields.String(required=True),
         "name": fields.String(required=True),
-        "contributors": fields.Nested(contributors, required=True),
-        "participants": fields.Nested(participants, required=True),
     },
 )
 
@@ -63,9 +65,9 @@ dataset_version = api.model(
 class AddDataset(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
-    @api.doc("dataset")
-    @api.param("id", "Adding dataset")
-    @api.marshal_with(dataset)
+    @api.doc("add dataset", params={'id': 'An ID'})
+    # @api.marshal_list_with(dataset)
+    # @api.expect(body=dataset)
     def get(self, study_id):
         study = Study.query.get(study_id)
         datasets = Dataset.query.filter_by(study=study)
@@ -73,9 +75,8 @@ class AddDataset(Resource):
 
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
-    @api.doc("dataset")
-    @api.param("id", "Adding dataset")
-    @api.marshal_with(dataset)
+    @api.doc("update dataset")
+
     def post(self, study_id):
         data = request.json
         study = Study.query.get(study_id)
@@ -101,7 +102,7 @@ class UpdateDataset(Resource):
     @api.response(400, "Validation Error")
     @api.doc("dataset version")
     @api.param("id", "Adding version")
-    @api.marshal_with(dataset_version)
+    # @api.marshal_with(dataset_version)
     def get(self, study_id, dataset_id, version_id):
         dataset_version = DatasetVersion.query.get(version_id)
         return jsonify(dataset_version.to_dict())
@@ -136,6 +137,7 @@ class PostDatasetVersion(Resource):
         return jsonify(dataset_version.to_dict())
 
 
+#TODO not finalized endpoint. have to set functionality
 @api.route("/study/<study_id>/dataset/<dataset_id>")
 @api.response(201, "Success")
 @api.response(400, "Validation Error")

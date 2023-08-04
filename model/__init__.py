@@ -5,6 +5,7 @@ from .db import db
 from .participant import Participant
 from .study import Study
 from .user import User
+# from .invited_study_contributor import InvitedStudyContributor
 
 __all__ = [
     "Study",
@@ -14,4 +15,5 @@ __all__ = [
     "Participant",
     "db",
     "User",
+    # "InvitedStudyContributor"
 ]
