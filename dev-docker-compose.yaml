@@ -3,18 +3,15 @@ services:
   flask-api:
     build:
       context: .
-      dockerfile: Dockerfile
-    # image: fairhub-flask-api:local
-    entrypoint:
-      - flask
-      - --debug
-      - run
-      - --port=5000
-      - --host=0.0.0.0      
+      dockerfile: Dockerfile    
     ports:
-      - 5000:5000
-    volumes:
-      - ./:/app
+      - "5000:5000"
+    # volumes:
+    #   - ./apis:/app/apis
+    #   - ./model:/app/model
+    #   - ./core:/app/core
+    #   - ./app.py:/app/
+    #   - ./config.py:/app/
     environment:
       FLASK_ENV: development
       FLASK_DEBUG: 1
