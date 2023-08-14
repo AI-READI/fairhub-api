@@ -6,7 +6,10 @@ from .participant import Participant
 from .study import Study
 from .user import User
 
-# from .invited_study_contributor import InvitedStudyContributor
+from .dataset_contributor import DatasetContributor
+
+from .invited_study_contributor import StudyInvitedContributor
+from .study_contributor import StudyContributor
 
 __all__ = [
     "Study",
@@ -16,5 +19,7 @@ __all__ = [
     "Participant",
     "db",
     "User",
-    # "InvitedStudyContributor"
+    "DatasetContributor",
+    "InvitedStudyContributor",
+    "StudyContributor"
 ]

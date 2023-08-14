@@ -1,4 +1,3 @@
-# from .study_contributor import StudyContributor
 import uuid
 from datetime import datetime
 
@@ -9,47 +8,36 @@ import model
 
 from .db import db
 
-study_contributors = db.Table(
-    "study_contributors",
-    db.Model.metadata,
-    db.Column("study_id", db.ForeignKey("study.id"), primary_key=True),
-    db.Column("user_id", db.ForeignKey("user.id"), primary_key=True),
-)
-
 
 class Study(db.Model):
     """A study is a collection of datasets and participants"""
 
     def __init__(self):
         self.id = str(uuid.uuid4())
+        # self.created_at = datetime.now()
 
     __tablename__ = "study"
 
     id = db.Column(db.CHAR(36), primary_key=True)
     title = db.Column(db.String, nullable=False)
-    description = db.Column(db.String, nullable=False)
     image = db.Column(db.String, nullable=False)
-    size = db.Column(db.String, nullable=False)
-    keywords = db.Column(ARRAY(String), nullable=False)
-    last_updated = db.Column(db.DateTime, nullable=False)
-    dataset = db.relationship("Dataset", back_populates="study")
+    created_at = db.Column(db.DateTime, nullable=False)
+    updated_on = db.Column(db.DateTime, nullable=False)
 
-    owner = db.relationship("User")
-    owner_id = db.Column(db.CHAR(36), db.ForeignKey("user.id"))
-    contributors = db.relationship("User", secondary=study_contributors)
+    dataset = db.relationship("Dataset", back_populates="study")
+    study_contributors = db.relationship("StudyContributor", back_populates="study")
     participants = db.relationship("Participant", back_populates="study")
+    invited_contributors = db.relationship("StudyInvitedContributor", back_populates="study")
 
     def to_dict(self):
         """Converts the study to a dictionary"""
         return {
             "id": self.id,
             "title": self.title,
-            "description": self.description,
             "image": self.image,
-            "keywords": self.keywords,
-            "last_updated": str(self.last_updated),
-            "size": self.size,
-            "owner": self.owner.to_dict(),
+            "created_at": str(self.created_at),
+            "updated_on": str(self.updated_on),
+            # "study_contributors": self.study_contributors.to_dict(),
         }
 
     @staticmethod
@@ -63,12 +51,10 @@ class Study(db.Model):
     def update(self, data):
         """Updates the study from a dictionary"""
         self.title = data["title"]
-        self.description = data["description"]
         self.image = data["image"]
-        self.size = data["size"]
-        self.keywords = data["keywords"]
-        self.last_updated = datetime.now()
-        self.owner = model.User.from_data(data["owner"])
+        # self.user = model.User.from_data(data["user"])
+        self.created_at = data["created_at"]
+        self.updated_on = data["updated_on"]
 
     def validate(self):
         """Validates the study"""

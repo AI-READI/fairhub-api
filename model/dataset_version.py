@@ -1,18 +1,8 @@
 import uuid
-
+from datetime import datetime
 from model import Dataset
 
 from .db import db
-
-version_contributors = db.Table(
-    "version_contributors",
-    db.Model.metadata,
-    db.Column(
-        "dataset_version_id", db.ForeignKey("dataset_version.id"), primary_key=True
-    ),
-    db.Column("user_id", db.ForeignKey("user.id"), primary_key=True),
-)
-
 
 version_participants = db.Table(
     "version_participants",
@@ -31,32 +21,28 @@ class DatasetVersion(db.Model):
 
     __tablename__ = "dataset_version"
     id = db.Column(db.CHAR(36), primary_key=True)
+
     title = db.Column(db.String, nullable=False)
-    description = db.Column(db.String, nullable=False)
-    keywords = db.Column(db.String, nullable=False)
-    primary_language = db.Column(db.String, nullable=False)
-    modified = db.Column(db.DateTime, nullable=True)
-    published = db.Column(db.Boolean, nullable=False)
+    published = db.Column(db.BOOLEAN, nullable=False)
+    changelog = db.Column(db.String, nullable=False)
+    updated_on = db.Column(db.DateTime, nullable=False)
     doi = db.Column(db.String, nullable=False)
-    name = db.Column(db.String, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False)
+    published_on = db.Column(db.DateTime, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
     dataset = db.relationship("Dataset", back_populates="dataset_versions")
-    contributors = db.relationship("User", secondary=version_contributors)
     participants = db.relationship("Participant", secondary=version_participants)
 
     def to_dict(self):
         return {
             "id": self.id,
             "title": self.title,
-            "description": self.description,
-            "keywords": self.keywords,
-            "primary_language": self.primary_language,
-            "modified": str(self.modified),
+            "changelog": self.published,
+            "published_on": str(datetime.now()),
+            "created_at": str(datetime.now()),
             "published": self.published,
-            "contributors": [user.to_dict() for user in self.contributors],
             "doi": self.doi,
-            "name": self.name,
             "participants": [p.id for p in self.participants],
         }
 
@@ -68,11 +54,11 @@ class DatasetVersion(db.Model):
 
     def update(self, data):
         self.title = data["title"]
-        self.description = data["description"]
-        self.keywords = data["keywords"]
-        self.primary_language = data["primary_language"]
-        self.modified = data["modified"]
         self.published = data["published"]
-        self.participants[:] = data["participants"]
         self.doi = data["doi"]
-        self.name = data["name"]
+        self.created_at = data["created_at"]
+        self.published_on = data["published_on"]
+        self.participants[:] = data["participants"]
+        self.changelog = data["changelog"]
+
+
