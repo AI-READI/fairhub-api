@@ -15,9 +15,7 @@ class DatasetRights(db.Model):
     size = db.Column(db.String, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
-    dataset = db.relationship(
-        "Dataset", back_populates="dataset_other"
-    )
+    dataset = db.relationship("Dataset", back_populates="dataset_other")
 
     def to_dict(self):
         return {
@@ -33,9 +31,8 @@ class DatasetRights(db.Model):
         dataset_other = DatasetRights()
         dataset_other.language = data["language"]
         dataset_other.managing_organization_name = data["managing_organization_name"]
-        dataset_other.managing_organization_ror_id = data["managing_organization_ror_id"]
+        dataset_other.managing_organization_ror_id = data[
+            "managing_organization_ror_id"
+        ]
         dataset_other.size = data["size"]
         return dataset_other
-
-
-

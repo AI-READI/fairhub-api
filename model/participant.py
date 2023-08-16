@@ -34,7 +34,7 @@ class Participant(db.Model):
             "last_name": self.last_name,
             "address": self.address,
             "age": self.age,
-            "created_at" : str(datetime.now()),
+            "created_at": str(datetime.now()),
             "published_on": str(datetime.now()),
         }
 

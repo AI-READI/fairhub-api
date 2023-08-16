@@ -1,6 +1,7 @@
 import uuid
 from ..db import db
 
+
 class DatasetConsent(db.Model):
     def __init__(self):
         self.id = str(uuid.uuid4())
@@ -17,9 +18,7 @@ class DatasetConsent(db.Model):
     details = db.Column(db.Boolean, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
-    dataset = db.relationship(
-        "Dataset", back_populates="dataset_consent"
-    )
+    dataset = db.relationship("Dataset", back_populates="dataset_consent")
 
     def to_dict(self):
         return {
@@ -31,9 +30,6 @@ class DatasetConsent(db.Model):
             "genetic_only": self.genetic_only,
             "no_methods": self.no_methods,
             "details": self.details,
-
-
-
         }
 
     @staticmethod
@@ -48,6 +44,3 @@ class DatasetConsent(db.Model):
         dataset_consent.details = data["details"]
 
         return dataset_consent
-
-
-

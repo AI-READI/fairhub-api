@@ -14,7 +14,9 @@ class DatasetRelatedItemIdentifier(db.Model):
     scheme_uri = db.Column(db.String, nullable=False)
     scheme_type = db.Column(db.String, nullable=False)
 
-    dataset_related_item_id = db.Column(db.CHAR(36), db.ForeignKey("dataset_related_item.id"))
+    dataset_related_item_id = db.Column(
+        db.CHAR(36), db.ForeignKey("dataset_related_item.id")
+    )
     dataset_related_item = db.relationship(
         "DatasetRelatedItem", back_populates="dataset_related_item_identifier"
     )
@@ -26,7 +28,7 @@ class DatasetRelatedItemIdentifier(db.Model):
             "type": self.type,
             "metadata_scheme": self.metadata_scheme,
             "scheme_uri": self.scheme_uri,
-            "scheme_type": self.scheme_type
+            "scheme_type": self.scheme_type,
         }
 
     @staticmethod

@@ -1,6 +1,7 @@
 import uuid
 from ..db import db
 
+
 class DatasetContributorAffiliation(db.Model):
     def __init__(self):
         self.id = str(uuid.uuid4())
@@ -14,7 +15,6 @@ class DatasetContributorAffiliation(db.Model):
         "DatasetContributor", back_populates="dataset_contributor_affiliation"
     )
     contributor_id = db.Column(db.String, db.ForeignKey("dataset.id"))
-
 
     def to_dict(self):
         return {

@@ -21,8 +21,12 @@ class Dataset(db.Model):
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
     study = db.relationship("Study", back_populates="dataset")
 
-    dataset_contributors = db.relationship("DatasetContributor", back_populates="dataset")
-    dataset_versions = db.relationship("DatasetVersion", back_populates="dataset", lazy="dynamic")
+    dataset_contributors = db.relationship(
+        "DatasetContributor", back_populates="dataset"
+    )
+    dataset_versions = db.relationship(
+        "DatasetVersion", back_populates="dataset", lazy="dynamic"
+    )
 
     def to_dict(self):
         last_published = self.last_published()
@@ -33,7 +37,7 @@ class Dataset(db.Model):
             "updated_on": str(datetime.now()),
             "created_at": str(datetime.now()),
             "dataset_versions": [i.to_dict() for i in self.dataset_versions],
-            "latest_version": last_published.id if last_published else None
+            "latest_version": last_published.id if last_published else None,
         }
 
     def last_published(self):

@@ -18,7 +18,9 @@ class DatasetRelatedItemOther(db.Model):
     publisher = db.Column(db.String, nullable=False)
     edition = db.Column(db.String, nullable=False)
 
-    dataset_related_item_id = db.Column(db.CHAR(36), db.ForeignKey("dataset_related_item.id"))
+    dataset_related_item_id = db.Column(
+        db.CHAR(36), db.ForeignKey("dataset_related_item.id")
+    )
     dataset_related_item = db.relationship(
         "DatasetRelatedItem", back_populates="dataset_related_item_other"
     )
@@ -35,7 +37,7 @@ class DatasetRelatedItemOther(db.Model):
             "last_page": self.last_page,
             "publisher": self.publisher,
             "edition": self.edition,
-            "scheme_type": self.scheme_type
+            "scheme_type": self.scheme_type,
         }
 
     @staticmethod

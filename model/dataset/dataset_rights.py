@@ -1,6 +1,7 @@
 import uuid
 from ..db import db
 
+
 class DatasetRights(db.Model):
     def __init__(self):
         self.id = str(uuid.uuid4())
@@ -14,9 +15,7 @@ class DatasetRights(db.Model):
     identifier_scheme = db.Column(db.String, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
-    dataset = db.relationship(
-        "Dataset", back_populates="dataset_rights"
-    )
+    dataset = db.relationship("Dataset", back_populates="dataset_rights")
 
     def to_dict(self):
         return {
@@ -35,6 +34,3 @@ class DatasetRights(db.Model):
         dataset_rights.identifier = data["identifier"]
         dataset_rights.identifier_scheme = data["identifier_scheme"]
         return dataset_rights
-
-
-

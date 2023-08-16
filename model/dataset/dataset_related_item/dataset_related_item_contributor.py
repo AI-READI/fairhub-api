@@ -13,7 +13,9 @@ class DatasetRelatedItemContributor(db.Model):
     creator = db.Column(db.Boolean, nullable=False)
     contributor_type = db.Column(db.String, nullable=False)
 
-    dataset_related_item_id = db.Column(db.CHAR(36), db.ForeignKey("dataset_related_item.id"))
+    dataset_related_item_id = db.Column(
+        db.CHAR(36), db.ForeignKey("dataset_related_item.id")
+    )
     dataset_related_item = db.relationship(
         "DatasetRelatedItem", back_populates="dataset_related_item_contributor"
     )

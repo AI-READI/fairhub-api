@@ -25,7 +25,9 @@ class Study(db.Model):
     dataset = db.relationship("Dataset", back_populates="study")
     study_contributors = db.relationship("StudyContributor", back_populates="study")
     participants = db.relationship("Participant", back_populates="study")
-    invited_contributors = db.relationship("StudyInvitedContributor", back_populates="study")
+    invited_contributors = db.relationship(
+        "StudyInvitedContributor", back_populates="study"
+    )
 
     def to_dict(self):
         """Converts the study to a dictionary"""

@@ -21,5 +21,5 @@ __all__ = [
     "User",
     "DatasetContributor",
     "StudyInvitedContributor",
-    "StudyContributor"
+    "StudyContributor",
 ]

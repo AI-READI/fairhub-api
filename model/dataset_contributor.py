@@ -19,9 +19,7 @@ class DatasetContributor(db.Model):
     contributor_type = db.Column(db.String, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
-    dataset = db.relationship(
-        "Dataset", back_populates="dataset_contributors"
-    )
+    dataset = db.relationship("Dataset", back_populates="dataset_contributors")
 
     def to_dict(self):
         return {
@@ -34,9 +32,7 @@ class DatasetContributor(db.Model):
             "name_identifier_scheme_uri": self.name_identifier_scheme_uri,
             "creator": self.creator,
             "contributor_type": self.contributor_type,
-
         }
-
 
     @staticmethod
     def from_data(data: dict):
@@ -47,7 +43,9 @@ class DatasetContributor(db.Model):
         dataset_contributor.name_type = data["name_type"]
         dataset_contributor.name_identifier = data["name_identifier"]
         dataset_contributor.name_identifier_scheme = data["name_identifier_scheme"]
-        dataset_contributor.name_identifier_scheme_uri = data["name_identifier_scheme_uri"]
+        dataset_contributor.name_identifier_scheme_uri = data[
+            "name_identifier_scheme_uri"
+        ]
         dataset_contributor.creator = data["creator"]
         dataset_contributor.contributor_type = data["contributor_type"]
         return dataset_contributor

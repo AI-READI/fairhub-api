@@ -1,6 +1,7 @@
 import uuid
 from ..db import db
 
+
 class DatasetDeIdentLevel(db.Model):
     def __init__(self):
         self.id = str(uuid.uuid4())
@@ -17,9 +18,7 @@ class DatasetDeIdentLevel(db.Model):
     details = db.Column(db.Boolean, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
-    dataset = db.relationship(
-        "Dataset", back_populates="dataset_de_ident_level"
-    )
+    dataset = db.relationship("Dataset", back_populates="dataset_de_ident_level")
 
     def to_dict(self):
         return {
@@ -31,7 +30,6 @@ class DatasetDeIdentLevel(db.Model):
             "nonarr": self.nonarr,
             "k_anon": self.k_anon,
             "details": self.details,
-
         }
 
     @staticmethod
@@ -46,6 +44,3 @@ class DatasetDeIdentLevel(db.Model):
         dataset_de_ident_level.details = data["details"]
 
         return dataset_de_ident_level
-
-
-

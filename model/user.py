@@ -1,5 +1,5 @@
 import uuid
-from datetime import  datetime
+from datetime import datetime
 from .db import db
 
 
@@ -18,6 +18,7 @@ class User(db.Model):
     created_at = db.Column(db.DateTime, nullable=False)
     institution = db.Column(db.String, nullable=False)
     study_contributors = db.relationship("StudyContributor", back_populates="user")
+
     def to_dict(self):
         return {
             "id": self.id,

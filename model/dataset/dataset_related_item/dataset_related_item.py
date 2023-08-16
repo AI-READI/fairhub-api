@@ -12,9 +12,7 @@ class DatasetRelatedItem(db.Model):
     relation_type = db.Column(db.String, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
-    dataset = db.relationship(
-        "Dataset", back_populates="dataset_related_item"
-    )
+    dataset = db.relationship("Dataset", back_populates="dataset_related_item")
 
     def to_dict(self):
         return {
