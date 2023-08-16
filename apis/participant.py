@@ -5,7 +5,7 @@ from model import Participant, Study, db
 
 api = Namespace("participant", description="participant operations", path="/")
 
-participants = api.model(
+participant_model = api.model(
     "Study",
     {
         "id": fields.String(required=True),
