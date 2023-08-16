@@ -1,7 +1,4 @@
 import uuid
-
-from sqlalchemy import String
-from sqlalchemy.dialects.postgresql import ARRAY
 from datetime import datetime
 from .db import db
 
@@ -11,7 +8,7 @@ class StudyInvitedContributor(db.Model):
         self.id = str(uuid.uuid4())
 
     __tablename__ = "invited_study_contributor"
-    email_address = db.Column(String, nullable=False, primary_key=True)
+    email_address = db.Column(db.String, nullable=False, primary_key=True)
     permission = db.Column(db.String, nullable=False)
     invited_on = db.Column(db.DateTime, nullable=False)
 

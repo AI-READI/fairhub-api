@@ -1,6 +1,4 @@
 import uuid
-from sqlalchemy import String
-from sqlalchemy.dialects.postgresql import ARRAY
 
 from .db import db
 

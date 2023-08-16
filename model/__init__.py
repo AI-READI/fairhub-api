@@ -20,6 +20,6 @@ __all__ = [
     "db",
     "User",
     "DatasetContributor",
-    "InvitedStudyContributor",
+    "StudyInvitedContributor",
     "StudyContributor"
 ]

@@ -1,8 +1,6 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import String
-from sqlalchemy.dialects.postgresql import ARRAY
 
 import model
 

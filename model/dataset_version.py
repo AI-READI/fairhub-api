@@ -38,11 +38,11 @@ class DatasetVersion(db.Model):
         return {
             "id": self.id,
             "title": self.title,
-            "changelog": self.published,
+            "changelog": self.changelog,
             "published_on": str(datetime.now()),
             "created_at": str(datetime.now()),
-            "published": self.published,
             "doi": self.doi,
+            "published": self.published,
             "participants": [p.id for p in self.participants],
         }
 

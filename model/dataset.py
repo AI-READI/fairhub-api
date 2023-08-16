@@ -1,7 +1,5 @@
 import uuid
-from datetime import datetime
-from sqlalchemy.dialects.postgresql import ARRAY
-from sqlalchemy import String
+
 from datetime import datetime
 from sqlalchemy.sql.expression import true
 
@@ -17,7 +15,6 @@ class Dataset(db.Model):
 
     __tablename__ = "dataset"
     id = db.Column(db.CHAR(36), primary_key=True)
-    # latest_version = db.Column(db.String, nullable=False)
     updated_on = db.Column(db.DateTime, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
 
