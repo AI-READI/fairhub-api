@@ -46,8 +46,17 @@ def create_app():
 
     @app.cli.command("create-schema")
     def create_schema():
-        """Create the database schema."""
-        model.db.create_all()
+        engine = model.db.session.get_bind()
+        with engine.begin() as conn:
+            """Create the database schema."""
+            model.db.create_all()
+
+    @app.cli.command("destroy-schema")
+    def destroy_schema():
+        engine = model.db.session.get_bind()
+        with engine.begin() as conn:
+            """Create the database schema."""
+            model.db.drop_all()
 
     #
     # @api.route("/")
