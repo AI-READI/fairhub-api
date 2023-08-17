@@ -17,9 +17,7 @@ class DatasetFunder(db.Model):
     award_title = db.Column(db.String, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
-    dataset = db.relationship(
-        "Dataset", back_populates="dataset_funder"
-    )
+    dataset = db.relationship("Dataset", back_populates="dataset_funder")
 
     def to_dict(self):
         return {

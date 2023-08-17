@@ -13,9 +13,7 @@ class DatasetIdentifier(db.Model):
     alternate = db.Column(db.BOOLEAN, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
-    dataset = db.relationship(
-        "Dataset", back_populates="dataset_identifier"
-    )
+    dataset = db.relationship("Dataset", back_populates="dataset_identifier")
 
     def to_dict(self):
         return {

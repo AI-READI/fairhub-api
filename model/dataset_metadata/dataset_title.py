@@ -15,7 +15,6 @@ class DatasetTitle(db.Model):
     )
     dataset_id = db.Column(db.String, db.ForeignKey("dataset.id"))
 
-
     def to_dict(self):
         return {
             "id": self.id,

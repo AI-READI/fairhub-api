@@ -14,9 +14,7 @@ class DatasetAccess(db.Model):
     url_last_checked = db.Column(db.String, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
-    dataset = db.relationship(
-        "Dataset", back_populates="dataset_access"
-    )
+    dataset = db.relationship("Dataset", back_populates="dataset_access")
 
     def to_dict(self):
         return {
@@ -25,7 +23,6 @@ class DatasetAccess(db.Model):
             "description": self.description,
             "url": self.url,
             "url_last_checked": self.url_last_checked,
-
         }
 
     @staticmethod

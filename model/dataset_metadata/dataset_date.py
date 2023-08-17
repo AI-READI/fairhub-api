@@ -1,6 +1,7 @@
 import uuid
 from ..db import db
 
+
 class DatasetDate(db.Model):
     def __init__(self):
         self.id = str(uuid.uuid4())
@@ -12,11 +13,7 @@ class DatasetDate(db.Model):
     data_information = db.Column(db.String, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
-    dataset = db.relationship(
-        "Dataset", back_populates="dataset_date"
-    )
-
-
+    dataset = db.relationship("Dataset", back_populates="dataset_date")
 
     def to_dict(self):
         return {

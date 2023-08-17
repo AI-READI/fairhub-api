@@ -60,5 +60,3 @@ class DatasetVersion(db.Model):
         self.published_on = data["published_on"]
         self.participants[:] = data["participants"]
         self.changelog = data["changelog"]
-
-

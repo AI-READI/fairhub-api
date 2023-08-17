@@ -10,7 +10,9 @@ class DatasetRelatedItemTitle(db.Model):
     type = db.Column(db.String, nullable=False)
     title = db.Column(db.String, nullable=False)
 
-    dataset_related_item_id = db.Column(db.CHAR(36), db.ForeignKey("dataset_related_item.id"))
+    dataset_related_item_id = db.Column(
+        db.CHAR(36), db.ForeignKey("dataset_related_item.id")
+    )
     dataset_related_item = db.relationship(
         "DatasetRelatedItem", back_populates="dataset_related_item_title"
     )

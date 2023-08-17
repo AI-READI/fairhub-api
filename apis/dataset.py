@@ -16,7 +16,7 @@ dataset_versions_model = api.model(
         "doi": fields.String(required=True),
         "published": fields.Boolean(required=True),
         "participants": fields.List(fields.String, required=True),
-        "published_on": fields.String(required=True)
+        "published_on": fields.String(required=True),
     },
 )
 
@@ -27,7 +27,7 @@ dataset = api.model(
         "updated_on": fields.String(required=True),
         "created_at": fields.String(required=True),
         "dataset_versions": fields.Nested(dataset_versions_model, required=True),
-        "latest_version": fields.String(required=True)
+        "latest_version": fields.String(required=True),
     },
 )
 
