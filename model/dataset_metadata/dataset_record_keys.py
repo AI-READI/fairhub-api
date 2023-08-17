@@ -2,7 +2,7 @@ import uuid
 from ..db import db
 
 
-class DatasetRecordsKeys(db.Model):
+class DatasetRecordKeys(db.Model):
     def __init__(self):
         self.id = str(uuid.uuid4())
 
@@ -25,7 +25,7 @@ class DatasetRecordsKeys(db.Model):
 
     @staticmethod
     def from_data(data: dict):
-        dataset_record_keys = DatasetRecordsKeys()
+        dataset_record_keys = DatasetRecordKeys()
 
         dataset_record_keys.key_type = data["key_type"]
         dataset_record_keys.key_details = data["key_details"]

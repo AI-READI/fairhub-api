@@ -1,7 +1,6 @@
 import uuid
 from ..db import db
 
-
 class DatasetRelatedItemTitle(db.Model):
     def __init__(self):
         self.id = str(uuid.uuid4())

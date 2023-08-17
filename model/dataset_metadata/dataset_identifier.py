@@ -1,6 +1,7 @@
 import uuid
 from ..db import db
 
+
 class DatasetIdentifier(db.Model):
     def __init__(self):
         self.id = str(uuid.uuid4())
@@ -9,7 +10,7 @@ class DatasetIdentifier(db.Model):
     id = db.Column(db.CHAR(36), primary_key=True)
     identifier = db.Column(db.String, nullable=False)
     identifier_type = db.Column(db.String, nullable=False)
-    alternate = db.Column(db.Boolean, nullable=False)
+    alternate = db.Column(db.BOOLEAN, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
     dataset = db.relationship(

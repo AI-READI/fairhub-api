@@ -9,12 +9,12 @@ class DatasetConsent(db.Model):
     id = db.Column(db.CHAR(36), primary_key=True)
 
     type = db.Column(db.String, nullable=False)
-    noncommercial = db.Column(db.Boolean, nullable=False)
-    geog_restrict = db.Column(db.Boolean, nullable=False)
-    research_type = db.Column(db.Boolean, nullable=False)
-    genetic_only = db.Column(db.Boolean, nullable=False)
-    no_methods = db.Column(db.Boolean, nullable=False)
-    details = db.Column(db.Boolean, nullable=False)
+    noncommercial = db.Column(db.BOOLEAN, nullable=False)
+    geog_restrict = db.Column(db.BOOLEAN, nullable=False)
+    research_type = db.Column(db.BOOLEAN, nullable=False)
+    genetic_only = db.Column(db.BOOLEAN, nullable=False)
+    no_methods = db.Column(db.BOOLEAN, nullable=False)
+    details = db.Column(db.String, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
     dataset = db.relationship(

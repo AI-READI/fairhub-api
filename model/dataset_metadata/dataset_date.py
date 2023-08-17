@@ -29,7 +29,6 @@ class DatasetDate(db.Model):
     @staticmethod
     def from_data(data: dict):
         dataset_date = DatasetDate()
-        # dataset_contributor.id = data["id"]
         dataset_date.date = data["date"]
         dataset_date.date_type = data["date_type"]
         dataset_date.data_information = data["data_information"]

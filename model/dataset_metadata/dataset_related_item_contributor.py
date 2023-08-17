@@ -10,7 +10,7 @@ class DatasetRelatedItemContributor(db.Model):
     id = db.Column(db.CHAR(36), primary_key=True)
     name = db.Column(db.String, nullable=False)
     name_type = db.Column(db.String, nullable=False)
-    creator = db.Column(db.Boolean, nullable=False)
+    creator = db.Column(db.BOOLEAN, nullable=False)
     contributor_type = db.Column(db.String, nullable=False)
 
     dataset_related_item_id = db.Column(db.CHAR(36), db.ForeignKey("dataset_related_item.id"))

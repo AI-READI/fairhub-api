@@ -15,13 +15,13 @@ class DatasetContributor(db.Model):
     name_identifier = db.Column(db.String, nullable=False)
     name_identifier_scheme = db.Column(db.String, nullable=False)
     name_identifier_scheme_uri = db.Column(db.String, nullable=False)
-    creator = db.Column(db.Boolean, nullable=False)
+    creator = db.Column(db.BOOLEAN, nullable=False)
     contributor_type = db.Column(db.String, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
-    dataset = db.relationship(
-        "Dataset", back_populates="dataset_contributors"
-    )
+    dataset = db.relationship("Dataset", back_populates="dataset_contributors")
+    dataset_contributor_affiliation = db.relationship(
+        "DatasetContributorAffiliation", back_populates="dataset_contributors")
 
     def to_dict(self):
         return {
@@ -41,7 +41,6 @@ class DatasetContributor(db.Model):
     @staticmethod
     def from_data(data: dict):
         dataset_contributor = DatasetContributor()
-        # dataset_contributor.id = data["id"]
         dataset_contributor.first_name = data["first_name"]
         dataset_contributor.last_name = data["last_name"]
         dataset_contributor.name_type = data["name_type"]

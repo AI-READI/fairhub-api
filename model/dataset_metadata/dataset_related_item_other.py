@@ -10,11 +10,11 @@ class DatasetRelatedItemOther(db.Model):
     id = db.Column(db.CHAR(36), primary_key=True)
     publication_year = db.Column(db.String, nullable=False)
     volume = db.Column(db.String, nullable=False)
-    issue = db.Column(db.Boolean, nullable=False)
+    issue = db.Column(db.String, nullable=False)
     number_value = db.Column(db.String, nullable=False)
     number_type = db.Column(db.String, nullable=False)
     first_page = db.Column(db.String, nullable=False)
-    last_page = db.Column(db.Boolean, nullable=False)
+    last_page = db.Column(db.BOOLEAN, nullable=False)
     publisher = db.Column(db.String, nullable=False)
     edition = db.Column(db.String, nullable=False)
 

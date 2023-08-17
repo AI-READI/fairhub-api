@@ -1,6 +1,7 @@
 import uuid
 from ..db import db
 
+
 class DatasetAccess(db.Model):
     def __init__(self):
         self.id = str(uuid.uuid4())

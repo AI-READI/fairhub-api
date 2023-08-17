@@ -23,10 +23,26 @@ class Dataset(db.Model):
 
     dataset_contributors = db.relationship("DatasetContributor", back_populates="dataset")
     dataset_versions = db.relationship("DatasetVersion", back_populates="dataset", lazy="dynamic")
+    dataset_access = db.relationship("DatasetAccess", back_populates="dataset")
+    dataset_consent = db.relationship("DatasetConsent", back_populates="dataset")
+    dataset_date = db.relationship("DatasetDate", back_populates="dataset")
+    dataset_de_ident_level = db.relationship("DatasetDeIdentLevel", back_populates="dataset")
+    dataset_description = db.relationship("DatasetDescription", back_populates="dataset")
+
+    dataset_funder = db.relationship("DatasetFunder", back_populates="dataset")
+    dataset_identifier = db.relationship("DatasetIdentifier", back_populates="dataset")
+    dataset_managing_organization = db.relationship("DatasetManagingOrganization", back_populates="dataset")
+    dataset_other = db.relationship("DatasetOther", back_populates="dataset")
+    dataset_readme = db.relationship("DatasetReadme", back_populates="dataset")
+    dataset_record_keys = db.relationship("DatasetRecordKeys", back_populates="dataset")
+    dataset_related_item = db.relationship("DatasetRelatedItem", back_populates="dataset")
+    dataset_rights = db.relationship("DatasetRights", back_populates="dataset")
+    dataset_subject = db.relationship("DatasetSubject", back_populates="dataset")
+    dataset_title = db.relationship("DatasetTitle", back_populates="dataset")
 
     def to_dict(self):
         last_published = self.last_published()
-        last_modified = self.last_modified()
+        # last_modified = self.last_modified()
 
         return {
             "id": self.id,

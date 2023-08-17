@@ -15,6 +15,18 @@ class DatasetRelatedItem(db.Model):
     dataset = db.relationship(
         "Dataset", back_populates="dataset_related_item"
     )
+    dataset_related_item_contributor = db.relationship(
+        "DatasetRelatedItemContributor", back_populates="dataset_related_item"
+    )
+    dataset_related_item_identifier = db.relationship(
+        "DatasetRelatedItemIdentifier", back_populates="dataset_related_item"
+    )
+    dataset_related_item_other = db.relationship(
+        "DatasetRelatedItemOther", back_populates="dataset_related_item"
+    )
+    dataset_related_item_title = db.relationship(
+        "DatasetRelatedItemTitle", back_populates="dataset_related_item"
+    )
 
     def to_dict(self):
         return {

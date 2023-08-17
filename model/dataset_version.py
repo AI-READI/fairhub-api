@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-from model import Dataset
+from model.dataset import Dataset
 
 from .db import db
 

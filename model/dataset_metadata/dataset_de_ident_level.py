@@ -5,16 +5,16 @@ class DatasetDeIdentLevel(db.Model):
     def __init__(self):
         self.id = str(uuid.uuid4())
 
-    __tablename__ = "datasedataset_de_ident_level"
+    __tablename__ = "dataset_de_ident_level"
     id = db.Column(db.CHAR(36), primary_key=True)
 
     type = db.Column(db.String, nullable=False)
-    direct = db.Column(db.Boolean, nullable=False)
-    hipaa = db.Column(db.Boolean, nullable=False)
-    dates = db.Column(db.Boolean, nullable=False)
-    nonarr = db.Column(db.Boolean, nullable=False)
-    k_anon = db.Column(db.Boolean, nullable=False)
-    details = db.Column(db.Boolean, nullable=False)
+    direct = db.Column(db.BOOLEAN, nullable=False)
+    hipaa = db.Column(db.BOOLEAN, nullable=False)
+    dates = db.Column(db.BOOLEAN, nullable=False)
+    nonarr = db.Column(db.BOOLEAN, nullable=False)
+    k_anon = db.Column(db.BOOLEAN, nullable=False)
+    details = db.Column(db.String, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
     dataset = db.relationship(

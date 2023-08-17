@@ -10,7 +10,7 @@ class DatasetRelatedItemIdentifier(db.Model):
     id = db.Column(db.CHAR(36), primary_key=True)
     identifier = db.Column(db.String, nullable=False)
     type = db.Column(db.String, nullable=False)
-    metadata_scheme = db.Column(db.Boolean, nullable=False)
+    metadata_scheme = db.Column(db.String, nullable=False)
     scheme_uri = db.Column(db.String, nullable=False)
     scheme_type = db.Column(db.String, nullable=False)
 
