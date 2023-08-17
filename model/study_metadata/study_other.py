@@ -13,7 +13,7 @@ class StudyOther(db.Model):
     __tablename__ = "study_other"
 
     id = db.Column(db.CHAR(36), primary_key=True)
-    oversight_has_dmc = db.Column(db.Boolean, nullable=False)
+    oversight_has_dmc = db.Column(db.BOOLEAN, nullable=False)
     conditions = db.Column(ARRAY(String), nullable=False)
     keywords = db.Column(ARRAY(String), nullable=False)
     size = db.Column(db.String, nullable=False)

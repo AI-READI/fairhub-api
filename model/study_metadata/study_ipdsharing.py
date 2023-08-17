@@ -33,8 +33,6 @@ class StudyIpdsharing(db.Model):
             "ipd_sharing_time_frame": self.ipd_sharing_time_frame,
             "ipd_sharing_access_criteria": self.ipd_sharing_access_criteria,
             "ipd_sharing_url": self.ipd_sharing_url,
-
-
         }
 
     @staticmethod

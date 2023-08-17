@@ -18,7 +18,7 @@ class StudyContact(db.Model):
     phone = db.Column(db.String, nullable=False)
     phone_ext = db.Column(db.String, nullable=False)
     email_address = db.Column(db.String, nullable=False)
-    central_contact = db.Column(db.Boolean, nullable=False)
+    central_contact = db.Column(db.BOOLEAN, nullable=False)
 
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
     study = db.relationship("Study", back_populates="study_contact")

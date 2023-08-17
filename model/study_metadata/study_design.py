@@ -22,7 +22,7 @@ class StudyDesign(db.Model):
     design_masking_description = db.Column(db.String, nullable=False)
     design_who_masked_list = db.Column(ARRAY(String), nullable=False)
     phase_list = db.Column(ARRAY(String), nullable=False)
-    enrollment_count = db.Column(db.String, nullable=False)
+    enrollment_count = db.Column(db.Integer, nullable=False)
     enrollment_type = db.Column(db.String, nullable=False)
     number_arms = db.Column(db.Integer, nullable=False)
     design_observational_model_list = db.Column(ARRAY(String), nullable=False)
@@ -57,7 +57,6 @@ class StudyDesign(db.Model):
             "bio_spec_description": self.bio_spec_description,
             "target_duration": self.target_duration,
             "number_groups_cohorts": str(self.number_groups_cohorts),
-            "intervention_list": self.intervention_list
         }
 
     @staticmethod
@@ -88,15 +87,6 @@ class StudyDesign(db.Model):
         self.bio_spec_description = data["bio_spec_description"]
         self.target_duration = data["target_duration"]
         self.number_groups_cohorts = data["number_groups_cohorts"]
-        self.intervention_list = data["intervention_list"]
-
-
-
-
-
-
-
-
 
     def validate(self):
         """Validates the study"""

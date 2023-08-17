@@ -33,7 +33,7 @@ from model.dataset_metadata.dataset_related_item_title import DatasetRelatedItem
 from model.dataset_metadata.dataset_related_item import DatasetRelatedItem
 
 from .study_metadata.study_arm import StudyArm
-from .study_metadata.study_available_ipd import StudyAvailableIPD
+from .study_metadata.study_available_ipd import StudyAvailableIpd
 from .study_metadata.study_contact import StudyContact
 from .study_metadata.study_description import StudyDescription
 from .study_metadata.study_design import StudyDesign
@@ -44,7 +44,7 @@ from .study_metadata.study_ipdsharing import StudyIpdsharing
 from .study_metadata.study_link import StudyLink
 from .study_metadata.study_location import StudyLocation
 from .study_metadata.study_other import StudyOther
-from .study_metadata.study_overall_official import StudyOverall
+from .study_metadata.study_overall_official import StudyOverallOfficial
 from .study_metadata.study_reference import StudyReference
 from .study_metadata.study_sponsors_collaborators import StudySponsorsCollaborators
 from .study_metadata.study_status import StudyStatus
@@ -85,7 +85,7 @@ __all__ = [
     "DatasetRelatedItem",
     "DatasetDescription",
     "StudyArm",
-    "StudyAvailableIPD",
+    "StudyAvailableIpd",
     "StudyContact",
     "StudyDescription",
     "StudyDesign",
@@ -96,7 +96,7 @@ __all__ = [
     "StudyLink",
     "StudyLocation",
     "StudyOther",
-    "StudyOverall",
+    "StudyOverallOfficial",
     "StudyReference",
     "StudySponsorsCollaborators",
     "StudyStatus",

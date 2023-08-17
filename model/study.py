@@ -27,6 +27,25 @@ class Study(db.Model):
     participants = db.relationship("Participant", back_populates="study")
     invited_contributors = db.relationship("StudyInvitedContributor", back_populates="study")
 
+    study_arm = db.relationship("StudyArm", back_populates="study")
+    study_available_ipd = db.relationship("StudyAvailableIpd", back_populates="study")
+    study_contact = db.relationship("StudyContact", back_populates="study")
+    study_description = db.relationship("StudyDescription", back_populates="study")
+    study_design = db.relationship("StudyDesign", back_populates="study")
+    study_eligibility = db.relationship("StudyEligibility", back_populates="study")
+    study_identification = db.relationship("StudyIdentification", back_populates="study")
+    study_intervention = db.relationship("StudyIntervention", back_populates="study")
+    study_ipdsharing = db.relationship("StudyIpdsharing", back_populates="study")
+    study_link = db.relationship("StudyLink", back_populates="study")
+    study_location = db.relationship("StudyLocation", back_populates="study")
+    study_other = db.relationship("StudyOther", back_populates="study")
+    study_overall_official = db.relationship("StudyOverallOfficial", back_populates="study")
+    study_reference = db.relationship("StudyReference", back_populates="study")
+    study_sponsors_collaborators = db.relationship("StudySponsorsCollaborators", back_populates="study")
+    study_status = db.relationship("StudyStatus", back_populates="study")
+
+
+
     def to_dict(self):
         """Converts the study to a dictionary"""
         return {
