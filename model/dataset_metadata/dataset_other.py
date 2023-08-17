@@ -3,6 +3,7 @@ from ..db import db
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 
+
 class DatasetOther(db.Model):
     def __init__(self):
         self.id = str(uuid.uuid4())
@@ -18,8 +19,7 @@ class DatasetOther(db.Model):
     acknowledgement = db.Column(db.String, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
-    dataset = db.relationship("Dataset", back_populates="dataset_other"
-    )
+    dataset = db.relationship("Dataset", back_populates="dataset_other")
 
     def to_dict(self):
         return {
@@ -37,9 +37,8 @@ class DatasetOther(db.Model):
         dataset_other = DatasetOther()
         dataset_other.language = data["language"]
         dataset_other.managing_organization_name = data["managing_organization_name"]
-        dataset_other.managing_organization_ror_id = data["managing_organization_ror_id"]
+        dataset_other.managing_organization_ror_id = data[
+            "managing_organization_ror_id"
+        ]
         dataset_other.size = data["size"]
         return dataset_other
-
-
-

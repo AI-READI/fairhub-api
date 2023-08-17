@@ -1,6 +1,7 @@
 import uuid
 from ..db import db
 
+
 class StudyDescription(db.Model):
     """A study is a collection of datasets and participants"""
 
@@ -22,8 +23,7 @@ class StudyDescription(db.Model):
             "id": self.id,
             "brief_summary": self.brief_summary,
             "detailed_description": self.detailed_description,
-
-         }
+        }
 
     @staticmethod
     def from_data(data: dict):

@@ -14,7 +14,9 @@ class DatasetContributorAffiliation(db.Model):
     dataset_contributors = db.relationship(
         "DatasetContributor", back_populates="dataset_contributor_affiliation"
     )
-    dataset_contributor_id = db.Column(db.String, db.ForeignKey("dataset_contributor.id"))
+    dataset_contributor_id = db.Column(
+        db.String, db.ForeignKey("dataset_contributor.id")
+    )
 
     def to_dict(self):
         return {

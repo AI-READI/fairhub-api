@@ -31,7 +31,7 @@ class StudyIntervention(db.Model):
             "description": self.description,
             "arm_group_label_list": self.arm_group_label_list,
             "other_name_list": self.other_name_list,
-         }
+        }
 
     @staticmethod
     def from_data(data: dict):

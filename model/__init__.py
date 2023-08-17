@@ -12,7 +12,9 @@ from .study_contributor import StudyContributor
 
 from .dataset_metadata.dataset_access import DatasetAccess
 from .dataset_metadata.dataset_consent import DatasetConsent
-from .dataset_metadata.dataset_contributor_affiliation import DatasetContributorAffiliation
+from .dataset_metadata.dataset_contributor_affiliation import (
+    DatasetContributorAffiliation,
+)
 from .dataset_metadata.dataset_date import DatasetDate
 from .dataset_metadata.dataset_de_ident_level import DatasetDeIdentLevel
 from .dataset_metadata.dataset_description import DatasetDescription
@@ -26,8 +28,12 @@ from .dataset_metadata.dataset_rights import DatasetRights
 from .dataset_metadata.dataset_title import DatasetTitle
 from .dataset_metadata.dataset_subject import DatasetSubject
 
-from model.dataset_metadata.dataset_related_item_contributor import DatasetRelatedItemContributor
-from model.dataset_metadata.dataset_related_item_identifier import DatasetRelatedItemIdentifier
+from model.dataset_metadata.dataset_related_item_contributor import (
+    DatasetRelatedItemContributor,
+)
+from model.dataset_metadata.dataset_related_item_identifier import (
+    DatasetRelatedItemIdentifier,
+)
 from model.dataset_metadata.dataset_related_item_other import DatasetRelatedItemOther
 from model.dataset_metadata.dataset_related_item_title import DatasetRelatedItemTitle
 from model.dataset_metadata.dataset_related_item import DatasetRelatedItem
@@ -50,7 +56,6 @@ from .study_metadata.study_sponsors_collaborators import StudySponsorsCollaborat
 from .study_metadata.study_status import StudyStatus
 
 
-
 __all__ = [
     "Study",
     "Dataset",
@@ -62,7 +67,6 @@ __all__ = [
     "DatasetContributor",
     "StudyInvitedContributor",
     "StudyContributor",
-
     "DatasetOther",
     "DatasetAccess",
     "DatasetConsent",
@@ -100,6 +104,4 @@ __all__ = [
     "StudyReference",
     "StudySponsorsCollaborators",
     "StudyStatus",
-
-
 ]

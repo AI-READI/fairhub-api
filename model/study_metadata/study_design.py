@@ -10,6 +10,7 @@ class StudyDesign(db.Model):
 
     def __init__(self):
         self.id = str(uuid.uuid4())
+
     __tablename__ = "study_design"
 
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -51,7 +52,9 @@ class StudyDesign(db.Model):
             "enrollment_count": self.enrollment_count,
             "enrollment_type": self.enrollment_type,
             "number_arms": self.number_arms,
-            "design_observational_model_list": str(self.design_observational_model_list),
+            "design_observational_model_list": str(
+                self.design_observational_model_list
+            ),
             "design_time_perspective_list": self.design_time_perspective_list,
             "bio_spec_retention": self.bio_spec_retention,
             "bio_spec_description": self.bio_spec_description,
@@ -72,7 +75,9 @@ class StudyDesign(db.Model):
         self.design_allocation = data["design_allocation"]
         self.study_type = data["study_type"]
         self.design_interventional_model = data["design_interventional_model"]
-        self.design_intervention_model_description = data["design_intervention_model_description"]
+        self.design_intervention_model_description = data[
+            "design_intervention_model_description"
+        ]
         self.design_primary_purpose = data["design_primary_purpose"]
         self.design_masking = data["design_masking"]
         self.design_masking_description = data["design_masking_description"]

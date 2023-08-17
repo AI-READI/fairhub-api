@@ -10,6 +10,7 @@ class StudyOther(db.Model):
 
     def __init__(self):
         self.id = str(uuid.uuid4())
+
     __tablename__ = "study_other"
 
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -45,7 +46,6 @@ class StudyOther(db.Model):
         self.conditions = data["conditions"]
         self.keywords = data["keywords"]
         self.size = data["size"]
-
 
     def validate(self):
         """Validates the study"""
