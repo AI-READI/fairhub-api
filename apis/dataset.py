@@ -33,7 +33,7 @@ dataset = api.model(
 
 
 @api.route("/study/<study_id>/dataset")
-class AddDataset(Resource):
+class DatasetList(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
     @api.doc("add dataset", params={"id": "An ID"})
@@ -47,21 +47,31 @@ class AddDataset(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
     @api.doc("update dataset")
-    @api.marshal_with(dataset)
+    # @api.marshal_with(dataset)
     def post(self, study_id):
-        data = request.json
         study = Study.query.get(study_id)
         # todo if study.participant id== different study Throw error
-        dataset_obj = Dataset(study)
-        dataset_versions = DatasetVersion.from_data(dataset_obj, data)
-        db.session.add(dataset_obj)
-        db.session.add(dataset_versions)
+        dataset_ = Dataset.from_data(study, request.json)
+        db.session.add(dataset_)
         db.session.commit()
-        return dataset_versions.to_dict()
+        return dataset_.to_dict()
+
+
+# TODO not finalized endpoint. have to set functionality
+@api.route("/study/<study_id>/dataset/<dataset_id>")
+@api.response(201, "Success")
+@api.response(400, "Validation Error")
+class DatasetResource(Resource):
+    def put(self, study_id, dataset_id):
+        data = request.json
+        data_obj = Dataset.query.get(dataset_id)
+        data_obj.update(data)
+        db.session.commit()
+        return data_obj.to_dict()
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>")
-class UpdateDataset(Resource):
+class Version(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
     @api.doc("dataset version")
@@ -90,7 +100,7 @@ class UpdateDataset(Resource):
 @api.route("/study/<study_id>/dataset/<dataset_id>/version")
 @api.response(201, "Success")
 @api.response(400, "Validation Error")
-class PostDatasetVersion(Resource):
+class VersionList(Resource):
     def post(self, study_id: int, dataset_id: int):
         data = request.json
         data["participants"] = [Participant.query.get(i) for i in data["participants"]]
@@ -99,18 +109,3 @@ class PostDatasetVersion(Resource):
         db.session.add(dataset_versions)
         db.session.commit()
         return jsonify(dataset_versions.to_dict())
-
-
-# TODO not finalized endpoint. have to set functionality
-@api.route("/study/<study_id>/dataset/<dataset_id>")
-@api.response(201, "Success")
-@api.response(400, "Validation Error")
-class PostDataset(Resource):
-    def put(study_id, dataset_id):
-        data = request.json
-        data["participants"] = [Participant.query.get(i) for i in data["participants"]]
-        data_obj = Dataset.query.get(dataset_id)
-        dataset_ = Dataset.from_data(data_obj, data)
-        db.session.add(dataset_)
-        db.session.commit()
-        return jsonify(dataset_.to_dict())

@@ -11,9 +11,11 @@ participant_model = api.model(
         "id": fields.String(required=True),
         "first_name": fields.String(required=True),
         "last_name": fields.String(required=True),
-        "firstname": fields.String(required=True),
+        "created_at": fields.String(required=True),
+        "updated_on": fields.String(required=True),
         "address": fields.String(required=True),
         "age": fields.String(required=True),
+
     },
 )
 
@@ -24,7 +26,7 @@ class AddParticipant(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.param("id", "Adding participants")
-    # @api.marshal_with(participants)
+    @api.marshal_with(participant_model)
     def get(self, study_id: int):
         participants = Participant.query.all()
         return [p.to_dict() for p in participants]

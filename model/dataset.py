@@ -12,7 +12,7 @@ class Dataset(db.Model):
     def __init__(self, study):
         self.study = study
         self.id = str(uuid.uuid4())
-
+        self.created_at = datetime.now()
     __tablename__ = "dataset"
     id = db.Column(db.CHAR(36), primary_key=True)
     updated_on = db.Column(db.DateTime, nullable=False)
@@ -23,6 +23,7 @@ class Dataset(db.Model):
 
     dataset_contributors = db.relationship("DatasetContributor", back_populates="dataset")
     dataset_versions = db.relationship("DatasetVersion", back_populates="dataset", lazy="dynamic")
+
     dataset_access = db.relationship("DatasetAccess", back_populates="dataset")
     dataset_consent = db.relationship("DatasetConsent", back_populates="dataset")
     dataset_date = db.relationship("DatasetDate", back_populates="dataset")
@@ -48,7 +49,7 @@ class Dataset(db.Model):
             "id": self.id,
             "updated_on": str(datetime.now()),
             "created_at": str(datetime.now()),
-            "dataset_versions": [i.to_dict() for i in self.dataset_versions],
+            # "dataset_versions": [i.to_dict() for i in self.dataset_versions],
             "latest_version": last_published.id if last_published else None
         }
 
@@ -65,14 +66,12 @@ class Dataset(db.Model):
         ).first()
 
     @staticmethod
-    def from_data(data: dict):
-        """Creates a new dataset from a dictionary"""
-        dataset = Dataset()
-        dataset.latest_version = data["latest_version"]
-        dataset.published_year = data["published_year"]
-        dataset.resource_type = data["resource_type"]
-        dataset.publisher = data["publisher"]
-        dataset.primary_language = data["primary_language"]
-        dataset.keywords = data["keywords"]
+    def from_data(study, data: dict):
+        dataset_obj = Dataset(study)
+        dataset_obj.update(data)
+        return dataset_obj
 
-        return dataset
+    def update(self, data: dict):
+        """Creates a new dataset from a dictionary"""
+        self.updated_on = datetime.now()
+        # self.dataset_versions = data["dataset_versions"]

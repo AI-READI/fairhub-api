@@ -16,7 +16,7 @@ class StudyArm(db.Model):
     id = db.Column(db.CHAR(36), primary_key=True)
     label = db.Column(db.String, nullable=False)
     type = db.Column(db.String, nullable=False)
-    description = db.Column(db.DateTime, nullable=False)
+    description = db.Column(db.String, nullable=False)
     intervention_list = db.Column(ARRAY(String), nullable=False)
 
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))

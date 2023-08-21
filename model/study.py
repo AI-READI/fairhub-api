@@ -46,8 +46,6 @@ class Study(db.Model):
     study_sponsors_collaborators = db.relationship("StudySponsorsCollaborators", back_populates="study")
     study_status = db.relationship("StudyStatus", back_populates="study")
 
-
-
     def to_dict(self):
         """Converts the study to a dictionary"""
         return {
