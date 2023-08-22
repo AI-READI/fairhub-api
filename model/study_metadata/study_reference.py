@@ -8,6 +8,7 @@ class StudyReference(db.Model):
 
     def __init__(self):
         self.id = str(uuid.uuid4())
+
     __tablename__ = "study_reference"
 
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -43,7 +44,6 @@ class StudyReference(db.Model):
         self.title = data["title"]
         self.type = data["type"]
         self.citation = data["citation"]
-
 
     def validate(self):
         """Validates the study"""

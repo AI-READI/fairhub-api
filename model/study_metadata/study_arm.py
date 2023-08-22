@@ -22,7 +22,6 @@ class StudyArm(db.Model):
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
     study = db.relationship("Study", back_populates="study_arm")
 
-
     def to_dict(self):
         """Converts the study to a dictionary"""
         return {
@@ -47,7 +46,6 @@ class StudyArm(db.Model):
         self.type = data["type"]
         self.description = data["description"]
         self.intervention_list = data["intervention_list"]
-
 
     def validate(self):
         """Validates the study"""

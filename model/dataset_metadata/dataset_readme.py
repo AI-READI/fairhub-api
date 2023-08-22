@@ -1,6 +1,7 @@
 import uuid
 from ..db import db
 
+
 class DatasetReadme(db.Model):
     def __init__(self):
         self.id = str(uuid.uuid4())
@@ -10,9 +11,7 @@ class DatasetReadme(db.Model):
     content = db.Column(db.BOOLEAN, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
-    dataset = db.relationship(
-        "Dataset", back_populates="dataset_readme"
-    )
+    dataset = db.relationship("Dataset", back_populates="dataset_readme")
 
     def to_dict(self):
         return {
@@ -25,6 +24,3 @@ class DatasetReadme(db.Model):
         dataset_readme = DatasetReadme()
         dataset_readme.content = data["content"]
         return dataset_readme
-
-
-

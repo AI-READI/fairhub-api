@@ -29,7 +29,7 @@ class StudyIdentification(db.Model):
             "identifier_domain": self.identifier_domain,
             "identifier_link": self.identifier_link,
             "secondary": self.secondary,
-         }
+        }
 
     @staticmethod
     def from_data(data: dict):

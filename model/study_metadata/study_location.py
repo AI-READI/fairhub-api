@@ -1,6 +1,7 @@
 import uuid
 from ..db import db
 
+
 class StudyLocation(db.Model):
     """A study is a collection of datasets and participants"""
 

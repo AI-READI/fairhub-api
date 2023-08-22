@@ -19,11 +19,7 @@ class StudyLink(db.Model):
 
     def to_dict(self):
         """Converts the study to a dictionary"""
-        return {
-            "id": self.id,
-            "url": self.url,
-            "title": self.title
-         }
+        return {"id": self.id, "url": self.url, "title": self.title}
 
     @staticmethod
     def from_data(data: dict):

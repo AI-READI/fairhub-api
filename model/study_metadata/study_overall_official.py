@@ -7,6 +7,7 @@ class StudyOverallOfficial(db.Model):
 
     def __init__(self):
         self.id = str(uuid.uuid4())
+
     __tablename__ = "study_overall_official"
 
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -42,7 +43,6 @@ class StudyOverallOfficial(db.Model):
         self.last_name = data["last_name"]
         self.affiliation = data["affiliation"]
         self.role = data["role"]
-
 
     def validate(self):
         """Validates the study"""

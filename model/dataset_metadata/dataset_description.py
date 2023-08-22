@@ -12,9 +12,7 @@ class DatasetDescription(db.Model):
     description_type = db.Column(db.String, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
-    dataset = db.relationship(
-        "Dataset", back_populates="dataset_description"
-    )
+    dataset = db.relationship("Dataset", back_populates="dataset_description")
 
     def to_dict(self):
         return {

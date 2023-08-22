@@ -35,15 +35,21 @@ class Study(db.Model):
     study_description = db.relationship("StudyDescription", back_populates="study")
     study_design = db.relationship("StudyDesign", back_populates="study")
     study_eligibility = db.relationship("StudyEligibility", back_populates="study")
-    study_identification = db.relationship("StudyIdentification", back_populates="study")
+    study_identification = db.relationship(
+        "StudyIdentification", back_populates="study"
+    )
     study_intervention = db.relationship("StudyIntervention", back_populates="study")
     study_ipdsharing = db.relationship("StudyIpdsharing", back_populates="study")
     study_link = db.relationship("StudyLink", back_populates="study")
     study_location = db.relationship("StudyLocation", back_populates="study")
     study_other = db.relationship("StudyOther", back_populates="study")
-    study_overall_official = db.relationship("StudyOverallOfficial", back_populates="study")
+    study_overall_official = db.relationship(
+        "StudyOverallOfficial", back_populates="study"
+    )
     study_reference = db.relationship("StudyReference", back_populates="study")
-    study_sponsors_collaborators = db.relationship("StudySponsorsCollaborators", back_populates="study")
+    study_sponsors_collaborators = db.relationship(
+        "StudySponsorsCollaborators", back_populates="study"
+    )
     study_status = db.relationship("StudyStatus", back_populates="study")
 
     def to_dict(self):

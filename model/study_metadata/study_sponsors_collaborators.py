@@ -37,7 +37,6 @@ class StudySponsorsCollaborators(db.Model):
             "lead_sponsor_first_name": self.lead_sponsor_first_name,
             "lead_sponsor_last_name": self.lead_sponsor_last_name,
             "collaborator_name": self.collaborator_name,
-
         }
 
     @staticmethod
@@ -51,10 +50,18 @@ class StudySponsorsCollaborators(db.Model):
     def update(self, data):
         """Updates the study from a dictionary"""
         self.responsible_party_type = data["responsible_party_type"]
-        self.responsible_party_investigator_first_name = data["responsible_party_investigator_first_name"]
-        self.responsible_party_investigator_last_name = data["responsible_party_investigator_last_name"]
-        self.responsible_party_investigator_title = data["responsible_party_investigator_title"]
-        self.responsible_party_investigator_affiliation = data["responsible_party_investigator_affiliation"]
+        self.responsible_party_investigator_first_name = data[
+            "responsible_party_investigator_first_name"
+        ]
+        self.responsible_party_investigator_last_name = data[
+            "responsible_party_investigator_last_name"
+        ]
+        self.responsible_party_investigator_title = data[
+            "responsible_party_investigator_title"
+        ]
+        self.responsible_party_investigator_affiliation = data[
+            "responsible_party_investigator_affiliation"
+        ]
         self.lead_sponsor_first_name = data["lead_sponsor_first_name"]
         self.lead_sponsor_last_name = data["lead_sponsor_last_name"]
         self.collaborator_name = data["collaborator_name"]

@@ -10,9 +10,7 @@ class DatasetTitle(db.Model):
     id = db.Column(db.CHAR(36), primary_key=True)
     title = db.Column(db.String, nullable=False)
     type = db.Column(db.String, nullable=False)
-    dataset = db.relationship(
-        "Dataset", back_populates="dataset_title"
-    )
+    dataset = db.relationship("Dataset", back_populates="dataset_title")
     dataset_id = db.Column(db.String, db.ForeignKey("dataset.id"))
 
     def to_dict(self):

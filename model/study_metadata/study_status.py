@@ -33,7 +33,6 @@ class StudyStatus(db.Model):
             "start_date_type": self.start_date_type,
             "completion_date": str(self.completion_date),
             "completion_date_type": self.completion_date_type,
-
         }
 
     @staticmethod

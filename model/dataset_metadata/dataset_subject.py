@@ -16,9 +16,7 @@ class DatasetSubject(db.Model):
     classification_code = db.Column(db.String, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
-    dataset = db.relationship(
-        "Dataset", back_populates="dataset_subject"
-    )
+    dataset = db.relationship("Dataset", back_populates="dataset_subject")
 
     def to_dict(self):
         return {
@@ -28,7 +26,6 @@ class DatasetSubject(db.Model):
             "scheme_uri": self.scheme_uri,
             "value_uri": self.value_uri,
             "classification_code": self.classification_code,
-
         }
 
     @staticmethod
@@ -40,6 +37,3 @@ class DatasetSubject(db.Model):
         dataset_subject.value_uri = data["value_uri"]
         dataset_subject.classification_code = data["classification_code"]
         return dataset_subject
-
-
-
