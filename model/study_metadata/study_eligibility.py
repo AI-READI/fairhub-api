@@ -34,7 +34,7 @@ class StudyEligibility(db.Model):
             "gender": self.gender,
             "gender_based": self.gender_based,
             "gender_description": self.gender_description,
-            "minimum_age": self.miminum_age,
+            "minimum_age": self.minimum_age,
             "maximum_age": self.maximum_age,
             "healthy_volunteers": self.healthy_volunteers,
             "inclusion_criteria": self.inclusion_criteria,
