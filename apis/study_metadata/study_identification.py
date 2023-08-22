@@ -14,7 +14,7 @@ study_identification = api.model(
         "identifier_type": fields.String(required=True),
         "identifier_domain": fields.String(required=True),
         "identifier_link": fields.String(required=True),
-        "secondary": fields.Boolean(required=True)
+        "secondary": fields.Boolean(required=True),
     },
 )
 
@@ -30,5 +30,3 @@ class StudyIdentificationResource(Resource):
         study_ = Study.query.get(study_id)
         study_identification_ = study_.study_identification
         return [s.to_dict() for s in study_identification_]
-
-

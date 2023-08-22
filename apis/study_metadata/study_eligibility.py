@@ -20,7 +20,6 @@ study_eligibility = api.model(
         "exclusion_criteria": fields.List(fields.String, required=True),
         "study_population": fields.String(required=True),
         "sampling_method": fields.String(required=True),
-
     },
 )
 
@@ -36,5 +35,3 @@ class StudyEligibilityResource(Resource):
         study_ = Study.query.get(study_id)
         study_eligibility_ = study_.study_eligibility
         return [s.to_dict() for s in study_eligibility_]
-
-

@@ -41,5 +41,3 @@ class StudyDesignResource(Resource):
         study_ = Study.query.get(study_id)
         study_design_ = study_.study_design
         return [s.to_dict() for s in study_design_]
-
-
