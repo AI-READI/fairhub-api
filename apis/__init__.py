@@ -66,11 +66,11 @@ api.add_namespace(intervention)
 api.add_namespace(ipdsharing)
 api.add_namespace(link)
 api.add_namespace(location)
-# api.add_namespace(other)
-# api.add_namespace(overall_official)
-# api.add_namespace(reference)
-# api.add_namespace(sponsors_collaborator)
-# api.add_namespace(status)
+api.add_namespace(other)
+api.add_namespace(overall_official)
+api.add_namespace(reference)
+api.add_namespace(sponsors_collaborator)
+api.add_namespace(status)
 
 
 
