@@ -31,12 +31,12 @@ study_design = api.model(
 
 
 @api.route("/study/<study_id>/metadata/design")
-class StudyArmResource(Resource):
+class StudyDesignResource(Resource):
     @api.doc("list_design")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")
-    # @api.marshal_with(study_design)
+    @api.marshal_with(study_design)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_design_ = study_.study_design

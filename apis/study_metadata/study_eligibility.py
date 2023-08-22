@@ -26,12 +26,12 @@ study_eligibility = api.model(
 
 
 @api.route("/study/<study_id>/metadata/eligibility")
-class StudyArmResource(Resource):
+class StudyEligibilityResource(Resource):
     @api.doc("list_study")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")
-    # @api.marshal_with(study_eligibility)
+    @api.marshal_with(study_eligibility)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_eligibility_ = study_.study_eligibility

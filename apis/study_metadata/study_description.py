@@ -18,7 +18,7 @@ study_description = api.model(
 
 
 @api.route("/study/<study_id>/metadata/description")
-class StudyArmResource(Resource):
+class StudyDescriptionResource(Resource):
     @api.doc("list_study")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
