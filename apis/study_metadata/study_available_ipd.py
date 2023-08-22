@@ -8,11 +8,10 @@ study_available = api.model(
     "StudyAvailable",
     {
         "id": fields.String(required=True),
-        "label": fields.String(required=True),
+        "identifier": fields.String(required=True),
         "type": fields.String(required=True),
-        "description": fields.String(required=True),
-        "intervention_list": fields.List(fields.String, required=True),
-
+        "comment": fields.String(required=True),
+        "url": fields.String(required=True),
     },
 )
 
@@ -23,7 +22,7 @@ class StudyArmResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")
-    # @api.marshal_with(study_available)
+    @api.marshal_with(study_available)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_available_ = study_.study_available_ipd
