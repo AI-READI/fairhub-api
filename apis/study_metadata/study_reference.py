@@ -27,5 +27,3 @@ class StudyReferenceResource(Resource):
         study_ = Study.query.get(study_id)
         study_reference_ = study_.study_reference
         return [s.to_dict() for s in study_reference_]
-
-

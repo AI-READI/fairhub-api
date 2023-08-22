@@ -12,7 +12,6 @@ study_link = api.model(
         "id": fields.String(required=True),
         "url": fields.String(required=True),
         "title": fields.String(required=True),
-
     },
 )
 
@@ -28,5 +27,3 @@ class StudyLinkResource(Resource):
         study_ = Study.query.get(study_id)
         study_link_ = study_.study_link
         return [s.to_dict() for s in study_link_]
-
-

@@ -29,5 +29,3 @@ class StudyStatusResource(Resource):
         study_ = Study.query.get(study_id)
         study_status_ = study_.study_status
         return [s.to_dict() for s in study_status_]
-
-

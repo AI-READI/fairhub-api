@@ -14,9 +14,7 @@ study_intervention = api.model(
         "name": fields.String(required=True),
         "description": fields.String(required=True),
         "arm_group_label_list": fields.List(fields.String, required=True),
-        "other_name_list": fields.List(fields.String, required=True)
-
-
+        "other_name_list": fields.List(fields.String, required=True),
     },
 )
 
@@ -32,5 +30,3 @@ class StudyInterventionResource(Resource):
         study_ = Study.query.get(study_id)
         study_intervention_ = study_.study_intervention
         return [s.to_dict() for s in study_intervention_]
-
-
