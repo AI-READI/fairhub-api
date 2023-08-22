@@ -27,5 +27,3 @@ class StudyAvailableResource(Resource):
         study_ = Study.query.get(study_id)
         study_available_ = study_.study_available_ipd
         return [s.to_dict() for s in study_available_]
-
-

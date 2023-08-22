@@ -12,7 +12,6 @@ study_description = api.model(
         "id": fields.String(required=True),
         "brief_summary": fields.String(required=True),
         "detailed_description": fields.String(required=True),
-
     },
 )
 
@@ -28,5 +27,3 @@ class StudyDescriptionResource(Resource):
         study_ = Study.query.get(study_id)
         study_description_ = study_.study_description
         return [s.to_dict() for s in study_description_]
-
-

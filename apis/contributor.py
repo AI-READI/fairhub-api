@@ -11,7 +11,6 @@ contributors_model = api.model(
         "user_id": fields.String(required=True),
         "permission": fields.String(required=True),
         "study_id": fields.String(required=True),
-
     },
 )
 

@@ -15,7 +15,6 @@ participant_model = api.model(
         "updated_on": fields.String(required=True),
         "address": fields.String(required=True),
         "age": fields.String(required=True),
-
     },
 )
 

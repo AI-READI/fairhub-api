@@ -17,7 +17,6 @@ study_contact = api.model(
         "phone_ext": fields.String(required=True),
         "email_address": fields.String(required=True),
         "central_contact": fields.Boolean(required=True),
-
     },
 )
 
@@ -33,5 +32,3 @@ class StudyContactResource(Resource):
         study_ = Study.query.get(study_id)
         study_contact_ = study_.study_contact
         return [s.to_dict() for s in study_contact_]
-
-

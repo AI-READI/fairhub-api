@@ -8,6 +8,7 @@ class StudyAvailableIpd(db.Model):
 
     def __init__(self):
         self.id = str(uuid.uuid4())
+
     __tablename__ = "study_available_ipd"
 
     id = db.Column(db.CHAR(36), primary_key=True)

@@ -13,6 +13,7 @@ class Dataset(db.Model):
         self.study = study
         self.id = str(uuid.uuid4())
         self.created_at = datetime.now()
+
     __tablename__ = "dataset"
     id = db.Column(db.CHAR(36), primary_key=True)
     updated_on = db.Column(db.DateTime, nullable=False)
@@ -21,22 +22,34 @@ class Dataset(db.Model):
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
     study = db.relationship("Study", back_populates="dataset")
 
-    dataset_contributors = db.relationship("DatasetContributor", back_populates="dataset")
-    dataset_versions = db.relationship("DatasetVersion", back_populates="dataset", lazy="dynamic")
+    dataset_contributors = db.relationship(
+        "DatasetContributor", back_populates="dataset"
+    )
+    dataset_versions = db.relationship(
+        "DatasetVersion", back_populates="dataset", lazy="dynamic"
+    )
 
     dataset_access = db.relationship("DatasetAccess", back_populates="dataset")
     dataset_consent = db.relationship("DatasetConsent", back_populates="dataset")
     dataset_date = db.relationship("DatasetDate", back_populates="dataset")
-    dataset_de_ident_level = db.relationship("DatasetDeIdentLevel", back_populates="dataset")
-    dataset_description = db.relationship("DatasetDescription", back_populates="dataset")
+    dataset_de_ident_level = db.relationship(
+        "DatasetDeIdentLevel", back_populates="dataset"
+    )
+    dataset_description = db.relationship(
+        "DatasetDescription", back_populates="dataset"
+    )
 
     dataset_funder = db.relationship("DatasetFunder", back_populates="dataset")
     dataset_identifier = db.relationship("DatasetIdentifier", back_populates="dataset")
-    dataset_managing_organization = db.relationship("DatasetManagingOrganization", back_populates="dataset")
+    dataset_managing_organization = db.relationship(
+        "DatasetManagingOrganization", back_populates="dataset"
+    )
     dataset_other = db.relationship("DatasetOther", back_populates="dataset")
     dataset_readme = db.relationship("DatasetReadme", back_populates="dataset")
     dataset_record_keys = db.relationship("DatasetRecordKeys", back_populates="dataset")
-    dataset_related_item = db.relationship("DatasetRelatedItem", back_populates="dataset")
+    dataset_related_item = db.relationship(
+        "DatasetRelatedItem", back_populates="dataset"
+    )
     dataset_rights = db.relationship("DatasetRights", back_populates="dataset")
     dataset_subject = db.relationship("DatasetSubject", back_populates="dataset")
     dataset_title = db.relationship("DatasetTitle", back_populates="dataset")
@@ -50,7 +63,7 @@ class Dataset(db.Model):
             "updated_on": str(datetime.now()),
             "created_at": str(datetime.now()),
             # "dataset_versions": [i.to_dict() for i in self.dataset_versions],
-            "latest_version": last_published.id if last_published else None
+            "latest_version": last_published.id if last_published else None,
         }
 
     def last_published(self):

@@ -13,9 +13,9 @@ study_arm = api.model(
         "type": fields.String(required=True),
         "description": fields.String(required=True),
         "intervention_list": fields.List(fields.String, required=True),
-
     },
 )
+
 
 @api.route("/study/<study_id>/metadata/arm")
 class StudyArm(Resource):
@@ -28,5 +28,3 @@ class StudyArm(Resource):
         study_ = Study.query.get(study_id)
         study_arm_ = study_.study_arm
         return [s.to_dict() for s in study_arm_]
-
-

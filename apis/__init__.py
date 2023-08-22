@@ -25,13 +25,6 @@ from .study_metadata.study_sponsors_collaborators import api as sponsors_collabo
 from .study_metadata.study_status import api as status
 
 
-
-
-
-
-
-
-
 api = Api(
     title="FAIRHUB",
     description="The backend api system for the fairhub vue app",
@@ -71,10 +64,3 @@ api.add_namespace(location)
 # api.add_namespace(reference)
 # api.add_namespace(sponsors_collaborator)
 # api.add_namespace(status)
-
-
-
-
-
-
-
