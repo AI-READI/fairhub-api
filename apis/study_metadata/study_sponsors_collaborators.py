@@ -29,7 +29,7 @@ class StudyStatusResource(Resource):
     @api.marshal_with(study_sponsors_collaborators)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
-        study_sponsors_collaborators_ = study_.sponsors_collaborators
+        study_sponsors_collaborators_ = study_.study_sponsors_collaborators
         return [s.to_dict() for s in study_sponsors_collaborators_]
 
 
