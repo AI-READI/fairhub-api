@@ -3,8 +3,9 @@ from ..db import db
 
 
 class DatasetDeIdentLevel(db.Model):
-    def __init__(self):
+    def __init__(self, dataset):
         self.id = str(uuid.uuid4())
+        self.dataset = dataset
 
     __tablename__ = "dataset_de_ident_level"
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -33,14 +34,15 @@ class DatasetDeIdentLevel(db.Model):
         }
 
     @staticmethod
-    def from_data(data: dict):
-        dataset_de_ident_level = DatasetDeIdentLevel()
-        dataset_de_ident_level.type = data["type"]
-        dataset_de_ident_level.direct = data["direct"]
-        dataset_de_ident_level.hipaa = data["hipaa"]
-        dataset_de_ident_level.dates = data["dates"]
-        dataset_de_ident_level.nonarr = data["nonarr"]
-        dataset_de_ident_level.k_anon = data["k_anon"]
-        dataset_de_ident_level.details = data["details"]
-
+    def from_data(dataset, data: dict):
+        dataset_de_ident_level = DatasetDeIdentLevel(dataset)
+        dataset_de_ident_level.update(data)
         return dataset_de_ident_level
+    def update(self, data):
+        self.type = data["type"]
+        self.direct = data["direct"]
+        self.hipaa = data["hipaa"]
+        self.dates = data["dates"]
+        self.nonarr = data["nonarr"]
+        self.k_anon = data["k_anon"]
+        self.details = data["details"]

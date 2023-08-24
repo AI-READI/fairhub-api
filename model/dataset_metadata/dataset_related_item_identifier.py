@@ -40,3 +40,5 @@ class DatasetRelatedItemIdentifier(db.Model):
         dataset_related_item_identifier.scheme_uri = data["scheme_uri"]
         dataset_related_item_identifier.scheme_type = data["scheme_type"]
         return dataset_related_item_identifier
+
+

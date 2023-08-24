@@ -3,9 +3,9 @@ from ..db import db
 
 
 class DatasetRelatedItemTitle(db.Model):
-    def __init__(self):
+    def __init__(self, dataset):
         self.id = str(uuid.uuid4())
-
+        self.dataset = dataset
     __tablename__ = "dataset_related_item_title"
     id = db.Column(db.CHAR(36), primary_key=True)
     type = db.Column(db.String, nullable=False)
@@ -26,8 +26,11 @@ class DatasetRelatedItemTitle(db.Model):
         }
 
     @staticmethod
-    def from_data(data: dict):
+    def from_data(dataset, data: dict):
         dataset_related_item_title = DatasetRelatedItemTitle()
-        dataset_related_item_title.type = data["type"]
-        dataset_related_item_title.title = data["title"]
+        dataset_related_item_title.update(data)
         return dataset_related_item_title
+
+    def update(self, data):
+        self.type = data["type"]
+        self.title = data["title"]

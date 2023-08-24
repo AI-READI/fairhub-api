@@ -3,9 +3,9 @@ from ..db import db
 
 
 class DatasetContributorAffiliation(db.Model):
-    def __init__(self):
+    def __init__(self, dataset):
         self.id = str(uuid.uuid4())
-
+        self.dataset = dataset
     __tablename__ = "dataset_contributor_affiliation"
     id = db.Column(db.CHAR(36), primary_key=True)
     identifier = db.Column(db.String, nullable=False)
@@ -27,9 +27,14 @@ class DatasetContributorAffiliation(db.Model):
         }
 
     @staticmethod
-    def from_data(data: dict):
-        dataset_contributor = DatasetContributorAffiliation()
-        dataset_contributor.name_identifier = data["identifier"]
-        dataset_contributor.name_identifier_scheme = data["identifier_scheme"]
-        dataset_contributor.name_identifier_scheme_uri = data["identifier_scheme_uri"]
+    def from_data(dataset, data: dict):
+        dataset_contributor = DatasetContributorAffiliation(dataset)
+        dataset_contributor.update(data)
         return dataset_contributor
+
+
+    def update(self, data):
+        self.identifier = data["identifier"]
+        self.identifier_scheme = data["identifier_scheme"]
+        self.identifier_scheme_uri = data["identifier_scheme_uri"]
+

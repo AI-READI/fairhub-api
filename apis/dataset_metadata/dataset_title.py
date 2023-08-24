@@ -1,34 +1,46 @@
-from model import Dataset
+from model import Dataset, DatasetTitle, db
 
 from flask_restx import Namespace, Resource, fields
+from flask import jsonify, request
 
 
 api = Namespace("title", description="dataset operations", path="/")
 
 dataset_title = api.model(
-    "StudyContact",
+    "DatasetTitle",
     {
         "id": fields.String(required=True),
-        "first_name": fields.String(required=True),
-        "last_name": fields.String(required=True),
-        "affiliation": fields.String(required=True),
-        "role": fields.String(required=True),
-        "phone": fields.String(required=True),
-        "phone_ext": fields.String(required=True),
-        "email_address": fields.String(required=True),
-        "central_contact": fields.Boolean(required=True),
+        "title": fields.String(required=True),
+        "type": fields.String(required=True),
+
     },
 )
 
 
-@api.route("/study/<study_id>/metadata/contact")
-class StudyContactResource(Resource):
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/title")
+class DatasetTitleResource(Resource):
     @api.doc("dataset")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The dataset identifier")
     @api.marshal_with(dataset_title)
-    def get(self, dataset_id: int):
+    def get(self,  study_id: int, dataset_id: int):
         dataset_ = Dataset.query.get(dataset_id)
         dataset_title_ = dataset_.dataset_title
         return [d.to_dict() for d in dataset_title_]
+
+    def post(self, study_id: int, dataset_id: int):
+        data = request.json
+        data_obj = Dataset.query.get(dataset_id)
+        dataset_title_ = DatasetTitle.from_data(data_obj, data)
+        db.session.add(dataset_title_)
+        db.session.commit()
+        return dataset_title_.to_dict()
+
+    @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/title/<title_id>")
+    class DatasetTitleUpdate(Resource):
+        def put(self, study_id: int, dataset_id: int, title_id: int):
+            dataset_title_ = DatasetTitle.query.get(title_id)
+            dataset_title_.update(request.json)
+            db.session.commit()
+            return dataset_title_.to_dict()

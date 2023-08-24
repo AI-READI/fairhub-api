@@ -1,7 +1,7 @@
-from model import Dataset
+from model import Dataset, DatasetFunder, db
 
 from flask_restx import Namespace, Resource, fields
-
+from flask import request
 
 api = Namespace("description", description="dataset operations", path="/")
 
@@ -32,3 +32,20 @@ class DatasetFunderResource(Resource):
         dataset_ = Dataset.query.get(dataset_id)
         dataset_funder_ = dataset_.dataset_funder
         return [d.to_dict() for d in dataset_funder_]
+
+    def post(self, study_id: int, dataset_id: int):
+        data = request.json
+        data_obj = Dataset.query.get(dataset_id)
+        dataset_funder_ = DatasetFunder.from_data(data_obj, data)
+        db.session.add(dataset_funder_)
+        db.session.commit()
+        return dataset_funder_.to_dict()
+
+
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/funder/<funder_id>")
+class DatasetFunderUpdate(Resource):
+    def put(self, study_id: int, dataset_id: int, funder_id: int):
+        dataset_funder_ = DatasetFunder.query.get(funder_id)
+        dataset_funder_.update(request.json)
+        db.session.commit()
+        return dataset_funder_.to_dict()

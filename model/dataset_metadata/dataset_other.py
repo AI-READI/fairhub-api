@@ -5,9 +5,9 @@ from sqlalchemy.dialects.postgresql import ARRAY
 
 
 class DatasetOther(db.Model):
-    def __init__(self):
+    def __init__(self, dataset):
         self.id = str(uuid.uuid4())
-
+        self.dataset = dataset
     __tablename__ = "dataset_other"
     id = db.Column(db.CHAR(36), primary_key=True)
 
@@ -28,17 +28,22 @@ class DatasetOther(db.Model):
             "managing_organization_name": self.managing_organization_name,
             "managing_organization_ror_id": self.managing_organization_ror_id,
             "standards_followed": self.managing_organization_ror_id,
-            "acknowledgement": self.size,
+            "acknowledgement": self.acknowledgement,
             "size": self.size,
         }
 
     @staticmethod
-    def from_data(data: dict):
-        dataset_other = DatasetOther()
-        dataset_other.language = data["language"]
-        dataset_other.managing_organization_name = data["managing_organization_name"]
-        dataset_other.managing_organization_ror_id = data[
+    def from_data(dataset, data: dict):
+        dataset_other = DatasetOther(dataset)
+        dataset_other.update(data)
+        return dataset_other
+
+    def update(self, data):
+        self.language = data["language"]
+        self.managing_organization_name = data["managing_organization_name"]
+        self.managing_organization_ror_id = data[
             "managing_organization_ror_id"
         ]
-        dataset_other.size = data["size"]
-        return dataset_other
+        self.size = data["size"]
+        self.acknowledgement = data["acknowledgement"]
+        self.standards_followed = data["standards_followed"]

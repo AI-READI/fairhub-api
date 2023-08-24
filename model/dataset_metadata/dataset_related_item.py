@@ -3,9 +3,9 @@ from ..db import db
 
 
 class DatasetRelatedItem(db.Model):
-    def __init__(self):
+    def __init__(self, dataset):
         self.id = str(uuid.uuid4())
-
+        self.dataset = dataset
     __tablename__ = "dataset_related_item"
     id = db.Column(db.CHAR(36), primary_key=True)
     type = db.Column(db.String, nullable=False)
@@ -34,8 +34,12 @@ class DatasetRelatedItem(db.Model):
         }
 
     @staticmethod
-    def from_data(data: dict):
-        dataset_related_item = DatasetRelatedItem()
-        dataset_related_item.type = data["type"]
-        dataset_related_item.relation_type = data["relation_type"]
+    def from_data(dataset, data: dict):
+        dataset_related_item = DatasetRelatedItem(dataset)
+        dataset_related_item.update(data)
         return dataset_related_item
+
+    def update(self, data):
+        self.type = data["type"]
+        self.relation_type = data["relation_type"]
+

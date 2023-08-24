@@ -3,8 +3,9 @@ from ..db import db
 
 
 class DatasetDescription(db.Model):
-    def __init__(self):
+    def __init__(self, dataset):
         self.id = str(uuid.uuid4())
+        self.dataset = dataset
 
     __tablename__ = "dataset_description"
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -22,9 +23,13 @@ class DatasetDescription(db.Model):
         }
 
     @staticmethod
-    def from_data(data: dict):
-        dataset_description = DatasetDescription()
-        dataset_description.description = data["description"]
-        dataset_description.description_type = data["description_type"]
-        dataset_description.name_identifier_scheme_uri = data["identifier_scheme_uri"]
+    def from_data(dataset,data: dict):
+        dataset_description = DatasetDescription(dataset)
+        dataset_description.update(data)
         return dataset_description
+
+
+    def update(self, data):
+        self.description = data["description"]
+        self.description_type = data["description_type"]
+

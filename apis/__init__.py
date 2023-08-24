@@ -24,8 +24,10 @@ from .study_metadata.study_reference import api as reference
 from .study_metadata.study_sponsors_collaborators import api as sponsors_collaborator
 from .study_metadata.study_status import api as status
 
+from .dataset_metadata_namespace import api as dataset_metadata_namespace
 
-from .dataset_metadata.dataset_consent import api as dataset_consent
+from .dataset_metadata.dataset_access import api as access
+from .dataset_metadata.dataset_consent import api as consent
 from .dataset_metadata.dataset_subject import api as subject
 from .dataset_metadata.dataset_description import api as description
 from .dataset_metadata.dataset_identifier import api as identifier
@@ -42,6 +44,7 @@ from .dataset_metadata.dataset_related_item_title import api as related_item_tit
 from .dataset_metadata.dataset_related_item_contributor import api as related_item_contributor
 from .dataset_metadata.dataset_related_item_identifier import api as related_item_identifier
 from .dataset_metadata.dataset_related_item_other import api as related_item_other
+from .dataset_metadata.dataset_funder import api as funder
 
 
 api = Api(
@@ -60,6 +63,7 @@ class HelloWorld(Resource):
 
         return "Server active!"
 
+#api.add_namespace(dataset_metadata_namespace)
 
 api.add_namespace(cats_api)
 api.add_namespace(study_api)
@@ -85,7 +89,9 @@ api.add_namespace(sponsors_collaborator)
 api.add_namespace(status)
 
 
-api.add_namespace(dataset_consent)
+api.add_namespace(access)
+api.add_namespace(funder)
+api.add_namespace(consent)
 api.add_namespace(subject)
 api.add_namespace(description)
 api.add_namespace(identifier)

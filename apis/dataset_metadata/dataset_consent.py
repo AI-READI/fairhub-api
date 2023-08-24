@@ -39,4 +39,12 @@ class DatasetConsentResource(Resource):
         dataset_consent_ = DatasetConsent.from_data(data_obj, data)
         db.session.add(dataset_consent_)
         db.session.commit()
-        return jsonify(dataset_consent_.to_dict())
+        return dataset_consent_.to_dict()
+
+    @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/consent/<consent_id>")
+    class DatasetAccessUpdate(Resource):
+        def put(self, study_id: int, dataset_id: int, consent_id: int):
+            dataset_consent_ = DatasetConsent.query.get(consent_id)
+            dataset_consent_.update(request.json)
+            db.session.commit()
+            return dataset_consent_.to_dict()

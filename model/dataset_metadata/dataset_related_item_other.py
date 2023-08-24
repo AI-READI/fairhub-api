@@ -3,9 +3,9 @@ from ..db import db
 
 
 class DatasetRelatedItemOther(db.Model):
-    def __init__(self):
+    def __init__(self, dataset):
         self.id = str(uuid.uuid4())
-
+        self.dataset = dataset
     __tablename__ = "dataset_related_item_other"
     id = db.Column(db.CHAR(36), primary_key=True)
     publication_year = db.Column(db.String, nullable=False)
@@ -41,15 +41,18 @@ class DatasetRelatedItemOther(db.Model):
         }
 
     @staticmethod
-    def from_data(data: dict):
-        dataset_related_item_other = DatasetRelatedItemOther()
-        dataset_related_item_other.publication_year = data["publication_year"]
-        dataset_related_item_other.volume = data["volume"]
-        dataset_related_item_other.issue = data["issue"]
-        dataset_related_item_other.number_value = data["number_value"]
-        dataset_related_item_other.number_type = data["number_type"]
-        dataset_related_item_other.first_page = data["first_page"]
-        dataset_related_item_other.last_page = data["last_page"]
-        dataset_related_item_other.publisher = data["publisher"]
-        dataset_related_item_other.edition = data["edition"]
+    def from_data(dataset, data: dict):
+        dataset_related_item_other = DatasetRelatedItemOther(dataset)
+        dataset_related_item_other.update(data)
         return dataset_related_item_other
+
+    def update(self, data):
+        self.publication_year = data["publication_year"]
+        self.volume = data["volume"]
+        self.issue = data["issue"]
+        self.number_value = data["number_value"]
+        self.number_type = data["number_type"]
+        self.first_page = data["first_page"]
+        self.last_page = data["last_page"]
+        self.publisher = data["publisher"]
+        self.edition = data["edition"]

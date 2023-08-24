@@ -3,9 +3,9 @@ from ..db import db
 
 
 class DatasetSubject(db.Model):
-    def __init__(self):
+    def __init__(self, dataset):
         self.id = str(uuid.uuid4())
-
+        self.dataset = dataset
     __tablename__ = "dataset_subject"
     id = db.Column(db.CHAR(36), primary_key=True)
 
@@ -29,11 +29,14 @@ class DatasetSubject(db.Model):
         }
 
     @staticmethod
-    def from_data(data: dict):
-        dataset_subject = DatasetRights()
-        dataset_subject.subject = data["subject"]
-        dataset_subject.scheme = data["scheme"]
-        dataset_subject.scheme_uri = data["scheme_uri"]
-        dataset_subject.value_uri = data["value_uri"]
-        dataset_subject.classification_code = data["classification_code"]
+    def from_data(dataset, data: dict):
+        dataset_subject = DatasetSubject(dataset)
+        dataset_subject.update(data)
         return dataset_subject
+
+    def update(self, data):
+        self.subject = data["subject"]
+        self.scheme = data["scheme"]
+        self.scheme_uri = data["scheme_uri"]
+        self.value_uri = data["value_uri"]
+        self.classification_code = data["classification_code"]

@@ -3,9 +3,9 @@ from ..db import db
 
 
 class DatasetRelatedItemContributor(db.Model):
-    def __init__(self):
+    def __init__(self, dataset):
         self.id = str(uuid.uuid4())
-
+        self.dataset = dataset
     __tablename__ = "dataset_related_item_contributor"
     id = db.Column(db.CHAR(36), primary_key=True)
     name = db.Column(db.String, nullable=False)
@@ -30,10 +30,14 @@ class DatasetRelatedItemContributor(db.Model):
         }
 
     @staticmethod
-    def from_data(data: dict):
-        dataset_related_contributor = DatasetRelatedItemContributor()
-        dataset_related_contributor.name = data["name"]
-        dataset_related_contributor.name_type = data["name_type"]
-        dataset_related_contributor.creator = data["creator"]
-        dataset_related_contributor.contributor_type = data["contributor_type"]
+    def from_data(dataset, data: dict):
+        dataset_related_contributor = DatasetRelatedItemContributor(dataset)
+        dataset_related_contributor.update(data)
         return dataset_related_contributor
+
+    def update(self, data):
+        self.name = data["name"]
+        self.name_type = data["name_type"]
+        self.creator = data["creator"]
+        self.contributor_type = data["contributor_type"]
+

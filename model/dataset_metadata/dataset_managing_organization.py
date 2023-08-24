@@ -3,9 +3,9 @@ from ..db import db
 
 
 class DatasetManagingOrganization(db.Model):
-    def __init__(self):
+    def __init__(self, dataset):
         self.id = str(uuid.uuid4())
-
+        self.dataset = dataset
     __tablename__ = "dataset_managing_organization"
     id = db.Column(db.CHAR(36), primary_key=True)
 
@@ -23,8 +23,11 @@ class DatasetManagingOrganization(db.Model):
         }
 
     @staticmethod
-    def from_data(data: dict):
-        dataset_managing_organization = DatasetManagingOrganization()
-        dataset_managing_organization.name = data["name"]
-        dataset_managing_organization.ror_id = data["ror_id"]
+    def from_data(dataset, data: dict):
+        dataset_managing_organization = DatasetManagingOrganization(dataset)
+        dataset_managing_organization.update(data)
         return dataset_managing_organization
+
+    def update(self, data):
+        self.name = data["name"]
+        self.ror_id = data["ror_id"]

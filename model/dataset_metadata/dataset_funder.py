@@ -3,8 +3,9 @@ from ..db import db
 
 
 class DatasetFunder(db.Model):
-    def __init__(self):
+    def __init__(self, dataset):
         self.id = str(uuid.uuid4())
+        self.dataset = dataset
 
     __tablename__ = "dataset_funder"
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -32,14 +33,17 @@ class DatasetFunder(db.Model):
         }
 
     @staticmethod
-    def from_data(data: dict):
-        dataset_funder = DatasetFunder()
-        dataset_funder.name = data["name"]
-        dataset_funder.identifier = data["identifier"]
-        dataset_funder.identifier_type = data["identifier_type"]
-        dataset_funder.identifier_scheme_uri = data["identifier_scheme_uri"]
-        dataset_funder.award_number = data["award_number"]
-        dataset_funder.award_uri = data["award_uri"]
-        dataset_funder.award_title = data["award_title"]
-
+    def from_data(dataset, data: dict):
+        dataset_funder = DatasetFunder(dataset)
+        dataset_funder.update(data)
         return dataset_funder
+
+    def update(self, data):
+        self.name = data["name"]
+        self.identifier = data["identifier"]
+        self.identifier_type = data["identifier_type"]
+        self.identifier_scheme_uri = data["identifier_scheme_uri"]
+        self.award_number = data["award_number"]
+        self.award_uri = data["award_uri"]
+        self.award_title = data["award_title"]
+

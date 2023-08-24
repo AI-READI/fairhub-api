@@ -3,9 +3,9 @@ from ..db import db
 
 
 class DatasetIdentifier(db.Model):
-    def __init__(self):
+    def __init__(self, dataset):
         self.id = str(uuid.uuid4())
-
+        self.dataset = dataset
     __tablename__ = "dataset_identifier"
     id = db.Column(db.CHAR(36), primary_key=True)
     identifier = db.Column(db.String, nullable=False)
@@ -24,10 +24,13 @@ class DatasetIdentifier(db.Model):
         }
 
     @staticmethod
-    def from_data(data: dict):
-        dataset_date = DatasetIdentifier()
-
-        dataset_date.identifier = data["identifier"]
-        dataset_date.identifier_type = data["identifier_type"]
-        dataset_date.alternate = data["alternate"]
+    def from_data(dataset, data: dict):
+        dataset_date = DatasetIdentifier(dataset)
+        dataset_date.update(data)
         return dataset_date
+
+    def update(self, data):
+        self.identifier = data["identifier"]
+        self.identifier_type = data["identifier_type"]
+        self.alternate = data["alternate"]
+
