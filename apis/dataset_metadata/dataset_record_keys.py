@@ -1,34 +1,46 @@
-from model import Dataset
+from model import Dataset, DatasetRecordKeys, db
 
 from flask_restx import Namespace, Resource, fields
+from flask import jsonify, request
 
 
-api = Namespace("consent", description="dataset operations", path="/")
+api = Namespace("record_keys", description="dataset operations", path="/")
 
-dataset_consent = api.model(
-    "StudyContact",
+dataset_record_keys = api.model(
+    "DatasetRecordKeys",
     {
         "id": fields.String(required=True),
-        "first_name": fields.String(required=True),
-        "last_name": fields.String(required=True),
-        "affiliation": fields.String(required=True),
-        "role": fields.String(required=True),
-        "phone": fields.String(required=True),
-        "phone_ext": fields.String(required=True),
-        "email_address": fields.String(required=True),
-        "central_contact": fields.Boolean(required=True),
+        "key_type": fields.String(required=True),
+        "key_details": fields.String(required=True),
+
     },
 )
 
 
-@api.route("/study/<study_id>/metadata/contact")
-class StudyContactResource(Resource):
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/record_keys")
+class DatasetRecordKeysResource(Resource):
     @api.doc("dataset")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The dataset identifier")
-    @api.marshal_with(dataset_consent)
-    def get(self, dataset_id: int):
+    @api.marshal_with(dataset_record_keys)
+    def get(self, study_id: int, dataset_id: int):
         dataset_ = Dataset.query.get(dataset_id)
-        dataset_consent_ = dataset_.dataset_consent
-        return [d.to_dict() for s in dataset_consent_]
+        dataset_record_keys_ = dataset_.dataset_record_keys
+        return [d.to_dict() for d in dataset_record_keys_]
+    def post(self, study_id: int, dataset_id: int):
+        data = request.json
+        data_obj = Dataset.query.get(dataset_id)
+        dataset_request_keys_ = DatasetRecordKeys.from_data(data_obj, data)
+        db.session.add(dataset_request_keys_)
+        db.session.commit()
+        return dataset_request_keys_.to_dict()
+
+    @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/record_keys/<record_key_id>")
+    class DatasetRecordKeysUpdate(Resource):
+        def put(self, study_id: int, dataset_id: int, record_key_id: int):
+            data = request.json
+            dataset_request_keys_ = DatasetRecordKeys.query.get(record_key_id)
+            dataset_request_keys_.update(request.json)
+            db.session.commit()
+            return dataset_request_keys_.to_dict()

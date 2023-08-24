@@ -3,7 +3,8 @@ from ..db import db
 
 
 class DatasetConsent(db.Model):
-    def __init__(self):
+    def __init__(self, dataset):
+        self.dataset = dataset
         self.id = str(uuid.uuid4())
 
     __tablename__ = "dataset_consent"
@@ -23,7 +24,7 @@ class DatasetConsent(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "type": self.destypecription,
+            "type": self.type,
             "noncommercial": self.noncommercial,
             "geog_restrict": self.geog_restrict,
             "research_type": self.research_type,
@@ -33,14 +34,16 @@ class DatasetConsent(db.Model):
         }
 
     @staticmethod
-    def from_data(data: dict):
-        dataset_consent = DatasetConsent()
-        dataset_consent.type = data["type"]
-        dataset_consent.noncommercial = data["noncommercial"]
-        dataset_consent.geog_restrict = data["geog_restrict"]
-        dataset_consent.research_type = data["research_type"]
-        dataset_consent.genetic_only = data["genetic_only"]
-        dataset_consent.no_methods = data["no_methods"]
-        dataset_consent.details = data["details"]
-
+    def from_data(dataset, data: dict):
+        dataset_consent = DatasetConsent(dataset)
+        dataset_consent.update(data)
         return dataset_consent
+
+    def update(self, data):
+        self.type = data["type"]
+        self.noncommercial = data["noncommercial"]
+        self.geog_restrict = data["geog_restrict"]
+        self.research_type = data["research_type"]
+        self.genetic_only = data["genetic_only"]
+        self.no_methods = data["no_methods"]
+        self.details = data["details"]

@@ -3,9 +3,9 @@ from ..db import db
 
 
 class DatasetRecordKeys(db.Model):
-    def __init__(self):
+    def __init__(self, dataset):
         self.id = str(uuid.uuid4())
-
+        self.dataset = dataset
     __tablename__ = "dataset_record_keys"
     id = db.Column(db.CHAR(36), primary_key=True)
     key_type = db.Column(db.String, nullable=False)
@@ -22,9 +22,11 @@ class DatasetRecordKeys(db.Model):
         }
 
     @staticmethod
-    def from_data(data: dict):
-        dataset_record_keys = DatasetRecordKeys()
-
-        dataset_record_keys.key_type = data["key_type"]
-        dataset_record_keys.key_details = data["key_details"]
+    def from_data(dataset, data: dict):
+        dataset_record_keys = DatasetRecordKeys(dataset)
+        dataset_record_keys.update(data)
         return dataset_record_keys
+
+    def update(self, data):
+        self.key_type = data["key_type"]
+        self.key_details = data["key_details"]

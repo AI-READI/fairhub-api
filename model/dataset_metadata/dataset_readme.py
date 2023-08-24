@@ -16,7 +16,7 @@ class DatasetReadme(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "content": self.noncommercial,
+            "content": self.content,
         }
 
     @staticmethod

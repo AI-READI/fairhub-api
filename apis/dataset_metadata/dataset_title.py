@@ -3,9 +3,9 @@ from model import Dataset
 from flask_restx import Namespace, Resource, fields
 
 
-api = Namespace("consent", description="dataset operations", path="/")
+api = Namespace("title", description="dataset operations", path="/")
 
-dataset_consent = api.model(
+dataset_title = api.model(
     "StudyContact",
     {
         "id": fields.String(required=True),
@@ -27,8 +27,8 @@ class StudyContactResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The dataset identifier")
-    @api.marshal_with(dataset_consent)
+    @api.marshal_with(dataset_title)
     def get(self, dataset_id: int):
         dataset_ = Dataset.query.get(dataset_id)
-        dataset_consent_ = dataset_.dataset_consent
-        return [d.to_dict() for s in dataset_consent_]
+        dataset_title_ = dataset_.dataset_title
+        return [d.to_dict() for d in dataset_title_]

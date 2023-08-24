@@ -29,11 +29,9 @@ from .dataset_metadata.dataset_consent import api as dataset_consent
 from .dataset_metadata.dataset_subject import api as subject
 from .dataset_metadata.dataset_description import api as description
 from .dataset_metadata.dataset_identifier import api as identifier
-from .dataset_metadata.dataset_other import api as other
-from .dataset_metadata.dataset_contributor_affiliation import api as contributor_affiliation
+from .dataset_metadata.dataset_other import api as dataset_other
 from .dataset_metadata.dataset_date import api as date
 from .dataset_metadata.dataset_de_ident_level import api as de_ident_level
-from .dataset_metadata.dataset_subject import api as subject
 from .dataset_metadata.dataset_managing_organization import api as managing_organization
 from .dataset_metadata.dataset_readme import api as readme
 from .dataset_metadata.dataset_record_keys import api as record_keys
@@ -91,17 +89,15 @@ api.add_namespace(dataset_consent)
 api.add_namespace(subject)
 api.add_namespace(description)
 api.add_namespace(identifier)
-api.add_namespace(other)
-# api.add_namespace(contributor_affiliation)
-# api.add_namespace(date)
-# api.add_namespace(de_ident_level)
-# api.add_namespace(subject)
-# api.add_namespace(managing_organization)
-# api.add_namespace(readme)
-# api.add_namespace(record_keys)
-# api.add_namespace(rights)
-# api.add_namespace(title)
-# api.add_namespace(related_item)
+api.add_namespace(dataset_other)
+api.add_namespace(date)
+api.add_namespace(de_ident_level)
+api.add_namespace(managing_organization)
+api.add_namespace(readme)
+api.add_namespace(record_keys)
+api.add_namespace(rights)
+api.add_namespace(title)
+api.add_namespace(related_item)
 # api.add_namespace(related_item_title)
 # api.add_namespace(related_item_contributor)
 # api.add_namespace(related_item_identifier)
