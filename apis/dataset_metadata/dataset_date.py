@@ -12,7 +12,6 @@ dataset_date = api.model(
         "date": fields.String(required=True),
         "date_type": fields.String(required=True),
         "data_information": fields.String(required=True),
-
     },
 )
 

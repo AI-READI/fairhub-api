@@ -11,7 +11,6 @@ managing_organization = api.model(
         "id": fields.String(required=True),
         "name": fields.String(required=True),
         "ror_id": fields.String(required=True),
-
     },
 )
 

@@ -39,8 +39,12 @@ from .dataset_metadata.dataset_rights import api as rights
 from .dataset_metadata.dataset_title import api as title
 from .dataset_metadata.dataset_related_item import api as related_item
 from .dataset_metadata.dataset_related_item_title import api as related_item_title
-from .dataset_metadata.dataset_related_item_contributor import api as related_item_contributor
-from .dataset_metadata.dataset_related_item_identifier import api as related_item_identifier
+from .dataset_metadata.dataset_related_item_contributor import (
+    api as related_item_contributor,
+)
+from .dataset_metadata.dataset_related_item_identifier import (
+    api as related_item_identifier,
+)
 from .dataset_metadata.dataset_related_item_other import api as related_item_other
 
 

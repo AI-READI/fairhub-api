@@ -16,7 +16,6 @@ dataset_funder = api.model(
         "award_number": fields.String(required=True),
         "award_uri": fields.String(required=True),
         "award_title": fields.String(required=True),
-
     },
 )
 

@@ -11,7 +11,6 @@ dataset_related_item = api.model(
         "id": fields.String(required=True),
         "type": fields.String(required=True),
         "relation_type": fields.String(required=True),
-
     },
 )
 

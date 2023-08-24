@@ -7,11 +7,7 @@ api = Namespace("readme", description="dataset operations", path="/")
 
 dataset_readme = api.model(
     "DatasetReadme",
-    {
-        "id": fields.String(required=True),
-        "content": fields.Boolean(required=True)
-
-    },
+    {"id": fields.String(required=True), "content": fields.Boolean(required=True)},
 )
 
 

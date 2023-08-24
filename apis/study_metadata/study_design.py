@@ -25,7 +25,7 @@ study_design = api.model(
         "bio_spec_retention": fields.String(required=True),
         "bio_spec_description": fields.String(required=True),
         "target_duration": fields.String(required=True),
-        "number_groups_cohorts": fields.Integer(required=True)
+        "number_groups_cohorts": fields.Integer(required=True),
     },
 )
 
@@ -36,7 +36,7 @@ class StudyDesignResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")
-    #@api.marshal_with(study_design)
+    # @api.marshal_with(study_design)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_design_ = study_.study_design
