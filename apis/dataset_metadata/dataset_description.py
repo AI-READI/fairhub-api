@@ -12,7 +12,6 @@ dataset_description = api.model(
         "id": fields.String(required=True),
         "description": fields.String(required=True),
         "description_type": fields.String(required=True),
-
     },
 )
 

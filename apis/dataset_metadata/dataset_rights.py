@@ -13,7 +13,6 @@ dataset_rights = api.model(
         "uri": fields.String(required=True),
         "identifier": fields.String(required=True),
         "identifier_scheme": fields.String(required=True),
-
     },
 )
 

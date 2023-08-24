@@ -6,6 +6,7 @@ class DatasetRecordKeys(db.Model):
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
+
     __tablename__ = "dataset_record_keys"
     id = db.Column(db.CHAR(36), primary_key=True)
     key_type = db.Column(db.String, nullable=False)
