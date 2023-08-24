@@ -31,5 +31,3 @@ class StudyStatusResource(Resource):
         study_ = Study.query.get(study_id)
         study_sponsors_collaborators_ = study_.study_sponsors_collaborators
         return [s.to_dict() for s in study_sponsors_collaborators_]
-
-

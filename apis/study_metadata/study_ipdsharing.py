@@ -31,5 +31,3 @@ class StudyIpdsharingResource(Resource):
         study_ = Study.query.get(study_id)
         study_ipdsharing_ = study_.study_ipdsharing
         return [s.to_dict() for s in study_ipdsharing_]
-
-

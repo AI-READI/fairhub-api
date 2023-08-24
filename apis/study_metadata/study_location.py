@@ -31,5 +31,3 @@ class StudyLocationResource(Resource):
         study_ = Study.query.get(study_id)
         study_location_ = study_.study_location
         return [s.to_dict() for s in study_location_]
-
-

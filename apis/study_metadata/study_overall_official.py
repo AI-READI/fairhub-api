@@ -27,5 +27,3 @@ class StudyOverallOfficialResource(Resource):
         study_ = Study.query.get(study_id)
         study_overall_official_ = study_.study_overall_official
         return [s.to_dict() for s in study_overall_official_]
-
-

@@ -11,7 +11,7 @@ study_other = api.model(
         "oversight_has_dmc": fields.String(required=True),
         "conditions": fields.String(required=True),
         "keywords": fields.String(required=True),
-        "size": fields.Integer(required=True)
+        "size": fields.Integer(required=True),
     },
 )
 
@@ -27,5 +27,3 @@ class StudyOtherResource(Resource):
         study_ = Study.query.get(study_id)
         study_other_ = study_.study_other
         return [s.to_dict() for s in study_other_]
-
-
