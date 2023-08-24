@@ -8,6 +8,7 @@ class DatasetOther(db.Model):
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
+
     __tablename__ = "dataset_other"
     id = db.Column(db.CHAR(36), primary_key=True)
 
@@ -41,9 +42,7 @@ class DatasetOther(db.Model):
     def update(self, data):
         self.language = data["language"]
         self.managing_organization_name = data["managing_organization_name"]
-        self.managing_organization_ror_id = data[
-            "managing_organization_ror_id"
-        ]
+        self.managing_organization_ror_id = data["managing_organization_ror_id"]
         self.size = data["size"]
         self.acknowledgement = data["acknowledgement"]
         self.standards_followed = data["standards_followed"]

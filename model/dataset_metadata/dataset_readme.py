@@ -6,6 +6,7 @@ class DatasetReadme(db.Model):
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
+
     __tablename__ = "dataset_readme"
     id = db.Column(db.CHAR(36), primary_key=True)
     content = db.Column(db.String, nullable=False)
@@ -27,5 +28,3 @@ class DatasetReadme(db.Model):
 
     def update(self, data):
         self.content = data["content"]
-
-

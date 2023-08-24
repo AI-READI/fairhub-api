@@ -6,6 +6,7 @@ class DatasetIdentifier(db.Model):
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
+
     __tablename__ = "dataset_identifier"
     id = db.Column(db.CHAR(36), primary_key=True)
     identifier = db.Column(db.String, nullable=False)
@@ -33,4 +34,3 @@ class DatasetIdentifier(db.Model):
         self.identifier = data["identifier"]
         self.identifier_type = data["identifier_type"]
         self.alternate = data["alternate"]
-

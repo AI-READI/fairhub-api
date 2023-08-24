@@ -46,4 +46,3 @@ class DatasetFunder(db.Model):
         self.award_number = data["award_number"]
         self.award_uri = data["award_uri"]
         self.award_title = data["award_title"]
-

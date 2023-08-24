@@ -67,7 +67,8 @@ class HelloWorld(Resource):
 
         return "Server active!"
 
-#api.add_namespace(dataset_metadata_namespace)
+
+# api.add_namespace(dataset_metadata_namespace)
 
 api.add_namespace(cats_api)
 api.add_namespace(study_api)

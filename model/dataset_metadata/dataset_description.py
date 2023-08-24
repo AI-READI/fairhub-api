@@ -23,13 +23,11 @@ class DatasetDescription(db.Model):
         }
 
     @staticmethod
-    def from_data(dataset,data: dict):
+    def from_data(dataset, data: dict):
         dataset_description = DatasetDescription(dataset)
         dataset_description.update(data)
         return dataset_description
 
-
     def update(self, data):
         self.description = data["description"]
         self.description_type = data["description_type"]
-

@@ -2,6 +2,7 @@ from model import Dataset, DatasetAccess, db
 
 from flask_restx import Namespace, Resource, fields
 from flask import jsonify, request
+
 # from ..dataset_metadata_namespace import api
 
 api = Namespace("access", description="dataset operations", path="/")
@@ -14,7 +15,6 @@ dataset_access = api.model(
         "description": fields.String(required=True),
         "url": fields.String(required=True),
         "url_last_checked": fields.String(required=True),
-
     },
 )
 

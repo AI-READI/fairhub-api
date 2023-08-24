@@ -36,7 +36,9 @@ class DatasetDescriptionResource(Resource):
         db.session.commit()
         return dataset_description_.to_dict()
 
-    @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/description/<description_id>")
+    @api.route(
+        "/study/<study_id>/dataset/<dataset_id>/metadata/description/<description_id>"
+    )
     class DatasetDescriptionUpdate(Resource):
         def put(self, study_id: int, dataset_id: int, description_id: int):
             dataset_description_ = DatasetDescription.query.get(description_id)

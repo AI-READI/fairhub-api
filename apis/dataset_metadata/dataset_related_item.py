@@ -36,7 +36,9 @@ class DatasetRelatedItemResource(Resource):
         db.session.commit()
         return dataset_related_item_.to_dict()
 
-    @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/related_item/<related_item_id>")
+    @api.route(
+        "/study/<study_id>/dataset/<dataset_id>/metadata/related_item/<related_item_id>"
+    )
     class DatasetRelatedItemUpdate(Resource):
         def put(self, study_id: int, dataset_id: int, related_item_id: int):
             data = request.json

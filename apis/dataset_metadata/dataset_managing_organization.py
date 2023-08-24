@@ -36,10 +36,14 @@ class DatasetManagingOrganizationResource(Resource):
         db.session.commit()
         return managing_organization_.to_dict()
 
-    @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/managing_organization/<managing_organization_id>")
+    @api.route(
+        "/study/<study_id>/dataset/<dataset_id>/metadata/managing_organization/<managing_organization_id>"
+    )
     class DatasetManagingOrganizationUpdate(Resource):
         def put(self, study_id: int, dataset_id: int, managing_organization_id: int):
-            managing_organization_ = DatasetManagingOrganization.query.get(managing_organization_id)
+            managing_organization_ = DatasetManagingOrganization.query.get(
+                managing_organization_id
+            )
             managing_organization_.update(request.json)
             db.session.commit()
             return managing_organization_.to_dict()
