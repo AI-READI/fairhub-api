@@ -3,7 +3,7 @@ from model import Study
 from flask_restx import Namespace, Resource, fields
 
 
-api = Namespace("eligibility", description="study operations", path="/")
+from apis.study_metadata_namespace import api
 
 
 study_eligibility = api.model(

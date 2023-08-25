@@ -1,7 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from model import Study
 
-api = Namespace("reference", description="study operations", path="/")
+from apis.study_metadata_namespace import api
 
 
 study_reference = api.model(

@@ -1,7 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from model import Study
 
-api = Namespace("overall_official", description="study operations", path="/")
+from apis.study_metadata_namespace import api
 
 
 study_overall_official = api.model(
