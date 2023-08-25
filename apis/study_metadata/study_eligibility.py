@@ -1,6 +1,7 @@
-from model import Study
+from flask_restx import Resource, fields
+from model import Study, db, StudyEligibility
+from flask import request
 
-from flask_restx import Namespace, Resource, fields
 
 
 from apis.study_metadata_namespace import api
@@ -35,3 +36,19 @@ class StudyEligibilityResource(Resource):
         study_ = Study.query.get(study_id)
         study_eligibility_ = study_.study_eligibility
         return [s.to_dict() for s in study_eligibility_]
+
+    def post(self, study_id: int):
+        data = request.json
+        study_eligibility_ = Study.query.get(study_id)
+        study_eligibility_ = StudyEligibility.from_data(study_eligibility_, data)
+        db.session.add(study_eligibility_)
+        db.session.commit()
+        return study_eligibility_.to_dict()
+
+    @api.route("/study/<study_id>/metadata/eligibility/<eligibility_id>")
+    class StudyArmUpdate(Resource):
+        def put(self, study_id: int, eligibility_id: int):
+            study_eligibility_ = StudyEligibility.query.get(eligibility_id)
+            study_eligibility_.update(request.json)
+            db.session.commit()
+            return study_eligibility_.to_dict()

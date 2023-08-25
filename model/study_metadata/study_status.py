@@ -6,9 +6,10 @@ from ..db import db
 class StudyStatus(db.Model):
     """A study is a collection of datasets and participants"""
 
-    def __init__(self):
+    def __init__(self, study):
         self.id = str(uuid.uuid4())
         # self.created_at = datetime.now()
+        self.study = study
 
     __tablename__ = "study_status"
 
@@ -36,21 +37,21 @@ class StudyStatus(db.Model):
         }
 
     @staticmethod
-    def from_data(data: dict):
+    def from_data(study, data: dict):
         """Creates a new study from a dictionary"""
-        study_status = StudyStatus()
+        study_status = StudyStatus(study)
         study_status.update(data)
 
         return study_status
 
     def update(self, data):
         """Updates the study from a dictionary"""
-        self.overall_status = data["title"]
-        self.why_stopped = data["image"]
-        self.start_date = data["created_at"]
-        self.start_date_type = data["updated_on"]
-        self.completion_date = data["title"]
-        self.completion_date_type = data["image"]
+        self.overall_status = data["overall_status"]
+        self.why_stopped = data["why_stopped"]
+        self.start_date = data["start_date"]
+        self.start_date_type = data["start_date_type"]
+        self.completion_date = data["completion_date"]
+        self.completion_date_type = data["completion_date_type"]
 
     def validate(self):
         """Validates the study"""

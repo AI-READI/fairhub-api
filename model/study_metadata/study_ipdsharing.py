@@ -7,9 +7,9 @@ from sqlalchemy.dialects.postgresql import ARRAY
 class StudyIpdsharing(db.Model):
     """A study is a collection of datasets and participants"""
 
-    def __init__(self):
+    def __init__(self, study):
         self.id = str(uuid.uuid4())
-
+        self.study = study
     __tablename__ = "study_ipdsharing"
 
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -36,9 +36,9 @@ class StudyIpdsharing(db.Model):
         }
 
     @staticmethod
-    def from_data(data: dict):
+    def from_data(study, data: dict):
         """Creates a new study from a dictionary"""
-        study_ipdsharing = StudyIpdsharing()
+        study_ipdsharing = StudyIpdsharing(study)
         study_ipdsharing.update(data)
 
         return study_ipdsharing
