@@ -1,9 +1,9 @@
 from model import Dataset, DatasetFunder, db
 
-from flask_restx import Namespace, Resource, fields
+from flask_restx import Resource, fields
 from flask import request
 
-api = Namespace("description", description="dataset operations", path="/")
+from apis.dataset_metadata_namespace import api
 
 dataset_funder = api.model(
     "DatasetFunder",

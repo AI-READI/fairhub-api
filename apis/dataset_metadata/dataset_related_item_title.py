@@ -1,10 +1,9 @@
 from model import Dataset, DatasetRelatedItemTitle, db
 
 from flask_restx import Namespace, Resource, fields
-from flask import jsonify, request
 
 
-api = Namespace("related_item_title", description="dataset operations", path="/")
+from apis.dataset_metadata_namespace import api
 
 # dataset_related_item_contributor = api.model(
 #     "DatasetRelatedItemTitle",

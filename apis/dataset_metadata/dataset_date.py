@@ -1,10 +1,10 @@
 from model import Dataset, db, DatasetDate
 
-from flask_restx import Namespace, Resource, fields
-from flask import jsonify, request
+from flask_restx import Resource, fields
+from flask import request
+from apis.dataset_metadata_namespace import api
 
 
-api = Namespace("date", description="dataset operations", path="/")
 
 dataset_date = api.model(
     "DatasetDate",

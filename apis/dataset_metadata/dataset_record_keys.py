@@ -2,9 +2,7 @@ from model import Dataset, DatasetRecordKeys, db
 
 from flask_restx import Namespace, Resource, fields
 from flask import jsonify, request
-
-
-api = Namespace("record_keys", description="dataset operations", path="/")
+from apis.dataset_metadata_namespace import api
 
 dataset_record_keys = api.model(
     "DatasetRecordKeys",

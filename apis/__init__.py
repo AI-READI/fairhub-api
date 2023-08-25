@@ -1,7 +1,9 @@
 """Initialize the api system for the backend"""
 from flask_restx import Api, Resource
 
-from .cats import api as cats_api
+from apis.dataset_metadata_namespace import api as dataset_metadata_namespace
+from apis.study_metadata_namespace import api as study_metadata_namespace
+
 from .contributor import api as contributors_api
 from .dataset import api as dataset_api
 from .participant import api as participants_api
@@ -24,7 +26,6 @@ from .study_metadata.study_reference import api as reference
 from .study_metadata.study_sponsors_collaborators import api as sponsors_collaborator
 from .study_metadata.study_status import api as status
 
-from .dataset_metadata_namespace import api as dataset_metadata_namespace
 
 from .dataset_metadata.dataset_access import api as access
 from .dataset_metadata.dataset_consent import api as consent
@@ -41,12 +42,8 @@ from .dataset_metadata.dataset_rights import api as rights
 from .dataset_metadata.dataset_title import api as title
 from .dataset_metadata.dataset_related_item import api as related_item
 from .dataset_metadata.dataset_related_item_title import api as related_item_title
-from .dataset_metadata.dataset_related_item_contributor import (
-    api as related_item_contributor,
-)
-from .dataset_metadata.dataset_related_item_identifier import (
-    api as related_item_identifier,
-)
+from .dataset_metadata.dataset_related_item_contributor import api as related_item_contributor
+from .dataset_metadata.dataset_related_item_identifier import api as related_item_identifier
 from .dataset_metadata.dataset_related_item_other import api as related_item_other
 from .dataset_metadata.dataset_funder import api as funder
 
@@ -58,6 +55,10 @@ api = Api(
 )
 
 
+api.add_namespace(dataset_metadata_namespace)
+api.add_namespace(study_metadata_namespace)
+
+
 @api.route("/echo", endpoint="echo")
 class HelloWorld(Resource):
     @api.response(200, "Success")
@@ -67,48 +68,45 @@ class HelloWorld(Resource):
 
         return "Server active!"
 
-#api.add_namespace(dataset_metadata_namespace)
-
-api.add_namespace(cats_api)
 api.add_namespace(study_api)
 api.add_namespace(dataset_api)
 api.add_namespace(participants_api)
 api.add_namespace(contributors_api)
-
-api.add_namespace(arm)
-api.add_namespace(available_ipd)
-api.add_namespace(contact)
-api.add_namespace(description)
-api.add_namespace(design)
-api.add_namespace(eligibility)
-api.add_namespace(identification)
-api.add_namespace(intervention)
-api.add_namespace(ipdsharing)
-api.add_namespace(link)
-api.add_namespace(location)
-api.add_namespace(other)
-api.add_namespace(overall_official)
-api.add_namespace(reference)
-api.add_namespace(sponsors_collaborator)
-api.add_namespace(status)
-
-
-api.add_namespace(access)
-api.add_namespace(funder)
-api.add_namespace(consent)
-api.add_namespace(subject)
-api.add_namespace(description)
-api.add_namespace(identifier)
-api.add_namespace(dataset_other)
-api.add_namespace(date)
-api.add_namespace(de_ident_level)
-api.add_namespace(managing_organization)
-api.add_namespace(readme)
-api.add_namespace(record_keys)
-api.add_namespace(rights)
-api.add_namespace(title)
-api.add_namespace(related_item)
-# api.add_namespace(related_item_title)
-# api.add_namespace(related_item_contributor)
-# api.add_namespace(related_item_identifier)
-# api.add_namespace(related_item_other)
+#
+# api.add_namespace(arm)
+# api.add_namespace(available_ipd)
+# api.add_namespace(contact)
+# api.add_namespace(description)
+# api.add_namespace(design)
+# api.add_namespace(eligibility)
+# api.add_namespace(identification)
+# api.add_namespace(intervention)
+# api.add_namespace(ipdsharing)
+# api.add_namespace(link)
+# api.add_namespace(location)
+# api.add_namespace(other)
+# api.add_namespace(overall_official)
+# api.add_namespace(reference)
+# api.add_namespace(sponsors_collaborator)
+# api.add_namespace(status)
+#
+#
+# api.add_namespace(access)
+# api.add_namespace(funder)
+# api.add_namespace(consent)
+# api.add_namespace(subject)
+# api.add_namespace(description)
+# api.add_namespace(identifier)
+# api.add_namespace(dataset_other)
+# api.add_namespace(date)
+# api.add_namespace(de_ident_level)
+# api.add_namespace(managing_organization)
+# api.add_namespace(readme)
+# api.add_namespace(record_keys)
+# api.add_namespace(rights)
+# api.add_namespace(title)
+# api.add_namespace(related_item)
+# # api.add_namespace(related_item_title)
+# # api.add_namespace(related_item_contributor)
+# # api.add_namespace(related_item_identifier)
+# # api.add_namespace(related_item_other)

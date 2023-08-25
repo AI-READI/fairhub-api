@@ -1,10 +1,10 @@
 from model import Dataset, db, DatasetManagingOrganization
 from flask import request
 
-from flask_restx import Namespace, Resource, fields
+from flask_restx import Resource, fields
 
 
-api = Namespace("managing_organization", description="dataset operations", path="/")
+from apis.dataset_metadata_namespace import api
 
 managing_organization = api.model(
     "DatasetManagingOrganization",

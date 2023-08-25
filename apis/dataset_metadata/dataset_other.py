@@ -3,7 +3,7 @@ from flask import request
 
 from flask_restx import Namespace, Resource, fields
 
-api = Namespace("dataset_other", description="dataset operations", path="/")
+from apis.dataset_metadata_namespace import api
 
 dataset_other = api.model(
     "DatasetOther",

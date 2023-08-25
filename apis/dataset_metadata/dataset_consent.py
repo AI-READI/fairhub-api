@@ -1,10 +1,9 @@
 from model import Dataset, DatasetConsent, db
 
-from flask_restx import Namespace, Resource, fields
-from flask import jsonify, request
+from flask_restx import Resource, fields
+from flask import request
+from apis.dataset_metadata_namespace import api
 
-
-api = Namespace("consent", description="dataset operations", path="/")
 
 dataset_consent = api.model(
     "DatasetConsent",

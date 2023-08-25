@@ -1,8 +1,8 @@
 from model import Dataset, db, DatasetIdentifier
-from flask_restx import Namespace, Resource, fields
+from flask_restx import Resource, fields
 from flask import request
 
-api = Namespace("identifier", description="dataset operations", path="/")
+from apis.dataset_metadata_namespace import api
 
 dataset_identifier = api.model(
     "DatasetIdentifier",
