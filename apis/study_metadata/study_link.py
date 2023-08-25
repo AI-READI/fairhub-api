@@ -1,6 +1,6 @@
-from model import Study
-
 from flask_restx import Namespace, Resource, fields
+from model import Study, db, StudyLink
+from flask import request
 
 
 from apis.study_metadata_namespace import api
@@ -27,3 +27,19 @@ class StudyLinkResource(Resource):
         study_ = Study.query.get(study_id)
         study_link_ = study_.study_link
         return [s.to_dict() for s in study_link_]
+
+    def post(self, study_id: int):
+        data = request.json
+        study_link_ = Study.query.get(study_id)
+        study_link_ = StudyLink.from_data(study_link_, data)
+        db.session.add(study_link_)
+        db.session.commit()
+        return study_link_.to_dict()
+
+    # @api.route("/study/<study_id>/metadata/available_ipd/<available_ipd_id>")
+    # class StudyLinkUpdate(Resource):
+    #     def put(self, study_id: int, available_ipd_id: int):
+    #         study_link_ = StudyLink.query.get(study_link_)
+    #         study_link_.update(request.json)
+    #         db.session.commit()
+    #         return study_intervention_.to_dict()

@@ -5,8 +5,9 @@ from ..db import db
 class StudyOverallOfficial(db.Model):
     """A study is a collection of datasets and participants"""
 
-    def __init__(self):
+    def __init__(self, study):
         self.id = str(uuid.uuid4())
+        self.study = study
 
     __tablename__ = "study_overall_official"
 
@@ -30,9 +31,9 @@ class StudyOverallOfficial(db.Model):
         }
 
     @staticmethod
-    def from_data(data: dict):
+    def from_data(study, data: dict):
         """Creates a new study from a dictionary"""
-        study_overall_official = StudyOverallOfficial()
+        study_overall_official = StudyOverallOfficial(study)
         study_overall_official.update(data)
 
         return study_overall_official

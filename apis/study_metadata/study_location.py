@@ -1,6 +1,7 @@
-from model import Study
+from flask_restx import Resource, fields
+from model import Study, db, StudyLocation
+from flask import request
 
-from flask_restx import Namespace, Resource, fields
 
 
 from apis.study_metadata_namespace import api
@@ -31,3 +32,19 @@ class StudyLocationResource(Resource):
         study_ = Study.query.get(study_id)
         study_location_ = study_.study_location
         return [s.to_dict() for s in study_location_]
+
+    def post(self, study_id: int):
+        data = request.json
+        study_location_ = Study.query.get(study_id)
+        study_location_ = StudyLocation.from_data(study_location_, data)
+        db.session.add(study_location_)
+        db.session.commit()
+        return study_location_.to_dict()
+
+    # @api.route("/study/<study_id>/metadata/available_ipd/<available_ipd_id>")
+    # class StudyLocationUpdate(Resource):
+    #     def put(self, study_id: int, available_ipd_id: int):
+    #         study_location_ = StudyLocation.query.get(study_location_)
+    #         study_location_.update(request.json)
+    #         db.session.commit()
+    #         return study_location_.to_dict()

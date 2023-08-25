@@ -1,8 +1,8 @@
 from flask_restx import Namespace, Resource, fields
-from model import Study
+from model import Study, db, StudyAvailableIpd
+from flask import request
 
 from apis.study_metadata_namespace import api
-
 
 study_available = api.model(
     "StudyAvailable",
@@ -25,5 +25,21 @@ class StudyAvailableResource(Resource):
     @api.marshal_with(study_available)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
-        study_available_ = study_.study_available_ipd
-        return [s.to_dict() for s in study_available_]
+        study_available_ipd = study_.study_available_ipd
+        return [s.to_dict() for s in study_available_ipd]
+
+    def post(self, study_id: int):
+        data = request.json
+        study_available_ipd_ = Study.query.get(study_id)
+        study_available_ipd_ = StudyAvailableIpd.from_data(study_available_ipd_, data)
+        db.session.add(study_available_ipd_)
+        db.session.commit()
+        return study_available_ipd_.to_dict()
+
+    # @api.route("/study/<study_id>/metadata/available_ipd/<available_ipd_id>")
+    # class StudyAvailableIpdUpdate(Resource):
+    #     def put(self, study_id: int, available_ipd_id: int):
+    #         study_available_ipd_ = StudyAvailableIpd.query.get(available_ipd_id)
+    #         study_available_ipd_.update(request.json)
+    #         db.session.commit()
+    #         return study_available_ipd_.to_dict()
