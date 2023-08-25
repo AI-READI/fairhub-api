@@ -1,7 +1,8 @@
 from model import Dataset, DatasetAccess, db
 
-from flask_restx import Resource, fields
-from flask import request
+from flask_restx import Namespace, Resource, fields
+from flask import jsonify, request
+
 from apis.dataset_metadata_namespace import api
 
 
@@ -13,7 +14,6 @@ dataset_access = api.model(
         "description": fields.String(required=True),
         "url": fields.String(required=True),
         "url_last_checked": fields.String(required=True),
-
     },
 )
 

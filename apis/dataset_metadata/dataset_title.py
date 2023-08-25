@@ -12,7 +12,6 @@ dataset_title = api.model(
         "id": fields.String(required=True),
         "title": fields.String(required=True),
         "type": fields.String(required=True),
-
     },
 )
 
@@ -24,7 +23,7 @@ class DatasetTitleResource(Resource):
     @api.response(400, "Validation Error")
     # @api.param("id", "The dataset identifier")
     @api.marshal_with(dataset_title)
-    def get(self,  study_id: int, dataset_id: int):
+    def get(self, study_id: int, dataset_id: int):
         dataset_ = Dataset.query.get(dataset_id)
         dataset_title_ = dataset_.dataset_title
         return [d.to_dict() for d in dataset_title_]

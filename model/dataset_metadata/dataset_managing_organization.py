@@ -6,6 +6,7 @@ class DatasetManagingOrganization(db.Model):
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
+
     __tablename__ = "dataset_managing_organization"
     id = db.Column(db.CHAR(36), primary_key=True)
 

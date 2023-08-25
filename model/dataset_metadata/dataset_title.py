@@ -6,6 +6,7 @@ class DatasetTitle(db.Model):
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
+
     __tablename__ = "dataset_title"
     id = db.Column(db.CHAR(36), primary_key=True)
     title = db.Column(db.String, nullable=False)
@@ -31,4 +32,3 @@ class DatasetTitle(db.Model):
     def update(self, data):
         self.title = data["title"]
         self.type = data["type"]
-

@@ -38,6 +38,7 @@ class DatasetDeIdentLevel(db.Model):
         dataset_de_ident_level = DatasetDeIdentLevel(dataset)
         dataset_de_ident_level.update(data)
         return dataset_de_ident_level
+
     def update(self, data):
         self.type = data["type"]
         self.direct = data["direct"]

@@ -11,7 +11,6 @@ dataset_identifier = api.model(
         "identifier": fields.String(required=True),
         "identifier_type": fields.String(required=True),
         "alternate": fields.Boolean(required=True),
-
     },
 )
 
@@ -36,7 +35,9 @@ class DatasetIdentifierResource(Resource):
         db.session.commit()
         return dataset_identifier_.to_dict()
 
-    @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/identifier/<identifier_id>")
+    @api.route(
+        "/study/<study_id>/dataset/<dataset_id>/metadata/identifier/<identifier_id>"
+    )
     class DatasetIdentifierUpdate(Resource):
         def put(self, study_id: int, dataset_id: int, identifier_id: int):
             dataset_identifier_ = DatasetIdentifier.query.get(identifier_id)

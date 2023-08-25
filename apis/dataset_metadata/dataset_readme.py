@@ -7,11 +7,7 @@ from apis.dataset_metadata_namespace import api
 
 dataset_readme = api.model(
     "DatasetReadme",
-    {
-        "id": fields.String(required=True),
-        "content": fields.String(required=True)
-
-    },
+    {"id": fields.String(required=True), "content": fields.String(required=True)},
 )
 
 

@@ -34,4 +34,3 @@ class DatasetDate(db.Model):
         self.date = data["date"]
         self.date_type = data["date_type"]
         self.data_information = data["data_information"]
-

@@ -6,6 +6,7 @@ class DatasetAccess(db.Model):
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
+
     __tablename__ = "dataset_access"
     id = db.Column(db.CHAR(36), primary_key=True)
     type = db.Column(db.String, nullable=False)
