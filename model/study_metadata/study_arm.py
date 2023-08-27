@@ -33,7 +33,7 @@ class StudyArm(db.Model):
         }
 
     @staticmethod
-    def from_data(study, data: dict):
+    def from_data(study, data):
         """Creates a new study from a dictionary"""
         study_arm = StudyArm(study)
         study_arm.update(data)

@@ -32,12 +32,19 @@ class StudyOverallOfficialResource(Resource):
 
     def post(self, study_id: int):
         data = request.json
-        study_overall_official_ = Study.query.get(study_id)
-        study_overall_official_ = StudyOverallOfficial.from_data(study_overall_official_, data)
-        db.session.add(study_overall_official_)
+        study_obj = Study.query.get(study_id)
+        list_of_elements = []
+        for i in data:
+            if 'id' in i and i["id"]:
+                study_overall_official_ = StudyOverallOfficial.query.get(i["id"])
+                study_overall_official_.update(i)
+                list_of_elements.append(study_overall_official_.to_dict())
+            elif "id" not in i or not i["id"]:
+                study_overall_official_ = StudyOverallOfficial.from_data(study_obj, i)
+                db.session.add(study_overall_official_)
+                list_of_elements.append(study_overall_official_.to_dict())
         db.session.commit()
-        return study_overall_official_.to_dict()
-
+        return list_of_elements
     # @api.route("/study/<study_id>/metadata/available_ipd/<available_ipd_id>")
     # class StudyOverallOfficialUpdate(Resource):
     #     def put(self, study_id: int, available_ipd_id: int):

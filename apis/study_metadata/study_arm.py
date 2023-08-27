@@ -1,4 +1,4 @@
-from flask_restx import Namespace, Resource, fields
+from flask_restx import Resource, fields
 from model import Study, db, StudyArm
 from flask import request
 
@@ -20,10 +20,8 @@ study_arm = api.model(
 
 @api.route("/study/<study_id>/metadata/arm")
 class StudyArmResource(Resource):
-    @api.doc("list_study")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.param("id", "The study identifier")
     @api.marshal_with(study_arm)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
@@ -33,11 +31,20 @@ class StudyArmResource(Resource):
     def post(self, study_id: int):
         data = request.json
         study_obj = Study.query.get(study_id)
-        study_arm_ = StudyArm.from_data(study_obj, data)
-        db.session.add(study_arm_)
+        list_of_elements = []
+        for i in data:
+            if 'id' in i and i["id"]:
+                study_arm_ = StudyArm.query.get(i["id"])
+                study_arm_.update(i)
+                list_of_elements.append(study_arm_.to_dict())
+            elif "id" not in i or not i["id"]:
+                study_arm_ = StudyArm.from_data(study_obj, i)
+                db.session.add(study_arm_)
+                list_of_elements.append(study_arm_.to_dict())
         db.session.commit()
-        return study_arm_.to_dict()
-    #
+
+        return list_of_elements
+
     # @api.route("/study/<study_id>/metadata/arm/<arm_id>")
     # class StudyArmUpdate(Resource):
     #     def put(self, study_id: int, arm_id: int):
