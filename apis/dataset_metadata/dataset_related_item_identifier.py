@@ -19,7 +19,7 @@ from apis.dataset_metadata_namespace import api
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/related_item_contributor")
 class DatasetRelatedItemContributorResource(Resource):
-    @api.doc("dataset")
+    @api.doc("related_item_contributor")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The dataset identifier")

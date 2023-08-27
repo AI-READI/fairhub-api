@@ -22,7 +22,7 @@ study_ipdsharing = api.model(
 
 @api.route("/study/<study_id>/metadata/ipdsharing")
 class StudyIpdsharingResource(Resource):
-    @api.doc("list_study")
+    @api.doc("ipdsharing")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")

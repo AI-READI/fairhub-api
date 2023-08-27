@@ -16,7 +16,7 @@ dataset_related_item = api.model(
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/related_item")
 class DatasetRelatedItemResource(Resource):
-    @api.doc("dataset")
+    @api.doc("related_item")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The dataset identifier")

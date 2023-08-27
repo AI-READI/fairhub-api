@@ -13,7 +13,7 @@ dataset_readme = api.model(
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/readme")
 class DatasetReadmeResource(Resource):
-    @api.doc("dataset")
+    @api.doc("readme")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The dataset identifier")

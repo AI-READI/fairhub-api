@@ -18,7 +18,7 @@ study_available = api.model(
 
 @api.route("/study/<study_id>/metadata/available")
 class StudyAvailableResource(Resource):
-    @api.doc("list_study")
+    @api.doc("available")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")

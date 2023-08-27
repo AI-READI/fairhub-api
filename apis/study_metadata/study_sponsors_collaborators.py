@@ -25,7 +25,7 @@ study_sponsors_collaborators = api.model(
 
 @api.route("/study/<study_id>/metadata/sponsors_collaborators")
 class StudyStatusResource(Resource):
-    @api.doc("list_study")
+    @api.doc("sponsors_collaborators")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")

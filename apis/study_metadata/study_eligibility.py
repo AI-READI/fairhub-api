@@ -27,7 +27,7 @@ study_eligibility = api.model(
 
 @api.route("/study/<study_id>/metadata/eligibility")
 class StudyEligibilityResource(Resource):
-    @api.doc("list_study")
+    @api.doc("eligibility")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")

@@ -20,7 +20,7 @@ study_overall_official = api.model(
 
 @api.route("/study/<study_id>/metadata/overall_official")
 class StudyOverallOfficialResource(Resource):
-    @api.doc("list_study")
+    @api.doc("overall_official")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")

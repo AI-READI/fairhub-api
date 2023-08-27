@@ -19,7 +19,7 @@ dataset_rights = api.model(
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/rights")
 class DatasetRightsResource(Resource):
-    @api.doc("dataset")
+    @api.doc("rights")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The dataset identifier")

@@ -21,7 +21,7 @@ study_reference = api.model(
 
 @api.route("/study/<study_id>/metadata/reference")
 class StudyReferenceResource(Resource):
-    @api.doc("list_study")
+    @api.doc("reference")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")

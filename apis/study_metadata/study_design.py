@@ -33,7 +33,7 @@ study_design = api.model(
 
 @api.route("/study/<study_id>/metadata/design")
 class StudyDesignResource(Resource):
-    @api.doc("list_design")
+    @api.doc("design")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")

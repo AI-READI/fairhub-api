@@ -19,7 +19,7 @@ study_other = api.model(
 
 @api.route("/study/<study_id>/metadata/other")
 class StudyOtherResource(Resource):
-    @api.doc("list_study")
+    @api.doc("other")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")

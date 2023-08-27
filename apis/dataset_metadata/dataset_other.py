@@ -21,7 +21,7 @@ dataset_other = api.model(
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/other")
 class DatasetOtherResource(Resource):
-    @api.doc("dataset")
+    @api.doc("other")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The dataset identifier")

@@ -22,7 +22,7 @@ study_intervention = api.model(
 
 @api.route("/study/<study_id>/metadata/intervention")
 class StudyInterventionResource(Resource):
-    @api.doc("list_study")
+    @api.doc("intervention")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")

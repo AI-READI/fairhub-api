@@ -21,7 +21,7 @@ study_identification = api.model(
 
 @api.route("/study/<study_id>/metadata/identification")
 class StudyIdentificationResource(Resource):
-    @api.doc("list_study")
+    @api.doc("identification")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")

@@ -22,7 +22,7 @@ dataset_consent = api.model(
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/consent")
 class DatasetConsentResource(Resource):
-    @api.doc("dataset")
+    @api.doc("consent")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The dataset identifier")

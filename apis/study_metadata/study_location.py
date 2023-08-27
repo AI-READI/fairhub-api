@@ -23,7 +23,7 @@ study_location = api.model(
 
 @api.route("/study/<study_id>/metadata/location")
 class StudyLocationResource(Resource):
-    @api.doc("list_study")
+    @api.doc("location")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")

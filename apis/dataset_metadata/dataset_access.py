@@ -1,7 +1,7 @@
 from model import Dataset, DatasetAccess, db
 
-from flask_restx import Namespace, Resource, fields
-from flask import jsonify, request
+from flask_restx import Resource, fields
+from flask import request
 
 from apis.dataset_metadata_namespace import api
 
@@ -20,10 +20,9 @@ dataset_access = api.model(
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/access")
 class DatasetAccessResource(Resource):
-    @api.doc("dataset")
+    @api.doc("access")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.param("id", "The dataset identifier")
     @api.marshal_with(dataset_access)
     def get(self, study_id: int, dataset_id: int):
         dataset_ = Dataset.query.get(dataset_id)
