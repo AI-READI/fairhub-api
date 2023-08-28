@@ -14,10 +14,12 @@ class StudyEligibility(db.Model):
 
     id = db.Column(db.CHAR(36), primary_key=True)
     gender = db.Column(db.String, nullable=False)
-    gender_based = db.Column(db.BOOLEAN, nullable=False)
+    gender_based = db.Column(db.String, nullable=False)
     gender_description = db.Column(db.String, nullable=False)
-    minimum_age = db.Column(db.String, nullable=False)
-    maximum_age = db.Column(db.String, nullable=False)
+    minimum_age_value = db.Column(db.Integer, nullable=False)
+    maximum_age_value = db.Column(db.Integer, nullable=False)
+    minimum_age_unit = db.Column(db.String, nullable=False)
+    maximum_age_unit = db.Column(db.String, nullable=False)
     healthy_volunteers = db.Column(db.BOOLEAN, nullable=False)
     inclusion_criteria = db.Column(ARRAY(String), nullable=False)
     exclusion_criteria = db.Column(ARRAY(String), nullable=False)
@@ -34,8 +36,10 @@ class StudyEligibility(db.Model):
             "gender": self.gender,
             "gender_based": self.gender_based,
             "gender_description": self.gender_description,
-            "minimum_age": self.minimum_age,
-            "maximum_age": self.maximum_age,
+            "minimum_age_unit": self.minimum_age_unit,
+            "maximum_age_unit": self.maximum_age_unit,
+            "minimum_age_value": self.minimum_age_value,
+            "maximum_age_value": self.maximum_age_value,
             "healthy_volunteers": self.healthy_volunteers,
             "inclusion_criteria": self.inclusion_criteria,
             "exclusion_criteria": self.exclusion_criteria,
@@ -56,8 +60,10 @@ class StudyEligibility(db.Model):
         self.gender = data["gender"]
         self.gender_based = data["gender_based"]
         self.gender_description = data["gender_description"]
-        self.minimum_age = data["minimum_age"]
-        self.maximum_age = data["maximum_age"]
+        self.minimum_age_value = data["minimum_age_value"]
+        self.minimum_age_unit = data["minimum_age_unit"]
+        self.maximum_age_unit = data["maximum_age_unit"]
+        self.maximum_age_value = data["maximum_age_value"]
         self.healthy_volunteers = data["healthy_volunteers"]
         self.inclusion_criteria = data["inclusion_criteria"]
         self.exclusion_criteria = data["exclusion_criteria"]

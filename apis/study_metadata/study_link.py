@@ -35,12 +35,15 @@ class StudyLinkResource(Resource):
         for i in data:
             if 'id' in i and i["id"]:
                 study_link_ = StudyLink.query.get(i["id"])
+                if study_link_ == None:
+                    return f"Study link {i['id']} Id is not found", 404
                 study_link_.update(i)
                 list_of_elements.append(study_link_.to_dict())
             elif "id" not in i or not i["id"]:
                 study_link_ = StudyLink.from_data(study_obj, i)
                 db.session.add(study_link_)
                 list_of_elements.append(study_link_.to_dict())
+
         db.session.commit()
         return list_of_elements
     # @api.route("/study/<study_id>/metadata/available_ipd/<available_ipd_id>")

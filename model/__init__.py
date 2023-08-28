@@ -19,7 +19,7 @@ from .dataset_metadata.dataset_date import DatasetDate
 from .dataset_metadata.dataset_de_ident_level import DatasetDeIdentLevel
 from .dataset_metadata.dataset_description import DatasetDescription
 from .dataset_metadata.dataset_funder import DatasetFunder
-from .dataset_metadata.dataset_identifier import DatasetIdentifier
+from .dataset_metadata.dataset_alternate_identifier import DatasetAlternateIdentifier
 from .dataset_metadata.dataset_managing_organization import DatasetManagingOrganization
 from .dataset_metadata.dataset_other import DatasetOther
 from .dataset_metadata.dataset_readme import DatasetReadme
@@ -75,7 +75,7 @@ __all__ = [
     "DatasetDeIdentLevel",
     "DatasetContributorAffiliation",
     "DatasetFunder",
-    "DatasetIdentifier",
+    "DatasetAlternateIdentifier",
     "DatasetManagingOrganization",
     "DatasetRights",
     "DatasetReadme",

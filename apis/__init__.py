@@ -31,7 +31,7 @@ from .dataset_metadata.dataset_access import api as access
 from .dataset_metadata.dataset_consent import api as consent
 from .dataset_metadata.dataset_subject import api as subject
 from .dataset_metadata.dataset_description import api as description
-from .dataset_metadata.dataset_identifier import api as identifier
+from .dataset_metadata.dataset_alternate_identifier import api as alternate_identifier
 from .dataset_metadata.dataset_other import api as dataset_other
 from .dataset_metadata.dataset_date import api as date
 from .dataset_metadata.dataset_de_ident_level import api as de_ident_level
