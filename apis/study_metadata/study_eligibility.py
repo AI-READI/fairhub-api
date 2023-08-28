@@ -3,7 +3,6 @@ from model import Study, db, StudyEligibility
 from flask import request
 
 
-
 from apis.study_metadata_namespace import api
 
 

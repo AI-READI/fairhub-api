@@ -33,7 +33,7 @@ class StudyAvailableResource(Resource):
         study_obj = Study.query.get(study_id)
         list_of_elements = []
         for i in data:
-            if 'id' in i and i["id"]:
+            if "id" in i and i["id"]:
                 study_available_ipd_ = StudyAvailableIpd.query.get(i["id"])
                 study_available_ipd_.update(i)
                 list_of_elements.append(study_available_ipd_.to_dict())

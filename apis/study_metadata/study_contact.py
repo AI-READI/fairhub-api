@@ -36,7 +36,7 @@ class StudyContactResource(Resource):
         study_obj = Study.query.get(study_id)
         list_of_elements = []
         for i in data:
-            if 'id' in i and i["id"]:
+            if "id" in i and i["id"]:
                 study_contact_ = StudyContact.query.get(i["id"])
                 study_contact_.update(i)
                 list_of_elements.append(study_contact_.to_dict())
@@ -46,6 +46,7 @@ class StudyContactResource(Resource):
                 list_of_elements.append(study_contact_.to_dict())
         db.session.commit()
         return list_of_elements
+
     # @api.route("/study/<study_id>/metadata/arm/<arm_id>")
     # class StudyArmUpdate(Resource):
     #     def put(self, study_id: int, arm_id: int):
