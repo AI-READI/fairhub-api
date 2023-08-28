@@ -33,7 +33,7 @@ class StudyArmResource(Resource):
         study_obj = Study.query.get(study_id)
         list_of_elements = []
         for i in data:
-            if 'id' in i and i["id"]:
+            if "id" in i and i["id"]:
                 study_arm_ = StudyArm.query.get(i["id"])
                 study_arm_.update(i)
                 list_of_elements.append(study_arm_.to_dict())

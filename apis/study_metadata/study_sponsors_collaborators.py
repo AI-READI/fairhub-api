@@ -3,7 +3,6 @@ from model import Study, db, StudySponsorsCollaborators
 from flask import request
 
 
-
 from apis.study_metadata_namespace import api
 
 
@@ -38,15 +37,21 @@ class StudyStatusResource(Resource):
     def post(self, study_id: int):
         data = request.json
         study_sponsors_collaborators_ = Study.query.get(study_id)
-        study_sponsors_collaborators_ = StudySponsorsCollaborators.from_data(study_sponsors_collaborators_, data)
+        study_sponsors_collaborators_ = StudySponsorsCollaborators.from_data(
+            study_sponsors_collaborators_, data
+        )
         db.session.add(study_sponsors_collaborators_)
         db.session.commit()
         return study_sponsors_collaborators_.to_dict()
 
-    @api.route("/study/<study_id>/metadata/sponsors_collaborators/<sponsors_collaborators_id>")
+    @api.route(
+        "/study/<study_id>/metadata/sponsors_collaborators/<sponsors_collaborators_id>"
+    )
     class StudySponsorsCollaboratorsUpdate(Resource):
         def put(self, study_id: int, sponsors_collaborators_id: int):
-            study_sponsors_collaborators_ = StudySponsorsCollaborators.query.get(sponsors_collaborators_id)
+            study_sponsors_collaborators_ = StudySponsorsCollaborators.query.get(
+                sponsors_collaborators_id
+            )
             study_sponsors_collaborators_.update(request.json)
             db.session.commit()
             return study_sponsors_collaborators_.to_dict()

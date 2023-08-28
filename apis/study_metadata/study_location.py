@@ -3,7 +3,6 @@ from model import Study, db, StudyLocation
 from flask import request
 
 
-
 from apis.study_metadata_namespace import api
 
 
@@ -38,7 +37,7 @@ class StudyLocationResource(Resource):
         study_obj = Study.query.get(study_id)
         list_of_elements = []
         for i in data:
-            if 'id' in i and i["id"]:
+            if "id" in i and i["id"]:
                 study_location_ = StudyLocation.query.get(i["id"])
                 study_location_.update(i)
                 list_of_elements.append(study_location_.to_dict())
@@ -48,7 +47,6 @@ class StudyLocationResource(Resource):
                 list_of_elements.append(study_location_.to_dict())
         db.session.commit()
         return list_of_elements
-
 
     # @api.route("/study/<study_id>/metadata/available_ipd/<available_ipd_id>")
     # class StudyLocationUpdate(Resource):
