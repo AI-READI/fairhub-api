@@ -15,8 +15,8 @@ def create_app():
     app = Flask(__name__)
 
     # `full` if you want to see all the details
-    app.config.SWAGGER_UI_DOC_EXPANSION = "list"
-
+    app.config["SWAGGER_UI_DOC_EXPANSION"] = "list"
+    app.config["RESTX_MASK_SWAGGER"] = False
     # Initialize config
     app.config.from_pyfile("config.py")
     # app.register_blueprint(api)
