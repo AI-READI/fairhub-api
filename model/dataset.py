@@ -60,8 +60,7 @@ class Dataset(db.Model):
 
         return {
             "id": self.id,
-            "updated_on": str(datetime.now()),
-            "created_at": str(datetime.now()),
+            "created_at": str(self.created_at),
             # "dataset_versions": [i.to_dict() for i in self.dataset_versions],
             "latest_version": last_published.id if last_published else None,
         }

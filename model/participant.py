@@ -9,7 +9,7 @@ class Participant(db.Model):
     def __init__(self, study):
         self.study = study
         self.id = str(uuid.uuid4())
-
+        self.created_at = datetime.now()
     __tablename__ = "participant"
     id = db.Column(db.CHAR(36), primary_key=True)
     first_name = db.Column(db.String, nullable=False)
@@ -34,8 +34,8 @@ class Participant(db.Model):
             "last_name": self.last_name,
             "address": self.address,
             "age": self.age,
-            "created_at": str(datetime.now()),
-            "published_on": str(datetime.now()),
+            "created_at": str(self.created_at),
+            "updated_on": str(self.updated_on)
         }
 
     @staticmethod
@@ -50,5 +50,4 @@ class Participant(db.Model):
         self.last_name = data["last_name"]
         self.address = data["address"]
         self.age = data["age"]
-        self.created_at = data["created_at"]
-        self.updated_on = data["updated_on"]
+        self.updated_on = datetime.now()

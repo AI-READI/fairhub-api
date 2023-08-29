@@ -56,7 +56,6 @@ class DatasetVersion(db.Model):
         self.title = data["title"]
         self.published = data["published"]
         self.doi = data["doi"]
-        self.created_at = data["created_at"]
         self.published_on = data["published_on"]
         self.participants[:] = data["participants"]
         self.changelog = data["changelog"]

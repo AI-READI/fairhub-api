@@ -76,7 +76,6 @@ class Study(db.Model):
         self.title = data["title"]
         self.image = data["image"]
         # self.user = model.User.from_data(data["user"])
-        self.created_at = data["created_at"]
         self.updated_on = data["updated_on"]
 
     def validate(self):
