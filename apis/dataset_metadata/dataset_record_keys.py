@@ -44,7 +44,6 @@ class DatasetRecordKeysResource(Resource):
         db.session.commit()
         return list_of_elements
 
-
     @api.route(
         "/study/<study_id>/dataset/<dataset_id>/metadata/record_keys/<record_key_id>"
     )

@@ -36,7 +36,7 @@ class DatasetConsentResource(Resource):
         data_obj = Dataset.query.get(dataset_id)
         list_of_elements = []
         for i in data:
-            if 'id' in i and i["id"]:
+            if "id" in i and i["id"]:
                 dataset_consent_ = DatasetConsent.query.get(i["id"])
                 if dataset_consent_ == None:
                     return f"Study link {i['id']} Id is not found", 404

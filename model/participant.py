@@ -10,6 +10,7 @@ class Participant(db.Model):
         self.study = study
         self.id = str(uuid.uuid4())
         self.created_at = datetime.now()
+
     __tablename__ = "participant"
     id = db.Column(db.CHAR(36), primary_key=True)
     first_name = db.Column(db.String, nullable=False)
@@ -35,7 +36,7 @@ class Participant(db.Model):
             "address": self.address,
             "age": self.age,
             "created_at": str(self.created_at),
-            "updated_on": str(self.updated_on)
+            "updated_on": str(self.updated_on),
         }
 
     @staticmethod
