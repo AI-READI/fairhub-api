@@ -21,7 +21,6 @@ class StudyAvailableResource(Resource):
     @api.doc("available")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.param("id", "The study identifier")
     @api.marshal_with(study_available)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)

@@ -25,7 +25,6 @@ class DatasetConsentResource(Resource):
     @api.doc("consent")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.param("id", "The dataset identifier")
     @api.marshal_with(dataset_consent)
     def get(self, study_id: int, dataset_id: int):
         dataset_ = Dataset.query.get(dataset_id)
@@ -35,10 +34,20 @@ class DatasetConsentResource(Resource):
     def post(self, study_id: int, dataset_id: int):
         data = request.json
         data_obj = Dataset.query.get(dataset_id)
-        dataset_consent_ = DatasetConsent.from_data(data_obj, data)
-        db.session.add(dataset_consent_)
+        list_of_elements = []
+        for i in data:
+            if 'id' in i and i["id"]:
+                dataset_consent_ = DatasetConsent.query.get(i["id"])
+                if dataset_consent_ == None:
+                    return f"Study link {i['id']} Id is not found", 404
+                dataset_consent_.update(i)
+                list_of_elements.append(dataset_consent_.to_dict())
+            elif "id" not in i or not i["id"]:
+                dataset_consent_ = DatasetConsent.from_data(data_obj, i)
+                db.session.add(dataset_consent_)
+                list_of_elements.append(dataset_consent_.to_dict())
         db.session.commit()
-        return dataset_consent_.to_dict()
+        return list_of_elements
 
     @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/consent/<consent_id>")
     class DatasetAccessUpdate(Resource):

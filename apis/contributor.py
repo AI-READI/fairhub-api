@@ -20,8 +20,11 @@ class AddParticipant(Resource):
     @api.doc("contributor list")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.param("id", "The contributor identifier")
     @api.marshal_with(contributors_model)
     def get(self, study_id: int):
         contributors = StudyContributor.query.all()
         return [c.to_dict() for c in contributors]
+
+    def post(self, study_id: int):
+        contributors = StudyContributor.query.all()
+

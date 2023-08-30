@@ -1,7 +1,7 @@
 from model import Dataset, DatasetRecordKeys, db
 
-from flask_restx import Namespace, Resource, fields
-from flask import jsonify, request
+from flask_restx import Resource, fields
+from flask import request
 from apis.dataset_metadata_namespace import api
 
 dataset_record_keys = api.model(
@@ -29,10 +29,21 @@ class DatasetRecordKeysResource(Resource):
     def post(self, study_id: int, dataset_id: int):
         data = request.json
         data_obj = Dataset.query.get(dataset_id)
-        dataset_record_keys_ = DatasetRecordKeys.from_data(data_obj, data)
-        db.session.add(dataset_record_keys_)
+        list_of_elements = []
+        for i in data:
+            if "id" in i and i["id"]:
+                dataset_record_keys_ = DatasetRecordKeys.query.get(i["id"])
+                if dataset_record_keys_ == None:
+                    return f"Study link {i['id']} Id is not found", 404
+                dataset_record_keys_.update(i)
+                list_of_elements.append(dataset_record_keys_.to_dict())
+            elif "id" not in i or not i["id"]:
+                dataset_record_keys_ = DatasetRecordKeys.from_data(data_obj, i)
+                db.session.add(dataset_record_keys_)
+                list_of_elements.append(dataset_record_keys_.to_dict())
         db.session.commit()
-        return dataset_record_keys_.to_dict()
+        return list_of_elements
+
 
     @api.route(
         "/study/<study_id>/dataset/<dataset_id>/metadata/record_keys/<record_key_id>"

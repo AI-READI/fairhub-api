@@ -20,7 +20,6 @@ class DatasetAlternateIdentifierResource(Resource):
     @api.doc("identifier")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.param("id", "The dataset identifier")
     @api.marshal_with(dataset_identifier)
     def get(self, study_id: int, dataset_id: int):
         dataset_ = Dataset.query.get(dataset_id)

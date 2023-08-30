@@ -36,7 +36,6 @@ dataset = api.model(
 class DatasetList(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
-    @api.doc("add dataset", params={"id": "An ID"})
     @api.marshal_with(dataset)
     # @api.expect(body=dataset)
     def get(self, study_id):
@@ -75,7 +74,6 @@ class Version(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
     @api.doc("dataset version")
-    @api.param("id", "Adding version")
     @api.marshal_with(dataset_versions_model)
     def get(self, study_id, dataset_id, version_id):
         dataset_version = DatasetVersion.query.get(version_id)

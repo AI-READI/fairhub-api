@@ -21,7 +21,6 @@ class DatasetManagingOrganizationResource(Resource):
     @api.doc("managing_organization")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.param("id", "The dataset identifier")
     @api.marshal_with(managing_organization)
     def get(self, study_id: int, dataset_id: int):
         dataset_ = Dataset.query.get(dataset_id)

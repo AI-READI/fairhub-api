@@ -25,7 +25,6 @@ class DatasetDeIdentLevelResource(Resource):
     @api.doc("de_ident_level")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.param("id", "The dataset identifier")
     @api.marshal_with(de_ident_level)
     def get(self, study_id: int, dataset_id: int):
         dataset_ = Dataset.query.get(dataset_id)
