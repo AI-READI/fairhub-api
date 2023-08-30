@@ -24,12 +24,8 @@ study = api.model(
     "Study",
     {
         "id": fields.String(required=True),
-        "name": fields.String(required=True),
         "title": fields.String(required=True),
-        "description": fields.String(required=True),
         "image": fields.String(required=True),
-        "size": fields.String(required=True),
-        "keywords": fields.String(required=True),
         "last_updated": fields.String(required=True),
         "owner": fields.Nested(owner, required=True),
     },
@@ -41,7 +37,6 @@ class Studies(Resource):
     @api.doc("list_study")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.param("id", "The study identifier")
     # @api.marshal_with(study)
     def get(self):
         studies = Study.query.all()
@@ -59,7 +54,6 @@ class StudyResource(Resource):
     @api.doc("get study")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.param("id", "The study identifier")
     # @api.marshal_with(study)
     def get(self, study_id: int):
         study1 = Study.query.get(study_id)

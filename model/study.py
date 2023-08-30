@@ -1,6 +1,6 @@
 import uuid
 from datetime import datetime
-
+from flask import jsonify
 
 import model
 
@@ -32,7 +32,7 @@ class Study(db.Model):
     study_arm = db.relationship("StudyArm", back_populates="study")
     study_available_ipd = db.relationship("StudyAvailableIpd", back_populates="study")
     study_contact = db.relationship("StudyContact", back_populates="study")
-    study_description = db.relationship("StudyDescription", back_populates="study")
+    study_description = db.relationship("StudyDescription", uselist=False, back_populates="study")
     study_design = db.relationship("StudyDesign", back_populates="study")
     study_eligibility = db.relationship("StudyEligibility", back_populates="study")
     study_identification = db.relationship(
@@ -42,7 +42,7 @@ class Study(db.Model):
     study_ipdsharing = db.relationship("StudyIpdsharing", back_populates="study")
     study_link = db.relationship("StudyLink", back_populates="study")
     study_location = db.relationship("StudyLocation", back_populates="study")
-    study_other = db.relationship("StudyOther", back_populates="study")
+    study_other = db.relationship("StudyOther",  uselist=False, back_populates="study")
     study_overall_official = db.relationship(
         "StudyOverallOfficial", back_populates="study"
     )
@@ -61,6 +61,8 @@ class Study(db.Model):
             "created_at": str(self.created_at),
             "updated_on": str(self.updated_on),
             # "study_contributors": self.study_contributors.to_dict(),
+            "size": self.study_other.size if self.study_other else None,
+            "description": self.study_description.brief_summary if self.study_description else None
         }
 
     @staticmethod
