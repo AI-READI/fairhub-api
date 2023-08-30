@@ -40,7 +40,9 @@ class Dataset(db.Model):
     )
 
     dataset_funder = db.relationship("DatasetFunder", back_populates="dataset")
-    dataset_alternate_identifier = db.relationship("DatasetAlternateIdentifier", back_populates="dataset")
+    dataset_alternate_identifier = db.relationship(
+        "DatasetAlternateIdentifier", back_populates="dataset"
+    )
     dataset_managing_organization = db.relationship(
         "DatasetManagingOrganization", back_populates="dataset"
     )
