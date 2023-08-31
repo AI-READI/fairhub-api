@@ -68,6 +68,24 @@ class DatasetResource(Resource):
         db.session.commit()
         return data_obj.to_dict()
 
+    def delete(self, study_id, dataset_id):
+        data = request.json
+        study_obj = Study.query.get(study_id)
+        for dataset_ in study_obj.dataset:
+            db.session.delete(dataset_)
+            db.session.commit()
+        db.session.delete(study_obj)
+        db.session.commit()
+        return Response(status=204)
+
+    # def delete(self, study_id, dataset_id, version_id):
+    #     data_obj = Dataset.query.get(dataset_id)
+    #     for version in data_obj.dataset_versions:
+    #         db.session.delete(version)
+    #         db.session.commit()
+    #     db.session.delete(data_obj)
+    #     db.session.commit()
+    #     return Response(status=204)
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>")
 class Version(Resource):

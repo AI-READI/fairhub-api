@@ -14,7 +14,6 @@ class StudyReference(db.Model):
 
     id = db.Column(db.CHAR(36), primary_key=True)
     identifier = db.Column(db.String, nullable=False)
-    title = db.Column(db.String, nullable=False)
     type = db.Column(db.String, nullable=False)
     citation = db.Column(db.String, nullable=False)
 
@@ -26,7 +25,6 @@ class StudyReference(db.Model):
         return {
             "id": self.id,
             "identifier": self.identifier,
-            "title": self.title,
             "type": self.type,
             "citation": self.citation,
         }
@@ -42,7 +40,6 @@ class StudyReference(db.Model):
     def update(self, data):
         """Updates the study from a dictionary"""
         self.identifier = data["identifier"]
-        self.title = data["title"]
         self.type = data["type"]
         self.citation = data["citation"]
 

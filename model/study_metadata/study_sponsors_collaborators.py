@@ -15,12 +15,10 @@ class StudySponsorsCollaborators(db.Model):
 
     id = db.Column(db.CHAR(36), primary_key=True)
     responsible_party_type = db.Column(db.String, nullable=False)
-    responsible_party_investigator_first_name = db.Column(db.String, nullable=False)
-    responsible_party_investigator_last_name = db.Column(db.String, nullable=False)
+    responsible_party_investigator_name = db.Column(db.String, nullable=False)
     responsible_party_investigator_title = db.Column(db.String, nullable=False)
     responsible_party_investigator_affiliation = db.Column(db.String, nullable=False)
-    lead_sponsor_first_name = db.Column(db.String, nullable=False)
-    lead_sponsor_last_name = db.Column(db.String, nullable=False)
+    lead_sponsor_name = db.Column(db.String, nullable=False)
     collaborator_name = db.Column(ARRAY(String), nullable=False)
 
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
@@ -31,12 +29,10 @@ class StudySponsorsCollaborators(db.Model):
         return {
             "id": self.id,
             "responsible_party_type": self.responsible_party_type,
-            "responsible_party_investigator_first_name": self.responsible_party_investigator_first_name,
-            "responsible_party_investigator_last_name": self.responsible_party_investigator_last_name,
+            "responsible_party_investigator_name": self.responsible_party_investigator_name,
             "responsible_party_investigator_title": self.responsible_party_investigator_title,
             "responsible_party_investigator_affiliation": self.responsible_party_investigator_affiliation,
-            "lead_sponsor_first_name": self.lead_sponsor_first_name,
-            "lead_sponsor_last_name": self.lead_sponsor_last_name,
+            "lead_sponsor_name": self.lead_sponsor_name,
             "collaborator_name": self.collaborator_name,
         }
 
@@ -51,11 +47,9 @@ class StudySponsorsCollaborators(db.Model):
     def update(self, data):
         """Updates the study from a dictionary"""
         self.responsible_party_type = data["responsible_party_type"]
-        self.responsible_party_investigator_first_name = data[
-            "responsible_party_investigator_first_name"
-        ]
-        self.responsible_party_investigator_last_name = data[
-            "responsible_party_investigator_last_name"
+
+        self.responsible_party_investigator_name = data[
+            "responsible_party_investigator_name"
         ]
         self.responsible_party_investigator_title = data[
             "responsible_party_investigator_title"
@@ -63,8 +57,7 @@ class StudySponsorsCollaborators(db.Model):
         self.responsible_party_investigator_affiliation = data[
             "responsible_party_investigator_affiliation"
         ]
-        self.lead_sponsor_first_name = data["lead_sponsor_first_name"]
-        self.lead_sponsor_last_name = data["lead_sponsor_last_name"]
+        self.lead_sponsor_name = data["lead_sponsor_name"]
         self.collaborator_name = data["collaborator_name"]
 
     def validate(self):
