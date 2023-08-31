@@ -7,9 +7,7 @@ from .db import db
 version_participants = db.Table(
     "version_participants",
     db.Model.metadata,
-    db.Column(
-        "dataset_version_id", db.ForeignKey("version.id"), primary_key=True
-    ),
+    db.Column("dataset_version_id", db.ForeignKey("version.id"), primary_key=True),
     db.Column("participant_id", db.ForeignKey("participant.id"), primary_key=True),
 )
 
