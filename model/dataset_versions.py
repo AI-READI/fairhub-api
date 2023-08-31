@@ -4,8 +4,8 @@ import model
 class DatasetVersions:
     def __init__(
         self,
-        last_published: model.DatasetVersion,
-        last_modified: model.DatasetVersion,
+        last_published: model.Version,
+        last_modified: model.Version,
         id: str,
     ):
         self.latest_version = last_modified.id

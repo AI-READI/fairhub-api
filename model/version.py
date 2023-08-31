@@ -8,18 +8,18 @@ version_participants = db.Table(
     "version_participants",
     db.Model.metadata,
     db.Column(
-        "dataset_version_id", db.ForeignKey("dataset_version.id"), primary_key=True
+        "dataset_version_id", db.ForeignKey("version.id"), primary_key=True
     ),
     db.Column("participant_id", db.ForeignKey("participant.id"), primary_key=True),
 )
 
 
-class DatasetVersion(db.Model):
+class Version(db.Model):
     def __init__(self, dataset):
         self.dataset = dataset
         self.id = str(uuid.uuid4())
 
-    __tablename__ = "dataset_version"
+    __tablename__ = "version"
     id = db.Column(db.CHAR(36), primary_key=True)
 
     title = db.Column(db.String, nullable=False)
@@ -48,7 +48,7 @@ class DatasetVersion(db.Model):
 
     @staticmethod
     def from_data(dataset: Dataset, data: dict):
-        dataset_version_obj = DatasetVersion(dataset)
+        dataset_version_obj = Version(dataset)
         dataset_version_obj.update(data)
         return dataset_version_obj
 

@@ -6,7 +6,7 @@ api = Namespace("contributor", description="contributors", path="/")
 
 
 contributors_model = api.model(
-    "DatasetVersion",
+    "Version",
     {
         "user_id": fields.String(required=True),
         "permission": fields.String(required=True),
