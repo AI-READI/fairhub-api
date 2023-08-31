@@ -327,54 +327,45 @@ INSERT INTO "study_location" ("id", "facility", "status", "city", "state", "zip"
 /*!40000 ALTER TABLE "study_location" ENABLE KEYS */;
 
 -- Dumping data for table public.study_other: -1 rows
+-- done
 /*!40000 ALTER TABLE "study_other" DISABLE KEYS */;
 INSERT INTO "study_other" ("id", "oversight_has_dmc", "conditions", "keywords", "size", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000002', 'false', '{conditional}', '{none}', '1', '00000000-0000-0000-0000-000000000004'),
-	('00000000-0000-0000-0000-000000000003', 'false', '{conditional}', '{none}', '1', '00000000-0000-0000-0000-000000000003'),
-	('00000000-0000-0000-0000-000000000004', 'false', '{conditional}', '{none}', '1', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000001', 'false', '{conditional}', '{none}', '1', '00000000-0000-0000-0000-000000000001'),
-	('cd440fa9-988b-4d51-8b66-8c2e42c630b3', 'false', '{conditional}', '{none}', '1', '00000000-0000-0000-0000-000000000001');
+	('00000000-0000-0000-0000-000000000001', TRUE, ARRAY ['condition 1'], ARRAY ['keyword 1'], '1 GB', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', FALSE, ARRAY ['condition 1'], ARRAY ['keyword 1'], '3 GB', '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "study_other" ENABLE KEYS */;
 
 -- Dumping data for table public.study_overall_official: -1 rows
+-- done
 /*!40000 ALTER TABLE "study_overall_official" DISABLE KEYS */;
 INSERT INTO "study_overall_official" ("id", "first_name", "last_name", "affiliation", "role", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'firstname', 'lastname', 'affiliation', 'Study Chair, Study Director', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'firstname', 'lastname', 'affiliation', 'Study Chair, Study Director', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000003', 'firstname', 'lastname', 'affiliation', 'Study Chair, Study Director', '00000000-0000-0000-0000-000000000003'),
-	('a0806089-6602-48b0-b870-1d5e91b956a5', 'firstname', 'lastname', 'affiliation', 'Study Chair', '00000000-0000-0000-0000-000000000001');
+	('00000000-0000-0000-0000-000000000001', 'Zoey', 'Bashirian', 'Lowe, Kshlerin and Ward', 'Study Director', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', 'Ashlynn', 'Grady', 'Kuhic - Towne', 'Study Chair', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000003', 'Maiya', 'Bartoletti', 'Medhurst - Marks', 'Study Chair', '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "study_overall_official" ENABLE KEYS */;
 
 -- Dumping data for table public.study_reference: 6 rows
+-- done
 /*!40000 ALTER TABLE "study_reference" DISABLE KEYS */;
-INSERT INTO "study_reference" ("id", "identifier", "title", "type", "citation", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000002', 'The PubMed Unique Identifier ', ' bibliographic reference', 'false', 'A bibliographic reference', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000004', 'The PubMed Unique Identifier ', ' bibliographic reference', 'false', 'A bibliographic reference', '00000000-0000-0000-0000-000000000001'),
-	('2996e115-8c44-4914-a470-2764ff280316', 'The PubMed Unique Identifier ', ' bibliographic reference', 'false', 'A bibliographic reference', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000001', 'The PubMed Unique Identifier ', ' bibliographic reference', 'type', 'A bibliographic reference', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000003', 'The PubMed Unique Identifier ', ' bibliographic reference', 'type', 'A bibliographic reference', '00000000-0000-0000-0000-000000000003'),
-	('00000000-0000-0000-0000-000000000005', 'The PubMed Unique Identifier ', ' bibliographic reference', 'type', 'A bibliographic reference', '00000000-0000-0000-0000-000000000004');
+INSERT INTO "study_reference" ("id", "identifier", "type", "citation", "study_id") VALUES
+	('00000000-0000-0000-0000-000000000001', 'PMID1234 ', 'Yes', 'Lorem Ipsum', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', 'PMID12234 ', 'No', 'Lorem Ipsum', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000003', 'PMID1A2234 ', 'No', 'Lorem Ipsum', '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "study_reference" ENABLE KEYS */;
 
 -- Dumping data for table public.study_sponsors_collaborators: -1 rows
 /*!40000 ALTER TABLE "study_sponsors_collaborators" DISABLE KEYS */;
-INSERT INTO "study_sponsors_collaborators" ("id", "responsible_party_type", "responsible_party_investigator_first_name", "responsible_party_investigator_last_name", "responsible_party_investigator_title", "responsible_party_investigator_affiliation", "lead_sponsor_first_name", "lead_sponsor_last_name", "collaborator_name", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'San Diego', 'firstname', 'lastname', 'title', 'affiliation', 'name', 'lastname', '{"clinical study"}', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'San Diego', 'firstname', 'lastname', 'title', 'affiliation', 'name', 'lastname', '{"clinical study"}', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000003', 'San Diego', 'firstname', 'lastname', 'title', 'affiliation', 'name', 'lastname', '{"clinical study"}', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000004', 'San Diego', 'firstname', 'lastname', 'title', 'affiliation', 'name', 'lastname', '{"clinical study"}', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000005', 'San Diego', 'firstname', 'lastname', 'title', 'affiliation', 'name', 'lastname', '{"clinical study"}', '00000000-0000-0000-0000-000000000001'),
-	('687dea6a-4dbf-45dc-867e-de7b303d4b0c', 'San Diego', 'firstname', 'lastname', 'title', 'affiliation', 'name', 'lastname', '{"clinical study"}', '00000000-0000-0000-0000-000000000001');
+-- done
+INSERT INTO "study_sponsors_collaborators" ("id", "responsible_party_type", "responsible_party_investigator_first_name", "responsible_party_investigator_last_name", "responsible_party_investigator_title", "responsible_party_investigator_affiliation", "lead_sponsor_name","collaborator_name", "study_id") VALUES
+	('00000000-0000-0000-0000-000000000001', 'Principal Investigator', 'Sean', 'West', 'Title 1', 'Wyman Inc', 'Kurtis Daniel', ARRAY ['Person 1', 'Person 2'], '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', 'Principal Investigator', 'Sean', 'East', 'Title 1', 'Medhurst Inc', 'Maiya Bartoletti', ARRAY ['Person 1', 'Person 2'], '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "study_sponsors_collaborators" ENABLE KEYS */;
 
 -- Dumping data for table public.study_status: -1 rows
+-- done
 /*!40000 ALTER TABLE "study_status" DISABLE KEYS */;
 INSERT INTO "study_status" ("id", "overall_status", "why_stopped", "start_date", "start_date_type", "completion_date", "completion_date_type", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'Overall Recruitment Status for the study must be ''Recruiting''', 'Suspended', '2021-08-21 12:57:34', 'Actual', '2022-08-21 12:57:44', 'anticipated', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'Overall Recruitment Status for the study must be ''Recruiting''', 'Terminated', '2021-08-21 12:57:34', 'anticipated', '2022-08-21 12:57:44', 'Actual', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000003', 'Overall Recruitment Status for the study must be ''Recruiting''', 'Terminated', '2020-08-21 12:57:34', 'anticipated', '2022-08-21 12:57:44', 'Actual', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000004', 'Overall Recruitment Status for the study must be ''Recruiting''', 'Terminated', '2020-08-21 12:57:34', 'anticipated', '2022-08-21 12:57:44', 'Actual', '00000000-0000-0000-0000-000000000001'),
-	('8100ce8e-406d-4483-bc47-634e97c34713', 'Overall Recruitment Status for the study must be ''Recruiting''', 'Suspended', '2021-08-21 12:57:34', 'Actual', '2022-08-21 12:57:44', 'anticipated', '00000000-0000-0000-0000-000000000001');
+	('00000000-0000-0000-0000-000000000001', 'Recruiting', 'Lorem Ipsum', '2021-08-21 12:57:34', 'Actual', '2022-08-21 12:57:44', 'Anticipated', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', 'Suspended', 'Lorem Ipsum', '2021-08-21 12:57:34', 'Actual', '2022-08-21 12:57:44', 'Actual', '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "study_status" ENABLE KEYS */;
 
 -- Dumping data for table public.user: -1 rows

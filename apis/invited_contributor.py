@@ -23,4 +23,3 @@ class AddParticipant(Resource):
     @api.marshal_with(contributors_model)
     def post(self, study_id: int, invited_contributor_id: int):
         invited_contributors = Study.query.get(invited_contributor_id)
-
