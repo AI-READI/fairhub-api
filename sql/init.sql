@@ -6,6 +6,634 @@
 -- --------------------------------------------------------
 
 BEGIN;
+
+-- Dumping structure for table public.study
+CREATE TABLE IF NOT EXISTS "study" (
+	"id" CHAR(36) NOT NULL,
+	"title" VARCHAR NOT NULL,
+	"image" VARCHAR NOT NULL,
+	"created_at" TIMESTAMP NOT NULL,
+	"updated_on" TIMESTAMP NOT NULL,
+	PRIMARY KEY ("id")
+);
+
+-- Dumping structure for table public.user
+CREATE TABLE IF NOT EXISTS "user" (
+	"id" CHAR(36) NOT NULL,
+	"email_address" VARCHAR NOT NULL,
+	"username" VARCHAR NOT NULL,
+	"first_name" VARCHAR NOT NULL,
+	"last_name" VARCHAR NOT NULL,
+	"orcid" VARCHAR NOT NULL,
+	"hash" VARCHAR NOT NULL,
+	"created_at" TIMESTAMP NOT NULL,
+	"institution" VARCHAR NOT NULL,
+	PRIMARY KEY ("id")
+);
+
+-- Dumping structure for table public.study_contributor
+CREATE TABLE IF NOT EXISTS "study_contributor" (
+	"permission" VARCHAR NOT NULL,
+	"user_id" CHAR(36) NOT NULL,
+	"study_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("user_id", "study_id"),
+	CONSTRAINT "study_contributor_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT "study_contributor_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.invited_study_contributor
+CREATE TABLE IF NOT EXISTS "invited_study_contributor" (
+	"email_address" VARCHAR NOT NULL,
+	"permission" VARCHAR NOT NULL,
+	"invited_on" TIMESTAMP NOT NULL,
+	"study_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("email_address", "study_id"),
+	CONSTRAINT "invited_study_contributor_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset
+CREATE TABLE IF NOT EXISTS "dataset" (
+	"id" CHAR(36) NOT NULL,
+	"updated_on" TIMESTAMP NOT NULL,
+	"created_at" TIMESTAMP NOT NULL,
+	"study_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_access
+CREATE TABLE IF NOT EXISTS "dataset_access" (
+	"id" CHAR(36) NOT NULL,
+	"type" VARCHAR NOT NULL,
+	"description" VARCHAR NOT NULL,
+	"url" VARCHAR NOT NULL,
+	"url_last_checked" VARCHAR NOT NULL,
+	"dataset_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_access_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "dataset" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_alternate_identifier
+CREATE TABLE IF NOT EXISTS "dataset_alternate_identifier" (
+	"id" CHAR(36) NOT NULL,
+	"identifier" VARCHAR NOT NULL,
+	"identifier_type" VARCHAR NOT NULL,
+	"dataset_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_identifier_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "dataset" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_consent
+CREATE TABLE IF NOT EXISTS "dataset_consent" (
+	"id" CHAR(36) NOT NULL,
+	"type" VARCHAR NOT NULL,
+	"noncommercial" BOOLEAN NOT NULL,
+	"geog_restrict" BOOLEAN NOT NULL,
+	"research_type" BOOLEAN NOT NULL,
+	"genetic_only" BOOLEAN NOT NULL,
+	"no_methods" BOOLEAN NOT NULL,
+	"details" VARCHAR NOT NULL,
+	"dataset_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_consent_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "dataset" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_contributor
+CREATE TABLE IF NOT EXISTS "dataset_contributor" (
+	"id" CHAR(36) NOT NULL,
+	"first_name" VARCHAR NOT NULL,
+	"last_name" VARCHAR NOT NULL,
+	"name_type" VARCHAR NOT NULL,
+	"name_identifier" VARCHAR NOT NULL,
+	"name_identifier_scheme" VARCHAR NOT NULL,
+	"name_identifier_scheme_uri" VARCHAR NOT NULL,
+	"creator" BOOLEAN NOT NULL,
+	"contributor_type" VARCHAR NOT NULL,
+	"dataset_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_contributor_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "dataset" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_contributor_affiliation
+CREATE TABLE IF NOT EXISTS "dataset_contributor_affiliation" (
+	"id" CHAR(36) NOT NULL,
+	"identifier" VARCHAR NOT NULL,
+	"identifier_scheme" VARCHAR NOT NULL,
+	"identifier_scheme_uri" VARCHAR NOT NULL,
+	"dataset_contributor_id" VARCHAR NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_contributor_affiliation_dataset_contributor_id_fkey" FOREIGN KEY ("dataset_contributor_id") REFERENCES "dataset_contributor" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_date
+CREATE TABLE IF NOT EXISTS "dataset_date" (
+	"id" CHAR(36) NOT NULL,
+	"date" VARCHAR NOT NULL,
+	"date_type" VARCHAR NOT NULL,
+	"data_information" VARCHAR NOT NULL,
+	"dataset_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_date_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "dataset" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_description
+CREATE TABLE IF NOT EXISTS "dataset_description" (
+	"id" CHAR(36) NOT NULL,
+	"description" VARCHAR NOT NULL,
+	"description_type" VARCHAR NOT NULL,
+	"dataset_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_description_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "dataset" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_de_ident_level
+CREATE TABLE IF NOT EXISTS "dataset_de_ident_level" (
+	"id" CHAR(36) NOT NULL,
+	"type" VARCHAR NOT NULL,
+	"direct" BOOLEAN NOT NULL,
+	"hipaa" BOOLEAN NOT NULL,
+	"dates" BOOLEAN NOT NULL,
+	"nonarr" BOOLEAN NOT NULL,
+	"k_anon" BOOLEAN NOT NULL,
+	"details" VARCHAR NOT NULL,
+	"dataset_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_de_ident_level_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "dataset" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_funder
+CREATE TABLE IF NOT EXISTS "dataset_funder" (
+	"id" CHAR(36) NOT NULL,
+	"name" VARCHAR NOT NULL,
+	"identifier" VARCHAR NOT NULL,
+	"identifier_type" VARCHAR NOT NULL,
+	"identifier_scheme_uri" VARCHAR NOT NULL,
+	"award_number" VARCHAR NOT NULL,
+	"award_uri" VARCHAR NOT NULL,
+	"award_title" VARCHAR NOT NULL,
+	"dataset_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_funder_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "dataset" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_managing_organization
+CREATE TABLE IF NOT EXISTS "dataset_managing_organization" (
+	"id" CHAR(36) NOT NULL,
+	"name" VARCHAR NOT NULL,
+	"ror_id" VARCHAR NOT NULL,
+	"dataset_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_managing_organization_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "dataset" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_other
+CREATE TABLE IF NOT EXISTS "dataset_other" (
+	"id" CHAR(36) NOT NULL,
+	"language" VARCHAR NOT NULL,
+	"managing_organization_name" VARCHAR NOT NULL,
+	"managing_organization_ror_id" VARCHAR NOT NULL,
+	"size" VARCHAR NOT NULL,
+	"standards_followed" VARCHAR NOT NULL,
+	"acknowledgement" VARCHAR NOT NULL,
+	"dataset_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_other_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "dataset" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_readme
+CREATE TABLE IF NOT EXISTS "dataset_readme" (
+	"id" CHAR(36) NOT NULL,
+	"content" VARCHAR NOT NULL,
+	"dataset_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_readme_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "dataset" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_record_keys
+CREATE TABLE IF NOT EXISTS "dataset_record_keys" (
+	"id" CHAR(36) NOT NULL,
+	"key_type" VARCHAR NOT NULL,
+	"key_details" VARCHAR NOT NULL,
+	"dataset_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_record_keys_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "dataset" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_related_item
+CREATE TABLE IF NOT EXISTS "dataset_related_item" (
+	"id" CHAR(36) NOT NULL,
+	"type" VARCHAR NOT NULL,
+	"relation_type" VARCHAR NOT NULL,
+	"dataset_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_related_item_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "dataset" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_related_item_contributor
+CREATE TABLE IF NOT EXISTS "dataset_related_item_contributor" (
+	"id" CHAR(36) NOT NULL,
+	"name" VARCHAR NOT NULL,
+	"name_type" VARCHAR NOT NULL,
+	"creator" BOOLEAN NOT NULL,
+	"contributor_type" VARCHAR NOT NULL,
+	"dataset_related_item_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_related_item_contributor_dataset_related_item_id_fkey" FOREIGN KEY ("dataset_related_item_id") REFERENCES "dataset_related_item" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_related_item_identifier
+CREATE TABLE IF NOT EXISTS "dataset_related_item_identifier" (
+	"id" CHAR(36) NOT NULL,
+	"identifier" VARCHAR NOT NULL,
+	"type" VARCHAR NOT NULL,
+	"metadata_scheme" VARCHAR NOT NULL,
+	"scheme_uri" VARCHAR NOT NULL,
+	"scheme_type" VARCHAR NOT NULL,
+	"dataset_related_item_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_related_item_identifier_dataset_related_item_id_fkey" FOREIGN KEY ("dataset_related_item_id") REFERENCES "dataset_related_item" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_related_item_other
+CREATE TABLE IF NOT EXISTS "dataset_related_item_other" (
+	"id" CHAR(36) NOT NULL,
+	"publication_year" VARCHAR NOT NULL,
+	"volume" VARCHAR NOT NULL,
+	"issue" VARCHAR NOT NULL,
+	"number_value" VARCHAR NOT NULL,
+	"number_type" VARCHAR NOT NULL,
+	"first_page" VARCHAR NOT NULL,
+	"last_page" BOOLEAN NOT NULL,
+	"publisher" VARCHAR NOT NULL,
+	"edition" VARCHAR NOT NULL,
+	"dataset_related_item_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_related_item_other_dataset_related_item_id_fkey" FOREIGN KEY ("dataset_related_item_id") REFERENCES "dataset_related_item" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_related_item_title
+CREATE TABLE IF NOT EXISTS "dataset_related_item_title" (
+	"id" CHAR(36) NOT NULL,
+	"type" VARCHAR NOT NULL,
+	"title" VARCHAR NOT NULL,
+	"dataset_related_item_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_related_item_title_dataset_related_item_id_fkey" FOREIGN KEY ("dataset_related_item_id") REFERENCES "dataset_related_item" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_rights
+CREATE TABLE IF NOT EXISTS "dataset_rights" (
+	"id" CHAR(36) NOT NULL,
+	"rights" VARCHAR NOT NULL,
+	"uri" VARCHAR NOT NULL,
+	"identifier" VARCHAR NOT NULL,
+	"identifier_scheme" VARCHAR NOT NULL,
+	"dataset_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_rights_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "dataset" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_subject
+CREATE TABLE IF NOT EXISTS "dataset_subject" (
+	"id" CHAR(36) NOT NULL,
+	"subject" VARCHAR NOT NULL,
+	"scheme" VARCHAR NOT NULL,
+	"scheme_uri" VARCHAR NOT NULL,
+	"value_uri" VARCHAR NOT NULL,
+	"classification_code" VARCHAR NOT NULL,
+	"dataset_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_subject_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "dataset" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.dataset_title
+CREATE TABLE IF NOT EXISTS "dataset_title" (
+	"id" CHAR(36) NOT NULL,
+	"title" VARCHAR NOT NULL,
+	"type" VARCHAR NOT NULL,
+	"dataset_id" VARCHAR NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_title_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "dataset" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+
+-- Dumping structure for table public.participant
+CREATE TABLE IF NOT EXISTS "participant" (
+	"id" CHAR(36) NOT NULL,
+	"first_name" VARCHAR NOT NULL,
+	"last_name" VARCHAR NOT NULL,
+	"address" VARCHAR NOT NULL,
+	"age" VARCHAR NOT NULL,
+	"created_at" TIMESTAMP NOT NULL,
+	"updated_on" TIMESTAMP NOT NULL,
+	"study_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "participant_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.study_arm
+CREATE TABLE IF NOT EXISTS "study_arm" (
+	"id" CHAR(36) NOT NULL,
+	"label" VARCHAR NOT NULL,
+	"type" VARCHAR NOT NULL,
+	"description" VARCHAR NOT NULL,
+	"intervention_list" VARCHAR[] NOT NULL,
+	"study_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "study_arm_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.study_available_ipd
+CREATE TABLE IF NOT EXISTS "study_available_ipd" (
+	"id" CHAR(36) NOT NULL,
+	"identifier" VARCHAR NOT NULL,
+	"type" VARCHAR NOT NULL,
+	"url" VARCHAR NOT NULL,
+	"comment" VARCHAR NOT NULL,
+	"study_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "study_available_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.study_contact
+CREATE TABLE IF NOT EXISTS "study_contact" (
+	"id" CHAR(36) NOT NULL,
+	"first_name" VARCHAR NOT NULL,
+	"last_name" VARCHAR NOT NULL,
+	"affiliation" VARCHAR NOT NULL,
+	"role" VARCHAR,
+	"phone" VARCHAR NOT NULL,
+	"phone_ext" VARCHAR NOT NULL,
+	"email_address" VARCHAR NOT NULL,
+	"central_contact" BOOLEAN NOT NULL,
+	"study_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "study_contact_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.study_description
+CREATE TABLE IF NOT EXISTS "study_description" (
+	"id" CHAR(36) NOT NULL,
+	"brief_summary" VARCHAR NOT NULL,
+	"detailed_description" VARCHAR NOT NULL,
+	"study_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "study_description_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.study_design
+CREATE TABLE IF NOT EXISTS "study_design" (
+	"id" CHAR(36) NOT NULL,
+	"design_allocation" VARCHAR,
+	"study_type" VARCHAR NOT NULL,
+	"design_interventional_model" VARCHAR,
+	"design_intervention_model_description" VARCHAR,
+	"design_primary_purpose" VARCHAR,
+	"design_masking" VARCHAR,
+	"design_masking_description" VARCHAR,
+	"design_who_masked_list" VARCHAR[],
+	"phase_list" VARCHAR[],
+	"enrollment_count" INTEGER NOT NULL,
+	"enrollment_type" VARCHAR NOT NULL,
+	"number_arms" INTEGER,
+	"design_observational_model_list" VARCHAR[],
+	"design_time_perspective_list" VARCHAR[],
+	"bio_spec_retention" VARCHAR,
+	"bio_spec_description" VARCHAR,
+	"target_duration" VARCHAR,
+	"number_groups_cohorts" INTEGER,
+	"study_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "study_design_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.study_eligibility
+CREATE TABLE IF NOT EXISTS "study_eligibility" (
+	"id" CHAR(36) NOT NULL,
+	"gender" VARCHAR NOT NULL,
+	"gender_based" VARCHAR NOT NULL,
+	"gender_description" VARCHAR NOT NULL,
+	"healthy_volunteers" BOOLEAN NOT NULL,
+	"inclusion_criteria" VARCHAR[] NOT NULL,
+	"exclusion_criteria" VARCHAR[] NOT NULL,
+	"study_population" VARCHAR,
+	"sampling_method" VARCHAR,
+	"study_id" CHAR(36) NOT NULL,
+	"minimum_age_value" INTEGER NOT NULL,
+	"minimum_age_unit" VARCHAR NOT NULL,
+	"maximum_age_value" INTEGER NOT NULL,
+	"maximum_age_unit" VARCHAR NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "study_eligibility_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.study_identification
+CREATE TABLE IF NOT EXISTS "study_identification" (
+	"id" CHAR(36) NOT NULL,
+	"identifier" VARCHAR NOT NULL,
+	"identifier_type" VARCHAR NOT NULL,
+	"identifier_domain" VARCHAR NOT NULL,
+	"identifier_link" VARCHAR NOT NULL,
+	"secondary" BOOLEAN NOT NULL,
+	"study_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "study_identification_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.study_intervention
+CREATE TABLE IF NOT EXISTS "study_intervention" (
+	"id" CHAR(36) NOT NULL,
+	"type" VARCHAR NOT NULL,
+	"name" VARCHAR NOT NULL,
+	"description" VARCHAR NOT NULL,
+	"arm_group_label_list" VARCHAR[] NOT NULL,
+	"other_name_list" VARCHAR[] NOT NULL,
+	"study_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "study_intervention_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.study_ipdsharing
+CREATE TABLE IF NOT EXISTS "study_ipdsharing" (
+	"id" CHAR(36) NOT NULL,
+	"ipd_sharing" VARCHAR NOT NULL,
+	"ipd_sharing_description" VARCHAR NOT NULL,
+	"ipd_sharing_info_type_list" VARCHAR[] NOT NULL,
+	"ipd_sharing_time_frame" VARCHAR NOT NULL,
+	"ipd_sharing_access_criteria" VARCHAR NOT NULL,
+	"ipd_sharing_url" VARCHAR NOT NULL,
+	"study_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "study_ipdsharing_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.study_link
+CREATE TABLE IF NOT EXISTS "study_link" (
+	"id" CHAR(36) NOT NULL,
+	"url" VARCHAR NOT NULL,
+	"title" VARCHAR NOT NULL,
+	"study_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "study_link_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.study_location
+CREATE TABLE IF NOT EXISTS "study_location" (
+	"id" CHAR(36) NOT NULL,
+	"facility" VARCHAR NOT NULL,
+	"status" VARCHAR NOT NULL,
+	"city" VARCHAR NOT NULL,
+	"state" VARCHAR NOT NULL,
+	"zip" VARCHAR NOT NULL,
+	"country" VARCHAR NOT NULL,
+	"study_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "study_location_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.study_other
+CREATE TABLE IF NOT EXISTS "study_other" (
+	"id" CHAR(36) NOT NULL,
+	"oversight_has_dmc" BOOLEAN NOT NULL,
+	"conditions" VARCHAR[] NOT NULL,
+	"keywords" VARCHAR[] NOT NULL,
+	"size" VARCHAR NOT NULL,
+	"study_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "study_other_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.study_overall_official
+CREATE TABLE IF NOT EXISTS "study_overall_official" (
+	"id" CHAR(36) NOT NULL,
+	"first_name" VARCHAR NOT NULL,
+	"last_name" VARCHAR NOT NULL,
+	"affiliation" VARCHAR NOT NULL,
+	"role" VARCHAR NOT NULL,
+	"study_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "study_overall_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.study_reference
+CREATE TABLE IF NOT EXISTS "study_reference" (
+	"id" CHAR(36) NOT NULL,
+	"identifier" VARCHAR NOT NULL,
+	"type" VARCHAR NOT NULL,
+	"citation" VARCHAR NOT NULL,
+	"study_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "study_reference_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.study_sponsors_collaborators
+CREATE TABLE IF NOT EXISTS "study_sponsors_collaborators" (
+	"id" CHAR(36) NOT NULL,
+	"responsible_party_type" VARCHAR NOT NULL,
+	"responsible_party_investigator_name" VARCHAR NOT NULL,
+	"responsible_party_investigator_title" VARCHAR NOT NULL,
+	"responsible_party_investigator_affiliation" VARCHAR NOT NULL,
+	"lead_sponsor_name" VARCHAR NOT NULL,
+	"collaborator_name" VARCHAR[] NOT NULL,
+	"study_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "study_sponsors_collaborators_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.study_status
+CREATE TABLE IF NOT EXISTS "study_status" (
+	"id" CHAR(36) NOT NULL,
+	"overall_status" VARCHAR NOT NULL,
+	"why_stopped" VARCHAR NOT NULL,
+	"start_date" TIMESTAMP NOT NULL,
+	"start_date_type" VARCHAR NOT NULL,
+	"completion_date" TIMESTAMP NOT NULL,
+	"completion_date_type" VARCHAR NOT NULL,
+	"study_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "study_status_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.version
+CREATE TABLE IF NOT EXISTS "version" (
+	"id" CHAR(36) NOT NULL,
+	"title" VARCHAR NOT NULL,
+	"published" BOOLEAN NOT NULL,
+	"changelog" VARCHAR NOT NULL,
+	"updated_on" TIMESTAMP NOT NULL,
+	"doi" VARCHAR NOT NULL,
+	"created_at" TIMESTAMP NOT NULL,
+	"published_on" TIMESTAMP NOT NULL,
+	"dataset_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "dataset_version_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "dataset" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping structure for table public.version_participants
+CREATE TABLE IF NOT EXISTS "version_participants" (
+	"dataset_version_id" CHAR(36) NOT NULL,
+	"participant_id" CHAR(36) NOT NULL,
+	PRIMARY KEY ("dataset_version_id", "participant_id"),
+	CONSTRAINT "version_participants_dataset_version_id_fkey" FOREIGN KEY ("dataset_version_id") REFERENCES "version" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT "version_participants_participant_id_fkey" FOREIGN KEY ("participant_id") REFERENCES "participant" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping data for table public.study: -1 rows
+-- done
+/*!40000 ALTER TABLE "study" DISABLE KEYS */;
+INSERT INTO "study" ("id", "title", "image", "created_at", "updated_on") VALUES
+	('00000000-0000-0000-0000-000000000001', 'study 1', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=1', '2023-08-13 12:33:10', '2023-08-13 12:33:11'),
+	('00000000-0000-0000-0000-000000000002', 'study 2', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=2', '2022-08-03 12:33:10', '2023-07-03 12:33:11'),
+	('00000000-0000-0000-0000-000000000003', 'study 3', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=3', '2016-08-03 12:33:10', '2023-02-03 12:33:11'),
+	('00000000-0000-0000-0000-000000000004', 'study 4', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=4', '2020-08-03 12:33:10', '2021-09-03 12:33:11'),
+	('00000000-0000-0000-0000-000000000005', 'study 5', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=5', '2021-08-03 12:33:10', '2023-05-03 12:33:11'),
+	('00000000-0000-0000-0000-000000000006', 'study 6', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=6', '2019-08-03 12:33:10', '2022-08-03 12:33:11'),
+	('00000000-0000-0000-0000-000000000007', 'study 7', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=7', '2020-08-03 12:33:10', '2023-03-03 12:33:11'),
+	('00000000-0000-0000-0000-000000000008', 'study 8', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=8', '2023-08-03 12:33:10', '2023-01-03 12:33:11');
+/*!40000 ALTER TABLE "study" ENABLE KEYS */;
+
+-- Dumping data for table public.user: -1 rows
+-- done
+/*!40000 ALTER TABLE "user" DISABLE KEYS */;
+INSERT INTO "user" ("id", "email_address", "username", "first_name", "last_name", "orcid", "hash", "created_at", "institution") VALUES
+	('00000000-0000-0000-0000-000000000001', 'Ervin_Lindgren@hotmail.com', 'Ervin79', 'Ervin', 'Lindgren', 'd348206e-b1e2-4f99-9157-44b1321ecb4c', 'hashed', '2023-08-13 12:34:06', 'Schinner, Kuvalis and Beatty'),
+	('00000000-0000-0000-0000-000000000002', 'Camila.Pacocha@hotmail.com', 'Camila_Pacocha', 'Camila', 'Pacocha', '699e9977-5d86-40fc-bf1a-a5083f0cdc95', 'hashed', '2023-08-13 12:34:06', 'Schmitt Inc'),
+	('00000000-0000-0000-0000-000000000003', 'Alaina.Hammes@hotmail.com', 'Alaina_Hammes', 'Alaina', 'Hammes', '0b39872c-a1d6-44c0-88c2-7ea1b3a33dcf', 'hashed', '2023-08-13 12:34:06', 'Stracke, Leuschke and Kuvalis'),
+	('00000000-0000-0000-0000-000000000004', 'Brady_Anderson@gmail.com', 'Brady_Anderson', 'Brady', 'Anderson', '779d42d2-4743-43d3-980b-fcf1a962b485', 'hashed', '2023-08-13 12:34:06', 'Heidenreich, Wilkinson and Mitchell'),
+	('00000000-0000-0000-0000-000000000005', 'Brycen78@hotmail.com', 'Brycen_OReilly64', 'Brycen', 'O''Reilly', '529053dc-a755-4819-bdd2-a593d41e7f73', 'hashed', '2023-08-13 12:34:06', 'Heaney, Russel and Turner');
+/*!40000 ALTER TABLE "user" ENABLE KEYS */;
+
+-- Dumping data for table public.study_contributor: -1 rows
+-- done
+/*!40000 ALTER TABLE "study_contributor" DISABLE KEYS */;
+INSERT INTO "study_contributor" ("permission", "user_id", "study_id") VALUES
+	('owner', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000001'),
+	('editor', '00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000001'),
+	('editor', '00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000001'),
+	('viewer', '00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000001'),
+	('owner', '00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000002'),
+	('viewer', '00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000002'),
+	('viewer', '00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000002'),
+	('owner', '00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000003'),
+	('viewer', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000003'),
+	('editor', '00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000003'),
+	('owner', '00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000004'),
+	('owner', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000005'),
+	('owner', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000006'),
+	('owner', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000007'),
+	('owner', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000008');
+/*!40000 ALTER TABLE "study_contributor" ENABLE KEYS */;
+
+-- Dumping data for table public.invited_study_contributor: -1 rows
+-- done
+/*!40000 ALTER TABLE "invited_study_contributor" DISABLE KEYS */;
+INSERT INTO "invited_study_contributor" ("email_address", "permission", "invited_on", "study_id") VALUES
+	('Aliya_Herman@yahoo.com', 'editor', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000001'),
+	('Anastacio50@hotmail.com', 'viewer', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000001'),
+	('Edward0@gmail.com', 'viewer', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000001'),
+	('Jailyn17@gmail.com', 'viewer', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000002');
+/*!40000 ALTER TABLE "invited_study_contributor" ENABLE KEYS */;
+
 -- Dumping data for table public.dataset: -1 rows
 -- done
 /*!40000 ALTER TABLE "dataset" DISABLE KEYS */;
@@ -14,19 +642,15 @@ INSERT INTO "dataset" ("id", "updated_on", "created_at", "study_id") VALUES
 	('00000000-0000-0000-0000-000000000002', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000001'),
 	('00000000-0000-0000-0000-000000000003', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000001'),
 	('00000000-0000-0000-0000-000000000004', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000005', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000002');
+	('00000000-0000-0000-0000-000000000005', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000002'),
 	('00000000-0000-0000-0000-000000000006', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000003');
 /*!40000 ALTER TABLE "dataset" ENABLE KEYS */;
 
 -- Dumping data for table public.dataset_access: -1 rows
 /*!40000 ALTER TABLE "dataset_access" DISABLE KEYS */;
 INSERT INTO "dataset_access" ("id", "type", "description", "url", "url_last_checked", "dataset_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'main', 'Clinical research studies ', 'https://aireadi.org', '1st August', NULL),
-	('badac1ab-26fd-4f94-b2b4-b198365a198f', 'none', '', '', '', NULL),
-	('6d2c020f-71b1-48d2-8532-89a563868fa4', 'none', '', '', '', NULL),
-	('f8f3bf91-2eb9-49b8-a8f0-1c92def99bcf', 'none', '', '', '', NULL),
-	('fdc10b6d-2dc6-41c1-b43e-202a24abc80a', 'none', '', '', '', '00000000-0000-0000-0000-000000000001'),
-	('395d37d9-e3cf-4989-81f6-21dd2202d1ca', 'none', '', '', '', '00000000-0000-0000-0000-000000000001');
+	('00000000-0000-0000-0000-000000000001', 'PublicOnScreenAccess', '', '', '', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000001', 'PublicOnScreenAccess', '', '', '', '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "dataset_access" ENABLE KEYS */;
 
 -- Dumping data for table public.dataset_alternate_identifier: 3 rows
@@ -166,16 +790,6 @@ INSERT INTO "dataset_title" ("id", "title", "type", "dataset_id") VALUES
 	('02937b58-268d-486d-ad63-55a79b39ea9c', 'title', 'na', '00000000-0000-0000-0000-000000000001');
 /*!40000 ALTER TABLE "dataset_title" ENABLE KEYS */;
 
--- Dumping data for table public.invited_study_contributor: -1 rows
--- done
-/*!40000 ALTER TABLE "invited_study_contributor" DISABLE KEYS */;
-INSERT INTO "invited_study_contributor" ("email_address", "permission", "invited_on", "study_id") VALUES
-	('Aliya_Herman@yahoo.com', 'editor', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000001'),
-	('Anastacio50@hotmail.com', 'viewer', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000001'),
-	('Edward0@gmail.com', 'viewer', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000001'),
-	('Jailyn17@gmail.com', 'viewer', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000002');
-/*!40000 ALTER TABLE "invited_study_contributor" ENABLE KEYS */;
-
 -- Dumping data for table public.participant: -1 rows
 /*!40000 ALTER TABLE "participant" DISABLE KEYS */;
 INSERT INTO "participant" ("id", "first_name", "last_name", "address", "age", "created_at", "updated_on", "study_id") VALUES
@@ -192,20 +806,6 @@ INSERT INTO "participant" ("id", "first_name", "last_name", "address", "age", "c
 	('00000000-0000-0000-0000-000000000001', 'aydan', 'gasimova1', '1221d kibler drive', '20', '2023-08-13 16:33:53', '2023-08-29 15:09:04.323914', '00000000-0000-0000-0000-000000000001'),
 	('006306a7-0ddb-4163-952d-2939712e190d', 'aydan', 'gasimova1', '1221d kibler drive', '20', '2023-08-29 15:15:35.891076', '2023-08-29 15:15:35.891076', '00000000-0000-0000-0000-000000000001');
 /*!40000 ALTER TABLE "participant" ENABLE KEYS */;
-
--- Dumping data for table public.study: -1 rows
--- done
-/*!40000 ALTER TABLE "study" DISABLE KEYS */;
-INSERT INTO "study" ("id", "title", "image", "created_at", "updated_on") VALUES
-	('00000000-0000-0000-0000-000000000001', 'study 1', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=1', '2023-08-13 12:33:10', '2023-08-13 12:33:11'),
-	('00000000-0000-0000-0000-000000000002', 'study 2', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=2', '2022-08-03 12:33:10', '2023-07-03 12:33:11'),
-	('00000000-0000-0000-0000-000000000003', 'study 3', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=3', '2016-08-03 12:33:10', '2023-02-03 12:33:11'),
-	('00000000-0000-0000-0000-000000000004', 'study 4', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=4', '2020-08-03 12:33:10', '2021-09-03 12:33:11'),
-	('00000000-0000-0000-0000-000000000005', 'study 5', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=5', '2021-08-03 12:33:10', '2023-05-03 12:33:11');
-	('00000000-0000-0000-0000-000000000006', 'study 6', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=6', '2019-08-03 12:33:10', '2022-08-03 12:33:11'),
-	('00000000-0000-0000-0000-000000000007', 'study 7', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=7', '2020-08-03 12:33:10', '2023-03-03 12:33:11'),
-	('00000000-0000-0000-0000-000000000008', 'study 8', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=8', '2023-08-03 12:33:10', '2023-01-03 12:33:11');
-/*!40000 ALTER TABLE "study" ENABLE KEYS */;
 
 -- Dumping data for table public.study_arm: -1 rows
 -- done
@@ -231,30 +831,9 @@ INSERT INTO "study_available_ipd" ("id", "identifier", "type", "url", "comment",
 INSERT INTO "study_contact" ("id", "first_name", "last_name", "affiliation", "role", "phone", "phone_ext", "email_address", "central_contact", "study_id") VALUES
 	('00000000-0000-0000-0000-000000000001', 'Dejah', 'Johnston', 'Erdman Inc', NULL, '501-039-841', '', 'Dejah83@hotmail.com', TRUE, '00000000-0000-0000-0000-000000000001'),
 	('00000000-0000-0000-0000-000000000002', 'Reanna', 'Rolfson', 'Schowalter, Ullrich and Reichert', NULL, '501-039-841', '', 'Reanna79@hotmail.com', TRUE, '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000003', 'Verner', 'Nolan', 'Monahan and Sons', '', '501-039-841', NULL, 'Verner19@yahoo.com', TRUE, '00000000-0000-0000-0000-000000000002'),
+	('00000000-0000-0000-0000-000000000003', 'Verner', 'Nolan', 'Monahan and Sons', NULL, '501-039-841', '', 'Verner19@yahoo.com', TRUE, '00000000-0000-0000-0000-000000000002'),
 	('00000000-0000-0000-0000-000000000004', 'Lela', 'Cormier', 'Metz LLC', NULL, '501-039-841', '', 'Lela84@hotmail.com', TRUE, '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "study_contact" ENABLE KEYS */;
-
--- Dumping data for table public.study_contributor: -1 rows
--- done
-/*!40000 ALTER TABLE "study_contributor" DISABLE KEYS */;
-INSERT INTO "study_contributor" ("permission", "user_id", "study_id") VALUES
-	('owner', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000001'),
-	('editor', '00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000001'),
-	('editor', '00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000001'),
-	('viewer', '00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000001'),
-	('owner', '00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000002'),
-	('viewer', '00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000002'),
-	('viewer', '00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000002'),
-	('owner', '00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000003'),
-	('viewer', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000003'),
-	('editor', '00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000003'),
-	('owner', '00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000004'),
-	('owner', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000005'),
-	('owner', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000006'),
-	('owner', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000007'),
-	('owner', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000008');
-/*!40000 ALTER TABLE "study_contributor" ENABLE KEYS */;
 
 -- Dumping data for table public.study_description: -1 rows
 -- done
@@ -285,10 +864,10 @@ INSERT INTO "study_eligibility" ("id", "gender", "gender_based", "gender_descrip
 -- done
 /*!40000 ALTER TABLE "study_identification" DISABLE KEYS */;
 INSERT INTO "study_identification" ("id", "identifier", "identifier_type", "identifier_domain", "identifier_link", "secondary", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'ADF89ADS', 'NIH Grant Number', "", 'https://reporter.nih.gov/quickSearch/K01HL147713', FALSE, '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'ADF8934ADS', 'NIH Grant Number', "", 'https://reporter.nih.gov/quickSearch/K01HL147713', TRUE, '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000003', 'AD6F89ADS', 'NIH Grant Number', "", 'https://reporter.nih.gov/quickSearch/K01HL147713', TRUE, '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000004', 'ADF897ADS', 'NIH Grant Number', "", 'https://reporter.nih.gov/quickSearch/K01HL147713', TRUE, '00000000-0000-0000-0000-000000000002');
+	('00000000-0000-0000-0000-000000000001', 'ADF89ADS', 'NIH Grant Number', '', 'https://reporter.nih.gov/quickSearch/K01HL147713', FALSE, '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', 'ADF8934ADS', 'NIH Grant Number', '', 'https://reporter.nih.gov/quickSearch/K01HL147713', TRUE, '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000003', 'AD6F89ADS', 'NIH Grant Number', '', 'https://reporter.nih.gov/quickSearch/K01HL147713', TRUE, '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000004', 'ADF897ADS', 'NIH Grant Number', '', 'https://reporter.nih.gov/quickSearch/K01HL147713', TRUE, '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "study_identification" ENABLE KEYS */;
 
 -- Dumping data for table public.study_intervention: -1 rows
@@ -355,9 +934,9 @@ INSERT INTO "study_reference" ("id", "identifier", "type", "citation", "study_id
 -- Dumping data for table public.study_sponsors_collaborators: -1 rows
 /*!40000 ALTER TABLE "study_sponsors_collaborators" DISABLE KEYS */;
 -- done
-INSERT INTO "study_sponsors_collaborators" ("id", "responsible_party_type", "responsible_party_investigator_first_name", "responsible_party_investigator_last_name", "responsible_party_investigator_title", "responsible_party_investigator_affiliation", "lead_sponsor_name","collaborator_name", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'Principal Investigator', 'Sean', 'West', 'Title 1', 'Wyman Inc', 'Kurtis Daniel', ARRAY ['Person 1', 'Person 2'], '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'Principal Investigator', 'Sean', 'East', 'Title 1', 'Medhurst Inc', 'Maiya Bartoletti', ARRAY ['Person 1', 'Person 2'], '00000000-0000-0000-0000-000000000002');
+INSERT INTO "study_sponsors_collaborators" ("id", "responsible_party_type", "responsible_party_investigator_name", "responsible_party_investigator_title", "responsible_party_investigator_affiliation", "lead_sponsor_name","collaborator_name", "study_id") VALUES
+	('00000000-0000-0000-0000-000000000001', 'Principal Investigator', 'Sean West', 'Title 1', 'Wyman Inc', 'Kurtis Daniel', ARRAY ['Person 1', 'Person 2'], '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', 'Principal Investigator', 'Sean East', 'Title 1', 'Medhurst Inc', 'Maiya Bartoletti', ARRAY ['Person 1', 'Person 2'], '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "study_sponsors_collaborators" ENABLE KEYS */;
 
 -- Dumping data for table public.study_status: -1 rows
@@ -368,17 +947,6 @@ INSERT INTO "study_status" ("id", "overall_status", "why_stopped", "start_date",
 	('00000000-0000-0000-0000-000000000002', 'Suspended', 'Lorem Ipsum', '2021-08-21 12:57:34', 'Actual', '2022-08-21 12:57:44', 'Actual', '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "study_status" ENABLE KEYS */;
 
--- Dumping data for table public.user: -1 rows
--- done
-/*!40000 ALTER TABLE "user" DISABLE KEYS */;
-INSERT INTO "user" ("id", "email_address", "username", "first_name", "last_name", "orcid", "hash", "created_at", "institution") VALUES
-	('00000000-0000-0000-0000-000000000001', 'Ervin_Lindgren@hotmail.com', 'Ervin79', 'Ervin', 'Lindgren', 'd348206e-b1e2-4f99-9157-44b1321ecb4c', 'hashed', '2023-08-13 12:34:06', 'Schinner, Kuvalis and Beatty'),
-	('00000000-0000-0000-0000-000000000002', 'Camila.Pacocha@hotmail.com', 'Camila_Pacocha', 'Camila', 'Pacocha', '699e9977-5d86-40fc-bf1a-a5083f0cdc95', 'hashed', '2023-08-13 12:34:06', 'Schmitt Inc'),
-	('00000000-0000-0000-0000-000000000003', 'Alaina.Hammes@hotmail.com', 'Alaina_Hammes', 'Alaina', 'Hammes', '0b39872c-a1d6-44c0-88c2-7ea1b3a33dcf', 'hashed', '2023-08-13 12:34:06', 'Stracke, Leuschke and Kuvalis'),
-	('00000000-0000-0000-0000-000000000004', 'Brady_Anderson@gmail.com', 'Brady_Anderson', 'Brady', 'Anderson', '779d42d2-4743-43d3-980b-fcf1a962b485', 'hashed', '2023-08-13 12:34:06', 'Heidenreich, Wilkinson and Mitchell');
-	('00000000-0000-0000-0000-000000000005', 'Brycen78@hotmail.com', 'Brycen_OReilly64', 'Brycen', 'O''Reilly', '529053dc-a755-4819-bdd2-a593d41e7f73', 'hashed', '2023-08-13 12:34:06', 'Heaney, Russel and Turner');
-/*!40000 ALTER TABLE "user" ENABLE KEYS */;
-
 -- Dumping data for table public.version: -1 rows
 -- done
 /*!40000 ALTER TABLE "version" DISABLE KEYS */;
@@ -386,7 +954,7 @@ INSERT INTO "version" ("id", "title", "published", "changelog", "updated_on", "d
 	('00000000-0000-0000-0000-000000000001', 'Version 1', 'true', 'lorem ipsum', '2023-08-13 16:24:05', '2435464e643', '2023-08-13 16:23:59', '2023-08-13 16:24:00', '00000000-0000-0000-0000-000000000001'),
 	('00000000-0000-0000-0000-000000000002', 'Version 2', 'false', 'lorem ipsum', '2023-08-13 16:24:05', '2435464e643', '2023-08-13 16:23:59', '2023-08-13 16:24:00', '00000000-0000-0000-0000-000000000001'),
 	('00000000-0000-0000-0000-000000000003', 'Version 1', 'false', 'lorem ipsum', '2023-08-13 16:24:05', '2435464e643', '2023-08-13 16:23:59', '2023-08-13 16:24:00', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000003', 'Version 1', 'false', 'lorem ipsum', '2023-08-13 16:24:05', '2435464e643', '2023-08-13 16:23:59', '2023-08-13 16:24:00', '00000000-0000-0000-0000-000000000003');
+	('00000000-0000-0000-0000-000000000004', 'Version 1', 'false', 'lorem ipsum', '2023-08-13 16:24:05', '2435464e643', '2023-08-13 16:23:59', '2023-08-13 16:24:00', '00000000-0000-0000-0000-000000000003');
 /*!40000 ALTER TABLE "version" ENABLE KEYS */;
 
 -- Dumping data for table public.version_participants: -1 rows
