@@ -15,7 +15,7 @@ services:
     environment:
       FLASK_ENV: development
       FLASK_DEBUG: 1
-      FAIRHUB_DATABASE_URL: "${FAIRHUB_DATABASE_URL:-postgresql://postgres:postgres@database:5432/fairhub}"
+      FAIRHUB_DATABASE_URL: "${FAIRHUB_DATABASE_URL:-postgresql://admin:root@database:5432/fairhub_local}"
   database:
     image: postgres:9.6
     environment:

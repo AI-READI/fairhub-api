@@ -650,7 +650,7 @@ INSERT INTO "dataset" ("id", "updated_on", "created_at", "study_id") VALUES
 /*!40000 ALTER TABLE "dataset_access" DISABLE KEYS */;
 INSERT INTO "dataset_access" ("id", "type", "description", "url", "url_last_checked", "dataset_id") VALUES
 	('00000000-0000-0000-0000-000000000001', 'PublicOnScreenAccess', '', '', '', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000001', 'PublicOnScreenAccess', '', '', '', '00000000-0000-0000-0000-000000000002');
+	('00000000-0000-0000-0000-000000000002', 'PublicOnScreenAccess', '', '', '', '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "dataset_access" ENABLE KEYS */;
 
 -- Dumping data for table public.dataset_alternate_identifier: 3 rows
