@@ -27,4 +27,3 @@ class AddParticipant(Resource):
 
     def post(self, study_id: int):
         contributors = StudyContributor.query.all()
-
