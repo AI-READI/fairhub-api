@@ -1,4 +1,4 @@
-from .dataset_version import DatasetVersion
+from .version import Version
 from .dataset_versions import DatasetVersions
 from .db import db
 from .participant import Participant
@@ -60,7 +60,7 @@ __all__ = [
     "Study",
     "Dataset",
     "DatasetVersions",
-    "DatasetVersion",
+    "Version",
     "Participant",
     "db",
     "User",

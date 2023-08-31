@@ -26,7 +26,7 @@ class Dataset(db.Model):
         "DatasetContributor", back_populates="dataset"
     )
     dataset_versions = db.relationship(
-        "DatasetVersion", back_populates="dataset", lazy="dynamic"
+        "Version", back_populates="dataset", lazy="dynamic"
     )
 
     dataset_access = db.relationship("DatasetAccess", back_populates="dataset")
@@ -69,15 +69,13 @@ class Dataset(db.Model):
 
     def last_published(self):
         return (
-            self.dataset_versions.filter(model.DatasetVersion.published == true())
-            .order_by(model.DatasetVersion.published_on.desc())
+            self.dataset_versions.filter(model.Version.published == true())
+            .order_by(model.Version.published_on.desc())
             .first()
         )
 
     def last_modified(self):
-        return self.dataset_versions.order_by(
-            model.DatasetVersion.updated_on.desc()
-        ).first()
+        return self.dataset_versions.order_by(model.Version.updated_on.desc()).first()
 
     @staticmethod
     def from_data(study, data: dict):

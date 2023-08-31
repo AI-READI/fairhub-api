@@ -1,13 +1,13 @@
 from flask import Response, jsonify, request
 from flask_restx import Namespace, Resource, fields
 
-from model import Dataset, DatasetVersion, Participant, Study, db
+from model import Dataset, Version, Participant, Study, db
 
 api = Namespace("dataset", description="dataset operations", path="/")
 
 
 dataset_versions_model = api.model(
-    "DatasetVersion",
+    "Version",
     {
         "id": fields.String(required=True),
         "title": fields.String(required=True),
@@ -76,11 +76,11 @@ class Version(Resource):
     @api.doc("dataset version")
     @api.marshal_with(dataset_versions_model)
     def get(self, study_id, dataset_id, version_id):
-        dataset_version = DatasetVersion.query.get(version_id)
+        dataset_version = Version.query.get(version_id)
         return dataset_version.to_dict()
 
     def put(self, study_id, dataset_id, version_id):
-        data_version_obj = DatasetVersion.query.get(version_id)
+        data_version_obj = Version.query.get(version_id)
         data_version_obj.update(request.json)
         db.session.commit()
         return jsonify(data_version_obj.to_dict())
@@ -103,7 +103,7 @@ class VersionList(Resource):
         data = request.json
         data["participants"] = [Participant.query.get(i) for i in data["participants"]]
         data_obj = Dataset.query.get(dataset_id)
-        dataset_versions = DatasetVersion.from_data(data_obj, data)
+        dataset_versions = Version.from_data(data_obj, data)
         db.session.add(dataset_versions)
         db.session.commit()
         return jsonify(dataset_versions.to_dict())
