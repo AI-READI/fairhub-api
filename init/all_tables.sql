@@ -7,18 +7,15 @@
 
 BEGIN;
 -- Dumping data for table public.dataset: -1 rows
+-- done
 /*!40000 ALTER TABLE "dataset" DISABLE KEYS */;
 INSERT INTO "dataset" ("id", "updated_on", "created_at", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000002', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000003', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000003'),
-	('00000000-0000-0000-0000-000000000004', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000004'),
-	('00000000-0000-0000-0000-000000000005', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000004'),
-	('00000000-0000-0000-0000-000000000001', '2023-08-15 16:53:05.257623', '2023-08-15 16:53:05.257623', '00000000-0000-0000-0000-000000000001'),
-	('b210863a-2bee-4eaf-aad8-999b7a7cae06', '2023-08-20 22:31:18.830152', '2023-08-20 22:31:18.830152', '00000000-0000-0000-0000-000000000001'),
-	('89aa8ffb-48b5-49c3-92c4-9b90fbcc736f', '2023-08-29 13:46:58.847208', '2023-08-29 13:46:58.847208', '00000000-0000-0000-0000-000000000001'),
-	('e6c4cde9-f769-457e-a1ee-2a6c6dd76609', '2023-08-29 13:54:00.410672', '2023-08-29 13:54:00.410672', '00000000-0000-0000-0000-000000000001'),
-	('8c510e24-2fb3-4abb-8712-5b4d6c429d15', '2023-08-29 13:54:28.093018', '2023-08-29 13:54:28.093018', '00000000-0000-0000-0000-000000000001'),
-	('151e9c0b-20b3-4558-9eed-51830a708899', '2023-08-29 15:02:18.766003', '2023-08-29 15:02:18.766003', '00000000-0000-0000-0000-000000000001');
+	('00000000-0000-0000-0000-000000000001', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000003', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000004', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000002'),
+	('00000000-0000-0000-0000-000000000005', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000002');
+	('00000000-0000-0000-0000-000000000006', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000003');
 /*!40000 ALTER TABLE "dataset" ENABLE KEYS */;
 
 -- Dumping data for table public.dataset_access: -1 rows
@@ -170,11 +167,13 @@ INSERT INTO "dataset_title" ("id", "title", "type", "dataset_id") VALUES
 /*!40000 ALTER TABLE "dataset_title" ENABLE KEYS */;
 
 -- Dumping data for table public.invited_study_contributor: -1 rows
+-- done
 /*!40000 ALTER TABLE "invited_study_contributor" DISABLE KEYS */;
 INSERT INTO "invited_study_contributor" ("email_address", "permission", "invited_on", "study_id") VALUES
-	('aydan.gasimova@gmail.com', 'owner', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000001'),
-	('bhavesh.patel@gmail.com', 'owner', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000003'),
-	('sanjay.soundarajan@@gmail.com', 'owner', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000004');
+	('Aliya_Herman@yahoo.com', 'editor', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000001'),
+	('Anastacio50@hotmail.com', 'viewer', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000001'),
+	('Edward0@gmail.com', 'viewer', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000001'),
+	('Jailyn17@gmail.com', 'viewer', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "invited_study_contributor" ENABLE KEYS */;
 
 -- Dumping data for table public.participant: -1 rows
@@ -195,141 +194,136 @@ INSERT INTO "participant" ("id", "first_name", "last_name", "address", "age", "c
 /*!40000 ALTER TABLE "participant" ENABLE KEYS */;
 
 -- Dumping data for table public.study: -1 rows
+-- done
 /*!40000 ALTER TABLE "study" DISABLE KEYS */;
 INSERT INTO "study" ("id", "title", "image", "created_at", "updated_on") VALUES
-	('00000000-0000-0000-0000-000000000001', 'study 1', 'https://loremflickr.com/640/480?lock=342651989655552', '2023-08-13 12:33:10', '2023-08-13 12:33:11'),
-	('00000000-0000-0000-0000-000000000006', 'study 6', 'https://loremflickr.com/640/480?lock=342651989655552', '2019-08-03 12:33:10', '2022-08-03 12:33:11'),
-	('00000000-0000-0000-0000-000000000007', 'study 7', 'https://loremflickr.com/640/480?lock=342651989655552', '2020-08-03 12:33:10', '2023-03-03 12:33:11'),
-	('00000000-0000-0000-0000-000000000008', 'study 8', 'https://loremflickr.com/640/480?lock=342651989655552', '2023-08-03 12:33:10', '2023-01-03 12:33:11'),
-	('00000000-0000-0000-0000-000000000003', 'study 3', 'https://loremflickr.com/640/480?lock=342651989655552', '2016-08-03 12:33:10', '2023-02-03 12:33:11'),
-	('00000000-0000-0000-0000-000000000002', 'study 2', 'https://loremflickr.com/640/480?lock=342651989655552', '2022-08-03 12:33:10', '2023-07-03 12:33:11'),
-	('00000000-0000-0000-0000-000000000004', 'study 4', 'https://loremflickr.com/640/480?lock=342651989655552', '2020-08-03 12:33:10', '2021-09-03 12:33:11'),
-	('00000000-0000-0000-0000-000000000005', 'study 5', 'https://loremflickr.com/640/480?lock=342651989655552', '2021-08-03 12:33:10', '2023-05-03 12:33:11');
+	('00000000-0000-0000-0000-000000000001', 'study 1', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=1', '2023-08-13 12:33:10', '2023-08-13 12:33:11'),
+	('00000000-0000-0000-0000-000000000002', 'study 2', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=2', '2022-08-03 12:33:10', '2023-07-03 12:33:11'),
+	('00000000-0000-0000-0000-000000000003', 'study 3', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=3', '2016-08-03 12:33:10', '2023-02-03 12:33:11'),
+	('00000000-0000-0000-0000-000000000004', 'study 4', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=4', '2020-08-03 12:33:10', '2021-09-03 12:33:11'),
+	('00000000-0000-0000-0000-000000000005', 'study 5', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=5', '2021-08-03 12:33:10', '2023-05-03 12:33:11');
+	('00000000-0000-0000-0000-000000000006', 'study 6', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=6', '2019-08-03 12:33:10', '2022-08-03 12:33:11'),
+	('00000000-0000-0000-0000-000000000007', 'study 7', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=7', '2020-08-03 12:33:10', '2023-03-03 12:33:11'),
+	('00000000-0000-0000-0000-000000000008', 'study 8', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=8', '2023-08-03 12:33:10', '2023-01-03 12:33:11');
 /*!40000 ALTER TABLE "study" ENABLE KEYS */;
 
 -- Dumping data for table public.study_arm: -1 rows
+-- done
 /*!40000 ALTER TABLE "study_arm" DISABLE KEYS */;
 INSERT INTO "study_arm" ("id", "label", "type", "description", "intervention_list", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'label', 'type', 'description', '{list}', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000003', 'Active Comparator', 'type', 'description', '{list}', '00000000-0000-0000-0000-000000000003'),
-	('75edc7d3-ab7c-404d-a6dd-b55f7fe6446d', 'label', 'type', 'description', '{list}', '00000000-0000-0000-0000-000000000001'),
-	('2b26a772-b4af-4e61-9e76-6642746b78ee', '', '', '', '{""}', '00000000-0000-0000-0000-000000000001'),
-	('a82a5e49-a735-4ba3-ab2e-ba64e7fb464c', 'label1', 'type', 'description', '{list}', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'label', 'type', 'description', '{list}', '00000000-0000-0000-0000-000000000002'),
-	('ba03826c-b9db-4517-aeaa-031793de4a25', 'label1', 'type', 'description', '{list}', '00000000-0000-0000-0000-000000000001'),
-	('a11728f0-fadb-4bd0-be09-511d5fb39649', 'label1', 'type', 'description', '{list}', '00000000-0000-0000-0000-000000000001'),
-	('311fed5e-fd7a-4a02-8465-3b55a05cab04', 'label1', 'type', 'description', '{list}', '00000000-0000-0000-0000-000000000001');
+	('00000000-0000-0000-0000-000000000001', 'arm1', 'Experimental', 'Lorem Ipsum', ARRAY ['intervention 1', 'intervention 2'], '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', 'arm2', 'Experimental', 'Lorem Ipsum', ARRAY ['intervention 1', 'intervention 2'], '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000003', 'arm1', 'Experimental', 'Lorem Ipsum', ARRAY ['intervention 1', 'intervention 2'], '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "study_arm" ENABLE KEYS */;
 
 -- Dumping data for table public.study_available_ipd: -1 rows
+-- done
 /*!40000 ALTER TABLE "study_available_ipd" DISABLE KEYS */;
 INSERT INTO "study_available_ipd" ("id", "identifier", "type", "url", "comment", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', ' for intermediate-size patient populations', 'available', 'https://json-schema.org/draft/2020-12/schema', 'none', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', ' for intermediate-size patient populations', 'available', 'https://json-schema.org/draft/2020-12/schema', 'none', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000003', ' for intermediate-size patient populations', 'available', 'https://json-schema.org/draft/2020-12/schema', 'none', '00000000-0000-0000-0000-000000000003'),
-	('00000000-0000-0000-0000-000000000004', ' for intermediate-size patient populations', 'available', 'https://json-schema.org/draft/2020-12/schema', 'none', '00000000-0000-0000-0000-000000000003');
+	('00000000-0000-0000-0000-000000000001', 'AS25AF', 'Study Protocol', 'https://someurl.io', '', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', 'AS2655AF', 'Study Protocol', 'https://someurl.io', '', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000003', 'AS625AF', 'Study Protocol', 'https://someurl.io', '', '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "study_available_ipd" ENABLE KEYS */;
 
 -- Dumping data for table public.study_contact: -1 rows
+-- done
 /*!40000 ALTER TABLE "study_contact" DISABLE KEYS */;
 INSERT INTO "study_contact" ("id", "first_name", "last_name", "affiliation", "role", "phone", "phone_ext", "email_address", "central_contact", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000002', 'holly', 'sienna', 'calmi2', 'editor', '4056074345', 'ext', 'holly.sienna@gmail.com', 'true', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000001', 'billy', 'brown', 'calmi2', 'editor', '4056074345', 'ext', 'billy.sanders@gmail.com', 'true', '00000000-0000-0000-0000-000000000001'),
-	('81e71d41-2c93-47cb-9fac-00d94ab1c1a2', 'billy', 'brown', 'calmi2', 'editor', '4056074345', 'ext', 'billy.sanders@gmail.com', 'true', '00000000-0000-0000-0000-000000000001');
+	('00000000-0000-0000-0000-000000000001', 'Dejah', 'Johnston', 'Erdman Inc', NULL, '501-039-841', '', 'Dejah83@hotmail.com', TRUE, '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', 'Reanna', 'Rolfson', 'Schowalter, Ullrich and Reichert', NULL, '501-039-841', '', 'Reanna79@hotmail.com', TRUE, '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000003', 'Verner', 'Nolan', 'Monahan and Sons', '', '501-039-841', NULL, 'Verner19@yahoo.com', TRUE, '00000000-0000-0000-0000-000000000002'),
+	('00000000-0000-0000-0000-000000000004', 'Lela', 'Cormier', 'Metz LLC', NULL, '501-039-841', '', 'Lela84@hotmail.com', TRUE, '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "study_contact" ENABLE KEYS */;
 
 -- Dumping data for table public.study_contributor: -1 rows
+-- done
 /*!40000 ALTER TABLE "study_contributor" DISABLE KEYS */;
 INSERT INTO "study_contributor" ("permission", "user_id", "study_id") VALUES
-	('editor', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000001'),
+	('owner', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000001'),
+	('editor', '00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000001'),
+	('editor', '00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000001'),
+	('viewer', '00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000001'),
 	('owner', '00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000002'),
-	('owner', '00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000004'),
-	('editor', '00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000006');
+	('viewer', '00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000002'),
+	('viewer', '00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000002'),
+	('owner', '00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000003'),
+	('viewer', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000003'),
+	('editor', '00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000003'),
+	('owner', '00000000-0000-0000-0000-000000000004', '00000000-0000-0000-0000-000000000004'),
+	('owner', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000005'),
+	('owner', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000006'),
+	('owner', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000007'),
+	('owner', '00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000008');
 /*!40000 ALTER TABLE "study_contributor" ENABLE KEYS */;
 
 -- Dumping data for table public.study_description: -1 rows
+-- done
 /*!40000 ALTER TABLE "study_description" DISABLE KEYS */;
 INSERT INTO "study_description" ("id", "brief_summary", "detailed_description", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'study summary', 'This is one of the data generation projects of the National Institutes of Health (NIH) funded Bridge2AI Program', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'study summary', 'This is one of the data generation projects of the National Institutes of Health (NIH) funded Bridge2AI Program', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000003', 'study summary', 'This is one of the data generation projects of the National Institutes of Health (NIH) funded Bridge2AI Program', '00000000-0000-0000-0000-000000000003'),
-	('f51a772e-373a-452a-8106-822840a76339', 'study summary', 'This is one of the data generation projects of the National Institutes of Health (NIH) funded Bridge2AI Program', '00000000-0000-0000-0000-000000000001');
+	('00000000-0000-0000-0000-000000000001', 'study summary', 'big description', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', 'study summary', 'big description', '00000000-0000-0000-0000-000000000002'),
+	('00000000-0000-0000-0000-000000000003', 'study summary', 'big description', '00000000-0000-0000-0000-000000000003');
 /*!40000 ALTER TABLE "study_description" ENABLE KEYS */;
 
 -- Dumping data for table public.study_design: -1 rows
+-- done
 /*!40000 ALTER TABLE "study_design" DISABLE KEYS */;
 INSERT INTO "study_design" ("id", "design_allocation", "study_type", "design_interventional_model", "design_intervention_model_description", "design_primary_purpose", "design_masking", "design_masking_description", "design_who_masked_list", "phase_list", "enrollment_count", "enrollment_type", "number_arms", "design_observational_model_list", "design_time_perspective_list", "bio_spec_retention", "bio_spec_description", "target_duration", "number_groups_cohorts", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000002', 'Randomized', 'type', 'biomedical chemistry', 'description', 'Single Group Assignment', 'Blinded', 'description', '{Participant}', '{Trials}', 1, 'enrollmentInfo', 2, '{CaseControl}', '{Retrospective}', 'Samples With DNA', 'Specify all types', '3years', 10, '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000003', 'Randomized', 'type', 'treatment of cancer', 'description', 'Single Group Assignment', 'Blinded', 'description', '{Participant}', '{Trials}', 1, 'enrollmentInfo', 2, '{CaseControl}', '{Retrospective}', 'Samples With DNA', 'Specify all types', '1 years', 10, '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000001', 'Randomized', 'type', 'treatment', 'description', 'Single Group Assignment', 'Blinded', 'description', '{Participant}', '{Trials}', 1, 'enrollmentInfo', 2, '{casecontrol}', '{Retrospective}', 'Samples With DNA', 'Specify all types', '3 months', 10, '00000000-0000-0000-0000-000000000002'),
-	('2b1312ef-338b-454a-9e17-5db84e17d97c', 'Randomized', 'type', 'biomedical chemistry', 'description', 'Single Group Assignment', 'Blinded', 'description', '{[,'',P,a,r,t,i,c,i,p,a,n,t,'',]}', '{Trials}', 1, 'enrollmentInfo', 2, '{[,'',C,a,s,e,C,o,n,t,r,o,l,'',]}', '{Retrospective}', 'Samples With DNA', 'Specify all types', '3years', 10, '00000000-0000-0000-0000-000000000001'),
-	('ca5500a4-cbce-454a-a767-653461d59397', 'Randomized', 'type', 'biomedical chemistry', 'description', 'Single Group Assignment', 'Blinded', 'description', '{CaseControl}', '{Trials}', 1, 'enrollmentInfo', 2, '{CaseControl}', '{Retrospective}', 'Samples With DNA', 'Specify all types', '3years', 10, '00000000-0000-0000-0000-000000000001');
+	('00000000-0000-0000-0000-000000000001', 'Randomized', 'Interventional', 'Treatment', 'description', 'Single Group Assignment', 'Single', 'description', ARRAY ['Participant'], ARRAY ['Phase 1'], 20, 'Actual', 30, NULL, NULL, NULL, NULL, NULL, NULL, '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', NULL, 'Observational', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 20, 'Actual', NULL, ARRAY ['Cohort'], ARRAY ['Retrospective'], 'None Retained', 'description', '5 Days', 30, '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "study_design" ENABLE KEYS */;
 
 -- Dumping data for table public.study_eligibility: 6 rows
+-- done
 /*!40000 ALTER TABLE "study_eligibility" DISABLE KEYS */;
 INSERT INTO "study_eligibility" ("id", "gender", "gender_based", "gender_description", "healthy_volunteers", "inclusion_criteria", "exclusion_criteria", "study_population", "sampling_method", "study_id", "minimum_age_value", "minimum_age_unit", "maximum_age_value", "maximum_age_unit") VALUES
-	('00000000-0000-0000-0000-000000000004', 'female', 'Correct', 'none', 'true', '{concluded}', '{none}', 'primary care clinic', 'Probability Sample', '00000000-0000-0000-0000-000000000001', 30, 'UCSD', 54, 'UW'),
-	('dfac0d9e-a104-4f4b-ac1d-05f3699c72f3', 'female', 'Not given', 'none', 'true', '{concluded}', '{none}', 'primary care clinic', 'Probability Sample', '00000000-0000-0000-0000-000000000001', 23, 'UCSD', 32, 'UW'),
-	('00000000-0000-0000-0000-000000000002', 'female', 'True', 'none', 'false', '{concluded}', '{none}', 'primary care clinic', 'Probability Sample', '00000000-0000-0000-0000-000000000001', 45, 'UCLA', 43, 'UCLA'),
-	('00000000-0000-0000-0000-000000000001', 'female', 'True', 'none', 'true', '{concluded}', '{none}', 'primary care clinic', 'Probability Sample', '00000000-0000-0000-0000-000000000001', 24, 'UCSD', 34, 'UCLA'),
-	('00000000-0000-0000-0000-000000000003', 'female', 'True', 'none', 'false', '{concluded}', '{none}', 'primary care clinic', 'Probability Sample', '00000000-0000-0000-0000-000000000001', 56, 'UCLA', 37, 'UCSD'),
-	('01ac64ef-cfca-47bc-8f30-67525017461f', 'female', 'True', 'none', 'true', '{concluded}', '{none}', 'primary care clinic', 'Probability Sample', '00000000-0000-0000-0000-000000000001', 34, 'UW', 29, 'UW');
+	('00000000-0000-0000-0000-000000000001', 'All', 'Yes', 'Description', 'Yes', ARRAY ['inclusion 1'], ARRAY ['exclusion 1'], NULL, NULL, '00000000-0000-0000-0000-000000000001', 24, 'Years', 34, 'Years'),
+	('00000000-0000-0000-0000-000000000002', 'All', 'Yes', 'Description', 'Yes', ARRAY ['inclusion 1'], ARRAY ['exclusion 1'], 'Description', 'Probability Sample', '00000000-0000-0000-0000-000000000002', 24, 'Years', 34, 'Years');
 /*!40000 ALTER TABLE "study_eligibility" ENABLE KEYS */;
 
 -- Dumping data for table public.study_identification: -1 rows
+-- done
 /*!40000 ALTER TABLE "study_identification" DISABLE KEYS */;
 INSERT INTO "study_identification" ("id", "identifier", "identifier_type", "identifier_domain", "identifier_link", "secondary", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000002', 'Screening', 'Registry Identifier', 'registry Identifier', 'https://reporter.nih.gov/quickSearch/K01HL147713', 'true', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000003', 'Screening', 'Registry Identifier', 'registry Identifier', 'https://reporter.nih.gov/quickSearch/K01HL147713', 'true', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000004', 'Screening', 'Registry Identifier', 'registry Identifier', 'https://reporter.nih.gov/quickSearch/K01HL147713', 'true', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000001', 'Screening', 'Registry Identifier', 'registry Identifier', 'https://reporter.nih.gov/quickSearch/K01HL147713', 'true', '00000000-0000-0000-0000-000000000001'),
-	('cfc1b66c-882a-4eee-a6d7-01a7cb018ac2', 'Screening', 'Registry Identifier', 'registry Identifier', 'https://reporter.nih.gov/quickSearch/K01HL147713', 'true', '00000000-0000-0000-0000-000000000001');
+	('00000000-0000-0000-0000-000000000001', 'ADF89ADS', 'NIH Grant Number', "", 'https://reporter.nih.gov/quickSearch/K01HL147713', FALSE, '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', 'ADF8934ADS', 'NIH Grant Number', "", 'https://reporter.nih.gov/quickSearch/K01HL147713', TRUE, '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000003', 'AD6F89ADS', 'NIH Grant Number', "", 'https://reporter.nih.gov/quickSearch/K01HL147713', TRUE, '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000004', 'ADF897ADS', 'NIH Grant Number', "", 'https://reporter.nih.gov/quickSearch/K01HL147713', TRUE, '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "study_identification" ENABLE KEYS */;
 
 -- Dumping data for table public.study_intervention: -1 rows
+-- done
 /*!40000 ALTER TABLE "study_intervention" DISABLE KEYS */;
 INSERT INTO "study_intervention" ("id", "type", "name", "description", "arm_group_label_list", "other_name_list", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000002', 'Drug', 'intervention name', 'Other current and former name', '{"Arm Group Label"}', '{"Arm other list"}', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000003', 'Procedure/Surgery', 'intervention name', 'Other current and former name', '{"Arm Group Label"}', '{"Arm other list"}', '00000000-0000-0000-0000-000000000003'),
-	('00000000-0000-0000-0000-000000000004', 'Radiation', 'intervention name', 'Other current and former name', '{"Arm Group Label"}', '{"Arm other list"}', '00000000-0000-0000-0000-000000000004'),
-	('70eecc49-2c32-47a4-a176-2abb57334fab', 'Device', 'intervention name', 'Other current and former name', '{"Arm Group Label"}', '{"Arm other list"}', '00000000-0000-0000-0000-000000000001'),
-	('ede01416-9693-4095-bdae-a2c144a9ec82', 'Device', 'intervention name', 'Other current and former name', '{"Arm Group Label"}', '{"Arm other list"}', '00000000-0000-0000-0000-000000000001'),
-	('f6c68d25-8a1c-47ec-9b8d-4db36cf3fecd', 'Device', 'intervention name', 'Other current and former name', '{"Arm Group Label"}', '{"Arm other list"}', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000001', 'Device', 'intervention name updatee', 'Other current and former name', '{"Arm Group Label"}', '{"Arm other list"}', '00000000-0000-0000-0000-000000000001'),
-	('65ef7ce9-4992-47a1-8a86-355792ca6fbc', 'Device', 'intervention name', 'Other current and former name', '{"Arm Group Label"}', '{"Arm other list"}', '00000000-0000-0000-0000-000000000001');
+	('00000000-0000-0000-0000-000000000001', 'Drug', 'Test Name1', 'Lorem Ipsum', ARRAY ['name 1'], ARRAY ['name 1'], '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', 'Drug', 'Test Name2', 'Lorem Ipsum', ARRAY ['name 1'], ARRAY ['name 1'], '00000000-0000-0000-0000-000000000001');
 /*!40000 ALTER TABLE "study_intervention" ENABLE KEYS */;
 
 -- Dumping data for table public.study_ipdsharing: -1 rows
+-- done
 /*!40000 ALTER TABLE "study_ipdsharing" DISABLE KEYS */;
 INSERT INTO "study_ipdsharing" ("id", "ipd_sharing", "ipd_sharing_description", "ipd_sharing_info_type_list", "ipd_sharing_time_frame", "ipd_sharing_access_criteria", "ipd_sharing_url", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'IPDSharing', 'unplanned', '{"Statistical Analysis Plan (SAP)"}', 'January 2025', 'No criteria', 'https://orcid.org/', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'IPDSharing', 'unplanned', '{"Statistical Analysis Plan (SAP)"}', 'January 2025', 'No criteria', 'https://orcid.org/', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000003', 'IPDSharing', 'unplanned', '{"Statistical Analysis Plan (SAP)"}', 'January 2025', 'No criteria', 'https://orcid.org/', '00000000-0000-0000-0000-000000000003'),
-	('ebfe1211-763e-4b10-8e15-7ccb29cb21f5', 'IPDSharing', 'unplanned', '{"Statistical Analysis Plan (SAP)"}', 'January 2025', 'No criteria', 'https://orcid.org/', '00000000-0000-0000-0000-000000000001');
+	('00000000-0000-0000-0000-000000000001', 'Yes', 'Lorem Ipsum', ARRAY ['Study Protocol'], 'January 2025', 'No criteria', 'https://orcid.org/', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', 'Yes', 'Lorem Ipsum', ARRAY ['Study Protocol'], 'January 2025', 'No criteria', 'https://orcid.org/', '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "study_ipdsharing" ENABLE KEYS */;
 
 -- Dumping data for table public.study_link: -1 rows
+-- done
 /*!40000 ALTER TABLE "study_link" DISABLE KEYS */;
 INSERT INTO "study_link" ("id", "url", "title", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'https://schema.aireadi.org/', 'schema', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'https://schema.aireadi.org/', 'schema', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000003', 'https://schema.aireadi.org/', 'schema', '00000000-0000-0000-0000-000000000003'),
-	('00000000-0000-0000-0000-000000000004', 'https://schema.aireadi.org/', 'schema', '00000000-0000-0000-0000-000000000003'),
-	('e354922c-9ab3-4b38-ba79-c4d4640737d2', 'https://schema.aireadi.org/', 'schema', '00000000-0000-0000-0000-000000000001'),
-	('040d305e-504d-433b-b5c2-7d56c24d440a', 'https://schema.aireadi.org/', 'schema', '00000000-0000-0000-0000-000000000001');
+	('00000000-0000-0000-0000-000000000001', 'https://schema.aireadi.org/', 'schema1', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', 'https://schema.aireadi.org/', 'schema2', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000003', 'https://schema.aireadi.org/', 'schema3', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000004', 'https://schema.aireadi.org/', 'schema1', '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "study_link" ENABLE KEYS */;
 
 -- Dumping data for table public.study_location: -1 rows
+-- done
 /*!40000 ALTER TABLE "study_location" DISABLE KEYS */;
 INSERT INTO "study_location" ("id", "facility", "status", "city", "state", "zip", "country", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'facility', 'active', 'San diego', 'CA', '92121', 'sAN dIEGO', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'facility', 'active', 'San diego', 'CA', '92121', 'sAN dIEGO', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000003', 'facility', 'active', 'San diego', 'CA', '92121', 'sAN dIEGO', '00000000-0000-0000-0000-000000000003'),
-	('00000000-0000-0000-0000-000000000004', 'facility', 'active', 'San diego', 'CA', '92121', 'sAN dIEGO', '00000000-0000-0000-0000-000000000003'),
-	('00000000-0000-0000-0000-000000000005', 'facility', 'active', 'San diego', 'CA', '92121', 'sAN dIEGO', '00000000-0000-0000-0000-000000000004'),
-	('cda2dc03-95cf-494a-87ea-aac49ac07f0b', 'facility', 'active', 'San diego', 'CA', '92121', 'San diego', '00000000-0000-0000-0000-000000000001'),
-	('72d6a140-e57b-4ba4-a57d-391cdc871c21', 'facility', 'active', 'San diego', 'CA', '92121', 'San diego', '00000000-0000-0000-0000-000000000001');
+	('00000000-0000-0000-0000-000000000001', 'facility1', 'Recruting', 'San Diego', 'CA', '92121', 'USA', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', 'facility2', 'Recruting', 'San Diego', 'CA', '92121', 'USA', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000003', 'facility1', 'Recruting', 'San Diego', 'CA', '92121', 'USA', '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "study_location" ENABLE KEYS */;
 
 -- Dumping data for table public.study_other: -1 rows
@@ -384,16 +378,26 @@ INSERT INTO "study_status" ("id", "overall_status", "why_stopped", "start_date",
 /*!40000 ALTER TABLE "study_status" ENABLE KEYS */;
 
 -- Dumping data for table public.user: -1 rows
+-- done
 /*!40000 ALTER TABLE "user" DISABLE KEYS */;
 INSERT INTO "user" ("id", "email_address", "username", "first_name", "last_name", "orcid", "hash", "created_at", "institution") VALUES
-	('00000000-0000-0000-0000-000000000001', 'bhavesh.patel@gmail.com', 'bhavesh', 'Bhavesh', 'Patel', '1111-2222-333-444-5555', 'hashed', '2023-08-13 12:34:06', 'CALMI2'),
-	('00000000-0000-0000-0000-000000000002', 'sanjay.soundarajan@gmail.com', 'sanjay', 'sanjay', 'soundarajan', '1111-2222-333-444-5555', 'hashed', '2023-08-13 12:34:06', 'CALMI2'),
-	('00000000-0000-0000-0000-000000000003', 'billy.sanders@gmail.com', 'billy', 'billy', 'sanders', '1111-2222-333-444-5555', 'hashed', '2023-08-13 12:34:06', 'CALMI2'),
-	('00000000-0000-0000-0000-000000000004', 'james.lilly@gmail.com', 'james', 'james', 'lilly', '1111-2222-333-444-5555', 'hashed', '2023-08-13 12:34:06', 'CALMI2');
+	('00000000-0000-0000-0000-000000000001', 'Ervin_Lindgren@hotmail.com', 'Ervin79', 'Ervin', 'Lindgren', 'd348206e-b1e2-4f99-9157-44b1321ecb4c', 'hashed', '2023-08-13 12:34:06', 'Schinner, Kuvalis and Beatty'),
+	('00000000-0000-0000-0000-000000000002', 'Camila.Pacocha@hotmail.com', 'Camila_Pacocha', 'Camila', 'Pacocha', '699e9977-5d86-40fc-bf1a-a5083f0cdc95', 'hashed', '2023-08-13 12:34:06', 'Schmitt Inc'),
+	('00000000-0000-0000-0000-000000000003', 'Alaina.Hammes@hotmail.com', 'Alaina_Hammes', 'Alaina', 'Hammes', '0b39872c-a1d6-44c0-88c2-7ea1b3a33dcf', 'hashed', '2023-08-13 12:34:06', 'Stracke, Leuschke and Kuvalis'),
+	('00000000-0000-0000-0000-000000000004', 'Brady_Anderson@gmail.com', 'Brady_Anderson', 'Brady', 'Anderson', '779d42d2-4743-43d3-980b-fcf1a962b485', 'hashed', '2023-08-13 12:34:06', 'Heidenreich, Wilkinson and Mitchell');
+	('00000000-0000-0000-0000-000000000005', 'Brycen78@hotmail.com', 'Brycen_OReilly64', 'Brycen', 'O''Reilly', '529053dc-a755-4819-bdd2-a593d41e7f73', 'hashed', '2023-08-13 12:34:06', 'Heaney, Russel and Turner');
 /*!40000 ALTER TABLE "user" ENABLE KEYS */;
 
 -- Dumping data for table public.version: -1 rows
+-- done
 /*!40000 ALTER TABLE "version" DISABLE KEYS */;
+INSERT INTO "version" ("id", "title", "published", "changelog", "updated_on", "doi", "created_at", "published_on", "dataset_id") VALUES
+	('00000000-0000-0000-0000-000000000001', 'Version 1', 'true', 'lorem ipsum', '2023-08-13 16:24:05', '2435464e643', '2023-08-13 16:23:59', '2023-08-13 16:24:00', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', 'Version 2', 'false', 'lorem ipsum', '2023-08-13 16:24:05', '2435464e643', '2023-08-13 16:23:59', '2023-08-13 16:24:00', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000003', 'Version 1', 'false', 'lorem ipsum', '2023-08-13 16:24:05', '2435464e643', '2023-08-13 16:23:59', '2023-08-13 16:24:00', '00000000-0000-0000-0000-000000000002'),
+	('00000000-0000-0000-0000-000000000003', 'Version 1', 'false', 'lorem ipsum', '2023-08-13 16:24:05', '2435464e643', '2023-08-13 16:23:59', '2023-08-13 16:24:00', '00000000-0000-0000-0000-000000000003');
+/*!40000 ALTER TABLE "version" ENABLE KEYS */;
+
 -- Dumping data for table public.version_participants: -1 rows
 /*!40000 ALTER TABLE "version_participants" DISABLE KEYS */;
 INSERT INTO "version_participants" ("dataset_version_id", "participant_id") VALUES
