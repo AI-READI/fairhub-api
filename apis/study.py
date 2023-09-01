@@ -71,7 +71,7 @@ class StudyResource(Resource):
             for version in d.dataset_versions:
                 version.participants.clear()
         for d in delete_study.dataset:
-            for version in d .dataset_versions:
+            for version in d.dataset_versions:
                 db.session.delete(version)
             db.session.delete(d)
         for p in delete_study.participants:
