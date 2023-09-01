@@ -62,6 +62,7 @@ class DatasetList(Resource):
 @api.response(400, "Validation Error")
 class DatasetResource(Resource):
     def put(self, study_id, dataset_id):
+
         data = request.json
         data_obj = Dataset.query.get(dataset_id)
         data_obj.update(data)
@@ -69,14 +70,28 @@ class DatasetResource(Resource):
         return data_obj.to_dict()
 
     def delete(self, study_id, dataset_id):
-        data = request.json
-        study_obj = Study.query.get(study_id)
-        for dataset_ in study_obj.dataset:
-            db.session.delete(dataset_)
-            db.session.commit()
-        db.session.delete(study_obj)
+        data_obj = Dataset.query.get(dataset_id)
+        for version in data_obj.dataset_versions:
+            db.session.delete(version)
+        db.session.delete(data_obj)
         db.session.commit()
-        return Response(status=204)
+        return '', 204
+        #
+        #
+        # delete_study = Study.query.get(study_id)
+        # for d in delete_study.dataset:
+        #     for version in d.dataset_versions:
+        #         version.participants.clear()
+        # for d in delete_study.dataset:
+        #     for version in d .dataset_versions:
+        #         db.session.delete(version)
+        #     db.session.delete(d)
+        # for p in delete_study.participants:
+        #     db.session.delete(p)
+        # db.session.delete(delete_study)
+        # db.session.commit()
+        # return "", 204
+        #
 
     # def delete(self, study_id, dataset_id, version_id):
     #     data_obj = Dataset.query.get(dataset_id)
