@@ -386,7 +386,7 @@ CREATE TABLE IF NOT EXISTS "study_design" (
 	"id" CHAR(36) NOT NULL,
 	"design_allocation" VARCHAR,
 	"study_type" VARCHAR NOT NULL,
-	"design_interventional_model" VARCHAR,
+	"design_intervention_model" VARCHAR,
 	"design_intervention_model_description" VARCHAR,
 	"design_primary_purpose" VARCHAR,
 	"design_masking" VARCHAR,
@@ -847,7 +847,7 @@ INSERT INTO "study_description" ("id", "brief_summary", "detailed_description", 
 -- Dumping data for table public.study_design: -1 rows
 -- done
 /*!40000 ALTER TABLE "study_design" DISABLE KEYS */;
-INSERT INTO "study_design" ("id", "design_allocation", "study_type", "design_interventional_model", "design_intervention_model_description", "design_primary_purpose", "design_masking", "design_masking_description", "design_who_masked_list", "phase_list", "enrollment_count", "enrollment_type", "number_arms", "design_observational_model_list", "design_time_perspective_list", "bio_spec_retention", "bio_spec_description", "target_duration", "number_groups_cohorts", "study_id") VALUES
+INSERT INTO "study_design" ("id", "design_allocation", "study_type", "design_intervention_model", "design_intervention_model_description", "design_primary_purpose", "design_masking", "design_masking_description", "design_who_masked_list", "phase_list", "enrollment_count", "enrollment_type", "number_arms", "design_observational_model_list", "design_time_perspective_list", "bio_spec_retention", "bio_spec_description", "target_duration", "number_groups_cohorts", "study_id") VALUES
 	('00000000-0000-0000-0000-000000000001', 'Randomized', 'Interventional', 'Treatment', 'description', 'Single Group Assignment', 'Single', 'description', ARRAY ['Participant'], ARRAY ['Phase 1'], 20, 'Actual', 30, NULL, NULL, NULL, NULL, NULL, NULL, '00000000-0000-0000-0000-000000000001'),
 	('00000000-0000-0000-0000-000000000002', NULL, 'Observational', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 20, 'Actual', NULL, ARRAY ['Cohort'], ARRAY ['Retrospective'], 'None Retained', 'description', '5 Days', 30, '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "study_design" ENABLE KEYS */;
