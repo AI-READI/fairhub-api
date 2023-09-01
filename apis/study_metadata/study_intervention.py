@@ -48,10 +48,10 @@ class StudyInterventionResource(Resource):
 
         return list_of_elements
 
-    # @api.route("/study/<study_id>/metadata/available_ipd/<available_ipd_id>")
-    # class StudyInterventionUpdate(Resource):
-    #     def put(self, study_id: int, available_ipd_id: int):
-    #         study_intervention_ = StudyIntervention.query.get(study_intervention_)
-    #         study_intervention_.update(request.json)
-    #         db.session.commit()
-    #         return study_intervention_.to_dict()
+    @api.route("/study/<study_id>/metadata/intervention/<intervention_id>")
+    class StudyInterventionUpdate(Resource):
+        def delete(self, study_id: int, intervention_id: int):
+            study_intervention_ = StudyIntervention.query.get(intervention_id)
+            db.session.delete(study_intervention_)
+            db.session.commit()
+            return 204

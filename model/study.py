@@ -12,7 +12,7 @@ class Study(db.Model):
 
     def __init__(self):
         self.id = str(uuid.uuid4())
-        # self.created_at = datetime.now()
+        self.created_at = datetime.now()
 
     __tablename__ = "study"
 
@@ -81,8 +81,7 @@ class Study(db.Model):
         """Updates the study from a dictionary"""
         self.title = data["title"]
         self.image = data["image"]
-        # self.user = model.User.from_data(data["user"])
-        self.updated_on = data["updated_on"]
+        self.updated_on = datetime.now()
 
     def validate(self):
         """Validates the study"""
