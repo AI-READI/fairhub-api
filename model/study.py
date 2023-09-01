@@ -36,12 +36,16 @@ class Study(db.Model):
         "StudyDescription", uselist=False, back_populates="study"
     )
     study_design = db.relationship("StudyDesign", uselist=False, back_populates="study")
-    study_eligibility = db.relationship("StudyEligibility", uselist=False, back_populates="study")
+    study_eligibility = db.relationship(
+        "StudyEligibility", uselist=False, back_populates="study"
+    )
     study_identification = db.relationship(
         "StudyIdentification", back_populates="study"
     )
     study_intervention = db.relationship("StudyIntervention", back_populates="study")
-    study_ipdsharing = db.relationship("StudyIpdsharing", uselist=False, back_populates="study")
+    study_ipdsharing = db.relationship(
+        "StudyIpdsharing", uselist=False, back_populates="study"
+    )
     study_link = db.relationship("StudyLink", back_populates="study")
     study_location = db.relationship("StudyLocation", back_populates="study")
     study_other = db.relationship("StudyOther", uselist=False, back_populates="study")

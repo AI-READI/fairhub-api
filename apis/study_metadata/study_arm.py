@@ -44,11 +44,13 @@ class StudyArmResource(Resource):
         db.session.commit()
 
         return list_of_elements
+
+
 # todo delete
-    # @api.route("/study/<study_id>/metadata/arm/<arm_id>")
-    # class StudyArmUpdate(Resource):
-    #     def put(self, study_id: int, arm_id: int):
-    #         study_arm_ = StudyArm.query.get(arm_id)
-    #         study_arm_.update(request.json)
-    #         db.session.commit()
-    #         return study_arm_.to_dict()
+# @api.route("/study/<study_id>/metadata/arm/<arm_id>")
+# class StudyArmUpdate(Resource):
+#     def put(self, study_id: int, arm_id: int):
+#         study_arm_ = StudyArm.query.get(arm_id)
+#         study_arm_.update(request.json)
+#         db.session.commit()
+#         return study_arm_.to_dict()

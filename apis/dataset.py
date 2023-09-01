@@ -62,7 +62,6 @@ class DatasetList(Resource):
 @api.response(400, "Validation Error")
 class DatasetResource(Resource):
     def put(self, study_id, dataset_id):
-
         data = request.json
         data_obj = Dataset.query.get(dataset_id)
         data_obj.update(data)
@@ -75,7 +74,7 @@ class DatasetResource(Resource):
             db.session.delete(version)
         db.session.delete(data_obj)
         db.session.commit()
-        return '', 204
+        return "", 204
         #
         #
         # delete_study = Study.query.get(study_id)
