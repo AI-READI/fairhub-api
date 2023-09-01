@@ -10,7 +10,10 @@ class StudyContributor(db.Model):
     __tablename__ = "study_contributor"
     permission = db.Column(db.String, nullable=False)
     user_id = db.Column(db.CHAR(36), db.ForeignKey("user.id"), primary_key=True)
-    user = db.relationship("User", back_populates="study_contributors", )
+    user = db.relationship(
+        "User",
+        back_populates="study_contributors",
+    )
 
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"), primary_key=True)
     study = db.relationship("Study", back_populates="study_contributors")
