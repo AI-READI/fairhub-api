@@ -49,7 +49,9 @@ class StudyOverallOfficialResource(Resource):
     @api.route("/study/<study_id>/metadata/overall_official/<overall_official_id>")
     class StudyOverallOfficialUpdate(Resource):
         def delete(self, study_id: int, overall_official_id: int):
-            study_overall_official_ = StudyOverallOfficial.query.get(overall_official_id)
+            study_overall_official_ = StudyOverallOfficial.query.get(
+                overall_official_id
+            )
             db.session.delete(study_overall_official_)
             db.session.commit()
             return 204
