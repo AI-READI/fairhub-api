@@ -15,7 +15,7 @@ class StudyContact(db.Model):
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String, nullable=False)
     affiliation = db.Column(db.String, nullable=False)
-    role = db.Column(db.String, nullable=False)
+    role = db.Column(db.String, nullable=True)
     phone = db.Column(db.String, nullable=False)
     phone_ext = db.Column(db.String, nullable=False)
     email_address = db.Column(db.String, nullable=False)

@@ -44,7 +44,7 @@ class StudyArmResource(Resource):
         db.session.commit()
 
         return list_of_elements
-
+# todo delete
     # @api.route("/study/<study_id>/metadata/arm/<arm_id>")
     # class StudyArmUpdate(Resource):
     #     def put(self, study_id: int, arm_id: int):

@@ -24,8 +24,8 @@ class StudyEligibility(db.Model):
     healthy_volunteers = db.Column(db.BOOLEAN, nullable=False)
     inclusion_criteria = db.Column(ARRAY(String), nullable=False)
     exclusion_criteria = db.Column(ARRAY(String), nullable=False)
-    study_population = db.Column(db.String, nullable=False)
-    sampling_method = db.Column(db.String, nullable=False)
+    study_population = db.Column(db.String, nullable=True)
+    sampling_method = db.Column(db.String, nullable=True)
 
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
     study = db.relationship("Study", back_populates="study_eligibility")
