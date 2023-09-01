@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfile    
     ports:
-      - "5000:5000"
+      - 5000:5000
     # volumes:
     #   - ./apis:/app/apis
     #   - ./model:/app/model
@@ -15,21 +15,21 @@ services:
     environment:
       FLASK_ENV: development
       FLASK_DEBUG: 1
-      FAIRHUB_DATABASE_URL: "${FAIRHUB_DATABASE_URL:-postgresql://admin:root@localhost:5432/fairhub_local}"
+      FAIRHUB_DATABASE_URL: "${FAIRHUB_DATABASE_URL:-postgresql://postgres:postgres@database:5432/postgres}"
     depends_on:
       database:
         condition: service_healthy
   database:
     image: postgres:9.6
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: fairhub_local
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
     ports:
       - 5432:5432
-    restart: always
+    # restart: always
     healthcheck:
-      test: "pg_isready --username=fairhub_local && psql --username=admin --list"
+      test: "pg_isready --username=postgres && psql --username=postgres --list"
       interval: 5s
       timeout: 5s
       retries: 5
