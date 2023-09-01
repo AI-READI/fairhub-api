@@ -42,14 +42,14 @@ class StudyStatusResource(Resource):
         db.session.commit()
         return study_sponsors_collaborators_.to_dict()
 
-    @api.route(
-        "/study/<study_id>/metadata/sponsors_collaborators/<sponsors_collaborators_id>"
-    )
-    class StudySponsorsCollaboratorsUpdate(Resource):
-        def put(self, study_id: int, sponsors_collaborators_id: int):
-            study_sponsors_collaborators_ = StudySponsorsCollaborators.query.get(
-                sponsors_collaborators_id
-            )
-            study_sponsors_collaborators_.update(request.json)
-            db.session.commit()
-            return study_sponsors_collaborators_.to_dict()
+    # @api.route(
+    #     "/study/<study_id>/metadata/sponsors_collaborators/<sponsors_collaborators_id>"
+    # )
+    # class StudySponsorsCollaboratorsUpdate(Resource):
+    #     def put(self, study_id: int, sponsors_collaborators_id: int):
+    #         study_sponsors_collaborators_ = StudySponsorsCollaborators.query.get(
+    #             sponsors_collaborators_id
+    #         )
+    #         study_sponsors_collaborators_.update(request.json)
+    #         db.session.commit()
+    #         return study_sponsors_collaborators_.to_dict()

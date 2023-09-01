@@ -46,10 +46,10 @@ class StudyEligibilityResource(Resource):
         db.session.commit()
         return study_eligibility_.to_dict()
 
-    @api.route("/study/<study_id>/metadata/eligibility/<eligibility_id>")
-    class StudyArmUpdate(Resource):
-        def put(self, study_id: int, eligibility_id: int):
-            study_eligibility_ = StudyEligibility.query.get(eligibility_id)
-            study_eligibility_.update(request.json)
-            db.session.commit()
-            return study_eligibility_.to_dict()
+    # @api.route("/study/<study_id>/metadata/eligibility/<eligibility_id>")
+    # class StudyArmUpdate(Resource):
+    #     def put(self, study_id: int, eligibility_id: int):
+    #         study_eligibility_ = StudyEligibility.query.get(eligibility_id)
+    #         study_eligibility_.update(request.json)
+    #         db.session.commit()
+    #         return study_eligibility_.to_dict()

@@ -41,7 +41,7 @@ class StudyDesignResource(Resource):
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_design_ = study_.study_design
-        return [s.to_dict() for s in study_design_]
+        return study_design_.to_dict()
 
     def post(self, study_id: int):
         data = request.json
@@ -51,10 +51,10 @@ class StudyDesignResource(Resource):
         db.session.commit()
         return study_design_.to_dict()
 
-    @api.route("/study/<study_id>/metadata/design/<design_id>")
-    class StudyDesignUpdate(Resource):
-        def put(self, study_id: int, design_id: int):
-            study_design_ = StudyDesign.query.get(design_id)
-            study_design_.update(request.json)
-            db.session.commit()
-            return study_design_.to_dict()
+    # @api.route("/study/<study_id>/metadata/design/<design_id>")
+    # class StudyDesignUpdate(Resource):
+    #     def put(self, study_id: int, design_id: int):
+    #         study_design_ = StudyDesign.query.get(design_id)
+    #         study_design_.update(request.json)
+    #         db.session.commit()
+    #         return study_design_.to_dict()

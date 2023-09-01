@@ -37,10 +37,10 @@ class StudyOtherResource(Resource):
         db.session.commit()
         return study_other_.to_dict()
 
-    @api.route("/study/<study_id>/metadata/other/<other_id>")
-    class StudyOtherUpdate(Resource):
-        def put(self, study_id: int, other_id: int):
-            study_other_ = StudyOther.query.get(other_id)
-            study_other_.update(request.json)
-            db.session.commit()
-            return study_other_.to_dict()
+    # @api.route("/study/<study_id>/metadata/other/<other_id>")
+    # class StudyOtherUpdate(Resource):
+    #     def put(self, study_id: int, other_id: int):
+    #         study_other_ = StudyOther.query.get(other_id)
+    #         study_other_.update(request.json)
+    #         db.session.commit()
+    #         return study_other_.to_dict()

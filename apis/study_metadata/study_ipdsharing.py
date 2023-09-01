@@ -40,10 +40,10 @@ class StudyIpdsharingResource(Resource):
         db.session.commit()
         return study_ipdsharing_.to_dict()
 
-    @api.route("/study/<study_id>/metadata/ipdsharing/<study_ipdsharing_id>")
-    class StudyIpdsharingUpdate(Resource):
-        def put(self, study_id: int, study_ipdsharing_id: int):
-            study_ipdsharing_ = StudyIpdsharing.query.get(study_ipdsharing_id)
-            study_ipdsharing_.update(request.json)
-            db.session.commit()
-            return study_ipdsharing_.to_dict()
+    # @api.route("/study/<study_id>/metadata/ipdsharing/<study_ipdsharing_id>")
+    # class StudyIpdsharingUpdate(Resource):
+    #     def put(self, study_id: int, study_ipdsharing_id: int):
+    #         study_ipdsharing_ = StudyIpdsharing.query.get(study_ipdsharing_id)
+    #         study_ipdsharing_.update(request.json)
+    #         db.session.commit()
+    #         return study_ipdsharing_.to_dict()

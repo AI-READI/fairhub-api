@@ -40,10 +40,10 @@ class StudyStatusResource(Resource):
         db.session.commit()
         return study_status_.to_dict()
 
-    @api.route("/study/<study_id>/metadata/status/<status_id>")
-    class StudyStatusUpdate(Resource):
-        def put(self, study_id: int, status_id: int):
-            study_status_ = StudyStatus.query.get(status_id)
-            study_status_.update(request.json)
-            db.session.commit()
-            return study_status_.to_dict()
+    # @api.route("/study/<study_id>/metadata/status/<status_id>")
+    # class StudyStatusUpdate(Resource):
+    #     def put(self, study_id: int, status_id: int):
+    #         study_status_ = StudyStatus.query.get(status_id)
+    #         study_status_.update(request.json)
+    #         db.session.commit()
+    #         return study_status_.to_dict()
