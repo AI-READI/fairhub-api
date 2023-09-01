@@ -30,7 +30,7 @@ class StudyStatusResource(Resource):
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_status_ = study_.study_status
-        return [s.to_dict() for s in study_status_]
+        return study_status_.to_dict()
 
     def post(self, study_id: int):
         data = request.json
@@ -40,10 +40,10 @@ class StudyStatusResource(Resource):
         db.session.commit()
         return study_status_.to_dict()
 
-    @api.route("/study/<study_id>/metadata/status/<study_status_id>")
+    @api.route("/study/<study_id>/metadata/status/<status_id>")
     class StudyStatusUpdate(Resource):
-        def put(self, study_id: int, study_status_id: int):
-            study_status_ = StudyStatus.query.get(study_status_id)
+        def put(self, study_id: int, status_id: int):
+            study_status_ = StudyStatus.query.get(status_id)
             study_status_.update(request.json)
             db.session.commit()
             return study_status_.to_dict()

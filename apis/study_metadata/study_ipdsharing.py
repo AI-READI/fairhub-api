@@ -30,7 +30,7 @@ class StudyIpdsharingResource(Resource):
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_ipdsharing_ = study_.study_ipdsharing
-        return [s.to_dict() for s in study_ipdsharing_]
+        return study_ipdsharing_.to_dict()
 
     def post(self, study_id: int):
         data = request.json

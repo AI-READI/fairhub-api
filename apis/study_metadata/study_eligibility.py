@@ -11,11 +11,13 @@ study_eligibility = api.model(
     {
         "id": fields.String(required=True),
         "gender": fields.String(required=True),
-        "gender_based": fields.Boolean(required=True),
+        "gender_based": fields.String(required=True),
         "gender_description": fields.String(required=True),
-        "minimum_age": fields.String(required=True),
-        "maximum_age": fields.String(required=True),
-        "healthy_volunteers": fields.Boolean(required=True),
+        "minimum_age_value": fields.Integer(required=True),
+        "maximum_age_value": fields.Integer(required=True),
+        "minimum_age_unit": fields.String(required=True),
+        "maximum_age_unit": fields.String(required=True),
+        "healthy_volunteers": fields.String(required=True),
         "inclusion_criteria": fields.List(fields.String, required=True),
         "exclusion_criteria": fields.List(fields.String, required=True),
         "study_population": fields.String(required=True),
@@ -34,7 +36,7 @@ class StudyEligibilityResource(Resource):
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_eligibility_ = study_.study_eligibility
-        return [s.to_dict() for s in study_eligibility_]
+        return study_eligibility_.to_dict()
 
     def post(self, study_id: int):
         data = request.json

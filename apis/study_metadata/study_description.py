@@ -26,7 +26,7 @@ class StudyDescriptionResource(Resource):
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_description_ = study_.study_description
-        return [s.to_dict() for s in study_description_]
+        return study_description_.to_dict()
 
     def post(self, study_id: int):
         data = request.json

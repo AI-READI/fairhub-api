@@ -11,12 +11,10 @@ study_sponsors_collaborators = api.model(
     {
         "id": fields.String(required=True),
         "responsible_party_type": fields.String(required=True),
-        "responsible_party_investigator_first_name": fields.String(required=True),
-        "responsible_party_investigator_last_name": fields.String(required=True),
+        "responsible_party_investigator_name": fields.String(required=True),
         "responsible_party_investigator_title": fields.String(required=True),
         "responsible_party_investigator_affiliation": fields.String(required=True),
-        "lead_sponsor_first_name": fields.String(required=True),
-        "lead_sponsor_last_name": fields.String(required=True),
+        "lead_sponsor_name": fields.String(required=True),
         "collaborator_name": fields.List(fields.String, required=True),
     },
 )
@@ -32,7 +30,7 @@ class StudyStatusResource(Resource):
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_sponsors_collaborators_ = study_.study_sponsors_collaborators
-        return [s.to_dict() for s in study_sponsors_collaborators_]
+        return study_sponsors_collaborators_.to_dict()
 
     def post(self, study_id: int):
         data = request.json
