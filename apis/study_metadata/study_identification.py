@@ -47,10 +47,10 @@ class StudyIdentificationResource(Resource):
         db.session.commit()
         return list_of_elements
 
-    # @api.route("/study/<study_id>/metadata/available_ipd/<available_ipd_id>")
-    # class StudyIdentificationdUpdate(Resource):
-    #     def put(self, study_id: int, available_ipd_id: int):
-    #         study_available_ipd_ = StudyIdentification.query.get(available_ipd_id)
-    #         study_available_ipd_.update(request.json)
-    #         db.session.commit()
-    #         return study_available_ipd_.to_dict()
+    @api.route("/study/<study_id>/metadata/identification/<identification_id>")
+    class StudyIdentificationdUpdate(Resource):
+        def delete(self, study_id: int, identification_id: int):
+            study_identification_ = StudyIdentification.query.get(identification_id)
+            db.session.delete(study_identification_)
+            db.session.commit()
+            return 204

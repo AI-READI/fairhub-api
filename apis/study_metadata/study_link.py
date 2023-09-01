@@ -47,10 +47,10 @@ class StudyLinkResource(Resource):
         db.session.commit()
         return list_of_elements
 
-    # @api.route("/study/<study_id>/metadata/available_ipd/<available_ipd_id>")
-    # class StudyLinkUpdate(Resource):
-    #     def put(self, study_id: int, available_ipd_id: int):
-    #         study_link_ = StudyLink.query.get(study_link_)
-    #         study_link_.update(request.json)
-    #         db.session.commit()
-    #         return study_intervention_.to_dict()
+    @api.route("/study/<study_id>/metadata/link/<link_id>")
+    class StudyLinkUpdate(Resource):
+        def delete(self, study_id: int, link_id: int):
+            study_link_ = StudyLink.query.get(link_id)
+            db.session.delete(study_link_)
+            db.session.commit()
+            return 204

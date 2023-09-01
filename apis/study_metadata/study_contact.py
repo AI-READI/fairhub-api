@@ -46,10 +46,10 @@ class StudyContactResource(Resource):
         db.session.commit()
         return list_of_elements
 
-    # @api.route("/study/<study_id>/metadata/arm/<arm_id>")
-    # class StudyArmUpdate(Resource):
-    #     def put(self, study_id: int, arm_id: int):
-    #         study_arm_ = StudyContact.query.get(arm_id)
-    #         study_arm_.update(request.json)
-    #         db.session.commit()
-    #         return study_arm_.to_dict()
+    @api.route("/study/<study_id>/metadata/contact/<contact_id>")
+    class StudyContactUpdate(Resource):
+        def delete(self, study_id: int, contact_id: int):
+            study_contact_ = StudyContact.query.get(contact_id)
+            db.session.delete(study_contact_)
+            db.session.commit()
+            return study_contact_.to_dict()

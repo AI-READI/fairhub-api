@@ -46,10 +46,10 @@ class StudyOverallOfficialResource(Resource):
         db.session.commit()
         return list_of_elements
 
-    # @api.route("/study/<study_id>/metadata/available_ipd/<available_ipd_id>")
-    # class StudyOverallOfficialUpdate(Resource):
-    #     def put(self, study_id: int, available_ipd_id: int):
-    #         study_overall_official_ = StudyOverallOfficial.query.get(study_overall_official_)
-    #         study_overall_official_.update(request.json)
-    #         db.session.commit()
-    #         return study_overall_official_.to_dict()
+    @api.route("/study/<study_id>/metadata/overall_official/<overall_official_id>")
+    class StudyOverallOfficialUpdate(Resource):
+        def delete(self, study_id: int, overall_official_id: int):
+            study_overall_official_ = StudyOverallOfficial.query.get(overall_official_id)
+            db.session.delete(study_overall_official_)
+            db.session.commit()
+            return 204
