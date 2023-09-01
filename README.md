@@ -85,6 +85,24 @@ If you would like to update the api, please follow the instructions below.
 
 ## Docker
 
+### Database
+
+The api uses a postgres database. You can run a postgres database locally using docker:
+
+```bash
+docker-compose -f ./db-docker-compose.yml up
+```
+
+Close the database with:
+
+```bash
+docker-compose -f ./db-docker-compose.yml down -v
+```
+
+This database will not persist data between runs.
+
+### API
+
 If you would like to run the api locally, you can use docker.
 
 1. Build the docker image:
