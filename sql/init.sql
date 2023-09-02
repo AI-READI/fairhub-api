@@ -505,8 +505,7 @@ CREATE TABLE IF NOT EXISTS "study_other" (
 -- Dumping structure for table public.study_overall_official
 CREATE TABLE IF NOT EXISTS "study_overall_official" (
 	"id" CHAR(36) NOT NULL,
-	"first_name" VARCHAR NOT NULL,
-	"last_name" VARCHAR NOT NULL,
+	"name" VARCHAR NOT NULL,
 	"affiliation" VARCHAR NOT NULL,
 	"role" VARCHAR NOT NULL,
 	"study_id" CHAR(36) NOT NULL,
@@ -915,10 +914,10 @@ INSERT INTO "study_other" ("id", "oversight_has_dmc", "conditions", "keywords", 
 -- Dumping data for table public.study_overall_official: -1 rows
 -- done
 /*!40000 ALTER TABLE "study_overall_official" DISABLE KEYS */;
-INSERT INTO "study_overall_official" ("id", "first_name", "last_name", "affiliation", "role", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'Zoey', 'Bashirian', 'Lowe, Kshlerin and Ward', 'Study Director', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'Ashlynn', 'Grady', 'Kuhic - Towne', 'Study Chair', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000003', 'Maiya', 'Bartoletti', 'Medhurst - Marks', 'Study Chair', '00000000-0000-0000-0000-000000000002');
+INSERT INTO "study_overall_official" ("id", "name", "affiliation", "role", "study_id") VALUES
+	('00000000-0000-0000-0000-000000000001', 'Zoey Bashirian', 'Lowe, Kshlerin and Ward', 'Study Director', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', 'Ashlynn Grady', 'Kuhic - Towne', 'Study Chair', '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000003', 'Maiya Bartoletti', 'Medhurst - Marks', 'Study Chair', '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "study_overall_official" ENABLE KEYS */;
 
 -- Dumping data for table public.study_reference: 6 rows
