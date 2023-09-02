@@ -407,13 +407,13 @@ CREATE TABLE IF NOT EXISTS "study_design" (
 	CONSTRAINT "study_design_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
--- Dumping structure for table public.study_eligibility
+-- Dumping structure for table public.study_eligibilitya
 CREATE TABLE IF NOT EXISTS "study_eligibility" (
 	"id" CHAR(36) NOT NULL,
 	"gender" VARCHAR NOT NULL,
 	"gender_based" VARCHAR NOT NULL,
 	"gender_description" VARCHAR NOT NULL,
-	"healthy_volunteers" BOOLEAN NOT NULL,
+	"healthy_volunteers" VARCHAR NOT NULL,
 	"inclusion_criteria" VARCHAR[] NOT NULL,
 	"exclusion_criteria" VARCHAR[] NOT NULL,
 	"study_population" VARCHAR,
