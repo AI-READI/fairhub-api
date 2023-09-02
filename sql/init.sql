@@ -358,8 +358,7 @@ CREATE TABLE IF NOT EXISTS "study_available_ipd" (
 -- Dumping structure for table public.study_contact
 CREATE TABLE IF NOT EXISTS "study_contact" (
 	"id" CHAR(36) NOT NULL,
-	"first_name" VARCHAR NOT NULL,
-	"last_name" VARCHAR NOT NULL,
+	"name" VARCHAR NOT NULL,
 	"affiliation" VARCHAR NOT NULL,
 	"role" VARCHAR,
 	"phone" VARCHAR NOT NULL,
@@ -828,11 +827,11 @@ INSERT INTO "study_available_ipd" ("id", "identifier", "type", "url", "comment",
 -- Dumping data for table public.study_contact: -1 rows
 -- done
 /*!40000 ALTER TABLE "study_contact" DISABLE KEYS */;
-INSERT INTO "study_contact" ("id", "first_name", "last_name", "affiliation", "role", "phone", "phone_ext", "email_address", "central_contact", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'Dejah', 'Johnston', 'Erdman Inc', NULL, '501-039-841', '', 'Dejah83@hotmail.com', TRUE, '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'Reanna', 'Rolfson', 'Schowalter, Ullrich and Reichert', NULL, '501-039-841', '', 'Reanna79@hotmail.com', TRUE, '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000003', 'Verner', 'Nolan', 'Monahan and Sons', NULL, '501-039-841', '', 'Verner19@yahoo.com', TRUE, '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000004', 'Lela', 'Cormier', 'Metz LLC', NULL, '501-039-841', '', 'Lela84@hotmail.com', TRUE, '00000000-0000-0000-0000-000000000002');
+INSERT INTO "study_contact" ("id", "name", "affiliation", "role", "phone", "phone_ext", "email_address", "central_contact", "study_id") VALUES
+	('00000000-0000-0000-0000-000000000001', 'Dejah Johnston', 'Erdman Inc', NULL, '501-039-841', '', 'Dejah83@hotmail.com', TRUE, '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', 'Reanna Rolfson', 'Schowalter, Ullrich and Reichert', NULL, '501-039-841', '', 'Reanna79@hotmail.com', TRUE, '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000003', 'Verner Nolan', 'Monahan and Sons', NULL, '501-039-841', '', 'Verner19@yahoo.com', TRUE, '00000000-0000-0000-0000-000000000002'),
+	('00000000-0000-0000-0000-000000000004', 'Lela Cormier', 'Metz LLC', NULL, '501-039-841', '', 'Lela84@hotmail.com', TRUE, '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "study_contact" ENABLE KEYS */;
 
 -- Dumping data for table public.study_description: -1 rows
