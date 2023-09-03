@@ -23,7 +23,6 @@ study_eligibility = api.model(
         "study_population": fields.String(required=True),
         "sampling_method": fields.String(required=True),
         "study_type": fields.String(required=True),
-
     },
 )
 
