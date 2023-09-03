@@ -6,8 +6,8 @@ from flask import request
 from apis.study_metadata_namespace import api
 
 
-study_sponsors_collaborators = api.model(
-    "StudySponsorsCollaborators",
+study_sponsors = api.model(
+    "StudySponsors",
     {
         "id": fields.String(required=True),
         "responsible_party_type": fields.String(required=True),
@@ -15,40 +15,62 @@ study_sponsors_collaborators = api.model(
         "responsible_party_investigator_title": fields.String(required=True),
         "responsible_party_investigator_affiliation": fields.String(required=True),
         "lead_sponsor_name": fields.String(required=True),
-        "collaborator_name": fields.List(fields.String, required=True),
     },
 )
 
 
+study_collaborators = api.model(
+    "StudyCollaborators",
+    {
+        "collaborator_name": fields.List(fields.String, required=True),
+    },
+)
+
 @api.route("/study/<study_id>/metadata/sponsors")
-class StudyStatusResource(Resource):
-    @api.doc("sponsors_collaborators")
+class StudySponsorsResource(Resource):
+    @api.doc("sponsors")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")
-    @api.marshal_with(study_sponsors_collaborators)
+    @api.marshal_with(study_sponsors)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_sponsors_collaborators_ = study_.study_sponsors_collaborators
         return study_sponsors_collaborators_.to_dict()
 
-    # def post(self, study_id: int):
-    #     data = request.json
-    #     study_sponsors_collaborators_ = Study.query.get(study_id)
-    #     study_sponsors_collaborators_ = StudySponsorsCollaborators.from_data(
-    #         study_sponsors_collaborators_, data
-    #     )
-    #     db.session.add(study_sponsors_collaborators_)
-    #     db.session.commit()
-    #     return study_sponsors_collaborators_.to_dict()
 
     @api.route(
-        "/study/<study_id>/metadata/sponsors_collaborators/<sponsors_collaborators_id>"
+        "/study/<study_id>/metadata/sponsors_collaborators/<sponsors_id>"
     )
-    class StudySponsorsCollaboratorsUpdate(Resource):
-        def put(self, study_id: int, sponsors_collaborators_id: int):
+    class StudySponsorsUpdate(Resource):
+        def put(self, study_id: int, sponsors_id: int):
             study_sponsors_collaborators_ = StudySponsorsCollaborators.query.get(
-                sponsors_collaborators_id
+                sponsors_id
+            )
+            study_sponsors_collaborators_.update(request.json)
+            db.session.commit()
+            return study_sponsors_collaborators_.to_dict()
+
+
+@api.route("/study/<study_id>/metadata/collaborators")
+class StudyCollaboratorsResource(Resource):
+    @api.doc("collaborators")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    # @api.param("id", "The study identifier")
+    # @api.marshal_with(study_collaborators)
+    def get(self, study_id: int):
+        study_ = Study.query.get(study_id)
+        study_sponsors_collaborators_ = study_.study_sponsors_collaborators.collaborator_name
+        return study_sponsors_collaborators_
+
+    @api.route(
+        "/study/<study_id>/metadata/collaborators/<collaborators_id>"
+    )
+    class StudyCollaboratorsUpdate(Resource):
+        def put(self, study_id: int, collaborators_id: int):
+            study_sponsors_collaborators_ = StudySponsorsCollaborators.query.get(
+                collaborators_id
             )
             study_sponsors_collaborators_.update(request.json)
             db.session.commit()

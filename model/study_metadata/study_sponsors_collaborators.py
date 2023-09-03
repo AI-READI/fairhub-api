@@ -33,7 +33,7 @@ class StudySponsorsCollaborators(db.Model):
             "responsible_party_investigator_title": self.responsible_party_investigator_title,
             "responsible_party_investigator_affiliation": self.responsible_party_investigator_affiliation,
             "lead_sponsor_name": self.lead_sponsor_name,
-            "collaborator_name": self.collaborator_name,
+
         }
 
     @staticmethod
@@ -58,6 +58,19 @@ class StudySponsorsCollaborators(db.Model):
             "responsible_party_investigator_affiliation"
         ]
         self.lead_sponsor_name = data["lead_sponsor_name"]
+        self.collaborator_name = data["collaborator_name"]
+
+
+    @staticmethod
+    def from_data_(study, data: dict):
+        """Creates a new study from a dictionary"""
+        study_sponsors_collaborators = StudySponsorsCollaborators(study)
+        study_sponsors_collaborators.update(data)
+
+        return study_sponsors_collaborators
+
+    def update_collaborators(self, data):
+        """Updates the study from a dictionary"""
         self.collaborator_name = data["collaborator_name"]
 
     def validate(self):
