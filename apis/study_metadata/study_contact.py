@@ -7,8 +7,7 @@ study_contact = api.model(
     "StudyContact",
     {
         "id": fields.String(required=True),
-        "first_name": fields.String(required=True),
-        "last_name": fields.String(required=True),
+        "name": fields.String(required=True),
         "affiliation": fields.String(required=True),
         "role": fields.String(required=True),
         "phone": fields.String(required=True),
