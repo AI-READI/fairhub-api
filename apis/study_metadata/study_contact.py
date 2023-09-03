@@ -18,7 +18,7 @@ study_contact = api.model(
 )
 
 
-@api.route("/study/<study_id>/metadata/contact")
+@api.route("/study/<study_id>/metadata/central-contact")
 class StudyContactResource(Resource):
     @api.doc("contact")
     @api.response(200, "Success")
@@ -45,10 +45,10 @@ class StudyContactResource(Resource):
         db.session.commit()
         return list_of_elements
 
-    @api.route("/study/<study_id>/metadata/contact/<contact_id>")
+    @api.route("/study/<study_id>/metadata/central-contact/<central_contact_id>")
     class StudyContactUpdate(Resource):
-        def delete(self, study_id: int, contact_id: int):
-            study_contact_ = StudyContact.query.get(contact_id)
+        def delete(self, study_id: int, central_contact_id: int):
+            study_contact_ = StudyContact.query.get(central_contact_id)
             db.session.delete(study_contact_)
             db.session.commit()
             return study_contact_.to_dict()
