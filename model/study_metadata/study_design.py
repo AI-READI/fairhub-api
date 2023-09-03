@@ -17,7 +17,7 @@ class StudyDesign(db.Model):
     id = db.Column(db.CHAR(36), primary_key=True)
     design_allocation = db.Column(db.String, nullable=True)
     study_type = db.Column(db.String, nullable=False)
-    design_interventional_model = db.Column(db.String, nullable=True)
+    design_intervention_model = db.Column(db.String, nullable=True)
     design_intervention_model_description = db.Column(db.String, nullable=True)
     design_primary_purpose = db.Column(db.String, nullable=True)
     design_masking = db.Column(db.String, nullable=True)
@@ -43,7 +43,7 @@ class StudyDesign(db.Model):
             "id": self.id,
             "design_allocation": self.design_allocation,
             "study_type": self.study_type,
-            "design_interventional_model": self.design_interventional_model,
+            "design_intervention_model": self.design_intervention_model,
             "design_intervention_model_description": self.design_intervention_model_description,
             "design_primary_purpose": self.design_primary_purpose,
             "design_masking": self.design_masking,
@@ -74,7 +74,7 @@ class StudyDesign(db.Model):
         """Updates the study from a dictionary"""
         self.design_allocation = data["design_allocation"]
         self.study_type = data["study_type"]
-        self.design_interventional_model = data["design_interventional_model"]
+        self.design_intervention_model = data["design_intervention_model"]
         self.design_intervention_model_description = data[
             "design_intervention_model_description"
         ]
