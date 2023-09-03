@@ -10,8 +10,7 @@ study_overall_official = api.model(
     "StudyOverallOfficial",
     {
         "id": fields.String(required=True),
-        "first_name": fields.String(required=True),
-        "last_name": fields.String(required=True),
+        "name": fields.String(required=True),
         "affiliation": fields.String(required=True),
         "role": fields.String(required=True),
     },

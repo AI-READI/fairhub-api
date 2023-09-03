@@ -12,8 +12,7 @@ class StudyOverallOfficial(db.Model):
     __tablename__ = "study_overall_official"
 
     id = db.Column(db.CHAR(36), primary_key=True)
-    first_name = db.Column(db.String, nullable=False)
-    last_name = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=False)
     affiliation = db.Column(db.String, nullable=False)
     role = db.Column(db.String, nullable=False)
 
@@ -24,8 +23,7 @@ class StudyOverallOfficial(db.Model):
         """Converts the study to a dictionary"""
         return {
             "id": self.id,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
+            "name": self.name,
             "affiliation": self.affiliation,
             "role": self.role,
         }
@@ -40,8 +38,7 @@ class StudyOverallOfficial(db.Model):
 
     def update(self, data):
         """Updates the study from a dictionary"""
-        self.first_name = data["first_name"]
-        self.last_name = data["last_name"]
+        self.name = data["name"]
         self.affiliation = data["affiliation"]
         self.role = data["role"]
 
