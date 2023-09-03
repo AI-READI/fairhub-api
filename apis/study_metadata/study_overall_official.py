@@ -18,7 +18,7 @@ study_overall_official = api.model(
 )
 
 
-@api.route("/study/<study_id>/metadata/overall_official")
+@api.route("/study/<study_id>/metadata/overall-official")
 class StudyOverallOfficialResource(Resource):
     @api.doc("overall_official")
     @api.response(200, "Success")
@@ -46,7 +46,7 @@ class StudyOverallOfficialResource(Resource):
         db.session.commit()
         return list_of_elements
 
-    @api.route("/study/<study_id>/metadata/overall_official/<overall_official_id>")
+    @api.route("/study/<study_id>/metadata/overall-official/<overall_official_id>")
     class StudyOverallOfficialUpdate(Resource):
         def delete(self, study_id: int, overall_official_id: int):
             study_overall_official_ = StudyOverallOfficial.query.get(
