@@ -61,8 +61,8 @@ class StudyCollaboratorsResource(Resource):
     # @api.marshal_with(study_collaborators)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
-        study_sponsors_collaborators_ = study_.study_sponsors_collaborators.collaborator_name
-        return study_sponsors_collaborators_
+        study_collaborators_ = study_.study_sponsors_collaborators.collaborator_name
+        return {"collaborator_name": study_collaborators_}
 
     @api.route(
         "/study/<study_id>/metadata/collaborators/<collaborators_id>"
