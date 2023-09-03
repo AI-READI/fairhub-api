@@ -53,8 +53,7 @@ class StudyDesign(db.Model):
             "enrollment_count": self.enrollment_count,
             "enrollment_type": self.enrollment_type,
             "number_arms": self.number_arms,
-            "design_observational_model_list":
-                self.design_observational_model_list,
+            "design_observational_model_list": self.design_observational_model_list,
             "design_time_perspective_list": self.design_time_perspective_list,
             "bio_spec_retention": self.bio_spec_retention,
             "bio_spec_description": self.bio_spec_description,

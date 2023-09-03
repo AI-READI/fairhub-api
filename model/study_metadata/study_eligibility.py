@@ -46,8 +46,9 @@ class StudyEligibility(db.Model):
             "exclusion_criteria": self.exclusion_criteria,
             "study_population": self.study_population,
             "sampling_method": self.sampling_method,
-            "study_type": self.study.study_design.study_type if self.study.study_design else None
-
+            "study_type": self.study.study_design.study_type
+            if self.study.study_design
+            else None,
         }
 
     @staticmethod
