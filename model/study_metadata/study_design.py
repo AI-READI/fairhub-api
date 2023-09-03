@@ -43,24 +43,23 @@ class StudyDesign(db.Model):
             "id": self.id,
             "design_allocation": self.design_allocation,
             "study_type": self.study_type,
-            "design_interventional_model": str(self.design_interventional_model),
+            "design_interventional_model": self.design_interventional_model,
             "design_intervention_model_description": self.design_intervention_model_description,
             "design_primary_purpose": self.design_primary_purpose,
             "design_masking": self.design_masking,
             "design_masking_description": self.design_masking_description,
-            "design_who_masked_list": str(self.design_who_masked_list),
+            "design_who_masked_list": self.design_who_masked_list,
             "phase_list": self.phase_list,
             "enrollment_count": self.enrollment_count,
             "enrollment_type": self.enrollment_type,
             "number_arms": self.number_arms,
-            "design_observational_model_list": str(
-                self.design_observational_model_list
-            ),
+            "design_observational_model_list":
+                self.design_observational_model_list,
             "design_time_perspective_list": self.design_time_perspective_list,
             "bio_spec_retention": self.bio_spec_retention,
             "bio_spec_description": self.bio_spec_description,
             "target_duration": self.target_duration,
-            "number_groups_cohorts": str(self.number_groups_cohorts),
+            "number_groups_cohorts": self.number_groups_cohorts,
         }
 
     @staticmethod
