@@ -1,10 +1,12 @@
 import uuid
 from datetime import datetime
-from flask import jsonify
+import datetime
 
 import model
-
 from .db import db
+from datetime import timezone
+
+
 
 
 class Study(db.Model):
@@ -12,15 +14,16 @@ class Study(db.Model):
 
     def __init__(self):
         self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
+        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
+
+        self.study_status = model.StudyStatus(self)
 
     __tablename__ = "study"
-
     id = db.Column(db.CHAR(36), primary_key=True)
     title = db.Column(db.String, nullable=False)
     image = db.Column(db.String, nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False)
-    updated_on = db.Column(db.DateTime, nullable=False)
+    created_at = db.Column(db.BigInteger, nullable=False)
+    updated_on = db.Column(db.BigInteger, nullable=False)
 
     dataset = db.relationship("Dataset", back_populates="study")
     study_contributors = db.relationship("StudyContributor", back_populates="study")
@@ -64,7 +67,7 @@ class Study(db.Model):
             "id": self.id,
             "title": self.title,
             "image": self.image,
-            "created_at": str(self.created_at),
+            "created_at": self.created_at,
             "updated_on": str(self.updated_on),
             # "study_contributors": self.study_contributors.to_dict(),
             "size": self.study_other.size if self.study_other else None,
@@ -85,7 +88,7 @@ class Study(db.Model):
         """Updates the study from a dictionary"""
         self.title = data["title"]
         self.image = data["image"]
-        self.updated_on = datetime.now()
+        self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
 
     def validate(self):
         """Validates the study"""
