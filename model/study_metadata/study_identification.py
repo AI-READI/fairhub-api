@@ -3,14 +3,11 @@ from ..db import db
 
 
 class StudyIdentification(db.Model):
-    """A study is a collection of datasets and participants"""
-
     def __init__(self, study):
         self.id = str(uuid.uuid4())
         self.study = study
 
     __tablename__ = "study_identification"
-
     id = db.Column(db.CHAR(36), primary_key=True)
     identifier = db.Column(db.String, nullable=False)
     identifier_type = db.Column(db.String, nullable=False)
@@ -22,14 +19,12 @@ class StudyIdentification(db.Model):
     study = db.relationship("Study", back_populates="study_identification")
 
     def to_dict(self):
-        """Converts the study to a dictionary"""
         return {
             "id": self.id,
             "identifier": self.identifier,
             "identifier_type": self.identifier_type,
             "identifier_domain": self.identifier_domain,
             "identifier_link": self.identifier_link,
-            "secondary": self.secondary,
         }
 
     @staticmethod

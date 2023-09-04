@@ -1,5 +1,5 @@
 from flask_restx import Namespace, Resource, fields
-from model import Study, db, StudyIdentification
+from model import Study, db, StudyIdentification, Identifiers
 from flask import request
 
 
@@ -25,32 +25,40 @@ class StudyIdentificationResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")
-    @api.marshal_with(study_identification)
+    # @api.marshal_with(study_identification)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
-        study_identification_ = study_.study_identification
-        return [s.to_dict() for s in study_identification_]
+        identifiers = Identifiers(study_)
+        return identifiers.to_dict()
 
     def post(self, study_id: int):
         data = request.json
         study_obj = Study.query.get(study_id)
-        list_of_elements = []
-        for i in data:
+        primary = data["primary"]
+        if "id" in primary and primary["id"]:
+            study_identification_ = StudyIdentification.query.get(primary["id"])
+            study_identification_.update(primary)
+        elif "id" not in primary or not primary["id"]:
+            study_identification_ = StudyIdentification.from_data(study_obj, primary)
+            db.session.add(study_identification_)
+
+        for i in data["secondary"]:
             if "id" in i and i["id"]:
                 study_identification_ = StudyIdentification.query.get(i["id"])
                 study_identification_.update(i)
-                list_of_elements.append(study_identification_.to_dict())
             elif "id" not in i or not i["id"]:
                 study_identification_ = StudyIdentification.from_data(study_obj, i)
                 db.session.add(study_identification_)
-                list_of_elements.append(study_identification_.to_dict())
         db.session.commit()
-        return list_of_elements
+        identifiers = Identifiers(study_obj)
+        return identifiers.to_dict()
 
     @api.route("/study/<study_id>/metadata/identification/<identification_id>")
     class StudyIdentificationdUpdate(Resource):
         def delete(self, study_id: int, identification_id: int):
             study_identification_ = StudyIdentification.query.get(identification_id)
+            if not study_identification_.secondary:
+                return 400, "primary identifier can not be deleted"
             db.session.delete(study_identification_)
             db.session.commit()
             return 204

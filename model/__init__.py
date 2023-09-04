@@ -1,5 +1,6 @@
 from .version import Version
 from .dataset_versions import DatasetVersions
+
 from .db import db
 from .participant import Participant
 from .study import Study
@@ -54,6 +55,7 @@ from .study_metadata.study_overall_official import StudyOverallOfficial
 from .study_metadata.study_reference import StudyReference
 from .study_metadata.study_sponsors_collaborators import StudySponsorsCollaborators
 from .study_metadata.study_status import StudyStatus
+from .study_metadata.identifiers import Identifiers
 
 
 __all__ = [
@@ -104,4 +106,5 @@ __all__ = [
     "StudyReference",
     "StudySponsorsCollaborators",
     "StudyStatus",
+    "Identifiers"
 ]
