@@ -27,7 +27,7 @@ class StudyContactResource(Resource):
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_contact_ = study_.study_contact
-        return [s.to_dict() for s in study_contact_]
+        return [s.to_dict() for s in study_contact_ if s.central_contact]
 
     def post(self, study_id: int):
         data = request.json
