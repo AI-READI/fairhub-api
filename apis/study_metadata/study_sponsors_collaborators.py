@@ -26,6 +26,7 @@ study_collaborators = api.model(
     },
 )
 
+
 @api.route("/study/<study_id>/metadata/sponsors")
 class StudySponsorsResource(Resource):
     @api.doc("sponsors")
@@ -38,10 +39,7 @@ class StudySponsorsResource(Resource):
         study_sponsors_collaborators_ = study_.study_sponsors_collaborators
         return study_sponsors_collaborators_.to_dict()
 
-
-    @api.route(
-        "/study/<study_id>/metadata/sponsors_collaborators/<sponsors_id>"
-    )
+    @api.route("/study/<study_id>/metadata/sponsors_collaborators/<sponsors_id>")
     class StudySponsorsUpdate(Resource):
         def put(self, study_id: int, sponsors_id: int):
             study_sponsors_collaborators_ = StudySponsorsCollaborators.query.get(
@@ -64,9 +62,7 @@ class StudyCollaboratorsResource(Resource):
         study_collaborators_ = study_.study_sponsors_collaborators.collaborator_name
         return {"collaborator_name": study_collaborators_}
 
-    @api.route(
-        "/study/<study_id>/metadata/collaborators/<collaborators_id>"
-    )
+    @api.route("/study/<study_id>/metadata/collaborators/<collaborators_id>")
     class StudyCollaboratorsUpdate(Resource):
         def put(self, study_id: int, collaborators_id: int):
             study_sponsors_collaborators_ = StudySponsorsCollaborators.query.get(

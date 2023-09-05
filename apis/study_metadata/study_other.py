@@ -46,14 +46,13 @@ class StudyOtherResource(Resource):
     #         return study_other_.to_dict()
 
 
-
 @api.route("/study/<study_id>/metadata/oversight")
 class StudyOversightResource(Resource):
     @api.doc("other")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.param("id", "The study identifier")
-   # @api.marshal_with(study_other)
+    # @api.marshal_with(study_other)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_oversight_has_dmc = study_.study_other.oversight_has_dmc
@@ -74,7 +73,7 @@ class StudyOversightResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.param("id", "The study identifier")
-   # @api.marshal_with(study_other)
+    # @api.marshal_with(study_other)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_other_conditions = study_.study_other.conditions
