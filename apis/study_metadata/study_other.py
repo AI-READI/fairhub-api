@@ -29,21 +29,11 @@ class StudyOtherResource(Resource):
         study_other_ = study_.study_other
         return study_other_.to_dict()
 
-    def post(self, study_id: int):
-        data = request.json
-        study_other_ = Study.query.get(study_id)
-        study_other_ = StudyOther.from_data(study_other_, data)
-        db.session.add(study_other_)
+    def put(self, study_id: int):
+        study_ = Study.query.get(study_id)
+        study_.study_other.update(request.json)
         db.session.commit()
-        return study_other_.to_dict()
-
-    # @api.route("/study/<study_id>/metadata/other/<other_id>")
-    # class StudyOtherUpdate(Resource):
-    #     def put(self, study_id: int, other_id: int):
-    #         study_other_ = StudyOther.query.get(other_id)
-    #         study_other_.update(request.json)
-    #         db.session.commit()
-    #         return study_other_.to_dict()
+        return study_.study_other.to_dict()
 
 
 @api.route("/study/<study_id>/metadata/oversight")
@@ -60,11 +50,10 @@ class StudyOversightResource(Resource):
 
     def put(self, study_id: int):
         data = request.json
-        study_other_ = Study.query.get(study_id)
-        study_other_ = StudyOther.from_data(study_other_, data)
-        db.session.add(study_other_)
+        study_ = Study.query.get(study_id)
+        study_oversight = study_.study_other.oversight_has_dmc = data["oversight_has_dmc"]
         db.session.commit()
-        return study_other_.to_dict()
+        return study_oversight
 
 
 @api.route("/study/<study_id>/metadata/conditions")
@@ -81,8 +70,7 @@ class StudyOversightResource(Resource):
 
     def put(self, study_id: int):
         data = request.json
-        study_other_ = Study.query.get(study_id)
-        study_other_ = StudyOther.from_data(study_other_, data)
-        db.session.add(study_other_)
+        study_ = Study.query.get(study_id)
+        study_.study_other.conditions = data["conditions"]
         db.session.commit()
-        return study_other_.to_dict()
+        return study_.study_other.conditions

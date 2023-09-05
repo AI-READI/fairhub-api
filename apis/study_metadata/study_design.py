@@ -42,18 +42,16 @@ class StudyDesignResource(Resource):
         study_design_ = study_.study_design
         return study_design_.to_dict()
 
-    def post(self, study_id: int):
-        data = request.json
-        study_design_ = Study.query.get(study_id)
-        study_design_ = StudyDesign.from_data(study_design_, data)
-        db.session.add(study_design_)
+    def put(self, study_id: int):
+        study_ = Study.query.get(study_id)
+        study_.study_design.update(request.json)
         db.session.commit()
-        return study_design_.to_dict()
+        return study_.study_design.to_dict()
 
-    # @api.route("/study/<study_id>/metadata/design/<design_id>")
-    # class StudyDesignUpdate(Resource):
-    #     def put(self, study_id: int, design_id: int):
-    #         study_design_ = StudyDesign.query.get(design_id)
-    #         study_design_.update(request.json)
-    #         db.session.commit()
-    #         return study_design_.to_dict()
+    # def post(self, study_id: int):
+    #     data = request.json
+    #     study_design_ = Study.query.get(study_id)
+    #     study_design_ = StudyDesign.from_data(study_design_, data)
+    #     db.session.add(study_design_)
+    #     db.session.commit()
+    #     return study_design_.to_dict()

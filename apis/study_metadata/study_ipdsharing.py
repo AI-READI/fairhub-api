@@ -29,21 +29,18 @@ class StudyIpdsharingResource(Resource):
     @api.marshal_with(study_ipdsharing)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
-        study_ipdsharing_ = study_.study_ipdsharing
-        return study_ipdsharing_.to_dict()
+        return study_.study_ipdsharing.to_dict()
 
-    def post(self, study_id: int):
-        data = request.json
-        study_ipdsharing_ = Study.query.get(study_id)
-        study_ipdsharing_ = StudyIpdsharing.from_data(study_ipdsharing_, data)
-        db.session.add(study_ipdsharing_)
+    def put(self, study_id: int):
+        study_ = Study.query.get(study_id)
+        study_.study_ipdsharing.update(request.json)
         db.session.commit()
-        return study_ipdsharing_.to_dict()
+        return study_.study_ipdsharing.to_dict()
 
-    # @api.route("/study/<study_id>/metadata/ipdsharing/<study_ipdsharing_id>")
-    # class StudyIpdsharingUpdate(Resource):
-    #     def put(self, study_id: int, study_ipdsharing_id: int):
-    #         study_ipdsharing_ = StudyIpdsharing.query.get(study_ipdsharing_id)
-    #         study_ipdsharing_.update(request.json)
-    #         db.session.commit()
-    #         return study_ipdsharing_.to_dict()
+    # def post(self, study_id: int):
+    #     data = request.json
+    #     study_ipdsharing_ = Study.query.get(study_id)
+    #     study_ipdsharing_ = StudyIpdsharing.from_data(study_ipdsharing_, data)
+    #     db.session.add(study_ipdsharing_)
+    #     db.session.commit()
+    #     return study_ipdsharing_.to_dict()

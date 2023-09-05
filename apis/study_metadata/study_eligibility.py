@@ -36,21 +36,18 @@ class StudyEligibilityResource(Resource):
     @api.marshal_with(study_eligibility)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
-        study_eligibility_ = study_.study_eligibility
-        return study_eligibility_.to_dict()
+        return study_.study_eligibility.to_dict()
 
-    def post(self, study_id: int):
-        data = request.json
-        study_eligibility_ = Study.query.get(study_id)
-        study_eligibility_ = StudyEligibility.from_data(study_eligibility_, data)
-        db.session.add(study_eligibility_)
+    def put(self, study_id: int):
+        study_ = Study.query.get(study_id)
+        study_.study_eligibility.update(request.json)
         db.session.commit()
-        return study_eligibility_.to_dict()
+        return study_.study_eligibility.to_dict()
 
-    # @api.route("/study/<study_id>/metadata/eligibility/<eligibility_id>")
-    # class StudyArmUpdate(Resource):
-    #     def put(self, study_id: int, eligibility_id: int):
-    #         study_eligibility_ = StudyEligibility.query.get(eligibility_id)
-    #         study_eligibility_.update(request.json)
-    #         db.session.commit()
-    #         return study_eligibility_.to_dict()
+    # def post(self, study_id: int):
+    #     data = request.json
+    #     study_eligibility_ = Study.query.get(study_id)
+    #     study_eligibility_ = StudyEligibility.from_data(study_eligibility_, data)
+    #     db.session.add(study_eligibility_)
+    #     db.session.commit()
+    #     return study_eligibility_.to_dict()

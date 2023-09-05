@@ -39,15 +39,11 @@ class StudySponsorsResource(Resource):
         study_sponsors_collaborators_ = study_.study_sponsors_collaborators
         return study_sponsors_collaborators_.to_dict()
 
-    @api.route("/study/<study_id>/metadata/sponsors_collaborators/<sponsors_id>")
-    class StudySponsorsUpdate(Resource):
-        def put(self, study_id: int, sponsors_id: int):
-            study_sponsors_collaborators_ = StudySponsorsCollaborators.query.get(
-                sponsors_id
-            )
-            study_sponsors_collaborators_.update(request.json)
-            db.session.commit()
-            return study_sponsors_collaborators_.to_dict()
+    def put(self, study_id: int):
+        study_ = Study.query.get(study_id)
+        study_.study_sponsors_collaborators.update(request.json)
+        db.session.commit()
+        return study_.study_sponsors_collaborators.to_dict()
 
 
 @api.route("/study/<study_id>/metadata/collaborators")
@@ -62,12 +58,19 @@ class StudyCollaboratorsResource(Resource):
         study_collaborators_ = study_.study_sponsors_collaborators.collaborator_name
         return {"collaborator_name": study_collaborators_}
 
-    @api.route("/study/<study_id>/metadata/collaborators/<collaborators_id>")
-    class StudyCollaboratorsUpdate(Resource):
-        def put(self, study_id: int, collaborators_id: int):
-            study_sponsors_collaborators_ = StudySponsorsCollaborators.query.get(
-                collaborators_id
-            )
-            study_sponsors_collaborators_.update(request.json)
-            db.session.commit()
-            return study_sponsors_collaborators_.to_dict()
+    def put(self, study_id: int):
+        data = request.json
+        study_ = Study.query.get(study_id)
+        study_.study_sponsors_collaborators.collaborator_name = data["collaborator_name"]
+        db.session.commit()
+        return study_.study_sponsors_collaborators.collaborator_name
+
+    # @api.route("/study/<study_id>/metadata/collaborators/<collaborators_id>")
+    # class StudyCollaboratorsUpdate(Resource):
+    #     def put(self, study_id: int, collaborators_id: int):
+    #         study_sponsors_collaborators_ = StudySponsorsCollaborators.query.get(
+    #             collaborators_id
+    #         )
+    #         study_sponsors_collaborators_.update(request.json)
+    #         db.session.commit()
+    #         return study_sponsors_collaborators_.to_dict()
