@@ -7,8 +7,6 @@ from .db import db
 from datetime import timezone
 
 
-
-
 class Study(db.Model):
     """A study is a collection of datasets and participants"""
 
