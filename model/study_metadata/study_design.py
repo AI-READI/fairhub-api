@@ -12,6 +12,25 @@ class StudyDesign(db.Model):
         self.id = str(uuid.uuid4())
         self.study = study
 
+        self.design_allocation = ""
+        self.study_type = ""
+        self.design_intervention_model = ""
+        self.design_intervention_model_description = ""
+        self.design_primary_purpose = ""
+        self.design_masking = ""
+        self.design_masking_description = ""
+        self.design_who_masked_list = []
+        self.phase_list = []
+        self.enrollment_count = 0
+        self.enrollment_type = ""
+        self.number_arms = 0
+        self.design_observational_model_list = []
+        self.design_time_perspective_list = []
+        self.bio_spec_retention = ""
+        self.bio_spec_description = ""
+        self.target_duration = ""
+        self.number_groups_cohorts = 0
+
     __tablename__ = "study_design"
 
     id = db.Column(db.CHAR(36), primary_key=True)

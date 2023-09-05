@@ -10,7 +10,18 @@ class StudyEligibility(db.Model):
     def __init__(self, study):
         self.id = str(uuid.uuid4())
         self.study = study
-
+        self.gender = ""
+        self.gender_based = ""
+        self.gender_description = ""
+        self.minimum_age_value = 18
+        self.maximum_age_value = 60
+        self.minimum_age_unit = ""
+        self.maximum_age_unit = ""
+        self.healthy_volunteers = ""
+        self.inclusion_criteria = []
+        self.exclusion_criteria = []
+        self.study_population = ""
+        self.sampling_method = ""
     __tablename__ = "study_eligibility"
 
     id = db.Column(db.CHAR(36), primary_key=True)

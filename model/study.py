@@ -13,8 +13,15 @@ class Study(db.Model):
     def __init__(self):
         self.id = str(uuid.uuid4())
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
+        #
+        # self.study_status = model.StudyStatus(self)
+        self.study_sponsors_collaborators = model.StudySponsorsCollaborators(self)
+        self.study_design = model.StudyDesign(self)
+        self.study_eligibility = model.StudyEligibility(self)
+        self.study_ipdsharing = model.StudyIpdsharing(self)
+        self.study_description = model.StudyDescription(self)
 
-        self.study_status = model.StudyStatus(self)
+        self.study_other = model.StudyOther(self)
 
     __tablename__ = "study"
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -66,7 +73,7 @@ class Study(db.Model):
             "title": self.title,
             "image": self.image,
             "created_at": self.created_at,
-            "updated_on": str(self.updated_on),
+            "updated_on": self.updated_on,
             # "study_contributors": self.study_contributors.to_dict(),
             "size": self.study_other.size if self.study_other else None,
             "description": self.study_description.brief_summary

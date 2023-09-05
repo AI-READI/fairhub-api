@@ -8,9 +8,13 @@ class StudyStatus(db.Model):
 
     def __init__(self, study):
         self.id = str(uuid.uuid4())
-        # self.created_at = datetime.now()
         self.study = study
-
+        self.overall_status = ""
+        self.why_stopped = ""
+        self.start_date = ""
+        self.start_date_type = ""
+        self.completion_date = ""
+        self.completion_date_type = ""
     __tablename__ = "study_status"
 
     id = db.Column(db.CHAR(36), primary_key=True)

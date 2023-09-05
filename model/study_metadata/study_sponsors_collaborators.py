@@ -10,7 +10,12 @@ class StudySponsorsCollaborators(db.Model):
     def __init__(self, study):
         self.id = str(uuid.uuid4())
         self.study = study
-
+        self.responsible_party_type = ""
+        self.responsible_party_investigator_name = ""
+        self.responsible_party_investigator_title = ""
+        self.responsible_party_investigator_affiliation = ""
+        self.lead_sponsor_name = ""
+        self.collaborator_name = []
     __tablename__ = "study_sponsors_collaborators"
 
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -57,7 +62,6 @@ class StudySponsorsCollaborators(db.Model):
             "responsible_party_investigator_affiliation"
         ]
         self.lead_sponsor_name = data["lead_sponsor_name"]
-        self.collaborator_name = data["collaborator_name"]
 
     @staticmethod
     def from_data_(study, data: dict):

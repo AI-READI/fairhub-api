@@ -8,6 +8,8 @@ class StudyDescription(db.Model):
     def __init__(self, study):
         self.id = str(uuid.uuid4())
         self.study = study
+        self.brief_summary = ''
+        self.detailed_description = ''
 
     __tablename__ = "study_description"
 
