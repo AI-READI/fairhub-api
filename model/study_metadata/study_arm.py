@@ -30,8 +30,10 @@ class StudyArm(db.Model):
             "label": self.label,
             "type": self.type,
             "description": str(self.description),
-            "intervention_list": self.intervention_list,
-        }
+            "intervention_list": self.intervention_list
+           },
+
+
 
     @staticmethod
     def from_data(study, data):

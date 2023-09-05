@@ -56,6 +56,7 @@ from .study_metadata.study_reference import StudyReference
 from .study_metadata.study_sponsors_collaborators import StudySponsorsCollaborators
 from .study_metadata.study_status import StudyStatus
 from .study_metadata.identifiers import Identifiers
+from .study_metadata.arm import Arm
 
 
 __all__ = [
@@ -106,5 +107,6 @@ __all__ = [
     "StudyReference",
     "StudySponsorsCollaborators",
     "StudyStatus",
-    "Identifiers"
+    "Identifiers",
+    "Arm"
 ]

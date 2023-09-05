@@ -1,20 +1,27 @@
 from flask_restx import Resource, fields
-from model import Study, db, StudyArm
+from model import Study, db, StudyArm, Arm
 from flask import request
 
 
 from apis.study_metadata_namespace import api
 
-
-study_arm = api.model(
-    "StudyArm",
-    {
+arm_object=api.model(
+    "ArmObject", {
         "id": fields.String(required=True),
         "label": fields.String(required=True),
         "type": fields.String(required=True),
         "description": fields.String(required=True),
         "intervention_list": fields.List(fields.String, required=True),
-    },
+    }
+)
+
+study_arm = api.model(
+    "StudyArm",
+    {
+        "arm": fields.Nested(arm_object, required=True),
+        "study_type": fields.String(required=True)
+
+    }
 )
 
 
@@ -22,28 +29,26 @@ study_arm = api.model(
 class StudyArmResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(study_arm)
-    def get(self, study_id: int):
+    # @api.marshal_with(study_arm)
+    def get(self, study_id):
         study_ = Study.query.get(study_id)
-        study_arm_ = study_.study_arm
-        return [s.to_dict() for s in study_arm_]
+        arm = Arm(study_)
 
-    def post(self, study_id: int):
+        return arm.to_dict()
+
+    def post(self, study_id):
         data = request.json
         study_obj = Study.query.get(study_id)
-        list_of_elements = []
         for i in data:
             if "id" in i and i["id"]:
                 study_arm_ = StudyArm.query.get(i["id"])
                 study_arm_.update(i)
-                list_of_elements.append(study_arm_.to_dict())
             elif "id" not in i or not i["id"]:
                 study_arm_ = StudyArm.from_data(study_obj, i)
                 db.session.add(study_arm_)
-                list_of_elements.append(study_arm_.to_dict())
         db.session.commit()
-
-        return list_of_elements
+        arms = Arm(study_obj)
+        return arms.to_dict()
 
     # todo delete
     @api.route("/study/<study_id>/metadata/arm/<arm_id>")
