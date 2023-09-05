@@ -9,7 +9,7 @@ study_other = api.model(
     "StudyOther",
     {
         "id": fields.String(required=True),
-        "oversight_has_dmc": fields.String(required=True),
+        "oversight_has_dmc": fields.Boolean(required=True),
         "conditions": fields.String(required=True),
         "keywords": fields.String(required=True),
         "size": fields.String(required=True),
