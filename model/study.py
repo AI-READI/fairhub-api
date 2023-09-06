@@ -1,10 +1,8 @@
 import uuid
-from datetime import datetime
-import datetime
-
+from datetime import timezone
 import model
 from .db import db
-from datetime import timezone
+import datetime
 
 
 class Study(db.Model):
@@ -14,7 +12,7 @@ class Study(db.Model):
         self.id = str(uuid.uuid4())
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
         #
-        # self.study_status = model.StudyStatus(self)
+        self.study_status = model.StudyStatus(self)
         self.study_sponsors_collaborators = model.StudySponsorsCollaborators(self)
         self.study_design = model.StudyDesign(self)
         self.study_eligibility = model.StudyEligibility(self)

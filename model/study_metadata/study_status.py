@@ -11,9 +11,9 @@ class StudyStatus(db.Model):
         self.study = study
         self.overall_status = ""
         self.why_stopped = ""
-        self.start_date = ""
+        self.start_date = None
         self.start_date_type = ""
-        self.completion_date = ""
+        self.completion_date = None
         self.completion_date_type = ""
 
     __tablename__ = "study_status"
@@ -21,9 +21,9 @@ class StudyStatus(db.Model):
     id = db.Column(db.CHAR(36), primary_key=True)
     overall_status = db.Column(db.String, nullable=False)
     why_stopped = db.Column(db.String, nullable=False)
-    start_date = db.Column(db.DateTime, nullable=False)
+    start_date = db.Column(db.DateTime, nullable=True)
     start_date_type = db.Column(db.String, nullable=False)
-    completion_date = db.Column(db.DateTime, nullable=False)
+    completion_date = db.Column(db.DateTime, nullable=True)
     completion_date_type = db.Column(db.String, nullable=False)
 
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
