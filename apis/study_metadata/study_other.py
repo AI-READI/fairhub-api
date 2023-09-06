@@ -51,7 +51,9 @@ class StudyOversightResource(Resource):
     def put(self, study_id: int):
         data = request.json
         study_ = Study.query.get(study_id)
-        study_oversight = study_.study_other.oversight_has_dmc = data["oversight_has_dmc"]
+        study_oversight = study_.study_other.oversight_has_dmc = data[
+            "oversight_has_dmc"
+        ]
         db.session.commit()
         return study_oversight
 

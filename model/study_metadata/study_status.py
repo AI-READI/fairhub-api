@@ -15,6 +15,7 @@ class StudyStatus(db.Model):
         self.start_date_type = ""
         self.completion_date = ""
         self.completion_date_type = ""
+
     __tablename__ = "study_status"
 
     id = db.Column(db.CHAR(36), primary_key=True)

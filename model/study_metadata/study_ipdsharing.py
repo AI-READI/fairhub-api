@@ -12,10 +12,11 @@ class StudyIpdsharing(db.Model):
         self.study = study
         self.ipd_sharing = ""
         self.ipd_sharing_description = ""
-        self.ipd_sharing_info_type_list =[]
+        self.ipd_sharing_info_type_list = []
         self.ipd_sharing_time_frame = ""
         self.ipd_sharing_access_criteria = ""
         self.ipd_sharing_url = ""
+
     __tablename__ = "study_ipdsharing"
 
     id = db.Column(db.CHAR(36), primary_key=True)

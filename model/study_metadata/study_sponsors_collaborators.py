@@ -16,6 +16,7 @@ class StudySponsorsCollaborators(db.Model):
         self.responsible_party_investigator_affiliation = ""
         self.lead_sponsor_name = ""
         self.collaborator_name = []
+
     __tablename__ = "study_sponsors_collaborators"
 
     id = db.Column(db.CHAR(36), primary_key=True)

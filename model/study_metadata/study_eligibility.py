@@ -22,6 +22,7 @@ class StudyEligibility(db.Model):
         self.exclusion_criteria = []
         self.study_population = ""
         self.sampling_method = ""
+
     __tablename__ = "study_eligibility"
 
     id = db.Column(db.CHAR(36), primary_key=True)

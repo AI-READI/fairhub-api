@@ -4,6 +4,7 @@ from .db import db
 import datetime
 from datetime import timezone
 
+
 class User(db.Model):
     def __init__(self):
         self.id = str(uuid.uuid4())
