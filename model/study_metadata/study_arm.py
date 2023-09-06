@@ -25,15 +25,15 @@ class StudyArm(db.Model):
 
     def to_dict(self):
         """Converts the study to a dictionary"""
-        return {
-            "id": self.id,
-            "label": self.label,
-            "type": self.type,
-            "description": str(self.description),
-            "intervention_list": self.intervention_list
-           },
-
-
+        return (
+            {
+                "id": self.id,
+                "label": self.label,
+                "type": self.type,
+                "description": str(self.description),
+                "intervention_list": self.intervention_list,
+            },
+        )
 
     @staticmethod
     def from_data(study, data):

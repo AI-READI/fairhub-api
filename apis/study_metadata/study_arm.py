@@ -5,23 +5,23 @@ from flask import request
 
 from apis.study_metadata_namespace import api
 
-arm_object=api.model(
-    "ArmObject", {
+arm_object = api.model(
+    "ArmObject",
+    {
         "id": fields.String(required=True),
         "label": fields.String(required=True),
         "type": fields.String(required=True),
         "description": fields.String(required=True),
         "intervention_list": fields.List(fields.String, required=True),
-    }
+    },
 )
 
 study_arm = api.model(
     "StudyArm",
     {
         "arm": fields.Nested(arm_object, required=True),
-        "study_type": fields.String(required=True)
-
-    }
+        "study_type": fields.String(required=True),
+    },
 )
 
 
