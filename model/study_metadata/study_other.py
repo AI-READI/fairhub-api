@@ -15,6 +15,7 @@ class StudyOther(db.Model):
         self.conditions = []
         self.keywords = []
         self.size = ""
+
     __tablename__ = "study_other"
 
     id = db.Column(db.CHAR(36), primary_key=True)

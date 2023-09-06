@@ -3,6 +3,7 @@ from datetime import datetime
 from .db import db
 import datetime
 
+
 class StudyInvitedContributor(db.Model):
     def __init__(self):
         self.id = str(uuid.uuid4())
