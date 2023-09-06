@@ -1,5 +1,4 @@
 import uuid
-
 from .db import db
 
 

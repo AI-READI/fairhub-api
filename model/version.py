@@ -1,7 +1,7 @@
 import uuid
-from datetime import datetime
+from datetime import timezone
+import datetime
 from model.dataset import Dataset
-
 from .db import db
 
 version_participants = db.Table(
@@ -23,10 +23,10 @@ class Version(db.Model):
     title = db.Column(db.String, nullable=False)
     published = db.Column(db.BOOLEAN, nullable=False)
     changelog = db.Column(db.String, nullable=False)
-    updated_on = db.Column(db.DateTime, nullable=False)
+    updated_on = db.Column(db.BigInteger, nullable=False)
     doi = db.Column(db.String, nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False)
-    published_on = db.Column(db.DateTime, nullable=False)
+    created_at = db.Column(db.BigInteger, nullable=False)
+    published_on = db.Column(db.BigInteger, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
     dataset = db.relationship("Dataset", back_populates="dataset_versions")
@@ -37,8 +37,9 @@ class Version(db.Model):
             "id": self.id,
             "title": self.title,
             "changelog": self.changelog,
-            "published_on": str(datetime.now()),
-            "created_at": str(datetime.now()),
+            "published_on": self.published_on,
+            "updated_on": self.updated_on,
+            "created_at": self.created_at,
             "doi": self.doi,
             "published": self.published,
             "participants": [p.id for p in self.participants],
@@ -54,6 +55,7 @@ class Version(db.Model):
         self.title = data["title"]
         self.published = data["published"]
         self.doi = data["doi"]
-        self.published_on = data["published_on"]
+        self.published_on = datetime.datetime.now(timezone.utc).timestamp()
+        self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
         self.participants[:] = data["participants"]
         self.changelog = data["changelog"]

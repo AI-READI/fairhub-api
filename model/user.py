@@ -1,7 +1,8 @@
 import uuid
 from datetime import datetime
 from .db import db
-
+import datetime
+from datetime import timezone
 
 class User(db.Model):
     def __init__(self):
@@ -15,7 +16,7 @@ class User(db.Model):
     last_name = db.Column(db.String, nullable=False)
     orcid = db.Column(db.String, nullable=False)
     hash = db.Column(db.String, nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False)
+    created_at = db.Column(db.BigInteger, nullable=False)
     institution = db.Column(db.String, nullable=False)
     study_contributors = db.relationship("StudyContributor", back_populates="user")
 
@@ -28,7 +29,7 @@ class User(db.Model):
             "last_name": self.last_name,
             "orcid": self.orcid,
             "hash": self.hash,
-            "created_at": str(datetime.now()),
+            "created_at": self.created_at,
             "institution": self.institution,
         }
 
@@ -41,6 +42,5 @@ class User(db.Model):
         user.last_name = data["last_name"]
         user.orcid = data["orcid"]
         user.hash = data["hash"]
-        user.created_at = data["created_at"]
         user.institution = data["institution"]
         return user

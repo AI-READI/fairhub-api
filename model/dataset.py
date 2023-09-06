@@ -1,7 +1,7 @@
 import uuid
-
-from datetime import datetime
+from datetime import timezone
 from sqlalchemy.sql.expression import true
+import datetime
 
 import model
 
@@ -12,12 +12,12 @@ class Dataset(db.Model):
     def __init__(self, study):
         self.study = study
         self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
+        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
 
     __tablename__ = "dataset"
     id = db.Column(db.CHAR(36), primary_key=True)
-    updated_on = db.Column(db.DateTime, nullable=False)
-    created_at = db.Column(db.DateTime, nullable=False)
+    updated_on = db.Column(db.BigInteger, nullable=False)
+    created_at = db.Column(db.BigInteger, nullable=False)
 
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
     study = db.relationship("Study", back_populates="dataset")
@@ -62,7 +62,7 @@ class Dataset(db.Model):
 
         return {
             "id": self.id,
-            "created_at": str(self.created_at),
+            "created_at": self.created_at,
             # "dataset_versions": [i.to_dict() for i in self.dataset_versions],
             "latest_version": last_published.id if last_published else None,
         }
@@ -85,5 +85,5 @@ class Dataset(db.Model):
 
     def update(self, data: dict):
         """Creates a new dataset from a dictionary"""
-        self.updated_on = datetime.now()
+        self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
         # self.dataset_versions = data["dataset_versions"]
