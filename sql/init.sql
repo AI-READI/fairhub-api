@@ -12,8 +12,8 @@ CREATE TABLE IF NOT EXISTS "study" (
 	"id" CHAR(36) NOT NULL,
 	"title" VARCHAR NOT NULL,
 	"image" VARCHAR NOT NULL,
-	"created_at" TIMESTAMP NOT NULL,
-	"updated_on" TIMESTAMP NOT NULL,
+	"created_at" BIGINT NOT NULL,
+	"updated_on" BIGINT NOT NULL,
 	PRIMARY KEY ("id")
 );
 
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS "user" (
 	"last_name" VARCHAR NOT NULL,
 	"orcid" VARCHAR NOT NULL,
 	"hash" VARCHAR NOT NULL,
-	"created_at" TIMESTAMP NOT NULL,
+	"created_at" BIGINT NOT NULL,
 	"institution" VARCHAR NOT NULL,
 	PRIMARY KEY ("id")
 );
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS "study_contributor" (
 CREATE TABLE IF NOT EXISTS "invited_study_contributor" (
 	"email_address" VARCHAR NOT NULL,
 	"permission" VARCHAR NOT NULL,
-	"invited_on" TIMESTAMP NOT NULL,
+	"invited_on" BIGINT NOT NULL,
 	"study_id" CHAR(36) NOT NULL,
 	PRIMARY KEY ("email_address", "study_id"),
 	CONSTRAINT "invited_study_contributor_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -54,8 +54,8 @@ CREATE TABLE IF NOT EXISTS "invited_study_contributor" (
 -- Dumping structure for table public.dataset
 CREATE TABLE IF NOT EXISTS "dataset" (
 	"id" CHAR(36) NOT NULL,
-	"updated_on" TIMESTAMP NOT NULL,
-	"created_at" TIMESTAMP NOT NULL,
+	"updated_on" BIGINT NOT NULL,
+	"created_at" BIGINT NOT NULL,
 	"study_id" CHAR(36) NOT NULL,
 	PRIMARY KEY ("id"),
 	CONSTRAINT "dataset_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -324,8 +324,8 @@ CREATE TABLE IF NOT EXISTS "participant" (
 	"last_name" VARCHAR NOT NULL,
 	"address" VARCHAR NOT NULL,
 	"age" VARCHAR NOT NULL,
-	"created_at" TIMESTAMP NOT NULL,
-	"updated_on" TIMESTAMP NOT NULL,
+	"created_at" BIGINT NOT NULL,
+	"updated_on" BIGINT NOT NULL,
 	"study_id" CHAR(36) NOT NULL,
 	PRIMARY KEY ("id"),
 	CONSTRAINT "participant_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -558,10 +558,10 @@ CREATE TABLE IF NOT EXISTS "version" (
 	"title" VARCHAR NOT NULL,
 	"published" BOOLEAN NOT NULL,
 	"changelog" VARCHAR NOT NULL,
-	"updated_on" TIMESTAMP NOT NULL,
+	"updated_on" BIGINT NOT NULL,
 	"doi" VARCHAR NOT NULL,
-	"created_at" TIMESTAMP NOT NULL,
-	"published_on" TIMESTAMP NOT NULL,
+	"created_at" BIGINT NOT NULL,
+	"published_on" BIGINT NOT NULL,
 	"dataset_id" CHAR(36) NOT NULL,
 	PRIMARY KEY ("id"),
 	CONSTRAINT "dataset_version_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "dataset" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -580,25 +580,25 @@ CREATE TABLE IF NOT EXISTS "version_participants" (
 -- done
 /*!40000 ALTER TABLE "study" DISABLE KEYS */;
 INSERT INTO "study" ("id", "title", "image", "created_at", "updated_on") VALUES
-	('00000000-0000-0000-0000-000000000001', 'study 1', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=1', '2023-08-13 12:33:10', '2023-08-13 12:33:11'),
-	('00000000-0000-0000-0000-000000000002', 'study 2', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=2', '2022-08-03 12:33:10', '2023-07-03 12:33:11'),
-	('00000000-0000-0000-0000-000000000003', 'study 3', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=3', '2016-08-03 12:33:10', '2023-02-03 12:33:11'),
-	('00000000-0000-0000-0000-000000000004', 'study 4', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=4', '2020-08-03 12:33:10', '2021-09-03 12:33:11'),
-	('00000000-0000-0000-0000-000000000005', 'study 5', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=5', '2021-08-03 12:33:10', '2023-05-03 12:33:11'),
-	('00000000-0000-0000-0000-000000000006', 'study 6', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=6', '2019-08-03 12:33:10', '2022-08-03 12:33:11'),
-	('00000000-0000-0000-0000-000000000007', 'study 7', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=7', '2020-08-03 12:33:10', '2023-03-03 12:33:11'),
-	('00000000-0000-0000-0000-000000000008', 'study 8', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=8', '2023-08-03 12:33:10', '2023-01-03 12:33:11');
+	('00000000-0000-0000-0000-000000000001', 'study 1', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=1', 1693957896, 1693957896),
+	('00000000-0000-0000-0000-000000000002', 'study 2', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=2', 1693957896, 1693957896),
+	('00000000-0000-0000-0000-000000000003', 'study 3', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=3', 1693957896, 1693957896),
+	('00000000-0000-0000-0000-000000000004', 'study 4', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=4', 1693957896, 1693957896),
+	('00000000-0000-0000-0000-000000000005', 'study 5', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=5', 1693957896, 1693957896),
+	('00000000-0000-0000-0000-000000000006', 'study 6', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=6', 1693957896, 1693957896),
+	('00000000-0000-0000-0000-000000000007', 'study 7', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=7', 1693957896, 1693957896),
+	('00000000-0000-0000-0000-000000000008', 'study 8', 'https://api.dicebear.com/7.x/fun-emoji/svg?seed=8', 1693957896, 1693957896);
 /*!40000 ALTER TABLE "study" ENABLE KEYS */;
 
 -- Dumping data for table public.user: -1 rows
 -- done
 /*!40000 ALTER TABLE "user" DISABLE KEYS */;
 INSERT INTO "user" ("id", "email_address", "username", "first_name", "last_name", "orcid", "hash", "created_at", "institution") VALUES
-	('00000000-0000-0000-0000-000000000001', 'Ervin_Lindgren@hotmail.com', 'Ervin79', 'Ervin', 'Lindgren', 'd348206e-b1e2-4f99-9157-44b1321ecb4c', 'hashed', '2023-08-13 12:34:06', 'Schinner, Kuvalis and Beatty'),
-	('00000000-0000-0000-0000-000000000002', 'Camila.Pacocha@hotmail.com', 'Camila_Pacocha', 'Camila', 'Pacocha', '699e9977-5d86-40fc-bf1a-a5083f0cdc95', 'hashed', '2023-08-13 12:34:06', 'Schmitt Inc'),
-	('00000000-0000-0000-0000-000000000003', 'Alaina.Hammes@hotmail.com', 'Alaina_Hammes', 'Alaina', 'Hammes', '0b39872c-a1d6-44c0-88c2-7ea1b3a33dcf', 'hashed', '2023-08-13 12:34:06', 'Stracke, Leuschke and Kuvalis'),
-	('00000000-0000-0000-0000-000000000004', 'Brady_Anderson@gmail.com', 'Brady_Anderson', 'Brady', 'Anderson', '779d42d2-4743-43d3-980b-fcf1a962b485', 'hashed', '2023-08-13 12:34:06', 'Heidenreich, Wilkinson and Mitchell'),
-	('00000000-0000-0000-0000-000000000005', 'Brycen78@hotmail.com', 'Brycen_OReilly64', 'Brycen', 'O''Reilly', '529053dc-a755-4819-bdd2-a593d41e7f73', 'hashed', '2023-08-13 12:34:06', 'Heaney, Russel and Turner');
+	('00000000-0000-0000-0000-000000000001', 'Ervin_Lindgren@hotmail.com', 'Ervin79', 'Ervin', 'Lindgren', 'd348206e-b1e2-4f99-9157-44b1321ecb4c', 'hashed', 1693957896, 'Schinner, Kuvalis and Beatty'),
+	('00000000-0000-0000-0000-000000000002', 'Camila.Pacocha@hotmail.com', 'Camila_Pacocha', 'Camila', 'Pacocha', '699e9977-5d86-40fc-bf1a-a5083f0cdc95', 'hashed', 1693957896, 'Schmitt Inc'),
+	('00000000-0000-0000-0000-000000000003', 'Alaina.Hammes@hotmail.com', 'Alaina_Hammes', 'Alaina', 'Hammes', '0b39872c-a1d6-44c0-88c2-7ea1b3a33dcf', 'hashed', 1693957896, 'Stracke, Leuschke and Kuvalis'),
+	('00000000-0000-0000-0000-000000000004', 'Brady_Anderson@gmail.com', 'Brady_Anderson', 'Brady', 'Anderson', '779d42d2-4743-43d3-980b-fcf1a962b485', 'hashed', 1693957896, 'Heidenreich, Wilkinson and Mitchell'),
+	('00000000-0000-0000-0000-000000000005', 'Brycen78@hotmail.com', 'Brycen_OReilly64', 'Brycen', 'O''Reilly', '529053dc-a755-4819-bdd2-a593d41e7f73', 'hashed', 1693957896, 'Heaney, Russel and Turner');
 /*!40000 ALTER TABLE "user" ENABLE KEYS */;
 
 -- Dumping data for table public.study_contributor: -1 rows
@@ -626,22 +626,22 @@ INSERT INTO "study_contributor" ("permission", "user_id", "study_id") VALUES
 -- done
 /*!40000 ALTER TABLE "invited_study_contributor" DISABLE KEYS */;
 INSERT INTO "invited_study_contributor" ("email_address", "permission", "invited_on", "study_id") VALUES
-	('Aliya_Herman@yahoo.com', 'editor', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000001'),
-	('Anastacio50@hotmail.com', 'viewer', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000001'),
-	('Edward0@gmail.com', 'viewer', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000001'),
-	('Jailyn17@gmail.com', 'viewer', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000002');
+	('Aliya_Herman@yahoo.com', 'editor', 1693957896, '00000000-0000-0000-0000-000000000001'),
+	('Anastacio50@hotmail.com', 'viewer', 1693957896, '00000000-0000-0000-0000-000000000001'),
+	('Edward0@gmail.com', 'viewer', 1693957896, '00000000-0000-0000-0000-000000000001'),
+	('Jailyn17@gmail.com', 'viewer', 1693957896, '00000000-0000-0000-0000-000000000002');
 /*!40000 ALTER TABLE "invited_study_contributor" ENABLE KEYS */;
 
 -- Dumping data for table public.dataset: -1 rows
 -- done
 /*!40000 ALTER TABLE "dataset" DISABLE KEYS */;
 INSERT INTO "dataset" ("id", "updated_on", "created_at", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000003', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000004', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000005', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000006', '2023-08-13 16:23:48', '2023-08-13 16:23:49', '00000000-0000-0000-0000-000000000003');
+	('00000000-0000-0000-0000-000000000001', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000003', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000004', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000002'),
+	('00000000-0000-0000-0000-000000000005', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000002'),
+	('00000000-0000-0000-0000-000000000006', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000003');
 /*!40000 ALTER TABLE "dataset" ENABLE KEYS */;
 
 -- Dumping data for table public.dataset_access: -1 rows
@@ -791,18 +791,18 @@ INSERT INTO "dataset_title" ("id", "title", "type", "dataset_id") VALUES
 -- Dumping data for table public.participant: -1 rows
 /*!40000 ALTER TABLE "participant" DISABLE KEYS */;
 INSERT INTO "participant" ("id", "first_name", "last_name", "address", "age", "created_at", "updated_on", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000002', 'bhavesh', 'patel', '3904 university ave', '20', '2023-08-13 16:33:53', '2023-08-13 16:33:54', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000003', 'sanjay', 'soundarajan', '123 gold coast', '27', '2023-08-13 16:33:53', '2023-08-13 16:33:54', '00000000-0000-0000-0000-000000000003'),
-	('00000000-0000-0000-0000-000000000004', 'billy', 'sanders', '123 gold coast', '32', '2023-08-13 16:33:53', '2023-08-13 16:33:54', '00000000-0000-0000-0000-000000000004'),
-	('921ba857-dd08-4149-8f5c-245c6c93ef84', 'aydan1', 'gasimova', '1221d kibler drive', '20', '2023-08-29 13:42:23.627034', '2023-08-13 16:33:54', '00000000-0000-0000-0000-000000000001'),
-	('458d2c15-6ed8-4f70-a47d-70b42f2f1b86', 'aydan1', 'gasimova', '1221d kibler drive', '20', '2023-08-29 13:42:36.656094', '2023-08-13 16:33:54', '00000000-0000-0000-0000-000000000001'),
-	('35750167-40c5-4f4a-9d8e-ebe89c2efcfc', 'aydan1', 'gasimova', '1221d kibler drive', '20', '2023-08-29 13:42:52.555088', '2023-08-13 16:33:54', '00000000-0000-0000-0000-000000000001'),
-	('43c54d45-2f63-41da-8d18-6d3ef06ba476', 'aydan1', 'gasimova', '1221d kibler drive', '20', '2023-08-29 13:42:59.614647', '2023-08-13 16:33:54', '00000000-0000-0000-0000-000000000001'),
-	('b444520d-0eac-4065-a86d-004481f68d8a', 'aydan1', 'gasimova', '1221d kibler drive', '20', '2023-08-29 13:45:49.495595', '2023-08-13 16:33:54', '00000000-0000-0000-0000-000000000001'),
-	('88c7592a-4382-4d6b-a197-e880e49db3c0', 'aydan1', 'gasimova', '1221d kibler drive', '20', '2023-08-29 13:46:17.682171', '2023-08-29 13:46:17.682171', '00000000-0000-0000-0000-000000000001'),
-	('ba73ed99-6ec2-46e0-acdb-4a00c31dd572', 'aydan', 'gasimova', '1221d kibler drive', '20', '2023-08-29 15:08:03.758771', '2023-08-29 15:08:03.758771', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000001', 'aydan', 'gasimova1', '1221d kibler drive', '20', '2023-08-13 16:33:53', '2023-08-29 15:09:04.323914', '00000000-0000-0000-0000-000000000001'),
-	('006306a7-0ddb-4163-952d-2939712e190d', 'aydan', 'gasimova1', '1221d kibler drive', '20', '2023-08-29 15:15:35.891076', '2023-08-29 15:15:35.891076', '00000000-0000-0000-0000-000000000001');
+	('00000000-0000-0000-0000-000000000002', 'bhavesh', 'patel', '3904 university ave', '20', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000002'),
+	('00000000-0000-0000-0000-000000000003', 'sanjay', 'soundarajan', '123 gold coast', '27', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000003'),
+	('00000000-0000-0000-0000-000000000004', 'billy', 'sanders', '123 gold coast', '32', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000004'),
+	('921ba857-dd08-4149-8f5c-245c6c93ef84', 'aydan1', 'gasimova', '1221d kibler drive', '20', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000001'),
+	('458d2c15-6ed8-4f70-a47d-70b42f2f1b86', 'aydan1', 'gasimova', '1221d kibler drive', '20', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000001'),
+	('35750167-40c5-4f4a-9d8e-ebe89c2efcfc', 'aydan1', 'gasimova', '1221d kibler drive', '20', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000001'),
+	('43c54d45-2f63-41da-8d18-6d3ef06ba476', 'aydan1', 'gasimova', '1221d kibler drive', '20', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000001'),
+	('b444520d-0eac-4065-a86d-004481f68d8a', 'aydan1', 'gasimova', '1221d kibler drive', '20', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000001'),
+	('88c7592a-4382-4d6b-a197-e880e49db3c0', 'aydan1', 'gasimova', '1221d kibler drive', '20', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000001'),
+	('ba73ed99-6ec2-46e0-acdb-4a00c31dd572', 'aydan', 'gasimova', '1221d kibler drive', '20', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000001', 'aydan', 'gasimova1', '1221d kibler drive', '20', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000001'),
+	('006306a7-0ddb-4163-952d-2939712e190d', 'aydan', 'gasimova1', '1221d kibler drive', '20', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000001');
 /*!40000 ALTER TABLE "participant" ENABLE KEYS */;
 
 -- Dumping data for table public.study_arm: -1 rows
@@ -949,10 +949,10 @@ INSERT INTO "study_status" ("id", "overall_status", "why_stopped", "start_date",
 -- done
 /*!40000 ALTER TABLE "version" DISABLE KEYS */;
 INSERT INTO "version" ("id", "title", "published", "changelog", "updated_on", "doi", "created_at", "published_on", "dataset_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'Version 1', 'true', 'lorem ipsum', '2023-08-13 16:24:05', '2435464e643', '2023-08-13 16:23:59', '2023-08-13 16:24:00', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'Version 2', 'false', 'lorem ipsum', '2023-08-13 16:24:05', '2435464e643', '2023-08-13 16:23:59', '2023-08-13 16:24:00', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000003', 'Version 1', 'false', 'lorem ipsum', '2023-08-13 16:24:05', '2435464e643', '2023-08-13 16:23:59', '2023-08-13 16:24:00', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000004', 'Version 1', 'false', 'lorem ipsum', '2023-08-13 16:24:05', '2435464e643', '2023-08-13 16:23:59', '2023-08-13 16:24:00', '00000000-0000-0000-0000-000000000003');
+	('00000000-0000-0000-0000-000000000001', 'Version 1', 'true', 'lorem ipsum', 1693957896, '2435464e643', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000002', 'Version 2', 'false', 'lorem ipsum', 1693957896, '2435464e643', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000001'),
+	('00000000-0000-0000-0000-000000000003', 'Version 1', 'false', 'lorem ipsum', 1693957896, '2435464e643', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000002'),
+	('00000000-0000-0000-0000-000000000004', 'Version 1', 'false', 'lorem ipsum', 1693957896, '2435464e643', 1693957896, 1693957896, '00000000-0000-0000-0000-000000000003');
 /*!40000 ALTER TABLE "version" ENABLE KEYS */;
 
 -- Dumping data for table public.version_participants: -1 rows
