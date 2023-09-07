@@ -56,7 +56,7 @@ class StudyCollaboratorsResource(Resource):
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_collaborators_ = study_.study_sponsors_collaborators.collaborator_name
-        return {"collaborator_name": study_collaborators_}
+        return study_collaborators_
 
     def put(self, study_id: int):
         data = request.json
