@@ -21,7 +21,7 @@ class StudyAvailableResource(Resource):
     @api.doc("available")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    #@api.marshal_with(study_available)
+    # @api.marshal_with(study_available)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_available_ipd = study_.study_available_ipd
