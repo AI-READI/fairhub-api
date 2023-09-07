@@ -11,7 +11,7 @@ study_reference = api.model(
     {
         "id": fields.String(required=True),
         "identifier": fields.String(required=True),
-        "type": fields.Boolean(required=True),
+        "type": fields.String(required=True),
         "title": fields.String(required=True),
         "citation": fields.String(required=True),
     },
