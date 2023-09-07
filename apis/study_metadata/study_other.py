@@ -46,7 +46,7 @@ class StudyOversightResource(Resource):
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_oversight_has_dmc = study_.study_other.oversight_has_dmc
-        return  study_oversight_has_dmc
+        return study_oversight_has_dmc
 
     def put(self, study_id: int):
         data = request.json
