@@ -732,7 +732,7 @@ CREATE TABLE IF NOT EXISTS "study_eligibility" (
 	"maximum_age_value" INTEGER NOT NULL,
 	"minimum_age_unit" VARCHAR NOT NULL,
 	"maximum_age_unit" VARCHAR NOT NULL,
-	"healthy_volunteers" VARCHAR NOT NULL,
+	"healthy_volunteers" VARCHAR DEFAULT NULL,
 	"inclusion_criteria" VARCHAR[] NOT NULL,
 	"exclusion_criteria" VARCHAR[] NOT NULL,
 	"study_population" VARCHAR NULL DEFAULT NULL,

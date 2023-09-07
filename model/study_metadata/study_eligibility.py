@@ -33,7 +33,7 @@ class StudyEligibility(db.Model):
     maximum_age_value = db.Column(db.Integer, nullable=False)
     minimum_age_unit = db.Column(db.String, nullable=False)
     maximum_age_unit = db.Column(db.String, nullable=False)
-    healthy_volunteers = db.Column(db.String, nullable=False)
+    healthy_volunteers = db.Column(db.String, nullable=True)
     inclusion_criteria = db.Column(ARRAY(String), nullable=False)
     exclusion_criteria = db.Column(ARRAY(String), nullable=False)
     study_population = db.Column(db.String, nullable=True)
