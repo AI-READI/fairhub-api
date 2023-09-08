@@ -10,6 +10,7 @@ class StudyContact(db.Model):
         self.study = study
         self.role = role
         self.central_contact = central_contact
+
     __tablename__ = "study_contact"
 
     id = db.Column(db.CHAR(36), primary_key=True)
