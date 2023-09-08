@@ -35,19 +35,20 @@ class StudyIdentificationResource(Resource):
         data = request.json
         study_obj = Study.query.get(study_id)
         primary = data["primary"]
+        primary["secondary"] = False
         if "id" in primary and primary["id"]:
             study_identification_ = StudyIdentification.query.get(primary["id"])
             study_identification_.update(primary)
         elif "id" not in primary or not primary["id"]:
-            study_identification_ = StudyIdentification.from_data(study_obj, primary)
+            study_identification_ = StudyIdentification.from_data(study_obj, primary, False)
             db.session.add(study_identification_)
-
         for i in data["secondary"]:
+            i["secondary"] = True
             if "id" in i and i["id"]:
                 study_identification_ = StudyIdentification.query.get(i["id"])
                 study_identification_.update(i)
             elif "id" not in i or not i["id"]:
-                study_identification_ = StudyIdentification.from_data(study_obj, i)
+                study_identification_ = StudyIdentification.from_data(study_obj, i, True)
                 db.session.add(study_identification_)
         db.session.commit()
         identifiers = Identifiers(study_obj)

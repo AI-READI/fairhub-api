@@ -3,10 +3,10 @@ from ..db import db
 
 
 class StudyIdentification(db.Model):
-    def __init__(self, study):
+    def __init__(self, study, secondary):
         self.id = str(uuid.uuid4())
         self.study = study
-
+        self.secondary = secondary
     __tablename__ = "study_identification"
     id = db.Column(db.CHAR(36), primary_key=True)
     identifier = db.Column(db.String, nullable=False)
@@ -28,9 +28,9 @@ class StudyIdentification(db.Model):
         }
 
     @staticmethod
-    def from_data(study, data: dict):
+    def from_data(study, data: dict, secondary):
         """Creates a new study from a dictionary"""
-        study_identification = StudyIdentification(study)
+        study_identification = StudyIdentification(study, secondary)
         study_identification.update(data)
 
         return study_identification
@@ -41,7 +41,6 @@ class StudyIdentification(db.Model):
         self.identifier_type = data["identifier_type"]
         self.identifier_domain = data["identifier_domain"]
         self.identifier_link = data["identifier_link"]
-        self.secondary = data["secondary"]
 
     def validate(self):
         """Validates the lead_sponsor_last_name study"""
