@@ -5,10 +5,11 @@ from ..db import db
 class StudyContact(db.Model):
     """A study is a collection of datasets and participants"""
 
-    def __init__(self, study):
+    def __init__(self, study, role, central_contact):
         self.id = str(uuid.uuid4())
         self.study = study
-
+        self.role = role
+        self.central_contact = central_contact
     __tablename__ = "study_contact"
 
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -37,9 +38,9 @@ class StudyContact(db.Model):
         }
 
     @staticmethod
-    def from_data(study, data: dict):
+    def from_data(study, data: dict, role, central_contact):
         """Creates a new study from a dictionary"""
-        study_contact = StudyContact(study)
+        study_contact = StudyContact(study, role, central_contact)
         study_contact.update(data)
 
         return study_contact
@@ -48,11 +49,10 @@ class StudyContact(db.Model):
         """Updates the study from a dictionary"""
         self.name = data["name"]
         self.affiliation = data["affiliation"]
-        self.role = data["role"]
+        # self.role = data["role"]
         self.phone = data["phone"]
         self.phone_ext = data["phone_ext"]
         self.email_address = data["email_address"]
-        self.central_contact = data["central_contact"]
 
     def validate(self):
         """Validates the lead_sponsor_last_name study"""

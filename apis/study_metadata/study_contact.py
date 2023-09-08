@@ -39,7 +39,7 @@ class StudyContactResource(Resource):
                 study_contact_.update(i)
                 list_of_elements.append(study_contact_.to_dict())
             elif "id" not in i or not i["id"]:
-                study_contact_ = StudyContact.from_data(study_obj, i)
+                study_contact_ = StudyContact.from_data(study_obj, i, None, True)
                 db.session.add(study_contact_)
                 list_of_elements.append(study_contact_.to_dict())
         db.session.commit()
