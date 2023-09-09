@@ -16,7 +16,6 @@ class DatasetReadmeResource(Resource):
     @api.doc("readme")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.param("id", "The dataset identifier")
     @api.marshal_with(dataset_readme)
     def get(self, study_id: int, dataset_id: int):
         dataset_ = Dataset.query.get(dataset_id)

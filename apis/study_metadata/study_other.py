@@ -38,10 +38,9 @@ class StudyOtherResource(Resource):
 
 @api.route("/study/<study_id>/metadata/oversight")
 class StudyOversightResource(Resource):
-    @api.doc("other")
+    @api.doc("oversight")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.param("id", "The study identifier")
     # @api.marshal_with(study_other)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
@@ -60,7 +59,7 @@ class StudyOversightResource(Resource):
 
 @api.route("/study/<study_id>/metadata/conditions")
 class StudyOversightResource(Resource):
-    @api.doc("other")
+    @api.doc("conditions")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(study_other)
