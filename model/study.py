@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 from datetime import timezone
 import model
 from .db import db
@@ -101,3 +102,6 @@ class Study(db.Model):
         # if self.keywords.length < 1:
         #     violations.push("At least one keyword must be specified")
         return violations
+
+    # def touch(self):
+    #     self.updated_on = datetime.datetime.now()

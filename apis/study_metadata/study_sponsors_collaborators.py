@@ -61,9 +61,7 @@ class StudyCollaboratorsResource(Resource):
     def put(self, study_id: int):
         data = request.json
         study_ = Study.query.get(study_id)
-        study_.study_sponsors_collaborators.collaborator_name = data[
-            "collaborator_name"
-        ]
+        study_.study_sponsors_collaborators.collaborator_name = data
         db.session.commit()
         return study_.study_sponsors_collaborators.collaborator_name
 
