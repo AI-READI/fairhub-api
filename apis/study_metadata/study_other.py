@@ -71,6 +71,6 @@ class StudyOversightResource(Resource):
     def put(self, study_id: int):
         data = request.json
         study_ = Study.query.get(study_id)
-        study_.study_other.conditions = ["conditions"]
+        study_.study_other.conditions = data
         db.session.commit()
         return study_.study_other.conditions
