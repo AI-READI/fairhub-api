@@ -1,6 +1,7 @@
 """Entry point for the application."""
 from flask import Flask
 from flask_cors import CORS
+from sqlalchemy import MetaData
 
 import model
 from apis import api
@@ -47,10 +48,14 @@ def create_app():
     @app.cli.command("create-schema")
     def create_schema():
         engine = model.db.session.get_bind()
-        with engine.begin() as conn:
-            """Create the database schema."""
-            model.db.create_all()
-
+        metadata = MetaData()
+        metadata.reflect(bind=engine)
+        table_names = [table.name for table in metadata.tables.values()]
+        print(table_names)
+        if len(table_names) == 0:
+            with engine.begin() as conn:
+                """Create the database schema."""
+                model.db.create_all()
     @app.cli.command("destroy-schema")
     def destroy_schema():
         engine = model.db.session.get_bind()
@@ -70,8 +75,8 @@ def create_app():
 
 
 if __name__ == "__main__":
-    from argparse import ArgumentParser
 
+    from argparse import ArgumentParser
     parser = ArgumentParser()
     parser.add_argument(
         "-p", "--port", default=5000, type=int, help="port to listen on"
@@ -80,5 +85,4 @@ if __name__ == "__main__":
     port = args.port
 
     app = create_app()
-
     app.run(host="0.0.0.0", port=port)
