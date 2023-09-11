@@ -48,7 +48,6 @@ class StudyArm(db.Model):
         self.intervention_list = data["intervention_list"]
         self.study.touch()
 
-
     def validate(self):
         """Validates the study"""
         violations = []
