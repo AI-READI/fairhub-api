@@ -53,6 +53,7 @@ class StudyOversightResource(Resource):
         study_oversight = study_.study_other.oversight_has_dmc = data[
             "oversight_has_dmc"
         ]
+        study_.touch()
         db.session.commit()
         return study_oversight
 
@@ -72,5 +73,6 @@ class StudyOversightResource(Resource):
         data = request.json
         study_ = Study.query.get(study_id)
         study_.study_other.conditions = data
+        study_.touch()
         db.session.commit()
         return study_.study_other.conditions

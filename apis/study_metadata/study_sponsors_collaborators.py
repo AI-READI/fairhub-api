@@ -32,7 +32,6 @@ class StudySponsorsResource(Resource):
     @api.doc("sponsors")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.param("id", "The study identifier")
     @api.marshal_with(study_sponsors)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
@@ -51,7 +50,6 @@ class StudyCollaboratorsResource(Resource):
     @api.doc("collaborators")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.param("id", "The study identifier")
     # @api.marshal_with(study_collaborators)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
@@ -62,6 +60,7 @@ class StudyCollaboratorsResource(Resource):
         data = request.json
         study_ = Study.query.get(study_id)
         study_.study_sponsors_collaborators.collaborator_name = data
+        study_.touch()
         db.session.commit()
         return study_.study_sponsors_collaborators.collaborator_name
 
