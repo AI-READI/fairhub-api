@@ -980,7 +980,8 @@ CREATE TABLE IF NOT EXISTS "study_status" (
 	"completion_date_type" VARCHAR NOT NULL,
 	"study_id" CHAR(36) NOT NULL,
 	PRIMARY KEY ("id"),
-	CONSTRAINT "study_status_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+	CONSTRAINT "study_status_study_id_fkey" FOREIGN KEY
+("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 -- Dumping data for table public.study_status: 2 rows
