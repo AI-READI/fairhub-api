@@ -85,6 +85,7 @@ class StudyEligibility(db.Model):
         self.exclusion_criteria = data["exclusion_criteria"]
         self.study_population = data["study_population"]
         self.sampling_method = data["sampling_method"]
+        self.study.touch()
 
     def validate(self):
         """Validates the lead_sponsor_last_name study"""

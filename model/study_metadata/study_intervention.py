@@ -49,6 +49,7 @@ class StudyIntervention(db.Model):
         self.description = data["description"]
         self.arm_group_label_list = data["arm_group_label_list"]
         self.other_name_list = data["other_name_list"]
+        self.study.touch()
 
     def validate(self):
         """Validates the lead_sponsor_last_name study"""

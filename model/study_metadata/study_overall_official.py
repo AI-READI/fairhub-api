@@ -41,6 +41,7 @@ class StudyOverallOfficial(db.Model):
         self.name = data["name"]
         self.affiliation = data["affiliation"]
         self.role = data["role"]
+        self.study.touch()
 
     def validate(self):
         """Validates the study"""

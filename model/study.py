@@ -103,5 +103,5 @@ class Study(db.Model):
         #     violations.push("At least one keyword must be specified")
         return violations
 
-    # def touch(self):
-    #     self.updated_on = datetime.datetime.now()
+    def touch(self):
+        self.updated_on = datetime.datetime.now(timezone.utc).timestamp()

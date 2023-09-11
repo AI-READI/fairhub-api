@@ -46,6 +46,8 @@ class StudyArm(db.Model):
         self.type = data["type"]
         self.description = data["description"]
         self.intervention_list = data["intervention_list"]
+        self.study.touch()
+
 
     def validate(self):
         """Validates the study"""

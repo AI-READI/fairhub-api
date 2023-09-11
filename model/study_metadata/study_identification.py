@@ -42,6 +42,7 @@ class StudyIdentification(db.Model):
         self.identifier_type = data["identifier_type"]
         self.identifier_domain = data["identifier_domain"]
         self.identifier_link = data["identifier_link"]
+        self.study.touch()
 
     def validate(self):
         """Validates the lead_sponsor_last_name study"""

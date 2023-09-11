@@ -54,6 +54,7 @@ class StudyContact(db.Model):
         self.phone = data["phone"]
         self.phone_ext = data["phone_ext"]
         self.email_address = data["email_address"]
+        self.study.touch()
 
     def validate(self):
         """Validates the lead_sponsor_last_name study"""

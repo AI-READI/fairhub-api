@@ -58,6 +58,7 @@ class StudyIpdsharing(db.Model):
         self.ipd_sharing_time_frame = data["ipd_sharing_time_frame"]
         self.ipd_sharing_access_criteria = data["ipd_sharing_access_criteria"]
         self.ipd_sharing_url = data["ipd_sharing_url"]
+        self.study.touch()
 
     def validate(self):
         """Validates the lead_sponsor_last_name study"""

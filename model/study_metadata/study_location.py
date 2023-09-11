@@ -50,6 +50,7 @@ class StudyLocation(db.Model):
         self.state = data["state"]
         self.zip = data["zip"]
         self.country = data["country"]
+        self.study.touch()
 
     def validate(self):
         """Validates the lead_sponsor_last_name study"""

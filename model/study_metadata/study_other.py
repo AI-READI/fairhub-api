@@ -51,6 +51,7 @@ class StudyOther(db.Model):
         self.conditions = data["conditions"]
         self.keywords = data["keywords"]
         self.size = data["size"]
+        self.study.touch()
 
     def validate(self):
         """Validates the study"""

@@ -42,6 +42,7 @@ class StudyReference(db.Model):
         self.identifier = data["identifier"]
         self.type = data["type"]
         self.citation = data["citation"]
+        self.study.touch()
 
     def validate(self):
         """Validates the study"""

@@ -57,6 +57,7 @@ class StudyStatus(db.Model):
         self.start_date_type = data["start_date_type"]
         self.completion_date = data["completion_date"]
         self.completion_date_type = data["completion_date_type"]
+        self.study.touch()
 
     def validate(self):
         """Validates the study"""

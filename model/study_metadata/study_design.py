@@ -110,6 +110,7 @@ class StudyDesign(db.Model):
         self.bio_spec_description = data["bio_spec_description"]
         self.target_duration = data["target_duration"]
         self.number_groups_cohorts = data["number_groups_cohorts"]
+        self.study.touch()
 
     def validate(self):
         """Validates the study"""

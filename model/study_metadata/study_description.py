@@ -40,6 +40,7 @@ class StudyDescription(db.Model):
         """Updates the study from a dictionary"""
         self.brief_summary = data["brief_summary"]
         self.detailed_description = data["detailed_description"]
+        self.study.touch()
 
     def validate(self):
         """Validates the lead_sponsor_last_name study"""

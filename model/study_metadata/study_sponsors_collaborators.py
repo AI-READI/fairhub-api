@@ -75,6 +75,7 @@ class StudySponsorsCollaborators(db.Model):
     def update_collaborators(self, data):
         """Updates the study from a dictionary"""
         self.collaborator_name = data["collaborator_name"]
+        self.study.touch()
 
     def validate(self):
         """Validates the lead_sponsor_last_name study"""

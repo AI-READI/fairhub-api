@@ -33,6 +33,7 @@ class StudyLink(db.Model):
         """Updates the study from a dictionary"""
         self.url = data["url"]
         self.title = data["title"]
+        self.study.touch()
 
     def validate(self):
         """Validates the lead_sponsor_last_name study"""

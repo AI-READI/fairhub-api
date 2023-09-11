@@ -44,6 +44,7 @@ class StudyAvailableIpd(db.Model):
         self.type = data["type"]
         self.url = data["url"]
         self.comment = data["comment"]
+        self.study.touch()
 
     def validate(self):
         """Validates the study"""
