@@ -30,7 +30,8 @@ class StudyLocationResource(Resource):
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_location_ = study_.study_location
-        return [s.to_dict() for s in study_location_]
+        sorted_study_location = sorted(study_location_, key=lambda x: x.created_at, reverse=True)
+        return [s.to_dict() for s in sorted_study_location]
 
     def post(self, study_id: int):
         data = request.json

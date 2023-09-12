@@ -1,6 +1,8 @@
 import uuid
 
 from ..db import db
+from datetime import timezone
+import datetime
 
 
 class StudyReference(db.Model):
@@ -9,6 +11,7 @@ class StudyReference(db.Model):
     def __init__(self, study):
         self.id = str(uuid.uuid4())
         self.study = study
+        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
 
     __tablename__ = "study_reference"
 
@@ -16,6 +19,7 @@ class StudyReference(db.Model):
     identifier = db.Column(db.String, nullable=False)
     type = db.Column(db.String, nullable=False)
     citation = db.Column(db.String, nullable=False)
+    created_at = db.Column(db.BigInteger, nullable=False)
 
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
     study = db.relationship("Study", back_populates="study_reference")
@@ -27,6 +31,8 @@ class StudyReference(db.Model):
             "identifier": self.identifier,
             "type": self.type,
             "citation": self.citation,
+            "created_at": self.created_at
+
         }
 
     @staticmethod

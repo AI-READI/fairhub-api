@@ -2,7 +2,8 @@ import uuid
 from ..db import db
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
-
+from datetime import timezone
+import datetime
 
 class StudyIntervention(db.Model):
     """A study is a collection of datasets and participants"""
@@ -10,6 +11,7 @@ class StudyIntervention(db.Model):
     def __init__(self, study):
         self.id = str(uuid.uuid4())
         self.study = study
+        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
 
     __tablename__ = "study_intervention"
 
@@ -19,6 +21,7 @@ class StudyIntervention(db.Model):
     description = db.Column(db.String, nullable=False)
     arm_group_label_list = db.Column(ARRAY(String), nullable=False)
     other_name_list = db.Column(ARRAY(String), nullable=False)
+    created_at = db.Column(db.BigInteger, nullable=False)
 
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
     study = db.relationship("Study", back_populates="study_intervention")
@@ -32,6 +35,8 @@ class StudyIntervention(db.Model):
             "description": self.description,
             "arm_group_label_list": self.arm_group_label_list,
             "other_name_list": self.other_name_list,
+            "created_at": self.created_at
+
         }
 
     @staticmethod

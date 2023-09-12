@@ -28,7 +28,9 @@ class StudyReferenceResource(Resource):
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_reference_ = study_.study_reference
-        return [s.to_dict() for s in study_reference_]
+        print(study_.study_reference)
+        sorted_study_reference = sorted(study_reference_, key=lambda x: x.created_at, reverse=True)
+        return [s.to_dict() for s in sorted_study_reference]
 
     def post(self, study_id: int):
         data = request.json

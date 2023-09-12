@@ -26,7 +26,8 @@ class StudyLinkResource(Resource):
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_link_ = study_.study_link
-        return [s.to_dict() for s in study_link_]
+        sorted_study_link_ = sorted(study_link_, key=lambda x: x.created_at, reverse=True)
+        return [s.to_dict() for s in sorted_study_link_]
 
     def post(self, study_id: int):
         data = request.json

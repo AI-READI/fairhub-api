@@ -1,6 +1,8 @@
 import uuid
 
 from ..db import db
+from datetime import timezone
+import datetime
 
 
 class StudyAvailableIpd(db.Model):
@@ -9,6 +11,7 @@ class StudyAvailableIpd(db.Model):
     def __init__(self, study):
         self.id = str(uuid.uuid4())
         self.study = study
+        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
 
     __tablename__ = "study_available_ipd"
 
@@ -17,6 +20,7 @@ class StudyAvailableIpd(db.Model):
     type = db.Column(db.String, nullable=False)
     url = db.Column(db.String, nullable=False)
     comment = db.Column(db.String, nullable=False)
+    created_at = db.Column(db.BigInteger, nullable=False)
 
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
     study = db.relationship("Study", back_populates="study_available_ipd")
@@ -29,6 +33,8 @@ class StudyAvailableIpd(db.Model):
             "type": self.type,
             "url": self.url,
             "comment": self.comment,
+            "created_at": self.created_at
+
         }
 
     @staticmethod

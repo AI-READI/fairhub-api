@@ -24,8 +24,11 @@ class StudyAvailableResource(Resource):
     # @api.marshal_with(study_available)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
-        study_available_ipd = study_.study_available_ipd
-        return [s.to_dict() for s in study_available_ipd]
+        study_available_ipd_ = study_.study_available_ipd
+        sorted_study_available_ipd = sorted(study_available_ipd_, key=lambda x: x.created_at, reverse=True)
+        return [s.to_dict() for s in sorted_study_available_ipd]
+
+
 
     @api.doc("update available")
     @api.response(200, "Success")

@@ -1,5 +1,7 @@
 import uuid
 from ..db import db
+from datetime import timezone
+import datetime
 
 
 class StudyLocation(db.Model):
@@ -8,6 +10,7 @@ class StudyLocation(db.Model):
     def __init__(self, study):
         self.id = str(uuid.uuid4())
         self.study = study
+        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
 
     __tablename__ = "study_location"
 
@@ -18,6 +21,7 @@ class StudyLocation(db.Model):
     state = db.Column(db.String, nullable=False)
     zip = db.Column(db.String, nullable=False)
     country = db.Column(db.String, nullable=False)
+    created_at = db.Column(db.BigInteger, nullable=False)
 
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
     study = db.relationship("Study", back_populates="study_location")
@@ -32,6 +36,8 @@ class StudyLocation(db.Model):
             "state": self.state,
             "zip": self.zip,
             "country": self.country,
+            "created_at": self.created_at
+
         }
 
     @staticmethod

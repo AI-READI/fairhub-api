@@ -1,6 +1,7 @@
 import uuid
 from ..db import db
-
+from datetime import timezone
+import datetime
 
 class StudyContact(db.Model):
     """A study is a collection of datasets and participants"""
@@ -10,6 +11,8 @@ class StudyContact(db.Model):
         self.study = study
         self.role = role
         self.central_contact = central_contact
+        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
+
 
     __tablename__ = "study_contact"
 
@@ -21,6 +24,7 @@ class StudyContact(db.Model):
     phone_ext = db.Column(db.String, nullable=False)
     email_address = db.Column(db.String, nullable=False)
     central_contact = db.Column(db.BOOLEAN, nullable=False)
+    created_at = db.Column(db.BigInteger, nullable=False)
 
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
     study = db.relationship("Study", back_populates="study_contact")
@@ -36,6 +40,8 @@ class StudyContact(db.Model):
             "phone_ext": self.phone_ext,
             "email_address": self.email_address,
             "central_contact": self.central_contact,
+            "created_at": self.created_at
+
         }
 
     @staticmethod
