@@ -63,6 +63,7 @@ def create_app():
         with engine.begin() as conn:
             """Create the database schema."""
             model.db.drop_all()
+
     with app.app_context():
         engine = model.db.session.get_bind()
         metadata = MetaData()
@@ -77,10 +78,12 @@ def create_app():
 
 
 if __name__ == "__main__":
-
     from argparse import ArgumentParser
+
     parser = ArgumentParser()
-    parser.add_argument("-p", "--port", default=5000, type=int, help="port to listen on")
+    parser.add_argument(
+        "-p", "--port", default=5000, type=int, help="port to listen on"
+    )
     args = parser.parse_args()
     port = args.port
 
