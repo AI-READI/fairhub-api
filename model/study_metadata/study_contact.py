@@ -3,6 +3,7 @@ from ..db import db
 from datetime import timezone
 import datetime
 
+
 class StudyContact(db.Model):
     """A study is a collection of datasets and participants"""
 
@@ -12,7 +13,6 @@ class StudyContact(db.Model):
         self.role = role
         self.central_contact = central_contact
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
-
 
     __tablename__ = "study_contact"
 
@@ -40,8 +40,7 @@ class StudyContact(db.Model):
             "phone_ext": self.phone_ext,
             "email_address": self.email_address,
             "central_contact": self.central_contact,
-            "created_at": self.created_at
-
+            "created_at": self.created_at,
         }
 
     @staticmethod

@@ -3,6 +3,7 @@ from ..db import db
 from datetime import timezone
 import datetime
 
+
 class StudyLink(db.Model):
     """A study is a collection of datasets and participants"""
 
@@ -10,7 +11,6 @@ class StudyLink(db.Model):
         self.id = str(uuid.uuid4())
         self.study = study
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
-
 
     __tablename__ = "study_link"
 
@@ -28,8 +28,7 @@ class StudyLink(db.Model):
             "id": self.id,
             "url": self.url,
             "title": self.title,
-            "created_at": self.created_at
-
+            "created_at": self.created_at,
         }
 
     @staticmethod

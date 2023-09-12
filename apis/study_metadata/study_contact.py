@@ -27,7 +27,9 @@ class StudyContactResource(Resource):
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_contact_ = study_.study_contact
-        sorted_study_contact = sorted(study_contact_, key=lambda x: x.created_at, reverse=True)
+        sorted_study_contact = sorted(
+            study_contact_, key=lambda x: x.created_at, reverse=True
+        )
         return [s.to_dict() for s in sorted_study_contact if s.central_contact]
 
     def post(self, study_id: int):

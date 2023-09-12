@@ -30,7 +30,7 @@ class StudyOverallOfficial(db.Model):
             "name": self.name,
             "affiliation": self.affiliation,
             "role": self.role,
-            "created_at": self.created_at
+            "created_at": self.created_at,
         }
 
     @staticmethod

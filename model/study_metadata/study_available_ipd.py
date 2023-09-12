@@ -33,8 +33,7 @@ class StudyAvailableIpd(db.Model):
             "type": self.type,
             "url": self.url,
             "comment": self.comment,
-            "created_at": self.created_at
-
+            "created_at": self.created_at,
         }
 
     @staticmethod

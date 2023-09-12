@@ -56,6 +56,7 @@ def create_app():
             with engine.begin() as conn:
                 """Create the database schema."""
                 model.db.create_all()
+
     @app.cli.command("destroy-schema")
     def destroy_schema():
         engine = model.db.session.get_bind()
@@ -75,8 +76,8 @@ def create_app():
 
 
 if __name__ == "__main__":
-
     from argparse import ArgumentParser
+
     parser = ArgumentParser()
     parser.add_argument(
         "-p", "--port", default=5000, type=int, help="port to listen on"
