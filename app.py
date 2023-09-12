@@ -44,9 +44,26 @@ def create_app():
     api.init_app(app)
 
     CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": "True"}})
+    #
+    # @app.cli.command("create-schema")
+    # def create_schema():
+    #     engine = model.db.session.get_bind()
+    #     metadata = MetaData()
+    #     metadata.reflect(bind=engine)
+    #     table_names = [table.name for table in metadata.tables.values()]
+    #     print(table_names)
+    #     if len(table_names) == 0:
+    #         with engine.begin() as conn:
+    #             """Create the database schema."""
+    #             model.db.create_all()
 
-    @app.cli.command("create-schema")
-    def create_schema():
+    @app.cli.command("destroy-schema")
+    def destroy_schema():
+        engine = model.db.session.get_bind()
+        with engine.begin() as conn:
+            """Create the database schema."""
+            model.db.drop_all()
+    with app.app_context():
         engine = model.db.session.get_bind()
         metadata = MetaData()
         metadata.reflect(bind=engine)
@@ -56,31 +73,13 @@ def create_app():
             with engine.begin() as conn:
                 """Create the database schema."""
                 model.db.create_all()
-    @app.cli.command("destroy-schema")
-    def destroy_schema():
-        engine = model.db.session.get_bind()
-        with engine.begin() as conn:
-            """Create the database schema."""
-            model.db.drop_all()
-
-    #
-    # @api.route("/")
-    # @api.doc(responses={404: "not found"})
-    # class Home(Resource):
-    #     def home(self):
-    #         return "Home page"
-    #
-
     return app
 
 
 if __name__ == "__main__":
-
     from argparse import ArgumentParser
     parser = ArgumentParser()
-    parser.add_argument(
-        "-p", "--port", default=5000, type=int, help="port to listen on"
-    )
+    parser.add_argument("-p", "--port", default=5000, type=int, help="port to listen on")
     args = parser.parse_args()
     port = args.port
 

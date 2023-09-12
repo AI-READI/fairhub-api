@@ -563,19 +563,19 @@ CREATE TABLE IF NOT EXISTS "study_arm" (
 
 -- Dumping data for table public.study_arm: -1 rows
 /*!40000 ALTER TABLE "study_arm" DISABLE KEYS */;
-INSERT INTO "study_arm" ("id", "label", "type", "description", "intervention_list", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'arm1', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'arm2', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000003', 'arm1', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000002'),
-	('3fa464ca-6701-4a75-ab84-c26f3d3f49be', 'arm2', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000001'),
-	('527b87cc-55e5-4e39-ada6-1ed738cdde47', 'arm2', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000002'),
-	('3d2189e8-e95b-4d1b-ac1e-b0716bbe9eb4', 'arm2', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000002'),
-	('47c1c51b-f145-4b7a-af99-f05eb0feb133', 'arm2', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000002'),
-	('50278410-a4ca-4e0b-bff0-632f9a1c447a', 'arm1', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000002'),
-	('cb555a08-5387-4d34-b397-1ddd10fec0b9', 'arm2', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000002'),
-	('038bb56d-2b8b-483a-a974-3612fc52b2a3', 'arm2', 'Experimental', 'Lorem Ipsum', '{inter1,"intervention 2"}', '00000000-0000-0000-0000-000000000001'),
-	('173c6350-ba74-47fd-ae34-f39e2c4901ab', 'arm1', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000001'),
-	('91dca128-d30d-41e3-8115-2a548b029e04', 'arm2', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000001');
+INSERT INTO "study_arm" ("id", "label", "type", "description", "intervention_list", "study_id", "created_at") VALUES
+	('00000000-0000-0000-0000-000000000001', 'arm1', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('00000000-0000-0000-0000-000000000002', 'arm2', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('00000000-0000-0000-0000-000000000003', 'arm1', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000002', 1694326095),
+	('3fa464ca-6701-4a75-ab84-c26f3d3f49be', 'arm2', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('527b87cc-55e5-4e39-ada6-1ed738cdde47', 'arm2', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000002', 1694326095),
+	('3d2189e8-e95b-4d1b-ac1e-b0716bbe9eb4', 'arm2', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000002', 1694326095),
+	('47c1c51b-f145-4b7a-af99-f05eb0feb133', 'arm2', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000002', 1694326095),
+	('50278410-a4ca-4e0b-bff0-632f9a1c447a', 'arm1', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000002', 1694326095),
+	('cb555a08-5387-4d34-b397-1ddd10fec0b9', 'arm2', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000002', 1694326095),
+	('038bb56d-2b8b-483a-a974-3612fc52b2a3', 'arm2', 'Experimental', 'Lorem Ipsum', '{inter1,"intervention 2"}', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('173c6350-ba74-47fd-ae34-f39e2c4901ab', 'arm1', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('91dca128-d30d-41e3-8115-2a548b029e04', 'arm2', 'Experimental', 'Lorem Ipsum', '{"intervention 1","intervention 2"}', '00000000-0000-0000-0000-000000000001', 1694326095);
 /*!40000 ALTER TABLE "study_arm" ENABLE KEYS */;
 
 -- Dumping structure for table public.study_available_ipd
@@ -586,16 +586,17 @@ CREATE TABLE IF NOT EXISTS "study_available_ipd" (
 	"url" VARCHAR NOT NULL,
 	"comment" VARCHAR NOT NULL,
 	"study_id" CHAR(36) NOT NULL,
+    "created_at" BIGINT NOT NULL,
 	PRIMARY KEY ("id"),
 	CONSTRAINT "study_available_ipd_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 -- Dumping data for table public.study_available_ipd: -1 rows
 /*!40000 ALTER TABLE "study_available_ipd" DISABLE KEYS */;
-INSERT INTO "study_available_ipd" ("id", "identifier", "type", "url", "comment", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'AS25AF', 'Study Protocol', 'https://someurl.io', '', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'AS2655AF', 'Study Protocol', 'https://someurl.io', '', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000003', 'AS625AF', 'Study Protocol', 'https://someurl.io', '', '00000000-0000-0000-0000-000000000002');
+INSERT INTO "study_available_ipd" ("id", "identifier", "type", "url", "comment", "study_id", "created_at") VALUES
+	('00000000-0000-0000-0000-000000000001', 'AS25AF', 'Study Protocol', 'https://someurl.io', '', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('00000000-0000-0000-0000-000000000002', 'AS2655AF', 'Study Protocol', 'https://someurl.io', '', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('00000000-0000-0000-0000-000000000003', 'AS625AF', 'Study Protocol', 'https://someurl.io', '', '00000000-0000-0000-0000-000000000002', 1694326095);
 /*!40000 ALTER TABLE "study_available_ipd" ENABLE KEYS */;
 
 -- Dumping structure for table public.study_contact
@@ -609,17 +610,19 @@ CREATE TABLE IF NOT EXISTS "study_contact" (
 	"email_address" VARCHAR NOT NULL,
 	"central_contact" BOOLEAN NOT NULL,
 	"study_id" CHAR(36) NOT NULL,
+	"created_at" BIGINT NOT NULL,
 	PRIMARY KEY ("id"),
 	CONSTRAINT "study_contact_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 -- Dumping data for table public.study_contact: -1 rows
 /*!40000 ALTER TABLE "study_contact" DISABLE KEYS */;
-INSERT INTO "study_contact" ("id", "name", "affiliation", "role", "phone", "phone_ext", "email_address", "central_contact", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'Dejah', 'Erdman Inc', NULL, '501-039-841', '', 'Dejah83@hotmail.com', 'true', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000004', 'Lela', 'Metz LLC', NULL, '501-039-841', '', 'Lela84@hotmail.com', 'true', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000003', 'Verner', 'Monahan and Sons', NULL, '501-039-841', '', 'Verner19@yahoo.com', 'false', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000002', 'Reanna', 'Schowalter, Ullrich and Reichert', NULL, '501-039-841', '', 'Reanna79@hotmail.com', 'false', '00000000-0000-0000-0000-000000000001');
+INSERT INTO "study_contact" ("id", "name", "affiliation", "role", "phone", "phone_ext", "email_address", "central_contact", "study_id", "created_at"
+) VALUES
+	('00000000-0000-0000-0000-000000000001', 'Dejah', 'Erdman Inc', NULL, '501-039-841', '', 'Dejah83@hotmail.com', 'true', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('00000000-0000-0000-0000-000000000004', 'Lela', 'Metz LLC', NULL, '501-039-841', '', 'Lela84@hotmail.com', 'true', '00000000-0000-0000-0000-000000000002', 1694326095),
+	('00000000-0000-0000-0000-000000000003', 'Verner', 'Monahan and Sons', NULL, '501-039-841', '', 'Verner19@yahoo.com', 'false', '00000000-0000-0000-0000-000000000002', 1694326095),
+	('00000000-0000-0000-0000-000000000002', 'Reanna', 'Schowalter, Ullrich and Reichert', NULL, '501-039-841', '', 'Reanna79@hotmail.com', 'false', '00000000-0000-0000-0000-000000000001', 1694326095);
 /*!40000 ALTER TABLE "study_contact" ENABLE KEYS */;
 
 -- Dumping structure for table public.study_contributor
@@ -766,19 +769,21 @@ CREATE TABLE IF NOT EXISTS "study_identification" (
 	"identifier_link" VARCHAR NOT NULL,
 	"secondary" BOOLEAN NOT NULL,
 	"study_id" CHAR(36) NOT NULL,
+	"created_at" BIGINT NOT NULL,
 	PRIMARY KEY ("id"),
 	CONSTRAINT "study_identification_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 -- Dumping data for table public.study_identification: -1 rows
 /*!40000 ALTER TABLE "study_identification" DISABLE KEYS */;
-INSERT INTO "study_identification" ("id", "identifier", "identifier_type", "identifier_domain", "identifier_link", "secondary", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'ADF89ADS', 'NIH Grant Number', '', 'https://reporter.nih.gov/quickSearch/K01HL147713', 'false', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'ADF8934ADS', 'NIH Grant Number', '', 'https://reporter.nih.gov/quickSearch/K01HL147713', 'true', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000003', 'AD6F89ADS', 'NIH Grant Number', '', 'https://reporter.nih.gov/quickSearch/K01HL147713', 'true', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000004', 'ADF897ADS', 'NIH Grant Number', '', 'https://reporter.nih.gov/quickSearch/K01HL147713', 'true', '00000000-0000-0000-0000-000000000002'),
-	('00000000-0000-0000-0000-000000000005', 'ADF897ADS', 'NIH Grant Number', 'domain', 'https://reporter.nih.gov/quickSearch/K01HL147713', 'false', '00000000-0000-0000-0000-000000000002'),
-	('d70c6003-1a9d-4ee2-adca-3250dd1ae50a', 'ADF897ADS', 'NIH Grant Number', '', 'https://reporter.nih.gov/quickSearch/K01HL147713', 'true', '00000000-0000-0000-0000-000000000002');
+INSERT INTO "study_identification" ("id", "identifier", "identifier_type", "identifier_domain", "identifier_link", "secondary", "study_id", "created_at"
+) VALUES
+	('00000000-0000-0000-0000-000000000001', 'ADF89ADS', 'NIH Grant Number', '', 'https://reporter.nih.gov/quickSearch/K01HL147713', 'false', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('00000000-0000-0000-0000-000000000002', 'ADF8934ADS', 'NIH Grant Number', '', 'https://reporter.nih.gov/quickSearch/K01HL147713', 'true', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('00000000-0000-0000-0000-000000000003', 'AD6F89ADS', 'NIH Grant Number', '', 'https://reporter.nih.gov/quickSearch/K01HL147713', 'true', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('00000000-0000-0000-0000-000000000004', 'ADF897ADS', 'NIH Grant Number', '', 'https://reporter.nih.gov/quickSearch/K01HL147713', 'true', '00000000-0000-0000-0000-000000000002', 1694326095),
+	('00000000-0000-0000-0000-000000000005', 'ADF897ADS', 'NIH Grant Number', 'domain', 'https://reporter.nih.gov/quickSearch/K01HL147713', 'false', '00000000-0000-0000-0000-000000000002', 1694326095),
+	('d70c6003-1a9d-4ee2-adca-3250dd1ae50a', 'ADF897ADS', 'NIH Grant Number', '', 'https://reporter.nih.gov/quickSearch/K01HL147713', 'true', '00000000-0000-0000-0000-000000000002', 1694326095);
 /*!40000 ALTER TABLE "study_identification" ENABLE KEYS */;
 
 -- Dumping structure for table public.study_intervention
@@ -790,15 +795,16 @@ CREATE TABLE IF NOT EXISTS "study_intervention" (
 	"arm_group_label_list" VARCHAR[] NOT NULL,
 	"other_name_list" VARCHAR[] NOT NULL,
 	"study_id" CHAR(36) NOT NULL,
+    "created_at" BIGINT NOT NULL,
 	PRIMARY KEY ("id"),
 	CONSTRAINT "study_intervention_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 -- Dumping data for table public.study_intervention: -1 rows
 /*!40000 ALTER TABLE "study_intervention" DISABLE KEYS */;
-INSERT INTO "study_intervention" ("id", "type", "name", "description", "arm_group_label_list", "other_name_list", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'Drug', 'Test Name1', 'Lorem Ipsum', '{"name 1"}', '{"name 1"}', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'Drug', 'Test Name2', 'Lorem Ipsum', '{"name 1"}', '{"name 1"}', '00000000-0000-0000-0000-000000000001');
+INSERT INTO "study_intervention" ("id", "type", "name", "description", "arm_group_label_list", "other_name_list", "study_id", "created_at") VALUES
+	('00000000-0000-0000-0000-000000000001', 'Drug', 'Test Name1', 'Lorem Ipsum', '{"name 1"}', '{"name 1"}', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('00000000-0000-0000-0000-000000000002', 'Drug', 'Test Name2', 'Lorem Ipsum', '{"name 1"}', '{"name 1"}', '00000000-0000-0000-0000-000000000001', 1694326095);
 /*!40000 ALTER TABLE "study_intervention" ENABLE KEYS */;
 
 -- Dumping structure for table public.study_ipdsharing
@@ -837,17 +843,18 @@ CREATE TABLE IF NOT EXISTS "study_link" (
 	"url" VARCHAR NOT NULL,
 	"title" VARCHAR NOT NULL,
 	"study_id" CHAR(36) NOT NULL,
+    "created_at" BIGINT NOT NULL,
 	PRIMARY KEY ("id"),
 	CONSTRAINT "study_link_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 -- Dumping data for table public.study_link: -1 rows
 /*!40000 ALTER TABLE "study_link" DISABLE KEYS */;
-INSERT INTO "study_link" ("id", "url", "title", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'https://schema.aireadi.org/', 'schema1', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'https://schema.aireadi.org/', 'schema2', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000003', 'https://schema.aireadi.org/', 'schema3', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000004', 'https://schema.aireadi.org/', 'schema1', '00000000-0000-0000-0000-000000000002');
+INSERT INTO "study_link" ("id", "url", "title", "study_id", "created_at") VALUES
+	('00000000-0000-0000-0000-000000000001', 'https://schema.aireadi.org/', 'schema1', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('00000000-0000-0000-0000-000000000002', 'https://schema.aireadi.org/', 'schema2', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('00000000-0000-0000-0000-000000000003', 'https://schema.aireadi.org/', 'schema3', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('00000000-0000-0000-0000-000000000004', 'https://schema.aireadi.org/', 'schema1', '00000000-0000-0000-0000-000000000002', 1694326095);
 /*!40000 ALTER TABLE "study_link" ENABLE KEYS */;
 
 -- Dumping structure for table public.study_location
@@ -860,16 +867,18 @@ CREATE TABLE IF NOT EXISTS "study_location" (
 	"zip" VARCHAR NOT NULL,
 	"country" VARCHAR NOT NULL,
 	"study_id" CHAR(36) NOT NULL,
+    "created_at" BIGINT NOT NULL,
 	PRIMARY KEY ("id"),
 	CONSTRAINT "study_location_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 -- Dumping data for table public.study_location: -1 rows
 /*!40000 ALTER TABLE "study_location" DISABLE KEYS */;
-INSERT INTO "study_location" ("id", "facility", "status", "city", "state", "zip", "country", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'facility1', 'Recruting', 'San Diego', 'CA', '92121', 'USA', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'facility2', 'Recruting', 'San Diego', 'CA', '92121', 'USA', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000003', 'facility1', 'Recruting', 'San Diego', 'CA', '92121', 'USA', '00000000-0000-0000-0000-000000000002');
+INSERT INTO "study_location" ("id", "facility", "status", "city", "state", "zip", "country", "study_id", , "created_at"
+) VALUES
+	('00000000-0000-0000-0000-000000000001', 'facility1', 'Recruting', 'San Diego', 'CA', '92121', 'USA', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('00000000-0000-0000-0000-000000000002', 'facility2', 'Recruting', 'San Diego', 'CA', '92121', 'USA', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('00000000-0000-0000-0000-000000000003', 'facility1', 'Recruting', 'San Diego', 'CA', '92121', 'USA', '00000000-0000-0000-0000-000000000002', 1694326095);
 /*!40000 ALTER TABLE "study_location" ENABLE KEYS */;
 
 -- Dumping structure for table public.study_other
@@ -908,18 +917,20 @@ CREATE TABLE IF NOT EXISTS "study_overall_official" (
 	"affiliation" VARCHAR NOT NULL,
 	"role" VARCHAR NOT NULL,
 	"study_id" CHAR(36) NOT NULL,
+    "created_at" BIGINT NOT NULL,
 	PRIMARY KEY ("id"),
 	CONSTRAINT "study_overall_official_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 -- Dumping data for table public.study_overall_official: -1 rows
 /*!40000 ALTER TABLE "study_overall_official" DISABLE KEYS */;
-INSERT INTO "study_overall_official" ("id", "name", "affiliation", "role", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'Zoey', 'Lowe, Kshlerin and Ward', 'Study Director', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'Ashlynn', 'Kuhic - Towne', 'Study Chair', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000003', 'Maiya', 'Medhurst - Marks', 'Study Chair', '00000000-0000-0000-0000-000000000002'),
-	('b1683ba3-26ca-42c5-a257-1974dbbf4f8b', 'Maiya', 'Medhurst - Marks', 'Study Chair', '00000000-0000-0000-0000-000000000002'),
-	('319c21f2-9441-48ec-a64c-ab839a1da2a3', 'Maiya', 'Medhurst - Marks', 'Study Chair', '00000000-0000-0000-0000-000000000002');
+INSERT INTO "study_overall_official" ("id", "name", "affiliation", "role", "study_id", "created_at"
+) VALUES
+	('00000000-0000-0000-0000-000000000001', 'Zoey', 'Lowe, Kshlerin and Ward', 'Study Director', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('00000000-0000-0000-0000-000000000002', 'Ashlynn', 'Kuhic - Towne', 'Study Chair', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('00000000-0000-0000-0000-000000000003', 'Maiya', 'Medhurst - Marks', 'Study Chair', '00000000-0000-0000-0000-000000000002', 1694326095),
+	('b1683ba3-26ca-42c5-a257-1974dbbf4f8b', 'Maiya', 'Medhurst - Marks', 'Study Chair', '00000000-0000-0000-0000-000000000002', 1694326095),
+	('319c21f2-9441-48ec-a64c-ab839a1da2a3', 'Maiya', 'Medhurst - Marks', 'Study Chair', '00000000-0000-0000-0000-000000000002', 1694326095);
 /*!40000 ALTER TABLE "study_overall_official" ENABLE KEYS */;
 
 -- Dumping structure for table public.study_reference
@@ -929,16 +940,18 @@ CREATE TABLE IF NOT EXISTS "study_reference" (
 	"type" VARCHAR NOT NULL,
 	"citation" VARCHAR NOT NULL,
 	"study_id" CHAR(36) NOT NULL,
+	"created_at" BIGINT NOT NULL,
 	PRIMARY KEY ("id"),
 	CONSTRAINT "study_reference_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 -- Dumping data for table public.study_reference: -1 rows
 /*!40000 ALTER TABLE "study_reference" DISABLE KEYS */;
-INSERT INTO "study_reference" ("id", "identifier", "type", "citation", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'PMID1234 ', 'Yes', 'Lorem Ipsum', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000002', 'PMID12234 ', 'No', 'Lorem Ipsum', '00000000-0000-0000-0000-000000000001'),
-	('00000000-0000-0000-0000-000000000003', 'PMID1A2234 ', 'No', 'Lorem Ipsum', '00000000-0000-0000-0000-000000000002');
+INSERT INTO "study_reference" ("id", "identifier", "type", "citation", "study_id", "created_at"
+) VALUES
+	('00000000-0000-0000-0000-000000000001', 'PMID1234 ', 'Yes', 'Lorem Ipsum', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('00000000-0000-0000-0000-000000000002', 'PMID12234 ', 'No', 'Lorem Ipsum', '00000000-0000-0000-0000-000000000001', 1694326095),
+	('00000000-0000-0000-0000-000000000003', 'PMID1A2234 ', 'No', 'Lorem Ipsum', '00000000-0000-0000-0000-000000000002',1694326095);
 /*!40000 ALTER TABLE "study_reference" ENABLE KEYS */;
 
 -- Dumping structure for table public.study_sponsors_collaborators
