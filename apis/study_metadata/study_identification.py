@@ -31,7 +31,6 @@ class StudyIdentificationResource(Resource):
         identifiers = Identifiers(study_)
         return identifiers.to_dict()
 
-
     def post(self, study_id: int):
         data = request.json
         study_obj = Study.query.get(study_id)

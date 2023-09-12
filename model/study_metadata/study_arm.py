@@ -6,6 +6,7 @@ from ..db import db
 from datetime import timezone
 import datetime
 
+
 class StudyArm(db.Model):
     """A study is a collection of datasets and participants"""
 
@@ -34,8 +35,7 @@ class StudyArm(db.Model):
             "type": self.type,
             "description": str(self.description),
             "intervention_list": self.intervention_list,
-            "created_at": self.created_at
-
+            "created_at": self.created_at,
         }
 
     @staticmethod

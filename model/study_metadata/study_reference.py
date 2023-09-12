@@ -31,8 +31,7 @@ class StudyReference(db.Model):
             "identifier": self.identifier,
             "type": self.type,
             "citation": self.citation,
-            "created_at": self.created_at
-
+            "created_at": self.created_at,
         }
 
     @staticmethod

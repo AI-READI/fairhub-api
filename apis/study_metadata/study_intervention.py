@@ -29,7 +29,9 @@ class StudyInterventionResource(Resource):
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_intervention_ = study_.study_intervention
-        sorted_study_intervention = sorted(study_intervention_, key=lambda x: x.created_at, reverse=True)
+        sorted_study_intervention = sorted(
+            study_intervention_, key=lambda x: x.created_at, reverse=True
+        )
         return [s.to_dict() for s in sorted_study_intervention]
 
     def post(self, study_id: int):

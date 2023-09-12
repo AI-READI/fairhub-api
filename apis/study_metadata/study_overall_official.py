@@ -23,12 +23,14 @@ class StudyOverallOfficialResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")
-    #@api.marshal_with(study_overall_official)
+    # @api.marshal_with(study_overall_official)
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_overall_official_ = study_.study_overall_official
         # sorted_by_date = sorted([i.created_at for i in study_overall_official_], reverse=True)
-        sorted_study_overall = sorted(study_overall_official_, key=lambda x: x.created_at, reverse=True)
+        sorted_study_overall = sorted(
+            study_overall_official_, key=lambda x: x.created_at, reverse=True
+        )
         return [i.to_dict() for i in sorted_study_overall]
 
     def post(self, study_id: int):

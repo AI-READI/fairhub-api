@@ -36,8 +36,7 @@ class StudyLocation(db.Model):
             "state": self.state,
             "zip": self.zip,
             "country": self.country,
-            "created_at": self.created_at
-
+            "created_at": self.created_at,
         }
 
     @staticmethod

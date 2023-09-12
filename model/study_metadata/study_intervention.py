@@ -5,6 +5,7 @@ from sqlalchemy.dialects.postgresql import ARRAY
 from datetime import timezone
 import datetime
 
+
 class StudyIntervention(db.Model):
     """A study is a collection of datasets and participants"""
 
@@ -35,8 +36,7 @@ class StudyIntervention(db.Model):
             "description": self.description,
             "arm_group_label_list": self.arm_group_label_list,
             "other_name_list": self.other_name_list,
-            "created_at": self.created_at
-
+            "created_at": self.created_at,
         }
 
     @staticmethod

@@ -30,8 +30,7 @@ class StudyIdentification(db.Model):
             "identifier_type": self.identifier_type,
             "identifier_domain": self.identifier_domain,
             "identifier_link": self.identifier_link,
-            "created_at": self.created_at
-
+            "created_at": self.created_at,
         }
 
     @staticmethod
