@@ -48,10 +48,3 @@ class StudyDesignResource(Resource):
         db.session.commit()
         return study_.study_design.to_dict()
 
-    # def post(self, study_id: int):
-    #     data = request.json
-    #     study_design_ = Study.query.get(study_id)
-    #     study_design_ = StudyDesign.from_data(study_design_, data)
-    #     db.session.add(study_design_)
-    #     db.session.commit()
-    #     return study_design_.to_dict()

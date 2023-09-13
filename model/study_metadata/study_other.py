@@ -14,7 +14,7 @@ class StudyOther(db.Model):
         self.oversight_has_dmc = False
         self.conditions = []
         self.keywords = []
-        self.size = ""
+        self.size = 0
 
     __tablename__ = "study_other"
 
@@ -22,7 +22,7 @@ class StudyOther(db.Model):
     oversight_has_dmc = db.Column(db.BOOLEAN, nullable=False)
     conditions = db.Column(ARRAY(String), nullable=False)
     keywords = db.Column(ARRAY(String), nullable=False)
-    size = db.Column(db.String, nullable=False)
+    size = db.Column(db.BigInteger, nullable=False)
 
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
     study = db.relationship("Study", back_populates="study_other")

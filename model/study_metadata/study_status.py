@@ -9,22 +9,22 @@ class StudyStatus(db.Model):
     def __init__(self, study):
         self.id = str(uuid.uuid4())
         self.study = study
-        self.overall_status = ""
+        self.overall_status = None
         self.why_stopped = ""
         self.start_date = None
-        self.start_date_type = ""
+        self.start_date_type = None
         self.completion_date = None
-        self.completion_date_type = ""
+        self.completion_date_type = None
 
     __tablename__ = "study_status"
 
     id = db.Column(db.CHAR(36), primary_key=True)
-    overall_status = db.Column(db.String, nullable=False)
+    overall_status = db.Column(db.String, nullable=True)
     why_stopped = db.Column(db.String, nullable=False)
-    start_date = db.Column(db.DateTime, nullable=True)
-    start_date_type = db.Column(db.String, nullable=False)
-    completion_date = db.Column(db.DateTime, nullable=True)
-    completion_date_type = db.Column(db.String, nullable=False)
+    start_date = db.Column(db.String, nullable=True)
+    start_date_type = db.Column(db.String, nullable=True)
+    completion_date = db.Column(db.String, nullable=True)
+    completion_date_type = db.Column(db.String, nullable=True)
 
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
     study = db.relationship("Study", back_populates="study_status")
@@ -35,9 +35,9 @@ class StudyStatus(db.Model):
             "id": self.id,
             "overall_status": self.overall_status,
             "why_stopped": self.why_stopped,
-            "start_date": str(self.start_date),
+            "start_date": self.start_date,
             "start_date_type": self.start_date_type,
-            "completion_date": str(self.completion_date),
+            "completion_date": self.completion_date,
             "completion_date_type": self.completion_date_type,
         }
 

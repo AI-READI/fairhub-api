@@ -887,7 +887,7 @@ CREATE TABLE IF NOT EXISTS "study_other" (
 	"oversight_has_dmc" BOOLEAN NOT NULL,
 	"conditions" VARCHAR[] NOT NULL,
 	"keywords" VARCHAR[] NOT NULL,
-	"size" VARCHAR NOT NULL,
+	"size" BIGINT NOT NULL,
 	"study_id" CHAR(36) NOT NULL,
 	PRIMARY KEY ("id"),
 	CONSTRAINT "study_other_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
@@ -896,8 +896,8 @@ CREATE TABLE IF NOT EXISTS "study_other" (
 -- Dumping data for table public.study_other: -1 rows
 /*!40000 ALTER TABLE "study_other" DISABLE KEYS */;
 INSERT INTO "study_other" ("id", "oversight_has_dmc", "conditions", "keywords", "size", "study_id") VALUES
-	('00000000-0000-0000-0000-000000000001', 'true', '{"condition 1"}', '{"keyword 1"}', '1 GB', '00000000-0000-0000-0000-000000000001'),
-	('7a1217d6-6e58-432d-b747-36e1dec81499', 'true', '{conditionupdate}', '{"keyword 1"}', '3 GB', '00000000-0000-0000-0000-000000000002'),
+	('00000000-0000-0000-0000-000000000001', 'true', '{"condition 1"}', '{"keyword 1"}', 32, '00000000-0000-0000-0000-000000000001'),
+	('7a1217d6-6e58-432d-b747-36e1dec81499', 'true', '{conditionupdate}', '{"keyword 1"}', 32, '00000000-0000-0000-0000-000000000002'),
 	('837dce97-4073-4c4a-8d65-d1b7c87f92c6', 'false', '{}', '{}', '', 'e5a2a1d2-850f-465a-8fc1-6a1aec6d9e5a'),
 	('a651f9b1-3db4-4dae-a486-e9f7f7b5a5cb', 'false', '{}', '{}', '', 'ec0064ca-4f34-48a8-9dcc-1377c7ca0a59'),
 	('ccd3e31d-9e45-4329-9c89-2e7c7fa0d53b', 'false', '{}', '{}', '', '995d703e-a6d0-4dc2-95e7-3ce868eb9fb7'),
@@ -985,16 +985,15 @@ INSERT INTO "study_sponsors_collaborators" ("id", "responsible_party_type", "res
 -- Dumping structure for table public.study_status
 CREATE TABLE IF NOT EXISTS "study_status" (
 	"id" CHAR(36) NOT NULL,
-	"overall_status" VARCHAR NOT NULL,
+	"overall_status" VARCHAR NULL DEFAULT NULL,
 	"why_stopped" VARCHAR NOT NULL,
-	"start_date" TIMESTAMP NULL DEFAULT NULL,
-	"start_date_type" VARCHAR NOT NULL,
-	"completion_date" TIMESTAMP NULL DEFAULT NULL,
-	"completion_date_type" VARCHAR NOT NULL,
-	"study_id" CHAR(36) NOT NULL,
+	"start_date" VARCHAR NULL DEFAULT NULL,
+	"start_date_type" VARCHAR NULL DEFAULT NULL,
+	"completion_date" VARCHAR NULL DEFAULT NULL,
+	"completion_date_type" VARCHAR NULL DEFAULT NULL,
+	"study_id" CHAR(36) NULL DEFAULT NULL,
 	PRIMARY KEY ("id"),
-	CONSTRAINT "study_status_study_id_fkey" FOREIGN KEY
-("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+	CONSTRAINT "study_status_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 -- Dumping data for table public.study_status: 2 rows
