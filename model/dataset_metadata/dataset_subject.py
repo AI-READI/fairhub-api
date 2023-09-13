@@ -16,7 +16,7 @@ class DatasetSubject(db.Model):
     value_uri = db.Column(db.String, nullable=False)
     classification_code = db.Column(db.String, nullable=False)
 
-    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
+    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
     dataset = db.relationship("Dataset", back_populates="dataset_subject")
 
     def to_dict(self):

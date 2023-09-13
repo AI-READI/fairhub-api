@@ -53,7 +53,7 @@ class StudyDesign(db.Model):
     target_duration = db.Column(db.String, nullable=True)
     number_groups_cohorts = db.Column(db.Integer, nullable=True)
 
-    study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"), nullable=True)
+    study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"), nullable=False)
     study = db.relationship("Study", back_populates="study_design")
 
     def to_dict(self):

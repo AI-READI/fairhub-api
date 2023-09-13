@@ -28,7 +28,7 @@ class Version(db.Model):
     created_at = db.Column(db.BigInteger, nullable=False)
     published_on = db.Column(db.BigInteger, nullable=False)
 
-    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
+    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
     dataset = db.relationship("Dataset", back_populates="dataset_versions")
     participants = db.relationship("Participant", secondary=version_participants)
 

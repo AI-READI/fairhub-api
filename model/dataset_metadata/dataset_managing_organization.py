@@ -13,7 +13,7 @@ class DatasetManagingOrganization(db.Model):
     name = db.Column(db.String, nullable=False)
     ror_id = db.Column(db.String, nullable=False)
 
-    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
+    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
     dataset = db.relationship("Dataset", back_populates="dataset_managing_organization")
 
     def to_dict(self):

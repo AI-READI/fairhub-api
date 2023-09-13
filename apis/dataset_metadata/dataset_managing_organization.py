@@ -27,22 +27,9 @@ class DatasetManagingOrganizationResource(Resource):
         managing_organization_ = dataset_.dataset_managing_organization
         return [d.to_dict() for d in managing_organization_]
 
-    def post(self, study_id: int, dataset_id: int):
+    def put(self, study_id: int, dataset_id: int):
         data = request.json
-        data_obj = Dataset.query.get(dataset_id)
-        managing_organization_ = DatasetManagingOrganization.from_data(data_obj, data)
-        db.session.add(managing_organization_)
+        dataset_ = Dataset.query.get(dataset_id)
+        managing_organization_ = dataset_.dataset_managing_organization.update(request.json)
         db.session.commit()
         return managing_organization_.to_dict()
-
-    @api.route(
-        "/study/<study_id>/dataset/<dataset_id>/metadata/managing_organization/<managing_organization_id>"
-    )
-    class DatasetManagingOrganizationUpdate(Resource):
-        def put(self, study_id: int, dataset_id: int, managing_organization_id: int):
-            managing_organization_ = DatasetManagingOrganization.query.get(
-                managing_organization_id
-            )
-            managing_organization_.update(request.json)
-            db.session.commit()
-            return managing_organization_.to_dict()

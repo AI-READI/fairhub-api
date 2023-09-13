@@ -17,7 +17,7 @@ class DatasetContributor(db.Model):
     creator = db.Column(db.BOOLEAN, nullable=False)
     contributor_type = db.Column(db.String, nullable=False)
 
-    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"))
+    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
     dataset = db.relationship("Dataset", back_populates="dataset_contributors")
     dataset_contributor_affiliation = db.relationship(
         "DatasetContributorAffiliation", back_populates="dataset_contributors"

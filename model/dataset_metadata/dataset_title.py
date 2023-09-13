@@ -13,7 +13,7 @@ class DatasetTitle(db.Model):
     type = db.Column(db.String, nullable=False)
 
     dataset = db.relationship("Dataset", back_populates="dataset_title")
-    dataset_id = db.Column(db.String, db.ForeignKey("dataset.id"))
+    dataset_id = db.Column(db.String, db.ForeignKey("dataset.id"), nullable=False)
 
     def to_dict(self):
         return {

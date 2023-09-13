@@ -30,18 +30,9 @@ class DatasetOtherResource(Resource):
         dataset_other_ = dataset_.dataset_other
         return [d.to_dict() for d in dataset_other_]
 
-    def post(self, study_id: int, dataset_id: int):
+    def put(self, study_id: int, dataset_id: int):
         data = request.json
-        data_obj = Dataset.query.get(dataset_id)
-        dataset_other_ = DatasetOther.from_data(data_obj, data)
-        db.session.add(dataset_other_)
+        dataset_ = Dataset.query.get(dataset_id)
+        dataset_other_ = dataset_.dataset_other.update(request.json)
         db.session.commit()
         return dataset_other_.to_dict()
-
-    @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/other/<other_id>")
-    class DatasetOtherUpdate(Resource):
-        def put(self, study_id: int, dataset_id: int, other_id: int):
-            dataset_other_ = DatasetOther.query.get(other_id)
-            dataset_other_.update(request.json)
-            db.session.commit()
-            return dataset_other_.to_dict()

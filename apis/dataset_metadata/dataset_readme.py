@@ -22,18 +22,9 @@ class DatasetReadmeResource(Resource):
         dataset_readme_ = dataset_.dataset_readme
         return [d.to_dict() for d in dataset_readme_]
 
-    def post(self, study_id: int, dataset_id: int):
+    def put(self, study_id: int, dataset_id: int):
         data = request.json
-        data_obj = Dataset.query.get(dataset_id)
-        dataset_readme_ = DatasetReadme.from_data(data_obj, data)
-        db.session.add(dataset_readme_)
+        dataset_ = Dataset.query.get(dataset_id)
+        dataset_readme_ = dataset_.dataset_readme.update(data)
         db.session.commit()
         return dataset_readme_.to_dict()
-
-    @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/readme/<readme_id>")
-    class DatasetReadmeUpdate(Resource):
-        def put(self, study_id: int, dataset_id: int, readme_id: int):
-            dataset_readme_ = DatasetReadme.query.get(readme_id)
-            dataset_readme_.update(request.json)
-            db.session.commit()
-            return dataset_readme_.to_dict()
