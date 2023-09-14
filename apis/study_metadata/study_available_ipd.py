@@ -26,8 +26,7 @@ class StudyAvailableResource(Resource):
         study_ = Study.query.get(study_id)
         study_available_ipd_ = study_.study_available_ipd
         sorted_study_available_ipd = sorted(
-            study_available_ipd_, key=lambda x: x.created_at, reverse=True
-        )
+            study_available_ipd_, key=lambda x: x.created_at)
         return [s.to_dict() for s in sorted_study_available_ipd]
 
     @api.doc("update available")

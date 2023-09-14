@@ -27,9 +27,9 @@ class StudyOverallOfficialResource(Resource):
     def get(self, study_id: int):
         study_ = Study.query.get(study_id)
         study_overall_official_ = study_.study_overall_official
-        # sorted_by_date = sorted([i.created_at for i in study_overall_official_], reverse=True)
+        # sorted_by_date = sorted([i.created_at for i in study_overall_official_])
         sorted_study_overall = sorted(
-            study_overall_official_, key=lambda x: x.created_at, reverse=True
+            study_overall_official_, key=lambda x: x.created_at
         )
         return [i.to_dict() for i in sorted_study_overall]
 

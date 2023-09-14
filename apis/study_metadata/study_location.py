@@ -31,8 +31,7 @@ class StudyLocationResource(Resource):
         study_ = Study.query.get(study_id)
         study_location_ = study_.study_location
         sorted_study_location = sorted(
-            study_location_, key=lambda x: x.created_at, reverse=True
-        )
+            study_location_, key=lambda x: x.created_at)
         return [s.to_dict() for s in sorted_study_location]
 
     def post(self, study_id: int):

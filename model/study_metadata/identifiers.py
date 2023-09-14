@@ -10,8 +10,7 @@ class Identifiers:
     def to_dict(self):
         sorted_study_identifications = sorted(
             self.study.study_identification,
-            key=lambda identifier: identifier.created_at,
-            reverse=True,
+            key=lambda identifier: identifier.created_at
         )
         return {
             "primary": [
