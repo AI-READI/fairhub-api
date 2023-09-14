@@ -30,6 +30,8 @@ class DatasetManagingOrganizationResource(Resource):
     def put(self, study_id: int, dataset_id: int):
         data = request.json
         dataset_ = Dataset.query.get(dataset_id)
-        managing_organization_ = dataset_.dataset_managing_organization.update(request.json)
+        managing_organization_ = dataset_.dataset_managing_organization.update(
+            request.json
+        )
         db.session.commit()
         return managing_organization_.to_dict()

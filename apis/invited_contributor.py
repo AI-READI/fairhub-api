@@ -30,6 +30,7 @@ class AddParticipant(Resource):
             return "Invitation is sent"
         elif not user:
             invite_user_to_study(study, user, permission)
+
     db.session.commit()
 
 
@@ -39,7 +40,6 @@ def add_user_to_study(study, user, permission):
 
 def invite_user_to_study(study, user, permission):
     pass
-
 
 
 # if study_obj.invited_contributors.email_address not in study_obj.study_contributors.user.email_address:
