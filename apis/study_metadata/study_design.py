@@ -47,4 +47,3 @@ class StudyDesignResource(Resource):
         study_.study_design.update(request.json)
         db.session.commit()
         return study_.study_design.to_dict()
-
