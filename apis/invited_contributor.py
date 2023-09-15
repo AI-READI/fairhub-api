@@ -37,3 +37,12 @@ class AddInvitedContributor(Resource):
         # except:
         #     print("error occured", 422)
 
+
+
+def invite_user_to_study(study, user, permission):
+    pass
+
+
+# if study_obj.invited_contributors.email_address not in study_obj.study_contributors.user.email_address:
+#     add_invited_contributor = StudyInvitedContributor.from_data(study_obj, request.json)
+#     db.session.add(add_invited_contributor)
