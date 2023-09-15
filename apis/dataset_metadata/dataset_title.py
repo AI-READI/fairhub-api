@@ -44,9 +44,7 @@ class DatasetTitleResource(Resource):
         db.session.commit()
         return list_of_elements
 
-    @api.route(
-        "/study/<study_id>/dataset/<dataset_id>/metadata/title/<title_id>"
-    )
+    @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/title/<title_id>")
     class DatasetDescriptionUpdate(Resource):
         def delete(self, study_id: int, dataset_id: int, title_id: int):
             dataset_title_ = DatasetTitle.query.get(title_id)

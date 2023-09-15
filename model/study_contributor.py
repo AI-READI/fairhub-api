@@ -9,6 +9,7 @@ class StudyContributor(db.Model):
         self.study = study
         self.user = user
         self.permission = permission
+
     __tablename__ = "study_contributor"
     permission = db.Column(db.String, nullable=False)
     user_id = db.Column(db.CHAR(36), db.ForeignKey("user.id"), primary_key=True)

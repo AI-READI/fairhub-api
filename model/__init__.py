@@ -108,5 +108,5 @@ __all__ = [
     "StudyStatus",
     "Identifiers",
     "Arm",
-    "StudyInvitedContributor"
+    "StudyInvitedContributor",
 ]

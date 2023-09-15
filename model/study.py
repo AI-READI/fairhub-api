@@ -30,7 +30,9 @@ class Study(db.Model):
     updated_on = db.Column(db.BigInteger, nullable=False)
 
     dataset = db.relationship("Dataset", back_populates="study")
-    study_contributors = db.relationship("StudyContributor", back_populates="study", lazy="dynamic")
+    study_contributors = db.relationship(
+        "StudyContributor", back_populates="study", lazy="dynamic"
+    )
     participants = db.relationship("Participant", back_populates="study")
     invited_contributors = db.relationship(
         "StudyInvitedContributor", back_populates="study"
@@ -107,7 +109,9 @@ class Study(db.Model):
         self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
 
     def add_user_to_study(self, user, permission):
-        contributor = self.study_contributors.filter(model.StudyContributor.user_id == user.id)
+        contributor = self.study_contributors.filter(
+            model.StudyContributor.user_id == user.id
+        )
         if contributor:
             raise Exception("User is already a contributor in study")
         else:
@@ -115,10 +119,13 @@ class Study(db.Model):
             db.session.add(contributor)
 
     def invite_user_to_study(self, email_address, permission):
-        invited_contributor = self.invited_contributors.filter_by(email_address=email_address).one_or_none()
+        invited_contributor = self.invited_contributors.filter_by(
+            email_address=email_address
+        ).one_or_none()
         if invited_contributor:
             raise Exception("User is already a contributor in study")
         else:
-            contributor_add = model.StudyInvitedContributor(self, email_address, permission)
+            contributor_add = model.StudyInvitedContributor(
+                self, email_address, permission
+            )
         db.session.add(contributor_add)
-

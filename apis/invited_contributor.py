@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from model import StudyInvitedContributor, Study, db, User, StudyContributor
 from flask import request
+
 api = Namespace("invited_contributors", description="invited contributors", path="/")
 
 
@@ -36,7 +37,6 @@ class AddInvitedContributor(Resource):
         db.session.commit()
         # except:
         #     print("error occured", 422)
-
 
 
 def invite_user_to_study(study, user, permission):

@@ -11,6 +11,7 @@ class StudyInvitedContributor(db.Model):
         self.study = study
         self.user = user
         self.permission = permission
+
     __tablename__ = "invited_study_contributor"
     email_address = db.Column(db.String, nullable=False, primary_key=True)
     permission = db.Column(db.String, nullable=False)
