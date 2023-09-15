@@ -68,7 +68,6 @@ __all__ = [
     "db",
     "User",
     "DatasetContributor",
-    "StudyInvitedContributor",
     "StudyContributor",
     "DatasetOther",
     "DatasetAccess",
@@ -109,4 +108,5 @@ __all__ = [
     "StudyStatus",
     "Identifiers",
     "Arm",
+    "StudyInvitedContributor"
 ]

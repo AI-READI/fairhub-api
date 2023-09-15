@@ -31,15 +31,25 @@ class DatasetTitleResource(Resource):
     def post(self, study_id: int, dataset_id: int):
         data = request.json
         data_obj = Dataset.query.get(dataset_id)
-        dataset_title_ = DatasetTitle.from_data(data_obj, data)
-        db.session.add(dataset_title_)
+        list_of_elements = []
+        for i in data:
+            if "id" in i and i["id"]:
+                dataset_title_ = DatasetTitle.query.get(i["id"])
+                dataset_title_.update(i)
+                list_of_elements.append(dataset_title_.to_dict())
+            elif "id" not in i or not i["id"]:
+                dataset_title_ = DatasetTitle.from_data(data_obj, i)
+                db.session.add(dataset_title_)
+                list_of_elements.append(dataset_title_.to_dict())
         db.session.commit()
-        return dataset_title_.to_dict()
+        return list_of_elements
 
-    @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/title/<title_id>")
-    class DatasetTitleUpdate(Resource):
-        def put(self, study_id: int, dataset_id: int, title_id: int):
+    @api.route(
+        "/study/<study_id>/dataset/<dataset_id>/metadata/title/<title_id>"
+    )
+    class DatasetDescriptionUpdate(Resource):
+        def delete(self, study_id: int, dataset_id: int, title_id: int):
             dataset_title_ = DatasetTitle.query.get(title_id)
-            dataset_title_.update(request.json)
+            db.session.delete(dataset_title_)
             db.session.commit()
             return dataset_title_.to_dict()

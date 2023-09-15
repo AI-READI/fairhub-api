@@ -30,17 +30,25 @@ class DatasetDescriptionResource(Resource):
     def post(self, study_id: int, dataset_id: int):
         data = request.json
         data_obj = Dataset.query.get(dataset_id)
-        dataset_description_ = DatasetDescription.from_data(data_obj, data)
-        db.session.add(dataset_description_)
+        list_of_elements = []
+        for i in data:
+            if "id" in i and i["id"]:
+                dataset_description_ = DatasetDescription.query.get(i["id"])
+                dataset_description_.update(i)
+                list_of_elements.append(dataset_description_.to_dict())
+            elif "id" not in i or not i["id"]:
+                dataset_description_ = DatasetDescription.from_data(data_obj, i)
+                db.session.add(dataset_description_)
+                list_of_elements.append(dataset_description_.to_dict())
         db.session.commit()
-        return dataset_description_.to_dict()
+        return list_of_elements
 
     @api.route(
         "/study/<study_id>/dataset/<dataset_id>/metadata/description/<description_id>"
     )
     class DatasetDescriptionUpdate(Resource):
-        def put(self, study_id: int, dataset_id: int, description_id: int):
+        def delete(self, study_id: int, dataset_id: int, description_id: int):
             dataset_description_ = DatasetDescription.query.get(description_id)
-            dataset_description_.update(request.json)
+            db.session.delete(dataset_description_)
             db.session.commit()
             return dataset_description_.to_dict()

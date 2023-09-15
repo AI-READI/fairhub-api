@@ -69,7 +69,7 @@ def create_app():
         metadata = MetaData()
         metadata.reflect(bind=engine)
         table_names = [table.name for table in metadata.tables.values()]
-        print(table_names)
+        # print(table_names)
         if len(table_names) == 0:
             with engine.begin() as conn:
                 """Create the database schema."""

@@ -4,9 +4,11 @@ from .db import db
 
 
 class StudyContributor(db.Model):
-    def __init__(self):
+    def __init__(self, study, user, permission):
         self.id = str(uuid.uuid4())
-
+        self.study = study
+        self.user = user
+        self.permission = permission
     __tablename__ = "study_contributor"
     permission = db.Column(db.String, nullable=False)
     user_id = db.Column(db.CHAR(36), db.ForeignKey("user.id"), primary_key=True)
@@ -24,11 +26,3 @@ class StudyContributor(db.Model):
             "user_id": self.user_id,
             "study_id": self.study_id,
         }
-
-    @staticmethod
-    def from_data(data: dict):
-        study_contributor = StudyContributor()
-        study_contributor.permission = data["permission"]
-        study_contributor.user_id = data["user_id"]
-        study_contributor.study_id = data["study_id"]
-        return study_contributor

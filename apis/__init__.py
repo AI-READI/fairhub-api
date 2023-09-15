@@ -5,9 +5,11 @@ from apis.dataset_metadata_namespace import api as dataset_metadata_namespace
 from apis.study_metadata_namespace import api as study_metadata_namespace
 
 from .contributor import api as contributors_api
+
 from .dataset import api as dataset_api
 from .participant import api as participants_api
 from .study import api as study_api
+from .invited_contributor import api as invited_contributors
 
 from .study_metadata.study_arm import api as arm
 from .study_metadata.study_available_ipd import api as available_ipd
@@ -77,3 +79,5 @@ api.add_namespace(study_api)
 api.add_namespace(dataset_api)
 api.add_namespace(participants_api)
 api.add_namespace(contributors_api)
+api.add_namespace(invited_contributors)
+

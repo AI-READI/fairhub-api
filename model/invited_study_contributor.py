@@ -2,12 +2,15 @@ import uuid
 from datetime import datetime
 from .db import db
 import datetime
+from datetime import timezone
 
 
 class StudyInvitedContributor(db.Model):
-    def __init__(self):
+    def __init__(self, study, user, permission):
         self.id = str(uuid.uuid4())
-
+        self.study = study
+        self.user = user
+        self.permission = permission
     __tablename__ = "invited_study_contributor"
     email_address = db.Column(db.String, nullable=False, primary_key=True)
     permission = db.Column(db.String, nullable=False)
@@ -22,12 +25,3 @@ class StudyInvitedContributor(db.Model):
             "permission": self.permission,
             "invited_on": self.invited_on,
         }
-
-    @staticmethod
-    def from_data(data: dict):
-        invited_contributor = StudyInvitedContributor()
-        invited_contributor.email_address = data["email_address"]
-        invited_contributor.permission = data["permission"]
-        invited_contributor.invited_on = datetime.datetime.now(timezone.utc).timestamp()
-
-        return invited_contributor
