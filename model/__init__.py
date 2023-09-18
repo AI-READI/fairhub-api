@@ -3,7 +3,7 @@ from .dataset_versions import DatasetVersions
 
 from .db import db
 from .participant import Participant
-from .study import Study
+from .study import Study, StudyException
 from .user import User
 from .dataset import Dataset
 
@@ -108,5 +108,6 @@ __all__ = [
     "StudyStatus",
     "Identifiers",
     "Arm",
-    "StudyInvitedContributor"
+    "StudyInvitedContributor",
+    "StudyException"
 ]

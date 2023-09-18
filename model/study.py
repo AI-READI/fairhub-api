@@ -6,6 +6,10 @@ from .db import db
 import datetime
 
 
+class StudyException(Exception):
+    pass
+
+
 class Study(db.Model):
     """A study is a collection of datasets and participants"""
 
@@ -33,7 +37,7 @@ class Study(db.Model):
     study_contributors = db.relationship("StudyContributor", back_populates="study", lazy="dynamic")
     participants = db.relationship("Participant", back_populates="study")
     invited_contributors = db.relationship(
-        "StudyInvitedContributor", back_populates="study"
+        "StudyInvitedContributor", back_populates="study", lazy="dynamic"
     )
 
     study_arm = db.relationship("StudyArm", back_populates="study")
@@ -109,16 +113,17 @@ class Study(db.Model):
     def add_user_to_study(self, user, permission):
         contributor = self.study_contributors.filter(model.StudyContributor.user_id == user.id)
         if contributor:
-            raise Exception("User is already a contributor in study")
+            raise StudyException("User is already exists in study")
         else:
             contributor = model.StudyContributor(self, user, permission)
             db.session.add(contributor)
+            return contributor
 
     def invite_user_to_study(self, email_address, permission):
-        invited_contributor = self.invited_contributors.filter_by(email_address=email_address).one_or_none()
+        invited_contributor = self.invited_contributors.filter(model.StudyInvitedContributor.email_address == email_address).one_or_none()
         if invited_contributor:
-            raise Exception("User is already a contributor in study")
+            raise StudyException("This email address has already been invited to this study")
         else:
             contributor_add = model.StudyInvitedContributor(self, email_address, permission)
-        db.session.add(contributor_add)
-
+            db.session.add(contributor_add)
+            return contributor_add

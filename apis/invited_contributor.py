@@ -1,5 +1,5 @@
 from flask_restx import Namespace, Resource, fields
-from model import StudyInvitedContributor, Study, db, User, StudyContributor
+from model import StudyInvitedContributor, Study, db, User, StudyContributor, StudyException
 from flask import request
 api = Namespace("invited_contributors", description="invited contributors", path="/")
 
@@ -27,22 +27,14 @@ class AddInvitedContributor(Resource):
         email_address = data["email_address"]
         user = User.query.filter_by(email_address=email_address).first()
         permission = data["permission"]
-        if user:
-            study_obj.add_user_to_study(user, permission)
-
-        elif not user:
-            study_obj.invite_user_to_study(email_address, permission)
-            print("User successfully saved")
+        contributor_ = None
+        try:
+            if user:
+                contributor_ = study_obj.add_user_to_study(user, permission)
+            else:
+                contributor_ = study_obj.invite_user_to_study(email_address, permission)
+        except StudyException as ex:
+            return ex.args[0], 409
         db.session.commit()
-        # except:
-        #     print("error occured", 422)
+        return contributor_.to_dict(), 201
 
-
-
-def invite_user_to_study(study, user, permission):
-    pass
-
-
-# if study_obj.invited_contributors.email_address not in study_obj.study_contributors.user.email_address:
-#     add_invited_contributor = StudyInvitedContributor.from_data(study_obj, request.json)
-#     db.session.add(add_invited_contributor)
