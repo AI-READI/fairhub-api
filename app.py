@@ -5,16 +5,16 @@ from sqlalchemy import MetaData
 
 import model
 from apis import api
+from flask_bcrypt import Bcrypt
 
 
 # from pyfairdatatools import __version__
 
-
+bcrypt = Bcrypt()
 def create_app():
     """Initialize the core application."""
     # create and configure the app
     app = Flask(__name__)
-
     # `full` if you want to see all the details
     app.config["SWAGGER_UI_DOC_EXPANSION"] = "list"
     app.config["RESTX_MASK_SWAGGER"] = False
@@ -42,7 +42,7 @@ def create_app():
 
     model.db.init_app(app)
     api.init_app(app)
-
+    bcrypt.init_app(app)
     CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": "True"}})
     #
     # @app.cli.command("create-schema")
@@ -88,4 +88,5 @@ if __name__ == "__main__":
     port = args.port
 
     app = create_app()
+
     app.run(host="0.0.0.0", port=port)

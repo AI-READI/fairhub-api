@@ -1,9 +1,8 @@
 from flask import Response, jsonify, request
 from flask_restx import Namespace, Resource, fields
-
-from model import Participant, Study, db
-
-api = Namespace("participant", description="participant operations", path="/")
+from model import User
+from flask import redirect, url_for
+api = Namespace("login", description="login", path="/")
 
 login_model = api.model(
     "Login",
@@ -19,9 +18,9 @@ login_model = api.model(
 )
 
 
-@api.route("/login")
+@api.route("/auth/login")
 class Login(Resource):
-    @api.doc("participants")
+    @api.doc("login")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(login_model)
@@ -31,11 +30,15 @@ class Login(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(login_model)
+    def post(self):
+        data = request.json
+        username = data["username"]
+        user = User.query.filter_by(username=username).one_or_none()
+        validate_pass = user.check_password(data["password"])
+        if user and validate_pass:
+            return redirect(url_for("study"))
+        else:
+            return "Username or password is not correct", 403
 
-    def post(self, study_id: int):
-        # user query using username
-        # call user check password
-
-        pass
 
 

@@ -3,14 +3,14 @@ from datetime import datetime
 from .db import db
 from datetime import timezone
 import datetime
-
+import app
 
 
 class User(db.Model):
-    def __init__(self, password):
+    def __init__(self, password, data):
         self.id = str(uuid.uuid4())
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
-        self.set_password(password)
+        self.set_password(password, data)
     __tablename__ = "user"
     id = db.Column(db.CHAR(36), primary_key=True)
     email_address = db.Column(db.String, nullable=False, unique=True)
@@ -37,7 +37,7 @@ class User(db.Model):
 
     @staticmethod
     def from_data(data: dict):
-        user = User(data["password"])
+        user = User(data["password"], data)
         user.update(data)
         return user
 
@@ -49,11 +49,13 @@ class User(db.Model):
         self.orcid = data["orcid"]
         self.institution = data["institution"]
 
-    def set_password(self, password):
-        pass
-        # hasliyib sonra zibil databasede saxla
+    def set_password(self, password, data):
+        hashed_password = app.bcrypt.generate_password_hash(password).decode('utf-8')
+        self.hash = hashed_password
+
 
     def check_password(self, password):
-        pass
-        # hasliyinb check ele
+        hashed_password = app.bcrypt.generate_password_hash(password).decode('utf-8')
+        is_valid = app.bcrypt.check_password_hash(hashed_password, password)
+        return f"Password: {password}<br>Hashed Password: {hashed_password}<br>Is Valid: {is_valid}"
 

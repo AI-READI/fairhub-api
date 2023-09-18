@@ -11,6 +11,9 @@ from .participant import api as participants_api
 from .study import api as study_api
 from .invited_contributor import api as invited_contributors
 
+from .signup_user import api as signup
+from .login import api as login
+
 from .study_metadata.study_arm import api as arm
 from .study_metadata.study_available_ipd import api as available_ipd
 from .study_metadata.study_contact import api as contact
@@ -63,7 +66,8 @@ api = Api(
 
 api.add_namespace(dataset_metadata_namespace)
 api.add_namespace(study_metadata_namespace)
-
+api.add_namespace(signup)
+api.add_namespace(login)
 
 @api.route("/echo", endpoint="echo")
 class HelloWorld(Resource):
@@ -80,3 +84,4 @@ api.add_namespace(dataset_api)
 api.add_namespace(participants_api)
 api.add_namespace(contributors_api)
 api.add_namespace(invited_contributors)
+
