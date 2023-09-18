@@ -16,7 +16,7 @@ signup_model = api.model(
         "orcid": fields.String(required=True),
         "hash": fields.String(required=True),
         "created_at": fields.Integer(required=True),
-        "institution": fields.String(required=True)
+        "institution": fields.String(required=True),
     },
 )
 
