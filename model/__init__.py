@@ -109,5 +109,5 @@ __all__ = [
     "Identifiers",
     "Arm",
     "StudyInvitedContributor",
-    "StudyException"
+    "StudyException",
 ]

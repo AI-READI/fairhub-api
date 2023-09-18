@@ -12,6 +12,7 @@ class StudyInvitedContributor(db.Model):
         self.permission = permission
         self.invited_on = datetime.datetime.now(timezone.utc).timestamp()
         self.email_address = email_address
+
     __tablename__ = "invited_study_contributor"
     email_address = db.Column(db.String, nullable=False, primary_key=True)
     permission = db.Column(db.String, nullable=False)

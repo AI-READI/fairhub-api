@@ -1,6 +1,14 @@
 from flask_restx import Namespace, Resource, fields
-from model import StudyInvitedContributor, Study, db, User, StudyContributor, StudyException
+from model import (
+    StudyInvitedContributor,
+    Study,
+    db,
+    User,
+    StudyContributor,
+    StudyException,
+)
 from flask import request
+
 api = Namespace("invited_contributors", description="invited contributors", path="/")
 
 
@@ -37,4 +45,3 @@ class AddInvitedContributor(Resource):
             return ex.args[0], 409
         db.session.commit()
         return contributor_.to_dict(), 201
-
