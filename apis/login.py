@@ -37,5 +37,3 @@ class Login(Resource):
         # call user check password
 
         pass
-
-
