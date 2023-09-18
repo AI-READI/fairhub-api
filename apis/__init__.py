@@ -69,6 +69,7 @@ api.add_namespace(study_metadata_namespace)
 api.add_namespace(signup)
 api.add_namespace(login)
 
+
 @api.route("/echo", endpoint="echo")
 class HelloWorld(Resource):
     @api.response(200, "Success")
@@ -84,4 +85,3 @@ api.add_namespace(dataset_api)
 api.add_namespace(participants_api)
 api.add_namespace(contributors_api)
 api.add_namespace(invited_contributors)
-

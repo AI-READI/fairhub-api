@@ -2,6 +2,7 @@ from flask import Response, jsonify, request
 from flask_restx import Namespace, Resource, fields
 from model import User
 from flask import redirect, url_for
+
 api = Namespace("login", description="login", path="/")
 
 login_model = api.model(
@@ -39,6 +40,3 @@ class Login(Resource):
             return redirect(url_for("study"))
         else:
             return "Username or password is not correct", 403
-
-
-
