@@ -1,18 +1,20 @@
 import uuid
 from datetime import datetime
 from .db import db
-import datetime
 from datetime import timezone
+import datetime
+
 
 
 class User(db.Model):
-    def __init__(self):
+    def __init__(self, password):
         self.id = str(uuid.uuid4())
-
+        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
+        self.set_password(password)
     __tablename__ = "user"
     id = db.Column(db.CHAR(36), primary_key=True)
-    email_address = db.Column(db.String, nullable=False)
-    username = db.Column(db.String, nullable=False)
+    email_address = db.Column(db.String, nullable=False, unique=True)
+    username = db.Column(db.String, nullable=False, unique=True)
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String, nullable=False)
     orcid = db.Column(db.String, nullable=False)
@@ -29,19 +31,29 @@ class User(db.Model):
             "first_name": self.first_name,
             "last_name": self.last_name,
             "orcid": self.orcid,
-            "hash": self.hash,
             "created_at": self.created_at,
             "institution": self.institution,
         }
 
     @staticmethod
     def from_data(data: dict):
-        user = User()
-        user.email_address = data["email_address"]
-        user.username = data["username"]
-        user.first_name = data["first_name"]
-        user.last_name = data["last_name"]
-        user.orcid = data["orcid"]
-        user.hash = data["hash"]
-        user.institution = data["institution"]
+        user = User(data["password"])
+        user.update(data)
         return user
+
+    def update(self, data):
+        self.email_address = data["email_address"]
+        self.username = data["username"]
+        self.first_name = data["first_name"]
+        self.last_name = data["last_name"]
+        self.orcid = data["orcid"]
+        self.institution = data["institution"]
+
+    def set_password(self, password):
+        pass
+        # hasliyib sonra zibil databasede saxla
+
+    def check_password(self, password):
+        pass
+        # hasliyinb check ele
+
