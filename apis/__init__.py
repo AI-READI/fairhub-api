@@ -80,4 +80,3 @@ api.add_namespace(dataset_api)
 api.add_namespace(participants_api)
 api.add_namespace(contributors_api)
 api.add_namespace(invited_contributors)
-
