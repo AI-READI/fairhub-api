@@ -11,6 +11,8 @@ from flask_bcrypt import Bcrypt
 # from pyfairdatatools import __version__
 
 bcrypt = Bcrypt()
+
+
 def create_app():
     """Initialize the core application."""
     # create and configure the app
