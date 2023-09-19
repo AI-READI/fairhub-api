@@ -55,6 +55,7 @@ class User(db.Model):
         self.hash = hashed_password
 
     def check_password(self, password):
+        # TODO check password lenght and having uppercase letter
         hashed_password = app.bcrypt.generate_password_hash(password).decode("utf-8")
         is_valid = app.bcrypt.check_password_hash(hashed_password, password)
         return is_valid

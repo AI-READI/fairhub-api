@@ -9,7 +9,7 @@ from model import (
 )
 from flask import request
 
-api = Namespace("invited_contributors", description="invited contributors", path="/")
+api = Namespace("Invited_contributors", description="Invited contributors", path="/")
 
 
 contributors_model = api.model(

@@ -3,7 +3,7 @@ from flask_restx import Namespace, Resource, fields
 
 from model import Participant, Study, db
 
-api = Namespace("participant", description="participant operations", path="/")
+api = Namespace("Participant", description="Participant operations", path="/")
 
 participant_model = api.model(
     "Study",

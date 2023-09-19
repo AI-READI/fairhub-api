@@ -3,7 +3,7 @@ from flask_restx import Namespace, Resource, fields
 
 from model import Dataset, Version, Participant, Study, db
 
-api = Namespace("dataset", description="dataset operations", path="/")
+api = Namespace("Dataset", description="Dataset operations", path="/")
 
 
 dataset_versions_model = api.model(
