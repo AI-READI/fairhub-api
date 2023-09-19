@@ -27,7 +27,7 @@ class SignupUser(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(signup_model)
-    def get(self, study_id: int):
+    def get(self):
         pass
 
     @api.response(200, "Success")

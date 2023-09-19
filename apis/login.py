@@ -9,12 +9,14 @@ login_model = api.model(
     "Login",
     {
         "id": fields.String(required=True),
+        "email_address": fields.String(required=True),
+        "username": fields.String(required=True),
         "first_name": fields.String(required=True),
         "last_name": fields.String(required=True),
-        "created_at": fields.String(required=True),
-        "updated_on": fields.String(required=True),
-        "address": fields.String(required=True),
-        "age": fields.String(required=True),
+        "orcid": fields.String(required=True),
+        "hash": fields.String(required=True),
+        "created_at": fields.Integer(required=True),
+        "institution": fields.String(required=True)
     },
 )
 
@@ -25,7 +27,7 @@ class Login(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(login_model)
-    def get(self, study_id: int):
+    def get(self):
         pass
 
     @api.response(200, "Success")
@@ -35,8 +37,10 @@ class Login(Resource):
         data = request.json
         username = data["username"]
         user = User.query.filter_by(username=username).one_or_none()
+        if not user:
+            return "Username is not correct", 403
         validate_pass = user.check_password(data["password"])
-        if user and validate_pass:
-            return redirect(url_for("study"))
+        if not validate_pass:
+            return 'Password is not correct', 401
         else:
-            return "Username or password is not correct", 403
+            return 'Authentication is successful'

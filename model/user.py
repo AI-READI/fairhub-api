@@ -57,4 +57,4 @@ class User(db.Model):
     def check_password(self, password):
         hashed_password = app.bcrypt.generate_password_hash(password).decode("utf-8")
         is_valid = app.bcrypt.check_password_hash(hashed_password, password)
-        return f"Password: {password}<br>Hashed Password: {hashed_password}<br>Is Valid: {is_valid}"
+        return is_valid
