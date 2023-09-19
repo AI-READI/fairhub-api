@@ -2,8 +2,10 @@ from flask import request
 from flask_restx import Namespace, Resource, fields
 
 from model import db, User
-
-api = Namespace("signup", description="signup user", path="/")
+import jwt
+encoded = jwt.encode({"some": "payload"}, "secret", algorithm="HS256")
+decoded = jwt.decode(encoded, "secret", algorithms=["HS256"])
+api = Namespace("Signup", description="Signup user", path="/")
 
 signup_model = api.model(
     "Signup",
@@ -14,7 +16,6 @@ signup_model = api.model(
         "first_name": fields.String(required=True),
         "last_name": fields.String(required=True),
         "orcid": fields.String(required=True),
-        "hash": fields.String(required=True),
         "created_at": fields.Integer(required=True),
         "institution": fields.String(required=True),
     },
@@ -23,16 +24,9 @@ signup_model = api.model(
 
 @api.route("/auth/signup")
 class SignupUser(Resource):
-    @api.doc("signup_model ")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.marshal_with(signup_model)
-    def get(self):
-        pass
-
-    @api.response(200, "Success")
-    @api.response(400, "Validation Error")
-    # @api.marshal_with(signup_model)
+    @api.marshal_with(signup_model)
     def post(self):
         data = request.json
         # TODO data[email doesnt exist then raise error; json validation library
