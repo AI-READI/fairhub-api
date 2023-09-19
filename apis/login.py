@@ -35,10 +35,10 @@ class Login(Resource):
     # @api.marshal_with(login_model)
     def post(self):
         data = request.json
-        username = data["username"]
-        user = User.query.filter_by(username=username).one_or_none()
+        email_address = data["email_address"]
+        user = User.query.filter_by(email_address=email_address).one_or_none()
         if not user:
-            return "Username is not correct", 403
+            return "Email is not correct", 403
         validate_pass = user.check_password(data["password"])
         if not validate_pass:
             return 'Password is not correct', 401

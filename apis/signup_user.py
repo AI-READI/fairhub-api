@@ -41,9 +41,9 @@ class SignupUser(Resource):
         user = User.query.filter_by(email_address=data["email_address"]).one_or_none()
         if user:
             return "This email address is already in use", 409
-        user = User.query.filter_by(username=data["username"]).one_or_none()
-        if user:
-            return "This username is already in use", 409
+        # user = User.query.filter_by(username=data["username"]).one_or_none()
+        # if user:
+        #     return "This username is already in use", 409
         user = User.from_data(data)
         db.session.add(user)
         db.session.commit()

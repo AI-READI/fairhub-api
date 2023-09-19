@@ -28,7 +28,7 @@ class User(db.Model):
         return {
             "id": self.id,
             "email_address": self.email_address,
-            "username": self.username,
+            "username": self.email_address,
             "first_name": self.first_name,
             "last_name": self.last_name,
             "orcid": self.orcid,
@@ -44,7 +44,7 @@ class User(db.Model):
 
     def update(self, data):
         self.email_address = data["email_address"]
-        self.username = data["username"]
+        self.username = data["email_address"]
         self.first_name = data["first_name"]
         self.last_name = data["last_name"]
         self.orcid = data["orcid"]
