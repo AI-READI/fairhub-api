@@ -16,7 +16,7 @@ login_model = api.model(
         "orcid": fields.String(required=True),
         "hash": fields.String(required=True),
         "created_at": fields.Integer(required=True),
-        "institution": fields.String(required=True)
+        "institution": fields.String(required=True),
     },
 )
 
@@ -41,6 +41,6 @@ class Login(Resource):
             return "Email is not correct", 403
         validate_pass = user.check_password(data["password"])
         if not validate_pass:
-            return 'Password is not correct', 401
+            return "Password is not correct", 401
         else:
-            return 'Authentication is successful'
+            return "Authentication is successful"
