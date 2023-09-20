@@ -1,8 +1,9 @@
-from flask import Response, jsonify, request
+from flask import Response, jsonify, request, make_response
 from flask_restx import Namespace, Resource, fields
 from model import User
-from flask import redirect, url_for
 
+import jwt
+import config
 api = Namespace("Login", description="Login", path="/")
 
 login_model = api.model(
@@ -17,7 +18,7 @@ login_model = api.model(
 class Login(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(login_model)
+    # @api.marshal_with(login_model)
     def post(self):
         data = request.json
         email_address = data["email_address"]
@@ -28,4 +29,11 @@ class Login(Resource):
         if not validate_pass:
             return "Password is not correct", 401
         else:
-            return "Authentication is successful"
+            if len(config.secret) < 14:
+                raise "secret key should contain at least 14 characters"
+            encoded_jwt_code = jwt.encode({"user": user.id}, config.secret, algorithm="HS256")
+            resp = make_response('Setting the cookie')
+            resp.set_cookie('test', encoded_jwt_code)
+            return f"Authentication is successful, {resp}"
+
+

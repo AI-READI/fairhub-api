@@ -2,9 +2,7 @@ from flask import request
 from flask_restx import Namespace, Resource, fields
 
 from model import db, User
-import jwt
-encoded = jwt.encode({"some": "payload"}, "secret", algorithm="HS256")
-decoded = jwt.decode(encoded, "secret", algorithms=["HS256"])
+
 api = Namespace("Signup", description="Signup user", path="/")
 
 signup_model = api.model(

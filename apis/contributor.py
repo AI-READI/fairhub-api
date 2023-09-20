@@ -16,7 +16,7 @@ contributors_model = api.model(
 
 
 @api.route("/study/<study_id>/contributor")
-class AddParticipant(Resource):
+class AddContributor(Resource):
     @api.doc("contributor list")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
@@ -28,7 +28,15 @@ class AddParticipant(Resource):
     def put(self, study_id: int):
         contributors = StudyContributor.query.all()
 
-    def delete(self, study_id: int):
+
+@api.route("/study/<study_id>/contributor/<user_id>")
+class DeleteContributor(Resource):
+    @api.doc("contributor delete")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    def delete(self, study_id: int, user_id: int):
         study = Study.query.get(study_id)
-        contributors = Study.query.filter_by(contributors=study.study_contributors.user_id)
+        contributors = study.study_contributor
         db.session.delete(contributors)
+        db.session.commit()
+        return 204
