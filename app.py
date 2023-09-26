@@ -6,7 +6,7 @@ from sqlalchemy import MetaData
 import model
 from apis import api
 from flask_bcrypt import Bcrypt
-
+from apis.login import authentication, authorization
 
 # from pyfairdatatools import __version__
 
@@ -58,6 +58,15 @@ def create_app():
     #         with engine.begin() as conn:
     #             """Create the database schema."""
     #             model.db.create_all()
+
+    @app.before_request
+    def on_before_request():
+        authentication()
+        try:
+            authorization()
+        except:
+            return 'Access denied', 403
+        # catch access denied error
 
     @app.cli.command("destroy-schema")
     def destroy_schema():

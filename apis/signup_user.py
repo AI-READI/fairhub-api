@@ -20,8 +20,8 @@ signup_model = api.model(
 )
 
 
-@api.route("/auth/signup")
-class SignupUser(Resource):
+@api.route("/auth/sign-up")
+class SignUpUser(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(signup_model)
