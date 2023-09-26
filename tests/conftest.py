@@ -9,13 +9,16 @@ def app():
     """An application for the tests."""
     config = {
         "TESTING": True,
+        "FAIRHUB_DATABASE_URL": "postgresql://admin:root@localhost:5432/fairhub_local"
     }
+    testing_config = True
 
     flask_app = create_app(config)
 
     flask_app.config.update(
         {
             "TESTING": True,
+            "FAIRHUB_DATABASE_URL": "postgresql://admin:root@localhost:5432/fairhub_local"
         }
     )
 

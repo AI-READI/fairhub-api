@@ -13,24 +13,25 @@ from apis.login import authentication, authorization
 bcrypt = Bcrypt()
 
 
-def create_app():
+def create_app(config=None):
     """Initialize the core application."""
     # create and configure the app
     app = Flask(__name__)
     # `full` if you want to see all the details
     app.config["SWAGGER_UI_DOC_EXPANSION"] = "list"
     app.config["RESTX_MASK_SWAGGER"] = False
+    
     # Initialize config
     app.config.from_pyfile("config.py")
-    # app.register_blueprint(api)
+    if config is not None:
+        app.config.update(config)
+        app.config["DATABASE_URL"] = app.config["FAIRHUB_DATABASE_URL"]
 
+    # app.register_blueprint(api)
+    app.config.from_prefixed_env("FAIRHUB")
     # TODO - fix this
     # csrf = CSRFProtect()
     # csrf.init_app(app)
-
-    app.config.from_prefixed_env("FAIRHUB")
-
-    # print(app.config)
 
     if "DATABASE_URL" in app.config:
         # if "TESTING" in app_config and app_config["TESTING"]:
