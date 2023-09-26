@@ -1,6 +1,6 @@
 from flask import jsonify, request, make_response, g
 from flask_restx import Namespace, Resource, fields
-from model import User
+from model import User, StudyContributor
 import uuid
 from datetime import timezone
 import datetime
@@ -24,8 +24,10 @@ class Login(Resource):
         data = request.json
         email_address = data["email_address"]
         user = User.query.filter_by(email_address=email_address).one_or_none()
+        if not user:
+            return "Invalid credentials", 401
         validate_pass = user.check_password(data["password"])
-        if not user or validate_pass:
+        if not validate_pass:
             return "Invalid credentials", 401
         else:
             if len(config.secret) < 14:
@@ -37,7 +39,7 @@ class Login(Resource):
                 config.secret,
                 algorithm="HS256")
             resp = make_response(user.to_dict())
-            resp.set_cookie('user', encoded_jwt_code)
+            resp.set_cookie('user', encoded_jwt_code,  secure=True, httponly=True, samesite='lax')
             resp.status = 200
             return resp
 
@@ -79,7 +81,8 @@ def authentication():
 
 def authorization():
     # white listed routes
-    public_routes = ["/auth/token", "/auth/login", "/auth/signup"]
+    public_routes = ["/auth/token", "/auth/login", "/auth/sign-up", "/docs", "/echo"]
+    # print(request.path)
     if request.path in public_routes:
         return
     if g.user:
@@ -87,9 +90,26 @@ def authorization():
     raise AccessDenied("Access denied")
 
 
-# def permission():
-#     if not g.user:
-#         return
-#     if g.user.permission == "viewer":
-#         pass
-#     # do not allow to make operations on endpoints
+# def is_viewer(study_id: int):
+#     contributor = StudyContributor.query.filter_by(user_id=g.user.id, study_id=study_id).first()
+#     if contributor.permission == "viewer":
+#         return "Access denied", 403
+#
+#
+# def is_admin(study_id: int):
+#     contributor = StudyContributor.query.filter_by(user_id=g.user.id, study_id=study_id).first()
+#     if contributor.permission == "admin":
+#         return "Access denied", 403
+#
+#
+# def is_editor(study_id: int):
+#     contributor = StudyContributor.query.filter_by(user_id=g.user.id, study_id=study_id).first()
+#
+#     if contributor.permission == "admin":
+#         return "Access denied", 403
+
+
+def is_granted(permission: str, study_id: int):
+    contributor = StudyContributor.query.filter_by(user_id=g.user.id, study_id=study_id).first()
+    return contributor.permission == permission
+

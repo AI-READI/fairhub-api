@@ -62,6 +62,7 @@ def create_app():
     @app.before_request
     def on_before_request():
         authentication()
+
         authorization()
 
         # catch access denied error
