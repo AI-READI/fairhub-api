@@ -114,7 +114,7 @@ lint = ["flake8", "typecheck", "pylint"]
 
 precommit = ["format", "flake8", "typecheck", "pylint"]
 
-test = "pytest -rx" 
+test = "pytest -rx -W ignore::DeprecationWarning" 
 test_with_capture = "pytest -s -W ignore::DeprecationWarning"
 
 jupyter = "jupyter notebook"
