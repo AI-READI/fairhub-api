@@ -65,7 +65,7 @@ def create_app():
         try:
             authorization()
         except:
-            return 'Access denied', 403
+            return "Access denied", 403
         # catch access denied error
 
     @app.cli.command("destroy-schema")

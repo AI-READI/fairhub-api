@@ -33,7 +33,9 @@ class ContributorResource(Resource):
     @api.response(400, "Validation Error")
     def put(self, study_id: int, user_id):
         data = request.json
-        contributors = StudyContributor.query.filter_by(study_id=study_id, user_id=user_id)
+        contributors = StudyContributor.query.filter_by(
+            study_id=study_id, user_id=user_id
+        )
         contributors.permission = data
         db.session.commit()
         return contributors.permission
@@ -47,5 +49,7 @@ class ContributorResource(Resource):
         db.session.delete(contributors)
         db.session.commit()
         return 204
+
+
 # will need to implement it in all endpoints for which that permission is relevant
 # Permissions should be only a database query and conditional statement. Failing permissions should result in a 403

@@ -25,5 +25,5 @@ class StudyContributor(db.Model):
         return {
             "permission": self.permission,
             "user_id": self.user_id,
-            "study_id": self.study_id
+            "study_id": self.study_id,
         }
