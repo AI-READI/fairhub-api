@@ -64,8 +64,10 @@ class CurrentUsers(Resource):
 
 
 def authentication():
+    g.user = None
     if 'user' not in request.cookies:
         return
+    # if 'user' in
     token = request.cookies.get("user")
     try:
         decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
@@ -77,7 +79,7 @@ def authentication():
 
 def authorization():
     # white listed routes
-    public_routes = ["/auth/token", "/auth/login", "/auth/sign-up"]
+    public_routes = ["/auth/token", "/auth/login", "/auth/signup"]
     if request.path in public_routes:
         return
     if g.user:

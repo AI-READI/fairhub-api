@@ -1,6 +1,6 @@
 from flask_restx import Namespace, Resource, fields
 from flask import request
-from model import StudyContributor, Study, db
+from model import StudyContributor, Study, db, User
 
 api = Namespace("Contributor", description="Contributors", path="/")
 
@@ -42,7 +42,8 @@ class ContributorResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def delete(self, study_id: int, user_id: int):
-        users = g.user.query.get()
+        user = User.query.filter_by(user_id=user_id, study_id=study_id)
+        # if user.permission
         contributors = StudyContributor.query.get(study_id=study_id, user_id=user_id)
         db.session.delete(contributors)
         db.session.commit()
