@@ -8,6 +8,7 @@ from dateutil.parser import parse
 
 import jwt
 import config
+
 api = Namespace("Login", description="Login", path="/")
 
 
@@ -35,11 +36,16 @@ class Login(Resource):
             encoded_jwt_code = jwt.encode(
                 {
                     "user": user.id,
-                    "exp": datetime.datetime.now(timezone.utc) + datetime.timedelta(minutes=60)},
+                    "exp": datetime.datetime.now(timezone.utc)
+                    + datetime.timedelta(minutes=60),
+                },
                 config.secret,
-                algorithm="HS256")
+                algorithm="HS256",
+            )
             resp = make_response(user.to_dict())
-            resp.set_cookie('user', encoded_jwt_code,  secure=True, httponly=True, samesite='lax')
+            resp.set_cookie(
+                "user", encoded_jwt_code, secure=True, httponly=True, samesite="lax"
+            )
             resp.status = 200
             return resp
 
@@ -51,7 +57,7 @@ class Logout(Resource):
     def post(self):
         resp = make_response()
         resp.status = 204
-        resp.delete_cookie('user')
+        resp.delete_cookie("user")
         return resp
 
 
@@ -67,7 +73,7 @@ class CurrentUsers(Resource):
 
 def authentication():
     g.user = None
-    if 'user' not in request.cookies:
+    if "user" not in request.cookies:
         return
     # if 'user' in
     token = request.cookies.get("user")
@@ -110,6 +116,7 @@ def authorization():
 
 
 def is_granted(permission: str, study_id: int):
-    contributor = StudyContributor.query.filter_by(user_id=g.user.id, study_id=study_id).first()
+    contributor = StudyContributor.query.filter_by(
+        user_id=g.user.id, study_id=study_id
+    ).first()
     return contributor.permission == permission
-

@@ -3,6 +3,7 @@ from flask_restx import Namespace, Resource, fields
 
 from model import Participant, Study, db, StudyContributor
 from .login import is_granted
+
 api = Namespace("Participant", description="Participant operations", path="/")
 
 participant_model = api.model(
@@ -33,7 +34,7 @@ class AddParticipant(Resource):
     @api.response(400, "Validation Error")
     # @api.marshal_with(participant_model)
     def post(self, study_id: int):
-        if is_granted('viewer', study_id):
+        if is_granted("viewer", study_id):
             return "Access denied, you can not modify", 403
         study = Study.query.get(study_id)
         add_participant = Participant.from_data(request.json, study)
@@ -49,9 +50,9 @@ class UpdateParticipant(Resource):
     @api.response(400, "Validation Error")
     @api.marshal_with(participant_model)
     def put(self, study_id, participant_id: int):
-        if is_granted('viewer', study_id):
+        if is_granted("viewer", study_id):
             return "Access denied, you can not modify", 403
-        is_granted('viewer', study_id)
+        is_granted("viewer", study_id)
         update_participant = Participant.query.get(participant_id)
         update_participant.update(request.json)
         db.session.commit()
@@ -60,9 +61,9 @@ class UpdateParticipant(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def delete(self, study_id, participant_id: int):
-        if is_granted('viewer', study_id):
+        if is_granted("viewer", study_id):
             return "Access denied, you can not modify", 403
-        is_granted('viewer', study_id)
+        is_granted("viewer", study_id)
 
         delete_participant = Participant.query.get(participant_id)
         db.session.delete(delete_participant)
