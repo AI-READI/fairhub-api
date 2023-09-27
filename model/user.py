@@ -16,12 +16,12 @@ class User(db.Model):
     id = db.Column(db.CHAR(36), primary_key=True)
     email_address = db.Column(db.String, nullable=False, unique=True)
     username = db.Column(db.String, nullable=False, unique=True)
-    first_name = db.Column(db.String, nullable=False)
-    last_name = db.Column(db.String, nullable=False)
-    orcid = db.Column(db.String, nullable=False)
+    first_name = db.Column(db.String, nullable=True)
+    last_name = db.Column(db.String, nullable=True)
+    orcid = db.Column(db.String, nullable=True)
     hash = db.Column(db.String, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
-    institution = db.Column(db.String, nullable=False)
+    institution = db.Column(db.String, nullable=True)
     study_contributors = db.relationship("StudyContributor", back_populates="user")
 
     def to_dict(self):
@@ -44,18 +44,20 @@ class User(db.Model):
 
     def update(self, data):
         self.email_address = data["email_address"]
-        self.username = data["email_address"]
-        self.first_name = data["first_name"]
-        self.last_name = data["last_name"]
-        self.orcid = data["orcid"]
-        self.institution = data["institution"]
+        # self.username = data["email_address"]
+        # self.first_name = data["first_name"]
+        # self.last_name = data["last_name"]
+        # self.orcid = data["orcid"]
+        # self.institution = data["institution"]
 
     def set_password(self, password, data):
+        """setting bcrypt passwords"""
         hashed_password = app.bcrypt.generate_password_hash(password).decode("utf-8")
         self.hash = hashed_password
 
     def check_password(self, password):
-        # TODO check password lenght and having uppercase letter
+        """validates password and bcrypt hashed password"""
+        # TODO check password length and make uppercase letter
         hashed_password = app.bcrypt.generate_password_hash(password).decode("utf-8")
         is_valid = app.bcrypt.check_password_hash(hashed_password, password)
         return is_valid
