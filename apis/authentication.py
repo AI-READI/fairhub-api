@@ -97,7 +97,9 @@ def authentication():
         return "Token has expired, please re-authenticate", 401
     user = User.query.get(decoded["user"])
     g.user = user
-    expires = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=60)
+    expires = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
+        minutes=60
+    )
     new_token = jwt.encode({"exp": expires}, config.secret, algorithm="HS256")
     resp = make_response("Token refreshed")
     resp.set_cookie("user", new_token, secure=True, httponly=True, samesite="lax")
@@ -125,7 +127,6 @@ class CurrentUsers(Resource):
         if not g.user:
             return None
         return g.user.to_dict()
-
 
 
 def authorization():
