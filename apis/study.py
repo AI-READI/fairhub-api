@@ -1,34 +1,17 @@
-from flask import request
+from flask import request, g
 from flask_restx import Namespace, Resource, fields
 
-from model import Study, db
+from model import Study, db, User
 from .authentication import is_granted
 
 api = Namespace("Study", description="Study operations", path="/")
 
-owner = api.model(
-    "Owner",
-    {
-        "id": fields.String(required=True),
-        "affiliations": fields.String(required=True),
-        "email": fields.String(required=True),
-        "first_name": fields.String(required=True),
-        "last_name": fields.String(required=True),
-        "orcid": fields.String(required=True),
-        "roles": fields.List(fields.String, required=True),
-        "permission": fields.String(required=True),
-        "status": fields.String(required=True),
-    },
-)
 
-study = api.model(
+study_model = api.model(
     "Study",
     {
-        "id": fields.String(required=True),
-        "title": fields.String(required=True),
-        "image": fields.String(required=True),
-        "last_updated": fields.String(required=True),
-        "owner": fields.Nested(owner, required=True),
+        "title": fields.String(required=True, default=""),
+        "image": fields.String(required=True, default=""),
     },
 )
 
@@ -40,9 +23,13 @@ class Studies(Resource):
     @api.response(400, "Validation Error")
     # @api.marshal_with(study)
     def get(self):
-        studies = Study.query.all()
+        """this code ensure each user access and see only allowed studies"""
+        studies = Study.query.filter(Study.study_contributors.any(User.id == g.user.id)).all()
         return [s.to_dict() for s in studies]
 
+    @api.expect(study_model)
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def post(self):
         add_study = Study.from_data(request.json)
         db.session.add(add_study)
@@ -60,6 +47,9 @@ class StudyResource(Resource):
         study1 = Study.query.get(study_id)
         return study1.to_dict()
 
+    @api.expect(study_model)
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def put(self, study_id: int):
         if is_granted("viewer", study_id):
             return "Access denied, you can not modify", 403
@@ -69,7 +59,7 @@ class StudyResource(Resource):
         return update_study.to_dict()
 
     def delete(self, study_id: int):
-        if not is_granted("admin", study_id):
+        if not is_granted("owner", study_id):
             return "Access denied, you can not delete study", 403
         delete_study = Study.query.get(study_id)
         for d in delete_study.dataset:
@@ -81,6 +71,8 @@ class StudyResource(Resource):
             db.session.delete(d)
         for p in delete_study.participants:
             db.session.delete(p)
+        for c in delete_study.study_contributors:
+            db.session.delete(c)
         db.session.delete(delete_study)
         db.session.commit()
         return "", 204
