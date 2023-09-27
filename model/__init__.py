@@ -7,6 +7,9 @@ from .study import Study, StudyException
 from .user import User
 from .dataset import Dataset
 
+from .email_verification import EmailVerification
+from .token_blacklist import TokenBlacklist
+from .user_details import UserDetails
 from .dataset_contributor import DatasetContributor
 from .invited_study_contributor import StudyInvitedContributor
 from .study_contributor import StudyContributor
@@ -110,4 +113,7 @@ __all__ = [
     "Arm",
     "StudyInvitedContributor",
     "StudyException",
+    "EmailVerification",
+    "TokenBlacklist",
+    "UserDetails"
 ]

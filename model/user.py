@@ -16,24 +16,23 @@ class User(db.Model):
     id = db.Column(db.CHAR(36), primary_key=True)
     email_address = db.Column(db.String, nullable=False, unique=True)
     username = db.Column(db.String, nullable=False, unique=True)
-    first_name = db.Column(db.String, nullable=True)
-    last_name = db.Column(db.String, nullable=True)
-    orcid = db.Column(db.String, nullable=True)
     hash = db.Column(db.String, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
-    institution = db.Column(db.String, nullable=True)
+    email_verified = db.Column(db.String, nullable=True)
+
     study_contributors = db.relationship("StudyContributor", back_populates="user")
+    email_verification = db.relationship("EmailVerification", back_populates="user")
+    token_blacklist = db.relationship("TokenBlacklist", back_populates="user")
+    user_details = db.relationship("UserDetails", back_populates="user")
 
     def to_dict(self):
         return {
             "id": self.id,
             "email_address": self.email_address,
-            "username": self.email_address,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "orcid": self.orcid,
+            "username": self.username,
+            "hash": self.hash,
             "created_at": self.created_at,
-            "institution": self.institution,
+            "email_verified": self.email_verified,
         }
 
     @staticmethod
@@ -44,11 +43,11 @@ class User(db.Model):
 
     def update(self, data):
         self.email_address = data["email_address"]
-        # self.username = data["email_address"]
-        # self.first_name = data["first_name"]
-        # self.last_name = data["last_name"]
-        # self.orcid = data["orcid"]
-        # self.institution = data["institution"]
+        self.username = data["email_address"]
+        # self.email_verified = data["email_verified"]
+        # self.username = data["username"]
+        # self.hash = data["hash"]
+        # self.created_at = data["created_at"]
 
     def set_password(self, password, data):
         """setting bcrypt passwords"""
