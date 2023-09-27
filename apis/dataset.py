@@ -2,6 +2,7 @@ from flask import Response, jsonify, request
 from flask_restx import Namespace, Resource, fields
 
 from model import Dataset, Version, Participant, Study, db
+from .login import is_granted
 
 api = Namespace("Dataset", description="Dataset operations", path="/")
 
@@ -48,6 +49,8 @@ class DatasetList(Resource):
     @api.doc("update dataset")
     # @api.marshal_with(dataset)
     def post(self, study_id):
+        if is_granted('viewer', study_id):
+            return "Access denied, you can not modify", 403
         study = Study.query.get(study_id)
         # todo if study.participant id== different study Throw error
         dataset_ = Dataset.from_data(study, request.json)
@@ -62,6 +65,8 @@ class DatasetList(Resource):
 @api.response(400, "Validation Error")
 class DatasetResource(Resource):
     def put(self, study_id, dataset_id):
+        if is_granted('viewer', study_id):
+            return "Access denied, you can not modify", 403
         data = request.json
         data_obj = Dataset.query.get(dataset_id)
         data_obj.update(data)
@@ -69,6 +74,8 @@ class DatasetResource(Resource):
         return data_obj.to_dict()
 
     def delete(self, study_id, dataset_id):
+        if is_granted('viewer', study_id):
+            return "Access denied, you can not modify", 403
         data_obj = Dataset.query.get(dataset_id)
         for version in data_obj.dataset_versions:
             db.session.delete(version)
@@ -113,12 +120,16 @@ class Version(Resource):
         return dataset_version.to_dict()
 
     def put(self, study_id, dataset_id, version_id):
+        if is_granted('viewer', study_id):
+            return "Access denied, you can not modify", 403
         data_version_obj = Version.query.get(version_id)
         data_version_obj.update(request.json)
         db.session.commit()
         return jsonify(data_version_obj.to_dict())
 
     def delete(self, study_id, dataset_id, version_id):
+        if is_granted('viewer', study_id):
+            return "Access denied, you can not modify", 403
         data_obj = Dataset.query.get(dataset_id)
         for version in data_obj.dataset_versions:
             db.session.delete(version)
@@ -133,6 +144,8 @@ class Version(Resource):
 @api.response(400, "Validation Error")
 class VersionList(Resource):
     def post(self, study_id: int, dataset_id: int):
+        if is_granted('viewer', study_id):
+            return "Access denied, you can not modify", 403
         data = request.json
         data["participants"] = [Participant.query.get(i) for i in data["participants"]]
         data_obj = Dataset.query.get(dataset_id)

@@ -1,7 +1,7 @@
 from flask_restx import Namespace, Resource, fields
-from flask import request
+from flask import request, g
 from model import StudyContributor, Study, db, User
-
+from .login import is_granted
 api = Namespace("Contributor", description="Contributors", path="/")
 
 
@@ -32,6 +32,11 @@ class ContributorResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def put(self, study_id: int, user_id):
+        if not is_granted('admin', study_id):
+            return "Access denied, you can not modify permissions", 403
+        if is_granted('viewer', study_id):
+            return "Access denied, you can not modify", 403
+
         data = request.json
         contributors = StudyContributor.query.filter_by(
             study_id=study_id, user_id=user_id
@@ -44,13 +49,13 @@ class ContributorResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def delete(self, study_id: int, user_id: int):
-        user = User.query.filter_by(user_id=user_id, study_id=study_id)
-        # if user.permission
-        contributors = StudyContributor.query.get(study_id=study_id, user_id=user_id)
-        db.session.delete(contributors)
+        if is_granted('viewer', study_id):
+            return "Access denied, you can not modify", 403
+        contributor = StudyContributor.query.filter_by(user_id=g.user.id, study_id=study_id)
+        db.session.delete(contributor)
         db.session.commit()
+        print(contributor)
         return 204
-
 
 # will need to implement it in all endpoints for which that permission is relevant
 # Permissions should be only a database query and conditional statement. Failing permissions should result in a 403

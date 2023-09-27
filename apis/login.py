@@ -79,13 +79,16 @@ def authentication():
     token = request.cookies.get("user")
     try:
         decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
+
     except jwt.ExpiredSignatureError:
         return
     user = User.query.get(decoded["user"])
     g.user = user
+    decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
 
 
 def authorization():
+    """check whether url is allowed to be reached"""
     # white listed routes
     public_routes = [
         "/auth",
@@ -94,36 +97,16 @@ def authorization():
         "/swaggerui",
         "/swagger.json",
     ]
-
     for route in public_routes:
         if request.path.startswith(route):
             return
-
     if g.user:
         return
     raise AccessDenied("Access denied")
 
 
-# def is_viewer(study_id: int):
-#     contributor = StudyContributor.query.filter_by(user_id=g.user.id, study_id=study_id).first()
-#     if contributor.permission == "viewer":
-#         return "Access denied", 403
-#
-#
-# def is_admin(study_id: int):
-#     contributor = StudyContributor.query.filter_by(user_id=g.user.id, study_id=study_id).first()
-#     if contributor.permission == "admin":
-#         return "Access denied", 403
-#
-#
-# def is_editor(study_id: int):
-#     contributor = StudyContributor.query.filter_by(user_id=g.user.id, study_id=study_id).first()
-#
-#     if contributor.permission == "admin":
-#         return "Access denied", 403
-
-
 def is_granted(permission: str, study_id: int):
+    """filters users and checks whether current permission equal to passed permission"""
     contributor = StudyContributor.query.filter_by(
         user_id=g.user.id, study_id=study_id
     ).first()
