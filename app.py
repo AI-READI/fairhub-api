@@ -24,9 +24,6 @@ def create_app(config_module=None):
 
     # Initialize config
     app.config.from_object(config_module or 'config')
-    print("config_module: ", config_module)
-    print("app.config: ", app.config)
-        # print("pytest-config.py: ", app.config)
 
     # app.register_blueprint(api)
     app.config.from_prefixed_env("FAIRHUB")
