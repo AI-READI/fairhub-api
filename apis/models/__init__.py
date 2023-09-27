@@ -4,4 +4,3 @@ from .fairhubRecruitmentDashboardData import FairhubRecruitmentDashboardDataMode
 from .redcapProjectData import REDCapProjectDataModel
 from .redcapReportParticipantsData import REDCapReportParticipantsDataModel
 from .redcapReportRecruitmentData import REDCapReportRecruitmentDataModel
-

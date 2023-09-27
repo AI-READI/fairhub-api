@@ -81,6 +81,7 @@ fairhubRecruitmentDashboardModel = api.inherit(
 # Dashboard Endpoints
 #
 
+
 @api.route("/")
 class DashboardsList(Resource):
     @api.doc("get_dashboards")
@@ -91,9 +92,11 @@ class DashboardsList(Resource):
         """
         return DASHBOARDS_CONFIG["dashboards"]
 
+
 #
 # Study Dashboard Endpoints
 #
+
 
 @api.route("/study/<study_id>")
 class RecruitmentDashboard(Resource):

@@ -11,7 +11,8 @@ import os
 import re
 import typing
 
-class REDCapTransform (object):
+
+class REDCapTransform(object):
     """
     A class to transform data from REDCap
 
@@ -22,28 +23,41 @@ class REDCapTransform (object):
     - The transforms are executed as a stack following this precendence
     - The transforms are idempotent
     """
-    def __init__ (self,
+
+    def __init__(
+        self,
         df: pd.DataFrame,
         config: dict,
     ):
-        self.df                     = df
-        self.config                 = config
-        self.checkbox_colname_maps  = {}
-        self.radio_colname_maps     = {}
-
-
-    #
-    # Data Frame Setup Methods
-    #
+        self.df = df
+        self.config = config
+        self.checkbox_colname_maps = {}
+        self.radio_colname_maps = {}
 
     #
     # Data Frame Setup Methods
     #
 
-    def preprocess_checkbox_conditional (self, df: pd.DataFrame, checkbox_key_value: dict, by_column_value: dict, checkbox_to_value: typing.Any = np.nan) -> pd.DataFrame:
+    #
+    # Data Frame Setup Methods
+    #
+
+    def preprocess_checkbox_conditional(
+        self,
+        df: pd.DataFrame,
+        checkbox_key_value: dict,
+        by_column_value: dict,
+        checkbox_to_value: typing.Any = np.nan,
+    ) -> pd.DataFrame:
         return df
 
-    def __preprocess_checkbox_columns (self, df: pd.DataFrame, maps: list = [], dtype: typing.Any = np.float64, nonetype: typing.Any = np.nan) -> pd.DataFrame:
+    def __preprocess_checkbox_columns(
+        self,
+        df: pd.DataFrame,
+        maps: list = [],
+        dtype: typing.Any = np.float64,
+        nonetype: typing.Any = np.nan,
+    ) -> pd.DataFrame:
         """
         Pre-processing for checkbox columns
         - Sanitize column names
@@ -58,21 +72,36 @@ class REDCapTransform (object):
             for column in df.columns:
                 if f"{map_name}___" in column:
                     prefix, suffix = column.split("___")
-                    suffix = map_dict[suffix].lower().replace(" ", "-").replace(",", "").replace("(", "").replace(")", "")
+                    suffix = (
+                        map_dict[suffix]
+                        .lower()
+                        .replace(" ", "-")
+                        .replace(",", "")
+                        .replace("(", "")
+                        .replace(")", "")
+                    )
                     checkbox_colname_maps[map_name][column] = f"{prefix}_{suffix}"
             if map_name in df.columns:
-                df = df.drop(columns = [map_name])
+                df = df.drop(columns=[map_name])
 
         # Rename and Retype Columns
         for map_name, map_dict in checkbox_colname_maps.items():
-            df = df.rename(columns = map_dict)
+            df = df.rename(columns=map_dict)
             for column in map_dict.values():
-                df[column] = df[column].where(pd.notnull(df[column]), nonetype) # Update NaN/None/etc. to defined nonetype
-                df[column] = df[column].astype(dtype) # Update to defined dtype
+                df[column] = df[column].where(
+                    pd.notnull(df[column]), nonetype
+                )  # Update NaN/None/etc. to defined nonetype
+                df[column] = df[column].astype(dtype)  # Update to defined dtype
 
         return df, checkbox_colname_maps
 
-    def __preprocess_radio_columns (self, df: pd.DataFrame, maps: list = [], dtype: typing.Any = np.float64, nonetype: typing.Any = np.nan) -> pd.DataFrame:
+    def __preprocess_radio_columns(
+        self,
+        df: pd.DataFrame,
+        maps: list = [],
+        dtype: typing.Any = np.float64,
+        nonetype: typing.Any = np.nan,
+    ) -> pd.DataFrame:
         """
         Pre-processing for checkbox columns
         """
@@ -81,26 +110,36 @@ class REDCapTransform (object):
         radio_colname_maps = {}
         for map_name, map_dict in maps:
             radio_colname_maps[map_name] = {}
-            dummies = pd.get_dummies(df[map_name], prefix = map_name)
+            dummies = pd.get_dummies(df[map_name], prefix=map_name)
             for column in dummies.columns:
                 if f"{map_name}" in column:
                     prefix, suffix = column.split("_")
-                    suffix = suffix.lower().replace(" ", "-").replace(",", "").replace("(", "").replace(")", "")
+                    suffix = (
+                        suffix.lower()
+                        .replace(" ", "-")
+                        .replace(",", "")
+                        .replace("(", "")
+                        .replace(")", "")
+                    )
                     radio_colname_maps[map_name][column] = f"{prefix}_{suffix}"
             if map_name in df.columns:
-                df = df.drop(columns = [map_name])
-            df = pd.concat([df, dummies], axis = 1)
+                df = df.drop(columns=[map_name])
+            df = pd.concat([df, dummies], axis=1)
 
         # Rename Columns
         for map_name, map_dict in radio_colname_maps.items():
-            df = df.rename(columns = map_dict)
+            df = df.rename(columns=map_dict)
             for column in map_dict.values():
-                df[column] = df[column].where(pd.notnull(df[column]), nonetype) # Update NaN/None/etc. to defined nonetype
-                df[column] = df[column].astype(dtype) # Update to defined dtype
+                df[column] = df[column].where(
+                    pd.notnull(df[column]), nonetype
+                )  # Update NaN/None/etc. to defined nonetype
+                df[column] = df[column].astype(dtype)  # Update to defined dtype
 
         return df, radio_colname_maps
 
-    def __preprocess_revalue_columns (self, df: pd.DataFrame, maps: list = []) -> typing.Tuple[pd.DataFrame, dict]:
+    def __preprocess_revalue_columns(
+        self, df: pd.DataFrame, maps: list = []
+    ) -> typing.Tuple[pd.DataFrame, dict]:
         """
         Pre-processing for re-value columns
         """
@@ -118,7 +157,13 @@ class REDCapTransform (object):
 
         return df, revalue_combined_maps
 
-    def __preprocess_type_columns (self, df: pd.DataFrame, columns: list, dtype: typing.Any = np.float64, nonetype: typing.Any = np.nan) -> pd.DataFrame:
+    def __preprocess_type_columns(
+        self,
+        df: pd.DataFrame,
+        columns: list,
+        dtype: typing.Any = np.float64,
+        nonetype: typing.Any = np.nan,
+    ) -> pd.DataFrame:
         """
         Pre-processing for typing columns
         """
@@ -126,7 +171,9 @@ class REDCapTransform (object):
         df[columns] = df[columns].astype(dtype)
         return df
 
-    def __preprocess_remap_columns (self, df: pd.DataFrame, map: dict = {}, cols: list = []) -> pd.DataFrame:
+    def __preprocess_remap_columns(
+        self, df: pd.DataFrame, map: dict = {}, cols: list = []
+    ) -> pd.DataFrame:
         """
         Pre-processing column values by map
         """
@@ -135,50 +182,73 @@ class REDCapTransform (object):
 
         return df
 
-    def __preprocess_repeat_instrument_by_map (self, df: pd.DataFrame, index: list = [], repeat_instrument_maps: list = [], dtype: typing.Any = np.float32, nonetype: typing.Any = np.nan) -> pd.DataFrame:
+    def __preprocess_repeat_instrument_by_map(
+        self,
+        df: pd.DataFrame,
+        index: list = [],
+        repeat_instrument_maps: list = [],
+        dtype: typing.Any = np.float32,
+        nonetype: typing.Any = np.nan,
+    ) -> pd.DataFrame:
         """
         Pre-processing REDCap repeat_instrument so each instrument has its own column and the value
         is computed using a function applied to the repeat_instance field.
         """
         # Remap repeat instruments
         for repeat_instrument_map in repeat_instrument_maps:
-            df_masked = df[df["redcap_repeat_instrument"] == repeat_instrument_map["name"]]
+            df_masked = df[
+                df["redcap_repeat_instrument"] == repeat_instrument_map["name"]
+            ]
             df_pt = pd.pivot_table(
                 df_masked,
-                index       = index,
-                columns     = ["redcap_repeat_instrument"],
-                values      = "redcap_repeat_instance",
-                aggfunc     = repeat_instrument_map["aggregator"],
+                index=index,
+                columns=["redcap_repeat_instrument"],
+                values="redcap_repeat_instance",
+                aggfunc=repeat_instrument_map["aggregator"],
             )
-            df = df.merge(df_pt, how = "outer", on = index)
-            df = df[df["redcap_repeat_instrument"].isnull()] # Keep only rows not generated by columns
+            df = df.merge(df_pt, how="outer", on=index)
+            df = df[
+                df["redcap_repeat_instrument"].isnull()
+            ]  # Keep only rows not generated by columns
 
         # Rename columns
         for repeat_instrument_map in repeat_instrument_maps:
-            df = df.rename(columns = {repeat_instrument_map["name"]: repeat_instrument_map["rename"]})
-            df[repeat_instrument_map["rename"]] = df[repeat_instrument_map["rename"]].where(pd.notnull(df[repeat_instrument_map["rename"]]), nonetype) # Update NaN/None/etc. to defined nonetype
-            df[repeat_instrument_map["rename"]] = df[repeat_instrument_map["rename"]].astype(dtype)
+            df = df.rename(
+                columns={repeat_instrument_map["name"]: repeat_instrument_map["rename"]}
+            )
+            df[repeat_instrument_map["rename"]] = df[
+                repeat_instrument_map["rename"]
+            ].where(
+                pd.notnull(df[repeat_instrument_map["rename"]]), nonetype
+            )  # Update NaN/None/etc. to defined nonetype
+            df[repeat_instrument_map["rename"]] = df[
+                repeat_instrument_map["rename"]
+            ].astype(dtype)
 
         # Drop repeat instrument columns
-        df = df.drop(["redcap_repeat_instrument", "redcap_repeat_instance"], axis = 1)
+        df = df.drop(["redcap_repeat_instrument", "redcap_repeat_instance"], axis=1)
 
         return df
 
-    def __preprocess_repeat_instrument_columns (self, df: pd.DataFrame, index: list = [], aggregator: typing.Callable = np.max) -> pd.DataFrame:
+    def __preprocess_repeat_instrument_columns(
+        self, df: pd.DataFrame, index: list = [], aggregator: typing.Callable = np.max
+    ) -> pd.DataFrame:
         """
         Pre-processing REDCap repeat_instrument so each instrument has its own column and the value
         is computed using a function applied to the repeat_instance field.
         """
         df_pt = pd.pivot_table(
             df,
-            index       = index,
-            columns     = ["redcap_repeat_instrument"],
-            values      = "redcap_repeat_instance",
-            aggfunc     = aggregator,
+            index=index,
+            columns=["redcap_repeat_instrument"],
+            values="redcap_repeat_instance",
+            aggfunc=aggregator,
         )
-        df = df.merge(df_pt, how = "outer", on = index)
-        df = df[df["redcap_repeat_instrument"].isnull()] # Keep only rows not generated by columns
-        df = df.drop(["redcap_repeat_instrument", "redcap_repeat_instance"], axis = 1)
+        df = df.merge(df_pt, how="outer", on=index)
+        df = df[
+            df["redcap_repeat_instrument"].isnull()
+        ]  # Keep only rows not generated by columns
+        df = df.drop(["redcap_repeat_instrument", "redcap_repeat_instance"], axis=1)
         return df
 
 
@@ -194,45 +264,37 @@ dm_map = {
 }
 
 race_map = {
-    "c17459"    : "American Indian or Alaska Native",
-    "c41260"    : "Asian",
-    "c16352"    : "Black or African American",
-    "c77820"    : "Middle Eastern",
-    "c41219"    : "Native Hawaiian or Pacific Islander",
-    "c77813"    : "North African",
-    "c41261"    : "White or Caucasian",
-    "888"       : "Other race, ethnicity, or origin",
-    "777"       : "Prefer not to say",
+    "c17459": "American Indian or Alaska Native",
+    "c41260": "Asian",
+    "c16352": "Black or African American",
+    "c77820": "Middle Eastern",
+    "c41219": "Native Hawaiian or Pacific Islander",
+    "c77813": "North African",
+    "c41261": "White or Caucasian",
+    "888": "Other race, ethnicity, or origin",
+    "777": "Prefer not to say",
 }
 
 ethnic_map = {
-    "c41222"    : "No",
-    "c67113"    : "Yes, Mexican",
-    "c67112"    : "Yes, Puerto Rican",
-    "c107608"   : "Yes, Cuban",
-    "c67117"    : "Yes, Dominican Republic",
-    "c67118"    : "Yes, Central American",
-    "c126532"   : "Yes, South American",
-    "c999"      : "Yes, Chicano",
-    "888"       : "Yes, Other",
-    "777"       : "Prefer not to say",
+    "c41222": "No",
+    "c67113": "Yes, Mexican",
+    "c67112": "Yes, Puerto Rican",
+    "c107608": "Yes, Cuban",
+    "c67117": "Yes, Dominican Republic",
+    "c67118": "Yes, Central American",
+    "c126532": "Yes, South American",
+    "c999": "Yes, Chicano",
+    "888": "Yes, Other",
+    "777": "Prefer not to say",
 }
 
-combined_map = {
-    **dm_map,
-    **race_map,
-    **ethnic_map
-}
+combined_map = {**dm_map, **race_map, **ethnic_map}
 
 #
 # Value Maps
 #
 
-binary_map = {
-    "0": 0,
-    "1": 1,
-    "2": 2
-}
+binary_map = {"0": 0, "1": 1, "2": 2}
 
 redcap_repeat_instrument_variable_map = {
     "ehr_information": "EHR Information",
@@ -281,16 +343,15 @@ redcap_repeat_instrument_variable_map = {
     "data_management": "Data Management",
 }
 
-redcap_repeat_instrument_label_map = {v: k for k, v in redcap_repeat_instrument_variable_map.items()}
+redcap_repeat_instrument_label_map = {
+    v: k for k, v in redcap_repeat_instrument_variable_map.items()
+}
 
 #
 # Computed Columns
 #
 
-dm_cols = [
-    "dm_incomplete",
-    "dm_complete"
-]
+dm_cols = ["dm_incomplete", "dm_complete"]
 
 race_cols = [
     "race_american-indian-or-alaska-native",
@@ -440,7 +501,8 @@ survey_cols = [
 # Data Frame Setup Methods
 #
 
-def __preprocess_df (df: pd.DataFrame, maps : list = []):
+
+def __preprocess_df(df: pd.DataFrame, maps: list = []):
     """
     Generic pre-processing for all modules
     """
@@ -461,17 +523,19 @@ def __preprocess_df (df: pd.DataFrame, maps : list = []):
         combined_maps |= map_dict
 
     # Update DataFrame
-    df = df.rename(columns = combined_maps).set_index(index_col)
+    df = df.rename(columns=combined_maps).set_index(index_col)
 
     return df, colname_maps
 
-def __setup_module (module: typing.Callable, df: pd.DataFrame, cols: list = []) -> dict:
+
+def __setup_module(module: typing.Callable, df: pd.DataFrame, cols: list = []) -> dict:
     flattened = []
     for col_group in cols:
         flattened.extend(col_group)
     return module(df, flattened)
 
-def __get_greatest (group: pd.DataFrame, column: str) -> typing.Any:
+
+def __get_greatest(group: pd.DataFrame, column: str) -> typing.Any:
     return group[column].max()
 
 
@@ -479,7 +543,8 @@ def __get_greatest (group: pd.DataFrame, column: str) -> typing.Any:
 # Module Methods
 #
 
-def overview (df: pd.DataFrame, cols: list) -> dict:
+
+def overview(df: pd.DataFrame, cols: list) -> dict:
     """
     Study overview transform
 
@@ -529,7 +594,7 @@ def overview (df: pd.DataFrame, cols: list) -> dict:
     # for i, group in df[cols].groupby(index_col):
     #     if len(group) > 1:
     #         print(i, group.value_counts(ascending = True, dropna = False))
-    counts = df[cols].nunique(dropna = False)
+    counts = df[cols].nunique(dropna=False)
     # for key, val in zip(counts, counts.index.names):
     #     print(key, val)
     for k, v in counts.items():
@@ -537,73 +602,77 @@ def overview (df: pd.DataFrame, cols: list) -> dict:
 
     return df
 
-def progress (df: pd.DataFrame, cols: list) -> dict:
+
+def progress(df: pd.DataFrame, cols: list) -> dict:
     """
     Study protocol transform
     """
     cols = base_cols + phenotype_cols + demographic_cols + survey_cols
     return df
 
-def demographics (df: pd.DataFrame, cols: list) -> dict:
+
+def demographics(df: pd.DataFrame, cols: list) -> dict:
     """
     Study demographics transform
     """
     cols = base_cols + phenotype_cols + demographic_cols
     return df
 
-def phenotype (df: pd.DataFrame, cols: list) -> dict:
+
+def phenotype(df: pd.DataFrame, cols: list) -> dict:
     """
     Study phenotype transform
     """
     cols = base_cols + phenotype_cols
     return df
 
-def device (df: pd.DataFrame, cols: list) -> dict:
+
+def device(df: pd.DataFrame, cols: list) -> dict:
     """
     Study device transform
     """
     cols = base_cols + phenotype_cols + demographic_cols + device_cols
     return df
 
-def contact (df: pd.DataFrame, cols: list) -> dict:
+
+def contact(df: pd.DataFrame, cols: list) -> dict:
     """
     Study contact transform
     """
     cols = base_cols + survey_cols + device_cols + contact_cols
     return df
 
+
 #
 # Column Counting Methods
 #
 
-def __n_participants (df: pd.DataFrame) -> dict:
+
+def __n_participants(df: pd.DataFrame) -> dict:
     groups = df.groupby(index_col)
     return len(groups)
 
-if __name__ == "__main__":
 
-    df = pd.read_csv( "../dev/data/AIREADiPilot-FairhubStudyDashboar_DATA_2023-08-08_1348.csv", sep = "\t", dtype = "str")
+if __name__ == "__main__":
+    df = pd.read_csv(
+        "../dev/data/AIREADiPilot-FairhubStudyDashboar_DATA_2023-08-08_1348.csv",
+        sep="\t",
+        dtype="str",
+    )
     df, colname_map = __preprocess_df(
-        df,
-        maps = [
-            ("dm", dm_map),
-            ("race", race_map),
-            ("ethnic", ethnic_map)
-        ]
+        df, maps=[("dm", dm_map), ("race", race_map), ("ethnic", ethnic_map)]
     )
 
     overview_data = __setup_module(
         overview,
-        df, [
-        base_cols,
-        dm_cols,
-        demographic_cols,
-        race_cols,
-        ethnic_cols,
-        phenotype_cols,
-        survey_cols
-    ])
-
-
-
-
+        df,
+        [
+            base_cols,
+            dm_cols,
+            demographic_cols,
+            race_cols,
+            ethnic_cols,
+            phenotype_cols,
+            survey_cols,
+        ],
+    )
