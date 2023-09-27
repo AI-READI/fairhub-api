@@ -2,6 +2,7 @@
 from flask import Flask
 from flask_cors import CORS
 from sqlalchemy import MetaData
+from os import environ
 
 import model
 from apis import api
@@ -26,6 +27,7 @@ def create_app(config=None):
     if config is not None:
         app.config.update(config)
         app.config["DATABASE_URL"] = app.config["FAIRHUB_DATABASE_URL"]
+        # print("pytest-config.py: ", app.config)
 
     # app.register_blueprint(api)
     app.config.from_prefixed_env("FAIRHUB")
@@ -62,11 +64,12 @@ def create_app(config=None):
 
     @app.before_request
     def on_before_request():
-        authentication()
-        try:
-            authorization()
-        except:
-            return "Access denied", 403
+        pass
+        # authentication()
+        # try:
+        #     authorization()
+        # except:
+        #     return "Access denied", 403
         # catch access denied error
 
     @app.cli.command("destroy-schema")
@@ -99,6 +102,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     port = args.port
 
-    app = create_app()
+    flask_app = create_app()
 
-    app.run(host="0.0.0.0", port=port)
+    flask_app.run(host="0.0.0.0", port=port)

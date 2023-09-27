@@ -4,7 +4,7 @@ import pytest
 
 from app import create_app
 
-
+# Create the flask app for testing
 @pytest.fixture(scope="module")
 def flask_app():
     """An application for the tests."""
@@ -17,11 +17,11 @@ def flask_app():
     os.environ["FLASK_ENV"] = "testing"
     flask_app = create_app(config)
 
-    flask_app.config.update(
-        {
-            "TESTING": True,
-            "FAIRHUB_DATABASE_URL": "postgresql://admin:root@localhost:5432/fairhub_local",
-        }
-    )
-
     yield flask_app
+
+# Create a test client for the app
+@pytest.fixture(scope="module")
+def test_client(flask_app):
+    """A test client for the app."""
+    with flask_app.test_client() as test_client:
+        yield test_client
