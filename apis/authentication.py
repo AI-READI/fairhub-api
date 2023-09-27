@@ -102,7 +102,7 @@ def authentication():
     user = User.query.get(decoded["user"])
     g.user = user
     expires = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=60)
-    new_token = jwt.encode({"exp": expires}, config.secret, algorithm="HS256")
+    new_token = jwt.encode({"user": g.user, "exp": expires}, config.secret, algorithm="HS256")
     resp = make_response("Token refreshed")
     resp.set_cookie("user", new_token, secure=True, httponly=True, samesite="lax")
     return resp
