@@ -1,4 +1,4 @@
-from flask import  request, make_response, g
+from flask import request, make_response, g
 from flask_restx import Namespace, Resource, fields
 from model import StudyContributor
 from datetime import timezone
@@ -46,7 +46,6 @@ class SignUpUser(Resource):
         db.session.add(user)
         db.session.commit()
         return user.to_dict(), 201
-
 
 
 @api.route("/auth/login")
@@ -97,6 +96,7 @@ class Logout(Resource):
 @api.route("/auth/current-users")
 class CurrentUsers(Resource):
     """function is used to see all logged users in the system. For now, it is used for testing purposes"""
+
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def get(self):
