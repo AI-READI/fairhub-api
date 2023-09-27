@@ -44,7 +44,6 @@ class Studies(Resource):
         return [s.to_dict() for s in studies]
 
     def post(self):
-
         add_study = Study.from_data(request.json)
         db.session.add(add_study)
         db.session.commit()
@@ -62,7 +61,7 @@ class StudyResource(Resource):
         return study1.to_dict()
 
     def put(self, study_id: int):
-        if is_granted('viewer', study_id):
+        if is_granted("viewer", study_id):
             return "Access denied, you can not modify", 403
         update_study = Study.query.get(study_id)
         update_study.update(request.json)
@@ -70,7 +69,7 @@ class StudyResource(Resource):
         return update_study.to_dict()
 
     def delete(self, study_id: int):
-        if not is_granted('admin', study_id):
+        if not is_granted("admin", study_id):
             return "Access denied, you can not delete study", 403
         delete_study = Study.query.get(study_id)
         for d in delete_study.dataset:
