@@ -10,7 +10,7 @@ def flask_app():
     """An application for the tests."""
     config = {
         "TESTING": True,
-        "FAIRHUB_DATABASE_URL": "postgresql://admin:root@localhost:5432/fairhub_local"
+        "FAIRHUB_DATABASE_URL": "postgresql://admin:root@localhost:5432/fairhub_local",
     }
 
     # Set the environment to testing
@@ -20,7 +20,7 @@ def flask_app():
     flask_app.config.update(
         {
             "TESTING": True,
-            "FAIRHUB_DATABASE_URL": "postgresql://admin:root@localhost:5432/fairhub_local"
+            "FAIRHUB_DATABASE_URL": "postgresql://admin:root@localhost:5432/fairhub_local",
         }
     )
 

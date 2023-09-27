@@ -20,7 +20,7 @@ def create_app(config=None):
     # `full` if you want to see all the details
     app.config["SWAGGER_UI_DOC_EXPANSION"] = "list"
     app.config["RESTX_MASK_SWAGGER"] = False
-    
+
     # Initialize config
     app.config.from_pyfile("config.py")
     if config is not None:

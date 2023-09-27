@@ -3,6 +3,7 @@ import json
 import os
 from app import create_app
 
+
 def test_post_studies(flask_app):
     """
     Given a Flask application configured for testing
@@ -12,12 +13,16 @@ def test_post_studies(flask_app):
 
     # Crate a test using the Flask application configured for testing
     with flask_app.test_client() as test_client:
-        response = test_client.post("/study", json={
-            "title": "Study Title",
-            "image": "https://api.dicebear.com/6.x/adventurer/svg",
-        })
-      
+        response = test_client.post(
+            "/study",
+            json={
+                "title": "Study Title",
+                "image": "https://api.dicebear.com/6.x/adventurer/svg",
+            },
+        )
+
         assert response.status_code == 200
+
 
 def test_get_studies(flask_app):
     """
@@ -40,6 +45,7 @@ def test_get_studies(flask_app):
         # Check the response is correct
         assert response.status_code == 200
 
+
 def test_delete_studies_created(flask_app):
     """
     Given a Flask application configured for testing
@@ -52,4 +58,3 @@ def test_delete_studies_created(flask_app):
     # TODO: DELETE ENDPOINT NOT WORKING
     # with flask_app.test_client() as test_client:
     #     response = test_client.post("/study", json={
-            
