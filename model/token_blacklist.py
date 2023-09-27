@@ -6,7 +6,6 @@ import datetime
 
 
 class TokenBlacklist(db.Model):
-
     __tablename__ = "token_blacklist"
     jti = db.Column(db.CHAR(36), primary_key=True)
     exp = db.Column(db.String, nullable=False)
