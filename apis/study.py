@@ -34,7 +34,7 @@ study = api.model(
 
 @api.route("/study")
 class Studies(Resource):
-    @api.doc("list_study")
+    @api.doc("list_study", description="List all studies")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(study)
@@ -43,6 +43,7 @@ class Studies(Resource):
         return [s.to_dict() for s in studies]
 
     def post(self):
+        print(request)
         add_study = Study.from_data(request.json)
         db.session.add(add_study)
         db.session.commit()
@@ -68,6 +69,7 @@ class StudyResource(Resource):
     def delete(self, study_id: int):
         delete_study = Study.query.get(study_id)
         for d in delete_study.dataset:
+            print(d)
             for version in d.dataset_versions:
                 version.participants.clear()
         for d in delete_study.dataset:
@@ -76,6 +78,8 @@ class StudyResource(Resource):
             db.session.delete(d)
         for p in delete_study.participants:
             db.session.delete(p)
+        # delete study_description
+        db.session.delete(delete_study.study_description)
         db.session.delete(delete_study)
         db.session.commit()
         return "", 204

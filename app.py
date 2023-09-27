@@ -62,11 +62,12 @@ def create_app(config=None):
 
     @app.before_request
     def on_before_request():
-        authentication()
-        try:
-            authorization()
-        except:
-            return "Access denied", 403
+        pass
+        # authentication()
+        # try:
+        #     authorization()
+        # except:
+        #     return "Access denied", 403
         # catch access denied error
 
     @app.cli.command("destroy-schema")
