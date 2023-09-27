@@ -1,19 +1,52 @@
-from flask import jsonify, request, make_response, g
+from flask import  request, make_response, g
 from flask_restx import Namespace, Resource, fields
-from model import User, StudyContributor
-import uuid
+from model import StudyContributor
 from datetime import timezone
 import datetime
 from dateutil.parser import parse
-
+from model import db, User
 import jwt
 import config
 
-api = Namespace("Login", description="Login", path="/")
+api = Namespace("Authentication", description="Authentication paths", path="/")
+
+signup_model = api.model(
+    "Signup",
+    {
+        "id": fields.String(required=True),
+        "email_address": fields.String(required=True),
+        "email_verified": fields.String(required=True),
+        "username": fields.String(required=True),
+        "created_at": fields.Integer(required=True),
+    },
+)
 
 
 class AccessDenied(Exception):
     pass
+
+
+@api.route("/auth/signup")
+class SignUpUser(Resource):
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    @api.marshal_with(signup_model)
+    def post(self):
+        data = request.json
+        # TODO data[email doesnt exist then raise error; json validation library
+        if not data["email_address"]:
+            raise "Email is not found"
+        user = User.query.filter_by(email_address=data["email_address"]).one_or_none()
+        if user:
+            return "This email address is already in use", 409
+        # user = User.query.filter_by(username=data["username"]).one_or_none()
+        # if user:
+        #     return "This username is already in use", 409
+        user = User.from_data(data)
+        db.session.add(user)
+        db.session.commit()
+        return user.to_dict(), 201
+
 
 
 @api.route("/auth/login")
@@ -63,6 +96,7 @@ class Logout(Resource):
 
 @api.route("/auth/current-users")
 class CurrentUsers(Resource):
+    """function is used to see all logged users in the system. For now, it is used for testing purposes"""
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def get(self):
@@ -79,12 +113,18 @@ def authentication():
     token = request.cookies.get("user")
     try:
         decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
-
     except jwt.ExpiredSignatureError:
-        return
+        return "Session time is over", 401
     user = User.query.get(decoded["user"])
     g.user = user
-    decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
+    # refreshed_encoded = jwt.decode({"exp": datetime.datetime.now(timezone.utc)
+    #                      + datetime.timedelta(minutes=60)},
+    #                     config.secret, algorithms=["HS256"])
+    # resp = make_response(user.to_dict())
+    # resp.set_cookie(
+    #     "user", refreshed_encoded, secure=True, httponly=True, samesite="lax"
+    # )
+    # resp.status = 200
 
 
 def authorization():

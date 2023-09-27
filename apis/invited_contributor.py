@@ -8,7 +8,7 @@ from model import (
     StudyException,
 )
 from flask import request
-from .login import is_granted
+from .authentication import is_granted
 
 api = Namespace("Invited_contributors", description="Invited contributors", path="/")
 

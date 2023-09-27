@@ -1,7 +1,7 @@
 from flask_restx import Namespace, Resource, fields
 from flask import request, g
 from model import StudyContributor, Study, db, User
-from .login import is_granted
+from .authentication import is_granted
 api = Namespace("Contributor", description="Contributors", path="/")
 
 

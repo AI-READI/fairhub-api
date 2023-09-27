@@ -2,7 +2,7 @@ from flask import request
 from flask_restx import Namespace, Resource, fields
 
 from model import Study, db
-from .login import is_granted
+from .authentication import is_granted
 
 api = Namespace("Study", description="Study operations", path="/")
 

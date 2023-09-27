@@ -6,7 +6,7 @@ from sqlalchemy import MetaData
 import model
 from apis import api
 from flask_bcrypt import Bcrypt
-from apis.login import authentication, authorization
+from apis.authentication import authentication, authorization
 
 # from pyfairdatatools import __version__
 

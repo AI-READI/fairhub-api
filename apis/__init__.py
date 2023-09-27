@@ -11,8 +11,7 @@ from .participant import api as participants_api
 from .study import api as study_api
 from .invited_contributor import api as invited_contributors
 
-from .signup_user import api as signup
-from .login import api as login
+from .authentication import api as authentication
 
 from .study_metadata.study_arm import api as arm
 from .study_metadata.study_available_ipd import api as available_ipd
@@ -66,8 +65,7 @@ api = Api(
 
 api.add_namespace(dataset_metadata_namespace)
 api.add_namespace(study_metadata_namespace)
-api.add_namespace(signup)
-api.add_namespace(login)
+api.add_namespace(authentication)
 
 
 @api.route("/echo", endpoint="echo")

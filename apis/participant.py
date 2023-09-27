@@ -2,7 +2,7 @@ from flask import Response, jsonify, request, g
 from flask_restx import Namespace, Resource, fields
 
 from model import Participant, Study, db, StudyContributor
-from .login import is_granted
+from .authentication import is_granted
 
 api = Namespace("Participant", description="Participant operations", path="/")
 
