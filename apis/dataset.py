@@ -49,7 +49,7 @@ class DatasetList(Resource):
     @api.doc("update dataset")
     # @api.marshal_with(dataset)
     def post(self, study_id):
-        if is_granted('viewer', study_id):
+        if is_granted("viewer", study_id):
             return "Access denied, you can not modify", 403
         study = Study.query.get(study_id)
         # todo if study.participant id== different study Throw error
@@ -65,7 +65,7 @@ class DatasetList(Resource):
 @api.response(400, "Validation Error")
 class DatasetResource(Resource):
     def put(self, study_id, dataset_id):
-        if is_granted('viewer', study_id):
+        if is_granted("viewer", study_id):
             return "Access denied, you can not modify", 403
         data = request.json
         data_obj = Dataset.query.get(dataset_id)
@@ -74,7 +74,7 @@ class DatasetResource(Resource):
         return data_obj.to_dict()
 
     def delete(self, study_id, dataset_id):
-        if is_granted('viewer', study_id):
+        if is_granted("viewer", study_id):
             return "Access denied, you can not modify", 403
         data_obj = Dataset.query.get(dataset_id)
         for version in data_obj.dataset_versions:
@@ -120,7 +120,7 @@ class Version(Resource):
         return dataset_version.to_dict()
 
     def put(self, study_id, dataset_id, version_id):
-        if is_granted('viewer', study_id):
+        if is_granted("viewer", study_id):
             return "Access denied, you can not modify", 403
         data_version_obj = Version.query.get(version_id)
         data_version_obj.update(request.json)
@@ -128,7 +128,7 @@ class Version(Resource):
         return jsonify(data_version_obj.to_dict())
 
     def delete(self, study_id, dataset_id, version_id):
-        if is_granted('viewer', study_id):
+        if is_granted("viewer", study_id):
             return "Access denied, you can not modify", 403
         data_obj = Dataset.query.get(dataset_id)
         for version in data_obj.dataset_versions:
@@ -144,7 +144,7 @@ class Version(Resource):
 @api.response(400, "Validation Error")
 class VersionList(Resource):
     def post(self, study_id: int, dataset_id: int):
-        if is_granted('viewer', study_id):
+        if is_granted("viewer", study_id):
             return "Access denied, you can not modify", 403
         data = request.json
         data["participants"] = [Participant.query.get(i) for i in data["participants"]]
