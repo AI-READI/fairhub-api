@@ -83,6 +83,28 @@ class Login(Resource):
             return resp
 
 
+def authentication():
+    """it authenticates users to a study, sets access and refresh token.
+    In addition, it handles error handling of expired token and non existed users"""
+    g.user = None
+    if "user" not in request.cookies:
+        return
+    # if 'user' in
+    token = request.cookies.get("user")
+    try:
+        decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
+    except jwt.ExpiredSignatureError:
+        # Handle token expiration error here (e.g., re-authenticate the user)
+        return "Token has expired, please re-authenticate", 401
+    user = User.query.get(decoded["user"])
+    g.user = user
+    expires = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=60)
+    new_token = jwt.encode({"exp": expires}, config.secret, algorithm="HS256")
+    resp = make_response("Token refreshed")
+    resp.set_cookie("user", new_token, secure=True, httponly=True, samesite="lax")
+    return resp
+
+
 @api.route("/auth/logout")
 class Logout(Resource):
     @api.response(200, "Success")
@@ -105,30 +127,9 @@ class CurrentUsers(Resource):
         return g.user.to_dict()
 
 
-def authentication():
-    g.user = None
-    if "user" not in request.cookies:
-        return
-    # if 'user' in
-    token = request.cookies.get("user")
-    try:
-        decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
-    except jwt.ExpiredSignatureError:
-        return "Session time is over", 401
-    user = User.query.get(decoded["user"])
-    g.user = user
-    # refreshed_encoded = jwt.decode({"exp": datetime.datetime.now(timezone.utc)
-    #                      + datetime.timedelta(minutes=60)},
-    #                     config.secret, algorithms=["HS256"])
-    # resp = make_response(user.to_dict())
-    # resp.set_cookie(
-    #     "user", refreshed_encoded, secure=True, httponly=True, samesite="lax"
-    # )
-    # resp.status = 200
-
 
 def authorization():
-    """check whether url is allowed to be reached"""
+    """it checks whether url is allowed to be reached"""
     # white listed routes
     public_routes = [
         "/auth",
