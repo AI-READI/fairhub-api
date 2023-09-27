@@ -1,6 +1,6 @@
 from flask_restx import fields
 
-FairhubStudyDashboardDataModel = {
+FairhubRecruitmentDashboardDataModel = {
     "module_name": fields.String(
         required=True, description="Visualization module name"
     ),

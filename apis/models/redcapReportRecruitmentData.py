@@ -1,6 +1,6 @@
 from flask_restx import fields
 
-REDCapReportStudyDashboardDataModel = {
+REDCapReportRecruitmentDataModel = {
     "record_id": fields.String(required=True, readonly=True, description="Participant record ID"),
     "redcap_repeat_instrument": fields.String(required=True, readonly=True, description="REDCap internal variable - name of repeatable instrument"),
     "recap_repeat_instance": fields.Integer(required=True, readonly=True, description="REDCap internal variable - repetition number of repeatable instrument"),
@@ -67,7 +67,7 @@ REDCapReportStudyDashboardDataModel = {
     "monofilament_complete": fields.Integer(required=True, readonly=True, description="Monofilament completed"),
     "moca_complete": fields.Integer(required=True, readonly=True, description="MOCA instrument completed"),
     "ecg_complete": fields.Integer(required=True, readonly=True, description="ECG completed"),
-    "retinal_imaging_complete": fields.Integer(required=True, readonly=True, description="Retinal imaging completed"),
+    "retinal_imaging_v2_complete": fields.Integer(required=True, readonly=True, description="Retinal imaging completed"),
     "lab_results_complete": fields.Integer(required=True, readonly=True, description="Lab results completed"),
     "device_return_complete": fields.Integer(required=True, readonly=True, description="Device return completed"),
     "specimen_management_complete": fields.Integer(required=True, readonly=True, description="Specimen management completed"),

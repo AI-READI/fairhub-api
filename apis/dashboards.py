@@ -47,8 +47,8 @@
 import json
 from flask_restx import Namespace, Resource, fields
 from core import utils
-from .models import DashboardModel
-from .models import FairhubStudyDashboardDataModel
+from .models import FairhubDashboardModel
+from .models import FairhubRecruitmentDashboardDataModel
 from __main__ import DASHBOARDS_CONFIG, MEMORY_CACHE
 
 with open("config/simulation.json") as config:
@@ -65,16 +65,16 @@ api = Namespace("dashboards", description="Dashboard related operations")
 # Register API Models
 #
 
-dashboardModel = api.model("Dashboard", DashboardModel)
+fairhubDashboardModel = api.model("FairhubDashboard", FairhubDashboardModel)
 
-fairhubStudyDashboardDataModel = api.model(
-    "FairhubStudyDashboardData", FairhubStudyDashboardDataModel
+fairhubRecruitmentDashboardDataModel = api.model(
+    "FairhubRecruitmentDashboardData", FairhubRecruitmentDashboardDataModel
 )
 
-fairhubStudyDashboardModel = api.inherit(
-    "FairhubStudyDashboard",
-    dashboardModel,
-    {"data": fields.List(fields.Nested(fairhubStudyDashboardDataModel))},
+fairhubRecruitmentDashboardModel = api.inherit(
+    "FairhubRecruitmentDashboard",
+    fairhubDashboardModel,
+    {"data": fields.List(fields.Nested(fairhubRecruitmentDashboardDataModel))},
 )
 
 #
@@ -84,7 +84,7 @@ fairhubStudyDashboardModel = api.inherit(
 @api.route("/")
 class DashboardsList(Resource):
     @api.doc("get_dashboards")
-    @api.marshal_list_with(dashboardModel)
+    @api.marshal_list_with(fairhubDashboardModel)
     def get(self):
         """
         Get list of all available dashboards
@@ -96,9 +96,9 @@ class DashboardsList(Resource):
 #
 
 @api.route("/study/<study_id>")
-class StudyDashboard(Resource):
-    @api.doc("get_study_dashboard")
-    @api.marshal_with(fairhubStudyDashboardModel)
+class RecruitmentDashboard(Resource):
+    @api.doc("get_recruitment_dashboard")
+    @api.marshal_with(fairhubRecruitmentDashboardModel)
     def get(self, study_id):
         """
         Get study dashboard
@@ -111,9 +111,9 @@ class StudyDashboard(Resource):
 @api.route("/study/<study_id>/visualization-module/<module_name>")
 @api.param("module_name", "The name of the visualization module")
 @api.response(404, "No visualization module with that name found.")
-class StudyDashboardModuleByName(Resource):
-    @api.doc("get_study_dashboard_module_by_name")
-    @api.marshal_with(fairhubStudyDashboardDataModel)
+class RecruitmentDashboardModuleByName(Resource):
+    @api.doc("get_recruitment_dashboard_module_by_name")
+    @api.marshal_with(fairhubRecruitmentDashboardDataModel)
     def get(self, module_name):
         """
         Get study dashboard visualization module data by name

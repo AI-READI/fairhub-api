@@ -51,6 +51,7 @@ redis = "^4.6.0"
 redis-om = "^0.1.2"
 python-dotenv = "^1.0.0"
 flask-caching = "^2.0.2"
+pycap = "^2.4.0"
 
 
 [tool.poetry.group.dev.dependencies]
