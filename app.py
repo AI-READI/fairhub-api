@@ -14,7 +14,7 @@ from apis.login import authentication, authorization
 bcrypt = Bcrypt()
 
 
-def create_app(config=None):
+def create_app(config_module=None):
     """Initialize the core application."""
     # create and configure the app
     app = Flask(__name__)
@@ -23,10 +23,9 @@ def create_app(config=None):
     app.config["RESTX_MASK_SWAGGER"] = False
 
     # Initialize config
-    app.config.from_pyfile("config.py")
-    if config is not None:
-        app.config.update(config)
-        app.config["DATABASE_URL"] = app.config["FAIRHUB_DATABASE_URL"]
+    app.config.from_object(config_module or 'config')
+    print("config_module: ", config_module)
+    print("app.config: ", app.config)
         # print("pytest-config.py: ", app.config)
 
     # app.register_blueprint(api)
