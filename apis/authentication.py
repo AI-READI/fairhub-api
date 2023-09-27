@@ -28,10 +28,12 @@ class AccessDenied(Exception):
 
 @api.route("/auth/signup")
 class SignUpUser(Resource):
+
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(signup_model)
     def post(self):
+        """signs up the new users and saves data in DB"""
         data = request.json
         # TODO data[email doesnt exist then raise error; json validation library
         if not data["email_address"]:
@@ -54,6 +56,8 @@ class Login(Resource):
     @api.response(400, "Validation Error")
     # @api.marshal_with(login_model)
     def post(self):
+        """logs in user and handles few authentication errors.
+        Also, it sets token for logged user along with expiration date"""
         data = request.json
         email_address = data["email_address"]
         user = User.query.filter_by(email_address=email_address).one_or_none()
@@ -109,6 +113,7 @@ class Logout(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def post(self):
+        """simply logges out user from the system"""
         resp = make_response()
         resp.status = 204
         resp.delete_cookie("user")
@@ -118,14 +123,12 @@ class Logout(Resource):
 @api.route("/auth/current-users")
 class CurrentUsers(Resource):
     """function is used to see all logged users in the system. For now, it is used for testing purposes"""
-
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def get(self):
         if not g.user:
             return None
         return g.user.to_dict()
-
 
 
 def authorization():
