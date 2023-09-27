@@ -6,6 +6,7 @@ from .db import db
 class EmailVerification(db.Model):
     def __init__(self):
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
+
     __tablename__ = "email_verification"
     id = db.Column(db.CHAR(36), primary_key=True)
     token = db.Column(db.CHAR(36), nullable=False)
@@ -19,5 +20,5 @@ class EmailVerification(db.Model):
             "id": self.id,
             "user_id": self.user_id,
             "token": self.token,
-            "created_at": self.created_at
+            "created_at": self.created_at,
         }

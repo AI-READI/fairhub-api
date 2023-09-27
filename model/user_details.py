@@ -42,5 +42,3 @@ class UserDetails(db.Model):
         self.orcid = data["orcid"]
         self.location = data["location"]
         self.timezone = data["timezone"]
-
-

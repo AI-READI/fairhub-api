@@ -115,5 +115,5 @@ __all__ = [
     "StudyException",
     "EmailVerification",
     "TokenBlacklist",
-    "UserDetails"
+    "UserDetails",
 ]
