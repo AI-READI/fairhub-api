@@ -20,7 +20,7 @@ def test_client(flask_app):
     """A test client for the app."""
     with flask_app.test_client() as test_client:
         yield test_client
-
+        
 # Create a user for testing
 
 # Sign in the user for module testing
