@@ -24,7 +24,9 @@ class Studies(Resource):
     # @api.marshal_with(study)
     def get(self):
         """this code ensure each user access and see only allowed studies"""
-        studies = Study.query.filter(Study.study_contributors.any(User.id == g.user.id)).all()
+        studies = Study.query.filter(
+            Study.study_contributors.any(User.id == g.user.id)
+        ).all()
         return [s.to_dict() for s in studies]
 
     @api.expect(study_model)
