@@ -1,7 +1,8 @@
 """Entry point for the application."""
-from flask import Flask
+from flask import Flask, request
 from flask_cors import CORS
 from sqlalchemy import MetaData
+
 
 import model
 from apis import api
@@ -32,6 +33,8 @@ def create_app():
 
     # print(app.config)
 
+    # TODO: add a check for secret key
+
     if "DATABASE_URL" in app.config:
         # if "TESTING" in app_config and app_config["TESTING"]:
         #     pass
@@ -50,14 +53,20 @@ def create_app():
     CORS(
         app,
         resources={
-            r"/*": {
-                "origins": "http://localhost:3000",
+            "/*": {
+                "origins": [
+                    "http://localhost:3000",
+                ],
             }
         },
+        allow_headers=[
+            "Content-Type",
+            "Authorization",
+            "Access-Control-Allow-Origin",
+            "Access-Control-Allow-Credentials",
+        ],
         supports_credentials=True,
     )
-
-    app.config["CORS_ALLOW_CREDENTIALS"] = True
 
     # CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": "True"}})
 

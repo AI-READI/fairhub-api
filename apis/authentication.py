@@ -105,6 +105,7 @@ def authentication():
         decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
         # Handle token expiration error here (e.g., re-authenticate the user)
+        # TODO: delete the cookie
         return "Token has expired, please re-authenticate", 401
     user = User.query.get(decoded["user"])
     # if decoded in user.token_blacklist:
@@ -155,6 +156,7 @@ def authorization():
         "/swaggerui",
         "/swagger.json",
     ]
+    print(g.user)
     for route in public_routes:
         if request.path.startswith(route):
             return
