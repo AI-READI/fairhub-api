@@ -4,14 +4,14 @@ from .db import db
 from datetime import timezone
 import datetime
 import app
-
+import model
 
 class User(db.Model):
     def __init__(self, password, data):
         self.id = str(uuid.uuid4())
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
         self.set_password(password, data)
-
+        self.user_details = model.UserDetails(self)
     __tablename__ = "user"
     id = db.Column(db.CHAR(36), primary_key=True)
     email_address = db.Column(db.String, nullable=False, unique=True)
@@ -23,16 +23,15 @@ class User(db.Model):
     study_contributors = db.relationship("StudyContributor", back_populates="user")
     email_verification = db.relationship("EmailVerification", back_populates="user")
     token_blacklist = db.relationship("TokenBlacklist", back_populates="user")
-    user_details = db.relationship("UserDetails", back_populates="user")
+    user_details = db.relationship("UserDetails", uselist=False, back_populates="user")
 
     def to_dict(self):
         return {
             "id": self.id,
             "email_address": self.email_address,
             "username": self.username,
-            "hash": self.hash,
-            "created_at": self.created_at,
-            "email_verified": self.email_verified,
+            "first_name": self.user_details.first_name,
+            "last_name": self.user_details.last_name,
         }
 
     @staticmethod

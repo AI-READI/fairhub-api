@@ -4,7 +4,7 @@ from model import StudyContributor
 from datetime import timezone
 import datetime
 from dateutil.parser import parse
-from model import db, User
+from model import db, User, UserDetails
 import jwt
 import config
 
@@ -13,14 +13,18 @@ api = Namespace("Authentication", description="Authentication paths", path="/")
 signup_model = api.model(
     "Signup",
     {
-        "id": fields.String(required=True),
-        "email_address": fields.String(required=True),
-        "email_verified": fields.String(required=True),
-        "username": fields.String(required=True),
-        "created_at": fields.Integer(required=True),
+        "email_address": fields.String(required=True, default="sample@gmail.com"),
+        "password": fields.String(required=True,  default=""),
     },
 )
 
+login_model = api.model(
+    "Login",
+    {
+        "email_address": fields.String(required=True, default=""),
+        "password": fields.String(required=True, default=""),
+    },
+)
 
 class AccessDenied(Exception):
     pass
@@ -31,7 +35,8 @@ class SignUpUser(Resource):
 
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(signup_model)
+    # @api.marshal_with(signup_model)
+    @api.expect(signup_model)
     def post(self):
         """signs up the new users and saves data in DB"""
         data = request.json
@@ -44,10 +49,11 @@ class SignUpUser(Resource):
         # user = User.query.filter_by(username=data["username"]).one_or_none()
         # if user:
         #     return "This username is already in use", 409
-        user = User.from_data(data)
-        db.session.add(user)
+        user_add = User.from_data(data)
+        # user.user_details.update(data)
+        db.session.add(user_add)
         db.session.commit()
-        return user.to_dict(), 201
+        return user_add.to_dict(), 201
 
 
 @api.route("/auth/login")
@@ -55,6 +61,7 @@ class Login(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(login_model)
+    @api.expect(login_model)
     def post(self):
         """logs in user and handles few authentication errors.
         Also, it sets token for logged user along with expiration date"""
@@ -100,9 +107,11 @@ def authentication():
         # Handle token expiration error here (e.g., re-authenticate the user)
         return "Token has expired, please re-authenticate", 401
     user = User.query.get(decoded["user"])
+    # if decoded in user.token_blacklist:
+    #     return "authentication failed", 403
     g.user = user
     expires = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=60)
-    new_token = jwt.encode({"user": g.user, "exp": expires}, config.secret, algorithm="HS256")
+    new_token = jwt.encode({"user": user.id, "exp": expires}, config.secret, algorithm="HS256")
     resp = make_response("Token refreshed")
     resp.set_cookie("user", new_token, secure=True, httponly=True, samesite="lax")
     return resp
