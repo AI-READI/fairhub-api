@@ -53,7 +53,7 @@ class SignUpUser(Resource):
         # user.user_details.update(data)
         db.session.add(user_add)
         db.session.commit()
-        return user_add.to_dict(), 201
+        return f"Hi, {user_add.email_address}, you have successfully signed up", 201
 
 
 @api.route("/auth/login")
