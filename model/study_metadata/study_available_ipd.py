@@ -22,7 +22,7 @@ class StudyAvailableIpd(db.Model):
     comment = db.Column(db.String, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
 
-    study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"), nullable=False)
+    study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=False)
     study = db.relationship("Study", back_populates="study_available_ipd")
 
     def to_dict(self):
@@ -38,13 +38,13 @@ class StudyAvailableIpd(db.Model):
 
     @staticmethod
     def from_data(study, data: dict):
-        """Creates a new study from a dictionary"""
+        """Creates a new study metadata from a dictionary"""
         study_available = StudyAvailableIpd(study)
         study_available.update(data)
         return study_available
 
     def update(self, data):
-        """Updates the study from a dictionary"""
+        """Updates the study metadata from a dictionary"""
         self.identifier = data["identifier"]
         self.type = data["type"]
         self.url = data["url"]

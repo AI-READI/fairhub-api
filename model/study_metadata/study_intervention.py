@@ -24,7 +24,7 @@ class StudyIntervention(db.Model):
     other_name_list = db.Column(ARRAY(String), nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
 
-    study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"), nullable=False)
+    study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=False)
     study = db.relationship("Study", back_populates="study_intervention")
 
     def to_dict(self):

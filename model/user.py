@@ -24,7 +24,6 @@ class User(db.Model):
 
     study_contributors = db.relationship("StudyContributor", back_populates="user")
     email_verification = db.relationship("EmailVerification", back_populates="user")
-    token_blacklist = db.relationship("TokenBlacklist", back_populates="user")
     user_details = db.relationship("UserDetails", uselist=False, back_populates="user")
 
     def to_dict(self):
