@@ -16,6 +16,6 @@ def test_server_launch(test_client):
 
     # Convert the response data from JSON to a Python dictionary
     response_data = json.loads(response.data)
-    
+
     # Check the response is correct
     assert response_data == "Server active!"

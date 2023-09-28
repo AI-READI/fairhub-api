@@ -2,16 +2,17 @@
 import json
 import pytest
 
+
 @pytest.fixture()
 def update_study_id():
     def study_id():
         """A study ID for testing."""
         return {}
-    
+
     def _update_study_id(study_id):
         study_id["title"] = "Study Title Updated"
         return study_id
-    
+
 
 def test_post_studies(test_client, study_id):
     """
@@ -46,13 +47,14 @@ def test_get_studies(test_client):
     """
 
     response = test_client.get("/study")
-    
+
     # Convert the response data from JSON to a Python dictionary
     response_data = json.loads(response.data)
-    
+
     # print(response_data)
     # Check the response is correct
     assert response.status_code == 200
+
 
 def test_update_study(test_client, study_id):
     """
@@ -62,11 +64,14 @@ def test_update_study(test_client, study_id):
     """
     print("study_id for updating a study")
     print(study_id)
-    response = test_client.put(f"/study/{study_id['id']}", json={
-        "id": study_id["id"],
-        "title": "Study Title Updated",
-        "image": study_id["image"],
-    })
+    response = test_client.put(
+        f"/study/{study_id['id']}",
+        json={
+            "id": study_id["id"],
+            "title": "Study Title Updated",
+            "image": study_id["image"],
+        },
+    )
     response_data = json.loads(response.data)
 
     assert response.status_code == 200
@@ -92,6 +97,7 @@ def test_get_study_by_id(test_client, study_id):
     assert response_data["id"] == study_id["id"]
     assert response_data["title"] == study_id["title"]
     assert response_data["image"] == study_id["image"]
+
 
 def test_delete_studies_created(test_client):
     """

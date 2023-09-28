@@ -23,7 +23,7 @@ def create_app(config_module=None):
     app.config["RESTX_MASK_SWAGGER"] = False
 
     # Initialize config
-    app.config.from_object(config_module or 'config')
+    app.config.from_object(config_module or "config")
 
     # app.register_blueprint(api)
     app.config.from_prefixed_env("FAIRHUB")
