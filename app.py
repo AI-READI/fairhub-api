@@ -45,7 +45,22 @@ def create_app():
     model.db.init_app(app)
     api.init_app(app)
     bcrypt.init_app(app)
-    CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": "True"}})
+
+    # Only allow CORS origin for localhost:3000
+    CORS(
+        app,
+        resources={
+            r"/*": {
+                "origins": "http://localhost:3000",
+            }
+        },
+        supports_credentials=True,
+    )
+
+    app.config["CORS_ALLOW_CREDENTIALS"] = True
+
+    # CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": "True"}})
+
     #
     # @app.cli.command("create-schema")
     # def create_schema():
