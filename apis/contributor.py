@@ -37,10 +37,16 @@ class ContributorResource(Resource):
         if is_granted("viewer", study_id):
             return "Access denied, you can not modify", 403
         data = request.json
-        contributors = StudyContributor.query.filter_by(study_id=study_id, user_id=user_id).first()
-        if is_granted("admin", study_id) and contributors.permission=="owner":
+        contributors = StudyContributor.query.filter_by(
+            study_id=study_id, user_id=user_id
+        ).first()
+        if is_granted("admin", study_id) and contributors.permission == "owner":
             return "Access denied, you can not modify", 403
-        if is_granted("admin", study_id) and user_id != g.user.id and contributors.permission == "admin":
+        if (
+            is_granted("admin", study_id)
+            and user_id != g.user.id
+            and contributors.permission == "admin"
+        ):
             return "Access denied, you can not modify other admin permissions", 403
         contributors.update(data)
         db.session.commit()
@@ -53,7 +59,9 @@ class ContributorResource(Resource):
         if is_granted("owner", study_id):
             return "Access denied, you can not modify", 403
 
-        contributor = StudyContributor.query.filter_by(user_id=user_id, study_id=study_id).first()
+        contributor = StudyContributor.query.filter_by(
+            user_id=user_id, study_id=study_id
+        ).first()
         db.session.delete(contributor)
         db.session.commit()
         return 204
