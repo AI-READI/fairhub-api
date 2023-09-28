@@ -60,6 +60,8 @@ class StudyResource(Resource):
         db.session.commit()
         return update_study.to_dict()
 
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def delete(self, study_id: int):
         if not is_granted("owner", study_id):
             return "Access denied, you can not delete study", 403
@@ -80,29 +82,15 @@ class StudyResource(Resource):
         return "", 204
 
 
-# @api.route("/viewProfile", methods=["GET"])
+# @api.route("/view-profile", methods=["GET"])
 # def viewProfile():
-#     dic = {
-#         "username": "admin",
-#         "email": "aydan.gasimova2@gmail.com",
-#         "fullname": "Aydan Gasimova",
-#         "image": f" https://api.dicebear.com/5.x/shapes/svg?seed=$"
-#         f"{str(random.randint(0,1000))}",
-#         "institution": "CALMI2",
-#         "location": "San Diego, CA",
-#         "password": "admin",
-#         "timezone": "(GMT-11:00) Midway Island",
-#     }
 #     return jsonify(dic)
 #
 
 
-# @study.route("/viewProfile", methods=["POST"])
+# @study.route("/view-profile", methods=["POST"])
 # def update_user_profile():
 #     data = request.json
-#
 #     if data is not None:
-#         data["id"] = 3
-#
 #     return jsonify(data), 201
 #

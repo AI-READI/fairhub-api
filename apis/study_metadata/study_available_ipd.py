@@ -35,14 +35,6 @@ class StudyAvailableResource(Resource):
     @api.response(400, "Validation Error")
     @api.marshal_with(study_available)
     def post(self, study_id: int):
-        # parser = reqparse.RequestParser()
-        # parser.add_argument("username", type=str, required=True)
-        # parser.add_argument("password", type=str, required=True)
-        # parser.add_argument("username", type=str, required=True)
-        # parser.add_argument("password", type=str, required=True)
-        # parser.add_argument("password", type=str, required=True)
-        # args = parser.parse_args()
-
         data = request.json
         study_obj = Study.query.get(study_id)
         list_of_elements = []

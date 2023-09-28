@@ -7,7 +7,7 @@ from .authentication import is_granted
 api = Namespace("Participant", description="Participant operations", path="/")
 
 participant_model = api.model(
-    "Study",
+    "Participant",
     {
         "id": fields.String(required=True),
         "first_name": fields.String(required=True),

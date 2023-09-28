@@ -80,7 +80,7 @@ class Login(Resource):
                 {
                     "user": user.id,
                     "exp": datetime.datetime.now(timezone.utc)
-                    + datetime.timedelta(minutes=60),
+                    + datetime.timedelta(minutes=2),
                 },
                 config.secret,
                 algorithm="HS256",
@@ -107,11 +107,11 @@ def authentication():
         # Handle token expiration error here (e.g., re-authenticate the user)
         return "Token has expired, please re-authenticate", 401
     user = User.query.get(decoded["user"])
-    # if decoded in user.token_blacklist:
+    # if decoded in token_blacklist:
     #     return "authentication failed", 403
     g.user = user
     expires = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
-        minutes=60
+        minutes=2
     )
     new_token = jwt.encode(
         {"user": user.id, "exp": expires}, config.secret, algorithm="HS256"
@@ -160,7 +160,7 @@ def authorization():
             return
     if g.user:
         return
-    raise AccessDenied("Access denied")
+    return "Access denied", 403
 
 
 def is_granted(permission: str, study_id: int):
