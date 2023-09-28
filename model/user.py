@@ -6,12 +6,14 @@ import datetime
 import app
 import model
 
+
 class User(db.Model):
     def __init__(self, password, data):
         self.id = str(uuid.uuid4())
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
         self.set_password(password, data)
         self.user_details = model.UserDetails(self)
+
     __tablename__ = "user"
     id = db.Column(db.CHAR(36), primary_key=True)
     email_address = db.Column(db.String, nullable=False, unique=True)

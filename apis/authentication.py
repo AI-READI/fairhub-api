@@ -14,7 +14,7 @@ signup_model = api.model(
     "Signup",
     {
         "email_address": fields.String(required=True, default="sample@gmail.com"),
-        "password": fields.String(required=True,  default=""),
+        "password": fields.String(required=True, default=""),
     },
 )
 
@@ -26,13 +26,13 @@ login_model = api.model(
     },
 )
 
+
 class AccessDenied(Exception):
     pass
 
 
 @api.route("/auth/signup")
 class SignUpUser(Resource):
-
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(signup_model)
@@ -110,8 +110,12 @@ def authentication():
     # if decoded in user.token_blacklist:
     #     return "authentication failed", 403
     g.user = user
-    expires = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=60)
-    new_token = jwt.encode({"user": user.id, "exp": expires}, config.secret, algorithm="HS256")
+    expires = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
+        minutes=60
+    )
+    new_token = jwt.encode(
+        {"user": user.id, "exp": expires}, config.secret, algorithm="HS256"
+    )
     resp = make_response("Token refreshed")
     resp.set_cookie("user", new_token, secure=True, httponly=True, samesite="lax")
     return resp
@@ -132,6 +136,7 @@ class Logout(Resource):
 @api.route("/auth/current-users")
 class CurrentUsers(Resource):
     """function is used to see all logged users in the system. For now, it is used for testing purposes"""
+
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def get(self):

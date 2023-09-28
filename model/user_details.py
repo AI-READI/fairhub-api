@@ -12,6 +12,7 @@ class UserDetails(db.Model):
         self.timezone = ""
         self.orcid = ""
         self.user = user
+
     __tablename__ = "user_details"
     id = db.Column(db.CHAR(36), primary_key=True)
     first_name = db.Column(db.String, nullable=True)
