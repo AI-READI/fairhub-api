@@ -1,13 +1,20 @@
 """Tests for API endpoints related to studies"""
 import json
-
 import pytest
 
-@pytest.fixture()
-def study_id():
-    return ""
 
-def test_post_studies(flask_app):
+@pytest.fixture()
+def update_study_id():
+    def study_id():
+        """A study ID for testing."""
+        return {}
+
+    def _update_study_id(study_id):
+        study_id["title"] = "Study Title Updated"
+        return study_id
+
+
+def test_post_studies(test_client, study_id):
     """
     Given a Flask application configured for testing
     WHEN the '/study' endpoint is requested (POST)
@@ -15,59 +22,84 @@ def test_post_studies(flask_app):
     """
 
     # Crate a test using the Flask application configured for testing
-    with flask_app.test_client() as test_client:
-        response = test_client.post("/study", json={
+    response = test_client.post(
+        "/study",
+        json={
             "title": "Study Title",
             "image": "https://api.dicebear.com/6.x/adventurer/svg",
-        })
-      
-        assert response.status_code == 200
+        },
+    )
+    response_data = json.loads(response.data)
 
-        response_data = json.loads(response.data)
-        study_id = response_data["id"]
-        print("response_data")
-        print(study_id)
-        print("response_data")
+    assert response.status_code == 200
+    assert response_data["title"] == "Study Title"
+    assert response_data["image"] == "https://api.dicebear.com/6.x/adventurer/svg"
+    study_id = response_data
+    print(study_id)
+    print("above is the study from the POST response")
 
-def test_get_all_studies(flask_app):
+
+def test_get_studies(test_client):
     """
     GIVEN a Flask application configured for testing
     WHEN the '/study' endpoint is requested (GET)
     THEN check that the response is valid
     """
 
-    # Create a test client using the Flask application configured for testing
-    with flask_app.test_client() as test_client:
-        response = test_client.get("/study")
+    response = test_client.get("/study")
 
-        # Convert the response data from JSON to a Python dictionary
-        response_data = json.loads(response.data)
-        print(response_data)
+    # Convert the response data from JSON to a Python dictionary
+    response_data = json.loads(response.data)
 
-        # Check the response is correct
-        assert response.status_code == 200
+    # print(response_data)
+    # Check the response is correct
+    assert response.status_code == 200
 
-def test_get_study_by_id(flask_app, test_post_studies, study_id):
+
+def test_update_study(test_client, study_id):
     """
-    GIVEN a Flask application configured for testing
+    GIVEN a study ID
+    WHEN the '/study' endpoint is requested (PUT)
+    THEN check that the study is updated
+    """
+    print("study_id for updating a study")
+    print(study_id)
+    response = test_client.put(
+        f"/study/{study_id['id']}",
+        json={
+            "id": study_id["id"],
+            "title": "Study Title Updated",
+            "image": study_id["image"],
+        },
+    )
+    response_data = json.loads(response.data)
+
+    assert response.status_code == 200
+    assert response_data["title"] == "Study Title Updated"
+    assert response_data["image"] == study_id["image"]
+    assert response_data["id"] == study_id["id"]
+    study_id = response_data
+
+
+def test_get_study_by_id(test_client, study_id):
+    """
+    GIVEN a study ID
     WHEN the '/study/{study_id}' endpoint is requested (GET)
     THEN check that the response is valid
     """
-        
-      # Create a test client using the Flask application configured for testing
-    with flask_app.test_client() as test_client:
-        print("test_get_study_by_id")
-        print(study_id[0]['id'])
-        print("test_get_study_by_id")
-        response = test_client.get(f"/study/{study_id[0]['id']}")
+    response = test_client.get(f"/study/{study_id['id']}")
 
-        # Convert the response data from JSON to a Python dictionary
-        response_data = json.loads(response.data)
-        print(response_data)
-        # Check the response is correct
-        assert response.status_code == 200
+    # Convert the response data from JSON to a Python dictionary
+    response_data = json.loads(response.data)
 
-def test_delete_studies_created(flask_app):
+    # Check the response is correct
+    assert response.status_code == 200
+    assert response_data["id"] == study_id["id"]
+    assert response_data["title"] == study_id["title"]
+    assert response_data["image"] == study_id["image"]
+
+
+def test_delete_studies_created(test_client):
     """
     Given a Flask application configured for testing
     WHEN the '/study' endpoint is requested (DELETE)
@@ -79,4 +111,3 @@ def test_delete_studies_created(flask_app):
     # TODO: DELETE ENDPOINT NOT WORKING
     # with flask_app.test_client() as test_client:
     #     response = test_client.post("/study", json={
-            

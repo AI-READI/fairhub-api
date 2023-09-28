@@ -2,6 +2,7 @@
 from flask import Flask
 from flask_cors import CORS
 from sqlalchemy import MetaData
+from os import environ
 
 import model
 from apis import api
@@ -13,19 +14,16 @@ from apis.login import authentication, authorization
 bcrypt = Bcrypt()
 
 
-def create_app(config=None):
+def create_app(config_module=None):
     """Initialize the core application."""
     # create and configure the app
     app = Flask(__name__)
     # `full` if you want to see all the details
     app.config["SWAGGER_UI_DOC_EXPANSION"] = "list"
     app.config["RESTX_MASK_SWAGGER"] = False
-    
+
     # Initialize config
-    app.config.from_pyfile("config.py")
-    if config is not None:
-        app.config.update(config)
-        app.config["DATABASE_URL"] = app.config["FAIRHUB_DATABASE_URL"]
+    app.config.from_object(config_module or "config")
 
     # app.register_blueprint(api)
     app.config.from_prefixed_env("FAIRHUB")
@@ -100,6 +98,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     port = args.port
 
-    app = create_app()
+    flask_app = create_app()
 
-    app.run(host="0.0.0.0", port=port)
+    flask_app.run(host="0.0.0.0", port=port)

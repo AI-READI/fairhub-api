@@ -3,25 +3,27 @@ import os
 import pytest
 
 from app import create_app
+from dotenv import load_dotenv
+
+# Load environment variables from .env
+load_dotenv(".env")
 
 
-@pytest.fixture(scope="module")
+# Create the flask app for testing
+@pytest.fixture()
 def flask_app():
     """An application for the tests."""
-    config = {
-        "TESTING": True,
-        "FAIRHUB_DATABASE_URL": "postgresql://admin:root@localhost:5432/fairhub_local"
-    }
+    yield create_app(config_module="pytest-config")
 
-    # Set the environment to testing
-    os.environ["FLASK_ENV"] = "testing"
-    flask_app = create_app(config)
 
-    flask_app.config.update(
-        {
-            "TESTING": True,
-            "FAIRHUB_DATABASE_URL": "postgresql://admin:root@localhost:5432/fairhub_local"
-        }
-    )
+# Create a test client for the app
+@pytest.fixture()
+def test_client(flask_app):
+    """A test client for the app."""
+    with flask_app.test_client() as test_client:
+        yield test_client
 
-    yield flask_app
+
+# Create a user for testing
+
+# Sign in the user for module testing
