@@ -3,24 +3,19 @@ import json
 import pytest
 
 
-@pytest.fixture()
-def update_study_id():
-    def study_id():
-        """A study ID for testing."""
-        return {}
+# Verify the database is empty before beginning tests
+def test_db_empty(test_client, empty_db):
+    """Test that the database is empty."""
+    response = test_client.get("/study")
+    assert response.status_code == 200
+    assert len(response.json) == 0
 
-    def _update_study_id(study_id):
-        study_id["title"] = "Study Title Updated"
-        return study_id
-
-
-def test_post_studies(test_client, study_id):
+def test_post_study(test_client):
     """
-    Given a Flask application configured for testing
+    Given a Flask application configured for testing and a study
     WHEN the '/study' endpoint is requested (POST)
     THEN check that the response is valid
     """
-
     # Crate a test using the Flask application configured for testing
     response = test_client.post(
         "/study",
@@ -34,18 +29,15 @@ def test_post_studies(test_client, study_id):
     assert response.status_code == 200
     assert response_data["title"] == "Study Title"
     assert response_data["image"] == "https://api.dicebear.com/6.x/adventurer/svg"
-    study_id = response_data
-    print(study_id)
-    print("above is the study from the POST response")
+    pytest.global_study_id  = response_data
 
 
-def test_get_studies(test_client):
+def test_get_all_studies(test_client):
     """
     GIVEN a Flask application configured for testing
     WHEN the '/study' endpoint is requested (GET)
     THEN check that the response is valid
     """
-
     response = test_client.get("/study")
 
     # Convert the response data from JSON to a Python dictionary
@@ -54,49 +46,52 @@ def test_get_studies(test_client):
     # print(response_data)
     # Check the response is correct
     assert response.status_code == 200
+    
 
 
-def test_update_study(test_client, study_id):
+def test_update_study(test_client):
     """
     GIVEN a study ID
     WHEN the '/study' endpoint is requested (PUT)
-    THEN check that the study is updated
+    THEN check that the study is updated with the inputed data
     """
     print("study_id for updating a study")
-    print(study_id)
+    print(pytest.global_study_id)
+    print("test3")
     response = test_client.put(
-        f"/study/{study_id['id']}",
+        f"/study/{pytest.global_study_id['id']}",
         json={
-            "id": study_id["id"],
+            "id": pytest.global_study_id["id"],
             "title": "Study Title Updated",
-            "image": study_id["image"],
+            "image": pytest.global_study_id["image"],
         },
     )
     response_data = json.loads(response.data)
 
     assert response.status_code == 200
     assert response_data["title"] == "Study Title Updated"
-    assert response_data["image"] == study_id["image"]
-    assert response_data["id"] == study_id["id"]
-    study_id = response_data
+    assert response_data["image"] == pytest.global_study_id["image"]
+    assert response_data["id"] == pytest.global_study_id["id"]
+    pytest.global_study_id = response_data
 
 
-def test_get_study_by_id(test_client, study_id):
+def test_get_study_by_id(test_client):
     """
     GIVEN a study ID
     WHEN the '/study/{study_id}' endpoint is requested (GET)
     THEN check that the response is valid
     """
-    response = test_client.get(f"/study/{study_id['id']}")
+    print("test4")
+    response = test_client.get(f"/study/{pytest.global_study_id['id']}")
 
     # Convert the response data from JSON to a Python dictionary
     response_data = json.loads(response.data)
 
     # Check the response is correct
     assert response.status_code == 200
-    assert response_data["id"] == study_id["id"]
-    assert response_data["title"] == study_id["title"]
-    assert response_data["image"] == study_id["image"]
+    assert response_data["id"] == pytest.global_study_id["id"]
+    assert response_data["title"] == pytest.global_study_id["title"]
+    assert response_data["image"] == pytest.global_study_id["image"]
 
 
 def test_delete_studies_created(test_client):
@@ -107,7 +102,7 @@ def test_delete_studies_created(test_client):
     THEN the '/study' endpoint is requested (GET)
     THEN check if the study created has been deleted
     """
-
+    print("test5")
     # TODO: DELETE ENDPOINT NOT WORKING
     # with flask_app.test_client() as test_client:
     #     response = test_client.post("/study", json={

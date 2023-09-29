@@ -1,5 +1,5 @@
 from flask import request
-from flask_restx import Namespace, Resource, fields
+from flask_restx import Namespace, Resource, fields, reqparse
 
 from model import Study, db
 
@@ -34,7 +34,10 @@ study = api.model(
 
 @api.route("/study")
 class Studies(Resource):
-    @api.doc("list_study", description="List all studies")
+    parser_study = reqparse.RequestParser(bundle_errors=True)
+    parser_study.add_argument('title', type=str, required=True, location='json', help='The title of the Study')
+    parser_study.add_argument('image', type=list, required=True, location='json', help='The image for the Study')
+    @api.doc(description="Return a list of all studies")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(study)
@@ -42,6 +45,8 @@ class Studies(Resource):
         studies = Study.query.all()
         return [s.to_dict() for s in studies]
 
+    @api.doc(description="Create a new study")
+    @api.expect(parser_study)
     def post(self):
         print(request)
         add_study = Study.from_data(request.json)
@@ -52,7 +57,7 @@ class Studies(Resource):
 
 @api.route("/study/<study_id>")
 class StudyResource(Resource):
-    @api.doc("get study")
+    @api.doc(description="Get a study's details")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(study)
@@ -60,12 +65,14 @@ class StudyResource(Resource):
         study1 = Study.query.get(study_id)
         return study1.to_dict()
 
+    @api.doc(description="Update a study's details")
     def put(self, study_id: int):
         update_study = Study.query.get(study_id)
         update_study.update(request.json)
         db.session.commit()
         return update_study.to_dict()
 
+    @api.doc(description="Delete a study")
     def delete(self, study_id: int):
         delete_study = Study.query.get(study_id)
         for d in delete_study.dataset:

@@ -18,7 +18,6 @@ pytest.global_version_id = ""
 def flask_app():
     """An application for the tests."""
     app = create_app(config_module="pytest-config")
-    
     yield app
 
 
