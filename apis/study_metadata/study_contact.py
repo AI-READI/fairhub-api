@@ -33,17 +33,16 @@ class StudyContactResource(Resource):
     def post(self, study_id: int):
         data = request.json
         study_obj = Study.query.get(study_id)
-        list_of_elements = []
-        for i in data:
-            if "id" in i and i["id"]:
-                study_contact_ = StudyContact.query.get(i["id"])
-                study_contact_.update(i)
-                list_of_elements.append(study_contact_.to_dict())
-            elif "id" not in i or not i["id"]:
-                study_contact_ = StudyContact.from_data(study_obj, i, None, True)
-                db.session.add(study_contact_)
-                list_of_elements.append(study_contact_.to_dict())
+        # for i in data:
+        if "id" in data:
+            study_contact_ = StudyContact.query.get(data["id"])
+            study_contact_.update(data)
+        else:
+            study_contact_ = StudyContact.from_data(study_obj, data, None, True)
+            db.session.add(study_contact_)
+        list_of_elements = [study_contact_.to_dict()]
         db.session.commit()
+        print(list_of_elements)
         return list_of_elements
 
     @api.route("/study/<study_id>/metadata/central-contact/<central_contact_id>")
