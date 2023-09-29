@@ -36,6 +36,7 @@ class ContributorResource(Resource):
         """update contributor permissions"""
         if is_granted("viewer", study_id):
             return "Access denied, you can not modify", 403
+
         data = request.json
         contributors = StudyContributor.query.filter_by(study_id=study_id, user_id=user_id).first()
         if is_granted("admin", study_id) and contributors.permission=="owner":

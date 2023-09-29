@@ -5,7 +5,6 @@ from .db import db
 
 class StudyContributor(db.Model):
     def __init__(self, study, user, permission):
-        self.id = str(uuid.uuid4())
         self.study = study
         self.user = user
         self.permission = permission
@@ -21,9 +20,17 @@ class StudyContributor(db.Model):
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"), primary_key=True)
     study = db.relationship("Study", back_populates="study_contributors")
 
+    @staticmethod
     def to_dict(self):
         return {
             "permission": self.permission,
-            "user_id": self.user_id,
-            "study_id": self.study_id,
         }
+
+    @staticmethod
+    def from_data(study, user, permission):
+        contributor = StudyContributor(study, user, permission)
+        return contributor
+    #
+    # def update(self, permission):
+    #     self.permission = permission["permission"]
+

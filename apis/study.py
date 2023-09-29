@@ -1,7 +1,7 @@
 from flask import request, g
 from flask_restx import Namespace, Resource, fields
 
-from model import Study, db, User
+from model import Study, db, User, StudyContributor
 from .authentication import is_granted
 
 api = Namespace("Study", description="Study operations", path="/")
@@ -25,8 +25,7 @@ class Studies(Resource):
     def get(self):
         """this code ensure each user access and see only allowed studies"""
         studies = Study.query.filter(
-            Study.study_contributors.any(User.id == g.user.id)
-        ).all()
+            Study.study_contributors.any(User.id == g.user.id)).all()
         return [s.to_dict() for s in studies]
 
     @api.expect(study_model)
@@ -36,7 +35,12 @@ class Studies(Resource):
         add_study = Study.from_data(request.json)
         db.session.add(add_study)
         db.session.commit()
-        return add_study.to_dict()
+        study_id = add_study.id
+        study_ = Study.query.get(study_id)
+        study_contributor = StudyContributor.from_data(study_, g.user, "owner")
+        db.session.add(study_contributor)
+        db.session.commit()
+        return 204
 
 
 @api.route("/study/<study_id>")
@@ -63,8 +67,8 @@ class StudyResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def delete(self, study_id: int):
-        if not is_granted("owner", study_id):
-            return "Access denied, you can not delete study", 403
+        # if not is_granted("owner", study_id):
+        #     return "Access denied, you can not delete study", 403
         delete_study = Study.query.get(study_id)
         for d in delete_study.dataset:
             for version in d.dataset_versions:

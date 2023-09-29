@@ -1,8 +1,11 @@
 """Entry point for the application."""
-from flask import Flask, request
+from flask import Flask, request, make_response, g
+import jwt
+import config
 from flask_cors import CORS
 from sqlalchemy import MetaData
-
+from datetime import timezone
+import datetime
 
 import model
 from apis import api
@@ -85,11 +88,23 @@ def create_app():
 
     @app.before_request
     def on_before_request():
-        authentication()
-
+        try:
+            authentication()
+        except:
+            raise "User not found"
         authorization()
 
         # catch access denied error
+
+    # @app.after_request
+    # def on_after_request(resp):
+    #     if request.path in "/auth/login":
+    #         return resp
+    #     expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=10)
+    #     new_token = jwt.encode(
+    #         {"user": g.user.id, "exp": expired_in}, config.secret, algorithm="HS256")
+    #     resp.set_cookie("user", new_token, secure=True, httponly=True, samesite="lax")
+    #     return resp
 
     @app.cli.command("destroy-schema")
     def destroy_schema():
