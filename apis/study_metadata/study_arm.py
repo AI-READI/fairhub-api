@@ -43,9 +43,8 @@ class StudyArmResource(Resource):
             if "id" in i and i["id"]:
                 study_arm_ = StudyArm.query.get(i["id"])
                 study_arm_.update(i)
-            elif "id" not in i or not i["id"]:
-                study_arm_ = StudyArm.from_data(study_obj, i)
-                db.session.add(study_arm_)
+        study_arm_ = StudyArm.from_data(study_obj, data)
+        db.session.add(study_arm_)
         db.session.commit()
         arms = Arm(study_obj)
         return arms.to_dict()
