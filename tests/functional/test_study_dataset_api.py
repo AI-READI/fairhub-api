@@ -16,7 +16,6 @@ def test_get_all_dataset_from_study(test_client):
     print(response_data)
 
 
-
 def test_post_dataset(test_client):
     """
     GIVEN a Flask application configured for testing and a study ID
@@ -28,7 +27,7 @@ def test_post_dataset(test_client):
         f"/study/{study_id}/dataset",
         json={
             "id": study_id,
-        }
+        },
     )
 
     assert response.status_code == 200

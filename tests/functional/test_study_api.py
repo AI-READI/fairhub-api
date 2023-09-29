@@ -10,6 +10,7 @@ def test_db_empty(test_client, empty_db):
     assert response.status_code == 200
     assert len(response.json) == 0
 
+
 def test_post_study(test_client):
     """
     Given a Flask application configured for testing and a study
@@ -29,7 +30,7 @@ def test_post_study(test_client):
     assert response.status_code == 200
     assert response_data["title"] == "Study Title"
     assert response_data["image"] == "https://api.dicebear.com/6.x/adventurer/svg"
-    pytest.global_study_id  = response_data
+    pytest.global_study_id = response_data
 
 
 def test_get_all_studies(test_client):
@@ -46,7 +47,6 @@ def test_get_all_studies(test_client):
     # print(response_data)
     # Check the response is correct
     assert response.status_code == 200
-    
 
 
 def test_update_study(test_client):

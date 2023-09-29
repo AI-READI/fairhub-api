@@ -35,8 +35,17 @@ study = api.model(
 @api.route("/study")
 class Studies(Resource):
     parser_study = reqparse.RequestParser(bundle_errors=True)
-    parser_study.add_argument('title', type=str, required=True, location='json', help='The title of the Study')
-    parser_study.add_argument('image', type=list, required=True, location='json', help='The image for the Study')
+    parser_study.add_argument(
+        "title", type=str, required=True, location="json", help="The title of the Study"
+    )
+    parser_study.add_argument(
+        "image",
+        type=list,
+        required=True,
+        location="json",
+        help="The image for the Study",
+    )
+
     @api.doc(description="Return a list of all studies")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
