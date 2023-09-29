@@ -41,11 +41,8 @@ def test_get_all_studies(test_client):
     """
     response = test_client.get("/study")
 
-    # Convert the response data from JSON to a Python dictionary
     response_data = json.loads(response.data)
-
-    # print(response_data)
-    # Check the response is correct
+    assert len(response_data) == 1 # Only one study created
     assert response.status_code == 200
 
 
@@ -55,9 +52,6 @@ def test_update_study(test_client):
     WHEN the '/study' endpoint is requested (PUT)
     THEN check that the study is updated with the inputed data
     """
-    print("study_id for updating a study")
-    print(pytest.global_study_id)
-    print("test3")
     response = test_client.put(
         f"/study/{pytest.global_study_id['id']}",
         json={
@@ -81,7 +75,6 @@ def test_get_study_by_id(test_client):
     WHEN the '/study/{study_id}' endpoint is requested (GET)
     THEN check that the response is valid
     """
-    print("test4")
     response = test_client.get(f"/study/{pytest.global_study_id['id']}")
 
     # Convert the response data from JSON to a Python dictionary
@@ -102,7 +95,7 @@ def test_delete_studies_created(test_client):
     THEN the '/study' endpoint is requested (GET)
     THEN check if the study created has been deleted
     """
-    print("test5")
+    print("delete study created")
     # TODO: DELETE ENDPOINT NOT WORKING
     # with flask_app.test_client() as test_client:
     #     response = test_client.post("/study", json={
