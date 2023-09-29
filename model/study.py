@@ -36,41 +36,110 @@ class Study(db.Model):
 
     dataset = db.relationship("Dataset", back_populates="study")
     study_contributors = db.relationship(
-        "StudyContributor", back_populates="study", lazy="dynamic", cascade="all, delete",
+        "StudyContributor",
+        back_populates="study",
+        lazy="dynamic",
+        cascade="all, delete",
     )
-    participants = db.relationship("Participant", back_populates="study", cascade="all, delete",)
+    participants = db.relationship(
+        "Participant",
+        back_populates="study",
+        cascade="all, delete",
+    )
     invited_contributors = db.relationship(
-        "StudyInvitedContributor", back_populates="study", lazy="dynamic", cascade="all, delete",
+        "StudyInvitedContributor",
+        back_populates="study",
+        lazy="dynamic",
+        cascade="all, delete",
     )
 
-    study_arm = db.relationship("StudyArm", back_populates="study", cascade="all, delete",)
-    study_available_ipd = db.relationship("StudyAvailableIpd", back_populates="study", cascade="all, delete",)
-    study_contact = db.relationship("StudyContact", back_populates="study", cascade="all, delete",)
-    study_description = db.relationship(
-        "StudyDescription", uselist=False, back_populates="study", cascade="all, delete",
+    study_arm = db.relationship(
+        "StudyArm",
+        back_populates="study",
+        cascade="all, delete",
     )
-    study_design = db.relationship("StudyDesign", uselist=False, back_populates="study", cascade="all, delete",)
+    study_available_ipd = db.relationship(
+        "StudyAvailableIpd",
+        back_populates="study",
+        cascade="all, delete",
+    )
+    study_contact = db.relationship(
+        "StudyContact",
+        back_populates="study",
+        cascade="all, delete",
+    )
+    study_description = db.relationship(
+        "StudyDescription",
+        uselist=False,
+        back_populates="study",
+        cascade="all, delete",
+    )
+    study_design = db.relationship(
+        "StudyDesign",
+        uselist=False,
+        back_populates="study",
+        cascade="all, delete",
+    )
     study_eligibility = db.relationship(
-        "StudyEligibility", uselist=False, back_populates="study", cascade="all, delete",
+        "StudyEligibility",
+        uselist=False,
+        back_populates="study",
+        cascade="all, delete",
     )
     study_identification = db.relationship(
-        "StudyIdentification", back_populates="study", cascade="all, delete",
+        "StudyIdentification",
+        back_populates="study",
+        cascade="all, delete",
     )
-    study_intervention = db.relationship("StudyIntervention", back_populates="study", cascade="all, delete",)
+    study_intervention = db.relationship(
+        "StudyIntervention",
+        back_populates="study",
+        cascade="all, delete",
+    )
     study_ipdsharing = db.relationship(
-        "StudyIpdsharing", uselist=False, back_populates="study", cascade="all, delete",
+        "StudyIpdsharing",
+        uselist=False,
+        back_populates="study",
+        cascade="all, delete",
     )
-    study_link = db.relationship("StudyLink", back_populates="study", cascade="all, delete",)
-    study_location = db.relationship("StudyLocation", back_populates="study", cascade="all, delete",)
-    study_other = db.relationship("StudyOther", uselist=False, back_populates="study", cascade="all, delete",)
+    study_link = db.relationship(
+        "StudyLink",
+        back_populates="study",
+        cascade="all, delete",
+    )
+    study_location = db.relationship(
+        "StudyLocation",
+        back_populates="study",
+        cascade="all, delete",
+    )
+    study_other = db.relationship(
+        "StudyOther",
+        uselist=False,
+        back_populates="study",
+        cascade="all, delete",
+    )
     study_overall_official = db.relationship(
-        "StudyOverallOfficial", back_populates="study", cascade="all, delete",
+        "StudyOverallOfficial",
+        back_populates="study",
+        cascade="all, delete",
     )
-    study_reference = db.relationship("StudyReference", back_populates="study", cascade="all, delete",)
+    study_reference = db.relationship(
+        "StudyReference",
+        back_populates="study",
+        cascade="all, delete",
+    )
     study_sponsors_collaborators = db.relationship(
-        "StudySponsorsCollaborators", uselist=False, back_populates="study", cascade="all, delete",
+        "StudySponsorsCollaborators",
+        uselist=False,
+        back_populates="study",
+        cascade="all, delete",
     )
-    study_status = db.relationship("StudyStatus", uselist=False, back_populates="study", cascade="all, delete",)
+    study_status = db.relationship(
+        "StudyStatus",
+        uselist=False,
+        back_populates="study",
+        cascade="all, delete",
+    )
 
     def to_dict(self):
         """Converts the study to a dictionary"""

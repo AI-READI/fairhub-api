@@ -30,7 +30,7 @@ class StudyContributor(db.Model):
     def from_data(study, user, permission):
         contributor = StudyContributor(study, user, permission)
         return contributor
+
     #
     # def update(self, permission):
     #     self.permission = permission["permission"]
-

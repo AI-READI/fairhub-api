@@ -24,7 +24,9 @@ class StudyOther(db.Model):
     keywords = db.Column(ARRAY(String), nullable=False)
     size = db.Column(db.BigInteger, nullable=False)
 
-    study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=False)
+    study_id = db.Column(
+        db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=False
+    )
     study = db.relationship("Study", back_populates="study_other")
 
     def to_dict(self):

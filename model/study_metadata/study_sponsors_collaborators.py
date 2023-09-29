@@ -27,7 +27,9 @@ class StudySponsorsCollaborators(db.Model):
     lead_sponsor_name = db.Column(db.String, nullable=False)
     collaborator_name = db.Column(ARRAY(String), nullable=False)
 
-    study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=False)
+    study_id = db.Column(
+        db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=False
+    )
     study = db.relationship("Study", back_populates="study_sponsors_collaborators")
 
     def to_dict(self):
