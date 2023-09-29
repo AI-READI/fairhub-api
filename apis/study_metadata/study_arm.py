@@ -39,12 +39,12 @@ class StudyArmResource(Resource):
     def post(self, study_id):
         data = request.json
         study_obj = Study.query.get(study_id)
-        for i in data:
-            if "id" in i and i["id"]:
-                study_arm_ = StudyArm.query.get(i["id"])
-                study_arm_.update(i)
-        study_arm_ = StudyArm.from_data(study_obj, data)
-        db.session.add(study_arm_)
+        if "id" in data:
+            study_arm_ = StudyArm.query.get(data["id"])
+            study_arm_.update(data)
+        else:
+            study_arm_ = StudyArm.from_data(study_obj, data)
+            db.session.add(study_arm_)
         db.session.commit()
         arms = Arm(study_obj)
         return arms.to_dict()
