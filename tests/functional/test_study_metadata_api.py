@@ -2,6 +2,7 @@
 import json
 import pytest
 
+
 # ------------------- ARM METADATA ------------------- #
 def test_post_arm_metadata(test_client):
     """
@@ -10,20 +11,27 @@ def test_post_arm_metadata(test_client):
     THEN check that the response is vaild and create a new arm
     """
     study_id = pytest.global_study_id["id"]
-    response = test_client.post(f"/study/{study_id}/metadata/arm", json={
-        "label": "Label1",
-        "type": "Arm Type",
-        "description": "Arm Description",
-        "intervention_list": ["intervention1", "intervention2"]
-    })
+    response = test_client.post(
+        f"/study/{study_id}/metadata/arm",
+        json={
+            "label": "Label1",
+            "type": "Arm Type",
+            "description": "Arm Description",
+            "intervention_list": ["intervention1", "intervention2"],
+        },
+    )
 
     response_data = json.loads(response.data)
     assert response.status_code == 200
     assert response_data["arms"][0]["label"] == "Label1"
-    assert response_data["arms"][0]["type"] == "Arm Type" 
+    assert response_data["arms"][0]["type"] == "Arm Type"
     assert response_data["arms"][0]["description"] == "Arm Description"
-    assert response_data["arms"][0]["intervention_list"] == ["intervention1", "intervention2"]
+    assert response_data["arms"][0]["intervention_list"] == [
+        "intervention1",
+        "intervention2",
+    ]
     pytest.global_arm_id = response_data["arms"][0]["id"]
+
 
 def test_get_arm_metadata(test_client):
     """
@@ -36,9 +44,13 @@ def test_get_arm_metadata(test_client):
     response_data = json.loads(response.data)
     assert response.status_code == 200
     assert response_data["arms"][0]["label"] == "Label1"
-    assert response_data["arms"][0]["type"] == "Arm Type" 
+    assert response_data["arms"][0]["type"] == "Arm Type"
     assert response_data["arms"][0]["description"] == "Arm Description"
-    assert response_data["arms"][0]["intervention_list"] == ["intervention1", "intervention2"]
+    assert response_data["arms"][0]["intervention_list"] == [
+        "intervention1",
+        "intervention2",
+    ]
+
 
 def test_delete_arm_metadata(test_client):
     """
@@ -89,15 +101,18 @@ def test_post_cc_metadata(test_client):
     """
     # BUG: IF CENTRAL_CONTACT IS SET TO FALSE THE ENDPOINT STILL RETURNS AS TRUE
     study_id = pytest.global_study_id["id"]
-    response = test_client.post(f"/study/{study_id}/metadata/central-contact", json={
-        "name": "central-contact",
-        "affiliation": "affiliation",
-        "role": "role",
-        "phone": "phone",
-        "phone_ext": "phone_ext",
-        "email_address": "email_address",
-        "central_contact": True
-    })
+    response = test_client.post(
+        f"/study/{study_id}/metadata/central-contact",
+        json={
+            "name": "central-contact",
+            "affiliation": "affiliation",
+            "role": "role",
+            "phone": "phone",
+            "phone_ext": "phone_ext",
+            "email_address": "email_address",
+            "central_contact": True,
+        },
+    )
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
@@ -112,6 +127,7 @@ def test_post_cc_metadata(test_client):
     assert response_data["central_contact"]["email_address"] == "email_address"
     assert response_data["central_contact"]["central_contact"] == True
     pytest.global_cc_id = response_data["central_contact"]["id"]
+
 
 def test_get_cc_metadata(test_client):
     """
@@ -134,6 +150,7 @@ def test_get_cc_metadata(test_client):
     assert response_data["central_contact"]["email_address"] == "email_address"
     assert response_data["central_contact"]["central_contact"] == True
 
+
 def test_delete_cc_metadata(test_client):
     """
     Given a Flask application configured for testing and a study ID and central contact ID
@@ -142,9 +159,10 @@ def test_delete_cc_metadata(test_client):
     """
     study_id = pytest.global_study_id["id"]
     central_contact_id = pytest.global_cc_id
-    response = test_client.delete(f"/study/{study_id}/metadata/central-contact/{central_contact_id}")
+    response = test_client.delete(
+        f"/study/{study_id}/metadata/central-contact/{central_contact_id}"
+    )
     assert response.status_code == 200
-
 
 
 #  ------------------- COLLABORATORS METADATA ------------------- #
@@ -157,6 +175,7 @@ def test_get_collaborators_metadata(test_client):
     study_id = pytest.global_study_id["id"]
     response = test_client.get(f"/study/{study_id}/metadata/collaborators")
     assert response.status_code == 200
+
 
 # ------------------- CONDITIONS METADATA ------------------- #
 def test_get_conditions_metadata(test_client):
@@ -181,6 +200,7 @@ def test_get_description_metadata(test_client):
     response = test_client.get(f"/study/{study_id}/metadata/description")
     assert response.status_code == 200
 
+
 # ------------------- DESIGN METADATA ------------------- #
 def test_get_design_metadata(test_client):
     """
@@ -191,6 +211,7 @@ def test_get_design_metadata(test_client):
     study_id = pytest.global_study_id["id"]
     response = test_client.get(f"/study/{study_id}/metadata/design")
     assert response.status_code == 200
+
 
 # ------------------- ELIGIBILITY METADATA ------------------- #
 def test_get_eligibility_metadata(test_client):
@@ -203,6 +224,7 @@ def test_get_eligibility_metadata(test_client):
     response = test_client.get(f"/study/{study_id}/metadata/eligibility")
     assert response.status_code == 200
 
+
 # ------------------- IDENTIFICATION METADATA ------------------- #
 def test_get_identification_metadata(test_client):
     """
@@ -214,6 +236,7 @@ def test_get_identification_metadata(test_client):
     # study_id = pytest.global_study_id["id"]
     # response = test_client.get(f"/study/{study_id}/metadata/identification")
     # assert response.status_code == 200
+
 
 # ------------------- INTERVENTION METADATA ------------------- #
 def test_get_intervention_metadata(test_client):
@@ -287,7 +310,6 @@ def test_get_overall_official_metadata(test_client):
     assert response.status_code == 200
 
 
-
 # ------------------- OVERSIGHT METADATA ------------------- #
 def test_get_oversight_official_metadata(test_client):
     """
@@ -322,7 +344,6 @@ def test_get_sponsors_metadata(test_client):
     study_id = pytest.global_study_id["id"]
     response = test_client.get(f"/study/{study_id}/metadata/sponsors")
     assert response.status_code == 200
-
 
 
 # ------------------- STATUS METADATA ------------------- #

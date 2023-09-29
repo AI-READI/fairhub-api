@@ -13,7 +13,7 @@ pytest.global_study_id = {}
 pytest.global_dataset_id = ""
 pytest.global_version_id = ""
 pytest.global_arm_id = ""
-pytest.global_cc_id = "" 
+pytest.global_cc_id = ""
 
 
 # Create the flask app for testing

@@ -42,7 +42,7 @@ def test_get_all_studies(test_client):
     response = test_client.get("/study")
 
     response_data = json.loads(response.data)
-    assert len(response_data) == 1 # Only one study created
+    assert len(response_data) == 1  # Only one study created
     assert response.status_code == 200
 
 
