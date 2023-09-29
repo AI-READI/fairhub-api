@@ -13,14 +13,14 @@ pytest.global_study_id = {}
 pytest.global_dataset_id = ""
 pytest.global_version_id = ""
 pytest.global_arm_id = ""
+pytest.global_cc_id = ""
 
 
 # Create the flask app for testing
 @pytest.fixture()
 def flask_app():
     """An application for the tests."""
-    app = create_app(config_module="pytest-config")
-    yield app
+    yield create_app(config_module="pytest-config")
 
 
 # Create a test client for the app
