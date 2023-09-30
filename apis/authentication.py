@@ -31,6 +31,10 @@ class AccessDenied(Exception):
     pass
 
 
+class UnauthenticatedException(Exception):
+    pass
+
+
 @api.route("/auth/signup")
 class SignUpUser(Resource):
     @api.response(200, "Success")
@@ -80,7 +84,7 @@ class Login(Resource):
                 {
                     "user": user.id,
                     "exp": datetime.datetime.now(timezone.utc)
-                    + datetime.timedelta(minutes=70),
+                    + datetime.timedelta(minutes=5),
                 },
                 config.secret,
                 algorithm="HS256",
@@ -98,18 +102,17 @@ def authentication():
     In addition, it handles error handling of expired token and non existed users"""
     g.user = None
     if "user" not in request.cookies:
-        return "user not found", 403
-    # if 'user' in
+        return
     token = request.cookies.get("user")
     try:
         decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
-        user = User.query.get(decoded["user"])
-        # if decoded in token_blacklist:
-        #     return "authentication failed", 403
-        g.user = user
     except jwt.ExpiredSignatureError:
-        # Handle token expiration error here (e.g., re-authenticate the user)
-        return "Token has expired, please re-authenticate", 401
+        return
+    user = User.query.get(decoded["user"])
+    # if decoded in token_blacklist:
+    #     return "authentication failed", 403
+    g.user = user
+
 
 
 @api.route("/auth/logout")
@@ -139,6 +142,7 @@ class CurrentUsers(Resource):
 def authorization():
     """it checks whether url is allowed to be reached"""
     # white listed routes
+
     public_routes = [
         "/auth",
         "/docs",
@@ -152,7 +156,7 @@ def authorization():
             return
     if g.user:
         return
-    return "Access denied", 403
+    raise UnauthenticatedException("Access denied", 403)
 
 
 def is_granted(permission: str, study_id: int):

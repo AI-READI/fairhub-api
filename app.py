@@ -10,7 +10,7 @@ import datetime
 import model
 from apis import api
 from flask_bcrypt import Bcrypt
-from apis.authentication import authentication, authorization
+from apis.authentication import authentication, authorization, UnauthenticatedException
 
 # from pyfairdatatools import __version__
 
@@ -90,21 +90,36 @@ def create_app():
     def on_before_request():
         try:
             authentication()
-        except:
-            raise "User not found"
-        authorization()
+            authorization()
+        except UnauthenticatedException:
+            return "You are not allowed to access", 403
 
-        # catch access denied error
+    @app.after_request
+    def on_after_request(resp):
+        public_routes = [
+            "/auth",
+            "/docs",
+            "/echo",
+            "/swaggerui",
+            "/swagger.json",
+        ]
+        for route in public_routes:
+            if request.path.startswith(route):
+                return resp
+        if "user" not in request.cookies:
+            return resp
+        try:
+            token = request.cookies.get("user")
+            jwt.decode(token, config.secret, algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            resp.delete_cookie("user")
+            return resp
+        expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=10)
+        new_token = jwt.encode({"user": g.user.id, "exp": expired_in}, config.secret, algorithm="HS256")
+        resp.set_cookie("user", new_token, secure=True, httponly=True, samesite="lax")
+        return resp
 
-    # @app.after_request
-    # def on_after_request(resp):
-    #     if request.path in "/auth/login":
-    #         return resp
-    #     expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=10)
-    #     new_token = jwt.encode(
-    #         {"user": g.user.id, "exp": expired_in}, config.secret, algorithm="HS256")
-    #     resp.set_cookie("user", new_token, secure=True, httponly=True, samesite="lax")
-    #     return resp
+
 
     @app.cli.command("destroy-schema")
     def destroy_schema():
