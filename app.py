@@ -114,12 +114,14 @@ def create_app():
         except jwt.ExpiredSignatureError:
             resp.delete_cookie("user")
             return resp
-        expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=10)
-        new_token = jwt.encode({"user": g.user.id, "exp": expired_in}, config.secret, algorithm="HS256")
+        expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
+            minutes=10
+        )
+        new_token = jwt.encode(
+            {"user": g.user.id, "exp": expired_in}, config.secret, algorithm="HS256"
+        )
         resp.set_cookie("user", new_token, secure=True, httponly=True, samesite="lax")
         return resp
-
-
 
     @app.cli.command("destroy-schema")
     def destroy_schema():

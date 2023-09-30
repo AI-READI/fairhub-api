@@ -114,7 +114,6 @@ def authentication():
     g.user = user
 
 
-
 @api.route("/auth/logout")
 class Logout(Resource):
     @api.response(200, "Success")
