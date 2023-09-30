@@ -25,7 +25,8 @@ class Studies(Resource):
     def get(self):
         """this code ensure each user access and see only allowed studies"""
         studies = Study.query.filter(
-            Study.study_contributors.any(User.id == g.user.id)).all()
+            Study.study_contributors.any(User.id == g.user.id)
+        ).all()
         return [s.to_dict() for s in studies]
 
     @api.expect(study_model)

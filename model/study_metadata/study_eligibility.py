@@ -39,7 +39,9 @@ class StudyEligibility(db.Model):
     study_population = db.Column(db.String, nullable=True)
     sampling_method = db.Column(db.String, nullable=True)
 
-    study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=False)
+    study_id = db.Column(
+        db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=False
+    )
     study = db.relationship("Study", back_populates="study_eligibility")
 
     def to_dict(self):
