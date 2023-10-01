@@ -20,7 +20,6 @@ class StudyContributor(db.Model):
     study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"), primary_key=True)
     study = db.relationship("Study", back_populates="study_contributors")
 
-    @staticmethod
     def to_dict(self):
         return {
             "permission": self.permission,
@@ -31,6 +30,5 @@ class StudyContributor(db.Model):
         contributor = StudyContributor(study, user, permission)
         return contributor
 
-    #
-    # def update(self, permission):
-    #     self.permission = permission["permission"]
+    def update(self, permission):
+        self.permission = permission["permission"]

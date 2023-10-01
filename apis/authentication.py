@@ -84,7 +84,7 @@ class Login(Resource):
                 {
                     "user": user.id,
                     "exp": datetime.datetime.now(timezone.utc)
-                    + datetime.timedelta(minutes=5),
+                    + datetime.timedelta(minutes=20),
                 },
                 config.secret,
                 algorithm="HS256",
@@ -114,35 +114,9 @@ def authentication():
     g.user = user
 
 
-
-@api.route("/auth/logout")
-class Logout(Resource):
-    @api.response(200, "Success")
-    @api.response(400, "Validation Error")
-    def post(self):
-        """simply logges out user from the system"""
-        resp = make_response()
-        resp.status = 204
-        resp.delete_cookie("user")
-        return resp
-
-
-@api.route("/auth/current-users")
-class CurrentUsers(Resource):
-    """function is used to see all logged users in the system. For now, it is used for testing purposes"""
-
-    @api.response(200, "Success")
-    @api.response(400, "Validation Error")
-    def get(self):
-        if not g.user:
-            return None
-        return g.user.to_dict()
-
-
 def authorization():
-    """it checks whether url is allowed to be reached"""
+    """it checks whether url is allowed to be reached to specific routes"""
     # white listed routes
-
     public_routes = [
         "/auth",
         "/docs",
@@ -164,4 +138,30 @@ def is_granted(permission: str, study_id: int):
     contributor = StudyContributor.query.filter_by(
         user_id=g.user.id, study_id=study_id
     ).first()
+
     return contributor.permission == permission
+
+
+@api.route("/auth/logout")
+class Logout(Resource):
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    def post(self):
+        """simply logges out user from the system"""
+        resp = make_response()
+        resp.status = 204
+        resp.delete_cookie("user")
+        return resp
+
+
+
+@api.route("/auth/current-users")
+class CurrentUsers(Resource):
+    """function is used to see all logged users in the system. For now, it is used for testing purposes"""
+
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    def get(self):
+        if not g.user:
+            return None
+        return g.user.to_dict()

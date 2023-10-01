@@ -35,7 +35,6 @@ class Studies(Resource):
     def post(self):
         add_study = Study.from_data(request.json)
         db.session.add(add_study)
-        db.session.commit()
         study_id = add_study.id
         study_ = Study.query.get(study_id)
         study_contributor = StudyContributor.from_data(study_, g.user, "owner")
@@ -68,8 +67,8 @@ class StudyResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def delete(self, study_id: int):
-        # if not is_granted("owner", study_id):
-        #     return "Access denied, you can not delete study", 403
+        if not is_granted("owner", study_id):
+            return "Access denied, you can not delete study", 403
         delete_study = Study.query.get(study_id)
         for d in delete_study.dataset:
             for version in d.dataset_versions:
