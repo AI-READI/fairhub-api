@@ -14,6 +14,10 @@ pytest.global_dataset_id = ""
 pytest.global_version_id = ""
 pytest.global_arm_id = ""
 pytest.global_cc_id = ""
+pytest.global_intermediate_id = ""
+pytest.global_link_id = ""
+pytest.global_location_id = ""
+pytest.global_overall_official_id = ""
 
 
 # Create the flask app for testing
