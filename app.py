@@ -10,7 +10,12 @@ import datetime
 import model
 from apis import api
 from flask_bcrypt import Bcrypt
-from apis.authentication import authentication, authorization, UnauthenticatedException, AccessDenied
+from apis.authentication import (
+    authentication,
+    authorization,
+    UnauthenticatedException,
+    AccessDenied,
+)
 
 # from pyfairdatatools import __version__
 

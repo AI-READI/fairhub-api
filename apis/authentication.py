@@ -154,9 +154,7 @@ def is_granted(permission: str, study):
             "delete_dataset",
             "permission",
             "edit_study",
-            "update_participant"
-            "delete_participant"
-
+            "update_participant" "delete_participant",
         ],
         "admin": [
             "admin",
@@ -167,8 +165,7 @@ def is_granted(permission: str, study):
             "delete_dataset",
             "permission",
             "update_participant",
-            "delete_participant"
-
+            "delete_participant",
         ],
         "editor": [
             "editor",
@@ -176,17 +173,12 @@ def is_granted(permission: str, study):
             "add_dataset",
             "permission",
             "update_participant",
-            "delete_participant"
+            "delete_participant",
         ],
-        "viewer": [
-            "viewer",
-            "view"
-                ],
+        "viewer": ["viewer", "view"],
     }
 
     return permission in role[contributor.permission]
-
-
 
 
 @api.route("/auth/logout")
