@@ -53,7 +53,7 @@ class Studies(Resource):
         study_contributor = StudyContributor.from_data(study_, g.user, "owner")
         db.session.add(study_contributor)
         db.session.commit()
-        return 204
+        return add_study.to_dict()
 
 
 @api.route("/study/<study_id>")
