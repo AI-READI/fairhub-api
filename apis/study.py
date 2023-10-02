@@ -57,7 +57,7 @@ class StudyResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def put(self, study_id: int):
-        if is_granted("viewer", study_id):
+        if is_granted("edit_study", study_id):
             return "Access denied, you can not modify", 403
         update_study = Study.query.get(study_id)
         update_study.update(request.json)
@@ -68,7 +68,7 @@ class StudyResource(Resource):
     @api.response(400, "Validation Error")
     def delete(self, study_id: int):
         study = Study.query.get(study_id)
-        if not is_granted("delete", study):
+        if not is_granted("delete_study", study):
             return "Access denied, you can not delete study", 403
         for d in study.dataset:
             for version in d.dataset_versions:
@@ -79,8 +79,6 @@ class StudyResource(Resource):
             db.session.delete(d)
         for p in study.participants:
             db.session.delete(p)
-        for c in study.study_contributors:
-            db.session.delete(c)
         db.session.delete(study)
         db.session.commit()
         return "", 204

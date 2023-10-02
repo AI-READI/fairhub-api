@@ -87,7 +87,6 @@ class ContributorResource(Resource):
         grantee = StudyContributor.query.filter(
             StudyContributor.user == user, StudyContributor.study == study
         ).first()
-
         granter = StudyContributor.query.filter(
             StudyContributor.user == g.user, StudyContributor.study == study
         ).first()

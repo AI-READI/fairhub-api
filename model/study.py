@@ -34,7 +34,7 @@ class Study(db.Model):
     created_at = db.Column(db.BigInteger, nullable=False)
     updated_on = db.Column(db.BigInteger, nullable=False)
 
-    dataset = db.relationship("Dataset", back_populates="study")
+    dataset = db.relationship("Dataset", back_populates="study", cascade="all, delete",)
     study_contributors = db.relationship(
         "StudyContributor",
         back_populates="study",

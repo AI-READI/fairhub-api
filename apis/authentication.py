@@ -143,10 +143,45 @@ def is_granted(permission: str, study):
     if not contributor:
         return False
     role = {
-        "owner": ["owner", "view", "delete", "invite", "publish_dataset", "add_dataset", "delete_dataset", "permission"],
-        "admin": ["admin", "view", "invite", "publish_dataset", "add_dataset", "delete_dataset", "permission"],
-        "editor": ["editor", "view", "add_dataset", "permission"],
-        "viewer": ["viewer", "view", ],
+        "owner": [
+            "owner",
+            "view",
+            "delete_study",
+            "delete_contributor",
+            "invite_contributor",
+            "publish_dataset",
+            "add_dataset",
+            "delete_dataset",
+            "permission",
+            "edit_study",
+            "update_participant"
+            "delete_participant"
+
+        ],
+        "admin": [
+            "admin",
+            "view",
+            "invite_contributor",
+            "publish_dataset",
+            "add_dataset",
+            "delete_dataset",
+            "permission",
+            "update_participant",
+            "delete_participant"
+
+        ],
+        "editor": [
+            "editor",
+            "view",
+            "add_dataset",
+            "permission",
+            "update_participant",
+            "delete_participant"
+        ],
+        "viewer": [
+            "viewer",
+            "view"
+                ],
     }
 
     return permission in role[contributor.permission]

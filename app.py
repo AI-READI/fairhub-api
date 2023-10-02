@@ -10,7 +10,7 @@ import datetime
 import model
 from apis import api
 from flask_bcrypt import Bcrypt
-from apis.authentication import authentication, authorization, UnauthenticatedException
+from apis.authentication import authentication, authorization, UnauthenticatedException, AccessDenied
 
 # from pyfairdatatools import __version__
 
@@ -91,7 +91,7 @@ def create_app():
         try:
             authentication()
             authorization()
-        except UnauthenticatedException:
+        except AccessDenied:
             return "Authentication is required", 401
 
     @app.after_request
