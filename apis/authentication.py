@@ -126,7 +126,7 @@ def authorization():
         "/swaggerui",
         "/swagger.json",
     ]
-    print(g.user)
+    print("g.user", g.user)
     for route in public_routes:
         if request.path.startswith(route):
             return

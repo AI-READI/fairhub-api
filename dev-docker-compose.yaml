@@ -3,7 +3,7 @@ services:
   flask-api:
     build:
       context: .
-      dockerfile: Dockerfile    
+      dockerfile: Dockerfile
     ports:
       - 5000:5000
     # volumes:
@@ -26,14 +26,15 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
+      PGUSER: postgres
     ports:
       - 5432:5432
     # restart: always
     healthcheck:
-      test: "pg_isready --username=postgres && psql --username=postgres --list"
-      interval: 5s
+      test: pg_isready
+      interval: 10s
       timeout: 5s
       retries: 5
-    volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      # volumes:
+      #   - ./postgres-data:/var/lib/postgresql/data
       # - ./sql/init_timezones.sql:/docker-entrypoint-initdb.d/1-schema.sql
