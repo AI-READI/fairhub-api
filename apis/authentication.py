@@ -3,10 +3,10 @@ from flask_restx import Namespace, Resource, fields
 from model import StudyContributor
 from datetime import timezone
 import datetime
-from dateutil.parser import parse
-from model import db, User, UserDetails
+from model import db, User, TokenBlacklist
 import jwt
 import config
+import uuid
 
 api = Namespace("Authentication", description="Authentication paths", path="/")
 
@@ -85,13 +85,14 @@ class Login(Resource):
                     "user": user.id,
                     "exp": datetime.datetime.now(timezone.utc)
                     + datetime.timedelta(minutes=20),
+                    "jti": str(uuid.uuid4())
                 },
                 config.secret,
                 algorithm="HS256",
             )
             resp = make_response(user.to_dict())
             resp.set_cookie(
-                "user", encoded_jwt_code, secure=True, httponly=True, samesite="lax"
+                "token", encoded_jwt_code, secure=True, httponly=True, samesite="lax"
             )
             resp.status = 200
             return resp
@@ -101,16 +102,17 @@ def authentication():
     """it authenticates users to a study, sets access and refresh token.
     In addition, it handles error handling of expired token and non existed users"""
     g.user = None
-    if "user" not in request.cookies:
+    if "token" not in request.cookies:
         return
-    token = request.cookies.get("user")
+    token = request.cookies.get("token")
     try:
         decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
         return
+    token_blacklist = TokenBlacklist.query.get(decoded["jti"])
+    if token_blacklist:
+        return
     user = User.query.get(decoded["user"])
-    # if decoded in token_blacklist:
-    #     return "authentication failed", 403
     g.user = user
 
 
@@ -138,7 +140,6 @@ def is_granted(permission: str, study_id: int):
     contributor = StudyContributor.query.filter_by(
         user_id=g.user.id, study_id=study_id
     ).first()
-
     return contributor.permission == permission
 
 
@@ -150,9 +151,8 @@ class Logout(Resource):
         """simply logges out user from the system"""
         resp = make_response()
         resp.status = 204
-        resp.delete_cookie("user")
+        resp.delete_cookie("token")
         return resp
-
 
 
 @api.route("/auth/current-users")

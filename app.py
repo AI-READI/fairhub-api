@@ -92,34 +92,26 @@ def create_app():
             authentication()
             authorization()
         except UnauthenticatedException:
-            return "You are not allowed to access", 403
+            return "Authentication is required", 401
 
     @app.after_request
     def on_after_request(resp):
-        public_routes = [
-            "/auth",
-            "/docs",
-            "/echo",
-            "/swaggerui",
-            "/swagger.json",
-        ]
-        for route in public_routes:
-            if request.path.startswith(route):
-                return resp
-        if "user" not in request.cookies:
+        if "token" not in request.cookies:
             return resp
+        token = request.cookies.get("token")
         try:
-            token = request.cookies.get("user")
-            jwt.decode(token, config.secret, algorithms=["HS256"])
+            decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
         except jwt.ExpiredSignatureError:
-            resp.delete_cookie("user")
+            resp.delete_cookie("token")
+            return resp
+        token_blacklist = model.TokenBlacklist.query.get(decoded["jti"])
+        if token_blacklist:
+            resp.delete_cookie("token")
             return resp
         expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=10)
-        new_token = jwt.encode({"user": g.user.id, "exp": expired_in}, config.secret, algorithm="HS256")
-        resp.set_cookie("user", new_token, secure=True, httponly=True, samesite="lax")
+        new_token = jwt.encode({"user": decoded["user"], "exp": expired_in, "jti": decoded["jti"]}, config.secret, algorithm="HS256")
+        resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="lax")
         return resp
-
-
 
     @app.cli.command("destroy-schema")
     def destroy_schema():

@@ -64,6 +64,14 @@ class DatasetList(Resource):
 @api.response(201, "Success")
 @api.response(400, "Validation Error")
 class DatasetResource(Resource):
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
+    def get(self, study_id, dataset_id):
+        data_obj = Dataset.query.get(dataset_id)
+        return data_obj.to_dict()
+
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
     def put(self, study_id, dataset_id):
         if is_granted("viewer", study_id):
             return "Access denied, you can not modify", 403
@@ -73,6 +81,8 @@ class DatasetResource(Resource):
         db.session.commit()
         return data_obj.to_dict()
 
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
     def delete(self, study_id, dataset_id):
         if is_granted("viewer", study_id):
             return "Access denied, you can not modify", 403

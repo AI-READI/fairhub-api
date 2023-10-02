@@ -23,6 +23,8 @@ class StudyContributor(db.Model):
     def to_dict(self):
         return {
             "permission": self.permission,
+            "study_id": self.study_id,
+            "user_id": self.user_id
         }
 
     @staticmethod
