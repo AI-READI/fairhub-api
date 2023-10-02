@@ -24,7 +24,7 @@ class StudyContributor(db.Model):
         return {
             "permission": self.permission,
             "study_id": self.study_id,
-            "user_id": self.user_id
+            "user_id": self.user_id,
         }
 
     @staticmethod

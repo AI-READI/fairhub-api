@@ -85,7 +85,7 @@ class Login(Resource):
                     "user": user.id,
                     "exp": datetime.datetime.now(timezone.utc)
                     + datetime.timedelta(minutes=20),
-                    "jti": str(uuid.uuid4())
+                    "jti": str(uuid.uuid4()),
                 },
                 config.secret,
                 algorithm="HS256",
@@ -143,15 +143,33 @@ def is_granted(permission: str, study):
     if not contributor:
         return False
     role = {
-        "owner": ["owner", "view", "delete", "invite", "publish_dataset", "add_dataset", "delete_dataset", "permission"],
-        "admin": ["admin", "view", "invite", "publish_dataset", "add_dataset", "delete_dataset", "permission"],
+        "owner": [
+            "owner",
+            "view",
+            "delete",
+            "invite",
+            "publish_dataset",
+            "add_dataset",
+            "delete_dataset",
+            "permission",
+        ],
+        "admin": [
+            "admin",
+            "view",
+            "invite",
+            "publish_dataset",
+            "add_dataset",
+            "delete_dataset",
+            "permission",
+        ],
         "editor": ["editor", "view", "add_dataset", "permission"],
-        "viewer": ["viewer", "view", ],
+        "viewer": [
+            "viewer",
+            "view",
+        ],
     }
 
     return permission in role[contributor.permission]
-
-
 
 
 @api.route("/auth/logout")

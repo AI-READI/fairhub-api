@@ -108,8 +108,14 @@ def create_app():
         if token_blacklist:
             resp.delete_cookie("token")
             return resp
-        expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=10)
-        new_token = jwt.encode({"user": decoded["user"], "exp": expired_in, "jti": decoded["jti"]}, config.secret, algorithm="HS256")
+        expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
+            minutes=10
+        )
+        new_token = jwt.encode(
+            {"user": decoded["user"], "exp": expired_in, "jti": decoded["jti"]},
+            config.secret,
+            algorithm="HS256",
+        )
         resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="lax")
         return resp
 

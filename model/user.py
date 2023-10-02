@@ -32,7 +32,7 @@ class User(db.Model):
             "email_address": self.email_address,
             "username": self.username,
             "first_name": self.user_details.first_name if self.user_details else None,
-            "last_name":  self.user_details.last_name if self.user_details else None,
+            "last_name": self.user_details.last_name if self.user_details else None,
         }
 
     @staticmethod
