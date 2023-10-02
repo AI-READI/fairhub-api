@@ -116,9 +116,7 @@ def test_post_cc_metadata(test_client):
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    print("$$$$$$$$$$$$$")
-    print(response_data[0])
-    print("$$$$$$$$$$$$$")
+
     assert response_data[0]["name"] == "central-contact"
     assert response_data[0]["affiliation"] == "affiliation"
     # assert response_data[0]["role"] == "role"    # BUG: ROLE IS RETURNED AS NONE
@@ -139,9 +137,7 @@ def test_get_cc_metadata(test_client):
     response = test_client.get(f"/study/{study_id}/metadata/central-contact")
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    print("$$$$$$$$$$$$$")
-    print(response_data[0])
-    print("$$$$$$$$$$$$$")
+
     assert response_data[0]["name"] == "central-contact"
     assert response_data[0]["affiliation"] == "affiliation"
     # assert response_data[0]["role"] == "role"     # BUG: ROLE IS RETURNED AS NONE
