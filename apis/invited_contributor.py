@@ -30,11 +30,11 @@ class AddInvitedContributor(Resource):
     @api.response(400, "Validation Error")
     # @api.marshal_with(contributors_model)
     def post(self, study_id: int):
-        if is_granted("viewer", study_id):
+        if is_granted("invite", study_id):
             return "Access denied, you can not modify", 403
         # try:
-        if is_granted("editor", study_id):
-            return "Access denied, you can not invite other contributors", 403
+        # contributors = StudyContributor.query.filter_by(
+        #     study_id=study_id, user_id=g.user.id).first()
         study_obj = Study.query.get(study_id)
         data = request.json
         email_address = data["email_address"]

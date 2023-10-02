@@ -67,21 +67,21 @@ class StudyResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def delete(self, study_id: int):
-        if not is_granted("owner", study_id):
+        study = Study.query.get(study_id)
+        if not is_granted("delete", study):
             return "Access denied, you can not delete study", 403
-        delete_study = Study.query.get(study_id)
-        for d in delete_study.dataset:
+        for d in study.dataset:
             for version in d.dataset_versions:
                 version.participants.clear()
-        for d in delete_study.dataset:
+        for d in study.dataset:
             for version in d.dataset_versions:
                 db.session.delete(version)
             db.session.delete(d)
-        for p in delete_study.participants:
+        for p in study.participants:
             db.session.delete(p)
-        for c in delete_study.study_contributors:
+        for c in study.study_contributors:
             db.session.delete(c)
-        db.session.delete(delete_study)
+        db.session.delete(study)
         db.session.commit()
         return "", 204
 

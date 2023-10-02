@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from flask_restx import Namespace, Resource, fields
 from flask import request, g
 from model import StudyContributor, Study, db, User
@@ -9,9 +11,8 @@ api = Namespace("Contributor", description="Contributors", path="/")
 contributors_model = api.model(
     "Contributor",
     {
-        "user_id": fields.String(required=True),
         "permission": fields.String(required=True),
-        "study_id": fields.String(required=True),
+
     },
 )
 
@@ -32,38 +33,47 @@ class ContributorResource(Resource):
     @api.doc("contributor update")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
+    @api.expect(contributors_model)
     def put(self, study_id: int, user_id: int):
         """update contributor permissions"""
+
+        study = Study.query.get(study_id)
+        if not is_granted("permission", study):
+            return "Access denied, you are not authorized to change this permission", 403
+
         data = request.json
-        assigned_permissions = ["owner", "editor", "admin", "viewer"]
-        contributors = StudyContributor.query.filter_by(
-            study_id=study_id, user_id=user_id).first()
-        permissions = StudyContributor.query.filter_by(
-            study_id=study_id).all()
-        permissions_list = [i.permission for i in permissions]
-        if "owner" in permissions_list and data["permission"]== "owner":
-            return "This study already contains an owner, only one owner is allowed", 403
-        if data["permission"] not in assigned_permissions:
-            return "Please choose one of allowed permissions", 403
-        if is_granted("viewer", study_id):
-            return "Access denied, viewer can not modify", 403
-        if is_granted("editor", study_id):
-            if data["permission"] == "owner" or data["permission"] == "admin":
-                return "Access denied, editor can not modify admin or other owners", 403
-        if is_granted("admin", study_id):
-            if user_id != g.user.id:
-                if contributors.permission == "admin" or contributors.permission == "owner":
-                    return "Access denied, you can not modify other admin's or owner's permissions", 403
-            elif user_id == g.user.id and data["permission"] == "owner":
-                return "Access denied, you can not assign an owner", 403
-        if is_granted("owner", study_id):
-            if user_id != g.user.id:
-                if data["permission"] == "admin":
-                    return "Access denied, you can give an admin access to other contributors", 403
-        contributors.update(data)
+        user = User.query.get(user_id)
+        permission = data["permission"]
+        grantee = StudyContributor.query.filter(
+            StudyContributor.user == user, StudyContributor.study == study
+        ).first()
+
+        granter = StudyContributor.query.filter(
+            StudyContributor.user == g.user, StudyContributor.study == study
+        ).first()
+
+        # Order should go from the least privileged to the most privileged
+        grants = OrderedDict()
+        grants["viewer"] = []
+        grants["editor"] = ["viewer"]
+        grants["admin"] = ["viewer", "editor"]
+        grants["owner"] = ["editor", "viewer", "admin"]
+
+        can_grant = permission in grants[granter.permission]
+        if not can_grant:
+            return f"User cannot grant {permission}", 403
+
+        # Granter can not downgrade anyone of equal or greater permissions other than themselves
+        # TODO: Owners downgrading themselves
+        if user != g.user:
+            grantee_level = list(grants.keys()).index(grantee.permission) # 2
+            new_level = list(grants.keys()).index(permission) #  0
+            granter_level = list(grants.keys()).index(granter.permission) #2
+            if granter_level <= grantee_level and new_level < grantee_level:
+                return f"User cannot downgrade from {grantee.permission} to {permission}", 403
+        grantee.permission = permission
         db.session.commit()
-        print(permissions_list)
-        return 204
+        return grantee.to_dict(), 200
 
     @api.doc("contributor delete")
     @api.response(200, "Success")
@@ -85,6 +95,3 @@ class ContributorResource(Resource):
         db.session.commit()
         return 204
 
-
-# will need to implement it in all endpoints for which that permission is relevant
-# Permissions should be only a database query and conditional statement. Failing permissions should result in a 403

@@ -135,12 +135,23 @@ def authorization():
     raise UnauthenticatedException("Access denied", 403)
 
 
-def is_granted(permission: str, study_id: int):
+def is_granted(permission: str, study):
     """filters users and checks whether current permission equal to passed permission"""
-    contributor = StudyContributor.query.filter_by(
-        user_id=g.user.id, study_id=study_id
+    contributor = StudyContributor.query.filter(
+        StudyContributor.user == g.user, StudyContributor.study == study
     ).first()
-    return contributor.permission == permission
+    if not contributor:
+        return False
+    role = {
+        "owner": ["owner", "view", "delete", "invite", "publish_dataset", "add_dataset", "delete_dataset", "permission"],
+        "admin": ["admin", "view", "invite", "publish_dataset", "add_dataset", "delete_dataset", "permission"],
+        "editor": ["editor", "view", "add_dataset", "permission"],
+        "viewer": ["viewer", "view", ],
+    }
+
+    return permission in role[contributor.permission]
+
+
 
 
 @api.route("/auth/logout")
