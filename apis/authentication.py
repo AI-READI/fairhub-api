@@ -85,7 +85,7 @@ class Login(Resource):
                     "user": user.id,
                     "exp": datetime.datetime.now(timezone.utc)
                     + datetime.timedelta(minutes=20),
-                    "jti": str(uuid.uuid4())
+                    "jti": str(uuid.uuid4()),
                 },
                 config.secret,
                 algorithm="HS256",
@@ -126,7 +126,7 @@ def authorization():
         "/swaggerui",
         "/swagger.json",
     ]
-    print(g.user)
+    print("g.user", g.user)
     for route in public_routes:
         if request.path.startswith(route):
             return

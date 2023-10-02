@@ -71,6 +71,14 @@ def create_app():
         supports_credentials=True,
     )
 
+    # app.config[
+    #     "CORS_ALLOW_HEADERS"
+    # ] = "Content-Type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
+    # app.config["CORS_SUPPORTS_CREDENTIALS"] = True
+    # app.config[
+    #     "CORS_EXPOSE_HEADERS"
+    # ] = "Content-Type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
+
     # CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": "True"}})
 
     #
@@ -88,6 +96,9 @@ def create_app():
 
     @app.before_request
     def on_before_request():
+        if request.method == "OPTIONS":
+            return
+
         try:
             authentication()
             authorization()
@@ -96,6 +107,8 @@ def create_app():
 
     @app.after_request
     def on_after_request(resp):
+        print("after request")
+        print(request.cookies.get("token"))
         if "token" not in request.cookies:
             return resp
         token = request.cookies.get("token")
@@ -108,9 +121,27 @@ def create_app():
         if token_blacklist:
             resp.delete_cookie("token")
             return resp
-        expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(minutes=10)
-        new_token = jwt.encode({"user": decoded["user"], "exp": expired_in, "jti": decoded["jti"]}, config.secret, algorithm="HS256")
+        expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
+            minutes=10
+        )
+        new_token = jwt.encode(
+            {"user": decoded["user"], "exp": expired_in, "jti": decoded["jti"]},
+            config.secret,
+            algorithm="HS256",
+        )
         resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="lax")
+
+        # resp.headers["Access-Control-Allow-Origin"] = "http://localhost:3000"
+        # resp.headers["Access-Control-Allow-Credentials"] = "true"
+        # resp.headers[
+        #     "Access-Control-Allow-Headers"
+        # ] = "Content-Type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
+        # resp.headers[
+        #     "Access-Control-Expose-Headers"
+        # ] = "Content-Type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
+
+        print(resp.headers)
+
         return resp
 
     @app.cli.command("destroy-schema")
