@@ -8,6 +8,7 @@ from model import (
     StudyException,
 )
 from flask import request
+from .authentication import is_granted
 
 api = Namespace("Invited_contributors", description="Invited contributors", path="/")
 
@@ -29,7 +30,11 @@ class AddInvitedContributor(Resource):
     @api.response(400, "Validation Error")
     # @api.marshal_with(contributors_model)
     def post(self, study_id: int):
+        if is_granted("invite", study_id):
+            return "Access denied, you can not modify", 403
         # try:
+        # contributors = StudyContributor.query.filter_by(
+        #     study_id=study_id, user_id=g.user.id).first()
         study_obj = Study.query.get(study_id)
         data = request.json
         email_address = data["email_address"]

@@ -20,7 +20,9 @@ class StudyOverallOfficial(db.Model):
     role = db.Column(db.String, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
 
-    study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"), nullable=False)
+    study_id = db.Column(
+        db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=False
+    )
     study = db.relationship("Study", back_populates="study_overall_official")
 
     def to_dict(self):

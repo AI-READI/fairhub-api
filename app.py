@@ -1,13 +1,22 @@
 """Entry point for the application."""
-from flask import Flask
+from flask import Flask, request, make_response, g
+import jwt
+import config
 from flask_cors import CORS
 from sqlalchemy import MetaData
+from datetime import timezone
+import datetime
 from os import environ
 
 import model
 from apis import api
 from flask_bcrypt import Bcrypt
-from apis.login import authentication, authorization
+from apis.authentication import (
+    authentication,
+    authorization,
+    UnauthenticatedException,
+    AccessDenied,
+)
 
 # from pyfairdatatools import __version__
 
@@ -31,6 +40,12 @@ def create_app(config_module=None):
     # csrf = CSRFProtect()
     # csrf.init_app(app)
 
+    app.config.from_prefixed_env("FAIRHUB")
+
+    # print(app.config)
+
+    # TODO: add a check for secret key
+
     if "DATABASE_URL" in app.config:
         # if "TESTING" in app_config and app_config["TESTING"]:
         #     pass
@@ -44,7 +59,36 @@ def create_app(config_module=None):
     model.db.init_app(app)
     api.init_app(app)
     bcrypt.init_app(app)
-    CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": "True"}})
+
+    # Only allow CORS origin for localhost:3000
+    CORS(
+        app,
+        resources={
+            "/*": {
+                "origins": [
+                    "http://localhost:3000",
+                ],
+            }
+        },
+        allow_headers=[
+            "Content-Type",
+            "Authorization",
+            "Access-Control-Allow-Origin",
+            "Access-Control-Allow-Credentials",
+        ],
+        supports_credentials=True,
+    )
+
+    # app.config[
+    #     "CORS_ALLOW_HEADERS"
+    # ] = "Content-Type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
+    # app.config["CORS_SUPPORTS_CREDENTIALS"] = True
+    # app.config[
+    #     "CORS_EXPOSE_HEADERS"
+    # ] = "Content-Type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
+
+    # CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": "True"}})
+
     #
     # @app.cli.command("create-schema")
     # def create_schema():
@@ -60,13 +104,53 @@ def create_app(config_module=None):
 
     @app.before_request
     def on_before_request():
-        pass
-        # authentication()
-        # try:
-        #     authorization()
-        # except:
-        #     return "Access denied", 403
-        # catch access denied error
+        if request.method == "OPTIONS":
+            return
+
+        try:
+            authentication()
+            authorization()
+        except AccessDenied:
+            return "Authentication is required", 401
+
+    @app.after_request
+    def on_after_request(resp):
+        print("after request")
+        print(request.cookies.get("token"))
+        if "token" not in request.cookies:
+            return resp
+        token = request.cookies.get("token")
+        try:
+            decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
+        except jwt.ExpiredSignatureError:
+            resp.delete_cookie("token")
+            return resp
+        token_blacklist = model.TokenBlacklist.query.get(decoded["jti"])
+        if token_blacklist:
+            resp.delete_cookie("token")
+            return resp
+        expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
+            minutes=10
+        )
+        new_token = jwt.encode(
+            {"user": decoded["user"], "exp": expired_in, "jti": decoded["jti"]},
+            config.secret,
+            algorithm="HS256",
+        )
+        resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="lax")
+
+        # resp.headers["Access-Control-Allow-Origin"] = "http://localhost:3000"
+        # resp.headers["Access-Control-Allow-Credentials"] = "true"
+        # resp.headers[
+        #     "Access-Control-Allow-Headers"
+        # ] = "Content-Type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
+        # resp.headers[
+        #     "Access-Control-Expose-Headers"
+        # ] = "Content-Type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
+
+        print(resp.headers)
+
+        return resp
 
     @app.cli.command("destroy-schema")
     def destroy_schema():

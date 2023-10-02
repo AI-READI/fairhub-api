@@ -19,29 +19,58 @@ class Dataset(db.Model):
     updated_on = db.Column(db.BigInteger, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
 
-    study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"), nullable=False)
+    study_id = db.Column(
+        db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=False
+    )
     study = db.relationship("Study", back_populates="dataset")
 
     dataset_contributors = db.relationship(
-        "DatasetContributor", back_populates="dataset"
+        "DatasetContributor",
+        back_populates="dataset",
+        cascade="all, delete",
     )
     dataset_versions = db.relationship(
-        "Version", back_populates="dataset", lazy="dynamic"
+        "Version",
+        back_populates="dataset",
+        lazy="dynamic",
+        cascade="all, delete",
     )
 
-    dataset_access = db.relationship("DatasetAccess", back_populates="dataset")
-    dataset_consent = db.relationship("DatasetConsent", back_populates="dataset")
-    dataset_date = db.relationship("DatasetDate", back_populates="dataset")
+    dataset_access = db.relationship(
+        "DatasetAccess",
+        back_populates="dataset",
+        cascade="all, delete",
+    )
+    dataset_consent = db.relationship(
+        "DatasetConsent",
+        back_populates="dataset",
+        cascade="all, delete",
+    )
+    dataset_date = db.relationship(
+        "DatasetDate",
+        back_populates="dataset",
+        cascade="all, delete",
+    )
     dataset_de_ident_level = db.relationship(
-        "DatasetDeIdentLevel", back_populates="dataset"
+        "DatasetDeIdentLevel",
+        back_populates="dataset",
+        cascade="all, delete",
     )
     dataset_description = db.relationship(
-        "DatasetDescription", back_populates="dataset"
+        "DatasetDescription",
+        back_populates="dataset",
+        cascade="all, delete",
     )
 
-    dataset_funder = db.relationship("DatasetFunder", back_populates="dataset")
+    dataset_funder = db.relationship(
+        "DatasetFunder",
+        back_populates="dataset",
+        cascade="all, delete",
+    )
     dataset_alternate_identifier = db.relationship(
-        "DatasetAlternateIdentifier", back_populates="dataset"
+        "DatasetAlternateIdentifier",
+        back_populates="dataset",
+        cascade="all, delete",
     )
     dataset_managing_organization = db.relationship(
         "DatasetManagingOrganization", back_populates="dataset"
