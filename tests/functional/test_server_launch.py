@@ -1,6 +1,7 @@
 """Tests for API endpoints related to server launch"""
 import json
 
+
 def test_server_launch(test_client):
     """
     GIVEN a Flask application configured for testing

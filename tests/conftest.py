@@ -1,13 +1,14 @@
 """Defines fixtures available to all tests."""
+import json
+import os
+import unittest.mock
+
 import pytest
+from dotenv import load_dotenv
 
 from app import create_app
-from dotenv import load_dotenv
 from model.db import db
-import json
-import unittest.mock
 from pytest_config import TestConfig
-import os
 
 # Load environment variables from .env
 load_dotenv(".env")

@@ -1,5 +1,6 @@
 """Tests for the Study Metadata API endpoints"""
 import json
+
 import pytest
 
 

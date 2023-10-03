@@ -1,6 +1,8 @@
 """Tests for API endpoints related to studies"""
 import json
+
 import pytest
+
 
 def test_post_study(test_client, login_user):
     """

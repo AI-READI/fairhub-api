@@ -1,6 +1,7 @@
 """Tests for the Study model"""
-from model.study import Study
 import uuid
+
+from model.study import Study
 
 
 def test_new_study():
