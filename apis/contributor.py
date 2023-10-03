@@ -114,9 +114,12 @@ class ContributorResource(Resource):
             granter_level = list(grants.keys()).index(granter.permission)  # 2
             if granter_level <= grantee_level:
                 return (
-                    f"You are not authorized to delete {grantee.permission}  permission",
+                    f"You are not authorized to delete {grantee.permission}s from study",
                     403,
                 )
         db.session.delete(grantee)
         db.session.commit()
-        return 204
+        contributors = StudyContributor.query.filter(
+            StudyContributor.study == study
+        ).all()
+        return [contributor.to_dict() for contributor in contributors], 200

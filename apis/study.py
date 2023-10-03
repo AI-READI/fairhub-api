@@ -40,7 +40,7 @@ class Studies(Resource):
         study_contributor = StudyContributor.from_data(study_, g.user, "owner")
         db.session.add(study_contributor)
         db.session.commit()
-        return 204
+        return study_.to_dict()
 
 
 @api.route("/study/<study_id>")
@@ -57,9 +57,10 @@ class StudyResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def put(self, study_id: int):
-        if is_granted("edit_study", study_id):
-            return "Access denied, you can not modify", 403
         update_study = Study.query.get(study_id)
+        if not is_granted("update_study", update_study):
+            return "Access denied, you can not modify", 403
+
         update_study.update(request.json)
         db.session.commit()
         return update_study.to_dict()
@@ -81,7 +82,10 @@ class StudyResource(Resource):
             db.session.delete(p)
         db.session.delete(study)
         db.session.commit()
-        return "", 204
+        studies = Study.query.filter(
+            Study.study_contributors.any(User.id == g.user.id)
+        ).all()
+        return [s.to_dict() for s in studies], 201
 
 
 # @api.route("/view-profile", methods=["GET"])
