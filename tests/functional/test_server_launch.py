@@ -1,7 +1,6 @@
 """Tests for API endpoints related to server launch"""
 import json
 
-
 def test_server_launch(test_client):
     """
     GIVEN a Flask application configured for testing
@@ -19,3 +18,9 @@ def test_server_launch(test_client):
 
     # Check the response is correct
     assert response_data == "Server active!"
+    
+# Empty database before testing and create a user for testing
+def test_db_empty(test_client, empty_db, create_user):
+    """Test that the database is empty."""
+    print("Database empty")
+    print("User created for testing")

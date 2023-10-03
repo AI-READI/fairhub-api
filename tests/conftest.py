@@ -63,8 +63,7 @@ def create_user(test_client):
             "/auth/signup",
             json={"email_address": "sample@gmail.com", "password": "test"},
         )
-        # response_data = response.json
-        print(json.loads(response.data))
+
         assert response.status_code == 201
 
 
@@ -77,6 +76,5 @@ def login_user(test_client):
             "/auth/login",
             json={"email_address": "sample@gmail.com", "password": "test"},
         )
-        # response_data = response.json
-        print(json.loads(response.data))
+
         assert response.status_code == 200

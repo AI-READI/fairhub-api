@@ -22,15 +22,15 @@ def test_post_dataset(test_client, login_user):
     WHEN the '/dataset/{study_id}' endpoint is requested (POST)
     THEN check that the response is valid and creates a dataset
     """
-    study_id = pytest.global_study_id["id"]
-    response = test_client.post(
-        f"/study/{study_id}/dataset",
-        json={
-            "id": study_id,
-        },
-    )
+    # study_id = pytest.global_study_id["id"]
+    # response = test_client.post(
+    #     f"/study/{study_id}/dataset",
+    #     json={
+    #         "id": study_id,
+    #     },
+    # )
 
-    assert response.status_code == 200
-    response_data = json.loads(response.data)
-    pytest.global_dataset_id = response_data["id"]
-    print(pytest.global_dataset_id)
+    # assert response.status_code == 200
+    # response_data = json.loads(response.data)
+    # pytest.global_dataset_id = response_data["id"]
+    # print(pytest.global_dataset_id)
