@@ -27,7 +27,6 @@ login_model = api.model(
 )
 
 
-
 class UnauthenticatedException(Exception):
     pass
 
@@ -156,7 +155,6 @@ def is_granted(permission: str, study):
             "participant",
             "study_metadata",
             "dataset_metadata",
-
         ],
         "admin": [
             "admin",
@@ -172,8 +170,7 @@ def is_granted(permission: str, study):
             "publish_version",
             "participant",
             "study_metadata",
-            "dataset_metadata"
-
+            "dataset_metadata",
         ],
         "editor": [
             "editor",
@@ -187,17 +184,12 @@ def is_granted(permission: str, study):
             "delete_dataset",
             "participant",
             "study_metadata",
-            "dataset_metadata"
-
+            "dataset_metadata",
         ],
-        "viewer": [
-            "viewer",
-            "view"
-            ],
+        "viewer": ["viewer", "view"],
     }
 
     return permission in role[contributor.permission]
-
 
 
 @api.route("/auth/logout")

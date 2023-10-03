@@ -1,6 +1,7 @@
-from flask_restx import Namespace, Resource, fields
-from model import Study, db, StudyIpdsharing
+"""API routes for study ipdsharing metadata"""
+from flask_restx import Resource, fields
 from flask import request
+from model import Study, db
 
 
 from apis.study_metadata_namespace import api
@@ -22,19 +23,27 @@ study_ipdsharing = api.model(
 
 @api.route("/study/<study_id>/metadata/ipdsharing")
 class StudyIpdsharingResource(Resource):
+    """Study Ipdsharing Metadata"""
+
     @api.doc("ipdsharing")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")
     @api.marshal_with(study_ipdsharing)
     def get(self, study_id: int):
+        """Get study ipdsharing metadata"""
         study_ = Study.query.get(study_id)
+
         return study_.study_ipdsharing.to_dict()
 
     def put(self, study_id: int):
+        """Create study ipdsharing metadata"""
         study_ = Study.query.get(study_id)
+
         study_.study_ipdsharing.update(request.json)
+
         db.session.commit()
+
         return study_.study_ipdsharing.to_dict()
 
     # def post(self, study_id: int):
