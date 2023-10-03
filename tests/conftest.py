@@ -38,15 +38,15 @@ def flask_app():
 
 # Create a test client for the app
 @pytest.fixture()
-def test_client(flask_app):
+def _test_client(flask_app):
     """A test client for the app."""
-    with flask_app.test_client() as test_client:
-        yield test_client
+    with flask_app._test_client() as _test_client:
+        yield _test_client
 
 
 # Empty local database for testing
 @pytest.fixture()
-def empty_db(flask_app):
+def _empty_db(flask_app):
     """Empty the local database."""
     with flask_app.app_context():
         meta = db.metadata
@@ -57,10 +57,10 @@ def empty_db(flask_app):
 
 
 @pytest.fixture()
-def create_user(test_client):
+def _create_user(_test_client):
     """Create a user for testing."""
     with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
-        response = test_client.post(
+        response = _test_client.post(
             "/auth/signup",
             json={"email_address": "sample@gmail.com", "password": "test"},
         )
@@ -70,10 +70,10 @@ def create_user(test_client):
 
 # Fixture to sign in the user for module testing
 @pytest.fixture()
-def login_user(test_client):
+def _login_user(_test_client):
     """Sign in the user for testing."""
     with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
-        response = test_client.post(
+        response = _test_client.post(
             "/auth/login",
             json={"email_address": "sample@gmail.com", "password": "test"},
         )

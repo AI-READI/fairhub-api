@@ -4,14 +4,14 @@ import json
 import pytest
 
 
-def test_post_study(test_client, login_user):
+def test_post_study(_test_client, _login_user):
     """
     Given a Flask application configured for testing and a study
     WHEN the '/study' endpoint is requested (POST)
     THEN check that the response is valid
     """
     # Crate a test using the Flask application configured for testing
-    response = test_client.post(
+    response = _test_client.post(
         "/study",
         json={
             "title": "Study Title",
@@ -27,13 +27,13 @@ def test_post_study(test_client, login_user):
     print(response_data)
 
 
-def test_get_all_studies(test_client, login_user):
+def test_get_all_studies(_test_client, _login_user):
     """
     GIVEN a Flask application configured for testing
     WHEN the '/study' endpoint is requested (GET)
     THEN check that the response is valid
     """
-    response = test_client.get("/study")
+    response = _test_client.get("/study")
 
     response_data = json.loads(response.data)
     print(response_data)
@@ -41,14 +41,14 @@ def test_get_all_studies(test_client, login_user):
     assert response.status_code == 200
 
 
-def test_update_study(test_client, login_user):
+def test_update_study(_test_client, _login_user):
     """
     GIVEN a study ID
     WHEN the '/study' endpoint is requested (PUT)
     THEN check that the study is updated with the inputed data
     """
     # study_id = pytest.global_study_id["id"]
-    # response = test_client.put(
+    # response = _test_client.put(
     #     f"/study/{study_id}",
     #     json={
     #         "id": pytest.global_study_id["id"],
@@ -65,13 +65,13 @@ def test_update_study(test_client, login_user):
     # pytest.global_study_id = response_data
 
 
-def test_get_study_by_id(test_client, login_user):
+def test_get_study_by_id(_test_client, _login_user):
     """
     GIVEN a study ID
     WHEN the '/study/{study_id}' endpoint is requested (GET)
     THEN check that the response is valid
     """
-    response = test_client.get(f"/study/{pytest.global_study_id['id']}")
+    response = _test_client.get(f"/study/{pytest.global_study_id['id']}")
 
     # Convert the response data from JSON to a Python dictionary
     response_data = json.loads(response.data)
@@ -83,7 +83,7 @@ def test_get_study_by_id(test_client, login_user):
     assert response_data["image"] == pytest.global_study_id["image"]
 
 
-def test_delete_studies_created(test_client, login_user):
+def test_delete_studies_created(_test_client, _login_user):
     """
     Given a Flask application configured for testing
     WHEN the '/study' endpoint is requested (DELETE)
@@ -93,5 +93,5 @@ def test_delete_studies_created(test_client, login_user):
     """
     print("delete study created")
     # TODO: DELETE ENDPOINT NOT WORKING
-    # with flask_app.test_client() as test_client:
-    #     response = test_client.post("/study", json={
+    # with flask_app._test_client() as _test_client:
+    #     response = _test_client.post("/study", json={
