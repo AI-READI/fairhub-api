@@ -107,6 +107,13 @@ def create_app():
 
     @app.after_request
     def on_after_request(resp):
+        public_routes = [
+            "/auth",
+        ]
+        print("g.user", g.user)
+        for route in public_routes:
+            if request.path.startswith(route):
+                return resp
         print("after request")
         print(request.cookies.get("token"))
         if "token" not in request.cookies:

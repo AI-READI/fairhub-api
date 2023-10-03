@@ -27,6 +27,8 @@ class Studies(Resource):
         studies = Study.query.filter(
             Study.study_contributors.any(User.id == g.user.id)
         ).all()
+        # studies = Study.query.filter(User.id == g.user.id).all()
+
         return [s.to_dict() for s in studies]
 
     @api.expect(study_model)
