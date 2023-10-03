@@ -5,8 +5,20 @@ from datetime import timezone
 import datetime
 from model import db, User, TokenBlacklist
 import jwt
-import config
+# import config
 import uuid
+import os
+import importlib
+
+# Determine the appropriate configuration module based on the testing context
+print(os.environ.get("FLASK_ENV"))
+# Determine the appropriate configuration module based on the testing context
+if os.environ.get("FLASK_ENV") == "testing":
+    config_module_name = "pytest_config"
+else:
+    config_module_name = "config"
+
+config = importlib.import_module(config_module_name)
 
 api = Namespace("Authentication", description="Authentication paths", path="/")
 
@@ -78,7 +90,10 @@ class Login(Resource):
         if not validate_pass:
             return "Invalid credentials", 401
         else:
+            print(config)
+            print(config.secret)
             if len(config.secret) < 14:
+                print(config.secret)
                 raise "secret key should contain at least 14 characters"
             encoded_jwt_code = jwt.encode(
                 {
