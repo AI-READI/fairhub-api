@@ -4,18 +4,14 @@ from .continuous import Continuous
 from .timeseries import Timeseries
 from datetime import datetime
 
-class Mixed (VType):
-  def __init__ (self: object) -> None:
-    raise NotImplementedError
-    super().__init__(
-      "mixed", [
-        Categorical,
-        Continuous,
-        Timeseries
-      ], str
-    )
+
+class Mixed(VType):
+    def __init__(self: object) -> None:
+        raise NotImplementedError
+        super().__init__("mixed", [Categorical, Continuous, Timeseries], str)
+
 
 if __name__ == "__main__":
-  pass
+    pass
 else:
-  pass
+    pass
