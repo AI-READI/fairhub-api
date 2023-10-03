@@ -96,9 +96,9 @@ class Login(Resource):
                 # If not testing, directly use the 'config' module
                 config = config_module
             print(config)
-            print(config.secret)
-            if len(config.secret) < 14:
-                print(config.secret)
+            print(config.FAIRHUB_SECRET)
+            if len(config.FAIRHUB_SECRET) < 14:
+                print(config.FAIRHUB_SECRET)
                 raise "secret key should contain at least 14 characters"
             encoded_jwt_code = jwt.encode(
                 {
@@ -107,7 +107,7 @@ class Login(Resource):
                     + datetime.timedelta(minutes=20),
                     "jti": str(uuid.uuid4()),
                 },
-                config.secret,
+                config.FAIRHUB_SECRET,
                 algorithm="HS256",
             )
             resp = make_response(user.to_dict())
@@ -138,7 +138,10 @@ def authentication():
         # If not testing, directly use the 'config' module
         config = config_module
     try:
-        decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
+        print(config.FAIRHUB_SECRET)
+        print(dir(config))
+        print("SECRET ABOVE")
+        decoded = jwt.decode(token, config.FAIRHUB_SECRET, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
         return
     token_blacklist = TokenBlacklist.query.get(decoded["jti"])

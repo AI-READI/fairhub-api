@@ -116,8 +116,8 @@ def create_app(config_module=None):
 
     @app.after_request
     def on_after_request(resp):
-        print("after request")
-        print(request.cookies.get("token"))
+        # print("after request")
+        # print(request.cookies.get("token"))
         if "token" not in request.cookies:
             return resp
         token = request.cookies.get("token")
@@ -134,7 +134,7 @@ def create_app(config_module=None):
             # If not testing, directly use the 'config' module
             config = config_module
         try:
-            decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
+            decoded = jwt.decode(token, config.FAIRHUB_SECRET, algorithms=["HS256"])
         except jwt.ExpiredSignatureError:
             resp.delete_cookie("token")
             return resp
@@ -147,7 +147,7 @@ def create_app(config_module=None):
         )
         new_token = jwt.encode(
             {"user": decoded["user"], "exp": expired_in, "jti": decoded["jti"]},
-            config.secret,
+            config.FAIRHUB_SECRET,
             algorithm="HS256",
         )
         resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="lax")
@@ -161,7 +161,7 @@ def create_app(config_module=None):
         #     "Access-Control-Expose-Headers"
         # ] = "Content-Type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
 
-        print(resp.headers)
+        # print(resp.headers)
 
         return resp
 
