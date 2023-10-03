@@ -22,7 +22,7 @@ def create_app():
     # create and configure the app
     app = Flask(__name__)
     # `full` if you want to see all the details
-    app.config["SWAGGER_UI_DOC_EXPANSION"] = "list"
+    app.config["SWAGGER_UI_DOC_EXPANSION"] = "none"
     app.config["RESTX_MASK_SWAGGER"] = False
     # Initialize config
     app.config.from_pyfile("config.py")
