@@ -3,12 +3,15 @@ import requests
 import json
 from flask import jsonify
 from flask_restx import Namespace, Resource, fields
+
 # Data Transforms
 from core import transforms
+
 # REDCap API Models
 from apis.models import REDCapProjectDataModel
 from apis.models import REDCapReportParticipantsDataModel
 from apis.models import REDCapReportRecruitmentDataModel
+
 # In-Memory Cache Data Models
 from model.cache import DashboardCache
 from model.cache import ParticipantCache
@@ -53,6 +56,7 @@ redcapReportParticipantsDataModel = api.model(
 # REDCap Endpoints
 #
 
+
 @api.route("/project", methods=["GET"])
 class REDCapProjectData(Resource):
     @api.doc("get_redcap_project")
@@ -71,6 +75,7 @@ class REDCapProjectData(Resource):
             },
         )
         return response.json()
+
 
 @api.route("/reports/participants", methods=["GET"])
 class REDCapProjectData(Resource):
@@ -151,7 +156,7 @@ class REDCapReportRecruitmentData(Resource):
         # )
         response = requests.post(
             REDCAP_API_URL,
-            data = {
+            data={
                 "token": REDCAP_API_TOKEN,
                 "format": REDCAP_API_FORMAT,
                 "returnFormat": REDCAP_API_FORMAT,
@@ -168,10 +173,10 @@ class REDCapReportRecruitmentData(Resource):
             "demographics",
             "phenotype",
             "device",
-            "contact"
+            "contact",
         ]
         transformed_data = {}
-        print(response);
+        print(response)
         for module in modules:
             transformed_data[module] = getattr(transforms, module)()
 
@@ -226,4 +231,3 @@ class REDCapReportRecruitmentDataBySiteid(Resource):
             },
         )
         return [row for row in response.json() if row["siteid"] == siteid]
-

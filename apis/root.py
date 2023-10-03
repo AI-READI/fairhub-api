@@ -14,6 +14,7 @@ fairhubApiModel = api.model("FairhubApiModel", FairhubAPIModel)
 # Root Endpoints
 #
 
+
 @api.route("/")
 class Index(Resource):
     @api.doc("get_api")

@@ -1,5 +1,6 @@
 from redis_om import HashModel
 
+
 class RecruitmentDashboardCache(HashModel):
     dm: str
     record_id: str
