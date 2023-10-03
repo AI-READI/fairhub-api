@@ -32,10 +32,9 @@ class StudyIdentificationResource(Resource):
     def get(self, study_id: int):
         """Get study identification metadata"""
         study_ = Study.query.get(study_id)
-
         identifiers = Identifiers(study_)
-
         return identifiers.to_dict()
+
 
     def post(self, study_id: int):
         """Create study identification metadata"""

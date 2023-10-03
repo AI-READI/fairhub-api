@@ -115,7 +115,10 @@ def create_app():
         try:
             decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
         except jwt.ExpiredSignatureError:
-            resp.delete_cookie("token")
+            resp.set_cookie(
+                "token", "", secure=True, httponly=True, samesite="lax",
+                expires=datetime.datetime.now(timezone.utc)
+            )
             return resp
         token_blacklist = model.TokenBlacklist.query.get(decoded["jti"])
         if token_blacklist:

@@ -21,7 +21,7 @@ class Studies(Resource):
     @api.doc("list_study")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.marshal_with(study)
+    # @api.marshal_with(study_model)
     def get(self):
         """this code ensure each user access and see only allowed studies"""
         studies = Study.query.filter(

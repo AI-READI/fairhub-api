@@ -175,7 +175,6 @@ def is_granted(permission: str, study):
         "editor": [
             "editor",
             "view",
-            "permission",
             "delete_contributor",
             "add_study",
             "update_study",
@@ -200,9 +199,10 @@ class Logout(Resource):
         """simply logges out user from the system"""
         resp = make_response()
         resp.status = 204
-        resp.delete_cookie("token")
+        resp.set_cookie(
+            "token", "", secure=True, httponly=True, samesite="lax", expires=datetime.datetime.now(timezone.utc)
+        )
         return resp
-
 
 @api.route("/auth/current-users")
 class CurrentUsers(Resource):
