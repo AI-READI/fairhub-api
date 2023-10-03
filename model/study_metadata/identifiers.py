@@ -13,11 +13,10 @@ class Identifiers:
             key=lambda identifier: identifier.created_at,
         )
         return {
-            "primary": [
-                identifier
-                for identifier in sorted_study_identifications
-                if not identifier.secondary
-            ][0].to_dict(),
+            "primary":
+               [identifier for identifier in sorted_study_identifications
+                if not identifier.secondary][0].to_dict() if len([identifier for identifier in
+                    sorted_study_identifications if not identifier.secondary]) != 0 else [],
             "secondary": [
                 identifier.to_dict()
                 for identifier in sorted_study_identifications

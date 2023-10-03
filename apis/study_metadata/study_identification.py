@@ -35,7 +35,10 @@ class StudyIdentificationResource(Resource):
         identifiers = Identifiers(study_)
         return identifiers.to_dict()
 
-
+    @api.doc("identification add")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    @api.expect(study_identification)
     def post(self, study_id: int):
         """Create study identification metadata"""
         data = request.json
