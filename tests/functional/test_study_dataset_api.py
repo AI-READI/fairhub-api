@@ -3,7 +3,7 @@ import json
 import pytest
 
 
-def test_get_all_dataset_from_study(test_client):
+def test_get_all_dataset_from_study(test_client, login_user):
     """
     GIVEN a Flask application configured for testing and a study ID
     WHEN the '/dataset/{study_id}' endpoint is requested (GET)
@@ -16,7 +16,7 @@ def test_get_all_dataset_from_study(test_client):
     print(response_data)
 
 
-def test_post_dataset(test_client):
+def test_post_dataset(test_client, login_user):
     """
     GIVEN a Flask application configured for testing and a study ID
     WHEN the '/dataset/{study_id}' endpoint is requested (POST)

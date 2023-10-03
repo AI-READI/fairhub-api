@@ -4,6 +4,7 @@ import pytest
 from app import create_app
 from dotenv import load_dotenv
 from model.db import db
+import json
 import unittest.mock
 from pytest_config import TestConfig
 import os
@@ -62,8 +63,9 @@ def create_user(test_client):
             "/auth/signup",
             json={"email_address": "sample@gmail.com", "password": "test"},
         )
-        response_data = response.json
-        assert response.status_code == 200
+        # response_data = response.json
+        print(json.loads(response.data))
+        assert response.status_code == 201
 
 
 # Fixture to sign in the user for module testing
@@ -75,5 +77,6 @@ def login_user(test_client):
             "/auth/login",
             json={"email_address": "sample@gmail.com", "password": "test"},
         )
-        response_data = response.json
+        # response_data = response.json
+        print(json.loads(response.data))
         assert response.status_code == 200

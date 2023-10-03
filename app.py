@@ -1,4 +1,6 @@
 """Entry point for the application."""
+import importlib
+import os
 from flask import Flask, request, make_response, g
 import jwt
 import config
@@ -119,6 +121,18 @@ def create_app(config_module=None):
         if "token" not in request.cookies:
             return resp
         token = request.cookies.get("token")
+        # Determine the appropriate configuration module based on the testing context
+        if os.environ.get("FLASK_ENV") == "testing":
+            config_module_name = "pytest_config"
+        else:
+            config_module_name = "config"
+        config_module = importlib.import_module(config_module_name)
+        if os.environ.get("FLASK_ENV") == "testing":
+            # If testing, use the 'TestConfig' class for accessing 'secret'
+            config = config_module.TestConfig
+        else:
+            # If not testing, directly use the 'config' module
+            config = config_module
         try:
             decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
         except jwt.ExpiredSignatureError:

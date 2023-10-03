@@ -4,7 +4,7 @@ import pytest
 
 
 # ------------------- ARM METADATA ------------------- #
-def test_post_arm_metadata(test_client):
+def test_post_arm_metadata(test_client, login_user):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/arm' endpoint is requested (POST)
@@ -33,7 +33,7 @@ def test_post_arm_metadata(test_client):
     pytest.global_arm_id = response_data["arms"][0]["id"]
 
 
-def test_get_arm_metadata(test_client):
+def test_get_arm_metadata(test_client, login_user):
     """
     GIVEN a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/arm/metadata' endpoint is requested (GET)
@@ -52,7 +52,7 @@ def test_get_arm_metadata(test_client):
     ]
 
 
-def test_delete_arm_metadata(test_client):
+def test_delete_arm_metadata(test_client, login_user):
     """
     GIVEN a Flask application configured for testing and a study ID and arm ID
     WHEN the '/study/{study_id}/arm/metadata' endpoint is requested (DELETE)
@@ -65,7 +65,7 @@ def test_delete_arm_metadata(test_client):
 
 
 # ------------------- IPD METADATA ------------------- #
-def test_post_available_ipd_metadata(test_client):
+def test_post_available_ipd_metadata(test_client, login_user):
     """
     GIVEN a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/available_id' endpoint is requested (POST)
@@ -81,7 +81,7 @@ def test_post_available_ipd_metadata(test_client):
     # })
 
 
-def test_get_available_ipd_metadata(test_client):
+def test_get_available_ipd_metadata(test_client, login_user):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/available_id' endpoint is requested (GET)
@@ -93,7 +93,7 @@ def test_get_available_ipd_metadata(test_client):
 
 
 # ------------------- CENTRAL CONTACT METADATA ------------------- #
-def test_post_cc_metadata(test_client):
+def test_post_cc_metadata(test_client, login_user):
     """
     GIVEN a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/central-contact' endpoint is requested (POST)
@@ -127,7 +127,7 @@ def test_post_cc_metadata(test_client):
     pytest.global_cc_id = response_data[0]["id"]
 
 
-def test_get_cc_metadata(test_client):
+def test_get_cc_metadata(test_client, login_user):
     """
     GIVEN a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/central-contact' endpoint is requested (GET)
@@ -147,7 +147,7 @@ def test_get_cc_metadata(test_client):
     assert response_data[0]["central_contact"] == True
 
 
-def test_delete_cc_metadata(test_client):
+def test_delete_cc_metadata(test_client, login_user):
     """
     Given a Flask application configured for testing and a study ID and central contact ID
     WHEN the '/study/{study_id}/metadata/central-contact/{central_contact_id}' endpoint is requested (DELETE)
@@ -162,7 +162,7 @@ def test_delete_cc_metadata(test_client):
 
 
 #  ------------------- COLLABORATORS METADATA ------------------- #
-def test_get_collaborators_metadata(test_client):
+def test_get_collaborators_metadata(test_client, login_user):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/collaborators' endpoint is requested (GET)
@@ -174,7 +174,7 @@ def test_get_collaborators_metadata(test_client):
 
 
 # ------------------- CONDITIONS METADATA ------------------- #
-def test_get_conditions_metadata(test_client):
+def test_get_conditions_metadata(test_client, login_user):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/conditions' endpoint is requested (GET)
@@ -186,7 +186,7 @@ def test_get_conditions_metadata(test_client):
 
 
 # ------------------- DESCRIPTION METADATA ------------------- #
-def test_get_description_metadata(test_client):
+def test_get_description_metadata(test_client, login_user):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/description' endpoint is requested (GET)
@@ -198,7 +198,7 @@ def test_get_description_metadata(test_client):
 
 
 # ------------------- DESIGN METADATA ------------------- #
-def test_get_design_metadata(test_client):
+def test_get_design_metadata(test_client, login_user):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/design' endpoint is requested (GET)
@@ -210,7 +210,7 @@ def test_get_design_metadata(test_client):
 
 
 # ------------------- ELIGIBILITY METADATA ------------------- #
-def test_get_eligibility_metadata(test_client):
+def test_get_eligibility_metadata(test_client, login_user):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/eligibility' endpoint is requested (GET)
@@ -222,7 +222,7 @@ def test_get_eligibility_metadata(test_client):
 
 
 # ------------------- IDENTIFICATION METADATA ------------------- #
-def test_get_identification_metadata(test_client):
+def test_get_identification_metadata(test_client, login_user):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/identification' endpoint is requested (GET)
@@ -235,7 +235,7 @@ def test_get_identification_metadata(test_client):
 
 
 # ------------------- INTERVENTION METADATA ------------------- #
-def test_get_intervention_metadata(test_client):
+def test_get_intervention_metadata(test_client, login_user):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/intervention' endpoint is requested (GET)
@@ -247,7 +247,7 @@ def test_get_intervention_metadata(test_client):
 
 
 # ------------------- IPD SHARING METADATA ------------------- #
-def test_get_ipdsharing_metadata(test_client):
+def test_get_ipdsharing_metadata(test_client, login_user):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/ipdsharing' endpoint is requested (GET)
@@ -259,7 +259,7 @@ def test_get_ipdsharing_metadata(test_client):
 
 
 # ------------------- LINK METADATA ------------------- #
-def test_get_link_metadata(test_client):
+def test_get_link_metadata(test_client, login_user):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/link' endpoint is requested (GET)
@@ -271,7 +271,7 @@ def test_get_link_metadata(test_client):
 
 
 # ------------------- LOCATION METADATA ------------------- #
-def test_get_location_metadata(test_client):
+def test_get_location_metadata(test_client, login_user):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/location' endpoint is requested (GET)
@@ -283,7 +283,7 @@ def test_get_location_metadata(test_client):
 
 
 # ------------------- OTHER METADATA ------------------- #
-def test_get_other_metadata(test_client):
+def test_get_other_metadata(test_client, login_user):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/other' endpoint is requested (GET)
@@ -295,7 +295,7 @@ def test_get_other_metadata(test_client):
 
 
 # ------------------- OVERALL-OFFICIAL METADATA ------------------- #
-def test_get_overall_official_metadata(test_client):
+def test_get_overall_official_metadata(test_client, login_user):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/overall-official' endpoint is requested (GET)
@@ -307,7 +307,7 @@ def test_get_overall_official_metadata(test_client):
 
 
 # ------------------- OVERSIGHT METADATA ------------------- #
-def test_get_oversight_official_metadata(test_client):
+def test_get_oversight_official_metadata(test_client, login_user):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/oversight' endpoint is requested (GET)
@@ -319,7 +319,7 @@ def test_get_oversight_official_metadata(test_client):
 
 
 # ------------------- REFERENCE METADATA ------------------- #
-def test_get_reference_metadata(test_client):
+def test_get_reference_metadata(test_client, login_user):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/reference' endpoint is requested (GET)
@@ -331,7 +331,7 @@ def test_get_reference_metadata(test_client):
 
 
 # ------------------- SPONSORS METADATA ------------------- #
-def test_get_sponsors_metadata(test_client):
+def test_get_sponsors_metadata(test_client, login_user):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/sponsors' endpoint is requested (GET)
@@ -343,7 +343,7 @@ def test_get_sponsors_metadata(test_client):
 
 
 # ------------------- STATUS METADATA ------------------- #
-def test_get_status_metadata(test_client):
+def test_get_status_metadata(test_client, login_user):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/status' endpoint is requested (GET)

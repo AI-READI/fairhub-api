@@ -4,5 +4,5 @@ from os import environ
 
 class TestConfig:
     FAIRHUB_DATABASE_URL = environ.get("FAIRHUB_DATABASE_URL")
-    secret = environ.get("secret")
+    secret = environ.get("secret") or "secretkeygoeshere"
     TESTING = True

@@ -11,16 +11,6 @@ import uuid
 import os
 import importlib
 
-# Determine the appropriate configuration module based on the testing context
-print(os.environ.get("FLASK_ENV"))
-# Determine the appropriate configuration module based on the testing context
-if os.environ.get("FLASK_ENV") == "testing":
-    config_module_name = "pytest_config"
-else:
-    config_module_name = "config"
-
-config = importlib.import_module(config_module_name)
-
 api = Namespace("Authentication", description="Authentication paths", path="/")
 
 signup_model = api.model(
@@ -91,6 +81,20 @@ class Login(Resource):
         if not validate_pass:
             return "Invalid credentials", 401
         else:
+            print(os.environ.get("FLASK_ENV"))
+            # Determine the appropriate configuration module based on the testing context
+            if os.environ.get("FLASK_ENV") == "testing":
+                config_module_name = "pytest_config"
+            else:
+                config_module_name = "config"
+
+            config_module = importlib.import_module(config_module_name)
+            if os.environ.get("FLASK_ENV") == "testing":
+                # If testing, use the 'TestConfig' class for accessing 'secret'
+                config = config_module.TestConfig
+            else:
+                # If not testing, directly use the 'config' module
+                config = config_module
             print(config)
             print(config.secret)
             if len(config.secret) < 14:
@@ -121,6 +125,18 @@ def authentication():
     if "token" not in request.cookies:
         return
     token = request.cookies.get("token")
+    # Determine the appropriate configuration module based on the testing context
+    if os.environ.get("FLASK_ENV") == "testing":
+        config_module_name = "pytest_config"
+    else:
+        config_module_name = "config"
+    config_module = importlib.import_module(config_module_name)
+    if os.environ.get("FLASK_ENV") == "testing":
+        # If testing, use the 'TestConfig' class for accessing 'secret'
+        config = config_module.TestConfig
+    else:
+        # If not testing, directly use the 'config' module
+        config = config_module
     try:
         decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
