@@ -8,6 +8,7 @@ def test_db_empty(test_client, empty_db):
     """Test that the database is empty."""
     pass
 
+
 def setup_user(login_user):
     """Setup the user for testing."""
     pass
