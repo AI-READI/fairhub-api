@@ -16,7 +16,7 @@ contributors_model = api.model(
 )
 
 
-@api.route("/study/<study_id>/contributor")
+@api.route("/study/<study_id>/contributors")
 class AddContributor(Resource):
     @api.doc("contributor list")
     @api.response(200, "Success")
