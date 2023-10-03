@@ -1,6 +1,7 @@
-from flask_restx import Namespace, Resource, fields
-from model import Study, db, StudySponsorsCollaborators
+"""API routes for study sponsors and collaborators metadata"""
+from flask_restx import Resource, fields
 from flask import request
+from model import Study, db
 
 
 from apis.study_metadata_namespace import api
@@ -29,39 +30,58 @@ study_collaborators = api.model(
 
 @api.route("/study/<study_id>/metadata/sponsors")
 class StudySponsorsResource(Resource):
+    """Study Sponsors Metadata"""
+
     @api.doc("sponsors")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(study_sponsors)
     def get(self, study_id: int):
+        """Get study sponsors metadata"""
         study_ = Study.query.get(study_id)
+
         study_sponsors_collaborators_ = study_.study_sponsors_collaborators
+
         return study_sponsors_collaborators_.to_dict()
 
     def put(self, study_id: int):
+        """Update study sponsors metadata"""
         study_ = Study.query.get(study_id)
+
         study_.study_sponsors_collaborators.update(request.json)
+
         db.session.commit()
+
         return study_.study_sponsors_collaborators.to_dict()
 
 
 @api.route("/study/<study_id>/metadata/collaborators")
 class StudyCollaboratorsResource(Resource):
+    """Study Collaborators Metadata"""
+
     @api.doc("collaborators")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(study_collaborators)
     def get(self, study_id: int):
+        """Get study collaborators metadata"""
         study_ = Study.query.get(study_id)
+
         study_collaborators_ = study_.study_sponsors_collaborators.collaborator_name
+
         return study_collaborators_
 
     def put(self, study_id: int):
+        """Update study collaborators metadata"""
         data = request.json
+
         study_ = Study.query.get(study_id)
+
         study_.study_sponsors_collaborators.collaborator_name = data
+
         study_.touch()
         db.session.commit()
+
         return study_.study_sponsors_collaborators.collaborator_name
 
     # @api.route("/study/<study_id>/metadata/collaborators/<collaborators_id>")
