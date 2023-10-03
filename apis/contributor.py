@@ -85,8 +85,8 @@ class ContributorResource(Resource):
     def delete(self, study_id: int, user_id: int):
         data = request.json
         study = Study.query.get(study_id)
-        if not is_granted("delete_contributors", study):
-            return "Access denied, you are not authorized to change this permission", 403
+        if not is_granted("delete_contributor", study):
+            return "Access denied, you are not authorized to delete this contributor", 403
         user = User.query.get(user_id)
         grantee = StudyContributor.query.filter(
             StudyContributor.user == user, StudyContributor.study == study
@@ -107,8 +107,10 @@ class ContributorResource(Resource):
             grantee_level = list(grants.keys()).index(grantee.permission)  # 2
             granter_level = list(grants.keys()).index(granter.permission)  # 2
             if granter_level <= grantee_level:
-                return f"You are not authorized to delete {grantee.permission}  permission", 403
+                return f"You are not authorized to delete {grantee.permission}s from study", 403
         db.session.delete(grantee)
         db.session.commit()
-        return 204
+        contributors = StudyContributor.query.filter(StudyContributor.study == study
+        ).all()
+        return [contributor.to_dict() for contributor in contributors], 200
 

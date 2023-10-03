@@ -27,9 +27,6 @@ login_model = api.model(
 )
 
 
-class AccessDenied(Exception):
-    pass
-
 
 class UnauthenticatedException(Exception):
     pass
@@ -146,46 +143,60 @@ def is_granted(permission: str, study):
         "owner": [
             "owner",
             "view",
-            "delete_study",
+            "permission",
             "delete_contributor",
             "invite_contributor",
-            "publish_dataset",
+            "add_study",
+            "update_study",
+            "delete_study",
             "add_dataset",
+            "update_dataset",
             "delete_dataset",
-            "permission",
-            "edit_study",
-            "update_participant"
-            "delete_participant"
+            "publish_version",
+            "participant",
+            "study_metadata",
+            "dataset_metadata",
 
         ],
         "admin": [
             "admin",
             "view",
-            "invite_contributor",
-            "publish_dataset",
-            "add_dataset",
-            "delete_dataset",
             "permission",
-            "update_participant",
-            "delete_participant"
+            "delete_contributor",
+            "invite_contributor",
+            "add_study",
+            "update_study",
+            "add_dataset",
+            "update_dataset",
+            "delete_dataset",
+            "publish_version",
+            "participant",
+            "study_metadata",
+            "dataset_metadata"
 
         ],
         "editor": [
             "editor",
             "view",
-            "add_dataset",
             "permission",
-            "update_participant",
-            "delete_participant"
+            "delete_contributor",
+            "add_study",
+            "update_study",
+            "add_dataset",
+            "update_dataset",
+            "delete_dataset",
+            "participant",
+            "study_metadata",
+            "dataset_metadata"
+
         ],
         "viewer": [
             "viewer",
             "view"
-                ],
+            ],
     }
 
     return permission in role[contributor.permission]
-
 
 
 

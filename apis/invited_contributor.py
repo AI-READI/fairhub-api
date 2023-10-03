@@ -1,10 +1,8 @@
 from flask_restx import Namespace, Resource, fields
 from model import (
-    StudyInvitedContributor,
     Study,
     db,
     User,
-    StudyContributor,
     StudyException,
 )
 from flask import request
@@ -16,9 +14,8 @@ api = Namespace("Invited_contributors", description="Invited contributors", path
 contributors_model = api.model(
     "InvitedContributor",
     {
-        "user_id": fields.String(required=True),
         "permission": fields.String(required=True),
-        "study_id": fields.String(required=True),
+        "email_address": fields.String(required=True),
     },
 )
 
@@ -26,16 +23,14 @@ contributors_model = api.model(
 @api.route("/study/<study_id>/invited-contributor")
 class AddInvitedContributor(Resource):
     @api.doc("invited contributor")
+    @api.expect(contributors_model)
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(contributors_model)
     def post(self, study_id: int):
-        if is_granted("invite", study_id):
-            return "Access denied, you can not modify", 403
-        # try:
-        # contributors = StudyContributor.query.filter_by(
-        #     study_id=study_id, user_id=g.user.id).first()
         study_obj = Study.query.get(study_id)
+        if not is_granted("invite_contributor", study_obj):
+            return "Access denied, you can not modify", 403
         data = request.json
         email_address = data["email_address"]
         user = User.query.filter_by(email_address=email_address).first()
