@@ -200,9 +200,15 @@ class Logout(Resource):
         resp = make_response()
         resp.status = 204
         resp.set_cookie(
-            "token", "", secure=True, httponly=True, samesite="lax", expires=datetime.datetime.now(timezone.utc)
+            "token",
+            "",
+            secure=True,
+            httponly=True,
+            samesite="lax",
+            expires=datetime.datetime.now(timezone.utc),
         )
         return resp
+
 
 @api.route("/auth/current-users")
 class CurrentUsers(Resource):

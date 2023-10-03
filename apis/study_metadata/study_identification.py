@@ -35,7 +35,6 @@ class StudyIdentificationResource(Resource):
         identifiers = Identifiers(study_)
         return identifiers.to_dict()
 
-
     def post(self, study_id: int):
         """Create study identification metadata"""
         data = request.json
