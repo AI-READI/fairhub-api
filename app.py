@@ -35,7 +35,6 @@ def create_app(config_module=None):
     app.config.from_object(config_module or "config")
 
     # app.register_blueprint(api)
-    app.config.from_prefixed_env("FAIRHUB")
     # TODO - fix this
     # csrf = CSRFProtect()
     # csrf.init_app(app)

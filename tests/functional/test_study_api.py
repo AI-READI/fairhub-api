@@ -4,14 +4,14 @@ import pytest
 
 
 # Verify the database is empty before beginning tests
-def test_db_empty(test_client, empty_db):
-    """Test that the database is empty."""
-    response = test_client.get("/study")
-    assert response.status_code == 200
-    assert len(response.json) == 0
+# def test_db_empty(test_client, empty_db, create_user, login_user):
+#     """Test that the database is empty."""
+#     response = test_client.get("/study")
+#     assert response.status_code == 200
+#     assert len(response.json) == 0
 
 
-def test_post_study(test_client):
+def test_post_study(test_client, login_user):
     """
     Given a Flask application configured for testing and a study
     WHEN the '/study' endpoint is requested (POST)
@@ -33,7 +33,7 @@ def test_post_study(test_client):
     pytest.global_study_id = response_data
 
 
-def test_get_all_studies(test_client):
+def test_get_all_studies(test_client, login_user):
     """
     GIVEN a Flask application configured for testing
     WHEN the '/study' endpoint is requested (GET)

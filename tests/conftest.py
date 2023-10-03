@@ -4,9 +4,16 @@ import pytest
 from app import create_app
 from dotenv import load_dotenv
 from model.db import db
+import unittest.mock
+from pytest_config import TestConfig
+import os
 
 # Load environment variables from .env
 load_dotenv(".env")
+
+# Set the FLASK_ENV environment variable to "testing"
+os.environ['FLASK_ENV'] = 'testing'
+print(os.environ.get("FLASK_ENV"))
 
 # Set global variable for study ID
 pytest.global_study_id = {}
@@ -24,7 +31,7 @@ pytest.global_overall_official_id = ""
 @pytest.fixture()
 def flask_app():
     """An application for the tests."""
-    yield create_app(config_module="pytest-config")
+    yield create_app(config_module="pytest_config")
 
 
 # Create a test client for the app
@@ -47,6 +54,31 @@ def empty_db(flask_app):
         db.session.commit()
 
 
-# Create a user for testing
+@pytest.fixture()
+def create_user(test_client):
+    """Create a user for testing."""
+    with unittest.mock.patch('pytest_config.TestConfig', TestConfig):
+        response = test_client.post(
+            "/auth/signup",
+            json={
+                "email_address": "sample@gmail.com",
+                "password": "test"
+            }
+        )
+        response_data = response.json
+        assert response.status_code == 200
 
-# Sign in the user for module testing
+# Fixture to sign in the user for module testing
+@pytest.fixture()
+def login_user(test_client):
+    """Sign in the user for testing."""
+    with unittest.mock.patch('pytest_config.TestConfig', TestConfig):
+        response = test_client.post(
+            "/auth/login",
+            json={
+                "email_address": "sample@gmail.com",
+                "password": "test"
+            }
+        )
+        response_data = response.json
+        assert response.status_code == 200
