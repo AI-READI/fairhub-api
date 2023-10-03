@@ -5,6 +5,7 @@ from datetime import timezone
 import datetime
 from model import db, User, TokenBlacklist
 import jwt
+
 # import config
 import uuid
 import os

@@ -12,7 +12,7 @@ import os
 load_dotenv(".env")
 
 # Set the FLASK_ENV environment variable to "testing"
-os.environ['FLASK_ENV'] = 'testing'
+os.environ["FLASK_ENV"] = "testing"
 print(os.environ.get("FLASK_ENV"))
 
 # Set global variable for study ID
@@ -57,28 +57,23 @@ def empty_db(flask_app):
 @pytest.fixture()
 def create_user(test_client):
     """Create a user for testing."""
-    with unittest.mock.patch('pytest_config.TestConfig', TestConfig):
+    with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
         response = test_client.post(
             "/auth/signup",
-            json={
-                "email_address": "sample@gmail.com",
-                "password": "test"
-            }
+            json={"email_address": "sample@gmail.com", "password": "test"},
         )
         response_data = response.json
         assert response.status_code == 200
+
 
 # Fixture to sign in the user for module testing
 @pytest.fixture()
 def login_user(test_client):
     """Sign in the user for testing."""
-    with unittest.mock.patch('pytest_config.TestConfig', TestConfig):
+    with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
         response = test_client.post(
             "/auth/login",
-            json={
-                "email_address": "sample@gmail.com",
-                "password": "test"
-            }
+            json={"email_address": "sample@gmail.com", "password": "test"},
         )
         response_data = response.json
         assert response.status_code == 200
