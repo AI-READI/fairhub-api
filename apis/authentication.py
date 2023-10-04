@@ -81,7 +81,6 @@ class Login(Resource):
         if not validate_pass:
             return "Invalid credentials", 401
         else:
-            print(os.environ.get("FLASK_ENV"))
             # Determine the appropriate configuration module based on the testing context
             if os.environ.get("FLASK_ENV") == "testing":
                 config_module_name = "pytest_config"
@@ -95,10 +94,8 @@ class Login(Resource):
             else:
                 # If not testing, directly use the 'config' module
                 config = config_module
-            print(config)
-            print(config.FAIRHUB_SECRET)
+    
             if len(config.FAIRHUB_SECRET) < 14:
-                print(config.FAIRHUB_SECRET)
                 raise "secret key should contain at least 14 characters"
             encoded_jwt_code = jwt.encode(
                 {
@@ -138,9 +135,6 @@ def authentication():
         # If not testing, directly use the 'config' module
         config = config_module
     try:
-        print(config.FAIRHUB_SECRET)
-        print(dir(config))
-        print("SECRET ABOVE")
         decoded = jwt.decode(token, config.FAIRHUB_SECRET, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
         return

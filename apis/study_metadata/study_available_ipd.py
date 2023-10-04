@@ -33,6 +33,7 @@ class StudyAvailableResource(Resource):
     @api.doc("update available")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
+    @api.expect(study_available)
     @api.marshal_with(study_available)
     def post(self, study_id: int):
         data = request.json
