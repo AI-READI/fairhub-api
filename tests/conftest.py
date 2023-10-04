@@ -15,13 +15,13 @@ load_dotenv(".env")
 
 # Set the FLASK_ENV environment variable to "testing"
 os.environ["FLASK_ENV"] = "testing"
-print(os.environ.get("FLASK_ENV"))
 
 # Set global variable for study ID
 pytest.global_study_id = {}
 pytest.global_dataset_id = ""
 pytest.global_version_id = ""
 pytest.global_arm_id = ""
+pytest.global_available_ipd_id = ""
 pytest.global_cc_id = ""
 pytest.global_intermediate_id = ""
 pytest.global_link_id = ""
@@ -40,7 +40,7 @@ def flask_app():
 @pytest.fixture()
 def _test_client(flask_app):
     """A test client for the app."""
-    with flask_app._test_client() as _test_client:
+    with flask_app.test_client() as _test_client:
         yield _test_client
 
 

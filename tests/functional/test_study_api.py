@@ -24,7 +24,6 @@ def test_post_study(_test_client, _login_user):
     assert response_data["title"] == "Study Title"
     assert response_data["image"] == "https://api.dicebear.com/6.x/adventurer/svg"
     pytest.global_study_id = response_data
-    print(response_data)
 
 
 def test_get_all_studies(_test_client, _login_user):
@@ -36,8 +35,7 @@ def test_get_all_studies(_test_client, _login_user):
     response = _test_client.get("/study")
 
     response_data = json.loads(response.data)
-    print(response_data)
-    # assert len(response_data) == 1  # Only one study created
+    assert len(response_data) == 1  # Only one study created
     assert response.status_code == 200
 
 

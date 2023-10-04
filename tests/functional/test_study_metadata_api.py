@@ -14,12 +14,12 @@ def test_post_arm_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.post(
         f"/study/{study_id}/metadata/arm",
-        json={
+        json=[{
             "label": "Label1",
             "type": "Arm Type",
             "description": "Arm Description",
             "intervention_list": ["intervention1", "intervention2"],
-        },
+        }],
     )
 
     response_data = json.loads(response.data)
@@ -69,28 +69,47 @@ def test_delete_arm_metadata(_test_client, _login_user):
 def test_post_available_ipd_metadata(_test_client, _login_user):
     """
     GIVEN a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/available_id' endpoint is requested (POST)
+    WHEN the '/study/{study_id}/metadata/available-id' endpoint is requested (POST)
     THEN check that the response is vaild and new IPD was created
     """
-    # Endpoint currently not working
-    # study_id = pytest.global_study_id["id"]
-    # response = _test_client(f"/study/{study_id}/metadata/available-ipd", json={
-    #     "identifier": "identifier1",
-    #     "type": "type1",
-    #     "url": "google.com",
-    #     "comment": "comment1"
-    # })
+    study_id = pytest.global_study_id["id"]
+    response = _test_client(f"/study/{study_id}/metadata/available-ipd", json=[{
+        "identifier": "identifier1",
+        "type": "type1",
+        "url": "google.com",
+        "comment": "comment1"
+    }])
+    
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    pytest.global_available_ipd_id = response_data[0]["id"]
+    
+    assert response_data[0]["identifier"] == "identifier1"
+    assert response_data[0]["type"] == "type1"
+    assert response_data[0]["url"] == "google.com"
+    assert response_data[0]["comment"] == "comment1"
 
 
 def test_get_available_ipd_metadata(_test_client, _login_user):
     """
     Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/available_id' endpoint is requested (GET)
+    WHEN the '/study/{study_id}/metadata/available-id' endpoint is requested (GET)
     THEN check that the response is vaild and retrieves the available IPD(s)
     """
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/available-ipd")
     assert response.status_code == 200
+    
+def test_delete_available_ipd_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and available IPD ID
+    WHEN the '/study/{study_id}/metadata/available-id' endpoint is requested (DELETE)
+    THEN check that the response is vaild and deletes the available IPD
+    """
+    study_id = pytest.global_study_id["id"]
+    available_ipd_id = pytest.global_available_ipd_id
+    response = _test_client.delete(f"/study/{study_id}/metadata/available-ipd/{available_ipd_id}")
+    assert response.status_code == 204
 
 
 # ------------------- CENTRAL CONTACT METADATA ------------------- #
@@ -101,10 +120,11 @@ def test_post_cc_metadata(_test_client, _login_user):
     THEN check that the response is valid and creates the central contact metadata
     """
     # BUG: IF CENTRAL_CONTACT IS SET TO FALSE THE ENDPOINT STILL RETURNS AS TRUE
+    # BUG: ROLE IS RETURNED AS NONE
     study_id = pytest.global_study_id["id"]
     response = _test_client.post(
         f"/study/{study_id}/metadata/central-contact",
-        json={
+        json=[{
             "name": "central-contact",
             "affiliation": "affiliation",
             "role": "role",
@@ -112,20 +132,20 @@ def test_post_cc_metadata(_test_client, _login_user):
             "phone_ext": "phone_ext",
             "email_address": "email_address",
             "central_contact": True,
-        },
+        }],
     )
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
+    pytest.global_cc_id = response_data[0]["id"]
 
     assert response_data[0]["name"] == "central-contact"
     assert response_data[0]["affiliation"] == "affiliation"
-    # assert response_data[0]["role"] == "role"    # BUG: ROLE IS RETURNED AS NONE
+    assert response_data[0]["role"] == "role"
     assert response_data[0]["phone"] == "phone"
     assert response_data[0]["phone_ext"] == "phone_ext"
     assert response_data[0]["email_address"] == "email_address"
     assert response_data[0]["central_contact"] == True
-    pytest.global_cc_id = response_data[0]["id"]
 
 
 def test_get_cc_metadata(_test_client, _login_user):
@@ -134,6 +154,7 @@ def test_get_cc_metadata(_test_client, _login_user):
     WHEN the '/study/{study_id}/metadata/central-contact' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the central contact metadata
     """
+    # BUG: ROLE IS RETURNED AS NONE
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/central-contact")
     assert response.status_code == 200
@@ -141,7 +162,7 @@ def test_get_cc_metadata(_test_client, _login_user):
 
     assert response_data[0]["name"] == "central-contact"
     assert response_data[0]["affiliation"] == "affiliation"
-    # assert response_data[0]["role"] == "role"     # BUG: ROLE IS RETURNED AS NONE
+    assert response_data[0]["role"] == "role"
     assert response_data[0]["phone"] == "phone"
     assert response_data[0]["phone_ext"] == "phone_ext"
     assert response_data[0]["email_address"] == "email_address"
@@ -172,7 +193,27 @@ def test_get_collaborators_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/collaborators")
     assert response.status_code == 200
+    
+def test_put_collaborators_metadata(_test_client, _login_user):
+    """
+    GIVEN a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/collaborators' endpoint is requested (POST)
+    THEN check that the response is valid and creates the collaborators metadata
+    """
+    # BUG: ENDPOINT STORES KEY RATHER THAN VALUE
+    study_id = pytest.global_study_id["id"]
+    response = _test_client.put(
+        f"/study/{study_id}/metadata/collaborators",
+        json={
+            "collaborator_name": "collaborator",
+        },
+    )
 
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    pytest.global_collaborators_id = response_data[0]["id"]
+
+    assert response_data[0] == "collaborator"
 
 # ------------------- CONDITIONS METADATA ------------------- #
 def test_get_conditions_metadata(_test_client, _login_user):
@@ -184,7 +225,33 @@ def test_get_conditions_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/conditions")
     assert response.status_code == 200
+    
 
+def test_put_conditions_metadata(_test_client, _login_user):
+    """
+    GIVEN a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/conditions' endpoint is requested (POST)
+    THEN check that the response is valid and creates the conditions metadata
+    """
+    # BUG: ENDPOINT STORES KEY RATHER THAN VALUE
+    study_id = pytest.global_study_id["id"]
+    response = _test_client.put(
+        f"/study/{study_id}/metadata/conditions",
+        json={
+            "oversight_has_dmc": True,
+            "conditions": "conditions",
+            "keywords": "keywords",
+            "size": "size"
+        },
+    )
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+
+    assert response_data[0] == True
+    assert response_data[1] == "conditions"
+    assert response_data[2] == "keywords"
+    assert response_data[3] == "size"
 
 # ------------------- DESCRIPTION METADATA ------------------- #
 def test_get_description_metadata(_test_client, _login_user):
@@ -196,6 +263,27 @@ def test_get_description_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/description")
     assert response.status_code == 200
+    
+def test_put_description_metadata(_test_client, _login_user):
+    """
+    GIVEN a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/description' endpoint is requested (POST)
+    THEN check that the response is valid and creates the description metadata
+    """
+    study_id = pytest.global_study_id["id"]
+    response = _test_client.put(
+        f"/study/{study_id}/metadata/description",
+        json={
+            "brief_summary": "brief_summary",
+            "detailed_description": "detailed_description"
+        },
+    )
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+
+    assert response_data["brief_summary"] == "brief_summary"
+    assert response_data["detailed_description"] == "detailed_description"
 
 
 # ------------------- DESIGN METADATA ------------------- #
@@ -208,7 +296,58 @@ def test_get_design_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/design")
     assert response.status_code == 200
-
+    
+def test_put_design_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/design' endpoint is requested (PUT)
+    THEN check that the response is valid and creates the design metadata
+    """
+    study_id = pytest.global_study_id["id"]
+    response = _test_client.put(
+        f"/study/{study_id}/metadata/design",
+        json={
+            "design_allocation": "dfasdfasd",
+            "study_type": "dffad",
+            "design_intervention_model": "eredf",
+            "design_intervention_model_description": "dfadf",
+            "design_primary_purpose": "dfasder",
+            "design_masking": "dfdasdf",
+            "design_masking_description": "tewsfdasf",
+            "design_who_masked_list": ["one", "two"],
+            "phase_list": ["three", "four"],
+            "enrollment_count": 3,
+            "enrollment_type": "dfasdf",
+            "number_arms": 2,
+            "design_observational_model_list": ["yes", "dfasd"],
+            "design_time_perspective_list": ["uhh"],
+            "bio_spec_retention": "dfasdf",
+            "bio_spec_description": "dfasdf",
+            "target_duration": "rewrwe",
+            "number_groups_cohorts": 1
+        },
+    )
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    
+    assert response_data["design_allocation"] == "dfasdfasd"
+    assert response_data["study_type"] == "dffad"
+    assert response_data["design_intervention_model"] == "eredf"
+    assert response_data["design_intervention_model_description"] == "dfadf"
+    assert response_data["design_primary_purpose"] == "dfasder"
+    assert response_data["design_masking"] == "dfdasdf"
+    assert response_data["design_masking_description"] == "tewsfdasf"
+    assert response_data["design_who_masked_list"] == ["one", "two"]
+    assert response_data["phase_list"] == ["three", "four"]
+    assert response_data["enrollment_count"] == 3
+    assert response_data["enrollment_type"] == "dfasdf"
+    assert response_data["number_arms"] == 2
+    assert response_data["design_observational_model_list"] == ["yes", "dfasd"]
+    assert response_data["design_time_perspective_list"] == ["uhh"]
+    assert response_data["bio_spec_retention"] == "dfasdf"
+    assert response_data["bio_spec_description"] == "dfasdf"
+    assert response_data["target_duration"] == "rewrwe"
+    assert response_data["number_groups_cohorts"] == 1
 
 # ------------------- ELIGIBILITY METADATA ------------------- #
 def test_get_eligibility_metadata(_test_client, _login_user):
@@ -220,6 +359,46 @@ def test_get_eligibility_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/eligibility")
     assert response.status_code == 200
+    
+def test_put_eligibility_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/eligibility' endpoint is requested (PUT)
+    THEN check that the response is valid and updates the eligibility metadata
+    """
+    study_id = pytest.global_study_id["id"]
+    response = _test_client.put(
+        f"/study/{study_id}/metadata/eligibility",
+        json={
+            "gender": "nb",
+            "gender_based": "no",
+            "gender_description": "none",
+            "minimum_age_value": 18,
+            "maximum_age_value": 61,
+            "minimum_age_unit": "1",
+            "maximum_age_unit": "2",
+            "healthy_volunteers": "3",
+            "inclusion_criteria": ["test"],
+            "exclusion_criteria": ["test", "ttest"],
+            "study_population": "study_population",
+            "sampling_method": "test"
+        })
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+
+    assert response_data["gender"] == "nb"
+    assert response_data["gender_based"] == "no"
+    assert response_data["gender_description"] == "none"
+    assert response_data["minimum_age_value"] == 18
+    assert response_data["maximum_age_value"] == 61
+    assert response_data["minimum_age_unit"] == "1"
+    assert response_data["maximum_age_unit"] == "2"
+    assert response_data["healthy_volunteers"] == "3"
+    assert response_data["inclusion_criteria"] == ["test"]
+    assert response_data["exclusion_criteria"] == ["test", "ttest"]
+    assert response_data["study_population"] == "study_population"
+    assert response_data["sampling_method"] == "test"
 
 
 # ------------------- IDENTIFICATION METADATA ------------------- #
