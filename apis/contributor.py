@@ -8,7 +8,7 @@ from model import (
     User,
     StudyException,
     StudyContributor,
-    StudyInvitedContributor
+    StudyInvitedContributor,
 )
 from .authentication import is_granted
 
@@ -35,16 +35,15 @@ class AddContributor(Resource):
         #     .filter(StudyContributor.user_id == g.user.id)  # Filter contributors where user_id matches the user's id
         #     .all()
         # )
-        contributors = StudyContributor.query.filter_by(
-             study_id=study_id
-        ).all()
+        contributors = StudyContributor.query.filter_by(study_id=study_id).all()
         invited_contributors = StudyInvitedContributor.query.filter_by(
-             study_id=study_id
+            study_id=study_id
         ).all()
 
-        contributors_list = [c.to_dict() for c in contributors] + [c.to_dict() for c in invited_contributors]
+        contributors_list = [c.to_dict() for c in contributors] + [
+            c.to_dict() for c in invited_contributors
+        ]
         return contributors_list
-
 
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
@@ -174,19 +173,20 @@ class AssignOwner(Resource):
         """set owner based on the assigned permissions"""
         study = Study.query.get(study_id)
         if not is_granted("make_owner", study):
-            return "Access denied, you are not authorized to change this permission", 403
+            return (
+                "Access denied, you are not authorized to change this permission",
+                403,
+            )
         if not data["role"] == "owner":
             return "you can assign only owner", 403
         user = User.query.get(user_id)
         existing_contributor = StudyContributor.query.filter(
             StudyContributor.user == user,
             StudyContributor.study == study,
-
         ).first()
         existing_contributor.permission = "owner"
         existing_owner = StudyContributor.query.filter(
-            StudyContributor.study == study,
-            StudyContributor.permission == "owner"
+            StudyContributor.study == study, StudyContributor.permission == "owner"
         ).first()
         existing_owner.permission = "admin"
         db.session.commit()
