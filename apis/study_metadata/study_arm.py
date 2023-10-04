@@ -31,20 +31,23 @@ class StudyArmResource(Resource):
     @api.response(400, "Validation Error")
     # @api.marshal_with(study_arm)
     def get(self, study_id):
+        """Get all Arms for a study"""
         study_ = Study.query.get(study_id)
         arm = Arm(study_)
 
         return arm.to_dict()
 
     def post(self, study_id):
+        """Creates"""
         data = request.json
         study_obj = Study.query.get(study_id)
-        if "id" in data:
-            study_arm_ = StudyArm.query.get(data["id"])
-            study_arm_.update(data)
-        else:
-            study_arm_ = StudyArm.from_data(study_obj, data)
-            db.session.add(study_arm_)
+        for i in data:
+            if "id" in i and i["id"]:
+                study_arm_ = StudyArm.query.get(i["id"])
+                study_arm_.update(i)
+            else:
+                study_arm_ = StudyArm.from_data(study_obj, i)
+                db.session.add(study_arm_)
         db.session.commit()
         arms = Arm(study_obj)
         return arms.to_dict()
