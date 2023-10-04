@@ -23,6 +23,7 @@ class StudyAvailableResource(Resource):
     @api.response(400, "Validation Error")
     # @api.marshal_with(study_available)
     def get(self, study_id: int):
+        """Get all available-ipd(s) for a study"""
         study_ = Study.query.get(study_id)
         study_available_ipd_ = study_.study_available_ipd
         sorted_study_available_ipd = sorted(
@@ -30,12 +31,13 @@ class StudyAvailableResource(Resource):
         )
         return [s.to_dict() for s in sorted_study_available_ipd]
 
-    @api.doc("update available")
+    @api.doc(description="An array of objects are expected within the payload with the keys demonstrated below to create an available-ipd")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.expect(study_available)
     @api.marshal_with(study_available)
     def post(self, study_id: int):
+        """Creates new available-ipd(s)"""
         data = request.json
         study_obj = Study.query.get(study_id)
         list_of_elements = []
@@ -55,6 +57,7 @@ class StudyAvailableResource(Resource):
 @api.route("/study/<study_id>/metadata/available-ipd/<available_ipd_id>")
 class StudyLocationUpdate(Resource):
     def delete(self, study_id: int, available_ipd_id: int):
+        """Deletes a specified available IPD"""
         study_available_ = StudyAvailableIpd.query.get(available_ipd_id)
         db.session.delete(study_available_)
         db.session.commit()
