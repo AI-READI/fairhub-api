@@ -109,10 +109,11 @@ def create_app():
     def on_after_request(resp):
         public_routes = [
             "/auth",
-        "/docs",
-        "/echo",
-        "/swaggerui",
-        "/swagger.json",
+            "/docs",
+            "/echo",
+            "/swaggerui",
+            "/swagger.json",
+            "/ favicon.ico"
         ]
         for route in public_routes:
             if request.path.startswith(route):
