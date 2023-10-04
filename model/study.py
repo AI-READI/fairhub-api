@@ -219,3 +219,6 @@ class Study(db.Model):
             )
             db.session.add(contributor_add)
             return contributor_add
+
+    def get_owner(self):
+        return self.study_contributors.query.filter_by(self.study_contributors.permission == "owner")

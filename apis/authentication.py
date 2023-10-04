@@ -171,6 +171,7 @@ def is_granted(permission: str, study):
             "participant",
             "study_metadata",
             "dataset_metadata",
+            "make_owner"
         ],
         "editor": [
             "editor",

@@ -86,6 +86,7 @@ def create_app():
     # def create_schema():
     #     engine = model.db.session.get_bind()
     #     metadata = MetaData()
+    #     metadata = MetaData()
     #     metadata.reflect(bind=engine)
     #     table_names = [table.name for table in metadata.tables.values()]
     #     print(table_names)

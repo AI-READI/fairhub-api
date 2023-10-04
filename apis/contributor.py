@@ -77,17 +77,15 @@ class ContributorResource(Resource):
     @api.expect(contributors_model)
     def put(self, study_id: int, user_id: int):
         """update contributor based on the assigned permissions"""
-
         study = Study.query.get(study_id)
         if not is_granted("permission", study):
             return (
                 "Access denied, you are not authorized to change this permission",
                 403,
             )
-
         data = request.json
         user = User.query.get(user_id)
-        permission = data["permission"]
+        permission = data["role"]
         grantee = StudyContributor.query.filter(
             StudyContributor.user == user, StudyContributor.study == study
         ).first()
@@ -100,7 +98,7 @@ class ContributorResource(Resource):
         grants = OrderedDict()
         grants["viewer"] = []
         grants["editor"] = ["viewer"]
-        grants["admin"] = ["viewer", "editor"]
+        grants["admin"] = ["viewer", "editor", "admin"]
         grants["owner"] = ["editor", "viewer", "admin"]
 
         can_grant = permission in grants[granter.permission]
@@ -110,10 +108,10 @@ class ContributorResource(Resource):
         # Granter can not downgrade anyone of equal or greater permissions other than themselves
         # TODO: Owners downgrading themselves
         if user != g.user:
-            grantee_level = list(grants.keys()).index(grantee.permission)  # 2
-            new_level = list(grants.keys()).index(permission)  #  0
+            grantee_level = list(grants.keys()).index(grantee.permission)  # 1
+            new_level = list(grants.keys()).index(permission)  #  2
             granter_level = list(grants.keys()).index(granter.permission)  # 2
-            if granter_level <= grantee_level and new_level < grantee_level:
+            if granter_level <= grantee_level and new_level <= grantee_level:
                 return (
                     f"User cannot downgrade from {grantee.permission} to {permission}",
                     403,
@@ -163,3 +161,33 @@ class ContributorResource(Resource):
             StudyContributor.study == study
         ).all()
         return [contributor.to_dict() for contributor in contributors], 200
+
+
+@api.route("/study/<study_id>/owner/<user_id>")
+class AssignOwner(Resource):
+    @api.doc("contributor update")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    @api.expect(contributors_model)
+    def put(self, study_id: int, user_id: int):
+        data = request.json
+        """set owner based on the assigned permissions"""
+        study = Study.query.get(study_id)
+        if not is_granted("make_owner", study):
+            return "Access denied, you are not authorized to change this permission", 403
+        if not data["role"] == "owner":
+            return "you can assign only owner", 403
+        user = User.query.get(user_id)
+        existing_contributor = StudyContributor.query.filter(
+            StudyContributor.user == user,
+            StudyContributor.study == study,
+
+        ).first()
+        existing_contributor.permission = "owner"
+        existing_owner = StudyContributor.query.filter(
+            StudyContributor.study == study,
+            StudyContributor.permission == "owner"
+        ).first()
+        existing_owner.permission = "admin"
+        db.session.commit()
+        return existing_contributor.to_dict(), 200
