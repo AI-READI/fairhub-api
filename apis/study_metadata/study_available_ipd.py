@@ -31,7 +31,9 @@ class StudyAvailableResource(Resource):
         )
         return [s.to_dict() for s in sorted_study_available_ipd]
 
-    @api.doc(description="An array of objects are expected within the payload with the keys demonstrated below to create an available-ipd")
+    @api.doc(
+        description="An array of objects are expected within the payload with the keys demonstrated below to create an available-ipd"
+    )
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.expect(study_available)

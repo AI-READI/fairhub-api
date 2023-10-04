@@ -19,7 +19,8 @@ def test_server_launch(_test_client):
 
     # Check the response is correct
     assert response_data == "Server active!"
-    
+
+
 # Empty database before testing and create a user for testing
 def test_db_empty(_test_client, _empty_db, _create_user):
     """Test that the database is empty."""

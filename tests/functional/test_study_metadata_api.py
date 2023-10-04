@@ -14,12 +14,14 @@ def test_post_arm_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.post(
         f"/study/{study_id}/metadata/arm",
-        json=[{
-            "label": "Label1",
-            "type": "Arm Type",
-            "description": "Arm Description",
-            "intervention_list": ["intervention1", "intervention2"],
-        }],
+        json=[
+            {
+                "label": "Label1",
+                "type": "Arm Type",
+                "description": "Arm Description",
+                "intervention_list": ["intervention1", "intervention2"],
+            }
+        ],
     )
 
     response_data = json.loads(response.data)
@@ -73,17 +75,22 @@ def test_post_available_ipd_metadata(_test_client, _login_user):
     THEN check that the response is vaild and new IPD was created
     """
     study_id = pytest.global_study_id["id"]
-    response = _test_client(f"/study/{study_id}/metadata/available-ipd", json=[{
-        "identifier": "identifier1",
-        "type": "type1",
-        "url": "google.com",
-        "comment": "comment1"
-    }])
-    
+    response = _test_client(
+        f"/study/{study_id}/metadata/available-ipd",
+        json=[
+            {
+                "identifier": "identifier1",
+                "type": "type1",
+                "url": "google.com",
+                "comment": "comment1",
+            }
+        ],
+    )
+
     assert response.status_code == 200
     response_data = json.loads(response.data)
     pytest.global_available_ipd_id = response_data[0]["id"]
-    
+
     assert response_data[0]["identifier"] == "identifier1"
     assert response_data[0]["type"] == "type1"
     assert response_data[0]["url"] == "google.com"
@@ -99,7 +106,8 @@ def test_get_available_ipd_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/available-ipd")
     assert response.status_code == 200
-    
+
+
 def test_delete_available_ipd_metadata(_test_client, _login_user):
     """
     Given a Flask application configured for testing and a study ID and available IPD ID
@@ -108,7 +116,9 @@ def test_delete_available_ipd_metadata(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]
     available_ipd_id = pytest.global_available_ipd_id
-    response = _test_client.delete(f"/study/{study_id}/metadata/available-ipd/{available_ipd_id}")
+    response = _test_client.delete(
+        f"/study/{study_id}/metadata/available-ipd/{available_ipd_id}"
+    )
     assert response.status_code == 204
 
 
@@ -124,15 +134,17 @@ def test_post_cc_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.post(
         f"/study/{study_id}/metadata/central-contact",
-        json=[{
-            "name": "central-contact",
-            "affiliation": "affiliation",
-            "role": "role",
-            "phone": "phone",
-            "phone_ext": "phone_ext",
-            "email_address": "email_address",
-            "central_contact": True,
-        }],
+        json=[
+            {
+                "name": "central-contact",
+                "affiliation": "affiliation",
+                "role": "role",
+                "phone": "phone",
+                "phone_ext": "phone_ext",
+                "email_address": "email_address",
+                "central_contact": True,
+            }
+        ],
     )
 
     assert response.status_code == 200
@@ -193,7 +205,8 @@ def test_get_collaborators_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/collaborators")
     assert response.status_code == 200
-    
+
+
 def test_put_collaborators_metadata(_test_client, _login_user):
     """
     GIVEN a Flask application configured for testing and a study ID
@@ -215,6 +228,7 @@ def test_put_collaborators_metadata(_test_client, _login_user):
 
     assert response_data[0] == "collaborator"
 
+
 # ------------------- CONDITIONS METADATA ------------------- #
 def test_get_conditions_metadata(_test_client, _login_user):
     """
@@ -225,7 +239,7 @@ def test_get_conditions_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/conditions")
     assert response.status_code == 200
-    
+
 
 def test_put_conditions_metadata(_test_client, _login_user):
     """
@@ -241,7 +255,7 @@ def test_put_conditions_metadata(_test_client, _login_user):
             "oversight_has_dmc": True,
             "conditions": "conditions",
             "keywords": "keywords",
-            "size": "size"
+            "size": "size",
         },
     )
 
@@ -253,6 +267,7 @@ def test_put_conditions_metadata(_test_client, _login_user):
     assert response_data[2] == "keywords"
     assert response_data[3] == "size"
 
+
 # ------------------- DESCRIPTION METADATA ------------------- #
 def test_get_description_metadata(_test_client, _login_user):
     """
@@ -263,7 +278,8 @@ def test_get_description_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/description")
     assert response.status_code == 200
-    
+
+
 def test_put_description_metadata(_test_client, _login_user):
     """
     GIVEN a Flask application configured for testing and a study ID
@@ -275,7 +291,7 @@ def test_put_description_metadata(_test_client, _login_user):
         f"/study/{study_id}/metadata/description",
         json={
             "brief_summary": "brief_summary",
-            "detailed_description": "detailed_description"
+            "detailed_description": "detailed_description",
         },
     )
 
@@ -296,7 +312,8 @@ def test_get_design_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/design")
     assert response.status_code == 200
-    
+
+
 def test_put_design_metadata(_test_client, _login_user):
     """
     Given a Flask application configured for testing and a study ID
@@ -324,12 +341,12 @@ def test_put_design_metadata(_test_client, _login_user):
             "bio_spec_retention": "dfasdf",
             "bio_spec_description": "dfasdf",
             "target_duration": "rewrwe",
-            "number_groups_cohorts": 1
+            "number_groups_cohorts": 1,
         },
     )
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    
+
     assert response_data["design_allocation"] == "dfasdfasd"
     assert response_data["study_type"] == "dffad"
     assert response_data["design_intervention_model"] == "eredf"
@@ -349,6 +366,7 @@ def test_put_design_metadata(_test_client, _login_user):
     assert response_data["target_duration"] == "rewrwe"
     assert response_data["number_groups_cohorts"] == 1
 
+
 # ------------------- ELIGIBILITY METADATA ------------------- #
 def test_get_eligibility_metadata(_test_client, _login_user):
     """
@@ -359,7 +377,8 @@ def test_get_eligibility_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/eligibility")
     assert response.status_code == 200
-    
+
+
 def test_put_eligibility_metadata(_test_client, _login_user):
     """
     Given a Flask application configured for testing and a study ID
@@ -381,8 +400,9 @@ def test_put_eligibility_metadata(_test_client, _login_user):
             "inclusion_criteria": ["test"],
             "exclusion_criteria": ["test", "ttest"],
             "study_population": "study_population",
-            "sampling_method": "test"
-        })
+            "sampling_method": "test",
+        },
+    )
 
     assert response.status_code == 200
     response_data = json.loads(response.data)

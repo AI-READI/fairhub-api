@@ -94,7 +94,7 @@ class Login(Resource):
             else:
                 # If not testing, directly use the 'config' module
                 config = config_module
-    
+
             if len(config.FAIRHUB_SECRET) < 14:
                 raise "secret key should contain at least 14 characters"
             encoded_jwt_code = jwt.encode(
