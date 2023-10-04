@@ -199,10 +199,16 @@ class Logout(Resource):
         """simply logges out user from the system"""
         resp = make_response()
         resp.set_cookie(
-            "token", "", secure=True, httponly=True, samesite="lax", expires=datetime.datetime.now(timezone.utc)
+            "token",
+            "",
+            secure=True,
+            httponly=True,
+            samesite="lax",
+            expires=datetime.datetime.now(timezone.utc),
         )
         resp.status = 204
         return resp
+
 
 @api.route("/auth/current-users")
 class CurrentUsers(Resource):
