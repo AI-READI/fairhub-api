@@ -2,13 +2,7 @@ from collections import OrderedDict
 
 from flask_restx import Namespace, Resource, fields
 from flask import request, g
-from model import (
-    Study,
-    db,
-    User,
-    StudyException,
-    StudyContributor
-)
+from model import Study, db, User, StudyException, StudyContributor
 from .authentication import is_granted
 
 api = Namespace("Contributor", description="Contributors", path="/")
@@ -55,6 +49,7 @@ class AddContributor(Resource):
             return ex.args[0], 409
         db.session.commit()
         return contributor_.to_dict(), 201
+
 
 @api.route("/study/<study_id>/contributor/<user_id>")
 class ContributorResource(Resource):

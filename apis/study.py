@@ -28,16 +28,12 @@ class Studies(Resource):
         #     Study.study_contributors.any(User.id == g.user.id)
         # ).all()
         # studies = Study.query.filter(User.id == g.user.id).all()
-        study_contributors = (
-            StudyContributor.query
-            .filter(StudyContributor.user_id == g.user.id)  # Filter contributors where user_id matches the user's id
-            .all()
-        )
+        study_contributors = StudyContributor.query.filter(
+            StudyContributor.user_id == g.user.id
+        ).all()  # Filter contributors where user_id matches the user's id
         study_ids = [contributor.study_id for contributor in study_contributors]
 
-        studies = (
-            Study.query.filter(Study.id.in_(study_ids)).all()
-        )
+        studies = Study.query.filter(Study.id.in_(study_ids)).all()
         return [s.to_dict() for s in studies]
 
     @api.expect(study_model)

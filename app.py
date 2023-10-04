@@ -113,7 +113,7 @@ def create_app():
             "/echo",
             "/swaggerui",
             "/swagger.json",
-            "/ favicon.ico"
+            "/ favicon.ico",
         ]
         for route in public_routes:
             if request.path.startswith(route):

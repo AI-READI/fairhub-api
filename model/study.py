@@ -163,9 +163,8 @@ class Study(db.Model):
             if self.study_description
             else None,
             # "role": [i.to_dict()["role"] for i in self.study_contributors],
-            "owner_id": filtered_contributors
+            "owner_id": filtered_contributors,
         }
-
 
     @staticmethod
     def from_data(data: dict):
