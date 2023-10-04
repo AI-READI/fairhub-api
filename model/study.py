@@ -5,7 +5,7 @@ import model
 from .db import db
 import datetime
 from flask import g
-
+from sqlalchemy import and_
 
 class StudyException(Exception):
     pass
@@ -148,7 +148,7 @@ class Study(db.Model):
 
     def to_dict(self):
         filtered_contributors = [c.to_dict() for c in self.study_contributors]
-        # contributors = model.StudyContributor.query.get(self.study_contributors.id).first()
+        contributors = model.StudyContributor.query.filter_by().first()
 
         """Converts the study to a dictionary"""
         return {
@@ -163,7 +163,8 @@ class Study(db.Model):
             if self.study_description
             else None,
             # "role": [i.to_dict()["role"] for i in self.study_contributors],
-            "owner_id": filtered_contributors
+            "owner_id": contributors.to_dict()["user_id"],
+            "role": contributors.to_dict()["role"]
         }
 
 

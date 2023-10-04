@@ -7,7 +7,8 @@ from model import (
     db,
     User,
     StudyException,
-    StudyContributor
+    StudyContributor,
+    StudyInvitedContributor
 )
 from .authentication import is_granted
 
@@ -22,17 +23,28 @@ contributors_model = api.model(
 )
 
 
-@api.route("/study/<study_id>/contributors")
+@api.route("/study/<study_id>/contributor")
 class AddContributor(Resource):
     @api.doc("contributor list")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(contributors_model)
     def get(self, study_id: int):
+        # study_contributors = (
+        #     StudyContributor.query
+        #     .filter(StudyContributor.user_id == g.user.id)  # Filter contributors where user_id matches the user's id
+        #     .all()
+        # )
         contributors = StudyContributor.query.filter_by(
-            user_id=g.user.id, study_id=study_id
+             study_id=study_id
         ).all()
-        return [c.to_dict() for c in contributors]
+        invited_contributors = StudyInvitedContributor.query.filter_by(
+             study_id=study_id
+        ).all()
+
+        contributors_list = [c.to_dict() for c in contributors] + [c.to_dict() for c in invited_contributors]
+        return contributors_list
+
 
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
@@ -44,7 +56,7 @@ class AddContributor(Resource):
         data = request.json
         email_address = data["email_address"]
         user = User.query.filter_by(email_address=email_address).first()
-        permission = data["permission"]
+        permission = data["role"]
         contributor_ = None
         try:
             if user:
@@ -55,6 +67,7 @@ class AddContributor(Resource):
             return ex.args[0], 409
         db.session.commit()
         return contributor_.to_dict(), 201
+
 
 @api.route("/study/<study_id>/contributor/<user_id>")
 class ContributorResource(Resource):

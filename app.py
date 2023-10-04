@@ -118,8 +118,8 @@ def create_app():
         for route in public_routes:
             if request.path.startswith(route):
                 return resp
-        print("after request")
-        print(request.cookies.get("token"))
+        # print("after request")
+        # print(request.cookies.get("token"))
         if "token" not in request.cookies:
             return resp
         token = request.cookies.get("token")
