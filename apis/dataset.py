@@ -92,7 +92,7 @@ class DatasetResource(Resource):
             db.session.delete(version)
         db.session.delete(data_obj)
         db.session.commit()
-        dataset_ =study.dataset
+        dataset_ = study.dataset
         return [d.to_dict() for d in dataset_], 201
 
     # def delete(self, study_id, dataset_id, version_id):
