@@ -131,8 +131,9 @@ class ContributorResource(Resource):
             )
         contributors = []
         if "@" in user_id:
-            invited_contributors = StudyInvitedContributor.query.filter_by(study_id=study_id,
-                                                                           email_address=user_id).first()
+            invited_contributors = StudyInvitedContributor.query.filter_by(
+                study_id=study_id, email_address=user_id
+            ).first()
             db.session.delete(invited_contributors)
         else:
             user = User.query.get(user_id)
@@ -167,7 +168,6 @@ class ContributorResource(Resource):
             study_id=study_id
         ).all()
         return invited_contributors if "@" in user_id else contributors
-
 
 
 @api.route("/study/<study_id>/owner/<user_id>")
