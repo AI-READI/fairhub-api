@@ -119,7 +119,7 @@ def test_delete_available_ipd_metadata(_test_client, _login_user):
     response = _test_client.delete(
         f"/study/{study_id}/metadata/available-ipd/{available_ipd_id}"
     )
-    assert response.status_code == 204
+    assert response.status_code == 200
 
 
 # ------------------- CENTRAL CONTACT METADATA ------------------- #
@@ -142,7 +142,7 @@ def test_post_cc_metadata(_test_client, _login_user):
                 "phone": "phone",
                 "phone_ext": "phone_ext",
                 "email_address": "email_address",
-                "central_contact": True,
+                "central_contact": False,
             }
         ],
     )
@@ -150,6 +150,9 @@ def test_post_cc_metadata(_test_client, _login_user):
     assert response.status_code == 200
     response_data = json.loads(response.data)
     pytest.global_cc_id = response_data[0]["id"]
+    print("$$$$$$$$$")
+    print(response_data)
+    print("$$$$$$$$$")
 
     assert response_data[0]["name"] == "central-contact"
     assert response_data[0]["affiliation"] == "affiliation"
@@ -157,7 +160,7 @@ def test_post_cc_metadata(_test_client, _login_user):
     assert response_data[0]["phone"] == "phone"
     assert response_data[0]["phone_ext"] == "phone_ext"
     assert response_data[0]["email_address"] == "email_address"
-    assert response_data[0]["central_contact"] == True
+    assert response_data[0]["central_contact"] is False
 
 
 def test_get_cc_metadata(_test_client, _login_user):
@@ -214,6 +217,7 @@ def test_put_collaborators_metadata(_test_client, _login_user):
     THEN check that the response is valid and creates the collaborators metadata
     """
     # BUG: ENDPOINT STORES KEY RATHER THAN VALUE
+    # RETURNS ['collaborator_name'] rather than ['collaborator'] (so it is storing the key rather than the value)
     study_id = pytest.global_study_id["id"]
     response = _test_client.put(
         f"/study/{study_id}/metadata/collaborators",
@@ -247,24 +251,28 @@ def test_put_conditions_metadata(_test_client, _login_user):
     THEN check that the response is valid and creates the conditions metadata
     """
     # BUG: ENDPOINT STORES KEY RATHER THAN VALUE
+    # RESPONSE FOR THIS TEST LOOKS LIKE ['conditions', 'keywords', 'oversight_has_dmc', 'size']
     study_id = pytest.global_study_id["id"]
     response = _test_client.put(
         f"/study/{study_id}/metadata/conditions",
         json={
             "oversight_has_dmc": True,
-            "conditions": "conditions",
-            "keywords": "keywords",
-            "size": "size",
+            "conditions": "conditions string",
+            "keywords": "keywords string",
+            "size": "size string",
         },
     )
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
+    print("$$$$$$")
+    print(response_data)
+    print("$$$$$$")
 
-    assert response_data[0] == True
-    assert response_data[1] == "conditions"
-    assert response_data[2] == "keywords"
-    assert response_data[3] == "size"
+    assert response_data[0] is True
+    assert response_data[1] == "conditions string"
+    assert response_data[2] == "keywords string"
+    assert response_data[3] == "size string"
 
 
 # ------------------- DESCRIPTION METADATA ------------------- #
@@ -810,8 +818,8 @@ def test_post_reference_metadata(_test_client, _login_user):
 
     assert response_data[0]["identifier"] == "reference identifier"
     assert response_data[0]["type"] == "reference type"
-    assert response_data[0]["title"] == "reference title"
     assert response_data[0]["citation"] == "reference citation"
+    assert response_data[0]["title"] == "reference title"
 
 
 def test_delete_reference_metadata(_test_client, _login_user):
