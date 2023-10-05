@@ -25,6 +25,7 @@ study_ipdsharing = api.model(
 @api.route("/study/<study_id>/metadata/ipdsharing")
 class StudyIpdsharingResource(Resource):
     """Study Ipd sharing Metadata"""
+
     @api.doc("ipdsharing")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")

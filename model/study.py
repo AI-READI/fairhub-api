@@ -162,7 +162,7 @@ class Study(db.Model):
             if self.study_description
             else None,
             "owner_id": contributors.to_dict()["user_id"],
-            "role": contributors.to_dict()["role"]
+            "role": contributors.to_dict()["role"],
         }
 
     @staticmethod
