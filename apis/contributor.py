@@ -164,17 +164,16 @@ class ContributorResource(Resource):
             #         )
             db.session.delete(grantee)
         db.session.commit()
-        return [c.to_dict() for c in contributors]
+        return 204
 
 
-@api.route("/study/<study_id>/owner/<user_id>")
+@api.route("/study/<study_id>/contributor/owner/<user_id>")
 class AssignOwner(Resource):
     @api.doc("contributor update")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.expect(contributors_model)
     def put(self, study_id: int, user_id: int):
-        data = request.json
         """set owner based on the assigned permissions"""
         study = Study.query.get(study_id)
         if not is_granted("make_owner", study):
@@ -182,8 +181,6 @@ class AssignOwner(Resource):
                 "Access denied, you are not authorized to change this permission",
                 403,
             )
-        if not data["role"] == "owner":
-            return "you can assign only owner", 403
         user = User.query.get(user_id)
         existing_contributor = StudyContributor.query.filter(
             StudyContributor.user == user,
@@ -195,4 +192,4 @@ class AssignOwner(Resource):
         ).first()
         existing_owner.permission = "admin"
         db.session.commit()
-        return existing_contributor.to_dict(), 200
+        return 204

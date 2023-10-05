@@ -22,7 +22,7 @@ class StudyContributor(db.Model):
 
     def to_dict(self):
         return {
-            "user_id": self.user_id,
+            "id": self.user_id,
             "name": self.user.user_details.first_name
             if self.user.user_details
             else None,
