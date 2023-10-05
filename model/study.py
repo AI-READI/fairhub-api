@@ -147,9 +147,9 @@ class Study(db.Model):
     )
 
     def to_dict(self):
-        filtered_contributors = [c.to_dict() for c in self.study_contributors]
-        # contributors = model.StudyContributor.query.get(self.study_contributors.id).first()
-
+        contributors = model.StudyContributor.query.filter(
+            model.StudyContributor.permission == "owner"
+        ).first()
         """Converts the study to a dictionary"""
         return {
             "id": self.id,
@@ -157,13 +157,12 @@ class Study(db.Model):
             "image": self.image,
             "created_at": self.created_at,
             "updated_on": self.updated_on,
-            # "study_contributors": self.study_contributors.to_dict(),
             "size": self.study_other.size if self.study_other else None,
             "description": self.study_description.brief_summary
             if self.study_description
             else None,
-            # "role": [i.to_dict()["role"] for i in self.study_contributors],
-            "owner_id": filtered_contributors,
+            "owner_id": contributors.to_dict()["user_id"],
+            "role": contributors.to_dict()["role"]
         }
 
     @staticmethod
