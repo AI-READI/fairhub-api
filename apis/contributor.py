@@ -97,7 +97,7 @@ class ContributorResource(Resource):
         grants = OrderedDict()
         grants["viewer"] = []
         grants["editor"] = ["viewer"]
-        grants["admin"] = ["viewer", "editor"]
+        grants["admin"] = ["viewer", "editor", "admin"]
         grants["owner"] = ["editor", "viewer", "admin"]
 
         can_grant = permission in grants[granter.permission]
