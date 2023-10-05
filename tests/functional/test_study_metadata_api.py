@@ -482,7 +482,7 @@ def test_get_intervention_metadata(_test_client, _login_user):
     assert response.status_code == 200
 
 
-def test_post_internvertion_metadata(_test_client, _login_user):
+def test_post_intervention_metadata(_test_client, _login_user):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/intervention' endpoint is requested (POST)
@@ -496,7 +496,7 @@ def test_post_internvertion_metadata(_test_client, _login_user):
                 "type": "intervention type",
                 "name": "intervention name",
                 "description": "intervention description",
-                "arm_group_list": ["arm group 1", "arm group 2"],
+                "arm_group_label_list": ["arm group 1", "arm group 2"],
                 "other_name_list": ["other name 1", "other name 2"],
             }
         ],
@@ -508,7 +508,7 @@ def test_post_internvertion_metadata(_test_client, _login_user):
     assert response_data[0]["type"] == "intervention type"
     assert response_data[0]["name"] == "intervention name"
     assert response_data[0]["description"] == "intervention description"
-    assert response_data[0]["arm_group_list"] == ["arm group 1", "arm group 2"]
+    assert response_data[0]["arm_group_label_list"] == ["arm group 1", "arm group 2"]
     assert response_data[0]["other_name_list"] == ["other name 1", "other name 2"]
 
 
