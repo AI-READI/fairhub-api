@@ -3,7 +3,7 @@ from flask_restx import Namespace, Resource, fields
 from model import StudyContributor
 from datetime import timezone
 import datetime
-from model import db, User, TokenBlacklist
+from model import db, User, TokenBlacklist, Study
 import jwt
 
 # import config
@@ -28,10 +28,6 @@ login_model = api.model(
         "password": fields.String(required=True, default=""),
     },
 )
-
-
-class AccessDenied(Exception):
-    pass
 
 
 class UnauthenticatedException(Exception):
@@ -164,7 +160,7 @@ def authorization():
     raise UnauthenticatedException("Access denied", 403)
 
 
-def is_granted(permission: str, study):
+def is_granted(permission: str, study=None):
     """filters users and checks whether current permission equal to passed permission"""
     contributor = StudyContributor.query.filter(
         StudyContributor.user == g.user, StudyContributor.study == study
@@ -175,39 +171,59 @@ def is_granted(permission: str, study):
         "owner": [
             "owner",
             "view",
-            "delete_study",
+            "permission",
             "delete_contributor",
             "invite_contributor",
-            "publish_dataset",
+            "add_study",
+            "update_study",
+            "delete_study",
             "add_dataset",
+            "update_dataset",
             "delete_dataset",
-            "permission",
-            "edit_study",
-            "update_participant" "delete_participant",
+            "publish_version",
+            "participant",
+            "study_metadata",
+            "dataset_metadata",
         ],
         "admin": [
             "admin",
             "view",
-            "invite_contributor",
-            "publish_dataset",
-            "add_dataset",
-            "delete_dataset",
             "permission",
-            "update_participant",
-            "delete_participant",
+            "delete_contributor",
+            "invite_contributor",
+            "add_study",
+            "update_study",
+            "add_dataset",
+            "update_dataset",
+            "delete_dataset",
+            "publish_version",
+            "participant",
+            "study_metadata",
+            "dataset_metadata",
+            "make_owner",
         ],
         "editor": [
             "editor",
             "view",
+            "add_study",
+            "update_study",
             "add_dataset",
-            "permission",
-            "update_participant",
-            "delete_participant",
+            "update_dataset",
+            "delete_dataset",
+            "participant",
+            "study_metadata",
+            "dataset_metadata",
         ],
         "viewer": ["viewer", "view"],
     }
 
     return permission in role[contributor.permission]
+
+
+def is_study_metadata(study_id: int):
+    study_obj = Study.query.get(study_id)
+    if not is_granted("study_metadata", study_obj):
+        return "Access denied, you can not delete study", 403
 
 
 @api.route("/auth/logout")
@@ -217,8 +233,15 @@ class Logout(Resource):
     def post(self):
         """simply logges out user from the system"""
         resp = make_response()
+        resp.set_cookie(
+            "token",
+            "",
+            secure=True,
+            httponly=True,
+            samesite="lax",
+            expires=datetime.datetime.now(timezone.utc),
+        )
         resp.status = 204
-        resp.delete_cookie("token")
         return resp
 
 

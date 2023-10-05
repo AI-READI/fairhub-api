@@ -33,12 +33,19 @@ class Studies(Resource):
     @api.doc(description="Return a list of all studies")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.marshal_with(study)
+    # @api.marshal_with(study_model)
     def get(self):
         """this code ensure each user access and see only allowed studies"""
-        studies = Study.query.filter(
-            Study.study_contributors.any(User.id == g.user.id)
-        ).all()
+        # studies = Study.query.filter(
+        #     Study.study_contributors.any(User.id == g.user.id)
+        # ).all()
+        # studies = Study.query.filter(User.id == g.user.id).all()
+        study_contributors = StudyContributor.query.filter(
+            StudyContributor.user_id == g.user.id
+        ).all()  # Filter contributors where user_id matches the user's id
+        study_ids = [contributor.study_id for contributor in study_contributors]
+
+        studies = Study.query.filter(Study.id.in_(study_ids)).all()
         return [s.to_dict() for s in studies]
 
     @api.expect(study_model)
@@ -53,7 +60,7 @@ class Studies(Resource):
         study_contributor = StudyContributor.from_data(study_, g.user, "owner")
         db.session.add(study_contributor)
         db.session.commit()
-        return add_study.to_dict()
+        return study_.to_dict()
 
 
 @api.route("/study/<study_id>")
@@ -71,9 +78,10 @@ class StudyResource(Resource):
     @api.response(400, "Validation Error")
     @api.doc(description="Update a study's details")
     def put(self, study_id: int):
-        if is_granted("edit_study", study_id):
-            return "Access denied, you can not modify", 403
         update_study = Study.query.get(study_id)
+        if not is_granted("update_study", update_study):
+            return "Access denied, you can not modify", 403
+
         update_study.update(request.json)
         db.session.commit()
         return update_study.to_dict()
@@ -96,7 +104,10 @@ class StudyResource(Resource):
             db.session.delete(p)
         db.session.delete(study)
         db.session.commit()
-        return "", 204
+        studies = Study.query.filter(
+            Study.study_contributors.any(User.id == g.user.id)
+        ).all()
+        return [s.to_dict() for s in studies], 201
 
 
 # @api.route("/view-profile", methods=["GET"])

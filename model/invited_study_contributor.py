@@ -25,8 +25,8 @@ class StudyInvitedContributor(db.Model):
 
     def to_dict(self):
         return {
-            "study_id": self.study.id,
+            "id": self.email_address,
+            "status": "invited",
+            "role": self.permission,
             "email_address": self.email_address,
-            "permission": self.permission,
-            "invited_on": self.invited_on,
         }

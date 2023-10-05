@@ -1,6 +1,8 @@
+"""API routes for study eligibility metadata"""
 from flask_restx import Resource, fields
-from model import Study, db, StudyEligibility
 from flask import request
+from model import Study, db
+from ..authentication import is_granted
 
 
 from apis.study_metadata_namespace import api
@@ -29,19 +31,28 @@ study_eligibility = api.model(
 
 @api.route("/study/<study_id>/metadata/eligibility")
 class StudyEligibilityResource(Resource):
+    """Study Eligibility Metadata"""
+
     @api.doc("eligibility")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")
     @api.marshal_with(study_eligibility)
     def get(self, study_id: int):
+        """Get study eligibility metadata"""
         study_ = Study.query.get(study_id)
+
         return study_.study_eligibility.to_dict()
 
     def put(self, study_id: int):
+        """Update study eligibility metadata"""
         study_ = Study.query.get(study_id)
+        if not is_granted("study_metadata", study_):
+            return "Access denied, you can not delete study", 403
         study_.study_eligibility.update(request.json)
+
         db.session.commit()
+
         return study_.study_eligibility.to_dict()
 
     # def post(self, study_id: int):

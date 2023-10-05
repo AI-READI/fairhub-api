@@ -13,12 +13,7 @@ from os import environ
 import model
 from apis import api
 from flask_bcrypt import Bcrypt
-from apis.authentication import (
-    authentication,
-    authorization,
-    UnauthenticatedException,
-    AccessDenied,
-)
+from apis.authentication import authentication, authorization, UnauthenticatedException
 
 # from pyfairdatatools import __version__
 
@@ -30,7 +25,7 @@ def create_app(config_module=None):
     # create and configure the app
     app = Flask(__name__)
     # `full` if you want to see all the details
-    app.config["SWAGGER_UI_DOC_EXPANSION"] = "list"
+    app.config["SWAGGER_UI_DOC_EXPANSION"] = "none"
     app.config["RESTX_MASK_SWAGGER"] = False
 
     # Initialize config
@@ -95,6 +90,7 @@ def create_app(config_module=None):
     # def create_schema():
     #     engine = model.db.session.get_bind()
     #     metadata = MetaData()
+    #     metadata = MetaData()
     #     metadata.reflect(bind=engine)
     #     table_names = [table.name for table in metadata.tables.values()]
     #     print(table_names)
@@ -111,11 +107,22 @@ def create_app(config_module=None):
         try:
             authentication()
             authorization()
-        except AccessDenied:
+        except UnauthenticatedException:
             return "Authentication is required", 401
 
     @app.after_request
     def on_after_request(resp):
+        public_routes = [
+            "/auth",
+            "/docs",
+            "/echo",
+            "/swaggerui",
+            "/swagger.json",
+            "/ favicon.ico",
+        ]
+        for route in public_routes:
+            if request.path.startswith(route):
+                return resp
         # print("after request")
         # print(request.cookies.get("token"))
         if "token" not in request.cookies:
@@ -136,7 +143,14 @@ def create_app(config_module=None):
         try:
             decoded = jwt.decode(token, config.FAIRHUB_SECRET, algorithms=["HS256"])
         except jwt.ExpiredSignatureError:
-            resp.delete_cookie("token")
+            resp.set_cookie(
+                "token",
+                "",
+                secure=True,
+                httponly=True,
+                samesite="lax",
+                expires=datetime.datetime.now(timezone.utc),
+            )
             return resp
         token_blacklist = model.TokenBlacklist.query.get(decoded["jti"])
         if token_blacklist:
