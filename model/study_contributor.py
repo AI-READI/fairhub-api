@@ -29,7 +29,7 @@ class StudyContributor(db.Model):
             "email_address": self.user.email_address,
             "orcid": self.user.user_details.orcid if self.user.user_details else None,
             "role": self.permission,
-            "status": None,
+            "status": "active",
         }
 
     @staticmethod
