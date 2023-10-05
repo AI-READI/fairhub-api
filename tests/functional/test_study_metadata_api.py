@@ -301,6 +301,7 @@ def test_put_description_metadata(_test_client, _login_user):
     assert response_data["brief_summary"] == "brief_summary"
     assert response_data["detailed_description"] == "detailed_description"
 
+
 # ------------------- DESIGN METADATA ------------------- #
 def test_get_design_metadata(_test_client, _login_user):
     """
@@ -431,7 +432,8 @@ def test_get_identification_metadata(_test_client, _login_user):
     # study_id = pytest.global_study_id["id"]
     # response = _test_client.get(f"/study/{study_id}/metadata/identification")
     # assert response.status_code == 200
-    
+
+
 def test_post_identification_metadata(_test_client, _login_user):
     """
     Given a Flask application configured for testing and a study ID
@@ -453,8 +455,8 @@ def test_post_identification_metadata(_test_client, _login_user):
     # assert response.status_code == 200
     # response_data = json.loads(response.data)
     # pytest.global_identification_id = response_data["id"]
-    
-    
+
+
 def test_delete_identification_metadata(_test_client, _login_user):
     """
     Given a Flask application configured for testing and a study ID
@@ -478,7 +480,8 @@ def test_get_intervention_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/intervention")
     assert response.status_code == 200
-    
+
+
 def test_post_internvertion_metadata(_test_client, _login_user):
     """
     Given a Flask application configured for testing and a study ID
@@ -486,17 +489,22 @@ def test_post_internvertion_metadata(_test_client, _login_user):
     THEN check that the response is valid and creates the intervention metadata
     """
     study_id = pytest.global_study_id["id"]
-    response = _test_client.post(f"/study/{study_id}/metadata/intervention", json=[{
-        "type": "intervention type",
-        "name": "intervention name",
-        "description": "intervention description",
-        "arm_group_list": ["arm group 1", "arm group 2"],
-        "other_name_list": ["other name 1", "other name 2"],
-    }])
+    response = _test_client.post(
+        f"/study/{study_id}/metadata/intervention",
+        json=[
+            {
+                "type": "intervention type",
+                "name": "intervention name",
+                "description": "intervention description",
+                "arm_group_list": ["arm group 1", "arm group 2"],
+                "other_name_list": ["other name 1", "other name 2"],
+            }
+        ],
+    )
     assert response.status_code == 200
     response_data = json.loads(response.data)
     pytest.global_intervention_id = response_data[0]["id"]
-    
+
     assert response_data[0]["type"] == "intervention type"
     assert response_data[0]["name"] == "intervention name"
     assert response_data[0]["description"] == "intervention description"
@@ -514,7 +522,8 @@ def test_get_ipdsharing_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/ipdsharing")
     assert response.status_code == 200
-    
+
+
 def test_put_ipdsharing_metadata(_test_client, _login_user):
     """
     Given a Flask application configured for testing and a study ID
@@ -522,18 +531,21 @@ def test_put_ipdsharing_metadata(_test_client, _login_user):
     THEN check that the response is valid and updates the ipdsharing metadata
     """
     study_id = pytest.global_study_id["id"]
-    response = _test_client.put(f"/study/{study_id}/metadata/ipdsharing", json={
-        "ipd_sharing": "ipd sharing",
-        "ipd_sharing_description": "sharing description",
-        "ipd_sharing_info_type_list": ["type1", "type2"],
-        "ipd_sharing_time_frame": "time frame",
-        "ipd_sharing_access_criteria": "access criteria",
-        "ipd_sharing_url": "sharing url"
-    })
+    response = _test_client.put(
+        f"/study/{study_id}/metadata/ipdsharing",
+        json={
+            "ipd_sharing": "ipd sharing",
+            "ipd_sharing_description": "sharing description",
+            "ipd_sharing_info_type_list": ["type1", "type2"],
+            "ipd_sharing_time_frame": "time frame",
+            "ipd_sharing_access_criteria": "access criteria",
+            "ipd_sharing_url": "sharing url",
+        },
+    )
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    
+
     assert response_data["ipd_sharing"] == "ipd sharing"
     assert response_data["ipd_sharing_description"] == "sharing description"
     assert response_data["ipd_sharing_info_type_list"] == ["type1", "type2"]
@@ -552,7 +564,8 @@ def test_get_link_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/link")
     assert response.status_code == 200
-    
+
+
 def test_post_link_metadata(_test_client, _login_user):
     """
     Given a Flask application configured for testing and a study ID
@@ -560,18 +573,18 @@ def test_post_link_metadata(_test_client, _login_user):
     THEN check that the response is valid and creates the link metadata
     """
     study_id = pytest.global_study_id["id"]
-    response = _test_client.post(f"/study/{study_id}/metadata/link", json=[{
-        "url": "url link",
-        "title": "link"
-    }])
+    response = _test_client.post(
+        f"/study/{study_id}/metadata/link", json=[{"url": "url link", "title": "link"}]
+    )
     assert response.status_code == 200
     response_data = json.loads(response.data)
     pytest.global_link_id = response_data[0]["id"]
-    
+
     assert response_data[0]["url"] == "url"
     assert response_data[0]["description"] == "description"
     assert response_data[0]["link_type"] == "link type"
     assert response_data[0]["label"] == "label"
+
 
 def test_delete_link_metadata(_test_client, _login_user):
     """
@@ -596,6 +609,7 @@ def test_get_location_metadata(_test_client, _login_user):
     response = _test_client.get(f"/study/{study_id}/metadata/location")
     assert response.status_code == 200
 
+
 def test_post_location_metadata(_test_client, _login_user):
     """
     Given a Flask application configured for testing and a study ID
@@ -603,24 +617,30 @@ def test_post_location_metadata(_test_client, _login_user):
     THEN check that the response is valid and creates the location metadata
     """
     study_id = pytest.global_study_id["id"]
-    response = _test_client.post(f"/study/{study_id}/metadata/location", json=[{
-        "facility": "facility location",
-        "status": "status location",
-        "city": "city location",
-        "state": "California",
-        "zip": "zip location",
-        "country": "country location"
-    }])
+    response = _test_client.post(
+        f"/study/{study_id}/metadata/location",
+        json=[
+            {
+                "facility": "facility location",
+                "status": "status location",
+                "city": "city location",
+                "state": "California",
+                "zip": "zip location",
+                "country": "country location",
+            }
+        ],
+    )
     assert response.status_code == 200
     response_data = json.loads(response.data)
     pytest.global_location_id = response_data[0]["id"]
-    
+
     assert response_data[0]["facility"] == "facility location"
     assert response_data[0]["status"] == "status location"
     assert response_data[0]["city"] == "city location"
     assert response_data[0]["state"] == "California"
     assert response_data[0]["zip"] == "zip location"
     assert response_data[0]["country"] == "country location"
+
 
 def test_delete_location_metadata(_test_client, _login_user):
     """
@@ -632,6 +652,7 @@ def test_delete_location_metadata(_test_client, _login_user):
     location_id = pytest.global_location_id
     response = _test_client.delete(f"/study/{study_id}/metadata/location/{location_id}")
     assert response.status_code == 204
+
 
 # ------------------- OTHER METADATA ------------------- #
 def test_get_other_metadata(_test_client, _login_user):
@@ -645,7 +666,8 @@ def test_get_other_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/other")
     assert response.status_code == 200
-    
+
+
 def test_put_other_metadata(_test_client, _login_user):
     """
     Given a Flask application configured for testing and a study ID
@@ -653,12 +675,15 @@ def test_put_other_metadata(_test_client, _login_user):
     THEN check that the response is valid and updates the other metadata
     """
     study_id = pytest.global_study_id["id"]
-    response = _test_client.put(f"/study/{study_id}/metadata/other", json={
-        "oversight_has_dmc": False,
-        "conditions": ["TESTCONDITION"],
-        "keywords": ["TEST"],
-        "size": "0"
-    })
+    response = _test_client.put(
+        f"/study/{study_id}/metadata/other",
+        json={
+            "oversight_has_dmc": False,
+            "conditions": ["TESTCONDITION"],
+            "keywords": ["TEST"],
+            "size": "0",
+        },
+    )
     assert response.status_code == 200
     response_data = json.loads(response.data)
 
@@ -679,6 +704,7 @@ def test_get_overall_official_metadata(_test_client, _login_user):
     response = _test_client.get(f"/study/{study_id}/metadata/overall-official")
     assert response.status_code == 200
 
+
 def test_post_overall_official_metadata(_test_client, _login_user):
     """
     Given a Flask application configured for testing and a study ID
@@ -686,11 +712,16 @@ def test_post_overall_official_metadata(_test_client, _login_user):
     THEN check that the response is valid and creates the overall-official metadata
     """
     study_id = pytest.global_study_id["id"]
-    response = _test_client.post(f"/study/{study_id}/metadata/overall-official", json=[{
-        "name": "official name",
-        "affiliation": "official affiliation",
-        "role": "official role"
-    }])
+    response = _test_client.post(
+        f"/study/{study_id}/metadata/overall-official",
+        json=[
+            {
+                "name": "official name",
+                "affiliation": "official affiliation",
+                "role": "official role",
+            }
+        ],
+    )
     assert response.status_code == 200
     response_data = json.loads(response.data)
     pytest.global_overall_official_id = response_data[0]["id"]
@@ -698,6 +729,7 @@ def test_post_overall_official_metadata(_test_client, _login_user):
     assert response_data[0]["name"] == "official name"
     assert response_data[0]["affiliation"] == "official affiliation"
     assert response_data[0]["role"] == "official role"
+
 
 def test_delete_overall_official_metadata(_test_client, _login_user):
     """
@@ -707,8 +739,11 @@ def test_delete_overall_official_metadata(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]
     overall_official_id = pytest.global_overall_official_id
-    response = _test_client.delete(f"/study/{study_id}/metadata/overall-official/{overall_official_id}")
+    response = _test_client.delete(
+        f"/study/{study_id}/metadata/overall-official/{overall_official_id}"
+    )
     assert response.status_code == 204
+
 
 # ------------------- OVERSIGHT METADATA ------------------- #
 def test_get_oversight_metadata(_test_client, _login_user):
@@ -720,7 +755,8 @@ def test_get_oversight_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/oversight")
     assert response.status_code == 200
-    
+
+
 def test_put_oversight_metadata(_test_client, _login_user):
     """
     Given a Flask application configured for testing and a study ID
@@ -728,9 +764,9 @@ def test_put_oversight_metadata(_test_client, _login_user):
     THEN check that the response is valid and updates the oversight metadata
     """
     study_id = pytest.global_study_id["id"]
-    response = _test_client.put(f"/study/{study_id}/metadata/oversight", json={
-        "oversight_has_dmc": True
-    })
+    response = _test_client.put(
+        f"/study/{study_id}/metadata/oversight", json={"oversight_has_dmc": True}
+    )
     assert response.status_code == 200
     response_data = json.loads(response.data)
     print(response)
