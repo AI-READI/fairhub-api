@@ -176,7 +176,6 @@ def is_granted(permission: str, study):
         "editor": [
             "editor",
             "view",
-            "delete_contributor",
             "add_study",
             "update_study",
             "add_dataset",

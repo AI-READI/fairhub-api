@@ -23,7 +23,7 @@ contributors_model = api.model(
 )
 
 
-@api.route("/study/<study_id>/contributors")
+@api.route("/study/<study_id>/contributor")
 class AddContributor(Resource):
     @api.doc("contributor list")
     @api.response(200, "Success")
@@ -124,7 +124,6 @@ class ContributorResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def delete(self, study_id: int, user_id: int):
-        data = request.json
         study = Study.query.get(study_id)
         if not is_granted("delete_contributors", study):
             return (
