@@ -143,8 +143,9 @@ class ContributorResource(Resource):
                 StudyContributor.user == user, StudyContributor.study == study
             ).first()
             contributors.append(grantee)
-            invited_contributors = StudyInvitedContributor.query.filter_by(study_id=study_id,
-                                                                           email_address=user_id).first()
+            invited_contributors = StudyInvitedContributor.query.filter_by(
+                study_id=study_id, email_address=user_id
+            ).first()
             granter = StudyContributor.query.filter(
                 StudyContributor.user == g.user, StudyContributor.study == study
             ).first()
