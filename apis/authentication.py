@@ -80,7 +80,7 @@ class Login(Resource):
                 {
                     "user": user.id,
                     "exp": datetime.datetime.now(timezone.utc)
-                    + datetime.timedelta(minutes=20),
+                    + datetime.timedelta(minutes=200),
                     "jti": str(uuid.uuid4()),
                 },
                 config.secret,

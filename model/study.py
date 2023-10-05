@@ -161,7 +161,7 @@ class Study(db.Model):
             "description": self.study_description.brief_summary
             if self.study_description
             else None,
-            "owner": contributors.to_dict()["id"],
+            "owner_id": contributors.to_dict()["user_id"],
             "role": contributors.to_dict()["role"],
         }
 
@@ -194,13 +194,14 @@ class Study(db.Model):
     def add_user_to_study(self, user, permission):
         contributor = self.study_contributors.filter(
             model.StudyContributor.user_id == user.id
-        )
+        ).all()
+        print("start", contributor, "dgfdrggdgdrfgbd")
         if contributor:
             raise StudyException("User is already exists in study")
         else:
             contributor = model.StudyContributor(self, user, permission)
             db.session.add(contributor)
-            return contributor
+        return contributor
 
     def invite_user_to_study(self, email_address, permission):
         invited_contributor = self.invited_contributors.filter(
