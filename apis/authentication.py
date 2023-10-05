@@ -3,7 +3,7 @@ from flask_restx import Namespace, Resource, fields
 from model import StudyContributor
 from datetime import timezone
 import datetime
-from model import db, User, TokenBlacklist
+from model import db, User, TokenBlacklist, Study
 import jwt
 import config
 import uuid
@@ -131,7 +131,7 @@ def authorization():
     raise UnauthenticatedException("Access denied", 403)
 
 
-def is_granted(permission: str, study):
+def is_granted(permission: str, study=None):
     """filters users and checks whether current permission equal to passed permission"""
     contributor = StudyContributor.query.filter(
         StudyContributor.user == g.user, StudyContributor.study == study
@@ -189,6 +189,12 @@ def is_granted(permission: str, study):
     }
 
     return permission in role[contributor.permission]
+
+
+def is_study_metadata(study_id: int):
+    study_obj = Study.query.get(study_id)
+    if not is_granted("study_metadata", study_obj):
+        return "Access denied, you can not delete study", 403
 
 
 @api.route("/auth/logout")

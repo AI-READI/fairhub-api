@@ -3,6 +3,8 @@ from flask_restx import Resource, fields
 from flask import request
 from model import Study, db, StudyContact
 from apis.study_metadata_namespace import api
+from ..authentication import is_granted, is_study_metadata
+
 
 study_contact = api.model(
     "StudyContact",
@@ -39,6 +41,9 @@ class StudyContactResource(Resource):
 
     def post(self, study_id: int):
         """Create study contact metadata"""
+        study = Study.query.get(study_id)
+        if not is_granted("study_metadata", study):
+            return "Access denied, you can not delete study", 403
         data = request.json
 
         study_obj = Study.query.get(study_id)
@@ -64,6 +69,9 @@ class StudyContactResource(Resource):
         """Study Contact Metadata"""
 
         def delete(self, study_id: int, central_contact_id: int):
+            study = Study.query.get(study_id)
+            if not is_granted("study_metadata", study):
+                return "Access denied, you can not delete study", 403
             """Delete study contact metadata"""
             study_contact_ = StudyContact.query.get(central_contact_id)
 

@@ -2,7 +2,7 @@
 from flask_restx import Resource, fields
 from flask import request
 from model import Study, db
-
+from ..authentication import is_granted, is_study_metadata
 
 from apis.study_metadata_namespace import api
 
@@ -35,6 +35,9 @@ class StudyDescriptionResource(Resource):
 
     def put(self, study_id: int):
         """Update study description metadata"""
+        study_obj = Study.query.get(study_id)
+        if not is_granted("study_metadata", study_obj):
+            return "Access denied, you can not delete study", 403
         study_ = Study.query.get(study_id)
 
         study_.study_description.update(request.json)

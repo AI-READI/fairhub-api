@@ -2,6 +2,7 @@
 from flask_restx import Resource, fields
 from flask import request
 from model import Study, db
+from ..authentication import is_granted
 
 
 from apis.study_metadata_namespace import api
@@ -71,25 +72,15 @@ class StudyCollaboratorsResource(Resource):
 
         return study_collaborators_
 
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def put(self, study_id: int):
-        """Update study collaborators metadata"""
+        """updating study collaborators"""
         data = request.json
-
-        study_ = Study.query.get(study_id)
-
-        study_.study_sponsors_collaborators.collaborator_name = data
-
-        study_.touch()
+        study_obj = Study.query.get(study_id)
+        if not is_granted("study_metadata", study_obj):
+            return "Access denied, you can not delete study", 403
+        study_obj.study_sponsors_collaborators.collaborator_name = data
+        study_obj.touch()
         db.session.commit()
-
-        return study_.study_sponsors_collaborators.collaborator_name
-
-    # @api.route("/study/<study_id>/metadata/collaborators/<collaborators_id>")
-    # class StudyCollaboratorsUpdate(Resource):
-    #     def put(self, study_id: int, collaborators_id: int):
-    #         study_sponsors_collaborators_ = StudySponsorsCollaborators.query.get(
-    #             collaborators_id
-    #         )
-    #         study_sponsors_collaborators_.update(request.json)
-    #         db.session.commit()
-    #         return study_sponsors_collaborators_.to_dict()
+        return study_obj.study_sponsors_collaborators.collaborator_name

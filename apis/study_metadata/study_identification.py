@@ -2,6 +2,7 @@
 from flask_restx import Resource, fields
 from flask import request
 from model import Study, db, StudyIdentification, Identifiers
+from ..authentication import is_granted
 
 
 from apis.study_metadata_namespace import api
@@ -44,7 +45,8 @@ class StudyIdentificationResource(Resource):
         data = request.json
 
         study_obj = Study.query.get(study_id)
-
+        if not is_granted("study_metadata", study_obj):
+            return "Access denied, you can not delete study", 403
         primary = data["primary"]
         primary["secondary"] = False
 
@@ -81,6 +83,9 @@ class StudyIdentificationResource(Resource):
 
         def delete(self, study_id: int, identification_id: int):
             """Delete study identification metadata"""
+            study = Study.query.get(study_id)
+            if not is_granted("study_metadata", study):
+                return "Access denied, you can not delete study", 403
             study_identification_ = StudyIdentification.query.get(identification_id)
 
             if not study_identification_.secondary:

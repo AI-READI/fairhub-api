@@ -2,6 +2,7 @@
 from flask_restx import Resource, fields
 from flask import request
 from model import Study, db
+from ..authentication import is_granted
 
 from apis.study_metadata_namespace import api
 
@@ -64,16 +65,14 @@ class StudyOversightResource(Resource):
 
     def put(self, study_id: int):
         """Update study oversight metadata"""
+        study_obj = Study.query.get(study_id)
+        if not is_granted("study_metadata", study_obj):
+            return "Access denied, you can not delete study", 403
         data = request.json
-
-        study_ = Study.query.get(study_id)
-
-        study_oversight = study_.study_other.oversight_has_dmc = data[
+        study_oversight = study_obj.study_other.oversight_has_dmc = data[
             "oversight_has_dmc"
         ]
-
-        study_.touch()
-
+        study_obj.touch()
         db.session.commit()
 
         return study_oversight
@@ -99,13 +98,11 @@ class StudyOversightResource(Resource):
     def put(self, study_id: int):
         """Update study conditions metadata"""
         data = request.json
-
-        study_ = Study.query.get(study_id)
-
-        study_.study_other.conditions = data
-
-        study_.touch()
-
+        study_obj = Study.query.get(study_id)
+        if not is_granted("study_metadata", study_obj):
+            return "Access denied, you can not delete study", 403
+        study_obj.study_other.conditions = data
+        study_obj.touch()
         db.session.commit()
 
-        return study_.study_other.conditions
+        return study_obj.study_other.conditions

@@ -2,6 +2,7 @@
 from flask_restx import Resource, fields
 from flask import request
 from model import Study, db, StudyArm, Arm
+from ..authentication import is_granted
 
 
 from apis.study_metadata_namespace import api
@@ -43,10 +44,11 @@ class StudyArmResource(Resource):
 
     def post(self, study_id):
         """Create study arm metadata"""
+        study = Study.query.get(study_id)
+        if not is_granted("study_metadata", study):
+            return "Access denied, you can not delete study", 403
         data = request.json
-
         study_obj = Study.query.get(study_id)
-
         for i in data:
             if "id" in i and i["id"]:
                 study_arm_ = StudyArm.query.get(i["id"])
@@ -68,8 +70,10 @@ class StudyArmResource(Resource):
 
         def delete(self, study_id: int, arm_id: int):
             """Delete study arm metadata"""
+            study_obj = Study.query.get(study_id)
+            if not is_granted("study_metadata", study_obj):
+                return "Access denied, you can not delete study", 403
             study_arm_ = StudyArm.query.get(arm_id)
-
             db.session.delete(study_arm_)
             db.session.commit()
 

@@ -2,7 +2,7 @@
 from flask_restx import Resource, fields
 from flask import request
 from model import Study, db, StudyLink
-
+from ..authentication import is_granted
 
 from apis.study_metadata_namespace import api
 
@@ -29,21 +29,17 @@ class StudyLinkResource(Resource):
     def get(self, study_id: int):
         """Get study link metadata"""
         study_ = Study.query.get(study_id)
-
         study_link_ = study_.study_link
-
         sorted_study_link_ = sorted(study_link_, key=lambda x: x.created_at)
-
         return [s.to_dict() for s in sorted_study_link_]
 
     def post(self, study_id: int):
         """Create study link metadata"""
-        data = request.json
-
         study_obj = Study.query.get(study_id)
-
+        if not is_granted("study_metadata", study_obj):
+            return "Access denied, you can not delete study", 403
+        data = request.json
         list_of_elements = []
-
         for i in data:
             if "id" in i and i["id"]:
                 study_link_ = StudyLink.query.get(i["id"])
@@ -68,6 +64,9 @@ class StudyLinkResource(Resource):
 
         def delete(self, study_id: int, link_id: int):
             """Delete study link metadata"""
+            study_obj = Study.query.get(study_id)
+            if not is_granted("study_metadata", study_obj):
+                return "Access denied, you can not delete study", 403
             study_link_ = StudyLink.query.get(link_id)
 
             db.session.delete(study_link_)
