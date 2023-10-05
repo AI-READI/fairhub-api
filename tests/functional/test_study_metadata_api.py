@@ -574,12 +574,13 @@ def test_post_link_metadata(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]
     response = _test_client.post(
-        f"/study/{study_id}/metadata/link", json=[{"url": "url link", "title": "title link"}]
+        f"/study/{study_id}/metadata/link",
+        json=[{"url": "url link", "title": "title link"}],
     )
     assert response.status_code == 200
     response_data = json.loads(response.data)
     pytest.global_link_id = response_data[0]["id"]
-    
+
     assert response_data[0]["url"] == "url link"
     assert response_data[0]["title"] == "title link"
 
@@ -737,7 +738,9 @@ def test_delete_overall_official_metadata(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]
     overall_official_id = pytest.global_overall_official_id
-    response = _test_client.delete(f"/study/{study_id}/metadata/overall-official/{overall_official_id}")
+    response = _test_client.delete(
+        f"/study/{study_id}/metadata/overall-official/{overall_official_id}"
+    )
     assert response.status_code == 200
 
 
@@ -780,7 +783,8 @@ def test_get_reference_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/reference")
     assert response.status_code == 200
-    
+
+
 def test_post_reference_metadata(_test_client, _login_user):
     """
     Given a Flask application configured for testing and a study ID
@@ -789,12 +793,17 @@ def test_post_reference_metadata(_test_client, _login_user):
     """
     # BUG:? title key is not being returned in response
     study_id = pytest.global_study_id["id"]
-    response = _test_client.post(f"/study/{study_id}/metadata/reference", json=[{
-        "identifier": "reference identifier",
-        "type": "reference type",
-        "title": "reference title",
-        "citation": "reference citation"
-    }])
+    response = _test_client.post(
+        f"/study/{study_id}/metadata/reference",
+        json=[
+            {
+                "identifier": "reference identifier",
+                "type": "reference type",
+                "title": "reference title",
+                "citation": "reference citation",
+            }
+        ],
+    )
     assert response.status_code == 200
     response_data = json.loads(response.data)
     pytest.global_reference_id = response_data[0]["id"]
@@ -804,6 +813,7 @@ def test_post_reference_metadata(_test_client, _login_user):
     assert response_data[0]["title"] == "reference title"
     assert response_data[0]["citation"] == "reference citation"
 
+
 def test_delete_reference_metadata(_test_client, _login_user):
     """
     Given a Flask application configured for testing and a study ID and reference ID
@@ -812,8 +822,11 @@ def test_delete_reference_metadata(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]
     reference_id = pytest.global_reference_id
-    response = _test_client.delete(f"/study/{study_id}/metadata/reference/{reference_id}")
+    response = _test_client.delete(
+        f"/study/{study_id}/metadata/reference/{reference_id}"
+    )
     assert response.status_code == 200
+
 
 # ------------------- SPONSORS METADATA ------------------- #
 def test_get_sponsors_metadata(_test_client, _login_user):
@@ -834,20 +847,26 @@ def test_put_sponsors_metadata(_test_client, _login_user):
     THEN check that the response is valid and updates the sponsors metadata
     """
     study_id = pytest.global_study_id["id"]
-    response = _test_client.put(f"/study/{study_id}/metadata/sponsors", json={
-        "responsible_party_type": "party type",
-        "responsible_party_investigator_name": "party name",
-        "responsible_party_investigator_title": "party title",
-        "responsible_party_investigator_affiliation": "party affiliation",
-        "lead_sponsor_name": "sponsor name",
-    })
+    response = _test_client.put(
+        f"/study/{study_id}/metadata/sponsors",
+        json={
+            "responsible_party_type": "party type",
+            "responsible_party_investigator_name": "party name",
+            "responsible_party_investigator_title": "party title",
+            "responsible_party_investigator_affiliation": "party affiliation",
+            "lead_sponsor_name": "sponsor name",
+        },
+    )
     assert response.status_code == 200
     response_data = json.loads(response.data)
 
     assert response_data["responsible_party_type"] == "party type"
     assert response_data["responsible_party_investigator_name"] == "party name"
     assert response_data["responsible_party_investigator_title"] == "party title"
-    assert response_data["responsible_party_investigator_affiliation"] == "party affiliation"
+    assert (
+        response_data["responsible_party_investigator_affiliation"]
+        == "party affiliation"
+    )
     assert response_data["lead_sponsor_name"] == "sponsor name"
 
 
@@ -862,6 +881,7 @@ def test_get_status_metadata(_test_client, _login_user):
     response = _test_client.get(f"/study/{study_id}/metadata/status")
     assert response.status_code == 200
 
+
 def test_put_status_metadata(_test_client, _login_user):
     """
     Given a Flask application configured for testing and a study ID
@@ -869,14 +889,17 @@ def test_put_status_metadata(_test_client, _login_user):
     THEN check that the response is valid and updates the status metadata
     """
     study_id = pytest.global_study_id["id"]
-    response = _test_client.put(f"/study/{study_id}/metadata/status", json={
-        "overall_status": "in progress",
-        "why_stopped": "not stopped",
-        "start_date": "no start",
-        "start_date_type": "date type",
-        "completion_date": "no completion",
-        "completion_date_type": "date type"
-    })
+    response = _test_client.put(
+        f"/study/{study_id}/metadata/status",
+        json={
+            "overall_status": "in progress",
+            "why_stopped": "not stopped",
+            "start_date": "no start",
+            "start_date_type": "date type",
+            "completion_date": "no completion",
+            "completion_date_type": "date type",
+        },
+    )
     assert response.status_code == 200
     response_data = json.loads(response.data)
 
