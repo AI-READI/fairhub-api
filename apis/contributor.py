@@ -134,6 +134,7 @@ class ContributorResource(Resource):
             invited_contributors = StudyInvitedContributor.query.filter_by(study_id=study_id,
                                                                            email_address=user_id).first()
             db.session.delete(invited_contributors)
+            contributors.append(invited_contributors)
         else:
             user = User.query.get(user_id)
             grantee = StudyContributor.query.filter(
@@ -162,11 +163,7 @@ class ContributorResource(Resource):
             #         )
             db.session.delete(grantee)
         db.session.commit()
-        contributors = StudyContributor.query.filter_by(study_id=study_id).all()
-        invited_contributors = StudyInvitedContributor.query.filter_by(
-            study_id=study_id
-        ).all()
-        return invited_contributors if "@" in user_id else contributors
+        return [c.to_dict() for c in contributors]
 
 
 
