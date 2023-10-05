@@ -28,6 +28,7 @@ pytest.global_intervention_id = ""
 pytest.global_link_id = ""
 pytest.global_location_id = ""
 pytest.global_overall_official_id = ""
+pytest.global_reference_id = ""
 
 
 # Create the flask app for testing

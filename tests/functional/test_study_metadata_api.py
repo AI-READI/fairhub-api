@@ -574,16 +574,14 @@ def test_post_link_metadata(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]
     response = _test_client.post(
-        f"/study/{study_id}/metadata/link", json=[{"url": "url link", "title": "link"}]
+        f"/study/{study_id}/metadata/link", json=[{"url": "url link", "title": "title link"}]
     )
     assert response.status_code == 200
     response_data = json.loads(response.data)
     pytest.global_link_id = response_data[0]["id"]
-
-    assert response_data[0]["url"] == "url"
-    assert response_data[0]["description"] == "description"
-    assert response_data[0]["link_type"] == "link type"
-    assert response_data[0]["label"] == "label"
+    
+    assert response_data[0]["url"] == "url link"
+    assert response_data[0]["title"] == "title link"
 
 
 def test_delete_link_metadata(_test_client, _login_user):
@@ -595,7 +593,7 @@ def test_delete_link_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     link_id = pytest.global_link_id
     response = _test_client.delete(f"/study/{study_id}/metadata/link/{link_id}")
-    assert response.status_code == 204
+    assert response.status_code == 200
 
 
 # ------------------- LOCATION METADATA ------------------- #
@@ -651,7 +649,7 @@ def test_delete_location_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     location_id = pytest.global_location_id
     response = _test_client.delete(f"/study/{study_id}/metadata/location/{location_id}")
-    assert response.status_code == 204
+    assert response.status_code == 200
 
 
 # ------------------- OTHER METADATA ------------------- #
@@ -690,7 +688,7 @@ def test_put_other_metadata(_test_client, _login_user):
     assert response_data["oversight_has_dmc"] is False
     assert response_data["conditions"] == ["TESTCONDITION"]
     assert response_data["keywords"] == ["TEST"]
-    assert response_data["size"] == "0"
+    assert response_data["size"] == 0
 
 
 # ------------------- OVERALL-OFFICIAL METADATA ------------------- #
@@ -739,10 +737,8 @@ def test_delete_overall_official_metadata(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]
     overall_official_id = pytest.global_overall_official_id
-    response = _test_client.delete(
-        f"/study/{study_id}/metadata/overall-official/{overall_official_id}"
-    )
-    assert response.status_code == 204
+    response = _test_client.delete(f"/study/{study_id}/metadata/overall-official/{overall_official_id}")
+    assert response.status_code == 200
 
 
 # ------------------- OVERSIGHT METADATA ------------------- #
@@ -784,7 +780,40 @@ def test_get_reference_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/reference")
     assert response.status_code == 200
+    
+def test_post_reference_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/reference' endpoint is requested (POST)
+    THEN check that the response is valid and creates the reference metadata
+    """
+    # BUG:? title key is not being returned in response
+    study_id = pytest.global_study_id["id"]
+    response = _test_client.post(f"/study/{study_id}/metadata/reference", json=[{
+        "identifier": "reference identifier",
+        "type": "reference type",
+        "title": "reference title",
+        "citation": "reference citation"
+    }])
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    pytest.global_reference_id = response_data[0]["id"]
 
+    assert response_data[0]["identifier"] == "reference identifier"
+    assert response_data[0]["type"] == "reference type"
+    assert response_data[0]["title"] == "reference title"
+    assert response_data[0]["citation"] == "reference citation"
+
+def test_delete_reference_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and reference ID
+    WHEN the '/study/{study_id}/metadata/reference/{reference_id}' endpoint is requested (DELETE)
+    THEN check that the response is valid and deletes the reference metadata
+    """
+    study_id = pytest.global_study_id["id"]
+    reference_id = pytest.global_reference_id
+    response = _test_client.delete(f"/study/{study_id}/metadata/reference/{reference_id}")
+    assert response.status_code == 200
 
 # ------------------- SPONSORS METADATA ------------------- #
 def test_get_sponsors_metadata(_test_client, _login_user):
@@ -798,6 +827,30 @@ def test_get_sponsors_metadata(_test_client, _login_user):
     assert response.status_code == 200
 
 
+def test_put_sponsors_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/sponsors' endpoint is requested (PUT)
+    THEN check that the response is valid and updates the sponsors metadata
+    """
+    study_id = pytest.global_study_id["id"]
+    response = _test_client.put(f"/study/{study_id}/metadata/sponsors", json={
+        "responsible_party_type": "party type",
+        "responsible_party_investigator_name": "party name",
+        "responsible_party_investigator_title": "party title",
+        "responsible_party_investigator_affiliation": "party affiliation",
+        "lead_sponsor_name": "sponsor name",
+    })
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+
+    assert response_data["responsible_party_type"] == "party type"
+    assert response_data["responsible_party_investigator_name"] == "party name"
+    assert response_data["responsible_party_investigator_title"] == "party title"
+    assert response_data["responsible_party_investigator_affiliation"] == "party affiliation"
+    assert response_data["lead_sponsor_name"] == "sponsor name"
+
+
 # ------------------- STATUS METADATA ------------------- #
 def test_get_status_metadata(_test_client, _login_user):
     """
@@ -808,3 +861,28 @@ def test_get_status_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     response = _test_client.get(f"/study/{study_id}/metadata/status")
     assert response.status_code == 200
+
+def test_put_status_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/status' endpoint is requested (PUT)
+    THEN check that the response is valid and updates the status metadata
+    """
+    study_id = pytest.global_study_id["id"]
+    response = _test_client.put(f"/study/{study_id}/metadata/status", json={
+        "overall_status": "in progress",
+        "why_stopped": "not stopped",
+        "start_date": "no start",
+        "start_date_type": "date type",
+        "completion_date": "no completion",
+        "completion_date_type": "date type"
+    })
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+
+    assert response_data["overall_status"] == "in progress"
+    assert response_data["why_stopped"] == "not stopped"
+    assert response_data["start_date"] == "no start"
+    assert response_data["start_date_type"] == "date type"
+    assert response_data["completion_date"] == "no completion"
+    assert response_data["completion_date_type"] == "date type"
