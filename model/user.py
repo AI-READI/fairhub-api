@@ -57,10 +57,6 @@ class User(db.Model):
     def check_password(self, password):
         """validates password and bcrypt hashed password"""
         # TODO check password length and make uppercase letter
-        hashed_password = app.bcrypt.generate_password_hash(password).decode("utf-8")
-        is_valid = app.bcrypt.check_password_hash(hashed_password, self.hash)
-        print(is_valid)
+        app.bcrypt.generate_password_hash(password).decode("utf-8")
+        is_valid = app.bcrypt.check_password_hash(self.hash, password)
         return is_valid
-
-    def add_study(self, user, permission):
-        contributor = model.StudyContributor(self, permission)
