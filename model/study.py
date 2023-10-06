@@ -151,8 +151,9 @@ class Study(db.Model):
         ).first()
         user = model.User.query.get(g.user.id)
         contributor_permission = self.study_contributors.filter(
-           model.StudyContributor.user_id == user.id
+           model.StudyContributor.user_id == g.user.id
         ).first()
+        print(contributor_permission)
         """Converts the study to a dictionary"""
         return {
             "id": self.id,
