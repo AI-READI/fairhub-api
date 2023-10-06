@@ -188,10 +188,12 @@ class AssignOwner(Resource):
             StudyContributor.user == user,
             StudyContributor.study == study,
         ).first()
+
         existing_contributor.permission = "owner"
         existing_owner = StudyContributor.query.filter(
             StudyContributor.study == study, StudyContributor.permission == "owner"
         ).first()
+
         existing_owner.permission = "admin"
         db.session.commit()
         return 204

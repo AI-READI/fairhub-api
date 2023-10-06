@@ -60,3 +60,6 @@ class User(db.Model):
         hashed_password = app.bcrypt.generate_password_hash(password).decode("utf-8")
         is_valid = app.bcrypt.check_password_hash(hashed_password, password)
         return is_valid
+
+    def add_study(self, user, permission):
+        contributor = model.StudyContributor(self, permission)

@@ -192,10 +192,10 @@ class Study(db.Model):
         self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
 
     def add_user_to_study(self, user, permission):
+        """add user to study """
         contributor = self.study_contributors.filter(
             model.StudyContributor.user_id == user.id
         ).all()
-        print("start", contributor, "dgfdrggdgdrfgbd")
         if contributor:
             raise StudyException("User is already exists in study")
         else:
@@ -217,3 +217,9 @@ class Study(db.Model):
             )
             db.session.add(contributor_add)
             return contributor_add
+
+    def add_invited_to_contributor(self, user, permission):
+        """add invited users to contributor"""
+        contributor = model.StudyContributor(self, user, permission)
+        db.session.add(contributor)
+        return contributor

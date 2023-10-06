@@ -3,7 +3,7 @@ from flask_restx import Namespace, Resource, fields
 from model import StudyContributor
 from datetime import timezone
 import datetime
-from model import db, User, TokenBlacklist, Study
+from model import db, User, TokenBlacklist, Study, StudyInvitedContributor
 import jwt
 import config
 import uuid
@@ -44,13 +44,16 @@ class SignUpUser(Resource):
         if not data["email_address"]:
             raise "Email is not found"
         user = User.query.filter_by(email_address=data["email_address"]).one_or_none()
+        print(user, "uudzusd")
         if user:
             return "This email address is already in use", 409
-        # user = User.query.filter_by(username=data["username"]).one_or_none()
-        # if user:
-        #     return "This username is already in use", 409
+        is_invited = StudyInvitedContributor.query.filter_by(email_address=data["email_address"]).one_or_none()
         user_add = User.from_data(data)
-        # user.user_details.update(data)
+        if is_invited:
+            study = Study.query.filter_by(id=is_invited.study_id).first()
+            contributor_add = study.add_invited_to_contributor(user_add, is_invited.permission)
+            db.session.add(contributor_add)
+            db.session.delete(is_invited)
         db.session.add(user_add)
         db.session.commit()
         return f"Hi, {user_add.email_address}, you have successfully signed up", 201
@@ -155,6 +158,7 @@ def is_granted(permission: str, study=None):
             "participant",
             "study_metadata",
             "dataset_metadata",
+            "make_owner"
         ],
         "admin": [
             "admin",
@@ -171,7 +175,6 @@ def is_granted(permission: str, study=None):
             "participant",
             "study_metadata",
             "dataset_metadata",
-            "make_owner",
         ],
         "editor": [
             "editor",
