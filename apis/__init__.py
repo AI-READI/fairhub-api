@@ -9,6 +9,7 @@ from .contributor import api as contributors_api
 from .dataset import api as dataset_api
 from .participant import api as participants_api
 from .study import api as study_api
+from .user import api as user
 
 from .authentication import api as authentication
 

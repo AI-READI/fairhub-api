@@ -44,7 +44,6 @@ class SignUpUser(Resource):
         if not data["email_address"]:
             raise "Email is not found"
         user = User.query.filter_by(email_address=data["email_address"]).one_or_none()
-        print(user, "uudzusd")
         if user:
             return "This email address is already in use", 409
         is_invited = StudyInvitedContributor.query.filter_by(
