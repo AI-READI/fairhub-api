@@ -47,11 +47,15 @@ class SignUpUser(Resource):
         print(user, "uudzusd")
         if user:
             return "This email address is already in use", 409
-        is_invited = StudyInvitedContributor.query.filter_by(email_address=data["email_address"]).one_or_none()
+        is_invited = StudyInvitedContributor.query.filter_by(
+            email_address=data["email_address"]
+        ).one_or_none()
         user_add = User.from_data(data)
         if is_invited:
             study = Study.query.filter_by(id=is_invited.study_id).first()
-            contributor_add = study.add_invited_to_contributor(user_add, is_invited.permission)
+            contributor_add = study.add_invited_to_contributor(
+                user_add, is_invited.permission
+            )
             db.session.add(contributor_add)
             db.session.delete(is_invited)
         db.session.add(user_add)
@@ -158,7 +162,7 @@ def is_granted(permission: str, study=None):
             "participant",
             "study_metadata",
             "dataset_metadata",
-            "make_owner"
+            "make_owner",
         ],
         "admin": [
             "admin",

@@ -191,7 +191,7 @@ class Study(db.Model):
         self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
 
     def add_user_to_study(self, user, permission):
-        """add user to study """
+        """add user to study"""
         contributor = self.study_contributors.filter(
             model.StudyContributor.user_id == user.id
         ).all()
