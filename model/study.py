@@ -160,7 +160,7 @@ class Study(db.Model):
             "description": self.study_description.brief_summary
             if self.study_description
             else None,
-            "owner_id": contributors.to_dict()["id"],
+            "owner": contributors.to_dict()["id"],
             "role": contributors.to_dict()["role"],
         }
 

@@ -95,17 +95,3 @@ class StudyResource(Resource):
             Study.study_contributors.any(User.id == g.user.id)
         ).all()
         return [s.to_dict() for s in studies], 201
-
-
-# @api.route("/view-profile", methods=["GET"])
-# def viewProfile():
-#     return jsonify(dic)
-#
-
-
-# @study.route("/view-profile", methods=["POST"])
-# def update_user_profile():
-#     data = request.json
-#     if data is not None:
-#     return jsonify(data), 201
-#
