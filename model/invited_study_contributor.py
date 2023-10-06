@@ -14,6 +14,7 @@ class StudyInvitedContributor(db.Model):
         self.email_address = email_address
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
         self.token = ""
+
     __tablename__ = "invited_study_contributor"
     email_address = db.Column(db.String, nullable=False, primary_key=True)
     permission = db.Column(db.String, nullable=False)
