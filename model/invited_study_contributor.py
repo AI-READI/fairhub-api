@@ -12,11 +12,14 @@ class StudyInvitedContributor(db.Model):
         self.permission = permission
         self.invited_on = datetime.datetime.now(timezone.utc).timestamp()
         self.email_address = email_address
-
+        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
+        self.token = ""
     __tablename__ = "invited_study_contributor"
     email_address = db.Column(db.String, nullable=False, primary_key=True)
     permission = db.Column(db.String, nullable=False)
     invited_on = db.Column(db.BigInteger, nullable=False)
+    token = db.Column(db.String, nullable=True)
+    created_at = db.Column(db.BigInteger, nullable=False)
 
     study_id = db.Column(
         db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), primary_key=True

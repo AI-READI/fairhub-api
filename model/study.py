@@ -4,7 +4,6 @@ from datetime import timezone
 import model
 from .db import db
 import datetime
-from flask import g
 
 
 class StudyException(Exception):
@@ -147,7 +146,7 @@ class Study(db.Model):
     )
 
     def to_dict(self):
-        contributors = model.StudyContributor.query.filter(
+        contributors = self.study_contributors.filter(
             model.StudyContributor.permission == "owner"
         ).first()
         """Converts the study to a dictionary"""

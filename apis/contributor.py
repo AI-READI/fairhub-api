@@ -43,6 +43,8 @@ class AddContributor(Resource):
         contributors_list = [c.to_dict() for c in contributors] + [
             c.to_dict() for c in invited_contributors
         ]
+        c = [c.to_dict() for c in contributors]
+        print(c, "contributor get")
         return contributors_list
 
     @api.response(200, "Success")
