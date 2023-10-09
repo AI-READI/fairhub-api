@@ -7,7 +7,7 @@ from model import db, User, TokenBlacklist, Study, StudyInvitedContributor
 import jwt
 import config
 import uuid
-
+import re
 api = Namespace("Authentication", description="Authentication paths", path="/")
 
 signup_model = api.model(
@@ -41,25 +41,23 @@ class SignUpUser(Resource):
         """signs up the new users and saves data in DB"""
         data = request.json
         # TODO data[email doesnt exist then raise error; json validation library
-        if not data["email_address"]:
-            raise "Email is not found"
+        pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        if not data["email_address"] or not re.match(pattern, data["email_address"]):
+            return "Email address is invalid", 422
         user = User.query.filter_by(email_address=data["email_address"]).one_or_none()
         if user:
             return "This email address is already in use", 409
-        is_invited = StudyInvitedContributor.query.filter_by(
+        invitations = StudyInvitedContributor.query.filter_by(
             email_address=data["email_address"]
-        ).one_or_none()
-        user_add = User.from_data(data)
-        if is_invited:
-            study = Study.query.filter_by(id=is_invited.study_id).first()
-            contributor_add = study.add_invited_to_contributor(
-                user_add, is_invited.permission
-            )
-            db.session.add(contributor_add)
-            db.session.delete(is_invited)
-        db.session.add(user_add)
+        ).all()
+        new_user = User.from_data(data)
+        for invite in invitations:
+            invite.study.add_user_to_study(
+                new_user, invite.permission)
+            db.session.delete(invite)
+        db.session.add(new_user)
         db.session.commit()
-        return f"Hi, {user_add.email_address}, you have successfully signed up", 201
+        return f"Hi, {new_user.email_address}, you have successfully signed up", 201
 
 
 @api.route("/auth/login")

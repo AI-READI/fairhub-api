@@ -14,7 +14,7 @@ class StudyContributor(db.Model):
     __tablename__ = "study_contributor"
     permission = db.Column(db.String, nullable=False)
     user_id = db.Column(db.CHAR(36), db.ForeignKey("user.id"), primary_key=True)
-    created_at = db.Column(db.CHAR(36), nullable=False)
+    created_at = db.Column(db.BigInteger, nullable=False)
 
     user = db.relationship(
         "User",

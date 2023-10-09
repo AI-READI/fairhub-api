@@ -77,6 +77,8 @@ class ContributorResource(Resource):
     def put(self, study_id: int, user_id: int):
         """update contributor based on the assigned permissions"""
         study = Study.query.get(study_id)
+        if not study:
+            return "study is not found", 404
         if not is_granted("permission", study):
             return (
                 "Access denied, you are not authorized to change this permission",
@@ -84,6 +86,8 @@ class ContributorResource(Resource):
             )
         data = request.json
         user = User.query.get(user_id)
+        if not user:
+            return "user not found", 404
         permission = data["role"]
         grantee = StudyContributor.query.filter(
             StudyContributor.user == user, StudyContributor.study == study
@@ -124,47 +128,55 @@ class ContributorResource(Resource):
     @api.response(400, "Validation Error")
     def delete(self, study_id: int, user_id: str):
         study = Study.query.get(study_id)
+        if not study:
+            return "study is not found", 404
+        granter = StudyContributor.query.filter(
+            StudyContributor.user == g.user, StudyContributor.study == study
+        ).first()
+        if not granter:
+            return "you are not contributor of this study", 403
+        grants = OrderedDict()
+        grants["viewer"] = []
+        grants["editor"] = []
+        grants["admin"] = ["viewer", "editor"]
+        grants["owner"] = ["editor", "viewer", "admin"]
+
+        if "@" in user_id:
+            invited_grantee = StudyInvitedContributor.query.filter_by(
+                study_id=study_id, email_address=user_id
+            ).first()
+            can_delete = invited_grantee.permission in grants[granter.permission]
+            if not can_delete:
+                return f"User cannot delete {invited_grantee.permission}", 403
+            db.session.delete(invited_grantee)
+            db.session.commit()
+            return 204
         user = User.query.get(user_id)
-        if not is_granted("delete_contributor", study) and user != g.user:
+        if not user:
+            return "user is not found", 404
+        contributors = StudyContributor.query.filter(
+            StudyContributor.study == study
+        ).all()
+        print(len(contributors), "")
+        grantee = StudyContributor.query.filter(
+            StudyContributor.user == user, StudyContributor.study == study
+        ).first()
+        if len(contributors) <= 1:
+            return "the study must have at least one contributor", 422
+        if grantee.user == granter.user:
+            if granter.permission == "owner":
+                return "you must transfer ownership before removing yourself", 422
+            db.session.delete(grantee)
+            db.session.commit()
+            return 204
+        if not is_granted("delete_contributor", study):
             return (
                 "Access denied, you are not authorized to change this permission",
-                403,
-            )
-        contributors = []
-        if "@" in user_id:
-            invited_contributors = StudyInvitedContributor.query.filter_by(
-                study_id=study_id, email_address=user_id
-            ).first()
-            db.session.delete(invited_contributors)
-            contributors.append(invited_contributors)
-        else:
-            user = User.query.get(user_id)
-            grantee = StudyContributor.query.filter(
-                StudyContributor.user == user, StudyContributor.study == study
-            ).first()
-            contributors.append(grantee)
-            invited_contributors = StudyInvitedContributor.query.filter_by(
-                study_id=study_id, email_address=user_id
-            ).first()
-            granter = StudyContributor.query.filter(
-                StudyContributor.user == g.user, StudyContributor.study == study
-            ).first()
-            # Order should go from the least privileged to the most privileged
-            grants = OrderedDict()
-            grants["viewer"] = []
-            grants["editor"] = ["viewer"]
-            grants["admin"] = ["viewer", "editor"]
-            grants["owner"] = ["editor", "viewer", "admin"]
-            # Granter can not downgrade anyone of equal or greater permissions other than themselves
-            if user != g.user:
-                grantee_level = list(grants.keys()).index(grantee.permission)  # 2
-                granter_level = list(grants.keys()).index(granter.permission)  # 2
-                if granter_level <= grantee_level:
-                    return (
-                        f"You are not authorized to delete {grantee.permission}s from study",
-                        403,
-                    )
-            db.session.delete(grantee)
+                403)
+        can_delete = grantee.permission in grants[granter.permission]
+        if not can_delete:
+            return f"User cannot delete {grantee.permission}", 403
+        db.session.delete(grantee)
         db.session.commit()
         return 204
 
@@ -188,7 +200,6 @@ class AssignOwner(Resource):
             StudyContributor.user == user,
             StudyContributor.study == study,
         ).first()
-
         existing_contributor.permission = "owner"
         existing_owner = StudyContributor.query.filter(
             StudyContributor.study == study, StudyContributor.permission == "owner"
