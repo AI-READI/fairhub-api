@@ -168,7 +168,6 @@ def create_app():
     def validation_exception_handler(error):
         return error.args[0], 422
 
-
     @app.cli.command("destroy-schema")
     def destroy_schema():
         engine = model.db.session.get_bind()

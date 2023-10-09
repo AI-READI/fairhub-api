@@ -8,6 +8,7 @@ import jwt
 import config
 import uuid
 import re
+
 api = Namespace("Authentication", description="Authentication paths", path="/")
 
 signup_model = api.model(
@@ -41,7 +42,7 @@ class SignUpUser(Resource):
         """signs up the new users and saves data in DB"""
         data = request.json
         # TODO data[email doesnt exist then raise error; json validation library
-        pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+        pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
         if not data["email_address"] or not re.match(pattern, data["email_address"]):
             return "Email address is invalid", 422
         user = User.query.filter_by(email_address=data["email_address"]).one_or_none()
@@ -52,8 +53,7 @@ class SignUpUser(Resource):
         ).all()
         new_user = User.from_data(data)
         for invite in invitations:
-            invite.study.add_user_to_study(
-                new_user, invite.permission)
+            invite.study.add_user_to_study(new_user, invite.permission)
             db.session.delete(invite)
         db.session.add(new_user)
         db.session.commit()

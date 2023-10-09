@@ -172,7 +172,8 @@ class ContributorResource(Resource):
         if not is_granted("delete_contributor", study):
             return (
                 "Access denied, you are not authorized to change this permission",
-                403)
+                403,
+            )
         can_delete = grantee.permission in grants[granter.permission]
         if not can_delete:
             return f"User cannot delete {grantee.permission}", 403
