@@ -9,9 +9,7 @@ api = Namespace("User", description="User tables", path="/")
 
 study_model = api.model(
     "User",
-    {
-
-    },
+    {},
 )
 
 
