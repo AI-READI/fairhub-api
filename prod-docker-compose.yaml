@@ -10,7 +10,6 @@ services:
       - run
       - --host=0.0.0.0      
       - --port=5000
-      - --debug
     ports:
       - 5000:5000
     environment:

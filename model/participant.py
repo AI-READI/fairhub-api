@@ -1,14 +1,15 @@
 import uuid
-
 import model
-
+from datetime import timezone
 from .db import db
+import datetime
 
 
 class Participant(db.Model):
     def __init__(self, study):
         self.study = study
         self.id = str(uuid.uuid4())
+        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
 
     __tablename__ = "participant"
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -16,13 +17,17 @@ class Participant(db.Model):
     last_name = db.Column(db.String, nullable=False)
     address = db.Column(db.String, nullable=False)
     age = db.Column(db.String, nullable=False)
+    created_at = db.Column(db.BigInteger, nullable=False)
+    updated_on = db.Column(db.BigInteger, nullable=False)
 
-    study_id = db.Column(db.CHAR(36), db.ForeignKey("study.id"))
+    study_id = db.Column(
+        db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=False
+    )
     study = db.relationship("Study", back_populates="participants")
     dataset_versions = db.relationship(
-        "DatasetVersion",
+        "Version",
         back_populates="participants",
-        secondary=model.dataset_version.version_participants,
+        secondary=model.version.version_participants,
     )
 
     def to_dict(self):
@@ -32,6 +37,8 @@ class Participant(db.Model):
             "last_name": self.last_name,
             "address": self.address,
             "age": self.age,
+            "created_at": self.created_at,
+            "updated_on": self.updated_on,
         }
 
     @staticmethod
@@ -41,8 +48,8 @@ class Participant(db.Model):
         return participant
 
     def update(self, data):
-        # self.id = data["id"]
         self.first_name = data["first_name"]
         self.last_name = data["last_name"]
         self.address = data["address"]
         self.age = data["age"]
+        self.updated_on = datetime.datetime.now(timezone.utc).timestamp()

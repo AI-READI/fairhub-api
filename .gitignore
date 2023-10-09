@@ -33,3 +33,7 @@ coverage
 
 # Environment variables
 .env
+
+# Database 
+postgres_data/*
+postgres-data/*
