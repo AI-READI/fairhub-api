@@ -5,7 +5,7 @@ import model
 from .db import db
 import datetime
 from flask import g
-
+from apis import exception
 class StudyException(Exception):
     pass
 
@@ -146,7 +146,7 @@ class Study(db.Model):
     )
 
     def to_dict(self):
-        owner_contributors = self.study_contributors.filter(
+        owner = self.study_contributors.filter(
             model.StudyContributor.permission == "owner"
         ).first()
         user = model.User.query.get(g.user.id)
@@ -164,7 +164,7 @@ class Study(db.Model):
             "size": self.study_other.size if self.study_other else None,
             "description": self.study_description.brief_summary
             if self.study_description else None,
-            "owner": owner_contributors.to_dict()["id"] if owner_contributors else None,
+            "owner": owner.to_dict()["id"] if owner else None,
             "role": contributor_permission.to_dict()["role"]
         }
 
@@ -178,6 +178,11 @@ class Study(db.Model):
 
     def update(self, data):
         """Updates the study from a dictionary"""
+        if not data["title"]:
+            raise exception.ValidationException("title is required")
+        if not data["image"]:
+            raise exception.ValidationException("image is required")
+
         self.title = data["title"]
         self.image = data["image"]
         self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
@@ -221,8 +226,3 @@ class Study(db.Model):
             db.session.add(contributor_add)
             return contributor_add
 
-    def add_invited_to_contributor(self, user, permission):
-        """add invited users to contributor"""
-        contributor = model.StudyContributor(self, user, permission)
-        db.session.add(contributor)
-        return contributor
