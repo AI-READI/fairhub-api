@@ -30,11 +30,6 @@ class AddContributor(Resource):
     @api.response(400, "Validation Error")
     # @api.marshal_with(contributors_model)
     def get(self, study_id: int):
-        # study_contributors = (
-        #     StudyContributor.query
-        #     .filter(StudyContributor.user_id == g.user.id)  # Filter contributors where user_id matches the user's id
-        #     .all()
-        # )
         contributors = StudyContributor.query.filter_by(study_id=study_id).all()
         invited_contributors = StudyInvitedContributor.query.filter_by(
             study_id=study_id
