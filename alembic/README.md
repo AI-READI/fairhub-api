@@ -37,7 +37,7 @@ how the down_revision identifiers link together with the down_revision of None r
 * All information needed to be revised should be included in 
     ``` upgrade ``` function.
 
-5.After all revisions completed, run the migration
+3.After all revisions completed, run the migration
 
 ```
 $ alembic upgrade head
@@ -46,4 +46,4 @@ INFO  [alembic.context] Will assume transactional DDL.
 INFO  [alembic.context] Running upgrade None -> 1975ea83b712
 ```
 
-6.All saved changes should be updated or removed by running new revision following steps mentioned above.
+4.All saved changes should be updated or removed by running new revision following steps mentioned above.
