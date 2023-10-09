@@ -32,7 +32,7 @@ Then, a new file ```1975ea83b712_create_account_table.py``` is generated.
     
     
 * ```down_revision``` runs an operation, and composes a list based on 
-how the down_revision identifiers link together with the down_revision of None representing the first file.
+how the ```down_revision``` identifiers link together with the ```down_revision``` of ```None``` representing the first file.
 
 * All information needed to be revised should be included in 
     ``` upgrade ``` function.
