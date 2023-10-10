@@ -1,16 +1,11 @@
 from collections import OrderedDict
 
+import model
 from flask_restx import Namespace, Resource, fields
 from flask import request, g
-from model import (
-    Study,
-    db,
-    User,
-    StudyException,
-    StudyContributor,
-    StudyInvitedContributor,
-)
+import model
 from .authentication import is_granted
+
 
 api = Namespace("Contributor", description="Contributors", path="/")
 
@@ -30,8 +25,8 @@ class AddContributor(Resource):
     @api.response(400, "Validation Error")
     # @api.marshal_with(contributors_model)
     def get(self, study_id: int):
-        contributors = StudyContributor.query.filter_by(study_id=study_id).all()
-        invited_contributors = StudyInvitedContributor.query.filter_by(
+        contributors = model.StudyContributor.query.filter_by(study_id=study_id).all()
+        invited_contributors = model.StudyInvitedContributor.query.filter_by(
             study_id=study_id
         ).all()
 
@@ -44,12 +39,12 @@ class AddContributor(Resource):
     @api.response(400, "Validation Error")
     # @api.marshal_with(contributors_model)
     def post(self, study_id: int):
-        study_obj = Study.query.get(study_id)
+        study_obj = model.Study.query.get(study_id)
         if not is_granted("invite_contributor", study_obj):
             return "Access denied, you can not modify", 403
         data = request.json
         email_address = data["email_address"]
-        user = User.query.filter_by(email_address=email_address).first()
+        user = model.User.query.filter_by(email_address=email_address).first()
         permission = data["role"]
         contributor_ = None
         try:
@@ -57,9 +52,9 @@ class AddContributor(Resource):
                 contributor_ = study_obj.add_user_to_study(user, permission)
             else:
                 contributor_ = study_obj.invite_user_to_study(email_address, permission)
-        except StudyException as ex:
+        except model.StudyException as ex:
             return ex.args[0], 409
-        db.session.commit()
+        model.db.session.commit()
         return contributor_.to_dict(), 201
 
 
@@ -71,7 +66,7 @@ class ContributorResource(Resource):
     @api.expect(contributors_model)
     def put(self, study_id: int, user_id: int):
         """update contributor based on the assigned permissions"""
-        study = Study.query.get(study_id)
+        study = model.Study.query.get(study_id)
         if not study:
             return "study is not found", 404
         if not is_granted("permission", study):
@@ -80,16 +75,16 @@ class ContributorResource(Resource):
                 403,
             )
         data = request.json
-        user = User.query.get(user_id)
+        user = model.User.query.get(user_id)
         if not user:
             return "user not found", 404
         permission = data["role"]
-        grantee = StudyContributor.query.filter(
-            StudyContributor.user == user, StudyContributor.study == study
+        grantee = model.StudyContributor.query.filter(
+            model.StudyContributor.user == user, model.StudyContributor.study == study
         ).first()
 
-        granter = StudyContributor.query.filter(
-            StudyContributor.user == g.user, StudyContributor.study == study
+        granter = model.StudyContributor.query.filter(
+            model.StudyContributor.user == g.user, model.StudyContributor.study == study
         ).first()
 
         # Order should go from the least privileged to the most privileged
@@ -122,11 +117,11 @@ class ContributorResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def delete(self, study_id: int, user_id: str):
-        study = Study.query.get(study_id)
+        study =model.Study.query.get(study_id)
         if not study:
             return "study is not found", 404
-        granter = StudyContributor.query.filter(
-            StudyContributor.user == g.user, StudyContributor.study == study
+        granter = model.StudyContributor.query.filter(
+            model.StudyContributor.user == g.user, model.StudyContributor.study == study
         ).first()
         if not granter:
             return "you are not contributor of this study", 403
@@ -137,32 +132,32 @@ class ContributorResource(Resource):
         grants["owner"] = ["editor", "viewer", "admin"]
 
         if "@" in user_id:
-            invited_grantee = StudyInvitedContributor.query.filter_by(
+            invited_grantee = model.StudyInvitedContributor.query.filter_by(
                 study_id=study_id, email_address=user_id
             ).first()
             can_delete = invited_grantee.permission in grants[granter.permission]
             if not can_delete:
                 return f"User cannot delete {invited_grantee.permission}", 403
-            db.session.delete(invited_grantee)
-            db.session.commit()
+            model.db.session.delete(invited_grantee)
+            model.db.session.commit()
             return 204
-        user = User.query.get(user_id)
+        user = model.User.query.get(user_id)
         if not user:
             return "user is not found", 404
-        contributors = StudyContributor.query.filter(
-            StudyContributor.study == study
+        contributors = model.StudyContributor.query.filter(
+            model.StudyContributor.study == study
         ).all()
         print(len(contributors), "")
-        grantee = StudyContributor.query.filter(
-            StudyContributor.user == user, StudyContributor.study == study
+        grantee = model.StudyContributor.query.filter(
+            model.StudyContributor.user == user, model.StudyContributor.study == study
         ).first()
         if len(contributors) <= 1:
             return "the study must have at least one contributor", 422
         if grantee.user == granter.user:
             if granter.permission == "owner":
                 return "you must transfer ownership before removing yourself", 422
-            db.session.delete(grantee)
-            db.session.commit()
+            model.db.session.delete(grantee)
+            model.db.session.commit()
             return 204
         if not is_granted("delete_contributor", study):
             return (
@@ -172,8 +167,8 @@ class ContributorResource(Resource):
         can_delete = grantee.permission in grants[granter.permission]
         if not can_delete:
             return f"User cannot delete {grantee.permission}", 403
-        db.session.delete(grantee)
-        db.session.commit()
+        model.db.session.delete(grantee)
+        model.db.session.commit()
         return 204
 
 
@@ -185,22 +180,22 @@ class AssignOwner(Resource):
     @api.expect(contributors_model)
     def put(self, study_id: int, user_id: int):
         """set owner based on the assigned permissions"""
-        study = Study.query.get(study_id)
+        study = model.Study.query.get(study_id)
         if not is_granted("make_owner", study):
             return (
                 "Access denied, you are not authorized to change this permission",
                 403,
             )
-        user = User.query.get(user_id)
-        existing_contributor = StudyContributor.query.filter(
-            StudyContributor.user == user,
-            StudyContributor.study == study,
+        user = model.User.query.get(user_id)
+        existing_contributor = model.StudyContributor.query.filter(
+            model.StudyContributor.user == user,
+            model.StudyContributor.study == study,
         ).first()
         existing_contributor.permission = "owner"
-        existing_owner = StudyContributor.query.filter(
-            StudyContributor.study == study, StudyContributor.permission == "owner"
+        existing_owner = model.StudyContributor.query.filter(
+            model.StudyContributor.study == study, model.StudyContributor.permission == "owner"
         ).first()
 
         existing_owner.permission = "admin"
-        db.session.commit()
+        model.db.session.commit()
         return 204

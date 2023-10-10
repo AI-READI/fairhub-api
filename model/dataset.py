@@ -107,7 +107,7 @@ class Dataset(db.Model):
         return self.dataset_versions.order_by(model.Version.updated_on.desc()).first()
 
     @staticmethod
-    def from_data(study, data: dict):
+    def from_data(study: model.Study, data: dict):
         dataset_obj = Dataset(study)
         dataset_obj.update(data)
         return dataset_obj
