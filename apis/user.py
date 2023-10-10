@@ -24,7 +24,7 @@ study_model = api.model(
 
 @api.route("/user/profile")
 class UserDetailsEndpoint(Resource):
-    @api.doc("list_study")
+    @api.doc(description="Returns user details gathered from the user and user_details tables")
     @api.response(200, "Success", study_model)
     @api.response(400, "Validation Error")
     def get(self):
@@ -32,6 +32,7 @@ class UserDetailsEndpoint(Resource):
         user = User.query.get(g.user.id)
         user_details = user.user_details
         user_information = user.to_dict()
+        # combine user and user_details to return a single object
         user_information.update(user_details.to_dict())
         return user_information
 
@@ -43,8 +44,12 @@ class UserDetailsEndpoint(Resource):
         if data is None:
             return {"message": "No data provided"}, 400
         user = User.query.get(g.user.id)
-        user.update(data)
+        # user.update(data) # don't update the username and email_address for now
         user_details = user.user_details
         user_details.update(data)
         db.session.commit()
-        return user_details.to_dict()
+        
+        # combine user and user_details to return a single object
+        user_information = user.to_dict()
+        user_information.update(user_details.to_dict())
+        return user_information
