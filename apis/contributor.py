@@ -117,7 +117,7 @@ class ContributorResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def delete(self, study_id: int, user_id: str):
-        study =model.Study.query.get(study_id)
+        study = model.Study.query.get(study_id)
         if not study:
             return "study is not found", 404
         granter = model.StudyContributor.query.filter(
@@ -193,7 +193,8 @@ class AssignOwner(Resource):
         ).first()
         existing_contributor.permission = "owner"
         existing_owner = model.StudyContributor.query.filter(
-            model.StudyContributor.study == study, model.StudyContributor.permission == "owner"
+            model.StudyContributor.study == study,
+            model.StudyContributor.permission == "owner",
         ).first()
 
         existing_owner.permission = "admin"
