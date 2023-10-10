@@ -1,7 +1,7 @@
 from flask import request, g
 from flask_restx import Namespace, Resource, fields
 
-from model import Study, db, User, StudyContributor
+from model import Study, db, User, StudyContributor, UserDetails
 from .authentication import is_granted
 
 api = Namespace("User", description="User tables", path="/")
@@ -21,21 +21,23 @@ study_model = api.model(
 
 
 @api.route("/profile")
-class UserDetails(Resource):
+class UserDetailsEndpoint(Resource):
     @api.doc("list_study")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(study_model)
     def get(self):
-        """This code returns user details"""
+        """Returns user details"""
         user = User.query.get(g.user.id)
-        return user.to_dict()
+        user_details = user.user_details
+        return user_details.to_dict()
     
     @api.expect(study_model)
     def put(self):
-        """This code updates user details"""
+        """Updates user details"""
         data = request.json
         user = User.query.get(g.user.id)
-        user.update(data)
+        user_details = user.user_details
+        user_details.update(data)
         db.session.commit()
-        return user.to_dict()
+        return user_details.to_dict()
