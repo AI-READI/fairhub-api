@@ -39,3 +39,8 @@ class DoubleContinuousTimeseries (VType):
       ],
       pd._libs.tslibs.nattype.NaTType
     )
+
+if __name__ == "__main__":
+    pass
+else:
+    pass

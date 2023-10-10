@@ -37,3 +37,8 @@ class Mixed (VType):
         valid = False
       else:
         continue
+
+if __name__ == "__main__":
+    pass
+else:
+    pass

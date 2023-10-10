@@ -8,7 +8,6 @@ from vtypes import *
 import pandas as pd
 
 class ModuleTransform (object):
-
   def __init__(self: object, config: Dict[str, Dict[str, Any]], logging_config: Dict[str, str] = {}) -> None:
 
     #
