@@ -2,17 +2,13 @@
 
 To set up Alembic migration management, please follow the instructions below.
 
-1. Initiate new `alembic` directory
+1. Create new revision
     ``` bash
-   alembic init alembic
-   ```
-   
-2. Create new revision
-    ``` bash
-    alembic revision --autogenerate -m "create account table"
+    alembic revision -m "create account table"
     ```
 
-    This will set a new directory, namely ` versions` which contains all the revised files, in the alembic directory. 
+    This will set a new directory alembic containing ` versions` 
+    which contains all the revised files. 
     Then, a new file 1975ea83b712_create_account_table.py is generated.
 
 
