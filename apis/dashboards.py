@@ -106,7 +106,7 @@ class RecruitmentDashboard(Resource):
         """
         Get study dashboard
         """
-        dashboard_data = MEMORY_CACHE.get(f"transform_study-overview_{study_id}")
+        dashboard_data = MEMORY_CACHE.get(f"transform_study-dashboard_{study_id}")
         print(dashboard_data)
         return dashboard_data
 

@@ -34,3 +34,4 @@ coverage
 .flaskenv
 *.rdb
 dev
+*.tsv

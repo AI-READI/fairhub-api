@@ -4,21 +4,10 @@ REDCapReportRecruitmentDataModel = {
     "record_id": fields.String(
         required=True, readonly=True, description="Participant record ID"
     ),
-    "redcap_repeat_instrument": fields.String(
-        required=True,
-        readonly=True,
-        description="REDCap internal variable - name of repeatable instrument",
+    "studyid": fields.String(
+        required=True, readonly=True, description="Study participant ID"
     ),
-    "recap_repeat_instance": fields.Integer(
-        required=True,
-        readonly=True,
-        description="REDCap internal variable - repetition number of repeatable instrument",
-    ),
-    "redcap_data_access_group": fields.String(
-        required=True,
-        readonly=True,
-        description="REDCap internal variable - abbreviated site name",
-    ),
+    "siteid": fields.String(required=True, readonly=True, description="Site ID"),
     "dm": fields.String(
         required=True, readonly=True, description="Data approved for Fairhub.io"
     ),

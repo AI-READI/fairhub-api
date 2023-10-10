@@ -1,26 +1,26 @@
 from .vtype import VType
 
-class SingleContinuous (VType):
+class SingleDiscrete (VType):
   def __init__ (self: object) -> None:
     super().__init__(
-      "SingleContinuous", [
+      "SingleDiscrete", [
         ("filterby", str),
         ("group", str),
         ("color", str),
-        ("x", float)
+        ("x", int)
       ],
-      float
+      int
     )
 
-class DoubleContinuous (VType):
+class DoubleDiscrete (VType):
   def __init__ (self: object) -> None:
     super().__init__(
-      "DoubleContinuous", [
+      "Discrete", [
         ("filterby", str),
         ("group", str),
         ("color", str),
-        ("x", float),
-        ("y", float),
+        ("x", int),
+        ("y", int),
       ],
-      float
+      int
     )

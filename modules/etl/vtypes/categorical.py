@@ -1,19 +1,26 @@
 from .vtype import VType
 
-class Categorical (VType):
+class SingleCategorical (VType):
   def __init__ (self: object) -> None:
     super().__init__(
-      "categorical", [
+      "SingleCategorical", [
         ("filterby", str),
         ("group", str),
-        ("subgroup", str),
         ("color", str),
-        ("value", float),
+        ("value", int),
       ],
       str
     )
 
-if __name__ == "__main__":
-  pass
-else:
-  pass
+class DoubleCategorical (VType):
+  def __init__ (self: object) -> None:
+    super().__init__(
+      "DoubleCategorical", [
+        ("filterby", str),
+        ("group", str),
+        ("subgroup", str),
+        ("color", str),
+        ("value", int),
+      ],
+      str
+    )

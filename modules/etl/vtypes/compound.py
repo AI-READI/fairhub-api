@@ -1,17 +1,16 @@
-from typing import Any, Callable, Union, List, Dict, Tuple
 from .vtype import VType
 from .categorical import SingleCategorical, DoubleCategorical
 from .discrete import SingleDiscrete, DoubleDiscrete
 from .continuous import SingleContinuous, DoubleContinuous
 from .timeseries import SingleTimeseries, DoubleDiscreteTimeseries, DoubleContinuousTimeseries
-from .compound import Compound
+from typing import Tuple, List, Dict, Callable, Any
 import pandas as pd
 
-class Mixed (VType):
+class Compound (VType):
   def __init__ (self: object) -> None:
     raise NotImplementedError
     super().__init__(
-      "Mixed", [
+      "Compound", [
         SingleCategorical,
         DoubleCategorical,
         SingleDiscrete,
@@ -20,11 +19,9 @@ class Mixed (VType):
         DoubleContinuous,
         SingleTimeseries,
         DoubleDiscreteTimeseries,
-        DoubleContinuousTimeseries,
-        Compound
+        DoubleContinuousTimeseries
       ], str
     )
-
   def isvalid (self: object, dfs: pd.DataFrame, accessorsList: List[Dict[str, Dict[str, str]]]) -> bool:
     """
     Extends the VType.isvalid method to operate on a list
@@ -37,3 +34,5 @@ class Mixed (VType):
         valid = False
       else:
         continue
+
+    return valid

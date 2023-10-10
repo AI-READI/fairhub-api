@@ -3,7 +3,7 @@ from datetime import datetime
 import pandas as pd
 
 class VType (object):
-  def __init__ (self: object, name: str, props: List[Tuple[str, Callable]], missing_value: Callable) -> None:
+  def __init__ (self: object, name: str, props: List[Tuple[str, Callable]], missing_value: Callable, strict = True) -> None:
     self.name = name
     self.props = props
     self.missing_value = missing_value

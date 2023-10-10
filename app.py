@@ -25,6 +25,10 @@ os.environ["FLASK_APP_VERSION"] = pyproject_toml["tool"]["poetry"]["version"]
 os.environ["FLASK_APP_DESCRIPTION"] = pyproject_toml["tool"]["poetry"]["description"]
 os.environ["FLASK_APP_LICENSE"] = pyproject_toml["tool"]["poetry"]["license"]
 
+#
+# Load Dashboard Config
+#
+
 # Load JSON config files
 with open("config/dashboards.json") as config:
     DASHBOARDS_CONFIG = json.load(config)
