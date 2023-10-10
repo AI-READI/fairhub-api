@@ -46,7 +46,4 @@ how the `down_revision` identifiers link together with the `down_revision` of `N
     INFO  [alembic.context] Running upgrade None -> 1975ea83b712
     ```
 
-4. All saved changes should be updated or removed by running new revision following steps mentioned above.
-
-
-You can refer to [Alembic official documentation](https://alembic.sqlalchemy.org/en/latest/) page for more details
+All saved changes should be updated or removed by running new revision following steps mentioned above. You can refer to [Alembic official documentation](https://alembic.sqlalchemy.org/en/latest/) for more details.
