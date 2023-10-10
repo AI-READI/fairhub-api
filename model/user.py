@@ -43,7 +43,9 @@ class User(db.Model):
 
     def update(self, data):
         self.email_address = data["email_address"]
-        self.username = data["username"] if "username" in data else data["email_address"]
+        self.username = (
+            data["username"] if "username" in data else data["email_address"]
+        )
         # self.email_verified = data["email_verified"]
         # self.username = data["username"]
         # self.hash = data["hash"]
