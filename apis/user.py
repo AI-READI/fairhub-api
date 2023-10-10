@@ -24,7 +24,9 @@ study_model = api.model(
 
 @api.route("/user/profile")
 class UserDetailsEndpoint(Resource):
-    @api.doc(description="Returns user details gathered from the user and user_details tables")
+    @api.doc(
+        description="Returns user details gathered from the user and user_details tables"
+    )
     @api.response(200, "Success", study_model)
     @api.response(400, "Validation Error")
     def get(self):
@@ -48,7 +50,7 @@ class UserDetailsEndpoint(Resource):
         user_details = user.user_details
         user_details.update(data)
         db.session.commit()
-        
+
         # combine user and user_details to return a single object
         user_information = user.to_dict()
         user_information.update(user_details.to_dict())
