@@ -31,7 +31,7 @@ class UserDetailsEndpoint(Resource):
         user = User.query.get(g.user.id)
         user_details = user.user_details
         return user_details.to_dict()
-    
+
     @api.expect(study_model)
     def put(self):
         """Updates user details"""
