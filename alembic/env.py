@@ -13,7 +13,9 @@ load_dotenv()
 config = context.config
 section = config.config_ini_section
 print(section, environ.get("FAIRHUB_DATABASE_URL"))
-config.set_section_option(section, "FAIRHUB_DATABASE_URL", str(environ.get("FAIRHUB_DATABASE_URL")))
+config.set_section_option(
+    section, "FAIRHUB_DATABASE_URL", str(environ.get("FAIRHUB_DATABASE_URL"))
+)
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:
@@ -68,9 +70,7 @@ def run_migrations_online() -> None:
         poolclass=pool.NullPool,
     )
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()
