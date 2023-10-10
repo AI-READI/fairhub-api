@@ -25,9 +25,8 @@ study_model = api.model(
 @api.route("/user/profile")
 class UserDetailsEndpoint(Resource):
     @api.doc("list_study")
-    @api.response(200, "Success")
+    @api.response(200, "Success", study_model)
     @api.response(400, "Validation Error")
-    # @api.marshal_with(study_model)
     def get(self):
         """Returns user details"""
         user = User.query.get(g.user.id)
@@ -37,14 +36,13 @@ class UserDetailsEndpoint(Resource):
         return user_information
 
     @api.expect(study_model)
+    @api.marshal_with(study_model)
     def put(self):
         """Updates user details"""
         data = request.json
-        # verify data follows study_model schema except for profile_image
         if data is None:
             return {"message": "No data provided"}, 400
         user = User.query.get(g.user.id)
-        # update email and username in user table and other fields in user_details table
         user.update(data)
         user_details = user.user_details
         user_details.update(data)
