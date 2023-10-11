@@ -1,11 +1,11 @@
 from collections import OrderedDict
 
-import model
+from flask import g, request
 from flask_restx import Namespace, Resource, fields
-from flask import request, g
-import model
-from .authentication import is_granted
 
+import model
+
+from .authentication import is_granted
 
 api = Namespace("Contributor", description="Contributors", path="/")
 

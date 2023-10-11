@@ -1,7 +1,8 @@
+import datetime
 import uuid
 from datetime import timezone
+
 from sqlalchemy.sql.expression import true
-import datetime
 
 import model
 

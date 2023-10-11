@@ -1,5 +1,6 @@
-from datetime import timezone
 import datetime
+from datetime import timezone
+
 from .db import db
 
 

@@ -1,4 +1,4 @@
-from flask import request, g
+from flask import g, request
 from flask_restx import Namespace, Resource, fields
 
 from model import User, db

@@ -1,11 +1,13 @@
-import uuid
-from datetime import datetime
-from datetime import timezone
-import model
-from .db import db
 import datetime
+import uuid
+from datetime import datetime, timezone
+
 from flask import g
+
+import model
 from apis import exception
+
+from .db import db
 
 
 class StudyException(Exception):

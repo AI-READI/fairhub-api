@@ -1,12 +1,11 @@
 """API routes for study location metadata"""
-from flask_restx import Resource, fields
 from flask import request
-from model import Study, db, StudyLocation
-from ..authentication import is_granted
-
+from flask_restx import Resource, fields
 
 from apis.study_metadata_namespace import api
+from model import Study, StudyLocation, db
 
+from ..authentication import is_granted
 
 study_location = api.model(
     "StudyLocation",

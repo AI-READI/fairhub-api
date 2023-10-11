@@ -1,8 +1,10 @@
-import uuid
-import model
-from datetime import timezone
-from .db import db
 import datetime
+import uuid
+from datetime import timezone
+
+import model
+
+from .db import db
 
 
 class Participant(db.Model):

@@ -1,7 +1,9 @@
+import datetime
 import uuid
 from datetime import timezone
-import datetime
+
 from model.dataset import Dataset
+
 from .db import db
 
 version_participants = db.Table(

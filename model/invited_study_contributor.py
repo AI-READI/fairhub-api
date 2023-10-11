@@ -1,8 +1,8 @@
-import uuid
-from datetime import datetime
-from .db import db
 import datetime
-from datetime import timezone
+import uuid
+from datetime import datetime, timezone
+
+from .db import db
 
 
 class StudyInvitedContributor(db.Model):

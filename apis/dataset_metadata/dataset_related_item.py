@@ -1,8 +1,8 @@
-from model import Dataset, DatasetRelatedItem, db
+from flask import request
+from flask_restx import Resource, fields
 
-from flask_restx import Namespace, Resource, fields
-from flask import jsonify, request
 from apis.dataset_metadata_namespace import api
+from model import Dataset, DatasetRelatedItem, db
 
 dataset_related_item = api.model(
     "DatasetRelatedItem",

@@ -1,9 +1,8 @@
-from model import Dataset, DatasetFunder, db
-
-from flask_restx import Resource, fields
 from flask import request
+from flask_restx import Resource, fields
 
 from apis.dataset_metadata_namespace import api
+from model import Dataset, DatasetFunder, db
 
 dataset_funder = api.model(
     "DatasetFunder",

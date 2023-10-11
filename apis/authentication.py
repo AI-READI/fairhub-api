@@ -1,13 +1,21 @@
-from flask import request, make_response, g
-from flask_restx import Namespace, Resource, fields
-from model import StudyContributor
-from datetime import timezone
 import datetime
-from model import db, User, TokenBlacklist, Study, StudyInvitedContributor
-import jwt
-import config
-import uuid
 import re
+import uuid
+from datetime import timezone
+
+import jwt
+from flask import g, make_response, request
+from flask_restx import Namespace, Resource, fields
+
+import config
+from model import (
+    Study,
+    StudyContributor,
+    StudyInvitedContributor,
+    TokenBlacklist,
+    User,
+    db,
+)
 
 api = Namespace("Authentication", description="Authentication paths", path="/")
 

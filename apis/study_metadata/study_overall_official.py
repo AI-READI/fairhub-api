@@ -1,12 +1,11 @@
 """API routes for study overall official metadata"""
-from flask_restx import Resource, fields
 from flask import request
-from model import Study, db, StudyOverallOfficial
-
+from flask_restx import Resource, fields
 
 from apis.study_metadata_namespace import api
-from ..authentication import is_granted
+from model import Study, StudyOverallOfficial, db
 
+from ..authentication import is_granted
 
 study_overall_official = api.model(
     "StudyOverallOfficial",

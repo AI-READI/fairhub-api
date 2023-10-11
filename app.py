@@ -1,17 +1,18 @@
 """Entry point for the application."""
-from apis.exception import ValidationException
-from flask import Flask, request, make_response, g
+import datetime
+from datetime import timezone
+
 import jwt
-import config
+from flask import Flask, g, make_response, request
+from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from sqlalchemy import MetaData
-from datetime import timezone
-import datetime
 
+import config
 import model
 from apis import api
-from flask_bcrypt import Bcrypt
-from apis.authentication import authentication, authorization, UnauthenticatedException
+from apis.authentication import UnauthenticatedException, authentication, authorization
+from apis.exception import ValidationException
 
 # from pyfairdatatools import __version__
 

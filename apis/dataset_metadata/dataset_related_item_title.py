@@ -1,9 +1,7 @@
-from model import Dataset, DatasetRelatedItemTitle, db
-
-from flask_restx import Namespace, Resource, fields
-
+from flask_restx import Resource
 
 from apis.dataset_metadata_namespace import api
+from model import Dataset
 
 # dataset_related_item_contributor = api.model(
 #     "DatasetRelatedItemTitle",

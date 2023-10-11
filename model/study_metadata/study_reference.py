@@ -1,8 +1,8 @@
+import datetime
 import uuid
+from datetime import timezone
 
 from ..db import db
-from datetime import timezone
-import datetime
 
 
 class StudyReference(db.Model):

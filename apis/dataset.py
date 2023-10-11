@@ -1,7 +1,8 @@
 from flask import Response, jsonify, request
 from flask_restx import Namespace, Resource, fields
 
-from model import Dataset, Version, Participant, Study, db
+from model import Dataset, Participant, Study, Version, db
+
 from .authentication import is_granted
 
 api = Namespace("Dataset", description="Dataset operations", path="/")

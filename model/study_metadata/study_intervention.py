@@ -1,9 +1,11 @@
+import datetime
 import uuid
-from ..db import db
+from datetime import timezone
+
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
-from datetime import timezone
-import datetime
+
+from ..db import db
 
 
 class StudyIntervention(db.Model):

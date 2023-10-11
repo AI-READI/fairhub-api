@@ -1,9 +1,8 @@
-from model import Dataset, db, DatasetDate
-
-from flask_restx import Resource, fields
 from flask import request
-from apis.dataset_metadata_namespace import api
+from flask_restx import Resource, fields
 
+from apis.dataset_metadata_namespace import api
+from model import Dataset, DatasetDate, db
 
 dataset_date = api.model(
     "DatasetDate",

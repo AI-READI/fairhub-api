@@ -1,9 +1,8 @@
-from model import Dataset, DatasetDeIdentLevel, db
-
-from flask_restx import Resource, fields
 from flask import request
+from flask_restx import Resource, fields
 
 from apis.dataset_metadata_namespace import api
+from model import Dataset, db
 
 de_ident_level = api.model(
     "DatasetDeIdentLevel",

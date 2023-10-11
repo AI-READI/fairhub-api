@@ -1,10 +1,11 @@
-import uuid
-from datetime import datetime
-from .db import db
-from datetime import timezone
 import datetime
+import uuid
+from datetime import datetime, timezone
+
 import app
 import model
+
+from .db import db
 
 
 class User(db.Model):
