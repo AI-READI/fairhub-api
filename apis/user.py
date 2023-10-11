@@ -1,5 +1,7 @@
 from flask import request, g
 from flask_restx import Namespace, Resource, fields
+from jsonschema import validate, ValidationError, FormatChecker
+from email_validator import validate_email, EmailNotValidError
 
 from model import User, db
 
@@ -43,8 +45,45 @@ class UserDetailsEndpoint(Resource):
     def put(self):
         """Updates user details"""
         data = request.json
-        if data is None:
-            return {"message": "No data provided"}, 400
+        def validate_is_valid_email(instance):
+            print("within is_valid_email")
+            email_address = instance
+            print(email_address)
+            try:
+                validate_email(email_address)
+                return True
+            except EmailNotValidError:
+                return False
+        
+        # Schema validation (profile_image is optional but additional properties are not allowed)
+        schema = {
+            "type": "object",
+            "required": ["email_address", "username", "first_name", "last_name", "institution", "orcid", "location", "timezone"],
+            "additionalProperties": False,
+            "properties": {
+                "email_address": {"type": "string", "format": "valid email"},
+                "username": {"type": "string"},
+                "first_name": {"type": "string"},
+                "last_name": {"type": "string"},
+                "institution": {"type": "string"},
+                "orcid": {"type": "string"},
+                "location": {"type": "string"},
+                "timezone": {"type": "string"},
+                "profile_image": {"type": "string"},
+            },
+        }
+        
+        format_checker = FormatChecker()
+        format_checker.checks("valid email")(validate_is_valid_email)
+        
+        try:
+            validate(instance=request.json, schema=schema, format_checker=format_checker)
+        except ValidationError as e:
+            print(e.message)
+            # Verify if the user_information being sent back is okay for this 400 error, e.message is
+            # not being sent back
+            return e.message, 400
+
         user = User.query.get(g.user.id)
         # user.update(data) # don't update the username and email_address for now
         user_details = user.user_details
