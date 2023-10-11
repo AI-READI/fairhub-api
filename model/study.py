@@ -5,6 +5,7 @@ import model
 from .db import db
 import datetime
 from flask import g
+from apis import exception
 
 
 class StudyException(Exception):
@@ -147,9 +148,14 @@ class Study(db.Model):
     )
 
     def to_dict(self):
-        contributors = model.StudyContributor.query.filter(
+        owner = self.study_contributors.filter(
             model.StudyContributor.permission == "owner"
         ).first()
+        user = model.User.query.get(g.user.id)
+        contributor_permission = self.study_contributors.filter(
+            model.StudyContributor.user_id == g.user.id
+        ).first()
+        print(contributor_permission)
         """Converts the study to a dictionary"""
         return {
             "id": self.id,
@@ -161,8 +167,8 @@ class Study(db.Model):
             "description": self.study_description.brief_summary
             if self.study_description
             else None,
-            "owner": contributors.to_dict()["id"],
-            "role": contributors.to_dict()["role"],
+            "owner": owner.to_dict()["id"] if owner else None,
+            "role": contributor_permission.to_dict()["role"],
         }
 
     @staticmethod
@@ -175,6 +181,11 @@ class Study(db.Model):
 
     def update(self, data):
         """Updates the study from a dictionary"""
+        if not data["title"]:
+            raise exception.ValidationException("title is required")
+        if not data["image"]:
+            raise exception.ValidationException("image is required")
+
         self.title = data["title"]
         self.image = data["image"]
         self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
@@ -192,15 +203,16 @@ class Study(db.Model):
         self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
 
     def add_user_to_study(self, user, permission):
+        """add user to study"""
         contributor = self.study_contributors.filter(
             model.StudyContributor.user_id == user.id
-        )
+        ).all()
         if contributor:
             raise StudyException("User is already exists in study")
         else:
             contributor = model.StudyContributor(self, user, permission)
             db.session.add(contributor)
-            return contributor
+        return contributor
 
     def invite_user_to_study(self, email_address, permission):
         invited_contributor = self.invited_contributors.filter(

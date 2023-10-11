@@ -1,6 +1,7 @@
 """Entry point for the application."""
 import importlib
 import os
+from apis.exception import ValidationException
 from flask import Flask, request, make_response, g
 import jwt
 import config
@@ -118,7 +119,7 @@ def create_app(config_module=None):
             "/echo",
             "/swaggerui",
             "/swagger.json",
-            "/ favicon.ico",
+            "/favicon.ico",
         ]
         for route in public_routes:
             if request.path.startswith(route):
@@ -178,6 +179,10 @@ def create_app(config_module=None):
         # print(resp.headers)
 
         return resp
+
+    @app.errorhandler(ValidationException)
+    def validation_exception_handler(error):
+        return error.args[0], 422
 
     @app.cli.command("destroy-schema")
     def destroy_schema():

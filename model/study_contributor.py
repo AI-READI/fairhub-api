@@ -1,5 +1,6 @@
-import uuid
-
+from datetime import datetime
+from datetime import timezone
+import datetime
 from .db import db
 
 
@@ -8,10 +9,13 @@ class StudyContributor(db.Model):
         self.study = study
         self.user = user
         self.permission = permission
+        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
 
     __tablename__ = "study_contributor"
     permission = db.Column(db.String, nullable=False)
     user_id = db.Column(db.CHAR(36), db.ForeignKey("user.id"), primary_key=True)
+    created_at = db.Column(db.BigInteger, nullable=False)
+
     user = db.relationship(
         "User",
         back_populates="study_contributors",
@@ -29,7 +33,7 @@ class StudyContributor(db.Model):
             "email_address": self.user.email_address,
             "orcid": self.user.user_details.orcid if self.user.user_details else None,
             "role": self.permission,
-            "status": "active",
+            "status": "accepted",
         }
 
     @staticmethod

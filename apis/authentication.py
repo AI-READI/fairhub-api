@@ -3,13 +3,14 @@ from flask_restx import Namespace, Resource, fields
 from model import StudyContributor
 from datetime import timezone
 import datetime
-from model import db, User, TokenBlacklist, Study
+from model import db, User, TokenBlacklist, Study, StudyInvitedContributor
 import jwt
 
 # import config
 import uuid
 import os
 import importlib
+import re
 
 api = Namespace("Authentication", description="Authentication paths", path="/")
 
@@ -44,19 +45,22 @@ class SignUpUser(Resource):
         """signs up the new users and saves data in DB"""
         data = request.json
         # TODO data[email doesnt exist then raise error; json validation library
-        if not data["email_address"]:
-            raise "Email is not found"
+        pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
+        if not data["email_address"] or not re.match(pattern, data["email_address"]):
+            return "Email address is invalid", 422
         user = User.query.filter_by(email_address=data["email_address"]).one_or_none()
         if user:
             return "This email address is already in use", 409
-        # user = User.query.filter_by(username=data["username"]).one_or_none()
-        # if user:
-        #     return "This username is already in use", 409
-        user_add = User.from_data(data)
-        # user.user_details.update(data)
-        db.session.add(user_add)
+        invitations = StudyInvitedContributor.query.filter_by(
+            email_address=data["email_address"]
+        ).all()
+        new_user = User.from_data(data)
+        for invite in invitations:
+            invite.study.add_user_to_study(new_user, invite.permission)
+            db.session.delete(invite)
+        db.session.add(new_user)
         db.session.commit()
-        return f"Hi, {user_add.email_address}, you have successfully signed up", 201
+        return f"Hi, {new_user.email_address}, you have successfully signed up", 201
 
 
 @api.route("/auth/login")
@@ -97,7 +101,7 @@ class Login(Resource):
                 {
                     "user": user.id,
                     "exp": datetime.datetime.now(timezone.utc)
-                    + datetime.timedelta(minutes=20),
+                    + datetime.timedelta(minutes=200),
                     "jti": str(uuid.uuid4()),
                 },
                 config.FAIRHUB_SECRET,
@@ -115,6 +119,7 @@ def authentication():
     """it authenticates users to a study, sets access and refresh token.
     In addition, it handles error handling of expired token and non existed users"""
     g.user = None
+
     if "token" not in request.cookies:
         return
     token = request.cookies.get("token")
@@ -184,6 +189,7 @@ def is_granted(permission: str, study=None):
             "participant",
             "study_metadata",
             "dataset_metadata",
+            "make_owner",
         ],
         "admin": [
             "admin",
@@ -200,7 +206,6 @@ def is_granted(permission: str, study=None):
             "participant",
             "study_metadata",
             "dataset_metadata",
-            "make_owner",
         ],
         "editor": [
             "editor",

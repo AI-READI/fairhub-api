@@ -9,6 +9,7 @@ from .contributor import api as contributors_api
 from .dataset import api as dataset_api
 from .participant import api as participants_api
 from .study import api as study_api
+from .user import api as user
 
 from .authentication import api as authentication
 
@@ -81,3 +82,4 @@ api.add_namespace(study_api)
 api.add_namespace(dataset_api)
 api.add_namespace(participants_api)
 api.add_namespace(contributors_api)
+api.add_namespace(user)

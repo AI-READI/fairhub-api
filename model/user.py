@@ -43,7 +43,9 @@ class User(db.Model):
 
     def update(self, data):
         self.email_address = data["email_address"]
-        self.username = data["email_address"]
+        self.username = (
+            data["username"] if "username" in data else data["email_address"]
+        )
         # self.email_verified = data["email_verified"]
         # self.username = data["username"]
         # self.hash = data["hash"]
@@ -57,6 +59,6 @@ class User(db.Model):
     def check_password(self, password):
         """validates password and bcrypt hashed password"""
         # TODO check password length and make uppercase letter
-        hashed_password = app.bcrypt.generate_password_hash(password).decode("utf-8")
-        is_valid = app.bcrypt.check_password_hash(hashed_password, password)
+        app.bcrypt.generate_password_hash(password).decode("utf-8")
+        is_valid = app.bcrypt.check_password_hash(self.hash, password)
         return is_valid
