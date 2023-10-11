@@ -47,7 +47,11 @@ class SignUpUser(Resource):
         schema = {
             "type": "object",
             "properties": {
-                "email_address": {"type": "string", "format": "email", "pattern": r"^[\w\.-]+@[\w\.-]+\.\w+$"},
+                "email_address": {
+                    "type": "string",
+                    "format": "email",
+                    "pattern": r"^[\w\.-]+@[\w\.-]+\.\w+$",
+                },
                 "password": {"type": "string"},
             },
             "required": ["email_address", "password"],
