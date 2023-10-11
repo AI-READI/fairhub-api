@@ -45,13 +45,14 @@ class SignUpUser(Resource):
         data = request.json
         
         def validate_is_valid_email(instance):
-            print("within is_valid_email")
+            # Turn on check_deliverability
+            # for first-time validations like on account creation pages (but not
+            # login pages).
             email_address = instance
-            print(email_address)
             try:
                 validate_email(email_address, check_deliverability=False)
                 return True
-            except EmailNotValidError as e:
+            except EmailNotValidError:
                 return False
 
         # Schema validation
@@ -99,6 +100,35 @@ class Login(Resource):
         Also, it sets token for logged user along with expiration date"""
         data = request.json
         email_address = data["email_address"]
+        def validate_is_valid_email(instance):
+            print("within is_valid_email")
+            email_address = instance
+            print(email_address)
+            try:
+                validate_email(email_address)
+                return True
+            except EmailNotValidError:
+                return False
+
+        # Schema validation
+        schema = {
+            "type": "object",
+            "required": ["email_address", "password"],
+            "additionalProperties": False,
+            "properties": {
+                "email_address": {"type": "string", "format": "valid email"},
+                "password": {"type": "string"},
+            },
+        }
+
+        format_checker = FormatChecker()
+        format_checker.checks("valid email")(validate_is_valid_email)
+
+        try:
+            validate(instance=data, schema=schema, format_checker=format_checker)
+        except ValidationError as e:
+            return e.message, 400
+        
         user = User.query.filter_by(email_address=email_address).one_or_none()
         if not user:
             return "Invalid credentials", 401
