@@ -8,6 +8,7 @@ import jwt
 import config
 import uuid
 import re
+from jsonschema import validate, ValidationError
 
 api = Namespace("Authentication", description="Authentication paths", path="/")
 
@@ -41,10 +42,24 @@ class SignUpUser(Resource):
     def post(self):
         """signs up the new users and saves data in DB"""
         data = request.json
-        # TODO data[email doesnt exist then raise error; json validation library
-        pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
-        if not data["email_address"] or not re.match(pattern, data["email_address"]):
-            return "Email address is invalid", 422
+
+        # Schema validation
+        schema = {
+            "type": "object",
+            "properties": {
+                "email_address": {"type": "string", "format": "email", "pattern": r"^[\w\.-]+@[\w\.-]+\.\w+$"},
+                "password": {"type": "string"},
+            },
+            "required": ["email_address", "password"],
+            "additionalProperties": False,
+        }
+
+        print(data)
+        try:
+            validate(instance=data, schema=schema)
+        except ValidationError as e:
+            return e.message, 422
+
         user = User.query.filter_by(email_address=data["email_address"]).one_or_none()
         if user:
             return "This email address is already in use", 409
