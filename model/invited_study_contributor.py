@@ -1,8 +1,9 @@
 import datetime
 import uuid
-from datetime import datetime, timezone
 
 from .db import db
+
+# from datetime import datetime, timezone
 
 
 class StudyInvitedContributor(db.Model):
@@ -10,9 +11,9 @@ class StudyInvitedContributor(db.Model):
         self.id = str(uuid.uuid4())
         self.study = study
         self.permission = permission
-        self.invited_on = datetime.datetime.now(timezone.utc).timestamp()
+        self.invited_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
         self.email_address = email_address
-        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
+        self.created_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
         self.token = ""
 
     __tablename__ = "invited_study_contributor"

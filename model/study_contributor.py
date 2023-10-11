@@ -1,7 +1,8 @@
 import datetime
-from datetime import datetime, timezone
 
 from .db import db
+
+# from datetime import datetime, timezone
 
 
 class StudyContributor(db.Model):
@@ -9,7 +10,7 @@ class StudyContributor(db.Model):
         self.study = study
         self.user = user
         self.permission = permission
-        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
+        self.created_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
 
     __tablename__ = "study_contributor"
     permission = db.Column(db.String, nullable=False)

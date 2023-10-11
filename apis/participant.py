@@ -1,7 +1,7 @@
-from flask import Response, g, jsonify, request
+from flask import Response, request
 from flask_restx import Namespace, Resource, fields
 
-from model import Participant, Study, StudyContributor, db
+from model import Participant, Study, db
 
 from .authentication import is_granted
 

@@ -24,8 +24,7 @@ class Identifiers:
                     for identifier in sorted_study_identifications
                     if not identifier.secondary
                 ]
-            )
-            != 0
+            ) != 0
             else [],
             "secondary": [
                 identifier.to_dict()

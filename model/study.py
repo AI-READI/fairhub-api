@@ -1,6 +1,5 @@
 import datetime
 import uuid
-from datetime import datetime, timezone
 
 from flask import g
 
@@ -8,6 +7,8 @@ import model
 from apis import exception
 
 from .db import db
+
+# from datetime import datetime, timezone
 
 
 class StudyException(Exception):
@@ -19,7 +20,7 @@ class Study(db.Model):
 
     def __init__(self):
         self.id = str(uuid.uuid4())
-        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
+        self.created_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
         #
         self.study_status = model.StudyStatus(self)
         self.study_sponsors_collaborators = model.StudySponsorsCollaborators(self)
@@ -153,7 +154,6 @@ class Study(db.Model):
         owner = self.study_contributors.filter(
             model.StudyContributor.permission == "owner"
         ).first()
-        user = model.User.query.get(g.user.id)
         contributor_permission = self.study_contributors.filter(
             model.StudyContributor.user_id == g.user.id
         ).first()
@@ -190,7 +190,7 @@ class Study(db.Model):
 
         self.title = data["title"]
         self.image = data["image"]
-        self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
+        self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
 
     def validate(self):
         """Validates the study"""
@@ -202,7 +202,7 @@ class Study(db.Model):
         return violations
 
     def touch(self):
-        self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
+        self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
 
     def add_user_to_study(self, user, permission):
         """add user to study"""

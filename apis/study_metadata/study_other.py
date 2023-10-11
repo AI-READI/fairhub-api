@@ -80,7 +80,7 @@ class StudyOversightResource(Resource):
 
 # todo: rename class
 @api.route("/study/<study_id>/metadata/conditions")
-class StudyOversightResource(Resource):
+class StudyConditionsResource(Resource):
     """Study Conditions Metadata"""
 
     @api.doc("conditions")

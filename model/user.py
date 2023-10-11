@@ -1,17 +1,18 @@
 import datetime
 import uuid
-from datetime import datetime, timezone
 
 import app
 import model
 
 from .db import db
 
+# from datetime import datetime, timezone
+
 
 class User(db.Model):
     def __init__(self, password, data):
         self.id = str(uuid.uuid4())
-        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
+        self.created_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
         self.set_password(password, data)
         self.user_details = model.UserDetails(self)
 

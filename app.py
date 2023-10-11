@@ -3,7 +3,7 @@ import datetime
 from datetime import timezone
 
 import jwt
-from flask import Flask, g, make_response, request
+from flask import Flask, request
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from sqlalchemy import MetaData
@@ -172,7 +172,7 @@ def create_app():
     @app.cli.command("destroy-schema")
     def destroy_schema():
         engine = model.db.session.get_bind()
-        with engine.begin() as conn:
+        with engine.begin():
             """Create the database schema."""
             model.db.drop_all()
 
@@ -183,7 +183,7 @@ def create_app():
         table_names = [table.name for table in metadata.tables.values()]
         # print(table_names)
         if len(table_names) == 0:
-            with engine.begin() as conn:
+            with engine.begin():
                 """Create the database schema."""
                 model.db.create_all()
     return app
