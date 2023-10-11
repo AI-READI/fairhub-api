@@ -8,7 +8,8 @@ import jwt
 import config
 import uuid
 import re
-from jsonschema import validate, ValidationError
+from jsonschema import validate, ValidationError, FormatChecker
+from email_validator import validate_email, EmailNotValidError
 
 api = Namespace("Authentication", description="Authentication paths", path="/")
 
@@ -42,23 +43,35 @@ class SignUpUser(Resource):
     def post(self):
         """signs up the new users and saves data in DB"""
         data = request.json
+        
+        def validate_is_valid_email(instance):
+            print("within is_valid_email")
+            email_address = instance
+            print(email_address)
+            try:
+                validate_email(email_address, check_deliverability=False)
+                return True
+            except EmailNotValidError as e:
+                return False
 
         # Schema validation
         schema = {
             "type": "object",
-            "properties": {
-                "email_address": {"type": "string", "format": "email", "pattern": r"^[\w\.-]+@[\w\.-]+\.\w+$"},
-                "password": {"type": "string"},
-            },
             "required": ["email_address", "password"],
             "additionalProperties": False,
+            "properties": {
+                "email_address": {"type": "string", "format": "valid email"},
+                "password": {"type": "string"},
+            },
         }
 
-        print(data)
+        format_checker = FormatChecker()
+        format_checker.checks("valid email")(validate_is_valid_email)
+
         try:
-            validate(instance=data, schema=schema)
+            validate(instance=data, schema=schema, format_checker=format_checker)
         except ValidationError as e:
-            return e.message, 422
+            return e.message, 400
 
         user = User.query.filter_by(email_address=data["email_address"]).one_or_none()
         if user:
