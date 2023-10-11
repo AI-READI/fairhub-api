@@ -3,6 +3,7 @@ from flask_restx import Resource, fields
 from flask import request
 from model import Study, db, StudyArm, Arm
 from ..authentication import is_granted
+from jsonschema import validate, ValidationError
 
 
 from apis.study_metadata_namespace import api
@@ -44,6 +45,27 @@ class StudyArmResource(Resource):
 
     def post(self, study_id):
         """Create study arm metadata"""
+        # Schema validation
+        schema = {
+            "type": "array",
+            "additionalProperties": False,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "label": {"type": "string"},
+                    "type": {"type": "string"},
+                    "description": {"type": "string"},
+                    "intervention_list": {"type": "array", "items": {"type": "string"}},
+                },
+                "required": ["label", "type", "description", "intervention_list"],
+            },
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+
         study = Study.query.get(study_id)
         if not is_granted("study_metadata", study):
             return "Access denied, you can not delete study", 403
