@@ -40,6 +40,6 @@ class DatasetRelatedItemResource(Resource):
         def put(self, study_id: int, dataset_id: int, related_item_id: int):
             data = request.json
             dataset_related_item_ = DatasetRelatedItem.query.get(related_item_id)
-            dataset_related_item_.update(request.json)
+            dataset_related_item_.update(data)
             db.session.commit()
             return dataset_related_item_.to_dict()

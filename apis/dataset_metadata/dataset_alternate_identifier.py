@@ -33,7 +33,7 @@ class DatasetAlternateIdentifierResource(Resource):
         for i in data:
             if "id" in i and i["id"]:
                 dataset_identifier_ = DatasetAlternateIdentifier.query.get(i["id"])
-                if dataset_identifier_ == None:
+                if not dataset_identifier_:
                     return f"Study link {i['id']} Id is not found", 404
                 dataset_identifier_.update(i)
                 list_of_elements.append(dataset_identifier_.to_dict())

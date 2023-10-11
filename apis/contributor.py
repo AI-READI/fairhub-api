@@ -102,7 +102,7 @@ class ContributorResource(Resource):
         # TODO: Owners downgrading themselves
         if user != g.user:
             grantee_level = list(grants.keys()).index(grantee.permission)  # 1
-            new_level = list(grants.keys()).index(permission)  #  2
+            new_level = list(grants.keys()).index(permission)  # 2
             granter_level = list(grants.keys()).index(granter.permission)  # 2
             if granter_level <= grantee_level and new_level <= grantee_level:
                 return (
@@ -110,7 +110,7 @@ class ContributorResource(Resource):
                     403,
                 )
         grantee.permission = permission
-        db.session.commit()
+        model.db.session.commit()
         return grantee.to_dict(), 200
 
     @api.doc("contributor delete")

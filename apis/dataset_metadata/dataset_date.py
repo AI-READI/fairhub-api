@@ -2,7 +2,7 @@ from flask import request
 from flask_restx import Resource, fields
 
 from apis.dataset_metadata_namespace import api
-from model import Dataset, DatasetDate, db
+from model import Dataset, db
 
 dataset_date = api.model(
     "DatasetDate",

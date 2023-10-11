@@ -2,7 +2,7 @@ from flask import request
 from flask_restx import Resource, fields
 
 from apis.dataset_metadata_namespace import api
-from model import Dataset, DatasetManagingOrganization, db
+from model import Dataset, db
 
 managing_organization = api.model(
     "DatasetManagingOrganization",
@@ -28,8 +28,6 @@ class DatasetManagingOrganizationResource(Resource):
     def put(self, study_id: int, dataset_id: int):
         data = request.json
         dataset_ = Dataset.query.get(dataset_id)
-        managing_organization_ = dataset_.dataset_managing_organization.update(
-            request.json
-        )
+        managing_organization_ = dataset_.dataset_managing_organization.update(data)
         db.session.commit()
         return managing_organization_.to_dict()

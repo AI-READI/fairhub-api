@@ -107,7 +107,7 @@ class DatasetResource(Resource):
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>")
-class Version(Resource):
+class VersionResource(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
     @api.doc("dataset version")

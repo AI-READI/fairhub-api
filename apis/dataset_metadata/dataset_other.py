@@ -32,6 +32,6 @@ class DatasetOtherResource(Resource):
     def put(self, study_id: int, dataset_id: int):
         data = request.json
         dataset_ = Dataset.query.get(dataset_id)
-        dataset_other_ = dataset_.dataset_other.update(request.json)
+        dataset_other_ = dataset_.dataset_other.update(data)
         db.session.commit()
         return dataset_other_.to_dict()
