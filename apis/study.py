@@ -3,6 +3,7 @@ from flask_restx import Namespace, Resource, fields
 
 from model import Study, db, User, StudyContributor
 from .authentication import is_granted
+from jsonschema import validate, ValidationError
 
 api = Namespace("Study", description="Study operations", path="/")
 
@@ -40,6 +41,23 @@ class Studies(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def post(self):
+        """Create a new study"""
+        # Schema validation
+        schema = {
+            "type": "object",
+            "required": ["title", "image"],
+            "additionalProperties": False,
+            "properties": {
+                "title": {"type": "string"},
+                "image": {"type": "string"},
+            },
+        }
+        
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+        
         add_study = Study.from_data(request.json)
         db.session.add(add_study)
         study_id = add_study.id
@@ -64,6 +82,23 @@ class StudyResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def put(self, study_id: int):
+        """Update a study"""
+        # Schema validation
+        schema = {
+            "type": "object",
+            "required": ["title", "image"],
+            "additionalProperties": False,
+            "properties": {
+                "title": {"type": "string"},
+                "image": {"type": "string"},
+            },
+        }
+        
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+        
         update_study = Study.query.get(study_id)
         if not is_granted("update_study", update_study):
             return "Access denied, you can not modify", 403
