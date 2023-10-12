@@ -60,12 +60,12 @@ class StudyAvailableResource(Resource):
                 "required": ["identifier", "type", "comment", "url"],
             },
         }
-        
+
         try:
             validate(request.json, schema)
         except ValidationError as e:
             return e.message, 400
-        
+
         study = Study.query.get(study_id)
         if not is_granted("study_metadata", study):
             return "Access denied, you can not delete study", 403
