@@ -28,7 +28,8 @@ class DatasetVersions:
         dataset_versions = DatasetVersions(
             id=data["id"],
             last_published=data["last_published"],
-            last_modified=data["last_modified"])
+            last_modified=data["last_modified"],
+        )
         dataset_versions.latest_version = data["latest_version"]
         dataset_versions.published_version = data["published_version"]
         return dataset_versions
