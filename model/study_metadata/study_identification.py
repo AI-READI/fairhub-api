@@ -8,7 +8,6 @@ from ..db import db
 
 
 class StudyIdentification(db.Model):  # type: ignore
-
     def __init__(self, study, secondary):
         self.id = str(uuid.uuid4())
         self.study = study
