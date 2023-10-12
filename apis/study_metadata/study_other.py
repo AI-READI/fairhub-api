@@ -39,6 +39,23 @@ class StudyOtherResource(Resource):
 
     def put(self, study_id: int):
         """Update study other metadata"""
+        # Schema validation
+        schema = {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "oversight_has_dmc": {"type": "boolean"},
+                "conditions": {"type": "arrya", "items": {"type": "string"}},
+                "keywords": {"type": "array", "items": {"type": "string"}},
+                "size": {"type": "string"},
+            },
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+
         study_ = Study.query.get(study_id)
 
         study_.study_other.update(request.json)
