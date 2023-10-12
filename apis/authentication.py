@@ -2,12 +2,12 @@ import datetime
 import re
 import uuid
 from datetime import timezone
-
+from typing import Any
+import config
 import jwt
 from flask import g, make_response, request
 from flask_restx import Namespace, Resource, fields
 
-import config
 import model
 
 api = Namespace("Authentication", description="Authentication paths", path="/")
@@ -41,7 +41,7 @@ class SignUpUser(Resource):
     @api.expect(signup_model)
     def post(self):
         """signs up the new users and saves data in DB"""
-        data: dict = request.json
+        data: Any | dict = request.json
         # TODO data[email doesnt exist then raise error; json validation library
         pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
         if not data["email_address"] or not re.match(pattern, data["email_address"]):
@@ -72,7 +72,7 @@ class Login(Resource):
     def post(self):
         """logs in user and handles few authentication errors.
         Also, it sets token for logged user along with expiration date"""
-        data = request.json
+        data: Any | dict = request.json
         email_address = data["email_address"]
         user = model.User.query.filter_by(email_address=email_address).one_or_none()
         if not user:
@@ -81,13 +81,12 @@ class Login(Resource):
         if not validate_pass:
             return "Invalid credentials", 401
         else:
-            if len(config.secret) < 14:
-                raise "secret key should contain at least 14 characters"
+
             encoded_jwt_code = jwt.encode(
                 {
                     "user": user.id,
                     "exp": datetime.datetime.now(timezone.utc)
-                    + datetime.timedelta(minutes=200),  # noqa: W503
+                    + datetime.timedelta(minutes=180),  # noqa: W503
                     "jti": str(uuid.uuid4()),
                 },  # noqa: W503
                 config.secret,
@@ -97,7 +96,7 @@ class Login(Resource):
             resp.set_cookie(
                 "token", encoded_jwt_code, secure=True, httponly=True, samesite="lax"
             )
-            resp.status = 200
+            resp.status_code = 200
             return resp
 
 
@@ -108,7 +107,7 @@ def authentication():
 
     if "token" not in request.cookies:
         return
-    token: str | bytes = request.cookies.get("token")
+    token: str | None = request.cookies.get("token")
     try:
         decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
@@ -220,7 +219,7 @@ class Logout(Resource):
             samesite="lax",
             expires=datetime.datetime.now(timezone.utc),
         )
-        resp.status = 204
+        resp.status_code = 204
         return resp
 
 
