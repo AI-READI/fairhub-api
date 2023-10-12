@@ -107,6 +107,8 @@ class Dataset(db.Model):
     def last_modified(self):
         return self.dataset_versions.order_by(model.Version.updated_on.desc()).first()
 
+
+
     @staticmethod
     def from_data(study, data: dict):
         dataset_obj = Dataset(study)
@@ -117,3 +119,4 @@ class Dataset(db.Model):
         """Creates a new dataset from a dictionary"""
         self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
         # self.dataset_versions = data["dataset_versions"]
+

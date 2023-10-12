@@ -30,6 +30,6 @@ class DatasetManagingOrganization(db.Model):
         dataset_managing_organization.update(data)
         return dataset_managing_organization
 
-    def update(self, data):
+    def update(self, data: dict):
         self.name = data["name"]
         self.ror_id = data["ror_id"]

@@ -4,6 +4,7 @@ from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 
 from ..db import db
+from model import Study
 
 
 class StudySponsorsCollaborators(db.Model):
@@ -46,14 +47,14 @@ class StudySponsorsCollaborators(db.Model):
         }
 
     @staticmethod
-    def from_data(study, data: dict):
+    def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""
         study_sponsors_collaborators = StudySponsorsCollaborators(study)
         study_sponsors_collaborators.update(data)
 
         return study_sponsors_collaborators
 
-    def update(self, data):
+    def update(self, data: dict):
         """Updates the study from a dictionary"""
         self.responsible_party_type = data["responsible_party_type"]
 
@@ -69,14 +70,14 @@ class StudySponsorsCollaborators(db.Model):
         self.lead_sponsor_name = data["lead_sponsor_name"]
 
     @staticmethod
-    def from_data_(study, data: dict):
+    def from_data_(study: Study, data: dict):
         """Creates a new study from a dictionary"""
         study_sponsors_collaborators = StudySponsorsCollaborators(study)
         study_sponsors_collaborators.update(data)
 
         return study_sponsors_collaborators
 
-    def update_collaborators(self, data):
+    def update_collaborators(self, data: dict):
         """Updates the study from a dictionary"""
         self.collaborator_name = data["collaborator_name"]
         self.study.touch()

@@ -27,5 +27,5 @@ class DatasetReadme(db.Model):
         dataset_readme.update(data)
         return dataset_readme
 
-    def update(self, data):
+    def update(self, data: dict):
         self.content = data["content"]

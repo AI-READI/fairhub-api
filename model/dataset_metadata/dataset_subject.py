@@ -36,7 +36,7 @@ class DatasetSubject(db.Model):
         dataset_subject.update(data)
         return dataset_subject
 
-    def update(self, data):
+    def update(self, data: dict):
         self.subject = data["subject"]
         self.scheme = data["scheme"]
         self.scheme_uri = data["scheme_uri"]

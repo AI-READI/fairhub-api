@@ -40,7 +40,7 @@ class DatasetDeIdentLevel(db.Model):
         dataset_de_ident_level.update(data)
         return dataset_de_ident_level
 
-    def update(self, data):
+    def update(self, data: dict):
         self.type = data["type"]
         self.direct = data["direct"]
         self.hipaa = data["hipaa"]

@@ -29,6 +29,6 @@ class DatasetRecordKeys(db.Model):
         dataset_record_keys.update(data)
         return dataset_record_keys
 
-    def update(self, data):
+    def update(self, data: dict):
         self.key_type = data["key_type"]
         self.key_details = data["key_details"]

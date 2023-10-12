@@ -1,6 +1,7 @@
 import uuid
 
 from ..db import db
+from model import Study
 
 
 class StudyStatus(db.Model):
@@ -44,14 +45,14 @@ class StudyStatus(db.Model):
         }
 
     @staticmethod
-    def from_data(study, data: dict):
+    def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""
         study_status = StudyStatus(study)
         study_status.update(data)
 
         return study_status
 
-    def update(self, data):
+    def update(self, data: dict):
         """Updates the study from a dictionary"""
         self.overall_status = data["overall_status"]
         self.why_stopped = data["why_stopped"]

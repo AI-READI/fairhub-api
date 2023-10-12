@@ -41,6 +41,6 @@ class DatasetRelatedItem(db.Model):
         dataset_related_item.update(data)
         return dataset_related_item
 
-    def update(self, data):
+    def update(self, data: dict):
         self.type = data["type"]
         self.relation_type = data["relation_type"]

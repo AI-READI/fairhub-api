@@ -39,7 +39,7 @@ class DatasetFunder(db.Model):
         dataset_funder.update(data)
         return dataset_funder
 
-    def update(self, data):
+    def update(self, data: dict):
         self.name = data["name"]
         self.identifier = data["identifier"]
         self.identifier_type = data["identifier_type"]

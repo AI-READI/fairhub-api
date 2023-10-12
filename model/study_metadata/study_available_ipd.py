@@ -2,6 +2,7 @@ import datetime
 import uuid
 from datetime import timezone
 
+import model
 from ..db import db
 
 
@@ -39,13 +40,13 @@ class StudyAvailableIpd(db.Model):
         }
 
     @staticmethod
-    def from_data(study, data: dict):
+    def from_data(study: model.StudyArm, data: dict):
         """Creates a new study metadata from a dictionary"""
         study_available = StudyAvailableIpd(study)
         study_available.update(data)
         return study_available
 
-    def update(self, data):
+    def update(self, data: dict):
         """Updates the study metadata from a dictionary"""
         self.identifier = data["identifier"]
         self.type = data["type"]

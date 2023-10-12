@@ -37,7 +37,7 @@ class DatasetRelatedItemContributor(db.Model):
         dataset_related_contributor.update(data)
         return dataset_related_contributor
 
-    def update(self, data):
+    def update(self, data: dict):
         self.name = data["name"]
         self.name_type = data["name_type"]
         self.creator = data["creator"]

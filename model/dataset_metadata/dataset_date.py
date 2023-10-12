@@ -31,7 +31,7 @@ class DatasetDate(db.Model):
         dataset_date.update(data)
         return dataset_date
 
-    def update(self, data):
+    def update(self, data: dict):
         self.date = data["date"]
         self.date_type = data["date_type"]
         self.data_information = data["data_information"]

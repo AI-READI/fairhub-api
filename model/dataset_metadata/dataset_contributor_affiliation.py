@@ -34,7 +34,7 @@ class DatasetContributorAffiliation(db.Model):
         dataset_contributor.update(data)
         return dataset_contributor
 
-    def update(self, data):
+    def update(self, data: dict):
         self.identifier = data["identifier"]
         self.identifier_scheme = data["identifier_scheme"]
         self.identifier_scheme_uri = data["identifier_scheme_uri"]

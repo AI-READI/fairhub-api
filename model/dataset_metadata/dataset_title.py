@@ -30,6 +30,6 @@ class DatasetTitle(db.Model):
 
         return dataset_title
 
-    def update(self, data):
+    def update(self, data: dict):
         self.title = data["title"]
         self.type = data["type"]

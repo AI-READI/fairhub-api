@@ -2,6 +2,7 @@ import datetime
 import uuid
 from datetime import timezone
 
+import model
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 
@@ -42,13 +43,13 @@ class StudyArm(db.Model):
         }
 
     @staticmethod
-    def from_data(study, data):
+    def from_data(study: model.Study, data: dict):
         """Creates a new study from a dictionary"""
         study_arm = StudyArm(study)
         study_arm.update(data)
         return study_arm
 
-    def update(self, data):
+    def update(self, data: dict):
         """Updates the study from a dictionary"""
         self.label = data["label"]
         self.type = data["type"]

@@ -3,6 +3,7 @@ import uuid
 from datetime import timezone
 
 from ..db import db
+from model import Study
 
 
 class StudyLocation(db.Model):
@@ -43,14 +44,14 @@ class StudyLocation(db.Model):
         }
 
     @staticmethod
-    def from_data(study, data: dict):
+    def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""
         study_location = StudyLocation(study)
         study_location.update(data)
 
         return study_location
 
-    def update(self, data):
+    def update(self, data: dict):
         """Updates the study from a dictionary"""
         self.facility = data["facility"]
         self.status = data["status"]

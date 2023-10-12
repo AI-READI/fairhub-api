@@ -29,6 +29,6 @@ class DatasetAlternateIdentifier(db.Model):
         dataset_date.update(data)
         return dataset_date
 
-    def update(self, data):
+    def update(self, data: dict):
         self.identifier = data["identifier"]
         self.identifier_type = data["identifier_type"]

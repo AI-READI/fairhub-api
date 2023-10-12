@@ -3,12 +3,12 @@ import uuid
 from datetime import timezone
 
 from ..db import db
-
+from model import Study
 
 class StudyContact(db.Model):
     """A study is a collection of datasets and participants"""
 
-    def __init__(self, study, role, central_contact):
+    def __init__(self, study: Study, role, central_contact):
         self.id = str(uuid.uuid4())
         self.study = study
         self.role = role
@@ -47,14 +47,14 @@ class StudyContact(db.Model):
         }
 
     @staticmethod
-    def from_data(study, data: dict, role, central_contact):
+    def from_data(study: Study, data: dict, role, central_contact):
         """Creates a new study from a dictionary"""
         study_contact = StudyContact(study, role, central_contact)
         study_contact.update(data)
 
         return study_contact
 
-    def update(self, data):
+    def update(self, data: dict):
         """Updates the study from a dictionary"""
         self.name = data["name"]
         self.affiliation = data["affiliation"]

@@ -41,7 +41,7 @@ class DatasetOther(db.Model):
         dataset_other.update(data)
         return dataset_other
 
-    def update(self, data):
+    def update(self, data: dict):
         self.language = data["language"]
         self.managing_organization_name = data["managing_organization_name"]
         self.managing_organization_ror_id = data["managing_organization_ror_id"]

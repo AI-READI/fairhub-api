@@ -29,6 +29,6 @@ class DatasetDescription(db.Model):
         dataset_description.update(data)
         return dataset_description
 
-    def update(self, data):
+    def update(self, data: dict):
         self.description = data["description"]
         self.description_type = data["description_type"]
