@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Union
 
 from flask import request
 from flask_restx import Resource, fields
@@ -31,7 +31,7 @@ class DatasetRightsResource(Resource):
         return [d.to_dict() for d in dataset_rights_]
 
     def post(self, study_id: int, dataset_id: int):
-        data: Any | dict = request.json
+        data: Union[Any | dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
         dataset_rights_ = model.DatasetRights.from_data(data_obj, data)
         model.db.session.add(dataset_rights_)

@@ -43,7 +43,7 @@ class StudyIdentificationResource(Resource):
     @api.expect(study_identification)
     def post(self, study_id: int):
         """Create study identification metadata"""
-        data: dict | typing.Any = request.json
+        data: typing.Union[dict | typing.Any] = request.json
 
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):

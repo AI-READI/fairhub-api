@@ -40,7 +40,7 @@ class StudyLinkResource(Resource):
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403
-        data: dict | typing.Any = request.json
+        data: typing.Union[dict | typing.Any] = request.json
         list_of_elements = []
         for i in data:
             if "id" in i and i["id"]:

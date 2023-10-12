@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Union
 
 from flask import g, request
 from flask_restx import Namespace, Resource, fields
@@ -43,7 +43,7 @@ class Studies(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def post(self):
-        data: Any | dict = request.json
+        data: Union[Any | dict] = request.json
         add_study = model.Study.from_data(data)
         model.db.session.add(add_study)
         study_id = add_study.id

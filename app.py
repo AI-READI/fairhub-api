@@ -1,6 +1,8 @@
 """Entry point for the application."""
 import datetime
 from datetime import timezone
+from typing import Union
+
 import jwt
 from flask import Flask, request
 from flask_bcrypt import Bcrypt
@@ -126,7 +128,7 @@ def create_app():
         # print(request.cookies.get("token"))
         if "token" not in request.cookies:
             return resp
-        token: str | bytes = request.cookies.get("token")
+        token: Union[str | bytes] = request.cookies.get("token")
         try:
             decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
         except jwt.ExpiredSignatureError:

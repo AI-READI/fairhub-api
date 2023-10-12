@@ -1,4 +1,4 @@
-from typing import Any, List
+from typing import Any, List, Union
 from collections import OrderedDict
 
 from flask import g, request
@@ -43,7 +43,7 @@ class AddContributor(Resource):
         study_obj = model.Study.query.get(study_id)
         if not is_granted("invite_contributor", study_obj):
             return "Access denied, you can not modify", 403
-        data: dict | Any = request.json
+        data: Union[dict | Any] = request.json
         email_address = data["email_address"]
         user = model.User.query.filter_by(email_address=email_address).first()
         permission = data["role"]
@@ -75,11 +75,11 @@ class ContributorResource(Resource):
                 "Access denied, you are not authorized to change this permission",
                 403,
             )
-        data: Any | dict = request.json
+        data: Union[Any | dict] = request.json
         user = model.User.query.get(user_id)
         if not user:
             return "user not found", 404
-        permission: Any | str = data["role"]
+        permission: Union[Any | str] = data["role"]
         grantee = model.StudyContributor.query.filter(
             model.StudyContributor.user == user, model.StudyContributor.study == study
         ).first()
@@ -87,7 +87,7 @@ class ContributorResource(Resource):
             model.StudyContributor.user == g.user, model.StudyContributor.study == study
         ).first()
         # Order should go from the least privileged to the most privileged
-        grants: OrderedDict[str, List[str]] = OrderedDict()
+        grants: Union[OrderedDict[str, List[str]]] = OrderedDict()
         grants["viewer"] = []
         grants["editor"] = ["viewer"]
         grants["admin"] = ["viewer", "editor", "admin"]
@@ -124,7 +124,7 @@ class ContributorResource(Resource):
         ).first()
         if not granter:
             return "you are not contributor of this study", 403
-        grants: OrderedDict[str, list | list[str]] = OrderedDict()
+        grants: Union[OrderedDict[str, list | list[str]]] = OrderedDict()
         grants["viewer"] = []
         grants["editor"] = []
         grants["admin"] = ["viewer", "editor"]
@@ -134,7 +134,7 @@ class ContributorResource(Resource):
             invited_grantee = model.StudyInvitedContributor.query.filter_by(
                 study_id=study_id, email_address=user_id
             ).first()
-            invited_grants: OrderedDict[str, list | list[str]] = OrderedDict()
+            invited_grants: Union[OrderedDict[str, list | List[str]]] = OrderedDict()
             invited_grants["viewer"] = []
             invited_grants["editor"] = []
             invited_grants["admin"] = ["viewer", "editor", "admin"]
