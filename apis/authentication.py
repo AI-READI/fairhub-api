@@ -81,7 +81,6 @@ class Login(Resource):
         if not validate_pass:
             return "Invalid credentials", 401
         else:
-
             encoded_jwt_code = jwt.encode(
                 {
                     "user": user.id,
