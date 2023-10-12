@@ -86,8 +86,7 @@ class Login(Resource):
             encoded_jwt_code = jwt.encode(
                 {
                     "user": user.id,
-                    "exp": datetime.datetime.now(timezone.utc)
-                    + datetime.timedelta(minutes=200),
+                    "exp": datetime.datetime.now(timezone.utc) + datetime.timedelta(minutes=200),
                     "jti": str(uuid.uuid4()),
                 },
                 config.secret,
