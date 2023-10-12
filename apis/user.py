@@ -53,8 +53,8 @@ class UserDetailsEndpoint(Resource):
             try:
                 validate_email(email_address)
                 return True
-            except EmailNotValidError:
-                return False
+            except EmailNotValidError as e:
+                raise ValidationError("Invalid email address format") from e
 
         # Schema validation (profile_image is optional but additional properties are not allowed)
         schema = {

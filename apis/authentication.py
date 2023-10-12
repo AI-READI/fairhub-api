@@ -52,8 +52,8 @@ class SignUpUser(Resource):
             try:
                 validate_email(email_address, check_deliverability=False)
                 return True
-            except EmailNotValidError:
-                return False
+            except EmailNotValidError as e:
+                raise ValidationError("Invalid email address format") from e
 
         # Schema validation
         schema = {
@@ -61,7 +61,7 @@ class SignUpUser(Resource):
             "required": ["email_address", "password"],
             "additionalProperties": False,
             "properties": {
-                "email_address": {"type": "string", "format": "valid email"},
+                "email_address": {"type": "string", "format": "valid email", "error_message": "Invalid email address"},
                 "password": {"type": "string"},
             },
         }
@@ -108,8 +108,8 @@ class Login(Resource):
             try:
                 validate_email(email_address)
                 return True
-            except EmailNotValidError:
-                return False
+            except EmailNotValidError as e:
+                raise ValidationError("Invalid email address format") from e
 
         # Schema validation
         schema = {
@@ -117,7 +117,7 @@ class Login(Resource):
             "required": ["email_address", "password"],
             "additionalProperties": False,
             "properties": {
-                "email_address": {"type": "string", "format": "valid email"},
+                "email_address": {"type": "string", "format": "valid email", "error_message": "Invalid email address"},
                 "password": {"type": "string"},
             },
         }
