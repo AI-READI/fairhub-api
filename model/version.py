@@ -2,11 +2,13 @@ import datetime
 import uuid
 from datetime import timezone
 
+from sqlalchemy import Table
+
 from model.dataset import Dataset
 
 from .db import db
 
-version_participants = db.Table(
+version_participants: Table = db.Table(
     "version_participants",
     db.Model.metadata,
     db.Column("dataset_version_id", db.ForeignKey("version.id"), primary_key=True),
@@ -44,8 +46,12 @@ class Version(db.Model):  # type: ignore
             "created_at": self.created_at,
             "doi": self.doi,
             "published": self.published,
-            "participants": [p.id for p in self.participants],
+            "participants": [p.id for p in self.participants]
+            if isinstance(self.participants, (list, set))
+            else [],
         }
+
+    # [p.id for p in self.participants]
 
     @staticmethod
     def from_data(dataset: Dataset, data: dict):

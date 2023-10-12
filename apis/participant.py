@@ -1,3 +1,5 @@
+from typing import Any, Union
+
 from flask import Response, request
 from flask_restx import Namespace, Resource, fields
 
@@ -35,10 +37,11 @@ class AddParticipant(Resource):
     @api.response(400, "Validation Error")
     # @api.marshal_with(participant_model)
     def post(self, study_id: int):
+        data: Union[Any | dict] = request.json
         if is_granted("viewer", study_id):
             return "Access denied, you can not modify", 403
         study = model.Study.query.get(study_id)
-        add_participant = model.Participant.from_data(request.json, study)
+        add_participant = model.Participant.from_data(data, study)
         model.db.session.add(add_participant)
         model.db.session.commit()
         return add_participant.to_dict(), 201

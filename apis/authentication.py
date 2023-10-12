@@ -3,11 +3,12 @@ import re
 import uuid
 from datetime import timezone
 from typing import Any, Union
-import config
+
 import jwt
 from flask import g, make_response, request
 from flask_restx import Namespace, Resource, fields
 
+import config
 import model
 
 api = Namespace("Authentication", description="Authentication paths", path="/")
@@ -106,7 +107,7 @@ def authentication():
 
     if "token" not in request.cookies:
         return
-    token: Union[str | None] = request.cookies.get("token")
+    token: str = request.cookies.get("token") if request.cookies.get("token") else ""  # type: ignore
     try:
         decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:

@@ -1,8 +1,8 @@
 import datetime
 
-from .user import User
-from .study import Study
 from .db import db
+from .study import Study
+from .user import User
 
 # from datetime import datetime, timezone
 

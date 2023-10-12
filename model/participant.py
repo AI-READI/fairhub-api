@@ -3,8 +3,9 @@ import uuid
 from datetime import timezone
 
 import model
-from .study import Study
+
 from .db import db
+from .study import Study
 
 
 class Participant(db.Model):  # type: ignore

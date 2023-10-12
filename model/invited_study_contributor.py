@@ -1,8 +1,8 @@
 import datetime
 import uuid
 
-from .study import Study
 from .db import db
+from .study import Study
 
 # from datetime import datetime, timezone
 

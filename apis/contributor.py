@@ -1,5 +1,5 @@
-from typing import Any, List, Union
 from collections import OrderedDict
+from typing import Any, List, Union
 
 from flask import g, request
 from flask_restx import Namespace, Resource, fields
