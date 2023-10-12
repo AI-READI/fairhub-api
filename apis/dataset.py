@@ -85,7 +85,6 @@ class DatasetResource(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
     def delete(self, _study_id, dataset_id):
-
         study = model.Study.query.get(_study_id)
         if not is_granted("delete_dataset", study):
             return "Access denied, you can not modify", 403
