@@ -1,3 +1,5 @@
+import typing
+
 from flask import Response, jsonify, request
 from flask_restx import Namespace, Resource, fields
 
@@ -53,7 +55,8 @@ class DatasetList(Resource):
         if not is_granted("add_dataset", study):
             return "Access denied, you can not modify", 403
         # todo if study.participant id== different study Throw error
-        dataset_ = model.Dataset.from_data(study, request.json)
+        data: dict = request.json
+        dataset_ = model.Dataset.from_data(study, data)
         model.db.session.add(dataset_)
         model.db.session.commit()
         return dataset_.to_dict()
@@ -146,7 +149,7 @@ class VersionList(Resource):
         study = model.Study.query.get(study_id)
         if not is_granted("publish_version", study):
             return "Access denied, you can not modify", 403
-        data = request.json
+        data: dict | typing.Any = request.json
         data["participants"] = [
             model.Participant.query.get(i) for i in data["participants"]
         ]

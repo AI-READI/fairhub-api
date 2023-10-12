@@ -1,3 +1,5 @@
+from typing import Any
+
 from flask import request
 from flask_restx import Resource, fields
 
@@ -31,7 +33,7 @@ class DatasetFunderResource(Resource):
         return [d.to_dict() for d in dataset_funder_]
 
     def post(self, study_id: int, dataset_id: int):
-        data = request.json
+        data: Any | dict = request.json
         data_obj = model.Dataset.query.get(dataset_id)
         dataset_funder_ = model.DatasetFunder.from_data(data_obj, data)
         model.db.session.add(dataset_funder_)

@@ -1,3 +1,5 @@
+from typing import Any
+
 from flask import request
 from flask_restx import Resource, fields
 
@@ -27,7 +29,7 @@ class DatasetTitleResource(Resource):
         return [d.to_dict() for d in dataset_title_]
 
     def post(self, study_id: int, dataset_id: int):
-        data = request.json
+        data: Any | dict = request.json
         data_obj = model.Dataset.query.get(dataset_id)
         list_of_elements = []
         for i in data:

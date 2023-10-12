@@ -1,3 +1,4 @@
+import typing
 from collections import OrderedDict
 
 from flask import g, request
@@ -42,7 +43,7 @@ class AddContributor(Resource):
         study_obj = model.Study.query.get(study_id)
         if not is_granted("invite_contributor", study_obj):
             return "Access denied, you can not modify", 403
-        data: dict = request.json
+        data: dict | typing.Any= request.json
         email_address = data["email_address"]
         user = model.User.query.filter_by(email_address=email_address).first()
         permission = data["role"]
@@ -78,7 +79,7 @@ class ContributorResource(Resource):
         user = model.User.query.get(user_id)
         if not user:
             return "user not found", 404
-        permission = data["role"]
+        permission: dict | typing.Any= data["role"]
         grantee = model.StudyContributor.query.filter(
             model.StudyContributor.user == user, model.StudyContributor.study == study
         ).first()
@@ -123,7 +124,7 @@ class ContributorResource(Resource):
         ).first()
         if not granter:
             return "you are not contributor of this study", 403
-        grants = OrderedDict()
+        grants: OrderedDict[str, list | list[str]] = OrderedDict()
         grants["viewer"] = []
         grants["editor"] = []
         grants["admin"] = ["viewer", "editor"]
@@ -133,7 +134,7 @@ class ContributorResource(Resource):
             invited_grantee = model.StudyInvitedContributor.query.filter_by(
                 study_id=study_id, email_address=user_id
             ).first()
-            invited_grants = OrderedDict()
+            invited_grants: OrderedDict[str, list | list[str]] = OrderedDict()
             invited_grants["viewer"] = []
             invited_grants["editor"] = []
             invited_grants["admin"] = ["viewer", "editor", "admin"]
