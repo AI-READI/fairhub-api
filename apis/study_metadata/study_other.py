@@ -3,6 +3,7 @@ from flask_restx import Resource, fields
 from flask import request
 from model import Study, db
 from ..authentication import is_granted
+from jsonschema import validate, ValidationError
 
 from apis.study_metadata_namespace import api
 
@@ -97,6 +98,19 @@ class StudyOversightResource(Resource):
 
     def put(self, study_id: int):
         """Update study conditions metadata"""
+        # Schema validation
+        schema = {
+            "type": "array",
+            "items": {
+                "type": ["string", "boolean"]
+            }
+        }
+ 
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+
         data = request.json
         study_obj = Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
