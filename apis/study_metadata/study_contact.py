@@ -1,4 +1,6 @@
 """API routes for study contact metadata"""
+import typing
+
 from flask import request
 from flask_restx import Resource, fields
 
@@ -45,7 +47,7 @@ class StudyContactResource(Resource):
         study = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study):
             return "Access denied, you can not delete study", 403
-        data = request.json
+        data: dict | typing.Any = request.json
 
         study_obj = model.Study.query.get(study_id)
 

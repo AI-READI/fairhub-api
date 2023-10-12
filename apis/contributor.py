@@ -42,7 +42,7 @@ class AddContributor(Resource):
         study_obj = model.Study.query.get(study_id)
         if not is_granted("invite_contributor", study_obj):
             return "Access denied, you can not modify", 403
-        data = request.json
+        data: dict = request.json
         email_address = data["email_address"]
         user = model.User.query.filter_by(email_address=email_address).first()
         permission = data["role"]
@@ -86,7 +86,7 @@ class ContributorResource(Resource):
             model.StudyContributor.user == g.user, model.StudyContributor.study == study
         ).first()
         # Order should go from the least privileged to the most privileged
-        grants = OrderedDict()
+        grants: OrderedDict[str, list | list[str]] = OrderedDict()
         grants["viewer"] = []
         grants["editor"] = ["viewer"]
         grants["admin"] = ["viewer", "editor", "admin"]

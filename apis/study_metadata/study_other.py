@@ -1,4 +1,6 @@
 """API routes for study other metadata"""
+import typing
+
 from flask import request
 from flask_restx import Resource, fields
 
@@ -68,7 +70,7 @@ class StudyOversightResource(Resource):
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403
-        data = request.json
+        data: dict | typing.Any = request.json
         study_oversight = study_obj.study_other.oversight_has_dmc = data[
             "oversight_has_dmc"
         ]
@@ -97,7 +99,7 @@ class StudyConditionsResource(Resource):
 
     def put(self, study_id: int):
         """Update study conditions metadata"""
-        data = request.json
+        data: dict | typing.Any = request.json
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403

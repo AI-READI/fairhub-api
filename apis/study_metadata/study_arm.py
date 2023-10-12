@@ -1,4 +1,6 @@
 """API routes for study arm metadata"""
+import typing
+
 from flask import request
 from flask_restx import Resource, fields
 
@@ -44,10 +46,10 @@ class StudyArmResource(Resource):
 
     def post(self, study_id):
         """Create study arm metadata"""
-        study = model.Study.query.get(study_id)
+        study: model.Study = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study):
             return "Access denied, you can not delete study", 403
-        data = request.json
+        data: dict | typing.Any = request.json
         study_obj = model.Study.query.get(study_id)
         for i in data:
             if "id" in i and i["id"]:

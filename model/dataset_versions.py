@@ -1,11 +1,10 @@
-import model
-
+from .version import Version
 
 class DatasetVersions:
     def __init__(
         self,
-        last_published: model.Version,
-        last_modified: model.Version,
+        last_published: Version,
+        last_modified: Version,
         id: str,
     ):
         self.latest_version = last_modified.id

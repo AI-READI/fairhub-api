@@ -125,7 +125,7 @@ def create_app():
         # print(request.cookies.get("token"))
         if "token" not in request.cookies:
             return resp
-        token = request.cookies.get("token")
+        token: str | bytes = request.cookies.get("token")
         try:
             decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
         except jwt.ExpiredSignatureError:

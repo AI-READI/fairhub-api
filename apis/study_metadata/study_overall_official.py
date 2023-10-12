@@ -1,4 +1,6 @@
 """API routes for study overall official metadata"""
+import typing
+
 from flask import request
 from flask_restx import Resource, fields
 
@@ -45,7 +47,7 @@ class StudyOverallOfficialResource(Resource):
     @api.response(400, "Validation Error")
     def post(self, study_id: int):
         """Create study overall official metadata"""
-        data = request.json
+        data: dict | typing.Any = request.json
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403

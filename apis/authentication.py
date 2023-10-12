@@ -41,7 +41,7 @@ class SignUpUser(Resource):
     @api.expect(signup_model)
     def post(self):
         """signs up the new users and saves data in DB"""
-        data = request.json
+        data: dict = request.json
         # TODO data[email doesnt exist then raise error; json validation library
         pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
         if not data["email_address"] or not re.match(pattern, data["email_address"]):
@@ -108,7 +108,7 @@ def authentication():
 
     if "token" not in request.cookies:
         return
-    token = request.cookies.get("token")
+    token: str | bytes = request.cookies.get("token")
     try:
         decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:

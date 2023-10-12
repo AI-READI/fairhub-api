@@ -1,4 +1,6 @@
 """API routes for study sponsors and collaborators metadata"""
+import typing
+
 from flask import request
 from flask_restx import Resource, fields
 
@@ -75,7 +77,7 @@ class StudyCollaboratorsResource(Resource):
     @api.response(400, "Validation Error")
     def put(self, study_id: int):
         """updating study collaborators"""
-        data = request.json
+        data: dict | typing.Any = request.json
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403

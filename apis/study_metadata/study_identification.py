@@ -1,4 +1,6 @@
 """API routes for study identification metadata"""
+import typing
+
 from flask import request
 from flask_restx import Resource, fields
 
@@ -41,7 +43,7 @@ class StudyIdentificationResource(Resource):
     @api.expect(study_identification)
     def post(self, study_id: int):
         """Create study identification metadata"""
-        data = request.json
+        data: dict | typing.Any = request.json
 
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
