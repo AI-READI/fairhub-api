@@ -69,7 +69,7 @@ class DatasetList(Resource):
 class DatasetResource(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
-    def get(self, study_id: int, dataset_id: int):
+    def get(self, study_id: int, dataset_id: int):  # pylint: disable EW0613
         data_obj = model.Dataset.query.get(dataset_id)
         return data_obj.to_dict()
 
