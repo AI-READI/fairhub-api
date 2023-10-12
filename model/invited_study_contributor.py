@@ -1,13 +1,15 @@
 import datetime
 import uuid
 
+import model
+
 from .db import db
 
 # from datetime import datetime, timezone
 
 
 class StudyInvitedContributor(db.Model):
-    def __init__(self, study, email_address, permission):
+    def __init__(self, study: model.Study, email_address: str, permission):
         self.id = str(uuid.uuid4())
         self.study = study
         self.permission = permission

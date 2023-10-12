@@ -2,9 +2,10 @@ import datetime
 import uuid
 from datetime import timezone
 
-import model
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
+
+import model
 
 from ..db import db
 

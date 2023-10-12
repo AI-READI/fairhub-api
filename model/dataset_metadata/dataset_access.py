@@ -1,7 +1,9 @@
 import uuid
 
-from ..db import db
 from model import Dataset
+
+from ..db import db
+
 
 class DatasetAccess(db.Model):
     def __init__(self, dataset):
@@ -27,7 +29,6 @@ class DatasetAccess(db.Model):
             "url_last_checked": self.url_last_checked,
         }
 
-
     @staticmethod
     def from_data(dataset: Dataset, data: dict):
         dataset_access = DatasetAccess(dataset)
@@ -39,5 +40,3 @@ class DatasetAccess(db.Model):
         self.url = data["url"]
         self.url_last_checked = data["url_last_checked"]
         self.type = data["type"]
-
-

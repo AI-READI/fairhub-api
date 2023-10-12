@@ -2,8 +2,9 @@ import datetime
 import uuid
 from datetime import timezone
 
-from ..db import db
 from model import Study
+
+from ..db import db
 
 
 class StudyLink(db.Model):

@@ -5,8 +5,9 @@ from datetime import timezone
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 
-from ..db import db
 from model import Study
+
+from ..db import db
 
 
 class StudyIntervention(db.Model):

@@ -18,6 +18,6 @@ class TokenBlacklist(db.Model):
         token_blacklist.update(data)
         return token_blacklist
 
-    def update(self, data):
+    def update(self, data: dict):
         self.jti = data["jti"]
         self.exp = data["exp"]

@@ -1,7 +1,8 @@
 import uuid
 
-from ..db import db
 from model import Study
+
+from ..db import db
 
 
 class StudyDescription(db.Model):

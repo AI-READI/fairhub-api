@@ -1,5 +1,7 @@
 import uuid
 
+import model
+
 from .db import db
 
 
@@ -41,12 +43,12 @@ class UserDetails(db.Model):
         }
 
     @staticmethod
-    def from_data(user, data: dict):
+    def from_data(user: model.User, data: dict):
         user = UserDetails(user)
         user.update(data)
         return user
 
-    def update(self, data):
+    def update(self, data: dict):
         self.first_name = data["first_name"]
         self.last_name = data["last_name"]
         self.institution = data["institution"]

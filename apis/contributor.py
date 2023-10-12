@@ -82,11 +82,9 @@ class ContributorResource(Resource):
         grantee = model.StudyContributor.query.filter(
             model.StudyContributor.user == user, model.StudyContributor.study == study
         ).first()
-
         granter = model.StudyContributor.query.filter(
             model.StudyContributor.user == g.user, model.StudyContributor.study == study
         ).first()
-
         # Order should go from the least privileged to the most privileged
         grants = OrderedDict()
         grants["viewer"] = []

@@ -151,6 +151,7 @@ class Study(db.Model):
     )
 
     def to_dict(self):
+        """Converts the study to a dictionary"""
         owner = self.study_contributors.filter(
             model.StudyContributor.permission == "owner"
         ).first()
@@ -158,7 +159,6 @@ class Study(db.Model):
             model.StudyContributor.user_id == g.user.id
         ).first()
         print(contributor_permission)
-        """Converts the study to a dictionary"""
         return {
             "id": self.id,
             "title": self.title,

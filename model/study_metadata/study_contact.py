@@ -2,8 +2,10 @@ import datetime
 import uuid
 from datetime import timezone
 
-from ..db import db
 from model import Study
+
+from ..db import db
+
 
 class StudyContact(db.Model):
     """A study is a collection of datasets and participants"""

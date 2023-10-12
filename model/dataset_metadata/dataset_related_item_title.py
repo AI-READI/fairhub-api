@@ -29,7 +29,7 @@ class DatasetRelatedItemTitle(db.Model):
 
     @staticmethod
     def from_data(dataset, data: dict):
-        dataset_related_item_title = DatasetRelatedItemTitle()
+        dataset_related_item_title = DatasetRelatedItemTitle(dataset)
         dataset_related_item_title.update(data)
         return dataset_related_item_title
 

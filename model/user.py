@@ -53,12 +53,12 @@ class User(db.Model):
         # self.hash = data["hash"]
         # self.created_at = data["created_at"]
 
-    def set_password(self, password, data):
+    def set_password(self, password: str, data):
         """setting bcrypt passwords"""
         hashed_password = app.bcrypt.generate_password_hash(password).decode("utf-8")
         self.hash = hashed_password
 
-    def check_password(self, password):
+    def check_password(self, password: str):
         """validates password and bcrypt hashed password"""
         # TODO check password length and make uppercase letter
         app.bcrypt.generate_password_hash(password).decode("utf-8")

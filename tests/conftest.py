@@ -7,11 +7,11 @@ from app import create_app
 @pytest.fixture()
 def app():
     """An application for the tests."""
-    config = {
-        "TESTING": True,
-    }
+    # config = {
+    #     "TESTING": True,
+    # }
 
-    flask_app = create_app(config)
+    flask_app = create_app()
 
     flask_app.config.update(
         {

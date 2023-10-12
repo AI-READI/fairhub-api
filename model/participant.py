@@ -49,7 +49,7 @@ class Participant(db.Model):
         participant.update(data)
         return participant
 
-    def update(self, data):
+    def update(self, data: dict):
         self.first_name = data["first_name"]
         self.last_name = data["last_name"]
         self.address = data["address"]

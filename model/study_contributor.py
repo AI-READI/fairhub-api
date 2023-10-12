@@ -1,12 +1,14 @@
 import datetime
 
+import model
+
 from .db import db
 
 # from datetime import datetime, timezone
 
 
 class StudyContributor(db.Model):
-    def __init__(self, study, user, permission):
+    def __init__(self, study: model.Study, user: model.User, permission):
         self.study = study
         self.user = user
         self.permission = permission
@@ -38,7 +40,7 @@ class StudyContributor(db.Model):
         }
 
     @staticmethod
-    def from_data(study, user, permission):
+    def from_data(study: model.Study, user: model.User, permission):
         contributor = StudyContributor(study, user, permission)
         return contributor
 

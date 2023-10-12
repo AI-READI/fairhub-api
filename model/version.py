@@ -53,7 +53,7 @@ class Version(db.Model):
         dataset_version_obj.update(data)
         return dataset_version_obj
 
-    def update(self, data):
+    def update(self, data: dict):
         self.title = data["title"]
         self.published = data["published"]
         self.doi = data["doi"]
