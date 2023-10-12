@@ -1,6 +1,7 @@
 """API routes for study description metadata"""
 from flask_restx import Resource, fields
 from flask import request
+from jsonschema import validate, ValidationError
 from model import Study, db
 from ..authentication import is_granted, is_study_metadata
 
@@ -35,6 +36,21 @@ class StudyDescriptionResource(Resource):
 
     def put(self, study_id: int):
         """Update study description metadata"""
+        # Schema validation
+        schema = {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "brief_summary": {"type": "string", "minLength": 1},
+                "detailed_description": {"type": "string", "minLength": 1},
+            },
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+
         study_obj = Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403
