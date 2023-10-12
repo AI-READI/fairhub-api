@@ -1,7 +1,7 @@
 """API routes for study ipdsharing metadata"""
 from flask_restx import Resource, fields
 from flask import request
-from jsonschema impoprt validate, ValidationError
+from jsonschema import validate, ValidationError
 from model import Study, db
 from ..authentication import is_granted
 
@@ -61,12 +61,12 @@ class StudyIpdsharingResource(Resource):
                 "ipd_sharing_url",
             ],
         }
-        
+
         try:
             validate(request.json, schema)
         except ValidationError as e:
             return e.message, 400
-        
+
         study_ = Study.query.get(study_id)
         if not is_granted("study_metadata", study_):
             return "Access denied, you can not delete study", 403
