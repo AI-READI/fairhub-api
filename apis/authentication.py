@@ -43,7 +43,7 @@ class SignUpUser(Resource):
     def post(self):
         """signs up the new users and saves data in DB"""
         data = request.json
-        
+
         def validate_is_valid_email(instance):
             # Turn on check_deliverability
             # for first-time validations like on account creation pages (but not
@@ -100,6 +100,7 @@ class Login(Resource):
         Also, it sets token for logged user along with expiration date"""
         data = request.json
         email_address = data["email_address"]
+
         def validate_is_valid_email(instance):
             print("within is_valid_email")
             email_address = instance
@@ -128,7 +129,7 @@ class Login(Resource):
             validate(instance=data, schema=schema, format_checker=format_checker)
         except ValidationError as e:
             return e.message, 400
-        
+
         user = User.query.filter_by(email_address=email_address).one_or_none()
         if not user:
             return "Invalid credentials", 401

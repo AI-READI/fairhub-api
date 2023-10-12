@@ -45,6 +45,7 @@ class UserDetailsEndpoint(Resource):
     def put(self):
         """Updates user details"""
         data = request.json
+
         def validate_is_valid_email(instance):
             print("within is_valid_email")
             email_address = instance
@@ -54,11 +55,20 @@ class UserDetailsEndpoint(Resource):
                 return True
             except EmailNotValidError:
                 return False
-        
+
         # Schema validation (profile_image is optional but additional properties are not allowed)
         schema = {
             "type": "object",
-            "required": ["email_address", "username", "first_name", "last_name", "institution", "orcid", "location", "timezone"],
+            "required": [
+                "email_address",
+                "username",
+                "first_name",
+                "last_name",
+                "institution",
+                "orcid",
+                "location",
+                "timezone",
+            ],
             "additionalProperties": False,
             "properties": {
                 "email_address": {"type": "string", "format": "valid email"},
@@ -72,12 +82,14 @@ class UserDetailsEndpoint(Resource):
                 "profile_image": {"type": "string"},
             },
         }
-        
+
         format_checker = FormatChecker()
         format_checker.checks("valid email")(validate_is_valid_email)
-        
+
         try:
-            validate(instance=request.json, schema=schema, format_checker=format_checker)
+            validate(
+                instance=request.json, schema=schema, format_checker=format_checker
+            )
         except ValidationError as e:
             print(e.message)
             # Verify if the user_information being sent back is okay for this 400 error, e.message is

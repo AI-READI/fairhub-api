@@ -52,12 +52,12 @@ class Studies(Resource):
                 "image": {"type": "string"},
             },
         }
-        
+
         try:
             validate(request.json, schema)
         except ValidationError as e:
             return e.message, 400
-        
+
         add_study = Study.from_data(request.json)
         db.session.add(add_study)
         study_id = add_study.id
@@ -93,12 +93,12 @@ class StudyResource(Resource):
                 "image": {"type": "string"},
             },
         }
-        
+
         try:
             validate(request.json, schema)
         except ValidationError as e:
             return e.message, 400
-        
+
         update_study = Study.query.get(study_id)
         if not is_granted("update_study", update_study):
             return "Access denied, you can not modify", 403
