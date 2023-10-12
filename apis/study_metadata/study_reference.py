@@ -1,6 +1,7 @@
 """API routes for study reference metadata"""
 from flask_restx import Resource, fields
 from flask import request
+from jsonschema import validate, ValidationError
 from model import Study, db, StudyReference
 from ..authentication import is_granted
 
@@ -44,6 +45,26 @@ class StudyReferenceResource(Resource):
 
     def post(self, study_id: int):
         """Create study reference metadata"""
+        # Schema validation
+        schema = {
+            "type": "array",
+            "additionalProperties": False,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "identifier": {"type": "string"},
+                    "type": {"type": "string"},
+                    "citation": {"type": "string"},
+                },
+                "required": ["identifier", "type", "citation"],
+            }
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return {"message": e.message}, 400
+
         study_obj = Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403
