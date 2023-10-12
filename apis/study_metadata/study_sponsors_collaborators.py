@@ -82,12 +82,12 @@ class StudyCollaboratorsResource(Resource):
             "type": "array",
             "items": {"type": "string"},
         }
-        
+
         try:
             validate(request.json, schema)
         except ValidationError as e:
             return e.message, 400
-        
+
         data = request.json
         study_obj = Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
