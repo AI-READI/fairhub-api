@@ -45,9 +45,9 @@ class StudyOtherResource(Resource):
             "additionalProperties": False,
             "properties": {
                 "oversight_has_dmc": {"type": "boolean"},
-                "conditions": {"type": "arrya", "items": {"type": "string"}},
+                "conditions": {"type": "array", "items": {"type": "string"}},
                 "keywords": {"type": "array", "items": {"type": "string"}},
-                "size": {"type": "string"},
+                "size": {"type": "integer"},
             },
         }
 
@@ -83,6 +83,19 @@ class StudyOversightResource(Resource):
 
     def put(self, study_id: int):
         """Update study oversight metadata"""
+        # Schema validation
+        schema = {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {"oversight_has_dmc": {"type": "boolean"}},
+            "required": ["oversight_has_dmc"],
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+
         study_obj = Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403
