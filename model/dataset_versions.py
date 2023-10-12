@@ -1,5 +1,6 @@
 from .version import Version
 
+
 class DatasetVersions:
     def __init__(
         self,
@@ -24,10 +25,10 @@ class DatasetVersions:
 
     @staticmethod
     def from_data(data: dict):
-        dataset_versions = DatasetVersions()
-        dataset_versions.id = data["id"]
+        dataset_versions = DatasetVersions(
+            id=data["id"],
+            last_published=data["last_published"],
+            last_modified=data["last_modified"])
         dataset_versions.latest_version = data["latest_version"]
-        dataset_versions.last_modified = data["last_modified"]
-        dataset_versions.last_published = data["last_published"]
         dataset_versions.published_version = data["published_version"]
         return dataset_versions
