@@ -1,9 +1,9 @@
 """API routes for study sponsors and collaborators metadata"""
 from flask_restx import Resource, fields
 from flask import request
+from jsonschema import validate, ValidationError
 from model import Study, db
 from ..authentication import is_granted
-from jsonschema import validate, ValidationError
 
 
 from apis.study_metadata_namespace import api
@@ -48,6 +48,31 @@ class StudySponsorsResource(Resource):
 
     def put(self, study_id: int):
         """Update study sponsors metadata"""
+        # Schema validation
+        schema = {
+            "type": "object",
+            "additionalProperties": False,
+            "required": [
+                "responsible_party_type",
+                "responsible_party_investigator_name",
+                "responsible_party_investigator_title",
+                "responsible_party_investigator_affiliation",
+                "lead_sponsor_name",
+            ],
+            "properties": {
+                "responsible_party_type": {"type": "string"},
+                "responsible_party_investigator_name": {"type": "string"},
+                "responsible_party_investigator_title": {"type": "string"},
+                "responsible_party_investigator_affiliation": {"type": "string"},
+                "lead_sponsor_name": {"type": "string"},
+            }
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+
         study_ = Study.query.get(study_id)
 
         study_.study_sponsors_collaborators.update(request.json)
