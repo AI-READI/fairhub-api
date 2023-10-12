@@ -2,8 +2,8 @@
 from flask import request
 from flask_restx import Resource, fields
 
+import model
 from apis.study_metadata_namespace import api
-from model import Study, StudyReference, db
 
 from ..authentication import is_granted
 
@@ -30,7 +30,7 @@ class StudyReferenceResource(Resource):
     @api.marshal_with(study_reference)
     def get(self, study_id: int):
         """Get study reference metadata"""
-        study_ = Study.query.get(study_id)
+        study_ = model.Study.query.get(study_id)
 
         study_reference_ = study_.study_reference
 
@@ -43,22 +43,22 @@ class StudyReferenceResource(Resource):
 
     def post(self, study_id: int):
         """Create study reference metadata"""
-        study_obj = Study.query.get(study_id)
+        study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403
         data = request.json
         list_of_elements = []
         for i in data:
             if "id" in i and i["id"]:
-                study_reference_ = StudyReference.query.get(i["id"])
+                study_reference_ = model.StudyReference.query.get(i["id"])
                 study_reference_.update(i)
                 list_of_elements.append(study_reference_.to_dict())
             elif "id" not in i or not i["id"]:
-                study_reference_ = StudyReference.from_data(study_obj, i)
-                db.session.add(study_reference_)
+                study_reference_ = model.StudyReference.from_data(study_obj, i)
+                model.db.session.add(study_reference_)
                 list_of_elements.append(study_reference_.to_dict())
 
-        db.session.commit()
+        model.db.session.commit()
 
         return list_of_elements
 
@@ -68,13 +68,13 @@ class StudyReferenceResource(Resource):
 
         def delete(self, study_id: int, reference_id: int):
             """Delete study reference metadata"""
-            study_obj = Study.query.get(study_id)
+            study_obj = model.Study.query.get(study_id)
             if not is_granted("study_metadata", study_obj):
                 return "Access denied, you can not delete study", 403
-            study_reference_ = StudyReference.query.get(reference_id)
+            study_reference_ = model.StudyReference.query.get(reference_id)
 
-            db.session.delete(study_reference_)
+            model.db.session.delete(study_reference_)
 
-            db.session.commit()
+            model.db.session.commit()
 
             return 204

@@ -1,8 +1,8 @@
 from flask import request
 from flask_restx import Resource, fields
 
+import model
 from apis.dataset_metadata_namespace import api
-from model import Dataset, DatasetAlternateIdentifier, db
 
 dataset_identifier = api.model(
     "DatasetAlternateIdentifier",
@@ -22,26 +22,30 @@ class DatasetAlternateIdentifierResource(Resource):
     @api.response(400, "Validation Error")
     @api.marshal_with(dataset_identifier)
     def get(self, study_id: int, dataset_id: int):
-        dataset_ = Dataset.query.get(dataset_id)
+        dataset_ = model.Dataset.query.get(dataset_id)
         dataset_identifier_ = dataset_.dataset_alternate_identifier
         return [d.to_dict() for d in dataset_identifier_]
 
     def post(self, study_id: int, dataset_id: int):
         data = request.json
-        data_obj = Dataset.query.get(dataset_id)
+        data_obj = model.Dataset.query.get(dataset_id)
         list_of_elements = []
         for i in data:
             if "id" in i and i["id"]:
-                dataset_identifier_ = DatasetAlternateIdentifier.query.get(i["id"])
+                dataset_identifier_ = model.DatasetAlternateIdentifier.query.get(
+                    i["id"]
+                )
                 if not dataset_identifier_:
                     return f"Study link {i['id']} Id is not found", 404
                 dataset_identifier_.update(i)
                 list_of_elements.append(dataset_identifier_.to_dict())
             elif "id" not in i or not i["id"]:
-                dataset_identifier_ = DatasetAlternateIdentifier.from_data(data_obj, i)
-                db.session.add(dataset_identifier_)
+                dataset_identifier_ = model.DatasetAlternateIdentifier.from_data(
+                    data_obj, i
+                )
+                model.db.session.add(dataset_identifier_)
                 list_of_elements.append(dataset_identifier_.to_dict())
-        db.session.commit()
+        model.db.session.commit()
         return list_of_elements
 
     @api.route(
@@ -49,7 +53,9 @@ class DatasetAlternateIdentifierResource(Resource):
     )
     class DatasetAlternateIdentifierUpdate(Resource):
         def put(self, study_id: int, dataset_id: int, identifier_id: int):
-            dataset_identifier_ = DatasetAlternateIdentifier.query.get(identifier_id)
+            dataset_identifier_ = model.DatasetAlternateIdentifier.query.get(
+                identifier_id
+            )
             dataset_identifier_.update(request.json)
-            db.session.commit()
+            model.db.session.commit()
             return dataset_identifier_.to_dict()

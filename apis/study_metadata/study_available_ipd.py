@@ -2,8 +2,8 @@
 from flask import request
 from flask_restx import Resource, fields
 
+import model
 from apis.study_metadata_namespace import api
-from model import Study, StudyAvailableIpd, db
 
 from ..authentication import is_granted
 
@@ -29,7 +29,7 @@ class StudyAvailableResource(Resource):
     # @api.marshal_with(study_available)
     def get(self, study_id: int):
         """Get study available metadata"""
-        study_ = Study.query.get(study_id)
+        study_ = model.Study.query.get(study_id)
 
         study_available_ipd_ = study_.study_available_ipd
 
@@ -45,26 +45,26 @@ class StudyAvailableResource(Resource):
     @api.marshal_with(study_available)
     def post(self, study_id: int):
         """Create study available metadata"""
-        study = Study.query.get(study_id)
+        study = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study):
             return "Access denied, you can not delete study", 403
         data = request.json
 
-        study_obj = Study.query.get(study_id)
+        study_obj = model.Study.query.get(study_id)
 
         list_of_elements = []
 
         for i in data:
             if "id" in i and i["id"]:
-                study_available_ipd_ = StudyAvailableIpd.query.get(i["id"])
+                study_available_ipd_ = model.StudyAvailableIpd.query.get(i["id"])
                 study_available_ipd_.update(i)
                 list_of_elements.append(study_available_ipd_.to_dict())
             elif "id" not in i or not i["id"]:
-                study_available_ipd_ = StudyAvailableIpd.from_data(study_obj, i)
-                db.session.add(study_available_ipd_)
+                study_available_ipd_ = model.StudyAvailableIpd.from_data(study_obj, i)
+                model.db.session.add(study_available_ipd_)
                 list_of_elements.append(study_available_ipd_.to_dict())
 
-        db.session.commit()
+        model.db.session.commit()
 
         return list_of_elements
 
@@ -75,12 +75,12 @@ class StudyLocationUpdate(Resource):
 
     def delete(self, study_id: int, available_ipd_id: int):
         """Delete study available metadata"""
-        study_obj = Study.query.get(study_id)
+        study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403
-        study_available_ = StudyAvailableIpd.query.get(available_ipd_id)
+        study_available_ = model.StudyAvailableIpd.query.get(available_ipd_id)
 
-        db.session.delete(study_available_)
-        db.session.commit()
+        model.db.session.delete(study_available_)
+        model.db.session.commit()
 
         return 204

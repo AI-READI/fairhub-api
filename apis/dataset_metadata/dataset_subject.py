@@ -1,8 +1,8 @@
 from flask import request
 from flask_restx import Resource, fields
 
+import model
 from apis.dataset_metadata_namespace import api
-from model import Dataset, DatasetSubject, db
 
 dataset_subject = api.model(
     "DatasetSubject",
@@ -25,22 +25,22 @@ class DatasetSubjectResource(Resource):
     # @api.param("id", "The dataset identifier")
     @api.marshal_with(dataset_subject)
     def get(self, study_id: int, dataset_id: int):
-        dataset_ = Dataset.query.get(dataset_id)
+        dataset_ = model.Dataset.query.get(dataset_id)
         dataset_subject_ = dataset_.dataset_subject
         return [d.to_dict() for d in dataset_subject_]
 
     def post(self, study_id: int, dataset_id: int):
         data = request.json
-        data_obj = Dataset.query.get(dataset_id)
-        dataset_subject_ = DatasetSubject.from_data(data_obj, data)
-        db.session.add(dataset_subject_)
-        db.session.commit()
+        data_obj = model.Dataset.query.get(dataset_id)
+        dataset_subject_ = model.DatasetSubject.from_data(data_obj, data)
+        model.db.session.add(dataset_subject_)
+        model.db.session.commit()
         return dataset_subject_.to_dict()
 
     @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/subject/<subject_id>")
     class DatasetSubjectUpdate(Resource):
         def put(self, study_id: int, dataset_id: int, subject_id: int):
-            dataset_subject_ = DatasetSubject.query.get(subject_id)
+            dataset_subject_ = model.DatasetSubject.query.get(subject_id)
             dataset_subject_.update(request.json)
-            db.session.commit()
+            model.db.session.commit()
             return dataset_subject_.to_dict()

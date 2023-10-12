@@ -2,8 +2,8 @@
 from flask import request
 from flask_restx import Resource, fields
 
+import model
 from apis.study_metadata_namespace import api
-from model import Study, db
 
 from ..authentication import is_granted
 
@@ -30,7 +30,7 @@ class StudyOtherResource(Resource):
     @api.marshal_with(study_other)
     def get(self, study_id: int):
         """Get study other metadata"""
-        study_ = Study.query.get(study_id)
+        study_ = model.Study.query.get(study_id)
 
         study_other_ = study_.study_other
 
@@ -38,11 +38,11 @@ class StudyOtherResource(Resource):
 
     def put(self, study_id: int):
         """Update study other metadata"""
-        study_ = Study.query.get(study_id)
+        study_ = model.Study.query.get(study_id)
 
         study_.study_other.update(request.json)
 
-        db.session.commit()
+        model.db.session.commit()
 
         return study_.study_other.to_dict()
 
@@ -57,7 +57,7 @@ class StudyOversightResource(Resource):
     # @api.marshal_with(study_other)
     def get(self, study_id: int):
         """Get study oversight metadata"""
-        study_ = Study.query.get(study_id)
+        study_ = model.Study.query.get(study_id)
 
         study_oversight_has_dmc = study_.study_other.oversight_has_dmc
 
@@ -65,7 +65,7 @@ class StudyOversightResource(Resource):
 
     def put(self, study_id: int):
         """Update study oversight metadata"""
-        study_obj = Study.query.get(study_id)
+        study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403
         data = request.json
@@ -73,7 +73,7 @@ class StudyOversightResource(Resource):
             "oversight_has_dmc"
         ]
         study_obj.touch()
-        db.session.commit()
+        model.db.session.commit()
 
         return study_oversight
 
@@ -89,7 +89,7 @@ class StudyConditionsResource(Resource):
     # @api.marshal_with(study_other)
     def get(self, study_id: int):
         """Get study conditions metadata"""
-        study_ = Study.query.get(study_id)
+        study_ = model.Study.query.get(study_id)
 
         study_other_conditions = study_.study_other.conditions
 
@@ -98,11 +98,11 @@ class StudyConditionsResource(Resource):
     def put(self, study_id: int):
         """Update study conditions metadata"""
         data = request.json
-        study_obj = Study.query.get(study_id)
+        study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403
         study_obj.study_other.conditions = data
         study_obj.touch()
-        db.session.commit()
+        model.db.session.commit()
 
         return study_obj.study_other.conditions

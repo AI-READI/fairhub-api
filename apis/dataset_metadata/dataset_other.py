@@ -1,8 +1,8 @@
 from flask import request
 from flask_restx import Resource, fields
 
+import model
 from apis.dataset_metadata_namespace import api
-from model import Dataset, db
 
 dataset_other = api.model(
     "DatasetOther",
@@ -25,13 +25,13 @@ class DatasetOtherResource(Resource):
     @api.response(400, "Validation Error")
     @api.marshal_with(dataset_other)
     def get(self, study_id: int, dataset_id: int):
-        dataset_ = Dataset.query.get(dataset_id)
+        dataset_ = model.Dataset.query.get(dataset_id)
         dataset_other_ = dataset_.dataset_other
         return [d.to_dict() for d in dataset_other_]
 
     def put(self, study_id: int, dataset_id: int):
         data = request.json
-        dataset_ = Dataset.query.get(dataset_id)
+        dataset_ = model.Dataset.query.get(dataset_id)
         dataset_other_ = dataset_.dataset_other.update(data)
-        db.session.commit()
+        model.db.session.commit()
         return dataset_other_.to_dict()

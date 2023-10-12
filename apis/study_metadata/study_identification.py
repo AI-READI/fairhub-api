@@ -2,8 +2,8 @@
 from flask import request
 from flask_restx import Resource, fields
 
+import model
 from apis.study_metadata_namespace import api
-from model import Identifiers, Study, StudyIdentification, db
 
 from ..authentication import is_granted
 
@@ -31,8 +31,8 @@ class StudyIdentificationResource(Resource):
     # @api.marshal_with(study_identification)
     def get(self, study_id: int):
         """Get study identification metadata"""
-        study_ = Study.query.get(study_id)
-        identifiers = Identifiers(study_)
+        study_ = model.Study.query.get(study_id)
+        identifiers = model.Identifiers(study_)
         return identifiers.to_dict()
 
     @api.doc("identification add")
@@ -43,36 +43,36 @@ class StudyIdentificationResource(Resource):
         """Create study identification metadata"""
         data = request.json
 
-        study_obj = Study.query.get(study_id)
+        study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403
         primary = data["primary"]
         primary["secondary"] = False
 
         if "id" in primary and primary["id"]:
-            study_identification_ = StudyIdentification.query.get(primary["id"])
+            study_identification_ = model.StudyIdentification.query.get(primary["id"])
             study_identification_.update(primary)
         elif "id" not in primary or not primary["id"]:
-            study_identification_ = StudyIdentification.from_data(
+            study_identification_ = model.StudyIdentification.from_data(
                 study_obj, primary, False
             )
-            db.session.add(study_identification_)
+            model.db.session.add(study_identification_)
 
         for i in data["secondary"]:
             i["secondary"] = True
 
             if "id" in i and i["id"]:
-                study_identification_ = StudyIdentification.query.get(i["id"])
+                study_identification_ = model.StudyIdentification.query.get(i["id"])
                 study_identification_.update(i)
             elif "id" not in i or not i["id"]:
-                study_identification_ = StudyIdentification.from_data(
+                study_identification_ = model.StudyIdentification.from_data(
                     study_obj, i, True
                 )
-                db.session.add(study_identification_)
+                model.db.session.add(study_identification_)
 
-        db.session.commit()
+        model.db.session.commit()
 
-        identifiers = Identifiers(study_obj)
+        identifiers = model.Identifiers(study_obj)
 
         return identifiers.to_dict()
 
@@ -82,15 +82,17 @@ class StudyIdentificationResource(Resource):
 
         def delete(self, study_id: int, identification_id: int):
             """Delete study identification metadata"""
-            study = Study.query.get(study_id)
+            study = model.Study.query.get(study_id)
             if not is_granted("study_metadata", study):
                 return "Access denied, you can not delete study", 403
-            study_identification_ = StudyIdentification.query.get(identification_id)
+            study_identification_ = model.StudyIdentification.query.get(
+                identification_id
+            )
 
             if not study_identification_.secondary:
                 return 400, "primary identifier can not be deleted"
 
-            db.session.delete(study_identification_)
-            db.session.commit()
+            model.db.session.delete(study_identification_)
+            model.db.session.commit()
 
             return 204

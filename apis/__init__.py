@@ -35,7 +35,7 @@ from .study import api as study_api
 from .study_metadata.study_arm import api as arm
 from .study_metadata.study_available_ipd import api as available_ipd
 from .study_metadata.study_contact import api as contact
-from .study_metadata.study_description import api as description
+from .study_metadata.study_description import api as study_description
 from .study_metadata.study_design import api as design
 from .study_metadata.study_eligibility import api as eligibility
 from .study_metadata.study_identification import api as identification
@@ -55,6 +55,53 @@ api = Api(
     description="The backend api system for the fairhub vue app",
     doc="/docs",
 )
+
+__all__ = [
+    "dataset_metadata_namespace",
+    "study_metadata_namespace",
+    "authentication",
+    "contributors_api",
+    "dataset_api",
+    "access",
+    "alternate_identifier",
+    "consent",
+    "date",
+    "de_ident_level",
+    "description",
+    "funder",
+    "managing_organization",
+    "dataset_other",
+    "readme",
+    "record_keys",
+    "related_item",
+    "related_item_contributor",
+    "related_item_identifier",
+    "api",
+    "related_item_other",
+    "related_item_title",
+    "rights",
+    "subject",
+    "title",
+    "participants_api",
+    "study_api",
+    "arm",
+    "available_ipd",
+    "contact",
+    "design",
+    "eligibility",
+    "intervention",
+    "ipdsharing",
+    "link",
+    "location",
+    "other",
+    "overall_official",
+    "reference",
+    "sponsors_collaborator",
+    "status",
+    "user",
+    "identification",
+    "study_description",
+]
 
 
 api.add_namespace(dataset_metadata_namespace)

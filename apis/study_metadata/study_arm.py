@@ -2,8 +2,8 @@
 from flask import request
 from flask_restx import Resource, fields
 
+import model
 from apis.study_metadata_namespace import api
-from model import Arm, Study, StudyArm, db
 
 from ..authentication import is_granted
 
@@ -36,30 +36,30 @@ class StudyArmResource(Resource):
     # @api.marshal_with(study_arm)
     def get(self, study_id):
         """Get study arm metadata"""
-        study_ = Study.query.get(study_id)
+        study_ = model.Study.query.get(study_id)
 
-        arm = Arm(study_)
+        arm = model.Arm(study_)
 
         return arm.to_dict()
 
     def post(self, study_id):
         """Create study arm metadata"""
-        study = Study.query.get(study_id)
+        study = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study):
             return "Access denied, you can not delete study", 403
         data = request.json
-        study_obj = Study.query.get(study_id)
+        study_obj = model.Study.query.get(study_id)
         for i in data:
             if "id" in i and i["id"]:
-                study_arm_ = StudyArm.query.get(i["id"])
+                study_arm_ = model.StudyArm.query.get(i["id"])
                 study_arm_.update(i)
             elif "id" not in i or not i["id"]:
-                study_arm_ = StudyArm.from_data(study_obj, i)
-                db.session.add(study_arm_)
+                study_arm_ = model.StudyArm.from_data(study_obj, i)
+                model.db.session.add(study_arm_)
 
-        db.session.commit()
+        model.db.session.commit()
 
-        arms = Arm(study_obj)
+        arms = model.Arm(study_obj)
 
         return arms.to_dict()
 
@@ -70,11 +70,11 @@ class StudyArmResource(Resource):
 
         def delete(self, study_id: int, arm_id: int):
             """Delete study arm metadata"""
-            study_obj = Study.query.get(study_id)
+            study_obj = model.Study.query.get(study_id)
             if not is_granted("study_metadata", study_obj):
                 return "Access denied, you can not delete study", 403
-            study_arm_ = StudyArm.query.get(arm_id)
-            db.session.delete(study_arm_)
-            db.session.commit()
+            study_arm_ = model.StudyArm.query.get(arm_id)
+            model.db.session.delete(study_arm_)
+            model.db.session.commit()
 
             return 204

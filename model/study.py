@@ -181,7 +181,7 @@ class Study(db.Model):
 
         return study
 
-    def update(self, data):
+    def update(self, data: dict):
         """Updates the study from a dictionary"""
         if not data["title"]:
             raise exception.ValidationException("title is required")
