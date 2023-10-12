@@ -46,7 +46,7 @@ class StudyIdentificationResource(Resource):
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403
-        primary = data["primary"]
+        primary: dict = data["primary"]
         primary["secondary"] = False
 
         if "id" in primary and primary["id"]:

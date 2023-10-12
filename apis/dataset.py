@@ -66,13 +66,13 @@ class DatasetList(Resource):
 class DatasetResource(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
-    def get(self, study_id, dataset_id):
+    def get(self, study_id: int, dataset_id: int):
         data_obj = model.Dataset.query.get(dataset_id)
         return data_obj.to_dict()
 
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
-    def put(self, study_id, dataset_id):
+    def put(self, study_id: int, dataset_id: int):
         study = model.Study.query.get(study_id)
         if not is_granted("update_dataset", study):
             return "Access denied, you can not modify", 403
@@ -84,9 +84,8 @@ class DatasetResource(Resource):
 
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
-    def delete(self, _study_id, dataset_id):
-
-        study = model.Study.query.get(_study_id)
+    def delete(self, study_id: int, dataset_id: int):
+        study = model.Study.query.get(study_id)
         if not is_granted("delete_dataset", study):
             return "Access denied, you can not modify", 403
         data_obj = model.Dataset.query.get(dataset_id)
@@ -97,7 +96,7 @@ class DatasetResource(Resource):
         dataset_ = study.dataset
         return [d.to_dict() for d in dataset_], 201
 
-    # def delete(self, study_id, dataset_id, version_id):
+    # def delete(self, study_id: int, dataset_id: int, version_id: int):
     #     data_obj = Dataset.query.get(dataset_id)
     #     for version in data_obj.dataset_versions:
     #         db.session.delete(version)
@@ -113,11 +112,11 @@ class VersionResource(Resource):
     @api.response(400, "Validation Error")
     @api.doc("dataset version")
     @api.marshal_with(dataset_versions_model)
-    def get(self, study_id, dataset_id, version_id):
+    def get(self, study_id: int, dataset_id: int, version_id: int):
         dataset_version = model.Version.query.get(version_id)
         return dataset_version.to_dict()
 
-    def put(self, study_id, dataset_id, version_id):
+    def put(self, study_id: int, dataset_id: int, version_id: int):
         study = model.Study.query.get(study_id)
         if not is_granted("publish_dataset", study):
             return "Access denied, you can not modify", 403
@@ -126,7 +125,7 @@ class VersionResource(Resource):
         model.db.session.commit()
         return jsonify(data_version_obj.to_dict()), 201
 
-    def delete(self, study_id, dataset_id, version_id):
+    def delete(self, study_id: int, dataset_id: int, version_id: int):
         study = model.Study.query.get(study_id)
         if not is_granted("delete_dataset", study):
             return "Access denied, you can not modify", 403

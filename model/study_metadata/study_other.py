@@ -8,7 +8,7 @@ from model import Study
 from ..db import db
 
 
-class StudyOther(db.Model):
+class StudyOther(db.Model):  # type: ignore
     """A study is a collection of datasets and participants"""
 
     def __init__(self, study):
@@ -60,5 +60,5 @@ class StudyOther(db.Model):
 
     def validate(self):
         """Validates the study"""
-        violations = []
+        violations: list = []
         return violations

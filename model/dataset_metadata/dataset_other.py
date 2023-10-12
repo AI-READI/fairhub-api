@@ -6,7 +6,7 @@ from sqlalchemy.dialects.postgresql import ARRAY
 from ..db import db
 
 
-class DatasetOther(db.Model):
+class DatasetOther(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset

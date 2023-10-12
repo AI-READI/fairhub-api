@@ -50,7 +50,7 @@ class UpdateParticipant(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(participant_model)
-    def put(self, study_id, participant_id: int):
+    def put(self, study_id: int, participant_id: int):
         if is_granted("viewer", study_id):
             return "Access denied, you can not modify", 403
         is_granted("viewer", study_id)
@@ -61,7 +61,7 @@ class UpdateParticipant(Resource):
 
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def delete(self, study_id, participant_id: int):
+    def delete(self, study_id: int, participant_id: int):
         if is_granted("viewer", study_id):
             return "Access denied, you can not modify", 403
         is_granted("viewer", study_id)

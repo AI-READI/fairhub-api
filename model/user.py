@@ -9,7 +9,7 @@ from .db import db
 # from datetime import datetime, timezone
 
 
-class User(db.Model):
+class User(db.Model):  # type: ignore
     def __init__(self, password, data):
         self.id = str(uuid.uuid4())
         self.created_at = datetime.datetime.now(datetime.timezone.utc).timestamp()

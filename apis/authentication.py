@@ -86,9 +86,10 @@ class Login(Resource):
             encoded_jwt_code = jwt.encode(
                 {
                     "user": user.id,
-                    "exp": datetime.datetime.now(timezone.utc) + datetime.timedelta(minutes=200),
+                    "exp": datetime.datetime.now(timezone.utc)
+                    + datetime.timedelta(minutes=200),  # noqa: W503
                     "jti": str(uuid.uuid4()),
-                },
+                },  # noqa: W503
                 config.secret,
                 algorithm="HS256",
             )

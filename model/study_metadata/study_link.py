@@ -7,7 +7,7 @@ from model import Study
 from ..db import db
 
 
-class StudyLink(db.Model):
+class StudyLink(db.Model):  # type: ignore
     """A study is a collection of datasets and participants"""
 
     def __init__(self, study):
@@ -52,5 +52,5 @@ class StudyLink(db.Model):
 
     def validate(self):
         """Validates the lead_sponsor_last_name study"""
-        violations = []
+        violations: list = []
         return violations

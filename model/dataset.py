@@ -10,7 +10,7 @@ from .db import db
 from .study import Study
 
 
-class Dataset(db.Model):
+class Dataset(db.Model):  # type: ignore
     def __init__(self, study):
         self.study = study
         self.id = str(uuid.uuid4())

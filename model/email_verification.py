@@ -4,7 +4,7 @@ from datetime import timezone
 from .db import db
 
 
-class EmailVerification(db.Model):
+class EmailVerification(db.Model):  # type: ignore
     def __init__(self):
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
 

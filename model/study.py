@@ -15,7 +15,7 @@ class StudyException(Exception):
     pass
 
 
-class Study(db.Model):
+class Study(db.Model):  # type: ignore
     """A study is a collection of datasets and participants"""
 
     def __init__(self):

@@ -7,7 +7,7 @@ import model
 from .db import db
 
 
-class Participant(db.Model):
+class Participant(db.Model):  # type: ignore
     def __init__(self, study):
         self.study = study
         self.id = str(uuid.uuid4())

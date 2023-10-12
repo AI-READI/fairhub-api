@@ -3,7 +3,7 @@ import uuid
 from ..db import db
 
 
-class DatasetConsent(db.Model):
+class DatasetConsent(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.dataset = dataset
         self.id = str(uuid.uuid4())

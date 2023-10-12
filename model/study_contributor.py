@@ -7,7 +7,7 @@ from .db import db
 # from datetime import datetime, timezone
 
 
-class StudyContributor(db.Model):
+class StudyContributor(db.Model):  # type: ignore
     def __init__(self, study: model.Study, user: model.User, permission):
         self.study = study
         self.user = user

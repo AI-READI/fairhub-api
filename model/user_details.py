@@ -5,7 +5,7 @@ import model
 from .db import db
 
 
-class UserDetails(db.Model):
+class UserDetails(db.Model):  # type: ignore
     def __init__(self, user):
         self.id = str(uuid.uuid4())
         self.first_name = ""

@@ -3,7 +3,7 @@ import uuid
 from ..db import db
 
 
-class DatasetRelatedItemIdentifier(db.Model):
+class DatasetRelatedItemIdentifier(db.Model):  # type: ignore
     def __init__(self):
         self.id = str(uuid.uuid4())
 
