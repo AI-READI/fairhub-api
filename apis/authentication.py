@@ -55,19 +55,47 @@ class SignUpUser(Resource):
             except EmailNotValidError as e:
                 raise ValidationError("Invalid email address format") from e
 
+        def validate_password(instance):
+            password = instance
+            # Check if password is at least 8 characters long
+            if len(password) < 8:
+                raise ValidationError("Password must be at least 8 characters long")
+            
+            # Check if password contains at least one lowercase letter
+            if not re.search("[a-z]", password):
+                raise ValidationError("Password must contain at least one lowercase letter")
+
+            # Check if password contains at least one uppercase letter
+            if not re.search("[A-Z]", password):
+                raise ValidationError("Password must contain at least one uppercase letter")
+
+            # Check if password contains at least one digit
+            if not re.search("[0-9]", password):
+                raise ValidationError("Password must contain at least one digit")
+
+            # Check if password contains at least one special character
+            if not re.search("[~`!@#$%^&*()_\-+={[}\]|:;\"'<,>.?/]", password):
+                raise ValidationError("Password must contain at least one special character")
+
+            return True
+
         # Schema validation
         schema = {
             "type": "object",
             "required": ["email_address", "password"],
             "additionalProperties": False,
             "properties": {
-                "email_address": {"type": "string", "format": "valid email", "error_message": "Invalid email address"},
-                "password": {"type": "string"},
-            },
+                "email_address": {"type": "string", "format": "valid email"},
+                "password": {
+                    "type": "string",
+                    "format": "password",
+                    }
+                }
         }
 
         format_checker = FormatChecker()
         format_checker.checks("valid email")(validate_is_valid_email)
+        format_checker.checks("password")(validate_password)
 
         try:
             validate(instance=data, schema=schema, format_checker=format_checker)
