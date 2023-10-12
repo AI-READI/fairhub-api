@@ -194,7 +194,7 @@ class Study(db.Model):  # type: ignore
 
     def validate(self):
         """Validates the study"""
-        violations = []
+        violations: list = []
         # if self.description.trim() == "":
         #     violations.push("A description is required")
         # if self.keywords.length < 1:

@@ -1,4 +1,4 @@
-import typing
+from typing import Any, List
 from collections import OrderedDict
 
 from flask import g, request
@@ -43,7 +43,7 @@ class AddContributor(Resource):
         study_obj = model.Study.query.get(study_id)
         if not is_granted("invite_contributor", study_obj):
             return "Access denied, you can not modify", 403
-        data: dict | typing.Any= request.json
+        data: dict | Any = request.json
         email_address = data["email_address"]
         user = model.User.query.filter_by(email_address=email_address).first()
         permission = data["role"]
@@ -75,11 +75,11 @@ class ContributorResource(Resource):
                 "Access denied, you are not authorized to change this permission",
                 403,
             )
-        data = request.json
+        data: Any | dict = request.json
         user = model.User.query.get(user_id)
         if not user:
             return "user not found", 404
-        permission: dict | typing.Any= data["role"]
+        permission: Any | str = data["role"]
         grantee = model.StudyContributor.query.filter(
             model.StudyContributor.user == user, model.StudyContributor.study == study
         ).first()
@@ -87,7 +87,7 @@ class ContributorResource(Resource):
             model.StudyContributor.user == g.user, model.StudyContributor.study == study
         ).first()
         # Order should go from the least privileged to the most privileged
-        grants: OrderedDict[str, list | list[str]] = OrderedDict()
+        grants: OrderedDict[str, List[str]] = OrderedDict()
         grants["viewer"] = []
         grants["editor"] = ["viewer"]
         grants["admin"] = ["viewer", "editor", "admin"]
@@ -101,7 +101,7 @@ class ContributorResource(Resource):
         # TODO: Owners downgrading themselves
         if user != g.user:
             grantee_level = list(grants.keys()).index(grantee.permission)  # 1
-            new_level = list(grants.keys()).index(permission)  # 2
+            new_level: int = list(grants.keys()).index(str(permission))  # 2
             granter_level = list(grants.keys()).index(granter.permission)  # 2
             if granter_level <= grantee_level and new_level <= grantee_level:
                 return (

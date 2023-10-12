@@ -149,7 +149,7 @@ class VersionList(Resource):
         study = model.Study.query.get(study_id)
         if not is_granted("publish_version", study):
             return "Access denied, you can not modify", 403
-        data: dict | typing.Any = request.json
+        data: typing.Any | dict = request.json
         data["participants"] = [
             model.Participant.query.get(i) for i in data["participants"]
         ]

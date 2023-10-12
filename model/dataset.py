@@ -106,7 +106,7 @@ class Dataset(db.Model):  # type: ignore
         )
 
     def last_modified(self):
-        return self.dataset_versions.order_by(model.Version.updated_on.desc()).first()
+        return self.dataset_versions.order_by(model.Version.updated_on.desc()).first()  # type: ignore
 
     @staticmethod
     def from_data(study: Study, data: dict):

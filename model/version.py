@@ -14,7 +14,7 @@ version_participants = db.Table(
 )
 
 
-class Version(db.Model):
+class Version(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.dataset = dataset
         self.id = str(uuid.uuid4())
