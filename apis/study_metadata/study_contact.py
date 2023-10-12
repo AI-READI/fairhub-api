@@ -4,6 +4,7 @@ from flask import request
 from model import Study, db, StudyContact
 from apis.study_metadata_namespace import api
 from ..authentication import is_granted, is_study_metadata
+from jsonschema import validate, ValidationError
 
 
 study_contact = api.model(
@@ -41,6 +42,38 @@ class StudyContactResource(Resource):
 
     def post(self, study_id: int):
         """Create study contact metadata"""
+        # Schema validation
+        schema = {
+            "type": "array",
+            "additionalProperties": False,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string"},
+                    "affiliation": {"type": "string"},
+                    "role": {"type": "string"},
+                    "phone": {"type": "string"},
+                    "phone_ext": {"type": "string"},
+                    "email_address": {"type": "string"},
+                    "central_contact": {"type": "boolean"},
+                },
+                "required": [
+                    "name",
+                    "affiliation",
+                    "role",
+                    "phone",
+                    "phone_ext",
+                    "email_address",
+                    "central_contact",
+                ],
+            },
+        }
+        
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+        
         study = Study.query.get(study_id)
         if not is_granted("study_metadata", study):
             return "Access denied, you can not delete study", 403
