@@ -4,6 +4,7 @@ from flask import request
 from model import Study, db, StudyAvailableIpd
 from apis.study_metadata_namespace import api
 from ..authentication import is_granted
+from jsonschema import validate, ValidationError
 
 
 study_available = api.model(
@@ -44,6 +45,27 @@ class StudyAvailableResource(Resource):
     @api.marshal_with(study_available)
     def post(self, study_id: int):
         """Create study available metadata"""
+        # Schema validation
+        schema = {
+            "type": "array",
+            "additionalProperties": False,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "identifier": {"type": "string"},
+                    "type": {"type": "string"},
+                    "comment": {"type": "string"},
+                    "url": {"type": "string"},
+                },
+                "required": ["identifier", "type", "comment", "url"],
+            },
+        }
+        
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+        
         study = Study.query.get(study_id)
         if not is_granted("study_metadata", study):
             return "Access denied, you can not delete study", 403
