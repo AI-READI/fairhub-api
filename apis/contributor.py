@@ -135,7 +135,14 @@ class ContributorResource(Resource):
             invited_grantee = model.StudyInvitedContributor.query.filter_by(
                 study_id=study_id, email_address=user_id
             ).first()
-            can_delete = invited_grantee.permission in grants[granter.permission]
+            invited_grants = OrderedDict()
+            invited_grants["viewer"] = []
+            invited_grants["editor"] = []
+            invited_grants["admin"] = ["viewer", "editor", "admin"]
+            invited_grants["owner"] = ["editor", "viewer", "admin"]
+            can_delete = (
+                invited_grantee.permission in invited_grants[granter.permission]
+            )
             if not can_delete:
                 return f"User cannot delete {invited_grantee.permission}", 403
             model.db.session.delete(invited_grantee)
