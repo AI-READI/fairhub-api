@@ -10,7 +10,7 @@ from .db import db
 
 
 class User(db.Model):  # type: ignore
-    def __init__(self, password, data):
+    def __init__(self, password):
         self.id = str(uuid.uuid4())
         self.created_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
         self.set_password(password)
@@ -39,7 +39,7 @@ class User(db.Model):  # type: ignore
 
     @staticmethod
     def from_data(data: dict):
-        user = User(data["password"], data)
+        user = User(data["password"])
         user.update(data)
         return user
 

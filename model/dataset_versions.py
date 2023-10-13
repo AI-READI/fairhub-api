@@ -6,7 +6,7 @@ class DatasetVersions:
         self,
         last_published: Version,
         last_modified: Version,
-        id: str,
+        id: str,  # pylint: disable = redefined-builtin
     ):
         self.latest_version = last_modified.id
         self.published_version = last_published.id

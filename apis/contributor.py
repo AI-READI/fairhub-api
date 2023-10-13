@@ -87,7 +87,9 @@ class ContributorResource(Resource):
             model.StudyContributor.user == g.user, model.StudyContributor.study == study
         ).first()
         # Order should go from the least privileged to the most privileged
-        grants: Union[OrderedDict[str, List[str]]] = OrderedDict()
+        grants: Union[
+            OrderedDict[str, List[str]]
+        ] = OrderedDict()  # pylint: disable= unsubscriptable-object
         grants["viewer"] = []
         grants["editor"] = ["viewer"]
         grants["admin"] = ["viewer", "editor", "admin"]
@@ -97,7 +99,6 @@ class ContributorResource(Resource):
         if not can_grant:
             return f"User cannot grant {permission}", 403
 
-        # Granter can not downgrade anyone of equal or greater permissions other than themselves
         # TODO: Owners downgrading themselves
         if user != g.user:
             grantee_level = list(grants.keys()).index(grantee.permission)  # 1
@@ -124,7 +125,9 @@ class ContributorResource(Resource):
         ).first()
         if not granter:
             return "you are not contributor of this study", 403
-        grants: Union[OrderedDict[str, List[str]]] = OrderedDict()
+        grants: Union[
+            OrderedDict[str, List[str]]
+        ] = OrderedDict()  # pylint: disable= unsubscriptable-object
         grants["viewer"] = []
         grants["editor"] = []
         grants["admin"] = ["viewer", "editor"]
@@ -134,7 +137,9 @@ class ContributorResource(Resource):
             invited_grantee = model.StudyInvitedContributor.query.filter_by(
                 study_id=study_id, email_address=user_id
             ).first()
-            invited_grants: Union[OrderedDict[str, List[str]]] = OrderedDict()
+            invited_grants: Union[
+                OrderedDict[str, List[str]]
+            ] = OrderedDict()  # pylint: disable= unsubscriptable-object
             invited_grants["viewer"] = []
             invited_grants["editor"] = []
             invited_grants["admin"] = ["viewer", "editor", "admin"]

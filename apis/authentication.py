@@ -81,23 +81,22 @@ class Login(Resource):
         validate_pass = user.check_password(data["password"])
         if not validate_pass:
             return "Invalid credentials", 401
-        else:
-            encoded_jwt_code = jwt.encode(
-                {
-                    "user": user.id,
-                    "exp": datetime.datetime.now(timezone.utc)
-                    + datetime.timedelta(minutes=180),  # noqa: W503
-                    "jti": str(uuid.uuid4()),
-                },  # noqa: W503
-                config.secret,
-                algorithm="HS256",
-            )
-            resp = make_response(user.to_dict())
-            resp.set_cookie(
-                "token", encoded_jwt_code, secure=True, httponly=True, samesite="lax"
-            )
-            resp.status_code = 200
-            return resp
+        encoded_jwt_code = jwt.encode(
+            {
+                "user": user.id,
+                "exp": datetime.datetime.now(timezone.utc)
+                + datetime.timedelta(minutes=180),  # noqa: W503
+                "jti": str(uuid.uuid4()),
+            },  # noqa: W503
+            config.secret,
+            algorithm="HS256",
+        )
+        resp = make_response(user.to_dict())
+        resp.set_cookie(
+            "token", encoded_jwt_code, secure=True, httponly=True, samesite="lax"
+        )
+        resp.status_code = 200
+        return resp
 
 
 def authentication():
@@ -108,7 +107,9 @@ def authentication():
     if "token" not in request.cookies:
         return
     token: str = (
-        request.cookies.get("token") if (request.cookies.get("token")) else ""  # type: ignore
+        request.cookies.get("token")
+        if (request.cookies.get("token"))
+        else ""  # type: ignore
     )
     try:
         decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
@@ -200,10 +201,12 @@ def is_granted(permission: str, study=None):
     return permission in role[contributor.permission]
 
 
-def is_study_metadata(study_id: int):
-    study_obj = model.Study.query.get(study_id)
-    if not is_granted("study_metadata", study_obj):
-        return "Access denied, you can not delete study", 403
+#
+# def is_study_metadata(study_id: int):
+#     study_obj = model.Study.query.get(study_id)
+#     if not is_granted("study_metadata", study_obj):
+#         return "Access denied, you can not delete study", 403
+#
 
 
 @api.route("/auth/logout")

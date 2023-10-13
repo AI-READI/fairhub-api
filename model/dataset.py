@@ -111,7 +111,7 @@ class Dataset(db.Model):  # type: ignore
         ).first()  # type: ignore
 
     @staticmethod
-    def from_data(study: Study, data: dict):
+    def from_data(study: Study):
         dataset_obj = Dataset(study)
         dataset_obj.update()
         return dataset_obj

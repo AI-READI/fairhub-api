@@ -1,3 +1,5 @@
+from typing import Any, Union
+
 from flask import g, request
 from flask_restx import Namespace, Resource, fields
 
@@ -43,7 +45,8 @@ class UserDetailsEndpoint(Resource):
     @api.marshal_with(study_model)
     def put(self):
         """Updates user details"""
-        data = request.json
+        data: Union[Any, dict] = request.json
+
         if data is None:
             return {"message": "No data provided"}, 400
         user = model.User.query.get(g.user.id)

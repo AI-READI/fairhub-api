@@ -38,7 +38,8 @@ def create_app():
 
     # print(app.config)
     if config.secret and len(config.secret) < 14:
-        raise "secret key should contain at least 14 characters"  # type: ignore  # E0702
+        raise RuntimeError("secret key should contain at"
+                           " least 14 characters")
 
     if "DATABASE_URL" in app.config:
         # if "TESTING" in app_config and app_config["TESTING"]:
@@ -100,7 +101,7 @@ def create_app():
     #             model.db.create_all()
 
     @app.before_request
-    def on_before_request():
+    def on_before_request():  # pylint: disable = inconsistent-return-statements
         if request.method == "OPTIONS":
             return
 
@@ -127,7 +128,10 @@ def create_app():
         # print(request.cookies.get("token"))
         if "token" not in request.cookies:
             return resp
-        token: str = request.cookies.get("token") if request.cookies.get("token") else ""  # type: ignore
+        token: str = (
+            request.cookies.get("token")
+            if request.cookies.get("token") else ""  # type: ignore
+        )
         try:
             decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
         except jwt.ExpiredSignatureError:

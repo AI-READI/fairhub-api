@@ -211,9 +211,8 @@ class Study(db.Model):  # type: ignore
         ).all()
         if contributor:
             raise StudyException("User is already exists in study")
-        else:
-            contributor = model.StudyContributor(self, user, permission)
-            db.session.add(contributor)
+        contributor = model.StudyContributor(self, user, permission)
+        db.session.add(contributor)
         return contributor
 
     def invite_user_to_study(self, email_address, permission):
@@ -224,9 +223,8 @@ class Study(db.Model):  # type: ignore
             raise StudyException(
                 "This email address has already been invited to this study"
             )
-        else:
-            contributor_add = model.StudyInvitedContributor(
-                self, email_address, permission
-            )
-            db.session.add(contributor_add)
-            return contributor_add
+        contributor_add = model.StudyInvitedContributor(
+            self, email_address, permission
+        )
+        db.session.add(contributor_add)
+        return contributor_add

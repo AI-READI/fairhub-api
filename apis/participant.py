@@ -29,7 +29,7 @@ class AddParticipant(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(participant_model)
-    def get(self, study_id: int):
+    def get(self, study_id: int):  # pylint: disable= unused-argument
         participants = model.Participant.query.all()
         return [p.to_dict() for p in participants]
 
