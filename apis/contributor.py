@@ -140,24 +140,33 @@ class ContributorResource(Resource):
             invited_grants["editor"] = []
             invited_grants["admin"] = ["viewer", "editor", "admin"]
             invited_grants["owner"] = ["editor", "viewer", "admin"]
+
             can_delete = (
                 invited_grantee.permission in invited_grants[granter.permission]
             )
+
             if not can_delete:
                 return f"User cannot delete {invited_grantee.permission}", 403
+
             model.db.session.delete(invited_grantee)
+
             model.db.session.commit()
+
             return 204
+
         user = model.User.query.get(user_id)
+
         if not user:
             return "user is not found", 404
+
         contributors = model.StudyContributor.query.filter(
             model.StudyContributor.study == study
         ).all()
-        print(len(contributors), "")
+
         grantee = model.StudyContributor.query.filter(
             model.StudyContributor.user == user, model.StudyContributor.study == study
         ).first()
+
         if len(contributors) <= 1:
             return "the study must have at least one contributor", 422
         if grantee.user == granter.user:

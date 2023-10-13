@@ -113,7 +113,7 @@ class Login(Resource):
                 + datetime.timedelta(minutes=180),  # noqa: W503
                 "jti": str(uuid.uuid4()),
             },  # noqa: W503
-            config.secret,
+            config.FAIRHUB_SECRET,
             algorithm="HS256",
         )
 
@@ -173,7 +173,7 @@ def authorization():
         "/swaggerui",
         "/swagger.json",
     ]
-    print("g.user", g.user)
+
     for route in public_routes:
         if request.path.startswith(route):
             return

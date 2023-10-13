@@ -36,9 +36,6 @@ class StudyReferenceResource(Resource):
 
         study_reference_ = study_.study_reference
 
-        # todo: remove print
-        print(study_.study_reference)
-
         sorted_study_reference = sorted(study_reference_, key=lambda x: x.created_at)
 
         return [s.to_dict() for s in sorted_study_reference]
