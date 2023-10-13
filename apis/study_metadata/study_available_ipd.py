@@ -42,7 +42,7 @@ class StudyAvailableResource(Resource):
     @api.doc("update available")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(study_available)
+    # @api.marshal_with(study_available) # marshal with will need to be removed to have validation errors return
     def post(self, study_id: int):
         """Create study available metadata"""
         # Schema validation
@@ -73,7 +73,7 @@ class StudyAvailableResource(Resource):
         }
 
         try:
-            validate(request.json, schema=schema)
+            validate(request.json, schema)
         except ValidationError as e:
             print(e.message)
             return e.message, 400
