@@ -52,22 +52,39 @@ class StudyInterventionResource(Resource):
             "items": {
                 "type": "object",
                 "properties": {
-                    "type": {"type": "string"},
-                    "name": {"type": "string"},
-                    "description": {"type": "string"},
+                    "type": {
+                        "type": "string", 
+                        "enum": [
+                            "Drug",
+                            "Device",
+                            "Biological/Vaccine",
+                            "Procedure/Surgery",
+                            "Radiation",
+                            "Behavioral",
+                            "Behavioral",
+                            "Genetic",
+                            "Dietary Supplement",
+                            "Combination Product",
+                            "Diagnostic Test",
+                            "Other",
+                        ]
+                    },
+                    "name": {"type": "string", "minLength": 1},
+                    "description": {"type": "string", "minLength": 1},
                     "arm_group_label_list": {
                         "type": "array",
-                        "items": {"type": "string"},
+                        "items": {"type": "string", "minLength": 1},
+                        "minItems": 1,
+                        "uniqueItems": True,
                     },
-                    "other_name_list": {"type": "array", "items": {"type": "string"}},
+                    "other_name_list": {
+                        "type": "array", 
+                        "items": {"type": "string", "minLength": 1},
+                        "minItems": 1,
+                        "uniqueItems": True,
+                    },
                 },
-                "required": [
-                    "type",
-                    "name",
-                    "description",
-                    "arm_group_label_list",
-                    "other_name_list",
-                ],
+                "required": ["name", "type", "arm_group_label_list"],
             },
         }
 
