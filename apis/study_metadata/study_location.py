@@ -51,14 +51,26 @@ class StudyLocationResource(Resource):
             "items": {
                 "type": "object",
                 "properties": {
-                    "facility": {"type": "string"},
-                    "status": {"type": "string"},
-                    "city": {"type": "string"},
-                    "state": {"type": "string"},
-                    "zip": {"type": "string"},
-                    "country": {"type": "string"},
+                    "facility": {"type": "string", "minLength": 1},
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "Withdrawn",
+                            "Recruiting",
+                            "Active, not recruiting",
+                            "Not yet recruiting",
+                            "Suspended",
+                            "Enrolling by invitation",
+                            "Completed",
+                            "Terminated",
+                        ]
+                    },
+                    "city": {"type": "string", "minLength": 1},
+                    "state": {"type": "string", "minLength": 1},
+                    "zip": {"type": "string", "minLength": 1},
+                    "country": {"type": "string", "minLength": 1},
                 },
-                "required": ["facility", "status", "city", "state", "zip", "country"],
+                "required": ["facility", "status", "city", "country"],
             },
         }
 
