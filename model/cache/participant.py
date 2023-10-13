@@ -3,4 +3,5 @@ from redis_om import HashModel
 
 class ParticipantCache(HashModel):
     studyid: str
-    data_management_complete: str
+    dm__i: str
+    dm__d: str

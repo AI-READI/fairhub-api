@@ -18,55 +18,57 @@ class REDCapTransform(object):
         self.redcap_api_url = config["redcap_api_url"]
         self.redcap_api_key = config["redcap_api_key"]
 
+        # Set Transform Key
+        self.key = config["key"] \
+            if "key" in config \
+            else "redcap-transform"
+
         # Data Config
-        self.index_columns = (
-            config["index_columns"] if "index_columns" in config else ["record_id"]
-        )
+        self.index_columns = config["index_columns"] \
+            if "index_columns" in config \
+            else ["record_id"]
 
         # REDCap Reports Config
-        self.reports_configs = config["reports"] if "reports" in config else []
+        self.reports_configs = config["reports"] \
+            if "reports" in config \
+            else []
 
         # Report Merging
-        self.merge_transformed_reports = (
-            config["merge_transformed_reports"]
-            if "merge_transformed_reports" in config
+        self.merge_transformed_reports = config["merge_transformed_reports"] \
+            if "merge_transformed_reports" in config \
             else []
-        )
 
         # Post Merge Transforms
-        self.post_merge_transforms = (
-            config["post_merge_transforms"] if "post_merge_transforms" in config else []
-        )
+        self.post_merge_transforms = config["post_merge_transforms"] \
+            if "post_merge_transforms" in config \
+            else []
 
         # Column Value Separator
-        self.multivalue_separator = (
-            config["multivalue_separator"] if "multivalue_separator" in config else "|"
-        )
+        self.multivalue_separator = config["multivalue_separator"] \
+            if "multivalue_separator" in config \
+            else "|"
 
         # CSV Float Format (Default: "%.2f")
-        self.csv_float_format = (
-            config["csv_float_format"] if "csv_float_format" in config else "%.2f"
-        )
+        self.csv_float_format = config["csv_float_format"] \
+            if "csv_float_format" in config \
+            else "%.2f"
 
         self.missing_value_generic = config["missing_value_generic"] \
-            if "missing_value_generic" \
-                in config else "Value Unavailable"
+            if "missing_value_generic" in config \
+            else "Value Unavailable"
 
         # Logging Config
-        self.logging_config = (
-            config["logging_config"]
-            if "logging_config" in config
+        self.logging_config = config["logging_config"] \
+            if "logging_config" in config \
             else {
                 "encoding": "utf-8",
                 "filename": "REDCapETL.log",
                 "level": logging.DEBUG,
             }
-        )
 
         # Configure Logging
         logging.basicConfig(**self.logging_config)
-        self.logger = logging.getLogger("REDCapETL")
-        self.logger.info(f"Initializing")
+        self.logger = logging.getLogger("REDCapTransform")
 
         #
         # REDCap Parsing Variables
@@ -100,6 +102,8 @@ class REDCapTransform(object):
             "0": "Incomplete",
             "" : self.missing_value_generic
         }
+
+        self.logger.info(f"Initialized")
 
         #
         # PyCap Initialization
@@ -159,6 +163,8 @@ class REDCapTransform(object):
             )
 
         self.logger.info(f"REDCap transforms complete")
+
+        return
 
     #
     # Getters

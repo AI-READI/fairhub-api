@@ -1,5 +1,4 @@
 from transforms import REDCapTransform, ModuleTransform
-from vtypes import SingleCategorical, DoubleCategorical
 import numpy as np
 
 if __name__ == "__main__":
@@ -127,7 +126,7 @@ if __name__ == "__main__":
 					"columns": index_columns + data_columns
 				})
 			]),
-			("dashboard_data_survey_completions", {"report_id": 251954}, [
+			("dashboard_data_study_waypoints", {"report_id": 251954}, [
 				("remap_values_by_columns", {
 					"columns": survey_columns,
 					"value_map": survey_instrument_map
@@ -153,7 +152,7 @@ if __name__ == "__main__":
 			])
 		],
 		"merge_transformed_reports" : ("dashboard_data_generic", [
-			("dashboard_data_survey_completions", {"on": index_columns, "how": "inner"}),
+			("dashboard_data_study_waypoints", {"on": index_columns, "how": "inner"}),
 			("dashboard_data_repeat_instruments", {"on": index_columns, "how": "outer"})
 		]),
 		"post_merge_transforms": [
@@ -175,10 +174,11 @@ if __name__ == "__main__":
 
 	# Sex & Gender Counts by Site
 	sexGenderTransform = ("simpleTransform", {
-		"vtype": DoubleCategorical,
+		"key": "sex-and-gender-transform",
 		"strict": True,
 		"transforms": {
 			"name": "Sex & Gender",
+			"vtype": "DoubleCategorical",
 			"method": {
 				"groups": ["siteid", "scrsex", "genderid"],
 				"value": "record_id",
@@ -220,10 +220,11 @@ if __name__ == "__main__":
 
 	# Race & Ethnicity Counts by Site
 	raceEthnicityTransform = ("simpleTransform", {
-		"vtype": DoubleCategorical,
+		"key": "race-and-ethnicity-transform",
 		"strict": True,
 		"transforms": {
 			"name": "Race & Ethnicity",
+			"vtype": "DoubleCategorical",
 			"method": {
 				"groups": ["siteid", "race", "ethnic"],
 				"value": "record_id",
@@ -266,10 +267,11 @@ if __name__ == "__main__":
 
 	# Phenotypes
 	phenotypeTransform = ("simpleTransform", {
-		"vtype": SingleCategorical,
+		"key": "phenotype-transform",
 		"strict": True,
 		"transforms": {
 			"name": "Type II Diabetes",
+			"vtype": "SingleCategorical",
 			"method": {
 				"groups": ["siteid", "mhterm_dm2"],
 				"value": "record_id",
@@ -304,12 +306,13 @@ if __name__ == "__main__":
 		}
 	})
 
-	# Survey Completions
-	surveyCompletionsTransform = ("mixedTransform", {
-		"vtype": SingleCategorical,
+	# Study Waypoints
+	studyWaypointsTransform = ("compoundTransform", {
+		"key": "study-waypoints-transform",
 		"strict": True,
 		"transforms": [{
 			"name": "Recruitment Survey",
+			"vtype": "SingleCategorical",
 			"method": {
 				"groups": ["siteid", "recruitment_survey_complete"],
 				"value": "record_id",
@@ -343,6 +346,7 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "FAQ Survey",
+			"vtype": "SingleCategorical",
 			"method": {
 				"groups": ["siteid", "faq_survey_complete"],
 				"value": "record_id",
@@ -376,6 +380,7 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "Screening Survey",
+			"vtype": "SingleCategorical",
 			"method": {
 				"groups": ["siteid", "screening_survey_complete"],
 				"value": "record_id",
@@ -409,6 +414,7 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "Preconsent Survey",
+			"vtype": "SingleCategorical",
 			"method": {
 				"groups": ["siteid", "preconsent_survey_complete"],
 				"value": "record_id",
@@ -442,6 +448,7 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "Consent Survey",
+			"vtype": "SingleCategorical",
 			"method": {
 				"groups": ["siteid", "consent_survey_complete"],
 				"value": "record_id",
@@ -475,6 +482,7 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "Staff Consent Attestation Survey",
+			"vtype": "SingleCategorical",
 			"method": {
 				"groups": ["siteid", "staff_consent_attestation_survey_complete"],
 				"value": "record_id",
@@ -508,6 +516,7 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "Demographics Survey",
+			"vtype": "SingleCategorical",
 			"method": {
 				"groups": ["siteid", "demographics_survey_complete"],
 				"value": "record_id",
@@ -541,6 +550,7 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "Health Survey",
+			"vtype": "SingleCategorical",
 			"method": {
 				"groups": ["siteid", "health_survey_complete"],
 				"value": "record_id",
@@ -574,6 +584,7 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "Substance Use Survey",
+			"vtype": "SingleCategorical",
 			"method": {
 				"groups": ["siteid", "substance_use_survey_complete"],
 				"value": "record_id",
@@ -607,6 +618,7 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "CES-D-10 Survey",
+			"vtype": "SingleCategorical",
 			"method": {
 				"groups": ["siteid", "cesd10_survey_complete"],
 				"value": "record_id",
@@ -640,6 +652,7 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "PAID-5 DM Survey",
+			"vtype": "SingleCategorical",
 			"method": {
 				"groups": ["siteid", "paid5_dm_survey_complete"],
 				"value": "record_id",
@@ -673,6 +686,7 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "Diabetes Survey",
+			"vtype": "SingleCategorical",
 			"method": {
 				"groups": ["siteid", "diabetes_survey_complete"],
 				"value": "record_id",
@@ -706,6 +720,7 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "Dietary Survey",
+			"vtype": "SingleCategorical",
 			"method": {
 				"groups": ["siteid", "dietary_survey_complete"],
 				"value": "record_id",
@@ -739,8 +754,9 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "Opthalmic Survey",
+			"vtype": "SingleCategorical",
 			"method": {
-				"groups": ["siteid", "opthalmic_survey_complete"],
+				"groups": ["siteid", "ophthalmic_survey_complete"],
 				"value": "record_id",
 				"func": "count"
 			},
@@ -753,13 +769,13 @@ if __name__ == "__main__":
 				},
 				"group": {
 					"name": "Opthalmic Survey",
-					"field": "opthalmic_survey_complete",
+					"field": "ophthalmic_survey_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
 				"color": {
 					"name": "Opthalmic Survey",
-					"field": "opthalmic_survey_complete",
+					"field": "ophthalmic_survey_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
@@ -772,6 +788,7 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "PhenX SDOH Combined Survey",
+			"vtype": "SingleCategorical",
 			"method": {
 				"groups": ["siteid", "px_sdoh_combined_survey_complete"],
 				"value": "record_id",
@@ -805,6 +822,7 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "PhenX Food Insecurity Survey",
+			"vtype": "SingleCategorical",
 			"method": {
 				"groups": ["siteid", "px_food_insecurity_survey_complete"],
 				"value": "record_id",
@@ -838,6 +856,7 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "PhenX Neighborhood Environment Survey",
+			"vtype": "SingleCategorical",
 			"method": {
 				"groups": ["siteid", "px_neighborhood_environment_survey_complete"],
 				"value": "record_id",
@@ -871,6 +890,7 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "PhenX Racial and Ethnic Discrimination Survey",
+			"vtype": "SingleCategorical",
 			"method": {
 				"groups": ["siteid", "px_racial_ethnic_discrimination_survey_complete"],
 				"value": "record_id",
@@ -904,6 +924,7 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "Decline Participation Survey",
+			"vtype": "SingleCategorical",
 			"method": {
 				"groups": ["siteid", "decline_participation_survey_complete"],
 				"value": "record_id",
@@ -937,8 +958,9 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "Study Enrollment Survey",
+			"vtype": "SingleCategorical",
 			"method": {
-				"groups": ["siteid", "study_enrollment_survey_complete"],
+				"groups": ["siteid", "study_enrollment_complete"],
 				"value": "record_id",
 				"func": "count"
 			},
@@ -951,13 +973,13 @@ if __name__ == "__main__":
 				},
 				"group": {
 					"name": "Study Enrollment Survey",
-					"field": "study_enrollment_survey_complete",
+					"field": "study_enrollment_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
 				"color": {
 					"name": "Study Enrollment Survey",
-					"field": "study_enrollment_survey_complete",
+					"field": "study_enrollment_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
@@ -969,9 +991,10 @@ if __name__ == "__main__":
 				}
 			}
 		}, {
-			"name": "Driving Record Survey",
+			"name": "Driving Record",
+			"vtype": "SingleCategorical",
 			"method": {
-				"groups": ["siteid", "driving_record_survey_complete"],
+				"groups": ["siteid", "driving_record_complete"],
 				"value": "record_id",
 				"func": "count"
 			},
@@ -983,14 +1006,14 @@ if __name__ == "__main__":
 					"astype": str
 				},
 				"group": {
-					"name": "Driving Record Survey",
-					"field": "driving_record_survey_complete",
+					"name": "Driving Record",
+					"field": "driving_record_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
 				"color": {
-					"name": "Driving Record Survey",
-					"field": "driving_record_survey_complete",
+					"name": "Driving Record",
+					"field": "driving_record_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
@@ -1002,9 +1025,10 @@ if __name__ == "__main__":
 				}
 			}
 		}, {
-			"name": "Device Distribution Survey",
+			"name": "Device Distribution",
+			"vtype": "SingleCategorical",
 			"method": {
-				"groups": ["siteid", "device_distribution_survey_complete"],
+				"groups": ["siteid", "device_distribution_complete"],
 				"value": "record_id",
 				"func": "count"
 			},
@@ -1016,14 +1040,14 @@ if __name__ == "__main__":
 					"astype": str
 				},
 				"group": {
-					"name": "Device Distribution Survey",
-					"field": "device_distribution_survey_complete",
+					"name": "Device Distribution",
+					"field": "device_distribution_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
 				"color": {
-					"name": "Device Distribution Survey",
-					"field": "device_distribution_survey_complete",
+					"name": "Device Distribution",
+					"field": "device_distribution_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
@@ -1035,9 +1059,10 @@ if __name__ == "__main__":
 				}
 			}
 		}, {
-			"name": "Medications Assessment Survey",
+			"name": "Medications Assessment",
+			"vtype": "SingleCategorical",
 			"method": {
-				"groups": ["siteid", "meds_assessment_survey_complete"],
+				"groups": ["siteid", "meds_assessment_complete"],
 				"value": "record_id",
 				"func": "count"
 			},
@@ -1049,14 +1074,14 @@ if __name__ == "__main__":
 					"astype": str
 				},
 				"group": {
-					"name": "Medications Assessment Survey",
-					"field": "meds_assessment_survey_complete",
+					"name": "Medications Assessment",
+					"field": "meds_assessment_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
 				"color": {
-					"name": "Medications Assessment Survey",
-					"field": "meds_assessment_survey_complete",
+					"name": "Medications Assessment",
+					"field": "meds_assessment_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
@@ -1068,9 +1093,10 @@ if __name__ == "__main__":
 				}
 			}
 		}, {
-			"name": "Physical Assessment Survey",
+			"name": "Physical Assessment",
+			"vtype": "SingleCategorical",
 			"method": {
-				"groups": ["siteid", "physical_assessment_survey_complete"],
+				"groups": ["siteid", "physical_assessment_complete"],
 				"value": "record_id",
 				"func": "count"
 			},
@@ -1082,14 +1108,14 @@ if __name__ == "__main__":
 					"astype": str
 				},
 				"group": {
-					"name": "Physical Assessment Survey",
-					"field": "physical_assessment_survey_complete",
+					"name": "Physical Assessment",
+					"field": "physical_assessment_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
 				"color": {
-					"name": "Physical Assessment Survey",
-					"field": "physical_assessment_survey_complete",
+					"name": "Physical Assessment",
+					"field": "physical_assessment_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
@@ -1101,9 +1127,10 @@ if __name__ == "__main__":
 				}
 			}
 		}, {
-			"name": "BCVA Survey",
+			"name": "BCVA",
+			"vtype": "SingleCategorical",
 			"method": {
-				"groups": ["siteid", "bcva_survey_complete"],
+				"groups": ["siteid", "bcva_complete"],
 				"value": "record_id",
 				"func": "count"
 			},
@@ -1115,14 +1142,14 @@ if __name__ == "__main__":
 					"astype": str
 				},
 				"group": {
-					"name": "BCVA Survey",
-					"field": "bcva_survey_complete",
+					"name": "BCVA",
+					"field": "bcva_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
 				"color": {
-					"name": "BCVA Survey",
-					"field": "bcva_survey_complete",
+					"name": "BCVA",
+					"field": "bcva_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
@@ -1134,9 +1161,10 @@ if __name__ == "__main__":
 				}
 			}
 		}, {
-			"name": "Photopic MARS Survey",
+			"name": "Photopic MARS",
+			"vtype": "SingleCategorical",
 			"method": {
-				"groups": ["siteid", "photopic_mars_survey_complete"],
+				"groups": ["siteid", "photopic_mars_complete"],
 				"value": "record_id",
 				"func": "count"
 			},
@@ -1148,14 +1176,14 @@ if __name__ == "__main__":
 					"astype": str
 				},
 				"group": {
-					"name": "Photopic MARS Survey",
-					"field": "photopic_mars_survey_complete",
+					"name": "Photopic MARS",
+					"field": "photopic_mars_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
 				"color": {
-					"name": "Photopic MARS Survey",
-					"field": "photopic_mars_survey_complete",
+					"name": "Photopic MARS",
+					"field": "photopic_mars_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
@@ -1167,9 +1195,10 @@ if __name__ == "__main__":
 				}
 			}
 		}, {
-			"name": "Mesopic MARS Survey",
+			"name": "Mesopic MARS",
+			"vtype": "SingleCategorical",
 			"method": {
-				"groups": ["siteid", "mesopic_mars_survey_complete"],
+				"groups": ["siteid", "mesopic_mars_complete"],
 				"value": "record_id",
 				"func": "count"
 			},
@@ -1181,14 +1210,14 @@ if __name__ == "__main__":
 					"astype": str
 				},
 				"group": {
-					"name": "Mesopic MARS Survey",
-					"field": "mesopic_mars_survey_complete",
+					"name": "Mesopic MARS",
+					"field": "mesopic_mars_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
 				"color": {
-					"name": "Mesopic MARS Survey",
-					"field": "mesopic_mars_survey_complete",
+					"name": "Mesopic MARS",
+					"field": "mesopic_mars_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
@@ -1200,9 +1229,10 @@ if __name__ == "__main__":
 				}
 			}
 		}, {
-			"name": "Monofilament Survey",
+			"name": "Monofilament",
+			"vtype": "SingleCategorical",
 			"method": {
-				"groups": ["siteid", "monofilament_survey_complete"],
+				"groups": ["siteid", "monofilament_complete"],
 				"value": "record_id",
 				"func": "count"
 			},
@@ -1214,14 +1244,14 @@ if __name__ == "__main__":
 					"astype": str
 				},
 				"group": {
-					"name": "Monofilament Survey",
-					"field": "monofilament_survey_complete",
+					"name": "Monofilament",
+					"field": "monofilament_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
 				"color": {
-					"name": "Monofilament Survey",
-					"field": "monofilament_survey_complete",
+					"name": "Monofilament",
+					"field": "monofilament_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
@@ -1233,9 +1263,10 @@ if __name__ == "__main__":
 				}
 			}
 		}, {
-			"name": "MOCA Survey",
+			"name": "MOCA",
+			"vtype": "SingleCategorical",
 			"method": {
-				"groups": ["siteid", "moca_survey_complete"],
+				"groups": ["siteid", "moca_complete"],
 				"value": "record_id",
 				"func": "count"
 			},
@@ -1247,14 +1278,14 @@ if __name__ == "__main__":
 					"astype": str
 				},
 				"group": {
-					"name": "MOCA Survey",
-					"field": "moca_survey_complete",
+					"name": "MOCA",
+					"field": "moca_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
 				"color": {
-					"name": "MOCA Survey",
-					"field": "moca_survey_complete",
+					"name": "MOCA",
+					"field": "moca_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
@@ -1267,8 +1298,9 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "ECG Survey",
+			"vtype": "SingleCategorical",
 			"method": {
-				"groups": ["siteid", "ecg_survey_complete"],
+				"groups": ["siteid", "ecg_complete"],
 				"value": "record_id",
 				"func": "count"
 			},
@@ -1281,13 +1313,13 @@ if __name__ == "__main__":
 				},
 				"group": {
 					"name": "ECG Survey",
-					"field": "ecg_survey_complete",
+					"field": "ecg_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
 				"color": {
 					"name": "ECG Survey",
-					"field": "ecg_survey_complete",
+					"field": "ecg_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
@@ -1300,8 +1332,9 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "Lab Results Survey",
+			"vtype": "SingleCategorical",
 			"method": {
-				"groups": ["siteid", "lab_results_survey_complete"],
+				"groups": ["siteid", "lab_results_complete"],
 				"value": "record_id",
 				"func": "count"
 			},
@@ -1314,13 +1347,13 @@ if __name__ == "__main__":
 				},
 				"group": {
 					"name": "Lab Results Survey",
-					"field": "lab_results_survey_complete",
+					"field": "lab_results_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
 				"color": {
 					"name": "Lab Results Survey",
-					"field": "lab_results_survey_complete",
+					"field": "lab_results_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
@@ -1332,9 +1365,10 @@ if __name__ == "__main__":
 				}
 			}
 		}, {
-			"name": "Specimen Management Survey",
+			"name": "Specimen Management",
+			"vtype": "SingleCategorical",
 			"method": {
-				"groups": ["siteid", "specimen_management_survey_complete"],
+				"groups": ["siteid", "specimen_management_complete"],
 				"value": "record_id",
 				"func": "count"
 			},
@@ -1346,14 +1380,14 @@ if __name__ == "__main__":
 					"astype": str
 				},
 				"group": {
-					"name": "Specimen Management Survey",
-					"field": "specimen_management_survey_complete",
+					"name": "Specimen Management",
+					"field": "specimen_management_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
 				"color": {
-					"name": "Specimen Management Survey",
-					"field": "specimen_management_survey_complete",
+					"name": "Specimen Management",
+					"field": "specimen_management_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
@@ -1365,9 +1399,10 @@ if __name__ == "__main__":
 				}
 			}
 		}, {
-			"name": "Device Return Survey",
+			"name": "Device Return",
+			"vtype": "SingleCategorical",
 			"method": {
-				"groups": ["siteid", "device_return_survey_complete"],
+				"groups": ["siteid", "device_return_complete"],
 				"value": "record_id",
 				"func": "count"
 			},
@@ -1379,14 +1414,14 @@ if __name__ == "__main__":
 					"astype": str
 				},
 				"group": {
-					"name": "Device Return Survey",
-					"field": "device_return_survey_complete",
+					"name": "Device Return",
+					"field": "device_return_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
 				"color": {
-					"name": "Device Return Survey",
-					"field": "device_return_survey_complete",
+					"name": "Device Return",
+					"field": "device_return_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
@@ -1399,8 +1434,9 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "Disposition Survey",
+			"vtype": "SingleCategorical",
 			"method": {
-				"groups": ["siteid", "disposition_survey_complete"],
+				"groups": ["siteid", "disposition_complete"],
 				"value": "record_id",
 				"func": "count"
 			},
@@ -1413,13 +1449,13 @@ if __name__ == "__main__":
 				},
 				"group": {
 					"name": "Disposition Survey",
-					"field": "disposition_survey_complete",
+					"field": "disposition_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
 				"color": {
 					"name": "Disposition Survey",
-					"field": "disposition_survey_complete",
+					"field": "disposition_complete",
 					"missing_value": missing_value_generic,
 					"astype": str
 				},
@@ -1432,6 +1468,7 @@ if __name__ == "__main__":
 			}
 		}, {
 			"name": "Data Management Survey",
+			"vtype": "SingleCategorical",
 			"method": {
 				"groups": ["siteid", "data_management_complete"],
 				"value": "record_id",
@@ -1466,6 +1503,126 @@ if __name__ == "__main__":
 		}]
 	})
 
+	# Sex & Gender Counts by Site
+	mixedTransform = ("mixedTransform", {
+		"key": "mixed-transform-test",
+		"strict": True,
+		"transforms": [{
+			"name": "Sex & Gender",
+			"vtype": "DoubleCategorical",
+			"method": {
+				"groups": ["siteid", "scrsex", "genderid"],
+				"value": "record_id",
+				"func": "count"
+			},
+			"accessors": {
+				"filterby": {
+					"name": "Site",
+					"field": "siteid",
+					"missing_value": missing_value_generic
+				},
+				"group": {
+					"name": "Sex",
+					"field": "scrsex",
+					"missing_value": missing_value_generic,
+					"astype": str
+				},
+				"subgroup": {
+					"name": "Gender",
+					"field": "genderid",
+					"missing_value": missing_value_generic,
+					"astype": str
+				},
+				"color": {
+					"name": "Gender",
+					"field": "genderid",
+					"missing_value": missing_value_generic,
+					"astype": str
+				},
+				"value": {
+					"name": "Count (N)",
+					"field": "record_id",
+					"missing_value": missing_value_generic,
+					"astype": int
+				}
+			}
+		}, {
+			"name": "Race & Ethnicity",
+			"vtype": "DoubleCategorical",
+			"method": {
+				"groups": ["siteid", "race", "ethnic"],
+				"value": "record_id",
+				"func": "count"
+			},
+			"accessors": {
+				"filterby": {
+					"name": "Site",
+					"field": "siteid",
+					"missing_value": missing_value_generic,
+					"astype": str
+				},
+				"group": {
+					"name": "Race",
+					"field": "race",
+					"missing_value": missing_value_generic,
+					"astype": str
+				},
+				"subgroup": {
+					"name": "Ethnicity",
+					"field": "ethnic",
+					"missing_value": missing_value_generic,
+					"astype": str
+				},
+				"color": {
+					"name": "Ethnicity",
+					"field": "ethnic",
+					"missing_value": missing_value_generic,
+					"astype": str
+				},
+				"value": {
+					"name": "Count (N)",
+					"field": "record_id",
+					"missing_value": missing_value_generic,
+					"astype": int
+				}
+			}
+		}, {
+			"name": "Type II Diabetes",
+			"vtype": "SingleCategorical",
+			"method": {
+				"groups": ["siteid", "mhterm_dm2"],
+				"value": "record_id",
+				"func": "count"
+			},
+			"accessors": {
+				"filterby": {
+					"name": "Site",
+					"field": "siteid",
+					"missing_value": missing_value_generic,
+					"astype": str
+				},
+				"group": {
+					"name": "Phenotype",
+					"field": "mhterm_dm2",
+					"missing_value": missing_value_generic,
+					"astype": str
+				},
+				"color": {
+					"name": "Phenotype",
+					"field": "mhterm_dm2",
+					"missing_value": missing_value_generic,
+					"astype": str
+				},
+				"value": {
+					"name": "Count (N)",
+					"field": "record_id",
+					"missing_value": missing_value_generic,
+					"astype": int
+				}
+			}
+		}]
+	})
+
 	extract = REDCapTransform(
 		config = redcapTransformConfig
 	).merged
@@ -1476,7 +1633,8 @@ if __name__ == "__main__":
 		sexGenderTransform,
 		raceEthnicityTransform,
 		phenotypeTransform,
-		surveyCompletionsTransform
+		studyWaypointsTransform,
+		mixedTransform
 	]
 
 	# Print

@@ -2,8 +2,7 @@
 from typing import Any, Callable, Union, List, Dict, Tuple
 from datetime import datetime
 import logging, re
-from vtypes import *
-
+import vtypes
 # Third-Party Modules
 import pandas as pd
 
@@ -28,14 +27,13 @@ class ModuleTransform (object):
 
     # Configure Logging
     logging.basicConfig(**self.logging_config)
-    self.logger = logging.getLogger("VizModETL")
-    self.logger.info(f"Initializing")
+    self.logger = logging.getLogger("VizModTransform")
 
     #
     # References
     #
 
-    self.valid_transforms = True
+    self.valid = True
 
     #
     # Visualization Variables
@@ -46,10 +44,6 @@ class ModuleTransform (object):
       if "strict" in config \
       else True
 
-    self.vtype = config["vtype"]() \
-      if "vtype" in config \
-      else None
-
     self.key = config["key"] \
       if "key" in config \
       else None
@@ -59,34 +53,50 @@ class ModuleTransform (object):
       else None
 
     if self.transforms is None:
-      self.valid_transforms = False
+      self.valid = False
       raise ValueError(f"ModuleTransform instantiation missing transforms argument")
 
     # Normalize Transforms List Type, Check Validity, and Warn on Missing Attributes
     self.transformList = self.transforms if (type(self.transforms) == list) else [self.transforms]
-    for i, transform in enumerate(self.transformList):
-      if "name" not in transform:
-        self.logger.error(f"Transform at index {i} in transforms list missing name property")
-        self.valid_transforms = False
-      if "method" not in transform:
-        self.logger.error(f"Transform at index {i} in transforms list missing method property")
-        self.valid_transforms = False
-      if "accessors" not in transform:
-        self.logger.error(f"Transform at index {i} in transforms list missing accessors property")
-        self.valid_transforms = False
-    if (self.strict and not self.valid_transforms):
-      raise ValueError(f"Missing properties in transforms argument, see log at {self.logging_config['filename']} for details")
+    for transform in enumerate(self.transformList):
+      self.valid = True if self._transformIsValid(transform) else False
+    if (self.strict and not self.valid):
+      raise ValueError(f"{self.key}:Missing properties in transforms argument, see log at {self.logging_config['filename']} for details")
+
+    self.logger.info(f"{self.key}:Initialized")
 
     return
 
-  def _setValueType (self, record, key, accessor):
+  def _transformIsValid (self: object, transform: Tuple[int, Dict[str, Any]]) -> bool:
+    """
+    Transform validator
+    """
+    index, transform = transform
+    valid = True
+    if "name" not in transform:
+      self.logger.error(f"{self.key}:Transform at index {index} in transforms list missing name property")
+      valid = False
+    if "vtype" not in transform:
+      self.logger.error(f"{self.key}:Transform at index {index} in transforms list missing vtype property")
+      valid = False
+    if "method" not in transform:
+      self.logger.error(f"{self.key}:Transform at index {index} in transforms list missing method property")
+      valid = False
+    if "accessors" not in transform:
+      self.logger.error(f"{self.key}:Transform at index {index} in transforms list missing accessors property")
+      valid = False
+    return valid
+
+
+
+  def _setValueType (self: object, vtype: Any, record: Dict[str, Any], key: str, accessor: Dict[str, Dict[str, str|Callable]]) -> Any:
     """
     Element-wise type setting method. If value of
     element is not the missing value, we cast the
     value as the type defined for property in the
     vtype.
     """
-    for pname, _ptype in self.vtype.props:
+    for pname, _ptype in vtype.props:
       if pname == key:
         # Accessor Typing
         ptype = _ptype \
@@ -119,25 +129,28 @@ class ModuleTransform (object):
     to create a multi-index (hierarchy) by the
     groups. An aggregate function is then applied
     to the non-grouped column (e.g. count, sum).
+
+    One transform for one VType.
     """
     transform = self.transformList.pop()
-    name, method, accessors = transform["name"], transform["method"], transform["accessors"]
-    self.transformed = []
+    name, _vtype, method, accessors = transform["name"], transform["vtype"], transform["method"], transform["accessors"]
+    vtype = getattr(vtypes, _vtype)()
 
-    if self.vtype.isvalid(df, accessors):
+    self.transformed = []
+    if vtype.isvalid(df, accessors):
       temp = df[list(set(accessor["field"] for key, accessor in accessors.items()))]
       groups, value, func = method["groups"], method["value"], method["func"]
       grouped = temp.groupby(groups, as_index = False)
       transformed = getattr(grouped, func)()
 
       for record in transformed.to_dict("records"):
-        record = {key: self._setValueType(record, key, accessor) for key, accessor in accessors.items()}
+        record = {key: self._setValueType(vtype, record, key, accessor) for key, accessor in accessors.items()}
         record = {"name": name} | record
         self.transformed.append(record)
 
     else:
 
-      for error in self.vtype.validation_errors:
+      for error in vtype.validation_errors:
         self.logger.warning(f"{error}")
 
     return self
@@ -152,27 +165,28 @@ class ModuleTransform (object):
     non-grouped column (e.g. count, sum).
 
     All transforms are combined into a single flat
-    transform.
+    transform. Transforms must be identical VType,
+    e.g. [transformA, transformB, ...]
     """
     self.transformed = []
 
     for transform in self.transformList:
 
-      name, method, accessors = transform["name"], transform["method"], transform["accessors"]
-      if self.vtype.isvalid(df, accessors):
+      name, vtype, method, accessors = transform["name"], getattr(vtypes, transform["vtype"])(), transform["method"], transform["accessors"]
+      if vtype.isvalid(df, accessors):
         temp = df[list(set(accessor["field"] for key, accessor in accessors.items()))]
         groups, value, func = method["groups"], method["value"], method["func"]
         grouped = temp.groupby(groups, as_index = False)
         transformed = getattr(grouped, func)()
 
         for record in transformed.to_dict("records"):
-          record = {key: self._setValueType(record, key, accessor) for key, accessor in accessors.items()}
+          record = {key: self._setValueType(vtype, record, key, accessor) for key, accessor in accessors.items()}
           record = {"name": name} | record
           self.transformed.append(record)
 
       else:
 
-        for error in self.vtype.validation_errors:
+        for error in vtype.validation_errors:
           self.logger.warning(f"{error}")
 
     return self
@@ -186,15 +200,16 @@ class ModuleTransform (object):
     groups. An aggregate function is then applied to the
     non-grouped column (e.g. count, sum).
 
-    Transforms are kept distinct and appended to a list,
-    e.g. [t_1, t_2, ..., t_n]
+    Transforms are kept distinct inserted into a dictionary,
+    e.g. {nameA: transformA, nameB: transformB, ...}.
+    Transforms can be heterogenous VTypes.
     """
     self.transformed = {}
 
     for transform in self.transformList:
 
-      name, method, accessors = transform["name"], transform["method"], transform["accessors"]
-      if self.vtype.isvalid(df, accessors):
+      name, vtype, method, accessors = transform["name"], getattr(vtypes, transform["vtype"])(), transform["method"], transform["accessors"]
+      if vtype.isvalid(df, accessors):
         temp = df[list(set(accessor["field"] for key, accessor in accessors.items()))]
         groups, value, func = method["groups"], method["value"], method["func"]
         grouped = temp.groupby(groups, as_index = False)
@@ -202,14 +217,14 @@ class ModuleTransform (object):
 
         subtransform = []
         for record in transformed.to_dict("records"):
-          record = {key: self._setValueType(record, key, accessor) for key, accessor in accessors.items()}
+          record = {key: self._setValueType(vtype, record, key, accessor) for key, accessor in accessors.items()}
           record = {"name": name} | record
           subtransform.append(record)
         self.transformed[name] = subtransform
 
       else:
 
-        for error in self.vtype.validation_errors:
+        for error in vtype.validation_errors:
           self.logger.warning(f"{error}")
 
     return self
