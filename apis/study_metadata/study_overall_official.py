@@ -54,9 +54,16 @@ class StudyOverallOfficialResource(Resource):
             "items": {
                 "type": "object",
                 "properties": {
-                    "name": {"type": "string"},
-                    "affiliation": {"type": "string"},
-                    "role": {"type": "string"},
+                    "name": {"type": "string", "minLength": 1},
+                    "affiliation": {"type": "string", "minLength": 1},
+                    "role": {
+                        "type": "string", 
+                        "enum": [
+                            "Study Chair", 
+                            "Study Director", 
+                            "Study Principal Investigator"
+                        ]
+                    },
                 },
                 "required": ["name", "affiliation", "role"],
             },
