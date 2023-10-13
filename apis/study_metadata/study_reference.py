@@ -52,11 +52,11 @@ class StudyReferenceResource(Resource):
             "items": {
                 "type": "object",
                 "properties": {
-                    "identifier": {"type": "string"},
-                    "type": {"type": "string"},
-                    "citation": {"type": "string"},
+                    "identifier": {"type": "string", "minLength": 1},
+                    "type": {"type": "string", "enum": ["Yes", "No"]},
+                    "citation": {"type": "string", "minLength": 1},
                 },
-                "required": ["identifier", "type", "citation"],
+                "required": ["citation"],
             },
         }
 
