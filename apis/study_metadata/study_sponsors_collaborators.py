@@ -118,7 +118,7 @@ class StudyCollaboratorsResource(Resource):
         # Schema validation
         schema = {
             "type": "array",
-            "items": {"type": "string"},
+            "items": {"type": "string", "minLength": 1},
         }
 
         try:
