@@ -1,8 +1,9 @@
 import uuid
+
 from ..db import db
 
 
-class DatasetDescription(db.Model):
+class DatasetDescription(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
@@ -28,6 +29,6 @@ class DatasetDescription(db.Model):
         dataset_description.update(data)
         return dataset_description
 
-    def update(self, data):
+    def update(self, data: dict):
         self.description = data["description"]
         self.description_type = data["description_type"]

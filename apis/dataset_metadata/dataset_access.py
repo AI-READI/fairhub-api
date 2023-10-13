@@ -1,10 +1,8 @@
-from model import Dataset, DatasetAccess, db
-
-from flask_restx import Resource, fields
 from flask import request
+from flask_restx import Resource, fields
 
+import model
 from apis.dataset_metadata_namespace import api
-
 
 dataset_access = api.model(
     "DatasetAccess",
@@ -25,13 +23,12 @@ class DatasetAccessResource(Resource):
     @api.response(400, "Validation Error")
     @api.marshal_with(dataset_access)
     def get(self, study_id: int, dataset_id: int):
-        dataset_ = Dataset.query.get(dataset_id)
+        dataset_ = model.Dataset.query.get(dataset_id)
         dataset_access_ = dataset_.dataset_access
         return [d.to_dict() for d in dataset_access_]
 
     def put(self, study_id: int, dataset_id: int):
-        data = request.json
-        dataset_ = Dataset.query.get(dataset_id)
+        dataset_ = model.Dataset.query.get(dataset_id)
         dataset_access_ = dataset_.dataset_access.update(request.json)
-        db.session.commit()
+        model.db.session.commit()
         return dataset_access_.to_dict()

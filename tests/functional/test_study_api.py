@@ -1,5 +1,4 @@
 """Tests for API endpoints related to studies"""
-import json
 import os
 
 from app import create_app
@@ -19,9 +18,6 @@ def test_should_return_studies():
     # Create a test client using the Flask application configured for testing
     with flask_app.test_client() as test_client:
         response = test_client.get("/study")
-
         # Convert the response data from JSON to a Python dictionary
-        response_data = json.loads(response.data)
-
         # Check the response is correct
         assert response.status_code == 200

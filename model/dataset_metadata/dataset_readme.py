@@ -1,8 +1,9 @@
 import uuid
+
 from ..db import db
 
 
-class DatasetReadme(db.Model):
+class DatasetReadme(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
@@ -26,5 +27,5 @@ class DatasetReadme(db.Model):
         dataset_readme.update(data)
         return dataset_readme
 
-    def update(self, data):
+    def update(self, data: dict):
         self.content = data["content"]

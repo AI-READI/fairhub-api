@@ -1,8 +1,6 @@
-from model import Dataset, DatasetRelatedItemOther, db
+from flask_restx import Resource
 
-from flask_restx import Namespace, Resource, fields
-from flask import jsonify, request
-
+import model
 from apis.dataset_metadata_namespace import api
 
 # dataset_related_item_contributor = api.model(
@@ -24,6 +22,6 @@ class DatasetRelatedItemContributorResource(Resource):
     # @api.param("id", "The dataset identifier")
     # @api.marshal_with(dataset_related_item_contributor)
     def get(self, study_id: int, dataset_id: int):
-        dataset_ = Dataset.query.get(dataset_id)
+        dataset_ = model.Dataset.query.get(dataset_id)
         dataset_related_item_ = dataset_.dataset_related_item
         return [d.to_dict() for d in dataset_related_item_]

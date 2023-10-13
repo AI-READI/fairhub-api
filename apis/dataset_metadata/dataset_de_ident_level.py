@@ -1,8 +1,7 @@
-from model import Dataset, DatasetDeIdentLevel, db
-
-from flask_restx import Resource, fields
 from flask import request
+from flask_restx import Resource, fields
 
+import model
 from apis.dataset_metadata_namespace import api
 
 de_ident_level = api.model(
@@ -27,13 +26,13 @@ class DatasetDeIdentLevelResource(Resource):
     @api.response(400, "Validation Error")
     @api.marshal_with(de_ident_level)
     def get(self, study_id: int, dataset_id: int):
-        dataset_ = Dataset.query.get(dataset_id)
+        dataset_ = model.Dataset.query.get(dataset_id)
         de_ident_level_ = dataset_.dataset_de_ident_level
         return [d.to_dict() for d in de_ident_level_]
 
     def put(self, study_id: int, dataset_id: int):
         data = request.json
-        dataset_ = Dataset.query.get(dataset_id)
+        dataset_ = model.Dataset.query.get(dataset_id)
         de_ident_level_ = dataset_.dataset_de_ident_level.update(data)
-        db.session.commit()
+        model.db.session.commit()
         return de_ident_level_.to_dict()

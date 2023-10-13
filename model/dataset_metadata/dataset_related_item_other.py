@@ -1,8 +1,9 @@
 import uuid
+
 from ..db import db
 
 
-class DatasetRelatedItemOther(db.Model):
+class DatasetRelatedItemOther(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
@@ -47,7 +48,7 @@ class DatasetRelatedItemOther(db.Model):
         dataset_related_item_other.update(data)
         return dataset_related_item_other
 
-    def update(self, data):
+    def update(self, data: dict):
         self.publication_year = data["publication_year"]
         self.volume = data["volume"]
         self.issue = data["issue"]

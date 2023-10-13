@@ -1,8 +1,9 @@
 import uuid
+
 from ..db import db
 
 
-class DatasetManagingOrganization(db.Model):
+class DatasetManagingOrganization(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
@@ -29,6 +30,6 @@ class DatasetManagingOrganization(db.Model):
         dataset_managing_organization.update(data)
         return dataset_managing_organization
 
-    def update(self, data):
+    def update(self, data: dict):
         self.name = data["name"]
         self.ror_id = data["ror_id"]

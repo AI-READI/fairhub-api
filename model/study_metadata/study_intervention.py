@@ -1,12 +1,16 @@
+import datetime
 import uuid
-from ..db import db
+from datetime import timezone
+
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
-from datetime import timezone
-import datetime
+
+from model import Study
+
+from ..db import db
 
 
-class StudyIntervention(db.Model):
+class StudyIntervention(db.Model):  # type: ignore
     """A study is a collection of datasets and participants"""
 
     def __init__(self, study):
@@ -42,14 +46,14 @@ class StudyIntervention(db.Model):
         }
 
     @staticmethod
-    def from_data(study, data: dict):
+    def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""
         study_intervention = StudyIntervention(study)
         study_intervention.update(data)
 
         return study_intervention
 
-    def update(self, data):
+    def update(self, data: dict):
         """Updates the study from a dictionary"""
         self.type = data["type"]
         self.name = data["name"]
@@ -60,5 +64,5 @@ class StudyIntervention(db.Model):
 
     def validate(self):
         """Validates the lead_sponsor_last_name study"""
-        violations = []
+        violations: list = []
         return violations

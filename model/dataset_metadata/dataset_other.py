@@ -1,10 +1,12 @@
 import uuid
-from ..db import db
+
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 
+from ..db import db
 
-class DatasetOther(db.Model):
+
+class DatasetOther(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
@@ -39,7 +41,7 @@ class DatasetOther(db.Model):
         dataset_other.update(data)
         return dataset_other
 
-    def update(self, data):
+    def update(self, data: dict):
         self.language = data["language"]
         self.managing_organization_name = data["managing_organization_name"]
         self.managing_organization_ror_id = data["managing_organization_ror_id"]

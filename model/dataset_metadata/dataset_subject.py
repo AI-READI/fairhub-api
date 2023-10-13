@@ -1,8 +1,9 @@
 import uuid
+
 from ..db import db
 
 
-class DatasetSubject(db.Model):
+class DatasetSubject(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
@@ -35,7 +36,7 @@ class DatasetSubject(db.Model):
         dataset_subject.update(data)
         return dataset_subject
 
-    def update(self, data):
+    def update(self, data: dict):
         self.subject = data["subject"]
         self.scheme = data["scheme"]
         self.scheme_uri = data["scheme_uri"]
