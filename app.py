@@ -38,7 +38,7 @@ def create_app():
 
     # print(app.config)
     if config.secret and len(config.secret) < 14:
-        raise RuntimeError("secret key should contain at" " least 14 characters")
+        raise RuntimeError("secret key should contain at least 14 characters")
 
     if "DATABASE_URL" in app.config:
         # if "TESTING" in app_config and app_config["TESTING"]:
