@@ -1,13 +1,17 @@
 import uuid
-from ..db import db
+
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 
+from model import Study
 
-class StudyEligibility(db.Model):
+from ..db import db
+
+
+class StudyEligibility(db.Model):  # type: ignore
     """A study is a collection of datasets and participants"""
 
-    def __init__(self, study):
+    def __init__(self, study: Study):
         self.id = str(uuid.uuid4())
         self.study = study
         self.gender = ""
@@ -66,14 +70,14 @@ class StudyEligibility(db.Model):
         }
 
     @staticmethod
-    def from_data(study, data: dict):
+    def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""
         study_eligibility = StudyEligibility(study)
         study_eligibility.update(data)
 
         return study_eligibility
 
-    def update(self, data):
+    def update(self, data: dict):
         """Updates the study from a dictionary"""
         self.gender = data["gender"]
         self.gender_based = data["gender_based"]
@@ -91,5 +95,5 @@ class StudyEligibility(db.Model):
 
     def validate(self):
         """Validates the lead_sponsor_last_name study"""
-        violations = []
+        violations: list = []
         return violations

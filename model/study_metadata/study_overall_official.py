@@ -1,10 +1,13 @@
-import uuid
-from ..db import db
-from datetime import timezone
 import datetime
+import uuid
+from datetime import timezone
+
+from model import Study
+
+from ..db import db
 
 
-class StudyOverallOfficial(db.Model):
+class StudyOverallOfficial(db.Model):  # type: ignore
     """A study is a collection of datasets and participants"""
 
     def __init__(self, study):
@@ -36,14 +39,14 @@ class StudyOverallOfficial(db.Model):
         }
 
     @staticmethod
-    def from_data(study, data: dict):
+    def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""
         study_overall_official = StudyOverallOfficial(study)
         study_overall_official.update(data)
 
         return study_overall_official
 
-    def update(self, data):
+    def update(self, data: dict):
         """Updates the study from a dictionary"""
         self.name = data["name"]
         self.affiliation = data["affiliation"]
@@ -52,5 +55,5 @@ class StudyOverallOfficial(db.Model):
 
     def validate(self):
         """Validates the study"""
-        violations = []
+        violations: list = []
         return violations

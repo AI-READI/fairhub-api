@@ -4,17 +4,19 @@ import os
 from apis.exception import ValidationException
 from flask import Flask, request, make_response, g
 import jwt
-import config
+from flask import Flask, request
+from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from sqlalchemy import MetaData
 from datetime import timezone
 import datetime
 from os import environ
 
+import config
 import model
 from apis import api
-from flask_bcrypt import Bcrypt
-from apis.authentication import authentication, authorization, UnauthenticatedException
+from apis.authentication import UnauthenticatedException, authentication, authorization
+from apis.exception import ValidationException
 
 # from pyfairdatatools import __version__
 
@@ -40,8 +42,8 @@ def create_app(config_module=None):
     app.config.from_prefixed_env("FAIRHUB")
 
     # print(app.config)
-
-    # TODO: add a check for secret key
+    if config.secret and len(config.secret) < 14:
+        raise RuntimeError("secret key should contain at least 14 characters")
 
     if "DATABASE_URL" in app.config:
         # if "TESTING" in app_config and app_config["TESTING"]:
@@ -78,11 +80,13 @@ def create_app(config_module=None):
 
     # app.config[
     #     "CORS_ALLOW_HEADERS"
-    # ] = "Content-Type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
+    # ] = "Content-Type, Authorization, Access-Control-Allow-Origin,
+    # Access-Control-Allow-Credentials"
     # app.config["CORS_SUPPORTS_CREDENTIALS"] = True
     # app.config[
     #     "CORS_EXPOSE_HEADERS"
-    # ] = "Content-Type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
+    # ] = "Content-Type, Authorization, Access-Control-Allow-Origin,
+    # Access-Control-Allow-Credentials"
 
     # CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": "True"}})
 
@@ -101,7 +105,7 @@ def create_app(config_module=None):
     #             model.db.create_all()
 
     @app.before_request
-    def on_before_request():
+    def on_before_request():  # pylint: disable = inconsistent-return-statements
         if request.method == "OPTIONS":
             return
 
@@ -128,7 +132,13 @@ def create_app(config_module=None):
         # print(request.cookies.get("token"))
         if "token" not in request.cookies:
             return resp
-        token = request.cookies.get("token")
+
+        token: str = (
+            request.cookies.get("token")
+            if request.cookies.get("token")
+            else ""  # type: ignore
+        )
+
         # Determine the appropriate configuration module based on the testing context
         if os.environ.get("FLASK_ENV") == "testing":
             config_module_name = "pytest_config"
@@ -158,7 +168,7 @@ def create_app(config_module=None):
             resp.delete_cookie("token")
             return resp
         expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
-            minutes=10
+            minutes=180
         )
         new_token = jwt.encode(
             {"user": decoded["user"], "exp": expired_in, "jti": decoded["jti"]},
@@ -171,10 +181,12 @@ def create_app(config_module=None):
         # resp.headers["Access-Control-Allow-Credentials"] = "true"
         # resp.headers[
         #     "Access-Control-Allow-Headers"
-        # ] = "Content-Type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
+        # ] = "Content-Type, Authorization, Access-Control-Allow-Origin,
+        # Access-Control-Allow-Credentials"
         # resp.headers[
         #     "Access-Control-Expose-Headers"
-        # ] = "Content-Type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
+        # ] = "Content-Type, Authorization, Access-Control-Allow-Origin,
+        # Access-Control-Allow-Credentials"
 
         # print(resp.headers)
 
@@ -186,9 +198,9 @@ def create_app(config_module=None):
 
     @app.cli.command("destroy-schema")
     def destroy_schema():
+        """Create the database schema."""
         engine = model.db.session.get_bind()
-        with engine.begin() as conn:
-            """Create the database schema."""
+        with engine.begin():
             model.db.drop_all()
 
     with app.app_context():
@@ -198,8 +210,7 @@ def create_app(config_module=None):
         table_names = [table.name for table in metadata.tables.values()]
         # print(table_names)
         if len(table_names) == 0:
-            with engine.begin() as conn:
-                """Create the database schema."""
+            with engine.begin():
                 model.db.create_all()
     return app
 

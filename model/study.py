@@ -1,23 +1,26 @@
-import uuid
-from datetime import datetime
-from datetime import timezone
-import model
-from .db import db
 import datetime
+import uuid
+
 from flask import g
+
+import model
 from apis import exception
+
+from .db import db
+
+# from datetime import datetime, timezone
 
 
 class StudyException(Exception):
     pass
 
 
-class Study(db.Model):
+class Study(db.Model):  # type: ignore
     """A study is a collection of datasets and participants"""
 
     def __init__(self):
         self.id = str(uuid.uuid4())
-        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
+        self.created_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
         #
         self.study_status = model.StudyStatus(self)
         self.study_sponsors_collaborators = model.StudySponsorsCollaborators(self)
@@ -148,15 +151,14 @@ class Study(db.Model):
     )
 
     def to_dict(self):
+        """Converts the study to a dictionary"""
         owner = self.study_contributors.filter(
             model.StudyContributor.permission == "owner"
         ).first()
-        user = model.User.query.get(g.user.id)
         contributor_permission = self.study_contributors.filter(
             model.StudyContributor.user_id == g.user.id
         ).first()
         print(contributor_permission)
-        """Converts the study to a dictionary"""
         return {
             "id": self.id,
             "title": self.title,
@@ -179,7 +181,7 @@ class Study(db.Model):
 
         return study
 
-    def update(self, data):
+    def update(self, data: dict):
         """Updates the study from a dictionary"""
         if not data["title"]:
             raise exception.ValidationException("title is required")
@@ -188,11 +190,11 @@ class Study(db.Model):
 
         self.title = data["title"]
         self.image = data["image"]
-        self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
+        self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
 
     def validate(self):
         """Validates the study"""
-        violations = []
+        violations: list = []
         # if self.description.trim() == "":
         #     violations.push("A description is required")
         # if self.keywords.length < 1:
@@ -200,7 +202,7 @@ class Study(db.Model):
         return violations
 
     def touch(self):
-        self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
+        self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
 
     def add_user_to_study(self, user, permission):
         """add user to study"""
@@ -209,9 +211,8 @@ class Study(db.Model):
         ).all()
         if contributor:
             raise StudyException("User is already exists in study")
-        else:
-            contributor = model.StudyContributor(self, user, permission)
-            db.session.add(contributor)
+        contributor = model.StudyContributor(self, user, permission)
+        db.session.add(contributor)
         return contributor
 
     def invite_user_to_study(self, email_address, permission):
@@ -222,9 +223,6 @@ class Study(db.Model):
             raise StudyException(
                 "This email address has already been invited to this study"
             )
-        else:
-            contributor_add = model.StudyInvitedContributor(
-                self, email_address, permission
-            )
-            db.session.add(contributor_add)
-            return contributor_add
+        contributor_add = model.StudyInvitedContributor(self, email_address, permission)
+        db.session.add(contributor_add)
+        return contributor_add

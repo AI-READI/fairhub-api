@@ -1,8 +1,9 @@
 import uuid
+
 from ..db import db
 
 
-class DatasetRights(db.Model):
+class DatasetRights(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
@@ -33,7 +34,7 @@ class DatasetRights(db.Model):
         dataset_rights.update(data)
         return dataset_rights
 
-    def update(self, data):
+    def update(self, data: dict):
         self.rights = data["rights"]
         self.uri = data["uri"]
         self.identifier = data["identifier"]

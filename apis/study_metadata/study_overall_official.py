@@ -1,12 +1,13 @@
 """API routes for study overall official metadata"""
-from flask_restx import Resource, fields
+import typing
+
 from flask import request
-from model import Study, db, StudyOverallOfficial
+from flask_restx import Resource, fields
 
-
+import model
 from apis.study_metadata_namespace import api
-from ..authentication import is_granted
 
+from ..authentication import is_granted
 
 study_overall_official = api.model(
     "StudyOverallOfficial",
@@ -30,7 +31,7 @@ class StudyOverallOfficialResource(Resource):
     # @api.marshal_with(study_overall_official)
     def get(self, study_id: int):
         """Get study overall official metadata"""
-        study_ = Study.query.get(study_id)
+        study_ = model.Study.query.get(study_id)
 
         study_overall_official_ = study_.study_overall_official
 
@@ -46,22 +47,24 @@ class StudyOverallOfficialResource(Resource):
     @api.response(400, "Validation Error")
     def post(self, study_id: int):
         """Create study overall official metadata"""
-        data = request.json
-        study_obj = Study.query.get(study_id)
+        data: typing.Union[dict, typing.Any] = request.json
+        study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403
         list_of_elements = []
         for i in data:
             if "id" in i and i["id"]:
-                study_overall_official_ = StudyOverallOfficial.query.get(i["id"])
+                study_overall_official_ = model.StudyOverallOfficial.query.get(i["id"])
                 study_overall_official_.update(i)
                 list_of_elements.append(study_overall_official_.to_dict())
             elif "id" not in i or not i["id"]:
-                study_overall_official_ = StudyOverallOfficial.from_data(study_obj, i)
-                db.session.add(study_overall_official_)
+                study_overall_official_ = model.StudyOverallOfficial.from_data(
+                    study_obj, i
+                )
+                model.db.session.add(study_overall_official_)
                 list_of_elements.append(study_overall_official_.to_dict())
 
-        db.session.commit()
+        model.db.session.commit()
 
         return list_of_elements
 
@@ -71,13 +74,13 @@ class StudyOverallOfficialResource(Resource):
         @api.response(400, "Validation Error")
         def delete(self, study_id: int, overall_official_id: int):
             """Delete study overall official metadata"""
-            study_obj = Study.query.get(study_id)
+            study_obj = model.Study.query.get(study_id)
             if not is_granted("study_metadata", study_obj):
                 return "Access denied, you can not delete study", 403
-            study_overall_official_ = StudyOverallOfficial.query.get(
+            study_overall_official_ = model.StudyOverallOfficial.query.get(
                 overall_official_id
             )
-            db.session.delete(study_overall_official_)
-            db.session.commit()
+            model.db.session.delete(study_overall_official_)
+            model.db.session.commit()
 
             return 204

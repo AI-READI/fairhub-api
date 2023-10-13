@@ -1,9 +1,8 @@
-from model import Dataset, DatasetConsent, db
-
-from flask_restx import Resource, fields
 from flask import request
-from apis.dataset_metadata_namespace import api
+from flask_restx import Resource, fields
 
+import model
+from apis.dataset_metadata_namespace import api
 
 dataset_consent = api.model(
     "DatasetConsent",
@@ -27,13 +26,13 @@ class DatasetConsentResource(Resource):
     @api.response(400, "Validation Error")
     @api.marshal_with(dataset_consent)
     def get(self, study_id: int, dataset_id: int):
-        dataset_ = Dataset.query.get(dataset_id)
+        dataset_ = model.Dataset.query.get(dataset_id)
         dataset_consent_ = dataset_.dataset_consent
         return [d.to_dict() for d in dataset_consent_]
 
     def put(self, study_id: int, dataset_id: int):
         data = request.json
-        dataset_ = Dataset.query.get(dataset_id)
+        dataset_ = model.Dataset.query.get(dataset_id)
         dataset_consent_ = dataset_.dataset_consent.update(data)
-        db.session.commit()
+        model.db.session.commit()
         return dataset_consent_.to_dict()

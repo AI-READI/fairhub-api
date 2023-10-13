@@ -1,7 +1,7 @@
 from .db import db
 
 
-class TokenBlacklist(db.Model):
+class TokenBlacklist(db.Model):  # type: ignore
     __tablename__ = "token_blacklist"
     jti = db.Column(db.CHAR(36), primary_key=True)
     exp = db.Column(db.String, nullable=False)
@@ -18,6 +18,6 @@ class TokenBlacklist(db.Model):
         token_blacklist.update(data)
         return token_blacklist
 
-    def update(self, data):
+    def update(self, data: dict):
         self.jti = data["jti"]
         self.exp = data["exp"]

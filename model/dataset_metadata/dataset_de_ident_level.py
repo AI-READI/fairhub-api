@@ -1,8 +1,9 @@
 import uuid
+
 from ..db import db
 
 
-class DatasetDeIdentLevel(db.Model):
+class DatasetDeIdentLevel(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
@@ -39,7 +40,7 @@ class DatasetDeIdentLevel(db.Model):
         dataset_de_ident_level.update(data)
         return dataset_de_ident_level
 
-    def update(self, data):
+    def update(self, data: dict):
         self.type = data["type"]
         self.direct = data["direct"]
         self.hipaa = data["hipaa"]

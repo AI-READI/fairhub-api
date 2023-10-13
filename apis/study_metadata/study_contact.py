@@ -1,10 +1,13 @@
 """API routes for study contact metadata"""
-from flask_restx import Resource, fields
-from flask import request
-from model import Study, db, StudyContact
-from apis.study_metadata_namespace import api
-from ..authentication import is_granted, is_study_metadata
+import typing
 
+from flask import request
+from flask_restx import Resource, fields
+
+import model
+from apis.study_metadata_namespace import api
+
+from ..authentication import is_granted
 
 study_contact = api.model(
     "StudyContact",
@@ -31,7 +34,7 @@ class StudyContactResource(Resource):
     @api.marshal_with(study_contact)
     def get(self, study_id: int):
         """Get study contact metadata"""
-        study_ = Study.query.get(study_id)
+        study_ = model.Study.query.get(study_id)
 
         study_contact_ = study_.study_contact
 
@@ -41,25 +44,26 @@ class StudyContactResource(Resource):
 
     def post(self, study_id: int):
         """Create study contact metadata"""
-        study = Study.query.get(study_id)
+        study = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study):
             return "Access denied, you can not delete study", 403
-        data = request.json
+        data: typing.Union[dict, typing.Any] = request.json
 
-        study_obj = Study.query.get(study_id)
+        study_obj = model.Study.query.get(study_id)
 
         list_of_elements = []
 
         for i in data:
             if "id" in i and i["id"]:
-                study_contact_ = StudyContact.query.get(i["id"])
+                study_contact_ = model.StudyContact.query.get(i["id"])
                 study_contact_.update(i)
-            else:
-                study_contact_ = StudyContact.from_data(study_obj, i, None, True)
-                db.session.add(study_contact_)
+                list_of_elements.append(study_contact_.to_dict())
+            elif "id" not in i or not i["id"]:
+                study_contact_ = model.StudyContact.from_data(study_obj, i, None, True)
+                model.db.session.add(study_contact_)
                 list_of_elements.append(study_contact_.to_dict())
 
-        db.session.commit()
+        model.db.session.commit()
 
         return list_of_elements
 
@@ -68,13 +72,13 @@ class StudyContactResource(Resource):
         """Study Contact Metadata"""
 
         def delete(self, study_id: int, central_contact_id: int):
-            study = Study.query.get(study_id)
+            study = model.Study.query.get(study_id)
             if not is_granted("study_metadata", study):
                 return "Access denied, you can not delete study", 403
             """Delete study contact metadata"""
-            study_contact_ = StudyContact.query.get(central_contact_id)
+            study_contact_ = model.StudyContact.query.get(central_contact_id)
 
-            db.session.delete(study_contact_)
-            db.session.commit()
+            model.db.session.delete(study_contact_)
+            model.db.session.commit()
 
             return study_contact_.to_dict()

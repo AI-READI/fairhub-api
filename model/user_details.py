@@ -1,8 +1,11 @@
 import uuid
+
+import model
+
 from .db import db
 
 
-class UserDetails(db.Model):
+class UserDetails(db.Model):  # type: ignore
     def __init__(self, user):
         self.id = str(uuid.uuid4())
         self.first_name = ""
@@ -40,12 +43,12 @@ class UserDetails(db.Model):
         }
 
     @staticmethod
-    def from_data(user, data: dict):
+    def from_data(user: model.User, data: dict):
         user = UserDetails(user)
         user.update(data)
         return user
 
-    def update(self, data):
+    def update(self, data: dict):
         self.first_name = data["first_name"]
         self.last_name = data["last_name"]
         self.institution = data["institution"]

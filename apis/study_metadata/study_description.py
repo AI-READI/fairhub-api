@@ -1,11 +1,11 @@
 """API routes for study description metadata"""
-from flask_restx import Resource, fields
 from flask import request
-from model import Study, db
-from ..authentication import is_granted, is_study_metadata
+from flask_restx import Resource, fields
 
+import model
 from apis.study_metadata_namespace import api
 
+from ..authentication import is_granted
 
 study_description = api.model(
     "StudyDescription",
@@ -27,7 +27,7 @@ class StudyDescriptionResource(Resource):
     @api.marshal_with(study_description)
     def get(self, study_id: int):
         """Get study description metadata"""
-        study_ = Study.query.get(study_id)
+        study_ = model.Study.query.get(study_id)
 
         study_description_ = study_.study_description
 
@@ -35,13 +35,13 @@ class StudyDescriptionResource(Resource):
 
     def put(self, study_id: int):
         """Update study description metadata"""
-        study_obj = Study.query.get(study_id)
+        study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403
-        study_ = Study.query.get(study_id)
+        study_ = model.Study.query.get(study_id)
 
         study_.study_description.update(request.json)
 
-        db.session.commit()
+        model.db.session.commit()
 
         return study_.study_description.to_dict()

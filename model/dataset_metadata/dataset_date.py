@@ -1,8 +1,9 @@
 import uuid
+
 from ..db import db
 
 
-class DatasetDate(db.Model):
+class DatasetDate(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
@@ -30,7 +31,7 @@ class DatasetDate(db.Model):
         dataset_date.update(data)
         return dataset_date
 
-    def update(self, data):
+    def update(self, data: dict):
         self.date = data["date"]
         self.date_type = data["date_type"]
         self.data_information = data["data_information"]

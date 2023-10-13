@@ -1,8 +1,9 @@
 import uuid
+
 from ..db import db
 
 
-class DatasetRelatedItemTitle(db.Model):
+class DatasetRelatedItemTitle(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
@@ -28,10 +29,10 @@ class DatasetRelatedItemTitle(db.Model):
 
     @staticmethod
     def from_data(dataset, data: dict):
-        dataset_related_item_title = DatasetRelatedItemTitle()
+        dataset_related_item_title = DatasetRelatedItemTitle(dataset)
         dataset_related_item_title.update(data)
         return dataset_related_item_title
 
-    def update(self, data):
+    def update(self, data: dict):
         self.type = data["type"]
         self.title = data["title"]

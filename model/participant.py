@@ -1,11 +1,14 @@
-import uuid
-import model
-from datetime import timezone
-from .db import db
 import datetime
+import uuid
+from datetime import timezone
+
+import model
+
+from .db import db
+from .study import Study
 
 
-class Participant(db.Model):
+class Participant(db.Model):  # type: ignore
     def __init__(self, study):
         self.study = study
         self.id = str(uuid.uuid4())
@@ -42,12 +45,12 @@ class Participant(db.Model):
         }
 
     @staticmethod
-    def from_data(data: dict, study):
+    def from_data(data: dict, study: Study):
         participant = Participant(study)
         participant.update(data)
         return participant
 
-    def update(self, data):
+    def update(self, data: dict):
         self.first_name = data["first_name"]
         self.last_name = data["last_name"]
         self.address = data["address"]
