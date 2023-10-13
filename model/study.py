@@ -223,8 +223,6 @@ class Study(db.Model):  # type: ignore
             raise StudyException(
                 "This email address has already been invited to this study"
             )
-        contributor_add = model.StudyInvitedContributor(
-            self, email_address, permission
-        )
+        contributor_add = model.StudyInvitedContributor(self, email_address, permission)
         db.session.add(contributor_add)
         return contributor_add
