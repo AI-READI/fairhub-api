@@ -1,0 +1,45 @@
+name: Test
+
+on: [push]
+
+jobs:
+  lint:
+    name: Run tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8"]
+    env:
+      # These are simulated secrets for test workflow only.
+      FAIRHUB_DATABASE_URL: postgresql://admin:root@localhost:5432/fairhub_local
+      FAIRHUB_SECRET: mXrkOHXXQoMAhCOTZOV93QlncmeTwEZFPxTP1TXGiOFabE0KmuZgHWvTOLgjbv3S
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Crate a database for tests with docker
+        run: docker run -d \
+          -n postgres \
+          -p 5432:5432 \
+          -e POSTGRES_USER=admin \
+          -e POSTGRES_PASSWORD=root \
+          -e POSTGRES_DB=fairhub_local \
+          postgres
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - uses: Gr1N/setup-poetry@v8
+
+      - name: Install dependencies
+        run: poetry install
+
+      - uses: actions/cache@v2
+        with:
+          path: .venv
+          key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+
+      - name: Run pytest (with capture)
+        run: poetry run pytest -s -W ignore::DeprecationWarning
