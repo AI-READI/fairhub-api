@@ -52,12 +52,23 @@ class StudyAvailableResource(Resource):
             "items": {
                 "type": "object",
                 "properties": {
-                    "identifier": {"type": "string"},
-                    "type": {"type": "string"},
-                    "comment": {"type": "string"},
-                    "url": {"type": "string"},
+                    "identifier": {"type": "string", "minLength": 1},
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "Individual Participant Data Set",
+                            "Study Protocol",
+                            "Statistical Analysis Plan",
+                            "Informated Consent Form",
+                            "Clinical Study Report",
+                            "Analytic Code",
+                            "Other"
+                        ]
+                    },
+                    "comment": {"type": "string", "minLength": 1},
+                    "url": {"type": "string", "format": "uri", "minLength": 1},
                 },
-                "required": ["identifier", "type", "comment", "url"],
+                "required": ["identifier", "type", "url"],
             },
         }
 
