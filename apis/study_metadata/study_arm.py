@@ -37,7 +37,7 @@ class StudyArmResource(Resource):
     @api.response(400, "Validation Error")
     # @api.marshal_with(study_arm)
     def get(self, study_id):
-        """Get study arm metadata"""
+        """Get all Arms for a study"""
         study_ = model.Study.query.get(study_id)
 
         arm = model.Arm(study_)

@@ -158,7 +158,7 @@ class Study(db.Model):  # type: ignore
         contributor_permission = self.study_contributors.filter(
             model.StudyContributor.user_id == g.user.id
         ).first()
-        print(contributor_permission)
+
         return {
             "id": self.id,
             "title": self.title,

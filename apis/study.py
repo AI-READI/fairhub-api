@@ -1,7 +1,7 @@
 from typing import Any, Union
 
 from flask import g, request
-from flask_restx import Namespace, Resource, fields
+from flask_restx import Namespace, Resource, fields, reqparse
 
 import model
 
@@ -21,7 +21,19 @@ study_model = api.model(
 
 @api.route("/study")
 class Studies(Resource):
-    @api.doc("list_study")
+    parser_study = reqparse.RequestParser(bundle_errors=True)
+    parser_study.add_argument(
+        "title", type=str, required=True, location="json", help="The title of the Study"
+    )
+    parser_study.add_argument(
+        "image",
+        type=list,
+        required=True,
+        location="json",
+        help="The image for the Study",
+    )
+
+    @api.doc(description="Return a list of all studies")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(study_model)
@@ -56,7 +68,7 @@ class Studies(Resource):
 
 @api.route("/study/<study_id>")
 class StudyResource(Resource):
-    @api.doc("get study")
+    @api.doc(description="Get a study's details")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(study)
@@ -67,6 +79,7 @@ class StudyResource(Resource):
     @api.expect(study_model)
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
+    @api.doc(description="Update a study's details")
     def put(self, study_id: int):
         update_study = model.Study.query.get(study_id)
         if not is_granted("update_study", update_study):
@@ -78,6 +91,7 @@ class StudyResource(Resource):
 
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
+    @api.doc(description="Delete a study")
     def delete(self, study_id: int):
         study = model.Study.query.get(study_id)
         if not is_granted("delete_study", study):

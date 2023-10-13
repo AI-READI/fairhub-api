@@ -1,5 +1,7 @@
 """Entry point for the application."""
 import datetime
+import importlib
+import os
 from datetime import timezone
 
 import jwt
@@ -19,17 +21,18 @@ from apis.exception import ValidationException
 bcrypt = Bcrypt()
 
 
-def create_app():
+def create_app(config_module=None):
     """Initialize the core application."""
     # create and configure the app
     app = Flask(__name__)
     # `full` if you want to see all the details
     app.config["SWAGGER_UI_DOC_EXPANSION"] = "none"
     app.config["RESTX_MASK_SWAGGER"] = False
-    # Initialize config
-    app.config.from_pyfile("config.py")
-    # app.register_blueprint(api)
 
+    # Initialize config
+    app.config.from_object(config_module or "config")
+
+    # app.register_blueprint(api)
     # TODO - fix this
     # csrf = CSRFProtect()
     # csrf.init_app(app)
@@ -37,7 +40,7 @@ def create_app():
     app.config.from_prefixed_env("FAIRHUB")
 
     # print(app.config)
-    if config.secret and len(config.secret) < 14:
+    if config.FAIRHUB_SECRET and len(config.FAIRHUB_SECRET) < 14:
         raise RuntimeError("secret key should contain at least 14 characters")
 
     if "DATABASE_URL" in app.config:
@@ -127,13 +130,27 @@ def create_app():
         # print(request.cookies.get("token"))
         if "token" not in request.cookies:
             return resp
+
         token: str = (
             request.cookies.get("token")
             if request.cookies.get("token")
             else ""  # type: ignore
         )
+
+        # Determine the appropriate configuration module based on the testing context
+        if os.environ.get("FLASK_ENV") == "testing":
+            config_module_name = "pytest_config"
+        else:
+            config_module_name = "config"
+        config_module = importlib.import_module(config_module_name)
+        if os.environ.get("FLASK_ENV") == "testing":
+            # If testing, use the 'TestConfig' class for accessing 'secret'
+            config = config_module.TestConfig
+        else:
+            # If not testing, directly use the 'config' module
+            config = config_module
         try:
-            decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
+            decoded = jwt.decode(token, config.FAIRHUB_SECRET, algorithms=["HS256"])
         except jwt.ExpiredSignatureError:
             resp.set_cookie(
                 "token",
@@ -153,7 +170,7 @@ def create_app():
         )
         new_token = jwt.encode(
             {"user": decoded["user"], "exp": expired_in, "jti": decoded["jti"]},
-            config.secret,
+            config.FAIRHUB_SECRET,
             algorithm="HS256",
         )
         resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="lax")
@@ -169,7 +186,7 @@ def create_app():
         # ] = "Content-Type, Authorization, Access-Control-Allow-Origin,
         # Access-Control-Allow-Credentials"
 
-        print(resp.headers)
+        # print(resp.headers)
 
         return resp
 
@@ -206,6 +223,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     port = args.port
 
-    app = create_app()
+    flask_app = create_app()
 
-    app.run(host="0.0.0.0", port=port)
+    flask_app.run(host="0.0.0.0", port=port)

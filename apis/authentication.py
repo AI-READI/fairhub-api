@@ -1,5 +1,9 @@
 import datetime
+import importlib
+import os
 import re
+
+# import config
 import uuid
 from datetime import timezone
 from typing import Any, Union
@@ -8,7 +12,6 @@ import jwt
 from flask import g, make_response, request
 from flask_restx import Namespace, Resource, fields
 
-import config
 import model
 
 api = Namespace("Authentication", description="Authentication paths", path="/")
@@ -74,13 +77,35 @@ class Login(Resource):
         """logs in user and handles few authentication errors.
         Also, it sets token for logged user along with expiration date"""
         data: Union[Any, dict] = request.json
+
         email_address = data["email_address"]
+
         user = model.User.query.filter_by(email_address=email_address).one_or_none()
+
         if not user:
             return "Invalid credentials", 401
+
         validate_pass = user.check_password(data["password"])
+
         if not validate_pass:
             return "Invalid credentials", 401
+
+        # Determine the appropriate configuration module
+        # based on the testing context
+        if os.environ.get("FLASK_ENV") == "testing":
+            config_module_name = "pytest_config"
+        else:
+            config_module_name = "config"
+
+        config_module = importlib.import_module(config_module_name)
+
+        if os.environ.get("FLASK_ENV") == "testing":
+            # If testing, use the 'TestConfig' class for accessing 'secret'
+            config = config_module.TestConfig
+        else:
+            # If not testing, directly use the 'config' module
+            config = config_module
+
         encoded_jwt_code = jwt.encode(
             {
                 "user": user.id,
@@ -88,14 +113,17 @@ class Login(Resource):
                 + datetime.timedelta(minutes=180),  # noqa: W503
                 "jti": str(uuid.uuid4()),
             },  # noqa: W503
-            config.secret,
+            config.FAIRHUB_SECRET,
             algorithm="HS256",
         )
+
         resp = make_response(user.to_dict())
+
         resp.set_cookie(
             "token", encoded_jwt_code, secure=True, httponly=True, samesite="lax"
         )
         resp.status_code = 200
+
         return resp
 
 
@@ -111,8 +139,21 @@ def authentication():
         if (request.cookies.get("token"))
         else ""  # type: ignore
     )
+
+    # Determine the appropriate configuration module based on the testing context
+    if os.environ.get("FLASK_ENV") == "testing":
+        config_module_name = "pytest_config"
+    else:
+        config_module_name = "config"
+    config_module = importlib.import_module(config_module_name)
+    if os.environ.get("FLASK_ENV") == "testing":
+        # If testing, use the 'TestConfig' class for accessing 'secret'
+        config = config_module.TestConfig
+    else:
+        # If not testing, directly use the 'config' module
+        config = config_module
     try:
-        decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
+        decoded = jwt.decode(token, config.FAIRHUB_SECRET, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
         return
     token_blacklist = model.TokenBlacklist.query.get(decoded["jti"])
@@ -132,7 +173,7 @@ def authorization():
         "/swaggerui",
         "/swagger.json",
     ]
-    print("g.user", g.user)
+
     for route in public_routes:
         if request.path.startswith(route):
             return

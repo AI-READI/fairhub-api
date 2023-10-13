@@ -41,9 +41,12 @@ class StudyAvailableResource(Resource):
 
         return [s.to_dict() for s in sorted_study_available_ipd]
 
-    @api.doc("update available")
+    @api.doc(
+        description="An array of objects are expected within the payload with the keys demonstrated below to create an available-ipd"  # noqa E501
+    )
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
+    @api.expect(study_available)
     @api.marshal_with(study_available)
     def post(self, study_id: int):
         """Create study available metadata"""
