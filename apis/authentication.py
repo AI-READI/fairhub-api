@@ -42,7 +42,7 @@ class SignUpUser(Resource):
     @api.expect(signup_model)
     def post(self):
         """signs up the new users and saves data in DB"""
-        data: Union[Any | dict] = request.json
+        data: Union[Any, dict] = request.json
         # TODO data[email doesnt exist then raise error; json validation library
         pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
         if not data["email_address"] or not re.match(pattern, data["email_address"]):
@@ -73,7 +73,7 @@ class Login(Resource):
     def post(self):
         """logs in user and handles few authentication errors.
         Also, it sets token for logged user along with expiration date"""
-        data: Union[Any | dict] = request.json
+        data: Union[Any, dict] = request.json
         email_address = data["email_address"]
         user = model.User.query.filter_by(email_address=email_address).one_or_none()
         if not user:
@@ -107,7 +107,8 @@ def authentication():
 
     if "token" not in request.cookies:
         return
-    token: str = request.cookies.get("token") if request.cookies.get("token") else ""  # type: ignore
+    token: str = request.cookies.get("token") if (
+        request.cookies.get("token")) else ""  # type: ignore
     try:
         decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
@@ -225,7 +226,8 @@ class Logout(Resource):
 
 @api.route("/auth/current-users")
 class CurrentUsers(Resource):
-    """function is used to see all logged users in the system. For now, it is used for testing purposes"""
+    """function is used to see all logged users in
+    the system. For now, it is used for testing purposes"""
 
     @api.response(200, "Success")
     @api.response(400, "Validation Error")

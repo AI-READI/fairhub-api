@@ -37,7 +37,7 @@ class AddParticipant(Resource):
     @api.response(400, "Validation Error")
     # @api.marshal_with(participant_model)
     def post(self, study_id: int):
-        data: Union[Any | dict] = request.json
+        data: Union[Any, dict] = request.json
         if is_granted("viewer", study_id):
             return "Access denied, you can not modify", 403
         study = model.Study.query.get(study_id)

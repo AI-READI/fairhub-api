@@ -25,7 +25,8 @@ study_model = api.model(
 @api.route("/user/profile")
 class UserDetailsEndpoint(Resource):
     @api.doc(
-        description="Returns user details gathered from the user and user_details tables"
+        description="Returns user details gathered from the"
+                    " user and user_details tables"
     )
     @api.response(200, "Success", study_model)
     @api.response(400, "Validation Error")

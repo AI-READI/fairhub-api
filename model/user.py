@@ -13,7 +13,7 @@ class User(db.Model):  # type: ignore
     def __init__(self, password, data):
         self.id = str(uuid.uuid4())
         self.created_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
-        self.set_password(password, data)
+        self.set_password(password)
         self.user_details = model.UserDetails(self)
 
     __tablename__ = "user"
@@ -53,7 +53,7 @@ class User(db.Model):  # type: ignore
         # self.hash = data["hash"]
         # self.created_at = data["created_at"]
 
-    def set_password(self, password: str, data):
+    def set_password(self, password: str):
         """setting bcrypt passwords"""
         hashed_password = app.bcrypt.generate_password_hash(password).decode("utf-8")
         self.hash = hashed_password

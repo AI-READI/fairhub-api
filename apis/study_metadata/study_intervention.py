@@ -49,7 +49,7 @@ class StudyInterventionResource(Resource):
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403
         list_of_elements = []
-        data: typing.Union[dict | typing.Any] = request.json
+        data: typing.Union[dict, typing.Any] = request.json
         for i in data:
             if "id" in i and i["id"]:
                 study_intervention_ = model.StudyIntervention.query.get(i["id"])
