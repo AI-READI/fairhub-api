@@ -56,6 +56,7 @@ class StudyDesignResource(Resource):
         schema = {
             "type": "object",
             "additionalProperties": False,
+            "required": ["study_type"],
             "properties": {
                 "design_allocation": {"type": "string", "minLength": 1},
                 "study_type": {
