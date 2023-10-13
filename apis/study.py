@@ -1,6 +1,6 @@
 from typing import Any, Union
 
-from flask import request, g
+from flask import g, request
 from flask_restx import Namespace, Resource, fields, reqparse
 
 import model

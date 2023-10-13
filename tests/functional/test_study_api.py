@@ -69,16 +69,16 @@ def test_get_study_by_id(_test_client, _login_user):
     WHEN the '/study/{study_id}' endpoint is requested (GET)
     THEN check that the response is valid
     """
-    response = _test_client.get(f"/study/{pytest.global_study_id['id']}")
+    response = _test_client.get(f"/study/{pytest.global_study_id['id']}")  # type: ignore # pylint: disable=line-too-long # noqa: E501
 
     # Convert the response data from JSON to a Python dictionary
     response_data = json.loads(response.data)
 
     # Check the response is correct
     assert response.status_code == 200
-    assert response_data["id"] == pytest.global_study_id["id"]
-    assert response_data["title"] == pytest.global_study_id["title"]
-    assert response_data["image"] == pytest.global_study_id["image"]
+    assert response_data["id"] == pytest.global_study_id["id"]  # type: ignore
+    assert response_data["title"] == pytest.global_study_id["title"]  # type: ignore
+    assert response_data["image"] == pytest.global_study_id["image"]  # type: ignore
 
 
 def test_delete_studies_created(_test_client, _login_user):

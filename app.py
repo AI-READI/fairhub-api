@@ -1,16 +1,14 @@
 """Entry point for the application."""
+import datetime
 import importlib
 import os
-from apis.exception import ValidationException
-from flask import Flask, request, make_response, g
+from datetime import timezone
+
 import jwt
 from flask import Flask, request
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from sqlalchemy import MetaData
-from datetime import timezone
-import datetime
-from os import environ
 
 import config
 import model
@@ -42,7 +40,7 @@ def create_app(config_module=None):
     app.config.from_prefixed_env("FAIRHUB")
 
     # print(app.config)
-    if config.secret and len(config.secret) < 14:
+    if config.FAIRHUB_SECRET and len(config.FAIRHUB_SECRET) < 14:
         raise RuntimeError("secret key should contain at least 14 characters")
 
     if "DATABASE_URL" in app.config:

@@ -10,7 +10,7 @@ def test_get_all_dataset_from_study(_test_client, _login_user):
     WHEN the '/dataset/{study_id}' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the dataset content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     response = _test_client.get(f"/study/{study_id}/dataset")
     response_data = json.loads(response.data)
     assert response.status_code == 200
