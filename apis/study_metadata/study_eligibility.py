@@ -51,19 +51,34 @@ class StudyEligibilityResource(Resource):
         schema = {
             "type": "object",
             "additionalProperties": False,
+            "required": [
+                "gender",
+                "gender_based",
+                "minimum_age_value",
+                "maximum_age_value"
+            ],
             "properties": {
-                "gender": {"type": "string"},
-                "gender_based": {"type": "string"},
+                "gender": {
+                    "type": "string",
+                    "enum": ["All", "Female", "Male"]
+                },
+                "gender_based": {"type": "string", "enum": ["Yes", "No"]},
                 "gender_description": {"type": "string"},
                 "minimum_age_value": {"type": "integer"},
                 "maximum_age_value": {"type": "integer"},
-                "minimum_age_unit": {"type": "string"},
-                "maximum_age_unit": {"type": "string"},
-                "healthy_volunteers": {"type": "string"},
+                "minimum_age_unit": {"type": "string", "minLength": 1},
+                "maximum_age_unit": {"type": "string", "minLength": 1},
+                "healthy_volunteers": {"type": "string", "enum": ["Yes", "No"]},
                 "inclusion_criteria": {"type": "array", "items": {"type": "string"}},
                 "exclusion_criteria": {"type": "array", "items": {"type": "string"}},
                 "study_population": {"type": "string"},
-                "sampling_method": {"type": "string"},
+                "sampling_method": {
+                    "type": "string", 
+                    "enum": [
+                        "Non-Probability Sample", 
+                        "Probability Sample"
+                    ]
+                },
             },
         }
 
