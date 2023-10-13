@@ -2,6 +2,7 @@ from typing import Any, Callable, Union, List, Dict, Tuple
 from datetime import datetime
 import pandas as pd
 
+
 class VType(object):
     def __init__(
         self: object,
