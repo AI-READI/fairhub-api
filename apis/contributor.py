@@ -124,7 +124,7 @@ class ContributorResource(Resource):
         ).first()
         if not granter:
             return "you are not contributor of this study", 403
-        grants: Union[OrderedDict[str, list[str]]] = OrderedDict()
+        grants: Union[OrderedDict[str, List[str]]] = OrderedDict()
         grants["viewer"] = []
         grants["editor"] = []
         grants["admin"] = ["viewer", "editor"]
