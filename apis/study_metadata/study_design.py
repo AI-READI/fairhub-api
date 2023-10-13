@@ -164,7 +164,7 @@ class StudyDesignResource(Resource):
                     "uniqueItems": True,
                 },
                 "enrollment_count": {"type": "integer"},
-                "enrollment_type": {"type": "string", "minLength": 1},
+                "enrollment_type": {"type": "string", "enum": ["Actual", "Anticipated"]},
                 "number_arms": {"type": "integer"},
                 "design_observational_model_list": {
                     "type": "array",
@@ -279,7 +279,7 @@ class StudyDesignResource(Resource):
 
         study_ = Study.query.get(study_id)
 
-        study_.study_design.update(request.json)
+        study_.study_design.update(data)
 
         db.session.commit()
 
