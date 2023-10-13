@@ -87,7 +87,9 @@ class StudyOversightResource(Resource):
         schema = {
             "type": "object",
             "additionalProperties": False,
-            "properties": {"oversight_has_dmc": {"type": "boolean"}},
+            "properties": {
+                "oversight_has_dmc": {"type": "boolean"}
+            },
             "required": ["oversight_has_dmc"],
         }
 
