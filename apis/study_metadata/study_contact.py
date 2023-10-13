@@ -1,10 +1,11 @@
 """API routes for study contact metadata"""
 from flask_restx import Resource, fields
 from flask import request
+from jsonschema import validate, ValidationError, FormatChecker
+from email_validator import validate_email, EmailNotValidError
 from model import Study, db, StudyContact
 from apis.study_metadata_namespace import api
 from ..authentication import is_granted, is_study_metadata
-from jsonschema import validate, ValidationError
 
 
 study_contact = api.model(
@@ -42,6 +43,15 @@ class StudyContactResource(Resource):
 
     def post(self, study_id: int):
         """Create study contact metadata"""
+        def validate_is_valid_email(instance):
+            print("within is_valid_email")
+            email_address = instance
+            print(email_address)
+            try:
+                validate_email(email_address)
+                return True
+            except EmailNotValidError as e:
+                raise ValidationError("Invalid email address format") from e
         # Schema validation
         schema = {
             "type": "array",
@@ -49,25 +59,25 @@ class StudyContactResource(Resource):
             "items": {
                 "type": "object",
                 "properties": {
-                    "name": {"type": "string"},
-                    "affiliation": {"type": "string"},
-                    "role": {"type": "string"},
-                    "phone": {"type": "string"},
-                    "phone_ext": {"type": "string"},
-                    "email_address": {"type": "string"},
+                    "name": {"type": "string", "minLength": 1},
+                    "affiliation": {"type": "string", "minLength": 1},
+                    "role": {"type": "string", "minLength": 1},
+                    "phone": {"type": "string", "minLength": 1, "maxLength": 30},
+                    "phone_ext": {"type": "string", "minLength": 1},
+                    "email_address": {"type": "string", "format": "email"},
                     "central_contact": {"type": "boolean"},
                 },
                 "required": [
                     "name",
                     "affiliation",
-                    "role",
                     "phone",
-                    "phone_ext",
-                    "email_address",
-                    "central_contact",
+                    "email_address"
                 ],
             },
         }
+
+        format_checker = FormatChecker()
+        format_checker.checks("email")(validate_is_valid_email)
 
         try:
             validate(request.json, schema)
