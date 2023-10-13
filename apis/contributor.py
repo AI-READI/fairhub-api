@@ -1,5 +1,5 @@
 from collections import OrderedDict
-from typing import Any, List, Union
+from typing import Any, List, Union, Dict
 
 from flask import g, request
 from flask_restx import Namespace, Resource, fields
@@ -87,9 +87,7 @@ class ContributorResource(Resource):
             model.StudyContributor.user == g.user, model.StudyContributor.study == study
         ).first()
         # Order should go from the least privileged to the most privileged
-        grants: Union[
-            OrderedDict[str, List[str]]
-        ] = OrderedDict()  # pylint: disable= unsubscriptable-object
+        grants: Dict[str, List[str]] = OrderedDict()
         grants["viewer"] = []
         grants["editor"] = ["viewer"]
         grants["admin"] = ["viewer", "editor", "admin"]
@@ -125,9 +123,7 @@ class ContributorResource(Resource):
         ).first()
         if not granter:
             return "you are not contributor of this study", 403
-        grants: Union[
-            OrderedDict[str, List[str]]
-        ] = OrderedDict()  # pylint: disable= unsubscriptable-object
+        grants: Dict[str, List[str]] = OrderedDict()
         grants["viewer"] = []
         grants["editor"] = []
         grants["admin"] = ["viewer", "editor"]
@@ -137,9 +133,9 @@ class ContributorResource(Resource):
             invited_grantee = model.StudyInvitedContributor.query.filter_by(
                 study_id=study_id, email_address=user_id
             ).first()
-            invited_grants: Union[
-                OrderedDict[str, List[str]]
-            ] = OrderedDict()  # pylint: disable= unsubscriptable-object
+            # invited_grants: Union[OrderedDict
+            # [str, List[str]]] = OrderedDict()
+            invited_grants: Dict[str, List[str]] = OrderedDict()
             invited_grants["viewer"] = []
             invited_grants["editor"] = []
             invited_grants["admin"] = ["viewer", "editor", "admin"]
