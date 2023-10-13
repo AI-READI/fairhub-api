@@ -51,7 +51,20 @@ class StudyStatusResource(Resource):
                 "start_date_type",
             ],
             "properties": {
-                "overall_status": {"type": "string", "minLength": 1},
+                "overall_status": {
+                    "type": "string", 
+                    "minLength": 1,
+                    "enum": [
+                        "Withdrawn",
+                        "Recruiting",
+                        "Active, not recruiting",
+                        "Not yet recruiting",
+                        "Suspended",
+                        "Enrolling by invitation",
+                        "Terminated",
+                        "Completed"
+                    ]
+                },
                 "why_stopped": {"type": "string", "minLength": 1},
                 "start_date": {"type": "string", "minLength": 1},
                 "start_date_type": {
