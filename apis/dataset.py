@@ -115,11 +115,15 @@ class VersionResource(Resource):
     @api.response(400, "Validation Error")
     @api.doc("dataset version")
     @api.marshal_with(dataset_versions_model)
-    def get(self, study_id: int, dataset_id: int, version_id: int):  # pylint: disable= unused-argument
+    def get(
+        self, study_id: int, dataset_id: int, version_id: int
+    ):  # pylint: disable= unused-argument
         dataset_version = model.Version.query.get(version_id)
         return dataset_version.to_dict()
 
-    def put(self, study_id: int, dataset_id: int, version_id: int):   # pylint: disable= unused-argument
+    def put(
+        self, study_id: int, dataset_id: int, version_id: int
+    ):  # pylint: disable= unused-argument
         study = model.Study.query.get(study_id)
         if not is_granted("publish_dataset", study):
             return "Access denied, you can not modify", 403
@@ -128,7 +132,9 @@ class VersionResource(Resource):
         model.db.session.commit()
         return jsonify(data_version_obj.to_dict()), 201
 
-    def delete(self, study_id: int, dataset_id: int, version_id: int):  # pylint: disable= unused-argument
+    def delete(
+        self, study_id: int, dataset_id: int, version_id: int
+    ):  # pylint: disable= unused-argument
         study = model.Study.query.get(study_id)
         if not is_granted("delete_dataset", study):
             return "Access denied, you can not modify", 403

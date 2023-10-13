@@ -107,8 +107,9 @@ def authentication():
 
     if "token" not in request.cookies:
         return
-    token: str = request.cookies.get("token") if (
-        request.cookies.get("token")) else ""  # type: ignore
+    token: str = (
+        request.cookies.get("token") if (request.cookies.get("token")) else ""
+    )  # type: ignore
     try:
         decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
