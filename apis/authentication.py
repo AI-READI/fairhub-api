@@ -1,15 +1,15 @@
-from flask import request, make_response, g
-from flask_restx import Namespace, Resource, fields
-from model import StudyContributor
-from datetime import timezone
 import datetime
-from model import db, User, TokenBlacklist, Study, StudyInvitedContributor
-import jwt
-import config
+from datetime import timezone
 import uuid
 import re
+from flask import request, make_response, g
+from flask_restx import Namespace, Resource, fields
+import jwt
 from jsonschema import validate, ValidationError, FormatChecker
 from email_validator import validate_email, EmailNotValidError
+import config
+from model import StudyContributor
+from model import db, User, TokenBlacklist, Study, StudyInvitedContributor
 
 api = Namespace("Authentication", description="Authentication paths", path="/")
 
@@ -85,7 +85,7 @@ class SignUpUser(Resource):
             "required": ["email_address", "password"],
             "additionalProperties": False,
             "properties": {
-                "email_address": {"type": "string", "format": "valid email"},
+                "email_address": {"type": "string", "format": "valid_email"},
                 "password": {
                     "type": "string",
                     "format": "password",
@@ -94,7 +94,7 @@ class SignUpUser(Resource):
         }
 
         format_checker = FormatChecker()
-        format_checker.checks("valid email")(validate_is_valid_email)
+        format_checker.checks("valid_email")(validate_is_valid_email)
         format_checker.checks("password")(validate_password)
 
         try:
@@ -145,8 +145,12 @@ class Login(Resource):
             "required": ["email_address", "password"],
             "additionalProperties": False,
             "properties": {
-                "email_address": {"type": "string", "format": "valid email", "error_message": "Invalid email address"},
-                "password": {"type": "string"},
+                "email_address": {
+                    "type": "string", 
+                    "format": "valid email", 
+                    "error_message": "Invalid email address"
+                },
+                "password": {"type": "string", "minLength": 8},
             },
         }
 

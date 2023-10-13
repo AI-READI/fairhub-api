@@ -48,8 +48,8 @@ class Studies(Resource):
             "required": ["title", "image"],
             "additionalProperties": False,
             "properties": {
-                "title": {"type": "string"},
-                "image": {"type": "string"},
+                "title": {"type": "string", "minLength": 1},
+                "image": {"type": "string", "minLength": 1},
             },
         }
 
@@ -89,8 +89,8 @@ class StudyResource(Resource):
             "required": ["title", "image"],
             "additionalProperties": False,
             "properties": {
-                "title": {"type": "string"},
-                "image": {"type": "string"},
+                "title": {"type": "string", "minLength": 1},
+                "image": {"type": "string", "minLength": 1},
             },
         }
 

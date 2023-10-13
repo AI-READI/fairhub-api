@@ -1,10 +1,10 @@
 """API routes for study available ipd metadata"""
 from flask_restx import Resource, fields
 from flask import request
+from jsonschema import validate, ValidationError
 from model import Study, db, StudyAvailableIpd
 from apis.study_metadata_namespace import api
 from ..authentication import is_granted
-from jsonschema import validate, ValidationError
 
 
 study_available = api.model(
@@ -62,8 +62,9 @@ class StudyAvailableResource(Resource):
         }
 
         try:
-            validate(request.json, schema)
+            validate(request.json, schema=schema)
         except ValidationError as e:
+            print(e.message)
             return e.message, 400
 
         study = Study.query.get(study_id)

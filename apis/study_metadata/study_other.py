@@ -129,7 +129,7 @@ class StudyOversightResource(Resource):
     def put(self, study_id: int):
         """Update study conditions metadata"""
         # Schema validation
-        schema = {"type": "array", "items": {"type": ["string", "boolean"]}}
+        schema = {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": True, "additionalItems": False}
 
         try:
             validate(request.json, schema)

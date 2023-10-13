@@ -52,10 +52,10 @@ class StudyArmResource(Resource):
             "items": {
                 "type": "object",
                 "properties": {
-                    "label": {"type": "string"},
-                    "type": {"type": "string"},
-                    "description": {"type": "string"},
-                    "intervention_list": {"type": "array", "items": {"type": "string"}},
+                    "label": {"type": "string", "minLength": 1},
+                    "type": {"type": "string", "minLength": 1},
+                    "description": {"type": "string", "minLength": 1},
+                    "intervention_list": {"type": "array", "items": {"type": "string", "minLength": 1}},
                 },
                 "required": ["label", "type", "description", "intervention_list"],
             },

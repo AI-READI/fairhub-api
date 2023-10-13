@@ -1,6 +1,7 @@
 """API routes for study eligibility metadata"""
 from flask_restx import Resource, fields
 from flask import request
+from jsonschema import validate, ValidationError
 from model import Study, db
 from ..authentication import is_granted
 
@@ -46,7 +47,33 @@ class StudyEligibilityResource(Resource):
 
     def put(self, study_id: int):
         """Update study eligibility metadata"""
+        # Schema validation
+        schema = {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "gender": {"type": "string"},
+                "gender_based": {"type": "string"},
+                "gender_description": {"type": "string"},
+                "minimum_age_value": {"type": "integer"},
+                "maximum_age_value": {"type": "integer"},
+                "minimum_age_unit": {"type": "string"},
+                "maximum_age_unit": {"type": "string"},
+                "healthy_volunteers": {"type": "string"},
+                "inclusion_criteria": {"type": "array", "items": {"type": "string"}},
+                "exclusion_criteria": {"type": "array", "items": {"type": "string"}},
+                "study_population": {"type": "string"},
+                "sampling_method": {"type": "string"},
+            },
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+
         study_ = Study.query.get(study_id)
+        # Check user permissions
         if not is_granted("study_metadata", study_):
             return "Access denied, you can not delete study", 403
         study_.study_eligibility.update(request.json)

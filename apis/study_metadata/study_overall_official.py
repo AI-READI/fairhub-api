@@ -1,6 +1,7 @@
 """API routes for study overall official metadata"""
 from flask_restx import Resource, fields
 from flask import request
+from jsonschema import validate, ValidationError
 from model import Study, db, StudyOverallOfficial
 
 
@@ -46,6 +47,26 @@ class StudyOverallOfficialResource(Resource):
     @api.response(400, "Validation Error")
     def post(self, study_id: int):
         """Create study overall official metadata"""
+        # Schema validation
+        schema = {
+            "type": "array",
+            "additionalProperties": False,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "name": {"type": "string"},
+                    "affiliation": {"type": "string"},
+                    "role": {"type": "string"},
+                },
+                "required": ["name", "affiliation", "role"],
+            }
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+
         data = request.json
         study_obj = Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):

@@ -60,11 +60,11 @@ class StudySponsorsResource(Resource):
                 "lead_sponsor_name",
             ],
             "properties": {
-                "responsible_party_type": {"type": "string"},
-                "responsible_party_investigator_name": {"type": "string"},
-                "responsible_party_investigator_title": {"type": "string"},
-                "responsible_party_investigator_affiliation": {"type": "string"},
-                "lead_sponsor_name": {"type": "string"},
+                "responsible_party_type": {"type": "string", "minLength": 1},
+                "responsible_party_investigator_name": {"type": "string", "minLength": 1},
+                "responsible_party_investigator_title": {"type": "string", "minLength": 1},
+                "responsible_party_investigator_affiliation": {"type": "string", "minLength": 1},
+                "lead_sponsor_name": {"type": "string", "minLength": 1},
             }
         }
 

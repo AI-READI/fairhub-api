@@ -72,14 +72,14 @@ class UserDetailsEndpoint(Resource):
             "additionalProperties": False,
             "properties": {
                 "email_address": {"type": "string", "format": "valid email"},
-                "username": {"type": "string"},
-                "first_name": {"type": "string"},
-                "last_name": {"type": "string"},
-                "institution": {"type": "string"},
-                "orcid": {"type": "string"},
-                "location": {"type": "string"},
-                "timezone": {"type": "string"},
-                "profile_image": {"type": "string"},
+                "username": {"type": "string", "minLength": 1},
+                "first_name": {"type": "string", "minLength": 1},
+                "last_name": {"type": "string", "minLength": 1},
+                "institution": {"type": "string", "minLength": 1},
+                "orcid": {"type": "string", "minLength": 1},
+                "location": {"type": "string", "minLength": 1},
+                "timezone": {"type": "string", "minLength": 1},
+                "profile_image": {"type": "string", "minLength": 1},
             },
         }
 
