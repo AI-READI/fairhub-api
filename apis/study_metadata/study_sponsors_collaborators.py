@@ -53,14 +53,18 @@ class StudySponsorsResource(Resource):
             "type": "object",
             "additionalProperties": False,
             "required": [
-                "responsible_party_type",
-                "responsible_party_investigator_name",
-                "responsible_party_investigator_title",
-                "responsible_party_investigator_affiliation",
-                "lead_sponsor_name",
+                "responsible_party_type"
             ],
             "properties": {
-                "responsible_party_type": {"type": "string", "minLength": 1},
+                "responsible_party_type": {
+                    "type": "string", 
+                    "minLength": 1,
+                    "enum": [
+                        "Sponsor",
+                        "Principal Investigator",
+                        "Sponsor-Investigator"
+                    ]
+                },
                 "responsible_party_investigator_name": {
                     "type": "string",
                     "minLength": 1,
