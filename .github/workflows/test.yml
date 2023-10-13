@@ -18,13 +18,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Crate a database for tests with docker
-        run: docker run -d \
-          -n postgres \
-          -p 5432:5432 \
-          -e POSTGRES_USER=admin \
-          -e POSTGRES_PASSWORD=root \
-          -e POSTGRES_DB=fairhub_local \
-          postgres
+        run: docker run --name postgres -p 5432:5432 -e POSTGRES_USER=admin -e POSTGRES_PASSWORD=root -e POSTGRES_DB=fairhub_local -d postgres:latest
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
