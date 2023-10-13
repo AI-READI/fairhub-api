@@ -45,30 +45,47 @@ class StudyIpdsharingResource(Resource):
             "type": "object",
             "additionalProperties": False,
             "properties": {
-                "ipd_sharing": {"type": "string"},
-                "ipd_sharing_description": {"type": "string"},
+                "ipd_sharing": {"type": "string", "enum": ["Yes", "No", "Undecided"]},
+                "ipd_sharing_description": {"type": "string", "minLength": 1},
                 "ipd_sharing_info_type_list": {
                     "type": "array",
-                    "items": {"type": "string"},
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Study Protocol",
+                            "Statistical Analysis Plan (SAP)",
+                            "Informed Consent Form (ICF)",
+                            "Clinical Study Report (CSR)",
+                            "Analytical Code",
+                        ],
+                    },
+                    "minItems": 1,
+                    "uniqueItems": True,
                 },
-                "ipd_sharing_time_frame": {"type": "string"},
-                "ipd_sharing_access_criteria": {"type": "string"},
-                "ipd_sharing_url": {"type": "string"},
+                "ipd_sharing_time_frame": {"type": "string", "minLength": 1},
+                "ipd_sharing_access_criteria": {"type": "string", "minLength": 1},
+                "ipd_sharing_url": {"type": "string", "format": "uri", "minLength": 1},
             },
-            "required": [
-                "ipd_sharing",
-                "ipd_sharing_description",
-                "ipd_sharing_info_type_list",
-                "ipd_sharing_time_frame",
-                "ipd_sharing_access_criteria",
-                "ipd_sharing_url",
-            ],
         }
 
         try:
             validate(request.json, schema)
         except ValidationError as e:
             return e.message, 400
+
+        data = request.json
+        if data["ipd_sharing"] == "Yes":
+            required_fields = [
+                "ipd_sharing_description",
+                "ipd_sharing_info_type_list",
+                "ipd_sharing_time_frame",
+                "ipd_sharing_access_criteria",
+                "ipd_sharing_url"
+            ]
+
+            for field in required_fields:
+                if field not in data:
+                    return f"Field {field} is required", 400
 
         study_ = Study.query.get(study_id)
         if not is_granted("study_metadata", study_):
