@@ -47,7 +47,10 @@ class StudyIpdsharingResource(Resource):
             "properties": {
                 "ipd_sharing": {"type": "string"},
                 "ipd_sharing_description": {"type": "string"},
-                "ipd_sharing_info_type_list": {"type": "array", "items": {"type": "string"}},
+                "ipd_sharing_info_type_list": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                },
                 "ipd_sharing_time_frame": {"type": "string"},
                 "ipd_sharing_access_criteria": {"type": "string"},
                 "ipd_sharing_url": {"type": "string"},

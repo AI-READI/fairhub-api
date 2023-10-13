@@ -59,7 +59,7 @@ class StudyOverallOfficialResource(Resource):
                     "role": {"type": "string"},
                 },
                 "required": ["name", "affiliation", "role"],
-            }
+            },
         }
 
         try:

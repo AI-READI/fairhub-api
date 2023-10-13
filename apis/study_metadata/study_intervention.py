@@ -55,10 +55,19 @@ class StudyInterventionResource(Resource):
                     "type": {"type": "string"},
                     "name": {"type": "string"},
                     "description": {"type": "string"},
-                    "arm_group_label_list": {"type": "array", "items": {"type": "string"}},
+                    "arm_group_label_list": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
                     "other_name_list": {"type": "array", "items": {"type": "string"}},
                 },
-                "required": ["type", "name", "description", "arm_group_label_list", "other_name_list"],
+                "required": [
+                    "type",
+                    "name",
+                    "description",
+                    "arm_group_label_list",
+                    "other_name_list",
+                ],
             },
         }
 

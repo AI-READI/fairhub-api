@@ -57,7 +57,7 @@ class StudyReferenceResource(Resource):
                     "citation": {"type": "string"},
                 },
                 "required": ["identifier", "type", "citation"],
-            }
+            },
         }
 
         try:

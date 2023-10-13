@@ -54,9 +54,17 @@ class StudyStatusResource(Resource):
                 "overall_status": {"type": "string", "minLength": 1},
                 "why_stopped": {"type": "string", "minLength": 1},
                 "start_date": {"type": "string", "minLength": 1},
-                "start_date_type": {"type": "string", "minLength": 1, "enum": ["Actual", "Anticipated"]},
+                "start_date_type": {
+                    "type": "string",
+                    "minLength": 1,
+                    "enum": ["Actual", "Anticipated"],
+                },
                 "completion_date": {"type": "string", "minLength": 1},
-                "completion_date_type": {"type": "string", "minLength": 1, "enum": ["Actual", "Anticipated"]},
+                "completion_date_type": {
+                    "type": "string",
+                    "minLength": 1,
+                    "enum": ["Actual", "Anticipated"],
+                },
             },
         }
 

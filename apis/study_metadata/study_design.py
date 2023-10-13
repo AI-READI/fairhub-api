@@ -86,9 +86,12 @@ class StudyDesignResource(Resource):
                                 "Device Feasibility",
                             ]
                         }
-                    ]
+                    ],
                 },
-                "design_intervention_model_description": {"type": "string", "minLength": 1},
+                "design_intervention_model_description": {
+                    "type": "string",
+                    "minLength": 1,
+                },
                 "design_primary_purpose": {
                     "type": "string",
                     "oneOf": [
@@ -104,44 +107,43 @@ class StudyDesignResource(Resource):
                     ],
                 },
                 "design_masking": {
-                    "type": "string", 
+                    "type": "string",
                     "oneOf": [
                         {
                             "enum": [
                                 "None (open label)",
-                                "Blinded (no details)"
-                                "Single",
+                                "Blinded (no details)" "Single",
                                 "Double",
                                 "Triple",
                                 "Quadruple",
-                                "N/A"
+                                "N/A",
                             ]
                         }
-                    ]
+                    ],
                 },
                 "design_masking_description": {"type": "string", "minLength": 1},
                 "design_who_masked_list": {
-                    "type": "array", 
+                    "type": "array",
                     "items": {
                         "type": "string",
                         "oneOf": [
-                            { 
+                            {
                                 "enum": [
-                                    "Participant", 
-                                    "Care Provider", 
-                                    "Investigator", 
-                                    "Outcomes Assessor"
+                                    "Participant",
+                                    "Care Provider",
+                                    "Investigator",
+                                    "Outcomes Assessor",
                                 ]
                             },
-                        ]
+                        ],
                     },
                     "minItems": 1,
                     "uniqueItems": True,
                 },
                 "phase_list": {
-                    "type": "array", 
+                    "type": "array",
                     "items": {
-                        "type": "string", 
+                        "type": "string",
                         "oneOf": [
                             {
                                 "enum": [
@@ -166,7 +168,7 @@ class StudyDesignResource(Resource):
                 "design_observational_model_list": {
                     "type": "array",
                     "items": {
-                        "type": "string", 
+                        "type": "string",
                         "oneOf": [
                             {
                                 "enum": [
@@ -179,7 +181,7 @@ class StudyDesignResource(Resource):
                                     "Other",
                                 ]
                             }
-                        ]
+                        ],
                     },
                     "minItems": 1,
                     "uniqueItems": True,
@@ -197,7 +199,7 @@ class StudyDesignResource(Resource):
                                     "Other",
                                 ]
                             }
-                        ]
+                        ],
                     },
                     "minItems": 1,
                     "uniqueItems": True,
@@ -212,7 +214,7 @@ class StudyDesignResource(Resource):
                                 "Samples Without DNA",
                             ]
                         }
-                    ]
+                    ],
                 },
                 "bio_spec_description": {"type": "string", "minLength": 1},
                 "target_duration": {"type": "string", "minLength": 1},
@@ -224,7 +226,7 @@ class StudyDesignResource(Resource):
             validate(request.json, schema)
         except ValidationError as e:
             return e.message, 400
-        
+
         # If schema validation passes, check other cases of validation
         data = request.json
         if data["study_type"] == "Interventional":
@@ -241,9 +243,12 @@ class StudyDesignResource(Resource):
 
             for field in required_fields:
                 if field not in data:
-                    return ValidationError(
-                        f"Field {field} is required for interventional studies"
-                        ), 400
+                    return (
+                        ValidationError(
+                            f"Field {field} is required for interventional studies"
+                        ),
+                        400,
+                    )
 
         if data["study_type"] == "Observational":
             required_fields = [
@@ -259,9 +264,12 @@ class StudyDesignResource(Resource):
 
             for field in required_fields:
                 if field not in data:
-                    return ValidationError(
-                        f"Field {field} is required for observational studies"
-                        ), 400
+                    return (
+                        ValidationError(
+                            f"Field {field} is required for observational studies"
+                        ),
+                        400,
+                    )
 
         study = Study.query.get(study_id)
         # Check user permissions

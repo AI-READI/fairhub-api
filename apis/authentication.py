@@ -60,14 +60,18 @@ class SignUpUser(Resource):
             # Check if password is at least 8 characters long
             if len(password) < 8:
                 raise ValidationError("Password must be at least 8 characters long")
-            
+
             # Check if password contains at least one lowercase letter
             if not re.search("[a-z]", password):
-                raise ValidationError("Password must contain at least one lowercase letter")
+                raise ValidationError(
+                    "Password must contain at least one lowercase letter"
+                )
 
             # Check if password contains at least one uppercase letter
             if not re.search("[A-Z]", password):
-                raise ValidationError("Password must contain at least one uppercase letter")
+                raise ValidationError(
+                    "Password must contain at least one uppercase letter"
+                )
 
             # Check if password contains at least one digit
             if not re.search("[0-9]", password):
@@ -75,7 +79,9 @@ class SignUpUser(Resource):
 
             # Check if password contains at least one special character
             if not re.search("[~`!@#$%^&*()_\-+={[}\]|:;\"'<,>.?/]", password):
-                raise ValidationError("Password must contain at least one special character")
+                raise ValidationError(
+                    "Password must contain at least one special character"
+                )
 
             return True
 
@@ -89,8 +95,8 @@ class SignUpUser(Resource):
                 "password": {
                     "type": "string",
                     "format": "password",
-                    }
-                }
+                },
+            },
         }
 
         format_checker = FormatChecker()
@@ -146,9 +152,9 @@ class Login(Resource):
             "additionalProperties": False,
             "properties": {
                 "email_address": {
-                    "type": "string", 
-                    "format": "valid email", 
-                    "error_message": "Invalid email address"
+                    "type": "string",
+                    "format": "valid email",
+                    "error_message": "Invalid email address",
                 },
                 "password": {"type": "string", "minLength": 8},
             },
