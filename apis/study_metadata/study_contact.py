@@ -58,29 +58,42 @@ class StudyContactResource(Resource):
             "additionalProperties": False,
             "items": {
                 "type": "object",
-                "properties": {
-                    "name": {"type": "string", "minLength": 1},
-                    "affiliation": {"type": "string", "minLength": 1},
-                    "role": {"type": "string", "minLength": 1},
-                    "phone": {"type": "string", "minLength": 1, "maxLength": 30},
-                    "phone_ext": {"type": "string", "minLength": 1},
-                    "email_address": {"type": "string", "format": "email"},
-                    "central_contact": {"type": "boolean"},
-                },
+                "additionalProperties": False,
                 "required": [
                     "name",
                     "affiliation",
                     "phone",
+                    "phone_ext",
                     "email_address"
                 ],
+                "properties": {
+                    "name": {"type": "string", "minLength": 1},
+                    "affiliation": {"type": "string", "minLength": 1},
+                    "role": {"type": "string", "minLength": 1},
+                    "phone": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 30,
+                        "pattern": "^[0-9-]+$",
+                    },
+                    "phone_ext": {
+                        "type": "string", 
+                        "minLength": 1, 
+                        "pattern": "^[0-9-]+$", 
+                        "errorMessage": "Invalid phone extension"
+                    },
+                    "email_address": {"type": "string", "format": "email"},
+                    "central_contact": {"type": "boolean"},
+                },
             },
+            "minItems": 1,
         }
 
         format_checker = FormatChecker()
         format_checker.checks("email")(validate_is_valid_email)
 
         try:
-            validate(request.json, schema)
+            validate(instance=request.json, schema=schema, format_checker=format_checker)
         except ValidationError as e:
             return e.message, 400
 
