@@ -2,11 +2,11 @@ from typing import Any, Union
 
 from flask import g, request
 from flask_restx import Namespace, Resource, fields, reqparse
+from jsonschema import ValidationError, validate
 
 import model
 
 from .authentication import is_granted
-from jsonschema import validate, ValidationError
 
 api = Namespace("Study", description="Study operations", path="/")
 

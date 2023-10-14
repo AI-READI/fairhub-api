@@ -9,10 +9,10 @@ from datetime import timezone
 from typing import Any, Union
 
 import jwt
-from jsonschema import validate, ValidationError, FormatChecker
-from email_validator import validate_email, EmailNotValidError
+from email_validator import EmailNotValidError, validate_email
 from flask import g, make_response, request
 from flask_restx import Namespace, Resource, fields
+from jsonschema import FormatChecker, ValidationError, validate
 
 import model
 

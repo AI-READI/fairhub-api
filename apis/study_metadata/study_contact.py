@@ -1,10 +1,11 @@
 """API routes for study contact metadata"""
 import typing
 
+from email_validator import EmailNotValidError, validate_email
 from flask import request
 from flask_restx import Resource, fields
-from jsonschema import validate, ValidationError, FormatChecker
-from email_validator import validate_email, EmailNotValidError
+from jsonschema import FormatChecker, ValidationError, validate
+
 import model
 from apis.study_metadata_namespace import api
 

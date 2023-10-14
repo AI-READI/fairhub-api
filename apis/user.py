@@ -1,9 +1,9 @@
 from typing import Any, Union
 
+from email_validator import EmailNotValidError, validate_email
 from flask import g, request
 from flask_restx import Namespace, Resource, fields
-from jsonschema import validate, ValidationError, FormatChecker
-from email_validator import validate_email, EmailNotValidError
+from jsonschema import FormatChecker, ValidationError, validate
 
 import model
 
