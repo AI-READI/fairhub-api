@@ -1,14 +1,16 @@
+import datetime
 import uuid
 from datetime import timezone
+
 from sqlalchemy.sql.expression import true
-import datetime
 
 import model
 
 from .db import db
+from .study import Study
 
 
-class Dataset(db.Model):
+class Dataset(db.Model):  # type: ignore
     def __init__(self, study):
         self.study = study
         self.id = str(uuid.uuid4())
@@ -104,15 +106,17 @@ class Dataset(db.Model):
         )
 
     def last_modified(self):
-        return self.dataset_versions.order_by(model.Version.updated_on.desc()).first()
+        return self.dataset_versions.order_by(
+            model.Version.updated_on.desc()
+        ).first()  # type: ignore
 
     @staticmethod
-    def from_data(study, data: dict):
+    def from_data(study: Study):
         dataset_obj = Dataset(study)
-        dataset_obj.update(data)
+        dataset_obj.update()
         return dataset_obj
 
-    def update(self, data: dict):
+    def update(self):
         """Creates a new dataset from a dictionary"""
         self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
         # self.dataset_versions = data["dataset_versions"]

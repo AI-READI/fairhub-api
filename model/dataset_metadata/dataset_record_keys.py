@@ -1,8 +1,9 @@
 import uuid
+
 from ..db import db
 
 
-class DatasetRecordKeys(db.Model):
+class DatasetRecordKeys(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
@@ -28,6 +29,6 @@ class DatasetRecordKeys(db.Model):
         dataset_record_keys.update(data)
         return dataset_record_keys
 
-    def update(self, data):
+    def update(self, data: dict):
         self.key_type = data["key_type"]
         self.key_details = data["key_details"]

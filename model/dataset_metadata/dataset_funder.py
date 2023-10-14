@@ -1,8 +1,9 @@
 import uuid
+
 from ..db import db
 
 
-class DatasetFunder(db.Model):
+class DatasetFunder(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
@@ -38,7 +39,7 @@ class DatasetFunder(db.Model):
         dataset_funder.update(data)
         return dataset_funder
 
-    def update(self, data):
+    def update(self, data: dict):
         self.name = data["name"]
         self.identifier = data["identifier"]
         self.identifier_type = data["identifier_type"]

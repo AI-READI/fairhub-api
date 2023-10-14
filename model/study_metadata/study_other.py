@@ -1,11 +1,14 @@
 import uuid
+
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
+
+from model import Study
 
 from ..db import db
 
 
-class StudyOther(db.Model):
+class StudyOther(db.Model):  # type: ignore
     """A study is a collection of datasets and participants"""
 
     def __init__(self, study):
@@ -40,14 +43,14 @@ class StudyOther(db.Model):
         }
 
     @staticmethod
-    def from_data(study, data: dict):
+    def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""
         study_other = StudyOther(study)
         study_other.update(data)
 
         return study_other
 
-    def update(self, data):
+    def update(self, data: dict):
         """Updates the study from a dictionary"""
         self.oversight_has_dmc = data["oversight_has_dmc"]
         self.conditions = data["conditions"]
@@ -57,5 +60,5 @@ class StudyOther(db.Model):
 
     def validate(self):
         """Validates the study"""
-        violations = []
+        violations: list = []
         return violations

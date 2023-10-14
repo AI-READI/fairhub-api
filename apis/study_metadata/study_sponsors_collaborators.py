@@ -1,13 +1,14 @@
 """API routes for study sponsors and collaborators metadata"""
-from flask_restx import Resource, fields
+import typing
+
 from flask import request
+from flask_restx import Resource, fields
 from jsonschema import validate, ValidationError
-from model import Study, db
-from ..authentication import is_granted
 
-
+import model
 from apis.study_metadata_namespace import api
 
+from ..authentication import is_granted
 
 study_sponsors = api.model(
     "StudySponsors",
@@ -40,7 +41,7 @@ class StudySponsorsResource(Resource):
     @api.marshal_with(study_sponsors)
     def get(self, study_id: int):
         """Get study sponsors metadata"""
-        study_ = Study.query.get(study_id)
+        study_ = model.Study.query.get(study_id)
 
         study_sponsors_collaborators_ = study_.study_sponsors_collaborators
 
@@ -86,11 +87,11 @@ class StudySponsorsResource(Resource):
         except ValidationError as e:
             return e.message, 400
 
-        study_ = Study.query.get(study_id)
+        study_ = model.Study.query.get(study_id)
 
         study_.study_sponsors_collaborators.update(request.json)
 
-        db.session.commit()
+        model.db.session.commit()
 
         return study_.study_sponsors_collaborators.to_dict()
 
@@ -105,7 +106,7 @@ class StudyCollaboratorsResource(Resource):
     # @api.marshal_with(study_collaborators)
     def get(self, study_id: int):
         """Get study collaborators metadata"""
-        study_ = Study.query.get(study_id)
+        study_ = model.Study.query.get(study_id)
 
         study_collaborators_ = study_.study_sponsors_collaborators.collaborator_name
 
@@ -126,11 +127,11 @@ class StudyCollaboratorsResource(Resource):
         except ValidationError as e:
             return e.message, 400
 
-        data = request.json
-        study_obj = Study.query.get(study_id)
+        data: typing.Union[dict, typing.Any] = request.json
+        study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403
         study_obj.study_sponsors_collaborators.collaborator_name = data
         study_obj.touch()
-        db.session.commit()
+        model.db.session.commit()
         return study_obj.study_sponsors_collaborators.collaborator_name

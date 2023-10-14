@@ -1,11 +1,12 @@
 from collections import OrderedDict
+from typing import Any, Dict, List, Union
 
-import model
+from flask import g, request
 from flask_restx import Namespace, Resource, fields
-from flask import request, g
-import model
-from .authentication import is_granted
 
+import model
+
+from .authentication import is_granted
 
 api = Namespace("Contributor", description="Contributors", path="/")
 
@@ -42,7 +43,7 @@ class AddContributor(Resource):
         study_obj = model.Study.query.get(study_id)
         if not is_granted("invite_contributor", study_obj):
             return "Access denied, you can not modify", 403
-        data = request.json
+        data: Union[dict, Any] = request.json
         email_address = data["email_address"]
         user = model.User.query.filter_by(email_address=email_address).first()
         permission = data["role"]
@@ -74,21 +75,19 @@ class ContributorResource(Resource):
                 "Access denied, you are not authorized to change this permission",
                 403,
             )
-        data = request.json
+        data: Union[Any, dict] = request.json
         user = model.User.query.get(user_id)
         if not user:
             return "user not found", 404
-        permission = data["role"]
+        permission: Union[Any, str] = data["role"]
         grantee = model.StudyContributor.query.filter(
             model.StudyContributor.user == user, model.StudyContributor.study == study
         ).first()
-
         granter = model.StudyContributor.query.filter(
             model.StudyContributor.user == g.user, model.StudyContributor.study == study
         ).first()
-
         # Order should go from the least privileged to the most privileged
-        grants = OrderedDict()
+        grants: Dict[str, List[str]] = OrderedDict()
         grants["viewer"] = []
         grants["editor"] = ["viewer"]
         grants["admin"] = ["viewer", "editor", "admin"]
@@ -98,11 +97,10 @@ class ContributorResource(Resource):
         if not can_grant:
             return f"User cannot grant {permission}", 403
 
-        # Granter can not downgrade anyone of equal or greater permissions other than themselves
         # TODO: Owners downgrading themselves
         if user != g.user:
             grantee_level = list(grants.keys()).index(grantee.permission)  # 1
-            new_level = list(grants.keys()).index(permission)  #  2
+            new_level: int = list(grants.keys()).index(str(permission))  # 2
             granter_level = list(grants.keys()).index(granter.permission)  # 2
             if granter_level <= grantee_level and new_level <= grantee_level:
                 return (
@@ -110,7 +108,7 @@ class ContributorResource(Resource):
                     403,
                 )
         grantee.permission = permission
-        db.session.commit()
+        model.db.session.commit()
         return grantee.to_dict(), 200
 
     @api.doc("contributor delete")
@@ -125,7 +123,7 @@ class ContributorResource(Resource):
         ).first()
         if not granter:
             return "you are not contributor of this study", 403
-        grants = OrderedDict()
+        grants: Dict[str, List[str]] = OrderedDict()
         grants["viewer"] = []
         grants["editor"] = []
         grants["admin"] = ["viewer", "editor"]
@@ -135,22 +133,40 @@ class ContributorResource(Resource):
             invited_grantee = model.StudyInvitedContributor.query.filter_by(
                 study_id=study_id, email_address=user_id
             ).first()
-            can_delete = invited_grantee.permission in grants[granter.permission]
+            # invited_grants: Union[OrderedDict
+            # [str, List[str]]] = OrderedDict()
+            invited_grants: Dict[str, List[str]] = OrderedDict()
+            invited_grants["viewer"] = []
+            invited_grants["editor"] = []
+            invited_grants["admin"] = ["viewer", "editor", "admin"]
+            invited_grants["owner"] = ["editor", "viewer", "admin"]
+
+            can_delete = (
+                invited_grantee.permission in invited_grants[granter.permission]
+            )
+
             if not can_delete:
                 return f"User cannot delete {invited_grantee.permission}", 403
+
             model.db.session.delete(invited_grantee)
+
             model.db.session.commit()
+
             return 204
+
         user = model.User.query.get(user_id)
+
         if not user:
             return "user is not found", 404
+
         contributors = model.StudyContributor.query.filter(
             model.StudyContributor.study == study
         ).all()
-        print(len(contributors), "")
+
         grantee = model.StudyContributor.query.filter(
             model.StudyContributor.user == user, model.StudyContributor.study == study
         ).first()
+
         if len(contributors) <= 1:
             return "the study must have at least one contributor", 422
         if grantee.user == granter.user:

@@ -1,13 +1,12 @@
 """API routes for study ipdsharing metadata"""
-from flask_restx import Resource, fields
 from flask import request
+from flask_restx import Resource, fields
 from jsonschema import validate, ValidationError
-from model import Study, db
-from ..authentication import is_granted
 
-
+import model
 from apis.study_metadata_namespace import api
 
+from ..authentication import is_granted
 
 study_ipdsharing = api.model(
     "StudyIpdsharing",
@@ -34,7 +33,7 @@ class StudyIpdsharingResource(Resource):
     @api.marshal_with(study_ipdsharing)
     def get(self, study_id: int):
         """Get study ipdsharing metadata"""
-        study_ = Study.query.get(study_id)
+        study_ = model.Study.query.get(study_id)
 
         return study_.study_ipdsharing.to_dict()
 
@@ -87,9 +86,9 @@ class StudyIpdsharingResource(Resource):
                 if field not in data:
                     return f"Field {field} is required", 400
 
-        study_ = Study.query.get(study_id)
+        study_ = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_):
             return "Access denied, you can not delete study", 403
         study_.study_ipdsharing.update(request.json)
-        db.session.commit()
+        model.db.session.commit()
         return study_.study_ipdsharing.to_dict()

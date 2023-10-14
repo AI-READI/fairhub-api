@@ -25,7 +25,7 @@ class Identifiers:
                     if not identifier.secondary
                 ]
             )
-            != 0
+            != 0  # noqa: W503
             else [],
             "secondary": [
                 identifier.to_dict()

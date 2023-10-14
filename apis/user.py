@@ -1,9 +1,11 @@
-from flask import request, g
+from typing import Any, Union
+
+from flask import g, request
 from flask_restx import Namespace, Resource, fields
 from jsonschema import validate, ValidationError, FormatChecker
 from email_validator import validate_email, EmailNotValidError
 
-from model import User, db
+import model
 
 api = Namespace("User", description="User tables", path="/")
 
@@ -27,13 +29,14 @@ study_model = api.model(
 @api.route("/user/profile")
 class UserDetailsEndpoint(Resource):
     @api.doc(
-        description="Returns user details gathered from the user and user_details tables"
+        description="Returns user details gathered from the"
+        " user and user_details tables"
     )
     @api.response(200, "Success", study_model)
     @api.response(400, "Validation Error")
     def get(self):
         """Returns user details"""
-        user = User.query.get(g.user.id)
+        user = model.User.query.get(g.user.id)
         user_details = user.user_details
         user_information = user.to_dict()
         # combine user and user_details to return a single object
@@ -44,8 +47,6 @@ class UserDetailsEndpoint(Resource):
     @api.marshal_with(study_model)
     def put(self):
         """Updates user details"""
-        data = request.json
-
         def validate_is_valid_email(instance):
             print("within is_valid_email")
             email_address = instance
@@ -96,11 +97,12 @@ class UserDetailsEndpoint(Resource):
             # not being sent back
             return e.message, 400
 
-        user = User.query.get(g.user.id)
+        data: Union[Any, dict] = request.json
+        user = model.User.query.get(g.user.id)
         # user.update(data) # don't update the username and email_address for now
         user_details = user.user_details
         user_details.update(data)
-        db.session.commit()
+        model.db.session.commit()
 
         # combine user and user_details to return a single object
         user_information = user.to_dict()

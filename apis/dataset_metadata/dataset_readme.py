@@ -1,8 +1,7 @@
-from model import Dataset, db, DatasetReadme
 from flask import request
+from flask_restx import Resource, fields
 
-from flask_restx import Namespace, Resource, fields
-
+import model
 from apis.dataset_metadata_namespace import api
 
 dataset_readme = api.model(
@@ -18,13 +17,13 @@ class DatasetReadmeResource(Resource):
     @api.response(400, "Validation Error")
     @api.marshal_with(dataset_readme)
     def get(self, study_id: int, dataset_id: int):
-        dataset_ = Dataset.query.get(dataset_id)
+        dataset_ = model.Dataset.query.get(dataset_id)
         dataset_readme_ = dataset_.dataset_readme
         return [d.to_dict() for d in dataset_readme_]
 
     def put(self, study_id: int, dataset_id: int):
         data = request.json
-        dataset_ = Dataset.query.get(dataset_id)
+        dataset_ = model.Dataset.query.get(dataset_id)
         dataset_readme_ = dataset_.dataset_readme.update(data)
-        db.session.commit()
+        model.db.session.commit()
         return dataset_readme_.to_dict()

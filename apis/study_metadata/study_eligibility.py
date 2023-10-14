@@ -1,13 +1,12 @@
 """API routes for study eligibility metadata"""
-from flask_restx import Resource, fields
 from flask import request
+from flask_restx import Resource, fields
 from jsonschema import validate, ValidationError
-from model import Study, db
-from ..authentication import is_granted
 
-
+import model
 from apis.study_metadata_namespace import api
 
+from ..authentication import is_granted
 
 study_eligibility = api.model(
     "StudyEligibility",
@@ -41,7 +40,7 @@ class StudyEligibilityResource(Resource):
     @api.marshal_with(study_eligibility)
     def get(self, study_id: int):
         """Get study eligibility metadata"""
-        study_ = Study.query.get(study_id)
+        study_ = model.Study.query.get(study_id)
 
         return study_.study_eligibility.to_dict()
 
@@ -87,13 +86,13 @@ class StudyEligibilityResource(Resource):
         except ValidationError as e:
             return e.message, 400
 
-        study_ = Study.query.get(study_id)
+        study_ = model.Study.query.get(study_id)
         # Check user permissions
         if not is_granted("study_metadata", study_):
             return "Access denied, you can not delete study", 403
         study_.study_eligibility.update(request.json)
 
-        db.session.commit()
+        model.db.session.commit()
 
         return study_.study_eligibility.to_dict()
 

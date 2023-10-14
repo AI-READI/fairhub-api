@@ -1,15 +1,18 @@
-from datetime import datetime
-from datetime import timezone
 import datetime
+
 from .db import db
+from .study import Study
+from .user import User
+
+# from datetime import datetime, timezone
 
 
-class StudyContributor(db.Model):
-    def __init__(self, study, user, permission):
+class StudyContributor(db.Model):  # type: ignore
+    def __init__(self, study: Study, user: User, permission):
         self.study = study
         self.user = user
         self.permission = permission
-        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
+        self.created_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
 
     __tablename__ = "study_contributor"
     permission = db.Column(db.String, nullable=False)
@@ -37,7 +40,7 @@ class StudyContributor(db.Model):
         }
 
     @staticmethod
-    def from_data(study, user, permission):
+    def from_data(study: Study, user: User, permission):
         contributor = StudyContributor(study, user, permission)
         return contributor
 

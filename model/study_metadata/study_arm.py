@@ -1,13 +1,16 @@
+import datetime
 import uuid
+from datetime import timezone
+
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 
+import model
+
 from ..db import db
-from datetime import timezone
-import datetime
 
 
-class StudyArm(db.Model):
+class StudyArm(db.Model):  # type: ignore
     """A study is a collection of datasets and participants"""
 
     def __init__(self, study):
@@ -41,13 +44,13 @@ class StudyArm(db.Model):
         }
 
     @staticmethod
-    def from_data(study, data):
+    def from_data(study: model.Study, data: dict):
         """Creates a new study from a dictionary"""
         study_arm = StudyArm(study)
         study_arm.update(data)
         return study_arm
 
-    def update(self, data):
+    def update(self, data: dict):
         """Updates the study from a dictionary"""
         self.label = data["label"]
         self.type = data["type"]
@@ -57,5 +60,5 @@ class StudyArm(db.Model):
 
     def validate(self):
         """Validates the study"""
-        violations = []
+        violations: list = []
         return violations

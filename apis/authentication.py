@@ -1,15 +1,20 @@
 import datetime
-from datetime import timezone
-import uuid
+import importlib
+import os
 import re
-from flask import request, make_response, g
-from flask_restx import Namespace, Resource, fields
+
+# import config
+import uuid
+from datetime import timezone
+from typing import Any, Union
+
 import jwt
 from jsonschema import validate, ValidationError, FormatChecker
 from email_validator import validate_email, EmailNotValidError
-import config
-from model import StudyContributor
-from model import db, User, TokenBlacklist, Study, StudyInvitedContributor
+from flask import g, make_response, request
+from flask_restx import Namespace, Resource, fields
+
+import model
 
 api = Namespace("Authentication", description="Authentication paths", path="/")
 
@@ -42,7 +47,7 @@ class SignUpUser(Resource):
     @api.expect(signup_model)
     def post(self):
         """signs up the new users and saves data in DB"""
-        data = request.json
+        data: Union[Any, dict] = request.json
 
         def validate_is_valid_email(instance):
             # Turn on check_deliverability
@@ -108,18 +113,18 @@ class SignUpUser(Resource):
         except ValidationError as e:
             return e.message, 400
 
-        user = User.query.filter_by(email_address=data["email_address"]).one_or_none()
+        user = model.User.query.filter_by(email_address=data["email_address"]).one_or_none()
         if user:
             return "This email address is already in use", 409
-        invitations = StudyInvitedContributor.query.filter_by(
+        invitations = model.StudyInvitedContributor.query.filter_by(
             email_address=data["email_address"]
         ).all()
-        new_user = User.from_data(data)
+        new_user = model.User.from_data(data)
         for invite in invitations:
             invite.study.add_user_to_study(new_user, invite.permission)
-            db.session.delete(invite)
-        db.session.add(new_user)
-        db.session.commit()
+            model.db.session.delete(invite)
+        model.db.session.add(new_user)
+        model.db.session.commit()
         return f"Hi, {new_user.email_address}, you have successfully signed up", 201
 
 
@@ -132,7 +137,8 @@ class Login(Resource):
     def post(self):
         """logs in user and handles few authentication errors.
         Also, it sets token for logged user along with expiration date"""
-        data = request.json
+        data: Union[Any, dict] = request.json
+
         email_address = data["email_address"]
 
         def validate_is_valid_email(instance):
@@ -168,31 +174,50 @@ class Login(Resource):
         except ValidationError as e:
             return e.message, 400
 
-        user = User.query.filter_by(email_address=email_address).one_or_none()
+        user = model.User.query.filter_by(email_address=email_address).one_or_none()
         if not user:
             return "Invalid credentials", 401
+
         validate_pass = user.check_password(data["password"])
+
         if not validate_pass:
             return "Invalid credentials", 401
+
+        # Determine the appropriate configuration module
+        # based on the testing context
+        if os.environ.get("FLASK_ENV") == "testing":
+            config_module_name = "pytest_config"
         else:
-            if len(config.secret) < 14:
-                raise "secret key should contain at least 14 characters"
-            encoded_jwt_code = jwt.encode(
-                {
-                    "user": user.id,
-                    "exp": datetime.datetime.now(timezone.utc)
-                    + datetime.timedelta(minutes=200),
-                    "jti": str(uuid.uuid4()),
-                },
-                config.secret,
-                algorithm="HS256",
-            )
-            resp = make_response(user.to_dict())
-            resp.set_cookie(
-                "token", encoded_jwt_code, secure=True, httponly=True, samesite="lax"
-            )
-            resp.status = 200
-            return resp
+            config_module_name = "config"
+
+        config_module = importlib.import_module(config_module_name)
+
+        if os.environ.get("FLASK_ENV") == "testing":
+            # If testing, use the 'TestConfig' class for accessing 'secret'
+            config = config_module.TestConfig
+        else:
+            # If not testing, directly use the 'config' module
+            config = config_module
+
+        encoded_jwt_code = jwt.encode(
+            {
+                "user": user.id,
+                "exp": datetime.datetime.now(timezone.utc)
+                + datetime.timedelta(minutes=180),  # noqa: W503
+                "jti": str(uuid.uuid4()),
+            },  # noqa: W503
+            config.FAIRHUB_SECRET,
+            algorithm="HS256",
+        )
+
+        resp = make_response(user.to_dict())
+
+        resp.set_cookie(
+            "token", encoded_jwt_code, secure=True, httponly=True, samesite="lax"
+        )
+        resp.status_code = 200
+
+        return resp
 
 
 def authentication():
@@ -202,15 +227,32 @@ def authentication():
 
     if "token" not in request.cookies:
         return
-    token = request.cookies.get("token")
+    token: str = (
+        request.cookies.get("token")
+        if (request.cookies.get("token"))
+        else ""  # type: ignore
+    )
+
+    # Determine the appropriate configuration module based on the testing context
+    if os.environ.get("FLASK_ENV") == "testing":
+        config_module_name = "pytest_config"
+    else:
+        config_module_name = "config"
+    config_module = importlib.import_module(config_module_name)
+    if os.environ.get("FLASK_ENV") == "testing":
+        # If testing, use the 'TestConfig' class for accessing 'secret'
+        config = config_module.TestConfig
+    else:
+        # If not testing, directly use the 'config' module
+        config = config_module
     try:
-        decoded = jwt.decode(token, config.secret, algorithms=["HS256"])
+        decoded = jwt.decode(token, config.FAIRHUB_SECRET, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
         return
-    token_blacklist = TokenBlacklist.query.get(decoded["jti"])
+    token_blacklist = model.TokenBlacklist.query.get(decoded["jti"])
     if token_blacklist:
         return
-    user = User.query.get(decoded["user"])
+    user = model.User.query.get(decoded["user"])
     g.user = user
 
 
@@ -224,7 +266,7 @@ def authorization():
         "/swaggerui",
         "/swagger.json",
     ]
-    print("g.user", g.user)
+
     for route in public_routes:
         if request.path.startswith(route):
             return
@@ -235,8 +277,8 @@ def authorization():
 
 def is_granted(permission: str, study=None):
     """filters users and checks whether current permission equal to passed permission"""
-    contributor = StudyContributor.query.filter(
-        StudyContributor.user == g.user, StudyContributor.study == study
+    contributor = model.StudyContributor.query.filter(
+        model.StudyContributor.user == g.user, model.StudyContributor.study == study
     ).first()
     if not contributor:
         return False
@@ -293,10 +335,12 @@ def is_granted(permission: str, study=None):
     return permission in role[contributor.permission]
 
 
-def is_study_metadata(study_id: int):
-    study_obj = Study.query.get(study_id)
-    if not is_granted("study_metadata", study_obj):
-        return "Access denied, you can not delete study", 403
+#
+# def is_study_metadata(study_id: int):
+#     study_obj = model.Study.query.get(study_id)
+#     if not is_granted("study_metadata", study_obj):
+#         return "Access denied, you can not delete study", 403
+#
 
 
 @api.route("/auth/logout")
@@ -314,13 +358,14 @@ class Logout(Resource):
             samesite="lax",
             expires=datetime.datetime.now(timezone.utc),
         )
-        resp.status = 204
+        resp.status_code = 204
         return resp
 
 
 @api.route("/auth/current-users")
 class CurrentUsers(Resource):
-    """function is used to see all logged users in the system. For now, it is used for testing purposes"""
+    """function is used to see all logged users in
+    the system. For now, it is used for testing purposes"""
 
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
