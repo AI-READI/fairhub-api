@@ -1,10 +1,7 @@
 """API routes for study description metadata"""
 from flask import request
 from flask_restx import Resource, fields
-from flask import request
 from jsonschema import validate, ValidationError
-from model
-from ..authentication import is_granted, is_study_metadata
 
 import model
 from apis.study_metadata_namespace import api
