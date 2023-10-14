@@ -64,7 +64,7 @@ class StudyLocationResource(Resource):
                             "Enrolling by invitation",
                             "Completed",
                             "Terminated",
-                        ]
+                        ],
                     },
                     "city": {"type": "string", "minLength": 1},
                     "state": {"type": "string", "minLength": 1},

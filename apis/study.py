@@ -72,7 +72,7 @@ class Studies(Resource):
             validate(request.json, schema)
         except ValidationError as e:
             return e.message, 400
-        
+
         data: Union[Any, dict] = request.json
 
         add_study = model.Study.from_data(data)

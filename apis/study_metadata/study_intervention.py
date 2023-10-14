@@ -54,7 +54,7 @@ class StudyInterventionResource(Resource):
                 "type": "object",
                 "properties": {
                     "type": {
-                        "type": "string", 
+                        "type": "string",
                         "enum": [
                             "Drug",
                             "Device",
@@ -68,7 +68,7 @@ class StudyInterventionResource(Resource):
                             "Combination Product",
                             "Diagnostic Test",
                             "Other",
-                        ]
+                        ],
                     },
                     "name": {"type": "string", "minLength": 1},
                     "description": {"type": "string", "minLength": 1},
@@ -79,7 +79,7 @@ class StudyInterventionResource(Resource):
                         "uniqueItems": True,
                     },
                     "other_name_list": {
-                        "type": "array", 
+                        "type": "array",
                         "items": {"type": "string", "minLength": 1},
                         "minItems": 1,
                         "uniqueItems": True,

@@ -113,7 +113,9 @@ class SignUpUser(Resource):
         except ValidationError as e:
             return e.message, 400
 
-        user = model.User.query.filter_by(email_address=data["email_address"]).one_or_none()
+        user = model.User.query.filter_by(
+            email_address=data["email_address"]
+        ).one_or_none()
         if user:
             return "This email address is already in use", 409
         invitations = model.StudyInvitedContributor.query.filter_by(

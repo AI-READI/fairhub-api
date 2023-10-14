@@ -53,18 +53,16 @@ class StudySponsorsResource(Resource):
         schema = {
             "type": "object",
             "additionalProperties": False,
-            "required": [
-                "responsible_party_type"
-            ],
+            "required": ["responsible_party_type"],
             "properties": {
                 "responsible_party_type": {
-                    "type": "string", 
+                    "type": "string",
                     "minLength": 1,
                     "enum": [
                         "Sponsor",
                         "Principal Investigator",
-                        "Sponsor-Investigator"
-                    ]
+                        "Sponsor-Investigator",
+                    ],
                 },
                 "responsible_party_investigator_name": {
                     "type": "string",

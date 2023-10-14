@@ -58,12 +58,12 @@ class StudyOverallOfficialResource(Resource):
                     "name": {"type": "string", "minLength": 1},
                     "affiliation": {"type": "string", "minLength": 1},
                     "role": {
-                        "type": "string", 
+                        "type": "string",
                         "enum": [
-                            "Study Chair", 
-                            "Study Director", 
-                            "Study Principal Investigator"
-                        ]
+                            "Study Chair",
+                            "Study Director",
+                            "Study Principal Investigator",
+                        ],
                     },
                 },
                 "required": ["name", "affiliation", "role"],

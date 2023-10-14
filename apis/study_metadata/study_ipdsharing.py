@@ -79,7 +79,7 @@ class StudyIpdsharingResource(Resource):
                 "ipd_sharing_info_type_list",
                 "ipd_sharing_time_frame",
                 "ipd_sharing_access_criteria",
-                "ipd_sharing_url"
+                "ipd_sharing_url",
             ]
 
             for field in required_fields:

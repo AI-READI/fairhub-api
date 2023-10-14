@@ -51,7 +51,7 @@ class StudyStatusResource(Resource):
             ],
             "properties": {
                 "overall_status": {
-                    "type": "string", 
+                    "type": "string",
                     "minLength": 1,
                     "enum": [
                         "Withdrawn",
@@ -61,8 +61,8 @@ class StudyStatusResource(Resource):
                         "Suspended",
                         "Enrolling by invitation",
                         "Terminated",
-                        "Completed"
-                    ]
+                        "Completed",
+                    ],
                 },
                 "why_stopped": {"type": "string", "minLength": 1},
                 "start_date": {"type": "string", "minLength": 1},

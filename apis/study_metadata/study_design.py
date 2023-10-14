@@ -164,7 +164,10 @@ class StudyDesignResource(Resource):
                     "uniqueItems": True,
                 },
                 "enrollment_count": {"type": "integer"},
-                "enrollment_type": {"type": "string", "enum": ["Actual", "Anticipated"]},
+                "enrollment_type": {
+                    "type": "string",
+                    "enum": ["Actual", "Anticipated"],
+                },
                 "number_arms": {"type": "integer"},
                 "design_observational_model_list": {
                     "type": "array",

@@ -46,6 +46,7 @@ class StudyContactResource(Resource):
 
     def post(self, study_id: int):
         """Create study contact metadata"""
+
         def validate_is_valid_email(instance):
             print("within is_valid_email")
             email_address = instance
@@ -55,6 +56,7 @@ class StudyContactResource(Resource):
                 return True
             except EmailNotValidError as e:
                 raise ValidationError("Invalid email address format") from e
+
         # Schema validation
         schema = {
             "type": "array",
@@ -67,7 +69,7 @@ class StudyContactResource(Resource):
                     "affiliation",
                     "phone",
                     "phone_ext",
-                    "email_address"
+                    "email_address",
                 ],
                 "properties": {
                     "name": {"type": "string", "minLength": 1},
@@ -80,10 +82,10 @@ class StudyContactResource(Resource):
                         "pattern": "^[0-9-]+$",
                     },
                     "phone_ext": {
-                        "type": "string", 
-                        "minLength": 1, 
-                        "pattern": "^[0-9-]+$", 
-                        "errorMessage": "Invalid phone extension"
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": "^[0-9-]+$",
+                        "errorMessage": "Invalid phone extension",
                     },
                     "email_address": {"type": "string", "format": "email"},
                     "central_contact": {"type": "boolean"},
@@ -96,7 +98,9 @@ class StudyContactResource(Resource):
         format_checker.checks("email")(validate_is_valid_email)
 
         try:
-            validate(instance=request.json, schema=schema, format_checker=format_checker)
+            validate(
+                instance=request.json, schema=schema, format_checker=format_checker
+            )
         except ValidationError as e:
             return e.message, 400
 

@@ -69,8 +69,8 @@ class StudyAvailableResource(Resource):
                             "Informated Consent Form",
                             "Clinical Study Report",
                             "Analytic Code",
-                            "Other"
-                        ]
+                            "Other",
+                        ],
                     },
                     "comment": {"type": "string", "minLength": 1},
                     "url": {"type": "string", "format": "uri", "minLength": 1},
