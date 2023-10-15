@@ -1,20 +1,16 @@
-import uuid
-
 from ..db import db
 
 
 class DatasetRelatedItemOther(db.Model):  # type: ignore
     def __init__(self, dataset):
-        self.id = str(uuid.uuid4())
         self.dataset = dataset
 
     __tablename__ = "dataset_related_item_other"
-    id = db.Column(db.CHAR(36), primary_key=True)
-    publication_year = db.Column(db.String, nullable=False)
+    publication_year = db.Column(db.String, nullable=True)
     volume = db.Column(db.String, nullable=False)
     issue = db.Column(db.String, nullable=False)
     number_value = db.Column(db.String, nullable=False)
-    number_type = db.Column(db.String, nullable=False)
+    number_type = db.Column(db.String, nullable=True)
     first_page = db.Column(db.String, nullable=False)
     last_page = db.Column(db.BOOLEAN, nullable=False)
     publisher = db.Column(db.String, nullable=False)
@@ -29,7 +25,6 @@ class DatasetRelatedItemOther(db.Model):  # type: ignore
 
     def to_dict(self):
         return {
-            "id": self.id,
             "publication_year": self.publication_year,
             "volume": self.volume,
             "issue": self.issue,

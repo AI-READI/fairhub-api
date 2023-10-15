@@ -1,4 +1,6 @@
 import uuid
+import datetime
+from datetime import timezone
 
 from .db import db
 
@@ -6,17 +8,19 @@ from .db import db
 class DatasetContributor(db.Model):  # type: ignore
     def __init__(self):
         self.id = str(uuid.uuid4())
+        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
 
     __tablename__ = "dataset_contributor"
     id = db.Column(db.CHAR(36), primary_key=True)
-    first_name = db.Column(db.String, nullable=False)
-    last_name = db.Column(db.String, nullable=False)
-    name_type = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=False)
+    name_type = db.Column(db.String, nullable=True)
     name_identifier = db.Column(db.String, nullable=False)
     name_identifier_scheme = db.Column(db.String, nullable=False)
     name_identifier_scheme_uri = db.Column(db.String, nullable=False)
     creator = db.Column(db.BOOLEAN, nullable=False)
-    contributor_type = db.Column(db.String, nullable=False)
+    contributor_type = db.Column(db.String, nullable=True)
+    affiliations = db.Column(db.String, nullable=False)
+    created_at = db.Column(db.BigInteger, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
     dataset = db.relationship("Dataset", back_populates="dataset_contributors")
@@ -35,6 +39,8 @@ class DatasetContributor(db.Model):  # type: ignore
             "name_identifier_scheme_uri": self.name_identifier_scheme_uri,
             "creator": self.creator,
             "contributor_type": self.contributor_type,
+            "created_at": self.created_at,
+
         }
 
     @staticmethod

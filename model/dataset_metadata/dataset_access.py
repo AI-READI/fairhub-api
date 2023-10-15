@@ -1,5 +1,3 @@
-import uuid
-
 from model import Dataset
 
 from ..db import db
@@ -7,12 +5,10 @@ from ..db import db
 
 class DatasetAccess(db.Model):  # type: ignore
     def __init__(self, dataset):
-        self.id = str(uuid.uuid4())
         self.dataset = dataset
 
     __tablename__ = "dataset_access"
-    id = db.Column(db.CHAR(36), primary_key=True)
-    type = db.Column(db.String, nullable=False)
+    type = db.Column(db.String, nullable=True)
     description = db.Column(db.String, nullable=False)
     url = db.Column(db.String, nullable=False)
     url_last_checked = db.Column(db.String, nullable=False)
@@ -22,7 +18,6 @@ class DatasetAccess(db.Model):  # type: ignore
 
     def to_dict(self):
         return {
-            "id": self.id,
             "type": self.type,
             "description": self.description,
             "url": self.url,

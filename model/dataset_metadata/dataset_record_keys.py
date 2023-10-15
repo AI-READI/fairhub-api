@@ -5,12 +5,10 @@ from ..db import db
 
 class DatasetRecordKeys(db.Model):  # type: ignore
     def __init__(self, dataset):
-        self.id = str(uuid.uuid4())
         self.dataset = dataset
 
     __tablename__ = "dataset_record_keys"
-    id = db.Column(db.CHAR(36), primary_key=True)
-    key_type = db.Column(db.String, nullable=False)
+    key_type = db.Column(db.String, nullable=True)
     key_details = db.Column(db.String, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
@@ -18,7 +16,6 @@ class DatasetRecordKeys(db.Model):  # type: ignore
 
     def to_dict(self):
         return {
-            "id": self.id,
             "key_type": self.key_type,
             "key_details": self.key_details,
         }

@@ -1,5 +1,6 @@
 import uuid
-
+import datetime
+from datetime import timezone
 from ..db import db
 
 
@@ -7,11 +8,13 @@ class DatasetAlternateIdentifier(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
+        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
 
     __tablename__ = "dataset_alternate_identifier"
     id = db.Column(db.CHAR(36), primary_key=True)
     identifier = db.Column(db.String, nullable=False)
-    identifier_type = db.Column(db.String, nullable=False)
+    type = db.Column(db.String, nullable=True)
+    created_at = db.Column(db.BigInteger, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
     dataset = db.relationship("Dataset", back_populates="dataset_alternate_identifier")
@@ -20,7 +23,9 @@ class DatasetAlternateIdentifier(db.Model):  # type: ignore
         return {
             "id": self.id,
             "identifier": self.identifier,
-            "identifier_type": self.identifier_type,
+            "type": self.type,
+            "created_at": self.created_at,
+
         }
 
     @staticmethod
@@ -31,4 +36,4 @@ class DatasetAlternateIdentifier(db.Model):  # type: ignore
 
     def update(self, data: dict):
         self.identifier = data["identifier"]
-        self.identifier_type = data["identifier_type"]
+        self.type = data["type"]

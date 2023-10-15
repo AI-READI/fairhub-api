@@ -5,13 +5,11 @@ from ..db import db
 
 class DatasetDeIdentLevel(db.Model):  # type: ignore
     def __init__(self, dataset):
-        self.id = str(uuid.uuid4())
         self.dataset = dataset
 
     __tablename__ = "dataset_de_ident_level"
-    id = db.Column(db.CHAR(36), primary_key=True)
 
-    type = db.Column(db.String, nullable=False)
+    type = db.Column(db.String, nullable=True)
     direct = db.Column(db.BOOLEAN, nullable=False)
     hipaa = db.Column(db.BOOLEAN, nullable=False)
     dates = db.Column(db.BOOLEAN, nullable=False)
@@ -24,7 +22,6 @@ class DatasetDeIdentLevel(db.Model):  # type: ignore
 
     def to_dict(self):
         return {
-            "id": self.id,
             "type": self.type,
             "direct": self.direct,
             "hipaa": self.hipaa,

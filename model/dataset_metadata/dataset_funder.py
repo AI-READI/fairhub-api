@@ -1,4 +1,6 @@
 import uuid
+import datetime
+from datetime import timezone
 
 from ..db import db
 
@@ -7,16 +9,18 @@ class DatasetFunder(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
+        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
 
     __tablename__ = "dataset_funder"
     id = db.Column(db.CHAR(36), primary_key=True)
     name = db.Column(db.String, nullable=False)
     identifier = db.Column(db.String, nullable=False)
-    identifier_type = db.Column(db.String, nullable=False)
+    identifier_type = db.Column(db.String, nullable=True)
     identifier_scheme_uri = db.Column(db.String, nullable=False)
     award_number = db.Column(db.String, nullable=False)
     award_uri = db.Column(db.String, nullable=False)
     award_title = db.Column(db.String, nullable=False)
+    created_at = db.Column(db.BigInteger, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
     dataset = db.relationship("Dataset", back_populates="dataset_funder")
@@ -31,6 +35,8 @@ class DatasetFunder(db.Model):  # type: ignore
             "award_number": self.award_number,
             "award_uri": self.award_uri,
             "award_title": self.award_title,
+            "created_at": self.created_at
+
         }
 
     @staticmethod

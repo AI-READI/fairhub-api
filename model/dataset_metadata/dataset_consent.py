@@ -1,17 +1,13 @@
-import uuid
-
 from ..db import db
 
 
 class DatasetConsent(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.dataset = dataset
-        self.id = str(uuid.uuid4())
 
     __tablename__ = "dataset_consent"
-    id = db.Column(db.CHAR(36), primary_key=True)
 
-    type = db.Column(db.String, nullable=False)
+    type = db.Column(db.String, nullable=True)
     noncommercial = db.Column(db.BOOLEAN, nullable=False)
     geog_restrict = db.Column(db.BOOLEAN, nullable=False)
     research_type = db.Column(db.BOOLEAN, nullable=False)
@@ -24,7 +20,6 @@ class DatasetConsent(db.Model):  # type: ignore
 
     def to_dict(self):
         return {
-            "id": self.id,
             "type": self.type,
             "noncommercial": self.noncommercial,
             "geog_restrict": self.geog_restrict,
