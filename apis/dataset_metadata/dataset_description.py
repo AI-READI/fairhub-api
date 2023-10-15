@@ -16,7 +16,7 @@ dataset_description = api.model(
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/description")
+@api.route("/study/<study_id>/dataset/<dataset_id>/description")
 class DatasetDescriptionResource(Resource):
     @api.doc("description")
     @api.response(200, "Success")
@@ -44,7 +44,7 @@ class DatasetDescriptionResource(Resource):
         return list_of_elements
 
     @api.route(
-        "/study/<study_id>/dataset/<dataset_id>/metadata/description/<description_id>"
+        "/study/<study_id>/dataset/<dataset_id>/description/<description_id>"
     )
     class DatasetDescriptionUpdate(Resource):
         def delete(self, study_id: int, dataset_id: int, description_id: int):

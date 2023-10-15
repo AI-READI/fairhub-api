@@ -4,11 +4,11 @@ from ..db import db
 class DatasetReadme(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.dataset = dataset
-
+        self.content = ""
     __tablename__ = "dataset_readme"
     content = db.Column(db.String, nullable=False)
 
-    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
+    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), primary_key=True, nullable=False)
     dataset = db.relationship("Dataset", back_populates="dataset_readme")
 
     def to_dict(self):

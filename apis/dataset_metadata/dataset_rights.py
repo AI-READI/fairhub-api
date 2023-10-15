@@ -18,7 +18,7 @@ dataset_rights = api.model(
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/rights")
+@api.route("/study/<study_id>/dataset/<dataset_id>/rights")
 class DatasetRightsResource(Resource):
     @api.doc("rights")
     @api.response(200, "Success")
@@ -38,7 +38,7 @@ class DatasetRightsResource(Resource):
         model.db.session.commit()
         return dataset_rights_.to_dict()
 
-    @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/rights/<rights_id>")
+    @api.route("/study/<study_id>/dataset/<dataset_id>/rights/<rights_id>")
     class DatasetRightsUpdate(Resource):
         def put(self, study_id: int, dataset_id: int, rights_id: int):
             dataset_rights_ = model.DatasetRights.query.get(rights_id)

@@ -5,7 +5,7 @@ import model
 from apis.dataset_metadata_namespace import api
 
 dataset_consent = api.model(
-    "DatasetConsent",
+    "DatasetContributor",
     {
         "id": fields.String(required=True),
         "type": fields.String(required=True),
@@ -19,20 +19,20 @@ dataset_consent = api.model(
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/consent")
-class DatasetConsentResource(Resource):
+@api.route("/study/<study_id>/dataset/<dataset_id>/contributor")
+class DatasetContributorResource(Resource):
     @api.doc("consent")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(dataset_consent)
     def get(self, study_id: int, dataset_id: int):
         dataset_ = model.Dataset.query.get(dataset_id)
-        dataset_consent_ = dataset_.dataset_consent
-        return [d.to_dict() for d in dataset_consent_]
+        dataset_contributor_ = dataset_.dataset_contributor
+        return [d.to_dict() for d in dataset_contributor_]
 
     def put(self, study_id: int, dataset_id: int):
         data = request.json
         dataset_ = model.Dataset.query.get(dataset_id)
-        dataset_consent_ = dataset_.dataset_consent.update(data)
+        dataset_contributor_ = dataset_.dataset_contributor.update(data)
         model.db.session.commit()
-        return dataset_consent_.to_dict()
+        return dataset_contributor_.to_dict()

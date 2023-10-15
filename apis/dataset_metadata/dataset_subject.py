@@ -19,7 +19,7 @@ dataset_subject = api.model(
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/subject")
+@api.route("/study/<study_id>/dataset/<dataset_id>/subject")
 class DatasetSubjectResource(Resource):
     @api.doc("subject")
     @api.response(200, "Success")
@@ -39,7 +39,7 @@ class DatasetSubjectResource(Resource):
         model.db.session.commit()
         return dataset_subject_.to_dict()
 
-    @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/subject/<subject_id>")
+    @api.route("/study/<study_id>/dataset/<dataset_id>/subject/<subject_id>")
     class DatasetSubjectUpdate(Resource):
         def put(self, study_id: int, dataset_id: int, subject_id: int):
             dataset_subject_ = model.DatasetSubject.query.get(subject_id)

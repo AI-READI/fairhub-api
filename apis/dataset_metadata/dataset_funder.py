@@ -21,7 +21,7 @@ dataset_funder = api.model(
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/funder")
+@api.route("/study/<study_id>/dataset/<dataset_id>/funder")
 class DatasetFunderResource(Resource):
     @api.doc("funder")
     @api.response(200, "Success")
@@ -41,7 +41,7 @@ class DatasetFunderResource(Resource):
         return dataset_funder_.to_dict()
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/funder/<funder_id>")
+@api.route("/study/<study_id>/dataset/<dataset_id>/funder/<funder_id>")
 class DatasetFunderUpdate(Resource):
     def put(self, study_id: int, dataset_id: int, funder_id: int):
         dataset_funder_ = model.DatasetFunder.query.get(funder_id)

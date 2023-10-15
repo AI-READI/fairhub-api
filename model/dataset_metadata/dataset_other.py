@@ -7,6 +7,14 @@ from ..db import db
 class DatasetOther(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.dataset = dataset
+        self.resource_type = ""
+        self.language = None
+        self.managing_organization_name = ""
+        self.managing_organization_ror_id = ""
+        self.size = ""
+        self.standards_followed = ""
+        self.acknowledgement = ""
+        self.publisher = []
 
     __tablename__ = "dataset_other"
 
@@ -19,7 +27,7 @@ class DatasetOther(db.Model):  # type: ignore
     acknowledgement = db.Column(db.String, nullable=False)
     publisher = db.Column(db.String, nullable=False)
 
-    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
+    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), primary_key=True, nullable=False)
     dataset = db.relationship("Dataset", back_populates="dataset_other")
 
     def to_dict(self):

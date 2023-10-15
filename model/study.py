@@ -8,7 +8,6 @@ from apis import exception
 
 from .db import db
 
-# from datetime import datetime, timezone
 
 
 class StudyException(Exception):

@@ -15,7 +15,7 @@ dataset_date = api.model(
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/date")
+@api.route("/study/<study_id>/dataset/<dataset_id>/date")
 class DatasetDateResource(Resource):
     @api.doc("date")
     @api.response(200, "Success")

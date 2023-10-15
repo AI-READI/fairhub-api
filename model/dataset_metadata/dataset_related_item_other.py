@@ -4,9 +4,18 @@ from ..db import db
 class DatasetRelatedItemOther(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.dataset = dataset
+        self.publication_year = None
+        self.volume = ""
+        self.issue = ""
+        self.number_value = None
+        self.number_type = ""
+        self.first_page = ""
+        self.last_page = ""
+        self.publisher = ""
+        self.edition = ""
 
     __tablename__ = "dataset_related_item_other"
-    publication_year = db.Column(db.String, nullable=True)
+    publication_year = db.Column(db.BigInteger, nullable=True)
     volume = db.Column(db.String, nullable=False)
     issue = db.Column(db.String, nullable=False)
     number_value = db.Column(db.String, nullable=False)
@@ -17,7 +26,7 @@ class DatasetRelatedItemOther(db.Model):  # type: ignore
     edition = db.Column(db.String, nullable=False)
 
     dataset_related_item_id = db.Column(
-        db.CHAR(36), db.ForeignKey("dataset_related_item.id"), nullable=False
+        db.CHAR(36), db.ForeignKey("dataset_related_item.id"), primary_key=True, nullable=False
     )
     dataset_related_item = db.relationship(
         "DatasetRelatedItem", back_populates="dataset_related_item_other"

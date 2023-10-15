@@ -4,6 +4,13 @@ from ..db import db
 class DatasetConsent(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.dataset = dataset
+        self.type = None
+        self.noncommercial = True
+        self.geog_restrict = True
+        self.research_type = True
+        self.genetic_only = True
+        self.no_methods = True
+        self.details = ""
 
     __tablename__ = "dataset_consent"
 
@@ -15,7 +22,7 @@ class DatasetConsent(db.Model):  # type: ignore
     no_methods = db.Column(db.BOOLEAN, nullable=False)
     details = db.Column(db.String, nullable=False)
 
-    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
+    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), primary_key=True, nullable=False)
     dataset = db.relationship("Dataset", back_populates="dataset_consent")
 
     def to_dict(self):

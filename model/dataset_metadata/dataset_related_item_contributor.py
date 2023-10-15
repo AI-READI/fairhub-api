@@ -1,7 +1,6 @@
-import datetime
 import uuid
+import datetime
 from datetime import timezone
-
 from ..db import db
 
 
@@ -20,9 +19,9 @@ class DatasetRelatedItemContributor(db.Model):  # type: ignore
     created_at = db.Column(db.BigInteger, nullable=False)
 
     dataset_related_item_id = db.Column(
-        db.CHAR(36), db.ForeignKey("related_item.id"), nullable=False
+        db.CHAR(36), db.ForeignKey("dataset_related_item.id"), nullable=False
     )
-    related_item = db.relationship(
+    dataset_related_item = db.relationship(
         "DatasetRelatedItem", back_populates="dataset_related_item_contributor"
     )
 
@@ -33,7 +32,8 @@ class DatasetRelatedItemContributor(db.Model):  # type: ignore
             "name_type": self.name_type,
             "creator": self.creator,
             "contributor_type": self.contributor_type,
-            "created_at": self.created_at,
+            "created_at": self.created_at
+
         }
 
     @staticmethod

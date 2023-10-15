@@ -13,9 +13,10 @@ class DatasetDate(db.Model):  # type: ignore
 
     __tablename__ = "dataset_date"
     id = db.Column(db.CHAR(36), primary_key=True)
-    date = db.Column(db.String, nullable=False)
+
+    date = db.Column(db.BigInteger, nullable=True)
     type = db.Column(db.String, nullable=True)
-    information = db.Column(db.String, nullable=True)
+    information = db.Column(db.String, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)

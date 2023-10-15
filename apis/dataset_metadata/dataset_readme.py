@@ -10,7 +10,7 @@ dataset_readme = api.model(
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/readme")
+@api.route("/study/<study_id>/dataset/<dataset_id>/readme")
 class DatasetReadmeResource(Resource):
     @api.doc("readme")
     @api.response(200, "Success")

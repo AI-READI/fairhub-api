@@ -16,7 +16,7 @@ dataset_access = api.model(
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/access")
+@api.route("/study/<study_id>/dataset/<dataset_id>/access")
 class DatasetAccessResource(Resource):
     @api.doc("access")
     @api.response(200, "Success")

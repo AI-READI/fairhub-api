@@ -9,18 +9,15 @@ from model.dataset_metadata.dataset_related_item_other import DatasetRelatedItem
 from model.dataset_metadata.dataset_related_item_title import DatasetRelatedItemTitle
 
 from .dataset import Dataset
-from .dataset_contributor import DatasetContributor
+from model.dataset_metadata.dataset_contributor import DatasetContributor
 from .dataset_metadata.dataset_access import DatasetAccess
 from .dataset_metadata.dataset_alternate_identifier import DatasetAlternateIdentifier
 from .dataset_metadata.dataset_consent import DatasetConsent
-from .dataset_metadata.dataset_contributor_affiliation import (
-    DatasetContributorAffiliation,
-)
+
 from .dataset_metadata.dataset_date import DatasetDate
 from .dataset_metadata.dataset_de_ident_level import DatasetDeIdentLevel
 from .dataset_metadata.dataset_description import DatasetDescription
 from .dataset_metadata.dataset_funder import DatasetFunder
-from .dataset_metadata.dataset_managing_organization import DatasetManagingOrganization
 from .dataset_metadata.dataset_other import DatasetOther
 from .dataset_metadata.dataset_readme import DatasetReadme
 from .dataset_metadata.dataset_record_keys import DatasetRecordKeys
@@ -56,7 +53,7 @@ from .token_blacklist import TokenBlacklist
 from .user import User
 from .user_details import UserDetails
 from .version import Version
-
+from .notification import Notification
 __all__ = [
     "Study",
     "Dataset",
@@ -70,13 +67,10 @@ __all__ = [
     "DatasetOther",
     "DatasetAccess",
     "DatasetConsent",
-    "DatasetContributorAffiliation",
     "DatasetDate",
     "DatasetDeIdentLevel",
-    "DatasetContributorAffiliation",
     "DatasetFunder",
     "DatasetAlternateIdentifier",
-    "DatasetManagingOrganization",
     "DatasetRights",
     "DatasetReadme",
     "DatasetRecordKeys",
@@ -111,4 +105,5 @@ __all__ = [
     "EmailVerification",
     "TokenBlacklist",
     "UserDetails",
+    "Notification"
 ]

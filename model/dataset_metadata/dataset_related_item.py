@@ -1,7 +1,8 @@
-import datetime
 import uuid
+import datetime
 from datetime import timezone
 
+import model
 from ..db import db
 
 
@@ -10,7 +11,7 @@ class DatasetRelatedItem(db.Model):  # type: ignore
         self.id = str(uuid.uuid4())
         self.dataset = dataset
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
-
+        self.dataset_related_item_other = model.DatasetRelatedItemOther(self)
     __tablename__ = "dataset_related_item"
 
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -19,19 +20,19 @@ class DatasetRelatedItem(db.Model):  # type: ignore
     created_at = db.Column(db.BigInteger, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
-    dataset = db.relationship("Dataset", back_populates="related_item")
+    dataset = db.relationship("Dataset", back_populates="dataset_related_item")
 
-    related_item_contributor = db.relationship(
-        "DatasetRelatedItemContributor", back_populates="related_item"
+    dataset_related_item_contributor = db.relationship(
+        "DatasetRelatedItemContributor", back_populates="dataset_related_item"
     )
-    related_item_identifier = db.relationship(
-        "DatasetRelatedItemIdentifier", back_populates="related_item"
+    dataset_related_item_identifier = db.relationship(
+        "DatasetRelatedItemIdentifier", back_populates="dataset_related_item"
     )
-    related_item_other = db.relationship(
-        "DatasetRelatedItemOther", back_populates="related_item"
+    dataset_related_item_other = db.relationship(
+        "DatasetRelatedItemOther", back_populates="dataset_related_item"
     )
-    related_item_title = db.relationship(
-        "DatasetRelatedItemTitle", back_populates="related_item"
+    dataset_related_item_title = db.relationship(
+        "DatasetRelatedItemTitle", back_populates="dataset_related_item"
     )
 
     def to_dict(self):
@@ -40,6 +41,7 @@ class DatasetRelatedItem(db.Model):  # type: ignore
             "type": self.type,
             "relation_type": self.relation_type,
             "created_at": self.created_at,
+
         }
 
     @staticmethod

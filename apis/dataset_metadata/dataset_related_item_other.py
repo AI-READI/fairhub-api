@@ -14,7 +14,7 @@ from apis.dataset_metadata_namespace import api
 # )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/related_item_other")
+@api.route("/study/<study_id>/dataset/<dataset_id>/related_item_other")
 class DatasetRelatedItemContributorResource(Resource):
     @api.doc("related_item_other")
     @api.response(200, "Success")

@@ -18,7 +18,7 @@ dataset_other = api.model(
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/other")
+@api.route("/study/<study_id>/dataset/<dataset_id>/other")
 class DatasetOtherResource(Resource):
     @api.doc("other")
     @api.response(200, "Success")
