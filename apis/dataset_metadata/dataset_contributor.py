@@ -7,14 +7,7 @@ from apis.dataset_metadata_namespace import api
 dataset_consent = api.model(
     "DatasetContributor",
     {
-        "id": fields.String(required=True),
-        "type": fields.String(required=True),
-        "noncommercial": fields.Boolean(required=True),
-        "geog_restrict": fields.Boolean(required=True),
-        "research_type": fields.Boolean(required=True),
-        "genetic_only": fields.Boolean(required=True),
-        "no_methods": fields.Boolean(required=True),
-        "details": fields.String(required=True),
+
     },
 )
 

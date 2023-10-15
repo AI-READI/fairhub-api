@@ -50,11 +50,12 @@ class DatasetAlternateIdentifierResource(Resource):
         model.db.session.commit()
         return list_of_elements
 
+# not ready
     @api.route(
         "/study/<study_id>/dataset/<dataset_id>/alternative-identifier/<identifier_id>"
     )
     class DatasetAlternateIdentifierUpdate(Resource):
-        def put(self, study_id: int, dataset_id: int, identifier_id: int):
+        def delete(self, study_id: int, dataset_id: int, identifier_id: int):
             dataset_identifier_ = model.DatasetAlternateIdentifier.query.get(
                 identifier_id
             )

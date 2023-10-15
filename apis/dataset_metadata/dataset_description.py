@@ -27,6 +27,10 @@ class DatasetDescriptionResource(Resource):
         dataset_description_ = dataset_.dataset_description
         return [d.to_dict() for d in dataset_description_]
 
+    @api.doc("description update")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    @api.marshal_with(dataset_description)
     def post(self, study_id: int, dataset_id: int):
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)

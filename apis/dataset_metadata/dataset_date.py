@@ -26,7 +26,7 @@ class DatasetDateResource(Resource):
         dataset_date_ = dataset_.dataset_date
         return [d.to_dict() for d in dataset_date_]
 
-    def put(self, study_id: int, dataset_id: int):
+    def post(self, study_id: int, dataset_id: int):
         data = request.json
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_date_ = dataset_.dataset_date.update(data)
