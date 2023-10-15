@@ -1,5 +1,3 @@
-import uuid
-
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 
@@ -12,11 +10,10 @@ class StudyDesign(db.Model):  # type: ignore
     """A study is a collection of datasets and participants"""
 
     def __init__(self, study: Study):
-        self.id = str(uuid.uuid4())
         self.study = study
 
         self.design_allocation = ""
-        self.study_type = ""
+        self.study_type = None
         self.design_intervention_model = ""
         self.design_intervention_model_description = ""
         self.design_primary_purpose = ""
@@ -25,7 +22,7 @@ class StudyDesign(db.Model):  # type: ignore
         self.design_who_masked_list = []
         self.phase_list = []
         self.enrollment_count = 0
-        self.enrollment_type = ""
+        self.enrollment_type = None
         self.number_arms = 0
         self.design_observational_model_list = []
         self.design_time_perspective_list = []
@@ -36,7 +33,6 @@ class StudyDesign(db.Model):  # type: ignore
 
     __tablename__ = "study_design"
 
-    id = db.Column(db.CHAR(36), primary_key=True)
     design_allocation = db.Column(db.String, nullable=True)
     study_type = db.Column(db.String, nullable=False)
     design_intervention_model = db.Column(db.String, nullable=True)
@@ -64,7 +60,6 @@ class StudyDesign(db.Model):  # type: ignore
     def to_dict(self):
         """Converts the study to a dictionary"""
         return {
-            "id": self.id,
             "design_allocation": self.design_allocation,
             "study_type": self.study_type,
             "design_intervention_model": self.design_intervention_model,

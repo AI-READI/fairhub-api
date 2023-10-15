@@ -1,5 +1,3 @@
-import uuid
-
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 
@@ -12,9 +10,8 @@ class StudyIpdsharing(db.Model):  # type: ignore
     """A study is a collection of datasets and participants"""
 
     def __init__(self, study):
-        self.id = str(uuid.uuid4())
         self.study = study
-        self.ipd_sharing = ""
+        self.ipd_sharing = None
         self.ipd_sharing_description = ""
         self.ipd_sharing_info_type_list = []
         self.ipd_sharing_time_frame = ""
@@ -23,7 +20,6 @@ class StudyIpdsharing(db.Model):  # type: ignore
 
     __tablename__ = "study_ipdsharing"
 
-    id = db.Column(db.CHAR(36), primary_key=True)
     ipd_sharing = db.Column(db.String, nullable=False)
     ipd_sharing_description = db.Column(db.String, nullable=False)
     ipd_sharing_info_type_list = db.Column(ARRAY(String), nullable=False)
@@ -39,7 +35,6 @@ class StudyIpdsharing(db.Model):  # type: ignore
     def to_dict(self):
         """Converts the study to a dictionary"""
         return {
-            "id": self.id,
             "ipd_sharing": self.ipd_sharing,
             "ipd_sharing_description": self.ipd_sharing_description,
             "ipd_sharing_info_type_list": self.ipd_sharing_info_type_list,

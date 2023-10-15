@@ -1,5 +1,5 @@
-import uuid
 import datetime
+import uuid
 from datetime import timezone
 
 from .db import db
@@ -40,7 +40,6 @@ class DatasetContributor(db.Model):  # type: ignore
             "creator": self.creator,
             "contributor_type": self.contributor_type,
             "created_at": self.created_at,
-
         }
 
     @staticmethod

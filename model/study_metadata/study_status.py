@@ -1,5 +1,3 @@
-import uuid
-
 from model import Study
 
 from ..db import db
@@ -9,7 +7,6 @@ class StudyStatus(db.Model):  # type: ignore
     """A study is a collection of datasets and participants"""
 
     def __init__(self, study):
-        self.id = str(uuid.uuid4())
         self.study = study
         self.overall_status = None
         self.why_stopped = ""
@@ -20,7 +17,6 @@ class StudyStatus(db.Model):  # type: ignore
 
     __tablename__ = "study_status"
 
-    id = db.Column(db.CHAR(36), primary_key=True)
     overall_status = db.Column(db.String, nullable=True)
     why_stopped = db.Column(db.String, nullable=False)
     start_date = db.Column(db.String, nullable=True)
@@ -36,7 +32,6 @@ class StudyStatus(db.Model):  # type: ignore
     def to_dict(self):
         """Converts the study to a dictionary"""
         return {
-            "id": self.id,
             "overall_status": self.overall_status,
             "why_stopped": self.why_stopped,
             "start_date": self.start_date,

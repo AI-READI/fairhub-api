@@ -1,5 +1,3 @@
-import uuid
-
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 
@@ -12,7 +10,6 @@ class StudyEligibility(db.Model):  # type: ignore
     """A study is a collection of datasets and participants"""
 
     def __init__(self, study: Study):
-        self.id = str(uuid.uuid4())
         self.study = study
         self.gender = ""
         self.gender_based = ""
@@ -29,7 +26,6 @@ class StudyEligibility(db.Model):  # type: ignore
 
     __tablename__ = "study_eligibility"
 
-    id = db.Column(db.CHAR(36), primary_key=True)
     gender = db.Column(db.String, nullable=False)
     gender_based = db.Column(db.String, nullable=False)
     gender_description = db.Column(db.String, nullable=False)
@@ -51,7 +47,6 @@ class StudyEligibility(db.Model):  # type: ignore
     def to_dict(self):
         """Converts the study to a dictionary"""
         return {
-            "id": self.id,
             "gender": self.gender,
             "gender_based": self.gender_based,
             "gender_description": self.gender_description,
