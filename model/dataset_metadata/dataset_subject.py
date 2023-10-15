@@ -1,6 +1,7 @@
-import uuid
 import datetime
+import uuid
 from datetime import timezone
+
 from ..db import db
 
 
@@ -31,7 +32,7 @@ class DatasetSubject(db.Model):  # type: ignore
             "scheme_uri": self.scheme_uri,
             "value_uri": self.value_uri,
             "classification_code": self.classification_code,
-            "created_at": self.created_at
+            "created_at": self.created_at,
         }
 
     @staticmethod

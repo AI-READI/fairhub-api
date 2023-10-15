@@ -1,5 +1,5 @@
-import uuid
 import datetime
+import uuid
 from datetime import timezone
 
 from ..db import db
@@ -35,8 +35,7 @@ class DatasetFunder(db.Model):  # type: ignore
             "award_number": self.award_number,
             "award_uri": self.award_uri,
             "award_title": self.award_title,
-            "created_at": self.created_at
-
+            "created_at": self.created_at,
         }
 
     @staticmethod

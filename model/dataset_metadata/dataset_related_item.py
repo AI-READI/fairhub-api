@@ -1,5 +1,5 @@
-import uuid
 import datetime
+import uuid
 from datetime import timezone
 
 from ..db import db
@@ -17,7 +17,6 @@ class DatasetRelatedItem(db.Model):  # type: ignore
     type = db.Column(db.String, nullable=True)
     relation_type = db.Column(db.String, nullable=True)
     created_at = db.Column(db.BigInteger, nullable=False)
-
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
     dataset = db.relationship("Dataset", back_populates="related_item")
@@ -41,7 +40,6 @@ class DatasetRelatedItem(db.Model):  # type: ignore
             "type": self.type,
             "relation_type": self.relation_type,
             "created_at": self.created_at,
-
         }
 
     @staticmethod

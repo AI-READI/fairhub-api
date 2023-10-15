@@ -1,6 +1,5 @@
-import uuid
-
 import datetime
+import uuid
 from datetime import timezone
 
 from ..db import db
@@ -26,8 +25,7 @@ class DatasetDescription(db.Model):  # type: ignore
             "id": self.id,
             "description_type": self.description,
             "type": self.type,
-            "created_at": self.created_at
-
+            "created_at": self.created_at,
         }
 
     @staticmethod

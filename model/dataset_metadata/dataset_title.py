@@ -1,5 +1,5 @@
-import uuid
 import datetime
+import uuid
 from datetime import timezone
 
 from ..db import db
@@ -26,7 +26,6 @@ class DatasetTitle(db.Model):  # type: ignore
             "title": self.title,
             "type": self.type,
             "created_at": self.created_at,
-
         }
 
     @staticmethod

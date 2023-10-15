@@ -1,6 +1,7 @@
-import uuid
 import datetime
+import uuid
 from datetime import timezone
+
 from ..db import db
 
 
@@ -30,8 +31,7 @@ class DatasetContributorAffiliation(db.Model):  # type: ignore
             "identifier": self.identifier,
             "identifier_scheme": self.identifier_scheme,
             "identifier_scheme_uri": self.identifier_scheme_uri,
-            "created_at": self.created_at
-
+            "created_at": self.created_at,
         }
 
     @staticmethod

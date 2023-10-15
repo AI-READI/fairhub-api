@@ -1,5 +1,3 @@
-import uuid
-
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 
@@ -51,4 +49,3 @@ class DatasetOther(db.Model):  # type: ignore
         self.standards_followed = data["standards_followed"]
         self.publisher = data["publisher"]
         self.resource_type = data["resource_type"]
-

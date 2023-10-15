@@ -1,6 +1,7 @@
-import uuid
 import datetime
+import uuid
 from datetime import timezone
+
 from ..db import db
 
 
@@ -25,7 +26,6 @@ class DatasetAlternateIdentifier(db.Model):  # type: ignore
             "identifier": self.identifier,
             "type": self.type,
             "created_at": self.created_at,
-
         }
 
     @staticmethod

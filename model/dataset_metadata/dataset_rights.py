@@ -1,6 +1,7 @@
-import uuid
 import datetime
+import uuid
 from datetime import timezone
+
 from ..db import db
 
 
@@ -29,7 +30,7 @@ class DatasetRights(db.Model):  # type: ignore
             "uri": self.uri,
             "identifier": self.identifier,
             "identifier_scheme": self.identifier_scheme,
-            "created_at": self.created_at
+            "created_at": self.created_at,
         }
 
     @staticmethod

@@ -1,5 +1,5 @@
-import uuid
 import datetime
+import uuid
 from datetime import timezone
 
 from ..db import db
@@ -27,7 +27,7 @@ class DatasetDate(db.Model):  # type: ignore
             "date": self.date,
             "type": self.type,
             "information": self.information,
-            "created_at": self.created_at
+            "created_at": self.created_at,
         }
 
     @staticmethod
