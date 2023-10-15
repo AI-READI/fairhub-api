@@ -21,7 +21,7 @@ class StudyIntervention(db.Model):  # type: ignore
     __tablename__ = "study_intervention"
 
     id = db.Column(db.CHAR(36), primary_key=True)
-    type = db.Column(db.String, nullable=False)
+    type = db.Column(db.String, nullable=True)
     name = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
     arm_group_label_list = db.Column(ARRAY(String), nullable=False)

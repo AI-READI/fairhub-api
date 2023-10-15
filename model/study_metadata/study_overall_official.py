@@ -20,7 +20,7 @@ class StudyOverallOfficial(db.Model):  # type: ignore
     id = db.Column(db.CHAR(36), primary_key=True)
     name = db.Column(db.String, nullable=False)
     affiliation = db.Column(db.String, nullable=False)
-    role = db.Column(db.String, nullable=False)
+    role = db.Column(db.String, nullable=True)
     created_at = db.Column(db.BigInteger, nullable=False)
 
     study_id = db.Column(

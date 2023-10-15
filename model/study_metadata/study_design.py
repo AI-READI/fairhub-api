@@ -12,38 +12,38 @@ class StudyDesign(db.Model):  # type: ignore
     def __init__(self, study: Study):
         self.study = study
 
-        self.design_allocation = ""
+        self.design_allocation = None
         self.study_type = None
-        self.design_intervention_model = ""
+        self.design_intervention_model = None
         self.design_intervention_model_description = ""
-        self.design_primary_purpose = ""
-        self.design_masking = ""
-        self.design_masking_description = ""
+        self.design_primary_purpose = None
+        self.design_masking = None
+        self.design_masking_description = None
         self.design_who_masked_list = []
-        self.phase_list = []
-        self.enrollment_count = 0
+        self.phase_list = None
+        self.enrollment_count = None
         self.enrollment_type = None
-        self.number_arms = 0
-        self.design_observational_model_list = []
-        self.design_time_perspective_list = []
-        self.bio_spec_retention = ""
-        self.bio_spec_description = ""
-        self.target_duration = ""
-        self.number_groups_cohorts = 0
+        self.number_arms = None
+        self.design_observational_model_list = None
+        self.design_time_perspective_list = None
+        self.bio_spec_retention = None
+        self.bio_spec_description = None
+        self.target_duration = None
+        self.number_groups_cohorts = None
 
     __tablename__ = "study_design"
 
     design_allocation = db.Column(db.String, nullable=True)
-    study_type = db.Column(db.String, nullable=False)
+    study_type = db.Column(db.String, nullable=True)
     design_intervention_model = db.Column(db.String, nullable=True)
-    design_intervention_model_description = db.Column(db.String, nullable=True)
+    design_intervention_model_description = db.Column(db.String, nullable=False)
     design_primary_purpose = db.Column(db.String, nullable=True)
     design_masking = db.Column(db.String, nullable=True)
     design_masking_description = db.Column(db.String, nullable=True)
     design_who_masked_list = db.Column(ARRAY(String), nullable=True)
     phase_list = db.Column(ARRAY(String), nullable=True)
-    enrollment_count = db.Column(db.Integer, nullable=False)
-    enrollment_type = db.Column(db.String, nullable=False)
+    enrollment_count = db.Column(db.Integer, nullable=True)
+    enrollment_type = db.Column(db.String, nullable=True)
     number_arms = db.Column(db.Integer, nullable=True)
     design_observational_model_list = db.Column(ARRAY(String), nullable=True)
     design_time_perspective_list = db.Column(ARRAY(String), nullable=True)
@@ -53,7 +53,7 @@ class StudyDesign(db.Model):  # type: ignore
     number_groups_cohorts = db.Column(db.Integer, nullable=True)
 
     study_id = db.Column(
-        db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=False
+        db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), primary_key=True, nullable=False
     )
     study = db.relationship("Study", back_populates="study_design")
 

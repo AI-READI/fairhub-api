@@ -24,7 +24,7 @@ class StudyOther(db.Model):  # type: ignore
     size = db.Column(db.BigInteger, nullable=False)
 
     study_id = db.Column(
-        db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=False
+        db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), primary_key=True, nullable=False
     )
     study = db.relationship("Study", back_populates="study_other")
 

@@ -17,7 +17,7 @@ class StudyDescription(db.Model):  # type: ignore
     detailed_description = db.Column(db.String, nullable=False)
 
     study_id = db.Column(
-        db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=False
+        db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), primary_key=True, nullable=False
     )
     study = db.relationship("Study", back_populates="study_description")
 
