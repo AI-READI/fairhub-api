@@ -52,9 +52,12 @@ class DatasetDescriptionResource(Resource):
         @api.doc("delete description")
         @api.response(200, "Success")
         @api.response(400, "Validation Error")
-        def delete(self,
-                   study_id: int, dataset_id: int,   # pylint: disable= unused-argument
-                   description_id: int):
+        def delete(
+            self,
+            study_id: int,
+            dataset_id: int,  # pylint: disable= unused-argument
+            description_id: int,
+        ):
             dataset_description_ = model.DatasetDescription.query.get(description_id)
 
             model.db.session.delete(dataset_description_)

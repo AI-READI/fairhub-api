@@ -58,9 +58,12 @@ class DatasetSubjectUpdate(Resource):
     @api.doc("delete subject")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def delete(self,
-               study_id: int, dataset_id: int,  # pylint: disable= unused-argument
-               subject_id: int):
+    def delete(
+        self,
+        study_id: int,
+        dataset_id: int,  # pylint: disable= unused-argument
+        subject_id: int,
+    ):
         dataset_subject_ = model.DatasetSubject.query.get(subject_id)
 
         model.db.session.delete(dataset_subject_)

@@ -31,8 +31,7 @@ class DatasetDateResource(Resource):
     @api.doc("update date")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def post(self,
-             study_id: int, dataset_id: int):  # pylint: disable= unused-argument
+    def post(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
         list_of_elements = []
@@ -56,8 +55,9 @@ class DatasetDateDeleteResource(Resource):
     @api.doc("delete date")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def delete(self,
-               study_id: int, dataset_id: int, date_id: int):  # pylint: disable= unused-argument
+    def delete(
+        self, study_id: int, dataset_id: int, date_id: int
+    ):  # pylint: disable= unused-argument
         date_ = model.DatasetDate.query.get(date_id)
 
         model.db.session.delete(date_)

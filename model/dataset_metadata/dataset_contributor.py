@@ -1,6 +1,7 @@
 import datetime
 import uuid
 from datetime import timezone
+
 from model.db import db
 
 

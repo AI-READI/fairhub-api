@@ -13,6 +13,7 @@ class DatasetRelatedItem(db.Model):  # type: ignore
         self.dataset = dataset
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
         self.dataset_related_item_other = model.DatasetRelatedItemOther(self)
+
     __tablename__ = "dataset_related_item"
 
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -42,9 +43,12 @@ class DatasetRelatedItem(db.Model):  # type: ignore
             "type": self.type,
             "relation_type": self.relation_type,
             "created_at": self.created_at,
-            "title": self.dataset_related_item_title.title if self.dataset_related_item_title else None,
-            "title_type": self.dataset_related_item_title.type if self.dataset_related_item_title else None,
-
+            "title": self.dataset_related_item_title.title
+            if self.dataset_related_item_title
+            else None,
+            "title_type": self.dataset_related_item_title.type
+            if self.dataset_related_item_title
+            else None,
         }
 
     @staticmethod

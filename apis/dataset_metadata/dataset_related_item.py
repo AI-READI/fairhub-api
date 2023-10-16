@@ -54,9 +54,12 @@ class DatasetRelatedItemUpdate(Resource):
     @api.doc("delete related item")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def delete(self,
-               study_id: int, dataset_id: int,  # pylint: disable= unused-argument
-               related_item_id: int):
+    def delete(
+        self,
+        study_id: int,
+        dataset_id: int,  # pylint: disable= unused-argument
+        related_item_id: int,
+    ):
         dataset_related_item_ = model.DatasetRelatedItem.query.get(related_item_id)
 
         model.db.session.delete(dataset_related_item_)
