@@ -53,11 +53,10 @@ class DatasetRelatedItemResource(Resource):
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/related-item/<related_item_id>")
 class DatasetRelatedItemUpdate(Resource):
-    @api.doc("update related item")
+    @api.doc("delete related item")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def delete(self, study_id: int, dataset_id: int, related_item_id: int):
-        data = request.json
         dataset_related_item_ = model.DatasetRelatedItem.query.get(related_item_id)
 
         model.db.session.delete(dataset_related_item_)

@@ -27,7 +27,7 @@ class DatasetDescriptionResource(Resource):
         dataset_description_ = dataset_.dataset_description
         return [d.to_dict() for d in dataset_description_]
 
-    @api.doc("description update")
+    @api.doc("update description")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(dataset_description)
@@ -56,6 +56,8 @@ class DatasetDescriptionResource(Resource):
         @api.response(400, "Validation Error")
         def delete(self, study_id: int, dataset_id: int, description_id: int):
             dataset_description_ = model.DatasetDescription.query.get(description_id)
+
             model.db.session.delete(dataset_description_)
             model.db.session.commit()
+
             return 204

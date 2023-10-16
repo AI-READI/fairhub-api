@@ -49,4 +49,5 @@ class DatasetDeIdentLevel(db.Model):  # type: ignore
         self.dates = data["dates"]
         self.nonarr = data["nonarr"]
         self.k_anon = data["k_anon"]
-        self.details = data["details"]
+        if "details" in data:
+            self.details = data["details"]

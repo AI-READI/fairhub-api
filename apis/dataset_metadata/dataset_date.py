@@ -55,7 +55,7 @@ class DatasetDateResource(Resource):
 
 
 @api.route("/study/<study_id>/dataset/<date_id>/date")
-class DatasetDateResource(Resource):
+class DatasetDateDeleteResource(Resource):
     @api.doc("delete date")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")

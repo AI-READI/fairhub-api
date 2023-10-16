@@ -21,8 +21,7 @@ class DatasetContributorResource(Resource):
     def get(self, study_id: int, dataset_id: int):
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_contributor_ = dataset_.dataset_contributors
-        print("444444444444444444444444",[d.to_dict()["creator"] for d in dataset_contributor_ if d.to_dict()["creator"] == True])
-        return [d.to_dict() for d in dataset_contributor_ if d.to_dict()["creator"] == False]
+        return [d.to_dict() for d in dataset_contributor_ if not d.to_dict()["creator"]]
 
     @api.doc("update contributor")
     @api.response(200, "Success")
@@ -67,7 +66,7 @@ class DatasetContributorDelete(Resource):
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/creator")
-class DatasetContributorResource(Resource):
+class DatasetCreatorResource(Resource):
     @api.doc("creator")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
@@ -75,7 +74,7 @@ class DatasetContributorResource(Resource):
     def get(self, study_id: int, dataset_id: int):
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_creator_ = dataset_.dataset_contributors
-        return [d.to_dict() for d in dataset_creator_ if d.to_dict()["creator"] == True]
+        return [d.to_dict() for d in dataset_creator_ if d.to_dict()["creator"]]
 
     @api.doc("update creator")
     @api.response(200, "Success")
@@ -87,7 +86,6 @@ class DatasetContributorResource(Resource):
         for i in data:
 
             i["creator"] = True
-
             if "id" in i and i["id"]:
                 dataset_creator_ = model.DatasetContributor.query.get(
                     i["id"]
@@ -104,3 +102,17 @@ class DatasetContributorResource(Resource):
                 list_of_elements.append(dataset_creator_.to_dict())
         model.db.session.commit()
         return list_of_elements
+
+
+@api.route("/study/<study_id>/dataset/<dataset_id>/creator/<creator_id>")
+class DatasetCreatorDelete(Resource):
+    @api.doc("delete creator")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    def delete(self, study_id: int, dataset_id: int, creator_id: int):
+
+        dataset_creator_ = model.DatasetContributor.query.get(creator_id)
+        model.db.session.delete(dataset_creator_)
+        model.db.session.commit()
+
+        return 204

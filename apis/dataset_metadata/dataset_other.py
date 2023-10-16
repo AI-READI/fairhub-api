@@ -1,5 +1,3 @@
-from typing import Union, Any
-
 from flask import request
 from flask_restx import Resource, fields
 

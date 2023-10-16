@@ -9,7 +9,6 @@ from apis import exception
 from .db import db
 
 
-
 class StudyException(Exception):
     pass
 

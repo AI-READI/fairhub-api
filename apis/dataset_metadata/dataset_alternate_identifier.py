@@ -53,7 +53,6 @@ class DatasetAlternateIdentifierResource(Resource):
         model.db.session.commit()
         return list_of_elements
 
-
     @api.route(
         "/study/<study_id>/dataset/<dataset_id>/alternative-identifier/<identifier_id>"
     )

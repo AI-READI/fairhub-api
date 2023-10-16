@@ -30,6 +30,9 @@ class DatasetConsentResource(Resource):
         dataset_consent_ = dataset_.dataset_consent
         return dataset_consent_.to_dict()
 
+    @api.doc("update consent")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def put(self, study_id: int, dataset_id: int):
         data = request.json
         dataset_ = model.Dataset.query.get(dataset_id)
