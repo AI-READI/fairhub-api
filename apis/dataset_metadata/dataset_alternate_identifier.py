@@ -11,7 +11,7 @@ dataset_identifier = api.model(
     {
         "id": fields.String(required=True),
         "identifier": fields.String(required=True),
-        "identifier_type": fields.String(required=True),
+        "type": fields.String(required=False),
         "alternate": fields.Boolean(required=True),
     },
 )
@@ -22,7 +22,7 @@ class DatasetAlternateIdentifierResource(Resource):
     @api.doc("identifier")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(dataset_identifier)
+    # @api.marshal_with(dataset_identifier)
     def get(self, study_id: int, dataset_id: int):  # pylint: disable = unused-argument
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_identifier_ = dataset_.dataset_alternate_identifier

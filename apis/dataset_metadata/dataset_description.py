@@ -21,7 +21,7 @@ class DatasetDescriptionResource(Resource):
     @api.doc("description")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(dataset_description)
+    # @api.marshal_with(dataset_description)
     def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_description_ = dataset_.dataset_description

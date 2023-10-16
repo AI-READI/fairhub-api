@@ -23,7 +23,7 @@ class DatasetDescription(db.Model):  # type: ignore
     def to_dict(self):
         return {
             "id": self.id,
-            "description_type": self.description,
+            "description": self.description,
             "type": self.type,
             "created_at": self.created_at,
         }

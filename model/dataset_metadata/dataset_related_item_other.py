@@ -7,8 +7,8 @@ class DatasetRelatedItemOther(db.Model):  # type: ignore
         self.publication_year = None
         self.volume = ""
         self.issue = ""
-        self.number_value = None
-        self.number_type = ""
+        self.number_value = ""
+        self.number_type = None
         self.first_page = ""
         self.last_page = ""
         self.publisher = ""
@@ -21,7 +21,7 @@ class DatasetRelatedItemOther(db.Model):  # type: ignore
     number_value = db.Column(db.String, nullable=False)
     number_type = db.Column(db.String, nullable=True)
     first_page = db.Column(db.String, nullable=False)
-    last_page = db.Column(db.BOOLEAN, nullable=False)
+    last_page = db.Column(db.String, nullable=False)
     publisher = db.Column(db.String, nullable=False)
     edition = db.Column(db.String, nullable=False)
 
@@ -46,7 +46,6 @@ class DatasetRelatedItemOther(db.Model):  # type: ignore
             "last_page": self.last_page,
             "publisher": self.publisher,
             "edition": self.edition,
-            "scheme_type": self.scheme_type,
         }
 
     @staticmethod
