@@ -57,9 +57,12 @@ class DatasetRightsUpdate(Resource):
     @api.doc("delete rights")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def delete(self,
-               study_id: int, dataset_id: int,  # pylint: disable= unused-argument
-               rights_id: int):
+    def delete(
+        self,
+        study_id: int,
+        dataset_id: int,  # pylint: disable= unused-argument
+        rights_id: int,
+    ):
         dataset_rights_ = model.DatasetRights.query.get(rights_id)
 
         model.db.session.delete(dataset_rights_)

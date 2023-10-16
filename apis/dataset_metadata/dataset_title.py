@@ -52,9 +52,12 @@ class DatasetTitleResource(Resource):
         @api.doc("delete title")
         @api.response(200, "Success")
         @api.response(400, "Validation Error")
-        def delete(self,
-                   study_id: int, dataset_id: int,  # pylint: disable= unused-argument
-                   title_id: int):
+        def delete(
+            self,
+            study_id: int,
+            dataset_id: int,  # pylint: disable= unused-argument
+            title_id: int,
+        ):
             dataset_title_ = model.DatasetTitle.query.get(title_id)
             model.db.session.delete(dataset_title_)
             model.db.session.commit()

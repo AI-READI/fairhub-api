@@ -35,8 +35,7 @@ class DatasetFunderResource(Resource):
     @api.doc("update funder")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def post(self, study_id: int,  # pylint: disable= unused-argument
-             dataset_id: int):
+    def post(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
         list_of_elements = []
@@ -60,9 +59,12 @@ class DatasetFunderUpdate(Resource):
     @api.doc("delete funder")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def delete(self,
-               study_id: int, dataset_id: int,  # pylint: disable= unused-argument
-               funder_id: int):
+    def delete(
+        self,
+        study_id: int,
+        dataset_id: int,  # pylint: disable= unused-argument
+        funder_id: int,
+    ):
         dataset_funder_ = model.DatasetFunder.query.get(funder_id)
 
         model.db.session.delete(dataset_funder_)

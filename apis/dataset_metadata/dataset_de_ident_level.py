@@ -33,8 +33,7 @@ class DatasetDeIdentLevelResource(Resource):
     @api.doc("update ident level")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def put(self, study_id: int,   # pylint: disable= unused-argument
-            dataset_id: int):
+    def put(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         data = request.json
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_.dataset_de_ident_level.update(data)
