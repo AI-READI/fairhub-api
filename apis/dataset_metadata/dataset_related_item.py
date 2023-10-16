@@ -18,7 +18,7 @@ dataset_related_item = api.model(
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/related-item")
 class DatasetRelatedItemResource(Resource):
-    @api.doc("related_item")
+    @api.doc("related item")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(dataset_related_item)
@@ -27,21 +27,40 @@ class DatasetRelatedItemResource(Resource):
         dataset_related_item_ = dataset_.dataset_related_item
         return [d.to_dict() for d in dataset_related_item_]
 
+    @api.doc("update related item")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def post(self, study_id: int, dataset_id: int):
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
-        dataset_related_item_ = model.DatasetRelatedItem.from_data(data_obj, data)
-        model.db.session.add(dataset_related_item_)
+        list_of_elements = []
+        for i in data:
+            if "id" in i and i["id"]:
+                dataset_related_item_ = model.DatasetRelatedItem.query.get(
+                    i["id"])
+                if not dataset_related_item_:
+                    return f"Study link {i['id']} Id is not found", 404
+                dataset_related_item_.update(i)
+                list_of_elements.append(dataset_related_item_.to_dict())
+            elif "id" not in i or not i["id"]:
+                dataset_related_item_ = model.DatasetRelatedItem.from_data(
+                    data_obj, i)
+                model.db.session.add(dataset_related_item_)
+                list_of_elements.append(dataset_related_item_.to_dict())
         model.db.session.commit()
-        return dataset_related_item_.to_dict()
+        return list_of_elements
 
-    @api.route(
-        "/study/<study_id>/dataset/<dataset_id>/related-item/<related_item_id>"
-    )
-    class DatasetRelatedItemUpdate(Resource):
-        def put(self, study_id: int, dataset_id: int, related_item_id: int):
-            data = request.json
-            dataset_related_item_ = model.DatasetRelatedItem.query.get(related_item_id)
-            dataset_related_item_.update(data)
-            model.db.session.commit()
-            return dataset_related_item_.to_dict()
+
+@api.route("/study/<study_id>/dataset/<dataset_id>/related-item/<related_item_id>")
+class DatasetRelatedItemUpdate(Resource):
+    @api.doc("update related item")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    def delete(self, study_id: int, dataset_id: int, related_item_id: int):
+        data = request.json
+        dataset_related_item_ = model.DatasetRelatedItem.query.get(related_item_id)
+
+        model.db.session.delete(dataset_related_item_)
+        model.db.session.commit()
+
+        return 204

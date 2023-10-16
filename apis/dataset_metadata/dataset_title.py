@@ -28,6 +28,9 @@ class DatasetTitleResource(Resource):
         dataset_title_ = dataset_.dataset_title
         return [d.to_dict() for d in dataset_title_]
 
+    @api.doc("update title")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def post(self, study_id: int, dataset_id: int):
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
@@ -46,8 +49,11 @@ class DatasetTitleResource(Resource):
 
     @api.route("/study/<study_id>/dataset/<dataset_id>/title/<title_id>")
     class DatasetDescriptionUpdate(Resource):
+        @api.doc("delete title")
+        @api.response(200, "Success")
+        @api.response(400, "Validation Error")
         def delete(self, study_id: int, dataset_id: int, title_id: int):
             dataset_title_ = model.DatasetTitle.query.get(title_id)
             model.db.session.delete(dataset_title_)
             model.db.session.commit()
-            return dataset_title_.to_dict()
+            return 204

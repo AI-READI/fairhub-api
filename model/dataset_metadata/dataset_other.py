@@ -49,11 +49,19 @@ class DatasetOther(db.Model):  # type: ignore
         return dataset_other
 
     def update(self, data: dict):
-        self.language = data["language"]
-        self.managing_organization_name = data["managing_organization_name"]
-        self.managing_organization_ror_id = data["managing_organization_ror_id"]
-        self.size = data["size"]
-        self.acknowledgement = data["acknowledgement"]
-        self.standards_followed = data["standards_followed"]
-        self.publisher = data["publisher"]
-        self.resource_type = data["resource_type"]
+        if "language" in data:
+            self.language = data["language"]
+        if "managing_organization_name" in data:
+            self.managing_organization_name = data["managing_organization_name"]
+        if "managing_organization_ror_id" in data:
+            self.managing_organization_ror_id = data["managing_organization_ror_id"]
+        if "size" in data:
+            self.size = data["size"]
+        if "acknowledgement" in data:
+            self.acknowledgement = data["acknowledgement"]
+        if "standards_followed" in data:
+            self.standards_followed = data["standards_followed"]
+        if "publisher" in data:
+            self.publisher = data["publisher"]
+        if "resource_type" in data:
+            self.resource_type = data["resource_type"]

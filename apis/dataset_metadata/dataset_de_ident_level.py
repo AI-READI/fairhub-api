@@ -28,11 +28,11 @@ class DatasetDeIdentLevelResource(Resource):
     def get(self, study_id: int, dataset_id: int):
         dataset_ = model.Dataset.query.get(dataset_id)
         de_ident_level_ = dataset_.dataset_de_ident_level
-        return [d.to_dict() for d in de_ident_level_]
+        return de_ident_level_.to_dict()
 
     def put(self, study_id: int, dataset_id: int):
         data = request.json
         dataset_ = model.Dataset.query.get(dataset_id)
-        de_ident_level_ = dataset_.dataset_de_ident_level.update(data)
+        dataset_.dataset_de_ident_level.update(data)
         model.db.session.commit()
-        return de_ident_level_.to_dict()
+        return dataset_.dataset_de_ident_level.to_dict()

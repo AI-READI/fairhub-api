@@ -32,19 +32,39 @@ class DatasetFunderResource(Resource):
         dataset_funder_ = dataset_.dataset_funder
         return [d.to_dict() for d in dataset_funder_]
 
+    @api.doc("update funder")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def post(self, study_id: int, dataset_id: int):
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
-        dataset_funder_ = model.DatasetFunder.from_data(data_obj, data)
-        model.db.session.add(dataset_funder_)
+        list_of_elements = []
+        for i in data:
+            if "id" in i and i["id"]:
+                dataset_funder_ = model.DatasetFunder.query.get(
+                    i["id"])
+                if not dataset_funder_:
+                    return f"Study link {i['id']} Id is not found", 404
+                dataset_funder_.update(i)
+                list_of_elements.append(dataset_funder_.to_dict())
+            elif "id" not in i or not i["id"]:
+                dataset_funder_ = model.DatasetFunder.from_data(
+                    data_obj, i)
+                model.db.session.add(dataset_funder_)
+                list_of_elements.append(dataset_funder_.to_dict())
         model.db.session.commit()
-        return dataset_funder_.to_dict()
+        return list_of_elements
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/funder/<funder_id>")
 class DatasetFunderUpdate(Resource):
-    def put(self, study_id: int, dataset_id: int, funder_id: int):
+    @api.doc("delete funder")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    def delete(self, study_id: int, dataset_id: int, funder_id: int):
         dataset_funder_ = model.DatasetFunder.query.get(funder_id)
-        dataset_funder_.update(request.json)
+
+        model.db.session.delete(dataset_funder_)
         model.db.session.commit()
-        return dataset_funder_.to_dict()
+
+        return 204

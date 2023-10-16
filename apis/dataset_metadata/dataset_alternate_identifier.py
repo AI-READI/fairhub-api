@@ -28,6 +28,9 @@ class DatasetAlternateIdentifierResource(Resource):
         dataset_identifier_ = dataset_.dataset_alternate_identifier
         return [d.to_dict() for d in dataset_identifier_]
 
+    @api.doc("update identifier")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def post(self, study_id: int, dataset_id: int):
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
@@ -50,15 +53,19 @@ class DatasetAlternateIdentifierResource(Resource):
         model.db.session.commit()
         return list_of_elements
 
-# not ready
+
     @api.route(
         "/study/<study_id>/dataset/<dataset_id>/alternative-identifier/<identifier_id>"
     )
     class DatasetAlternateIdentifierUpdate(Resource):
+        @api.doc("delete identifier")
+        @api.response(200, "Success")
+        @api.response(400, "Validation Error")
         def delete(self, study_id: int, dataset_id: int, identifier_id: int):
             dataset_identifier_ = model.DatasetAlternateIdentifier.query.get(
-                identifier_id
-            )
-            dataset_identifier_.update(request.json)
+                identifier_id)
+
+            model.db.session.delete(dataset_identifier_)
             model.db.session.commit()
-            return dataset_identifier_.to_dict()
+
+            return 204

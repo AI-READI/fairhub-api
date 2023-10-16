@@ -25,10 +25,10 @@ class DatasetAccessResource(Resource):
     def get(self, study_id: int, dataset_id: int):
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_access_ = dataset_.dataset_access
-        return [d.to_dict() for d in dataset_access_]
+        return dataset_access_.to_dict()
 
     def put(self, study_id: int, dataset_id: int):
         dataset_ = model.Dataset.query.get(dataset_id)
-        dataset_access_ = dataset_.dataset_access.update(request.json)
+        dataset_.dataset_access.update(request.json)
         model.db.session.commit()
-        return dataset_access_.to_dict()
+        return dataset_.dataset_access.to_dict()

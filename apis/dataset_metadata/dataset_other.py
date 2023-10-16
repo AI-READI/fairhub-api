@@ -1,3 +1,5 @@
+from typing import Union, Any
+
 from flask import request
 from flask_restx import Resource, fields
 
@@ -27,11 +29,33 @@ class DatasetOtherResource(Resource):
     def get(self, study_id: int, dataset_id: int):
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_other_ = dataset_.dataset_other
-        return [d.to_dict() for d in dataset_other_]
+        return dataset_other_.to_dict()
 
     def put(self, study_id: int, dataset_id: int):
         data = request.json
         dataset_ = model.Dataset.query.get(dataset_id)
-        dataset_other_ = dataset_.dataset_other.update(data)
+        dataset_.dataset_other.update(data)
         model.db.session.commit()
+        return dataset_.dataset_other.to_dict()
+
+
+@api.route("/study/<study_id>/dataset/<dataset_id>/publisher")
+class DatasetPublisherResource(Resource):
+    @api.doc("publisher")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    # @api.marshal_with(dataset_publisher)
+    def get(self, study_id: int, dataset_id: int):
+        dataset_ = model.Dataset.query.get(dataset_id)
+        dataset_other_ = dataset_.dataset_other
         return dataset_other_.to_dict()
+
+    @api.doc("update publisher")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    def put(self, study_id: int, dataset_id: int):
+        data = request.json
+        dataset_ = model.Dataset.query.get(dataset_id)
+        dataset_.dataset_other.update(data)
+        model.db.session.commit()
+        return dataset_.dataset_other.to_dict()

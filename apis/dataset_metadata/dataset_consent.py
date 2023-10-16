@@ -24,15 +24,15 @@ class DatasetConsentResource(Resource):
     @api.doc("consent")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(dataset_consent)
+    # @api.marshal_with(dataset_consent)
     def get(self, study_id: int, dataset_id: int):
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_consent_ = dataset_.dataset_consent
-        return [d.to_dict() for d in dataset_consent_]
+        return dataset_consent_.to_dict()
 
     def put(self, study_id: int, dataset_id: int):
         data = request.json
         dataset_ = model.Dataset.query.get(dataset_id)
-        dataset_consent_ = dataset_.dataset_consent.update(data)
+        dataset_.dataset_consent.update(data)
         model.db.session.commit()
-        return dataset_consent_.to_dict()
+        return dataset_.dataset_consent.to_dict()
