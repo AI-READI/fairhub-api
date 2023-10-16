@@ -21,7 +21,7 @@ class DatasetRelatedItemTitleResource(Resource):
     @api.response(400, "Validation Error")
     # @api.param("id", "The dataset identifier")
     # @api.marshal_with(dataset_related_item_contributor)
-    def get(self, study_id: int, dataset_id: int):
+    def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_related_item_title_ = dataset_.dataset_related_item_title
         return [d.to_dict() for d in dataset_related_item_title_]

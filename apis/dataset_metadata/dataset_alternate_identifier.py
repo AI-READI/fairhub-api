@@ -23,7 +23,7 @@ class DatasetAlternateIdentifierResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(dataset_identifier)
-    def get(self, study_id: int, dataset_id: int):
+    def get(self, study_id: int, dataset_id: int):  # pylint: disable = unused-argument
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_identifier_ = dataset_.dataset_alternate_identifier
         return [d.to_dict() for d in dataset_identifier_]
@@ -31,7 +31,7 @@ class DatasetAlternateIdentifierResource(Resource):
     @api.doc("update identifier")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def post(self, study_id: int, dataset_id: int):
+    def post(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
         list_of_elements = []
@@ -60,7 +60,9 @@ class DatasetAlternateIdentifierResource(Resource):
         @api.doc("delete identifier")
         @api.response(200, "Success")
         @api.response(400, "Validation Error")
-        def delete(self, study_id: int, dataset_id: int, identifier_id: int):
+        def delete(
+            self, study_id: int, dataset_id: int, identifier_id: int
+        ):  # pylint: disable= unused-argument
             dataset_identifier_ = model.DatasetAlternateIdentifier.query.get(
                 identifier_id
             )

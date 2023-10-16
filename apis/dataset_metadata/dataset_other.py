@@ -24,12 +24,12 @@ class DatasetOtherResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(dataset_other)
-    def get(self, study_id: int, dataset_id: int):
+    def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_other_ = dataset_.dataset_other
         return dataset_other_.to_dict()
 
-    def put(self, study_id: int, dataset_id: int):
+    def put(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         data = request.json
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_.dataset_other.update(data)
@@ -43,7 +43,7 @@ class DatasetPublisherResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(dataset_publisher)
-    def get(self, study_id: int, dataset_id: int):
+    def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_other_ = dataset_.dataset_other
         return dataset_other_.to_dict()
@@ -51,7 +51,8 @@ class DatasetPublisherResource(Resource):
     @api.doc("update publisher")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def put(self, study_id: int, dataset_id: int):
+    def put(self, study_id: int,  # pylint: disable= unused-argument
+            dataset_id: int):
         data = request.json
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_.dataset_other.update(data)

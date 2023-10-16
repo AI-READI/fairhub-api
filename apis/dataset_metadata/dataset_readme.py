@@ -16,12 +16,12 @@ class DatasetReadmeResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(dataset_readme)
-    def get(self, study_id: int, dataset_id: int):
+    def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_readme_ = dataset_.dataset_readme
         return [d.to_dict() for d in dataset_readme_]
 
-    def put(self, study_id: int, dataset_id: int):
+    def put(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         data = request.json
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_readme_ = dataset_.dataset_readme.update(data)

@@ -25,7 +25,7 @@ class DatasetRightsResource(Resource):
     @api.response(400, "Validation Error")
     # @api.param("id", "The dataset identifier")
     @api.marshal_with(dataset_rights)
-    def get(self, study_id: int, dataset_id: int):
+    def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_rights_ = dataset_.dataset_rights
         return [d.to_dict() for d in dataset_rights_]
@@ -33,7 +33,7 @@ class DatasetRightsResource(Resource):
     @api.doc("update rights")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def post(self, study_id: int, dataset_id: int):
+    def post(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
         list_of_elements = []
@@ -57,7 +57,9 @@ class DatasetRightsUpdate(Resource):
     @api.doc("delete rights")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def delete(self, study_id: int, dataset_id: int, rights_id: int):
+    def delete(self,
+               study_id: int, dataset_id: int,  # pylint: disable= unused-argument
+               rights_id: int):
         dataset_rights_ = model.DatasetRights.query.get(rights_id)
 
         model.db.session.delete(dataset_rights_)

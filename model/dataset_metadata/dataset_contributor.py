@@ -1,8 +1,6 @@
 import datetime
 import uuid
 from datetime import timezone
-
-import model
 from model.db import db
 
 
@@ -45,7 +43,7 @@ class DatasetContributor(db.Model):  # type: ignore
         }
 
     @staticmethod
-    def from_data(dataset: model.Dataset, data: dict):
+    def from_data(dataset, data: dict):
         dataset_contributor = DatasetContributor(dataset)
         dataset_contributor.update(data)
         return dataset_contributor

@@ -22,7 +22,7 @@ class DatasetAccessResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(dataset_access)
-    def get(self, study_id: int, dataset_id: int):
+    def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_access_ = dataset_.dataset_access
         return dataset_access_.to_dict()
@@ -30,7 +30,7 @@ class DatasetAccessResource(Resource):
     @api.doc("update access")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def put(self, study_id: int, dataset_id: int):
+    def put(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_.dataset_access.update(request.json)
         model.db.session.commit()

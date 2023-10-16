@@ -26,7 +26,7 @@ class DatasetSubjectResource(Resource):
     @api.response(400, "Validation Error")
     # @api.param("id", "The dataset identifier")
     @api.marshal_with(dataset_subject)
-    def get(self, study_id: int, dataset_id: int):
+    def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_subject_ = dataset_.dataset_subject
         return [d.to_dict() for d in dataset_subject_]
@@ -34,7 +34,7 @@ class DatasetSubjectResource(Resource):
     @api.doc("update subject")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def post(self, study_id: int, dataset_id: int):
+    def post(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
         list_of_elements = []
@@ -58,7 +58,9 @@ class DatasetSubjectUpdate(Resource):
     @api.doc("delete subject")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def delete(self, study_id: int, dataset_id: int, subject_id: int):
+    def delete(self,
+               study_id: int, dataset_id: int,  # pylint: disable= unused-argument
+               subject_id: int):
         dataset_subject_ = model.DatasetSubject.query.get(subject_id)
 
         model.db.session.delete(dataset_subject_)

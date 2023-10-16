@@ -18,7 +18,8 @@ class DatasetContributorResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(dataset_contributor)
-    def get(self, study_id: int, dataset_id: int):
+    def get(self,
+            study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_contributor_ = dataset_.dataset_contributors
         return [d.to_dict() for d in dataset_contributor_ if not d.to_dict()["creator"]]
@@ -26,7 +27,8 @@ class DatasetContributorResource(Resource):
     @api.doc("update contributor")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def post(self, study_id: int, dataset_id: int):
+    def post(self,
+             study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
         list_of_elements = []
@@ -52,7 +54,10 @@ class DatasetContributorDelete(Resource):
     @api.doc("delete contributor")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def delete(self, study_id: int, dataset_id: int, contributor_id: int):
+    def delete(
+        self, study_id: int,
+            dataset_id: int, contributor_id: int
+    ):  # pylint: disable= unused-argument
         contributor_ = model.DatasetContributor.query.get(contributor_id)
 
         model.db.session.delete(contributor_)
@@ -67,7 +72,8 @@ class DatasetCreatorResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(dataset_contributor)
-    def get(self, study_id: int, dataset_id: int):
+    def get(self,
+            study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_creator_ = dataset_.dataset_contributors
         return [d.to_dict() for d in dataset_creator_ if d.to_dict()["creator"]]
@@ -75,7 +81,8 @@ class DatasetCreatorResource(Resource):
     @api.doc("update creator")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def post(self, study_id: int, dataset_id: int):
+    def post(self,
+             study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
         list_of_elements = []
@@ -100,7 +107,10 @@ class DatasetCreatorDelete(Resource):
     @api.doc("delete creator")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def delete(self, study_id: int, dataset_id: int, creator_id: int):
+    def delete(
+        self,
+            study_id: int, dataset_id: int, creator_id: int
+    ):  # pylint: disable= unused-argument
         dataset_creator_ = model.DatasetContributor.query.get(creator_id)
         model.db.session.delete(dataset_creator_)
         model.db.session.commit()

@@ -22,7 +22,7 @@ class DatasetDescriptionResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(dataset_description)
-    def get(self, study_id: int, dataset_id: int):
+    def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_description_ = dataset_.dataset_description
         return [d.to_dict() for d in dataset_description_]
@@ -31,7 +31,7 @@ class DatasetDescriptionResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(dataset_description)
-    def post(self, study_id: int, dataset_id: int):
+    def post(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
         list_of_elements = []
@@ -52,7 +52,9 @@ class DatasetDescriptionResource(Resource):
         @api.doc("delete description")
         @api.response(200, "Success")
         @api.response(400, "Validation Error")
-        def delete(self, study_id: int, dataset_id: int, description_id: int):
+        def delete(self,
+                   study_id: int, dataset_id: int,   # pylint: disable= unused-argument
+                   description_id: int):
             dataset_description_ = model.DatasetDescription.query.get(description_id)
 
             model.db.session.delete(dataset_description_)
