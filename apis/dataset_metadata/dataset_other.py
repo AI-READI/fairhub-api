@@ -28,7 +28,7 @@ class DatasetOtherResource(Resource):
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_other_ = dataset_.dataset_other
         return dataset_other_.to_dict()
-
+ 
     def put(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         data = request.json
         dataset_ = model.Dataset.query.get(dataset_id)

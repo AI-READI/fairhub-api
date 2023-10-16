@@ -50,10 +50,12 @@ class StudyIdentification(db.Model):  # type: ignore
         """Updates the study from a dictionary"""
         self.identifier = data["identifier"]
         self.identifier_type = data["identifier_type"]
-        self.identifier_domain = (
-            data["identifier_domain"] if "identifier_domain" in data else ""
-        )
-        self.identifier_link = data["identifier_link"]
+        if "identifier_domain" in data:
+            self.identifier_domain = (
+                data["identifier_domain"] if "identifier_domain" in data else ""
+            )
+        if "identifier_link" in data:
+            self.identifier_link = data["identifier_link"]
         self.study.touch()
 
     def validate(self):

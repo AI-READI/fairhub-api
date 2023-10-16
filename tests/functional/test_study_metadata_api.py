@@ -307,7 +307,7 @@ def test_put_description_metadata(_test_client, _login_user):
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    pytest.global_description_id = response_data["id"]
+    # pytest.global_id = response_data["study_id"]
 
     assert response_data["brief_summary"] == "brief_summary"
     assert response_data["detailed_description"] == "detailed_description"
