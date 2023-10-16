@@ -36,7 +36,7 @@ class DatasetContributor(db.Model):  # type: ignore
             "name": self.name,
             "name_type": self.name_type,
             "name_identifier": self.name_identifier,
-            "name_identifier_scheme": self.name_identifier_schemename,
+            "name_identifier_scheme": self.name_identifier_scheme,
             "name_identifier_scheme_uri": self.name_identifier_scheme_uri,
             "creator": self.creator,
             "contributor_type": self.contributor_type,
@@ -57,5 +57,6 @@ class DatasetContributor(db.Model):  # type: ignore
         self.name_identifier_scheme = data["name_identifier_scheme"]
         self.name_identifier_scheme_uri = data["name_identifier_scheme_uri"]
         self.creator = data["creator"]
-        self.contributor_type = data["contributor_type"]
+        if "contributor_type" in data:
+            self.contributor_type = data["contributor_type"]
         self.affiliations = data["affiliations"]

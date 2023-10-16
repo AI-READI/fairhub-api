@@ -18,9 +18,9 @@ class DatasetContributorAffiliation(db.Model):  # type: ignore
     identifier_scheme_uri = db.Column(db.String, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
 
-    dataset_contributors = db.relationship(
-        "DatasetContributor", back_populates="dataset_contributor_affiliation"
-    )
+    # dataset_contributors = db.relationship(
+    #     "DatasetContributor", back_populates="dataset_contributor_affiliation"
+    # )
     contributor_id = db.Column(
         db.String, db.ForeignKey("dataset_contributor.id"), nullable=False
     )

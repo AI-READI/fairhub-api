@@ -24,7 +24,6 @@ from .dataset_metadata.dataset_record_keys import DatasetRecordKeys
 from .dataset_metadata.dataset_rights import DatasetRights
 from .dataset_metadata.dataset_subject import DatasetSubject
 from .dataset_metadata.dataset_title import DatasetTitle
-from .dataset_versions import DatasetVersions
 from .db import db
 from .email_verification import EmailVerification
 from .invited_study_contributor import StudyInvitedContributor
@@ -57,9 +56,8 @@ from .notification import Notification
 __all__ = [
     "Study",
     "Dataset",
-    "DatasetVersions",
-    "Version",
     "Participant",
+    "Version",
     "db",
     "User",
     "DatasetContributor",

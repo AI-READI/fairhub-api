@@ -27,6 +27,7 @@ from .dataset_metadata.dataset_related_item_identifier import (
 from .dataset_metadata.dataset_related_item_other import api as related_item_other
 from .dataset_metadata.dataset_related_item_title import api as related_item_title
 from .dataset_metadata.dataset_rights import api as rights
+from .dataset_metadata.dataset_contributor import api as dataset_contributor
 from .dataset_metadata.dataset_subject import api as subject
 from .dataset_metadata.dataset_title import api as title
 from .participant import api as participants_api
@@ -68,7 +69,6 @@ __all__ = [
     "de_ident_level",
     "description",
     "funder",
-    "managing_organization",
     "dataset_other",
     "readme",
     "record_keys",
@@ -100,6 +100,7 @@ __all__ = [
     "user",
     "identification",
     "study_description",
+    "dataset_contributor"
 ]
 
 

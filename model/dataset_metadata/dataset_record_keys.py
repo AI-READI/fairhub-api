@@ -26,5 +26,6 @@ class DatasetRecordKeys(db.Model):  # type: ignore
         return dataset_record_keys
 
     def update(self, data: dict):
-        self.key_type = data["key_type"]
-        self.key_details = data["key_details"]
+        self.key_type = data["type"]
+        if "key_details" in data:
+            self.key_details = data["key_details"]
