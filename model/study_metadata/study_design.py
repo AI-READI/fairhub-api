@@ -53,7 +53,10 @@ class StudyDesign(db.Model):  # type: ignore
     number_groups_cohorts = db.Column(db.Integer, nullable=True)
 
     study_id = db.Column(
-        db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), primary_key=True, nullable=False
+        db.CHAR(36),
+        db.ForeignKey("study.id", ondelete="CASCADE"),
+        primary_key=True,
+        nullable=False,
     )
     study = db.relationship("Study", back_populates="study_design")
 

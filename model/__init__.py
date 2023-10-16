@@ -1,3 +1,4 @@
+from model.dataset_metadata.dataset_contributor import DatasetContributor
 from model.dataset_metadata.dataset_related_item import DatasetRelatedItem
 from model.dataset_metadata.dataset_related_item_contributor import (
     DatasetRelatedItemContributor,
@@ -9,11 +10,9 @@ from model.dataset_metadata.dataset_related_item_other import DatasetRelatedItem
 from model.dataset_metadata.dataset_related_item_title import DatasetRelatedItemTitle
 
 from .dataset import Dataset
-from model.dataset_metadata.dataset_contributor import DatasetContributor
 from .dataset_metadata.dataset_access import DatasetAccess
 from .dataset_metadata.dataset_alternate_identifier import DatasetAlternateIdentifier
 from .dataset_metadata.dataset_consent import DatasetConsent
-
 from .dataset_metadata.dataset_date import DatasetDate
 from .dataset_metadata.dataset_de_ident_level import DatasetDeIdentLevel
 from .dataset_metadata.dataset_description import DatasetDescription
@@ -27,6 +26,7 @@ from .dataset_metadata.dataset_title import DatasetTitle
 from .db import db
 from .email_verification import EmailVerification
 from .invited_study_contributor import StudyInvitedContributor
+from .notification import Notification
 from .participant import Participant
 from .study import Study, StudyException
 from .study_contributor import StudyContributor
@@ -52,7 +52,7 @@ from .token_blacklist import TokenBlacklist
 from .user import User
 from .user_details import UserDetails
 from .version import Version
-from .notification import Notification
+
 __all__ = [
     "Study",
     "Dataset",
@@ -103,5 +103,5 @@ __all__ = [
     "EmailVerification",
     "TokenBlacklist",
     "UserDetails",
-    "Notification"
+    "Notification",
 ]

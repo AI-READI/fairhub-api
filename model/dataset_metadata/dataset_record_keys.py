@@ -6,11 +6,14 @@ class DatasetRecordKeys(db.Model):  # type: ignore
         self.dataset = dataset
         self.key_type = None
         self.key_details = ""
+
     __tablename__ = "dataset_record_keys"
     key_type = db.Column(db.String, nullable=True)
     key_details = db.Column(db.String, nullable=False)
 
-    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), primary_key=True, nullable=False)
+    dataset_id = db.Column(
+        db.CHAR(36), db.ForeignKey("dataset.id"), primary_key=True, nullable=False
+    )
     dataset = db.relationship("Dataset", back_populates="dataset_record_keys")
 
     def to_dict(self):

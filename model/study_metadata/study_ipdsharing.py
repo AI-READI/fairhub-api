@@ -28,7 +28,10 @@ class StudyIpdsharing(db.Model):  # type: ignore
     ipd_sharing_url = db.Column(db.String, nullable=False)
 
     study_id = db.Column(
-        db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), primary_key=True, nullable=False
+        db.CHAR(36),
+        db.ForeignKey("study.id", ondelete="CASCADE"),
+        primary_key=True,
+        nullable=False,
     )
     study = db.relationship("Study", back_populates="study_ipdsharing")
 

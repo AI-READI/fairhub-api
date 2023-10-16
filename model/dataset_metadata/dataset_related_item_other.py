@@ -26,7 +26,10 @@ class DatasetRelatedItemOther(db.Model):  # type: ignore
     edition = db.Column(db.String, nullable=False)
 
     dataset_related_item_id = db.Column(
-        db.CHAR(36), db.ForeignKey("dataset_related_item.id"), primary_key=True, nullable=False
+        db.CHAR(36),
+        db.ForeignKey("dataset_related_item.id"),
+        primary_key=True,
+        nullable=False,
     )
     dataset_related_item = db.relationship(
         "DatasetRelatedItem", back_populates="dataset_related_item_other"

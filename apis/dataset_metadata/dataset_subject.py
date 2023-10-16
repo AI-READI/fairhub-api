@@ -40,15 +40,13 @@ class DatasetSubjectResource(Resource):
         list_of_elements = []
         for i in data:
             if "id" in i and i["id"]:
-                dataset_subject_ = model.DatasetSubject.query.get(
-                    i["id"])
+                dataset_subject_ = model.DatasetSubject.query.get(i["id"])
                 if not dataset_subject_:
                     return f"Study link {i['id']} Id is not found", 404
                 dataset_subject_.update(i)
                 list_of_elements.append(dataset_subject_.to_dict())
             elif "id" not in i or not i["id"]:
-                dataset_subject_ = model.DatasetSubject.from_data(
-                    data_obj, i)
+                dataset_subject_ = model.DatasetSubject.from_data(data_obj, i)
                 model.db.session.add(dataset_subject_)
                 list_of_elements.append(dataset_subject_.to_dict())
         model.db.session.commit()

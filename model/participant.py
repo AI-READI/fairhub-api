@@ -2,9 +2,9 @@ import datetime
 import uuid
 from datetime import timezone
 
-from .version import version_participants
 from .db import db
 from .study import Study
+from .version import version_participants
 
 
 class Participant(db.Model):  # type: ignore

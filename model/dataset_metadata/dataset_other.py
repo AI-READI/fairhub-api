@@ -27,7 +27,9 @@ class DatasetOther(db.Model):  # type: ignore
     acknowledgement = db.Column(db.String, nullable=False)
     publisher = db.Column(db.String, nullable=False)
 
-    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), primary_key=True, nullable=False)
+    dataset_id = db.Column(
+        db.CHAR(36), db.ForeignKey("dataset.id"), primary_key=True, nullable=False
+    )
     dataset = db.relationship("Dataset", back_populates="dataset_other")
 
     def to_dict(self):

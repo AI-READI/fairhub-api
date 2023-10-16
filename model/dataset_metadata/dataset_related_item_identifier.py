@@ -1,6 +1,7 @@
-import uuid
 import datetime
+import uuid
 from datetime import timezone
+
 from ..db import db
 
 
@@ -33,8 +34,7 @@ class DatasetRelatedItemIdentifier(db.Model):  # type: ignore
             "metadata_scheme": self.metadata_scheme,
             "scheme_uri": self.scheme_uri,
             "scheme_type": self.scheme_type,
-            "created_at": self.created_at
-
+            "created_at": self.created_at,
         }
 
     @staticmethod

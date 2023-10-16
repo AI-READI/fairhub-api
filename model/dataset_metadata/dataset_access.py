@@ -1,5 +1,6 @@
-from model import Dataset
 import datetime
+
+from model import Dataset
 
 from ..db import db
 
@@ -18,7 +19,9 @@ class DatasetAccess(db.Model):  # type: ignore
     url = db.Column(db.String, nullable=False)
     url_last_checked = db.Column(db.BigInteger, nullable=True)
 
-    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), primary_key=True, nullable=False)
+    dataset_id = db.Column(
+        db.CHAR(36), db.ForeignKey("dataset.id"), primary_key=True, nullable=False
+    )
     dataset = db.relationship("Dataset", back_populates="dataset_access")
 
     def to_dict(self):

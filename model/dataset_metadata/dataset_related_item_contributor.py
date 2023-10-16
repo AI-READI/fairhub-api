@@ -1,6 +1,7 @@
-import uuid
 import datetime
+import uuid
 from datetime import timezone
+
 from ..db import db
 
 
@@ -32,8 +33,7 @@ class DatasetRelatedItemContributor(db.Model):  # type: ignore
             "name_type": self.name_type,
             "creator": self.creator,
             "contributor_type": self.contributor_type,
-            "created_at": self.created_at
-
+            "created_at": self.created_at,
         }
 
     @staticmethod

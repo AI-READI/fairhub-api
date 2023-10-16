@@ -1,4 +1,4 @@
-from typing import Union, Any
+from typing import Any, Union
 
 from flask import request
 from flask_restx import Resource, fields
@@ -37,17 +37,13 @@ class DatasetDateResource(Resource):
         list_of_elements = []
         for i in data:
             if "id" in i and i["id"]:
-                dataset_date_ = model.DatasetDate.query.get(
-                    i["id"]
-                )
+                dataset_date_ = model.DatasetDate.query.get(i["id"])
                 if not dataset_date_:
                     return f"Study link {i['id']} Id is not found", 404
                 dataset_date_.update(i)
                 list_of_elements.append(dataset_date_.to_dict())
             elif "id" not in i or not i["id"]:
-                dataset_date_ = model.DatasetDate.from_data(
-                    data_obj, i
-                )
+                dataset_date_ = model.DatasetDate.from_data(data_obj, i)
                 model.db.session.add(dataset_date_)
                 list_of_elements.append(dataset_date_.to_dict())
         model.db.session.commit()

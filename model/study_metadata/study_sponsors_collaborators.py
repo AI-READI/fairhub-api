@@ -28,7 +28,10 @@ class StudySponsorsCollaborators(db.Model):  # type: ignore
     collaborator_name = db.Column(ARRAY(String), nullable=False)
 
     study_id = db.Column(
-        db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), primary_key=True, nullable=False
+        db.CHAR(36),
+        db.ForeignKey("study.id", ondelete="CASCADE"),
+        primary_key=True,
+        nullable=False,
     )
     study = db.relationship("Study", back_populates="study_sponsors_collaborators")
 

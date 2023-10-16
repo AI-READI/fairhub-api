@@ -1,4 +1,4 @@
-from typing import Union, Any
+from typing import Any, Union
 
 from flask import request
 from flask_restx import Resource
@@ -33,18 +33,14 @@ class DatasetContributorResource(Resource):
         for i in data:
             i["creator"] = False
             if "id" in i and i["id"]:
-                dataset_contributor_ = model.DatasetContributor.query.get(
-                    i["id"]
-                )
+                dataset_contributor_ = model.DatasetContributor.query.get(i["id"])
                 if not dataset_contributor_:
                     return f"Study link {i['id']} Id is not found", 404
 
                 dataset_contributor_.update(i)
                 list_of_elements.append(dataset_contributor_.to_dict())
             elif "id" not in i or not i["id"]:
-                dataset_contributor_ = model.DatasetContributor.from_data(
-                    data_obj, i
-                )
+                dataset_contributor_ = model.DatasetContributor.from_data(data_obj, i)
                 model.db.session.add(dataset_contributor_)
                 list_of_elements.append(dataset_contributor_.to_dict())
         model.db.session.commit()
@@ -84,20 +80,15 @@ class DatasetCreatorResource(Resource):
         data_obj = model.Dataset.query.get(dataset_id)
         list_of_elements = []
         for i in data:
-
             i["creator"] = True
             if "id" in i and i["id"]:
-                dataset_creator_ = model.DatasetContributor.query.get(
-                    i["id"]
-                )
+                dataset_creator_ = model.DatasetContributor.query.get(i["id"])
                 if not dataset_creator_:
                     return f"Study link {i['id']} Id is not found", 404
                 dataset_creator_.update(i)
                 list_of_elements.append(dataset_creator_.to_dict())
             elif "id" not in i or not i["id"]:
-                dataset_creator_ = model.DatasetContributor.from_data(
-                    data_obj, i
-                )
+                dataset_creator_ = model.DatasetContributor.from_data(data_obj, i)
                 model.db.session.add(dataset_creator_)
                 list_of_elements.append(dataset_creator_.to_dict())
         model.db.session.commit()
@@ -110,7 +101,6 @@ class DatasetCreatorDelete(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def delete(self, study_id: int, dataset_id: int, creator_id: int):
-
         dataset_creator_ = model.DatasetContributor.query.get(creator_id)
         model.db.session.delete(dataset_creator_)
         model.db.session.commit()

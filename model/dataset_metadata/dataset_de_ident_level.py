@@ -22,7 +22,9 @@ class DatasetDeIdentLevel(db.Model):  # type: ignore
     k_anon = db.Column(db.BOOLEAN, nullable=False)
     details = db.Column(db.String, nullable=False)
 
-    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), primary_key=True, nullable=False)
+    dataset_id = db.Column(
+        db.CHAR(36), db.ForeignKey("dataset.id"), primary_key=True, nullable=False
+    )
     dataset = db.relationship("Dataset", back_populates="dataset_de_ident_level")
 
     def to_dict(self):

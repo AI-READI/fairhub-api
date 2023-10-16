@@ -10,6 +10,7 @@ from .dataset import api as dataset_api
 from .dataset_metadata.dataset_access import api as access
 from .dataset_metadata.dataset_alternate_identifier import api as alternate_identifier
 from .dataset_metadata.dataset_consent import api as consent
+from .dataset_metadata.dataset_contributor import api as dataset_contributor
 from .dataset_metadata.dataset_date import api as date
 from .dataset_metadata.dataset_de_ident_level import api as de_ident_level
 from .dataset_metadata.dataset_description import api as description
@@ -27,7 +28,6 @@ from .dataset_metadata.dataset_related_item_identifier import (
 from .dataset_metadata.dataset_related_item_other import api as related_item_other
 from .dataset_metadata.dataset_related_item_title import api as related_item_title
 from .dataset_metadata.dataset_rights import api as rights
-from .dataset_metadata.dataset_contributor import api as dataset_contributor
 from .dataset_metadata.dataset_subject import api as subject
 from .dataset_metadata.dataset_title import api as title
 from .participant import api as participants_api
@@ -100,7 +100,7 @@ __all__ = [
     "user",
     "identification",
     "study_description",
-    "dataset_contributor"
+    "dataset_contributor",
 ]
 
 

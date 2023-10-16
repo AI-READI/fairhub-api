@@ -39,15 +39,13 @@ class DatasetRightsResource(Resource):
         list_of_elements = []
         for i in data:
             if "id" in i and i["id"]:
-                dataset_rights_ = model.DatasetRights.query.get(
-                    i["id"])
+                dataset_rights_ = model.DatasetRights.query.get(i["id"])
                 if not dataset_rights_:
                     return f"Study link {i['id']} Id is not found", 404
                 dataset_rights_.update(i)
                 list_of_elements.append(dataset_rights_.to_dict())
             elif "id" not in i or not i["id"]:
-                dataset_rights_ = model.DatasetRights.from_data(
-                    data_obj, i)
+                dataset_rights_ = model.DatasetRights.from_data(data_obj, i)
                 model.db.session.add(dataset_rights_)
                 list_of_elements.append(dataset_rights_.to_dict())
         model.db.session.commit()

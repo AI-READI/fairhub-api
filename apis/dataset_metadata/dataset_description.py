@@ -47,9 +47,7 @@ class DatasetDescriptionResource(Resource):
         model.db.session.commit()
         return list_of_elements
 
-    @api.route(
-        "/study/<study_id>/dataset/<dataset_id>/description/<description_id>"
-    )
+    @api.route("/study/<study_id>/dataset/<dataset_id>/description/<description_id>")
     class DatasetDescriptionUpdate(Resource):
         @api.doc("delete description")
         @api.response(200, "Success")

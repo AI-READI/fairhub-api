@@ -62,7 +62,8 @@ class DatasetAlternateIdentifierResource(Resource):
         @api.response(400, "Validation Error")
         def delete(self, study_id: int, dataset_id: int, identifier_id: int):
             dataset_identifier_ = model.DatasetAlternateIdentifier.query.get(
-                identifier_id)
+                identifier_id
+            )
 
             model.db.session.delete(dataset_identifier_)
             model.db.session.commit()

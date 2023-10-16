@@ -22,7 +22,9 @@ class DatasetConsent(db.Model):  # type: ignore
     no_methods = db.Column(db.BOOLEAN, nullable=False)
     details = db.Column(db.String, nullable=False)
 
-    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), primary_key=True, nullable=False)
+    dataset_id = db.Column(
+        db.CHAR(36), db.ForeignKey("dataset.id"), primary_key=True, nullable=False
+    )
     dataset = db.relationship("Dataset", back_populates="dataset_consent")
 
     def to_dict(self):

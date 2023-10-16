@@ -41,15 +41,13 @@ class DatasetFunderResource(Resource):
         list_of_elements = []
         for i in data:
             if "id" in i and i["id"]:
-                dataset_funder_ = model.DatasetFunder.query.get(
-                    i["id"])
+                dataset_funder_ = model.DatasetFunder.query.get(i["id"])
                 if not dataset_funder_:
                     return f"Study link {i['id']} Id is not found", 404
                 dataset_funder_.update(i)
                 list_of_elements.append(dataset_funder_.to_dict())
             elif "id" not in i or not i["id"]:
-                dataset_funder_ = model.DatasetFunder.from_data(
-                    data_obj, i)
+                dataset_funder_ = model.DatasetFunder.from_data(data_obj, i)
                 model.db.session.add(dataset_funder_)
                 list_of_elements.append(dataset_funder_.to_dict())
         model.db.session.commit()

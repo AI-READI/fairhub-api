@@ -36,15 +36,13 @@ class DatasetRelatedItemResource(Resource):
         list_of_elements = []
         for i in data:
             if "id" in i and i["id"]:
-                dataset_related_item_ = model.DatasetRelatedItem.query.get(
-                    i["id"])
+                dataset_related_item_ = model.DatasetRelatedItem.query.get(i["id"])
                 if not dataset_related_item_:
                     return f"Study link {i['id']} Id is not found", 404
                 dataset_related_item_.update(i)
                 list_of_elements.append(dataset_related_item_.to_dict())
             elif "id" not in i or not i["id"]:
-                dataset_related_item_ = model.DatasetRelatedItem.from_data(
-                    data_obj, i)
+                dataset_related_item_ = model.DatasetRelatedItem.from_data(data_obj, i)
                 model.db.session.add(dataset_related_item_)
                 list_of_elements.append(dataset_related_item_.to_dict())
         model.db.session.commit()
