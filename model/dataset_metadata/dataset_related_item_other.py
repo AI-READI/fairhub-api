@@ -2,8 +2,8 @@ from ..db import db
 
 
 class DatasetRelatedItemOther(db.Model):  # type: ignore
-    def __init__(self, dataset):
-        self.dataset = dataset
+    def __init__(self, dataset_related_item):
+        self.dataset_related_item = dataset_related_item
         self.publication_year = None
         self.volume = ""
         self.issue = ""
@@ -49,8 +49,8 @@ class DatasetRelatedItemOther(db.Model):  # type: ignore
         }
 
     @staticmethod
-    def from_data(dataset, data: dict):
-        dataset_related_item_other = DatasetRelatedItemOther(dataset)
+    def from_data(dataset_related_item, data: dict):
+        dataset_related_item_other = DatasetRelatedItemOther(dataset_related_item)
         dataset_related_item_other.update(data)
         return dataset_related_item_other
 

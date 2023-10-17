@@ -6,9 +6,10 @@ from ..db import db
 
 
 class DatasetRelatedItemIdentifier(db.Model):  # type: ignore
-    def __init__(self):
+    def __init__(self, dataset_related_item):
         self.id = str(uuid.uuid4())
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
+        self.dataset_related_item = dataset_related_item
 
     __tablename__ = "dataset_related_item_identifier"
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -38,11 +39,14 @@ class DatasetRelatedItemIdentifier(db.Model):  # type: ignore
         }
 
     @staticmethod
-    def from_data(data: dict):
-        dataset_related_item_identifier = DatasetRelatedItemIdentifier()
-        dataset_related_item_identifier.identifier = data["identifier"]
-        dataset_related_item_identifier.type = data["type"]
-        dataset_related_item_identifier.metadata_scheme = data["metadata_scheme"]
-        dataset_related_item_identifier.scheme_uri = data["scheme_uri"]
-        dataset_related_item_identifier.scheme_type = data["scheme_type"]
-        return dataset_related_item_identifier
+    def from_data(dataset_related_item, data: dict):
+        identifier_ = DatasetRelatedItemIdentifier(dataset_related_item)
+        identifier_.update(data)
+        return identifier_
+
+    def update(self, data: dict):
+        self.identifier = data["identifier"]
+        self.type = data["identifier_type"]
+        self.metadata_scheme = data["metadata_scheme"]
+        self.scheme_uri = data["scheme_uri"]
+        self.scheme_type = data["scheme_type"]

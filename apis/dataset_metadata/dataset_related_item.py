@@ -45,6 +45,10 @@ class DatasetRelatedItemResource(Resource):
                     list_of_elements.append(item.to_dict())
                 for item in dataset_related_item_.dataset_related_item_contributor:
                     item.update(i)
+                for item in dataset_related_item_.dataset_related_item_identifier:
+                    item.update(i)
+                for item in dataset_related_item_.dataset_related_item_other:
+                    item.update(i)
                 list_of_elements.append(dataset_related_item_.to_dict())
 
             elif "id" not in i or not i["id"]:
@@ -55,14 +59,21 @@ class DatasetRelatedItemResource(Resource):
                 filtered_related_item = dataset_related_item_.query.filter_by(
                     id=dataset_related_item_.id
                 ).first()
+
                 title_add = model.DatasetRelatedItemTitle.from_data(
                     filtered_related_item, i
                 )
+                model.db.session.add(title_add)
+
                 contributor_add = model.DatasetRelatedItemContributor.from_data(
                     filtered_related_item, i
                 )
-                model.db.session.add(title_add)
                 model.db.session.add(contributor_add)
+
+                itentifier_add = model.DatasetRelatedItemIdentifier.from_data(
+                    filtered_related_item, i
+                )
+                model.db.session.add(itentifier_add)
 
                 list_of_elements.append(dataset_related_item_.to_dict())
 

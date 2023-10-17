@@ -33,8 +33,8 @@ class DatasetRelatedItemTitle(db.Model):  # type: ignore
         }
 
     @staticmethod
-    def from_data(dataset, data: dict):
-        dataset_related_item_title = DatasetRelatedItemTitle(dataset)
+    def from_data(dataset_related_item, data: dict):
+        dataset_related_item_title = DatasetRelatedItemTitle(dataset_related_item)
         dataset_related_item_title.update(data)
         return dataset_related_item_title
 
