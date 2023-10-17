@@ -6,9 +6,9 @@ from ..db import db
 
 
 class DatasetRelatedItemTitle(db.Model):  # type: ignore
-    def __init__(self, dataset):
+    def __init__(self, dataset_related_item):
         self.id = str(uuid.uuid4())
-        self.dataset = dataset
+        self.dataset_related_item = dataset_related_item
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
 
     __tablename__ = "dataset_related_item_title"
@@ -39,5 +39,5 @@ class DatasetRelatedItemTitle(db.Model):  # type: ignore
         return dataset_related_item_title
 
     def update(self, data: dict):
-        self.type = data["type"]
+        self.type = data["title_type"]
         self.title = data["title"]

@@ -65,9 +65,7 @@ __all__ = [
     "readme",
     "record_keys",
     "related_item",
-
     "api",
-
     "rights",
     "subject",
     "title",

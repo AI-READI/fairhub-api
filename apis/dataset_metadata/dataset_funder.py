@@ -61,7 +61,7 @@ class DatasetFunderUpdate(Resource):
     @api.response(400, "Validation Error")
     def delete(
         self,
-        study_id: int,
+        study_id: int,  # pylint: disable= unused-argument
         dataset_id: int,  # pylint: disable= unused-argument
         funder_id: int,
     ):

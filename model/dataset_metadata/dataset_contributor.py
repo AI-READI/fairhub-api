@@ -26,7 +26,6 @@ class DatasetContributor(db.Model):  # type: ignore
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
     dataset = db.relationship("Dataset", back_populates="dataset_contributors")
 
-
     def to_dict(self):
         return {
             "id": self.id,

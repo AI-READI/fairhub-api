@@ -38,14 +38,36 @@ class DatasetRelatedItemResource(Resource):
             if "id" in i and i["id"]:
                 dataset_related_item_ = model.DatasetRelatedItem.query.get(i["id"])
                 if not dataset_related_item_:
-                    return f"Study link {i['id']} Id is not found", 404
+                    return f"{i['id']} Id is not found", 404
                 dataset_related_item_.update(i)
+                for item in dataset_related_item_.dataset_related_item_title:
+                    item.update(i)
+                    list_of_elements.append(item.to_dict())
+                for item in dataset_related_item_.dataset_related_item_contributor:
+                    item.update(i)
                 list_of_elements.append(dataset_related_item_.to_dict())
+
             elif "id" not in i or not i["id"]:
-                dataset_related_item_ = model.DatasetRelatedItem.from_data(data_obj, i)
+                dataset_related_item_ = (model.DatasetRelatedItem.
+                                         from_data(data_obj, i))
                 model.db.session.add(dataset_related_item_)
+
+                filtered_related_item = dataset_related_item_.query.filter_by(
+                    id=dataset_related_item_.id
+                ).first()
+                title_add = model.DatasetRelatedItemTitle.from_data(
+                    filtered_related_item, i
+                )
+                contributor_add = model.DatasetRelatedItemContributor.from_data(
+                    filtered_related_item, i
+                )
+                model.db.session.add(title_add)
+                model.db.session.add(contributor_add)
+
                 list_of_elements.append(dataset_related_item_.to_dict())
+
         model.db.session.commit()
+
         return list_of_elements
 
 
@@ -56,7 +78,7 @@ class DatasetRelatedItemUpdate(Resource):
     @api.response(400, "Validation Error")
     def delete(
         self,
-        study_id: int,
+        study_id: int,  # pylint: disable= unused-argument
         dataset_id: int,  # pylint: disable= unused-argument
         related_item_id: int,
     ):
