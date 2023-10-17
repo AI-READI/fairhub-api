@@ -86,14 +86,26 @@ class StudySponsorsResource(Resource):
             return e.message, 400
 
         data = request.json
-        if data["responsible_party_type"] == ["Principal Investigator", "Sponsor-Investigator"]:
-            if not data["responsible_party_investigator_name"] or data["responsible_party_investigator_name"] == "":
+        if data["responsible_party_type"] == [
+            "Principal Investigator",
+            "Sponsor-Investigator",
+        ]:
+            if (
+                not data["responsible_party_investigator_name"]
+                or data["responsible_party_investigator_name"] == ""
+            ):
                 return "Principal Investigator name is required", 400
-            
-            if not data["responsible_party_investigator_title"] or data["responsible_party_investigator_title"] == "":
-               return "Principal Investigator title is required", 400
-           
-            if not data["responsible_party_investigator_affiliation"] or data["responsible_party_investigator_affiliation"] == "":
+
+            if (
+                not data["responsible_party_investigator_title"]
+                or data["responsible_party_investigator_title"] == ""
+            ):
+                return "Principal Investigator title is required", 400
+
+            if (
+                not data["responsible_party_investigator_affiliation"]
+                or data["responsible_party_investigator_affiliation"] == ""
+            ):
                 return "Principal Investigator affiliation is required", 400
 
         study_ = model.Study.query.get(study_id)

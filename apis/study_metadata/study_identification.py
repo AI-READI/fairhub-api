@@ -44,7 +44,7 @@ class StudyIdentificationResource(Resource):
     @api.expect(study_identification)
     def post(self, study_id: int):
         """Create study identification metadata"""
-        # Schema validation 
+        # Schema validation
         schema = {
             "type": "object",
             "additionalProperties": False,
@@ -62,7 +62,7 @@ class StudyIdentificationResource(Resource):
                 "secondary": {
                     "type": "array",
                 },
-            }
+            },
         }
 
         try:

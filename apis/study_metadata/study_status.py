@@ -89,7 +89,10 @@ class StudyStatusResource(Resource):
         data = request.json
         if data["overall_status"] in ["Completed", "Terminated", "Suspended"]:
             if "why_stopped" not in data or not data["why_stopped"]:
-                return f"why_stopped is required for overall_status: {data['overall_status']}", 400
+                return (
+                    f"why_stopped is required for overall_status: {data['overall_status']}",
+                    400,
+                )
 
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
