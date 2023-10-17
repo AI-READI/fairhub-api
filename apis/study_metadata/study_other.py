@@ -144,7 +144,7 @@ class StudyConditionsResource(Resource):
         except ValidationError as e:
             return e.message, 400
 
-        data = request.json
+        data: typing.Union[dict, typing.Any] = request.json
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403
