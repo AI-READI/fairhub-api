@@ -56,15 +56,15 @@ class StudyArmResource(Resource):
                 "properties": {
                     "label": {"type": "string", "minLength": 1},
                     "type": {
-                        "type": "string", 
+                        "type": "string",
                         "enum": [
-                            "Experimental", 
-                            "Active Comparator", 
-                            "Placebo Comparator", 
-                            "Sham Comparator", 
+                            "Experimental",
+                            "Active Comparator",
+                            "Placebo Comparator",
+                            "Sham Comparator",
                             "No Intervention",
-                            "Other"
-                        ]
+                            "Other",
+                        ],
                     },
                     "description": {"type": "string", "minLength": 1},
                     "intervention_list": {
