@@ -44,7 +44,7 @@ class UserDetailsEndpoint(Resource):
         return user_information
 
     @api.expect(study_model)
-    @api.marshal_with(study_model)
+    # @api.marshal_with(study_model)
     def put(self):
         """Updates user details"""
 
