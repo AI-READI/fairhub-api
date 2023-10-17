@@ -64,12 +64,12 @@ class StudyIdentificationResource(Resource):
                 },
             }
         }
-        
+
         try:
             validate(request.json, schema)
         except ValidationError as e:
             return e.message, 400
-        
+
         data: typing.Union[dict, typing.Any] = request.json
 
         study_obj = model.Study.query.get(study_id)
