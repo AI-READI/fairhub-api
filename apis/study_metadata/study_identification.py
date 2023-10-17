@@ -53,10 +53,10 @@ class StudyIdentificationResource(Resource):
                     "type": "object",
                     "additionalProperties": False,
                     "properties": {
-                        "identifier": {"type": "string"},
-                        "identifier_type": {"type": "string"},
-                        "identifier_domain": {"type": "string"},
-                        "identifier_link": {"type": "string"},
+                        "identifier": {"type": "string", "minLength": 1},
+                        "identifier_type": {"type": "string", "minLength": 1},
+                        "identifier_domain": {"type": "string", "minLength": 1},
+                        "identifier_link": {"type": "string", "minLength": 1},
                     },
                 },
                 "secondary": {
