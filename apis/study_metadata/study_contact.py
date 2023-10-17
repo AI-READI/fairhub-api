@@ -132,10 +132,10 @@ class StudyContactResource(Resource):
         """Study Contact Metadata"""
 
         def delete(self, study_id: int, central_contact_id: int):
+            """Delete study contact metadata"""
             study = model.Study.query.get(study_id)
             if not is_granted("study_metadata", study):
                 return "Access denied, you can not delete study", 403
-            """Delete study contact metadata"""
             study_contact_ = model.StudyContact.query.get(central_contact_id)
 
             model.db.session.delete(study_contact_)
