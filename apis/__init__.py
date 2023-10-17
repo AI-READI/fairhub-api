@@ -19,14 +19,6 @@ from .dataset_metadata.dataset_other import api as dataset_other
 from .dataset_metadata.dataset_readme import api as readme
 from .dataset_metadata.dataset_record_keys import api as record_keys
 from .dataset_metadata.dataset_related_item import api as related_item
-from .dataset_metadata.dataset_related_item_contributor import (
-    api as related_item_contributor,
-)
-from .dataset_metadata.dataset_related_item_identifier import (
-    api as related_item_identifier,
-)
-from .dataset_metadata.dataset_related_item_other import api as related_item_other
-from .dataset_metadata.dataset_related_item_title import api as related_item_title
 from .dataset_metadata.dataset_rights import api as rights
 from .dataset_metadata.dataset_subject import api as subject
 from .dataset_metadata.dataset_title import api as title
@@ -73,11 +65,9 @@ __all__ = [
     "readme",
     "record_keys",
     "related_item",
-    "related_item_contributor",
-    "related_item_identifier",
+
     "api",
-    "related_item_other",
-    "related_item_title",
+
     "rights",
     "subject",
     "title",

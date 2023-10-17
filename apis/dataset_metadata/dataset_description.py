@@ -54,7 +54,7 @@ class DatasetDescriptionResource(Resource):
         @api.response(400, "Validation Error")
         def delete(
             self,
-            study_id: int,
+            study_id: int,  # pylint: disable= unused-argument
             dataset_id: int,  # pylint: disable= unused-argument
             description_id: int,
         ):
