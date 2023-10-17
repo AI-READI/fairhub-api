@@ -242,6 +242,7 @@ class StudyDesignResource(Resource):
                 "design_who_masked_list",
                 "phase_list",
                 "enrollment_count",
+                "enrollment_type",
                 "number_arms",
             ]
 

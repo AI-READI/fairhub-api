@@ -47,8 +47,8 @@ class StudyOtherResource(Resource):
             "additionalProperties": False,
             "properties": {
                 "oversight_has_dmc": {"type": "boolean"},
-                "conditions": {"type": "array", "items": {"type": "string"}},
-                "keywords": {"type": "array", "items": {"type": "string"}},
+                "conditions": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": True},
+                "keywords": {"type": "array", "items": {"type": "string"}, "minItems": 1, "uniqueItems": True},
                 "size": {"type": "integer"},
             },
         }
