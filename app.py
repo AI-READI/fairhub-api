@@ -185,8 +185,8 @@ def create_app(config_module=None):
         )
         resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="lax")
 
-        print("after request")
-        print(request.headers.get("Origin"))
+        app.logger.info("after request")
+        app.logger.info(request.headers.get("Origin"))
 
         resp.headers["Access-Control-Allow-Origin"] = request.headers.get("Origin")
         # resp.headers["Access-Control-Allow-Credentials"] = "true"
@@ -199,7 +199,7 @@ def create_app(config_module=None):
         # ] = "Content-Type, Authorization, Access-Control-Allow-Origin,
         # Access-Control-Allow-Credentials"
 
-        print(resp.headers)
+        app.logger.info(resp.headers)
 
         return resp
 
