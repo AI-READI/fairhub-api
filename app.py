@@ -62,7 +62,10 @@ def create_app(config_module=None):
         app,
         resources={
             "/*": {
-                "origins": ["http://localhost:3000", "https://*.azurestaticapps.net"],
+                "origins": [
+                    "http://localhost:3000",
+                    "https://brave-ground-*.centralus.2.azurestaticapps.net",
+                ],
             }
         },
         allow_headers=[
