@@ -10,6 +10,7 @@ from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from sqlalchemy import MetaData
 
+import logging
 import config
 import model
 from apis import api
@@ -28,6 +29,9 @@ def create_app(config_module=None):
     # `full` if you want to see all the details
     app.config["SWAGGER_UI_DOC_EXPANSION"] = "none"
     app.config["RESTX_MASK_SWAGGER"] = False
+
+    # set up logging
+    logging.basicConfig(level=logging.DEBUG)
 
     # Initialize config
     app.config.from_object(config_module or "config")
@@ -180,10 +184,6 @@ def create_app(config_module=None):
             algorithm="HS256",
         )
         resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="lax")
-
-        print("after request")
-        print(resp.headers)
-        print(request.headers.get("Origin"))
 
         resp.headers["Access-Control-Allow-Origin"] = request.headers.get("Origin")
         # resp.headers["Access-Control-Allow-Credentials"] = "true"
