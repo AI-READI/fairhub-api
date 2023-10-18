@@ -176,7 +176,7 @@ def create_app(config_module=None):
         )
         resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="lax")
 
-        # resp.headers["Access-Control-Allow-Origin"] = "http://localhost:3000"
+        resp.headers["Access-Control-Allow-Origin"] = request.headers.get("Origin")
         # resp.headers["Access-Control-Allow-Credentials"] = "true"
         # resp.headers[
         #     "Access-Control-Allow-Headers"
