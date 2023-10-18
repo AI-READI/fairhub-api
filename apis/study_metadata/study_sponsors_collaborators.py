@@ -93,7 +93,10 @@ class StudySponsorsResource(Resource):
             or not data["responsible_party_investigator_affiliation"]
             or data["responsible_party_investigator_affiliation"] == ""
         ):
-            return "Principal Investigator name, title, and affiliation are required", 400
+            return (
+                "Principal Investigator name, title, and affiliation are required",
+                400,
+            )
 
         study_ = model.Study.query.get(study_id)
 
