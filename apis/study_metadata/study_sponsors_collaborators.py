@@ -101,7 +101,9 @@ class StudySponsorsResource(Resource):
 
             investigator_name = data["responsible_party_investigator_name"]
             investigator_title = data["responsible_party_investigator_title"]
-            investigator_affiliation = data["responsible_party_investigator_affiliation"]
+            investigator_affiliation = data[
+                "responsible_party_investigator_affiliation"
+            ]
 
             if investigator_name == "":
                 return ("Principal Investigator name cannot be empty", 400)
