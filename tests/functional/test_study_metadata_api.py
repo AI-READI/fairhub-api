@@ -353,7 +353,7 @@ def test_put_design_metadata(_test_client, _login_user):
             "bio_spec_retention": "None Retained",
             "bio_spec_description": "dfasdf",
             "target_duration": "rewrwe",
-            "number_groups_cohorts": 1
+            "number_groups_cohorts": 1,
         },
     )
     assert response.status_code == 200
@@ -371,7 +371,10 @@ def test_put_design_metadata(_test_client, _login_user):
     assert response_data["enrollment_count"] == 3
     assert response_data["enrollment_type"] == "Actual"
     assert response_data["number_arms"] == 2
-    assert response_data["design_observational_model_list"] == ["Cohort", "Case-Control"]
+    assert response_data["design_observational_model_list"] == [
+        "Cohort",
+        "Case-Control",
+    ]
     assert response_data["design_time_perspective_list"] == ["Other"]
     assert response_data["bio_spec_retention"] == "None Retained"
     assert response_data["bio_spec_description"] == "dfasdf"
@@ -412,7 +415,7 @@ def test_put_eligibility_metadata(_test_client, _login_user):
             "inclusion_criteria": ["tests"],
             "exclusion_criteria": ["Probability Sample"],
             "study_population": "study_population",
-            "sampling_method": "Probability Sample"
+            "sampling_method": "Probability Sample",
         },
     )
 
@@ -441,7 +444,7 @@ def test_get_identification_metadata(_test_client, _login_user):
     THEN check that the response is valid and retrieves the identification metadata
     """
     # BUG: ENDPOINT NOT WORKING
-    study_id = pytest.global_study_id["id"] # type: ignore
+    study_id = pytest.global_study_id["id"]  # type: ignore
     response = _test_client.get(f"/study/{study_id}/metadata/identification")
     assert response.status_code == 200
 
@@ -453,18 +456,17 @@ def test_post_identification_metadata(_test_client, _login_user):
     THEN check that the response is valid and creates the identification metadata
     """
     # BUG: ENDPOINT NOT WORKING
-    study_id = pytest.global_study_id["id"] # type: ignore
+    study_id = pytest.global_study_id["id"]  # type: ignore
     response = _test_client.post(
         f"/study/{study_id}/metadata/identification",
         json={
-            "primary": 
-            {
+            "primary": {
                 "identifier": "first",
                 "identifier_type": "test",
                 "identifier_domain": "domain",
-                "identifier_link": "link"
+                "identifier_link": "link",
             },
-            "secondary": []
+            "secondary": [],
         },
     )
     assert response.status_code == 200
@@ -512,7 +514,7 @@ def test_post_intervention_metadata(_test_client, _login_user):
                 "name": "name test",
                 "description": "desc",
                 "arm_group_label_list": ["test", "one"],
-                "other_name_list": ["uhh", "yes"]
+                "other_name_list": ["uhh", "yes"],
             }
         ],
     )
@@ -554,7 +556,7 @@ def test_put_ipdsharing_metadata(_test_client, _login_user):
             "ipd_sharing_info_type_list": ["Study Protocol", "Analytical Code"],
             "ipd_sharing_time_frame": "uh",
             "ipd_sharing_access_criteria": "Study Protocol",
-            "ipd_sharing_url": "1"
+            "ipd_sharing_url": "1",
         },
     )
 
@@ -563,7 +565,10 @@ def test_put_ipdsharing_metadata(_test_client, _login_user):
 
     assert response_data["ipd_sharing"] == "Yes"
     assert response_data["ipd_sharing_description"] == "yes"
-    assert response_data["ipd_sharing_info_type_list"] == ["Study Protocol", "Analytical Code"]
+    assert response_data["ipd_sharing_info_type_list"] == [
+        "Study Protocol",
+        "Analytical Code",
+    ]
     assert response_data["ipd_sharing_time_frame"] == "uh"
     assert response_data["ipd_sharing_access_criteria"] == "Study Protocol"
     assert response_data["ipd_sharing_url"] == "1"
@@ -590,12 +595,7 @@ def test_post_link_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]  # type: ignore
     response = _test_client.post(
         f"/study/{study_id}/metadata/link",
-        json=[
-            {
-                "url": "google.com",
-                "title": "google link"
-            }
-        ],
+        json=[{"url": "google.com", "title": "google link"}],
     )
     assert response.status_code == 200
     response_data = json.loads(response.data)
@@ -645,7 +645,7 @@ def test_post_location_metadata(_test_client, _login_user):
                 "city": "city",
                 "state": "ca",
                 "zip": "test",
-                "country": "yes"
+                "country": "yes",
             }
         ],
     )
@@ -701,7 +701,7 @@ def test_put_other_metadata(_test_client, _login_user):
             "oversight_has_dmc": False,
             "conditions": ["true", "conditions", "keywords", "1"],
             "keywords": ["true", "u"],
-            "size": 103
+            "size": 103,
         },
     )
     assert response.status_code == 200
@@ -734,13 +734,7 @@ def test_post_overall_official_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]  # type: ignore
     response = _test_client.post(
         f"/study/{study_id}/metadata/overall-official",
-        json=[
-            {
-                "name": "test",
-                "affiliation": "aff",
-                "role": "Study Chair"
-            }
-        ],
+        json=[{"name": "test", "affiliation": "aff", "role": "Study Chair"}],
     )
     assert response.status_code == 200
     response_data = json.loads(response.data)
@@ -822,7 +816,7 @@ def test_post_reference_metadata(_test_client, _login_user):
             {
                 "identifier": "reference identifier",
                 "type": "Yes",
-                "citation": "reference citation"
+                "citation": "reference citation",
             }
         ],
     )
@@ -920,7 +914,7 @@ def test_put_status_metadata(_test_client, _login_user):
             "start_date": "fff",
             "start_date_type": "Actual",
             "completion_date": "nuzzzll",
-            "completion_date_type": "Actual"
+            "completion_date_type": "Actual",
         },
     )
     assert response.status_code == 200
