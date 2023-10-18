@@ -57,14 +57,12 @@ def create_app(config_module=None):
     api.init_app(app)
     bcrypt.init_app(app)
 
-    # Only allow CORS origin for localhost:3000
+    # Only allow CORS origin for localhost:3000 and any subdomain of azurestaticapps.net/
     CORS(
         app,
         resources={
             "/*": {
-                "origins": [
-                    "http://localhost:3000",
-                ],
+                "origins": ["http://localhost:3000", "https://*.azurestaticapps.net"],
             }
         },
         allow_headers=[
