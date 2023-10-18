@@ -57,15 +57,17 @@ def create_app(config_module=None):
     api.init_app(app)
     bcrypt.init_app(app)
 
+    allowed_origins = [
+        "http://localhost:3000",
+        "https://brave-ground-*.centralus.2.azurestaticapps.net",
+    ]
+
     # Only allow CORS origin for localhost:3000 and any subdomain of azurestaticapps.net/
     CORS(
         app,
         resources={
             "/*": {
-                "origins": [
-                    "http://localhost:3000",
-                    "https://brave-ground-07b6bfb10-datasetmetadata.centralus.2.azurestaticapps.net",
-                ],
+                "origins": allowed_origins,
             }
         },
         allow_headers=[
@@ -176,7 +178,7 @@ def create_app(config_module=None):
         )
         resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="lax")
 
-        resp.headers["Access-Control-Allow-Origin"] = request.headers.get("Origin")
+        resp.headers["Access-Control-Allow-Origin"] = allowed_origins
         # resp.headers["Access-Control-Allow-Credentials"] = "true"
         # resp.headers[
         #     "Access-Control-Allow-Headers"
