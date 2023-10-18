@@ -58,7 +58,8 @@ class UserDetailsEndpoint(Resource):
             except EmailNotValidError as e:
                 raise ValidationError("Invalid email address format") from e
 
-        # Schema validation (profile_image is optional but additional properties are not allowed)
+        # Schema validation
+        # (profile_image is optional but additional properties are not allowed)
         schema = {
             "type": "object",
             "required": [
@@ -93,8 +94,8 @@ class UserDetailsEndpoint(Resource):
                 instance=request.json, schema=schema, format_checker=format_checker
             )
         except ValidationError as e:
-            print(e.message)
-            # Verify if the user_information being sent back is okay for this 400 error, e.message is
+            # Verify if the user_information being sent
+            # back is okay for this 400 error, e.message is
             # not being sent back
             return e.message, 400
 
