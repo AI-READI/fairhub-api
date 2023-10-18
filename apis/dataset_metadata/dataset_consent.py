@@ -1,3 +1,4 @@
+import typing
 from flask import request
 from flask_restx import Resource, fields
 
@@ -31,7 +32,7 @@ class DatasetConsentResource(Resource):
         return [d.to_dict() for d in dataset_consent_]
 
     def put(self, study_id: int, dataset_id: int):
-        data = request.json
+        data: typing.Union[dict, typing.Any] = request.json
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_consent_ = dataset_.dataset_consent.update(data)
         model.db.session.commit()

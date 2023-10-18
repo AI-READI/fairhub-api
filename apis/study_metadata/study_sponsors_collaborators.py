@@ -85,7 +85,7 @@ class StudySponsorsResource(Resource):
         except ValidationError as e:
             return e.message, 400
 
-        data = request.json
+        data: typing.Union[dict, typing.Any] = request.json
         if data["responsible_party_type"] in [
             "Principal Investigator",
             "Sponsor-Investigator",

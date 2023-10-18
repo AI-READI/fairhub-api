@@ -40,7 +40,7 @@ class DatasetRelatedItemResource(Resource):
     )
     class DatasetRelatedItemUpdate(Resource):
         def put(self, study_id: int, dataset_id: int, related_item_id: int):
-            data = request.json
+            data: Union[Any, dict] = request.json
             dataset_related_item_ = model.DatasetRelatedItem.query.get(related_item_id)
             dataset_related_item_.update(data)
             model.db.session.commit()

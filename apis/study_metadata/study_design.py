@@ -1,4 +1,5 @@
 """API routes for study design metadata"""
+import typing
 from flask import request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
@@ -232,7 +233,7 @@ class StudyDesignResource(Resource):
             return e.message, 400
 
         # If schema validation passes, check other cases of validation
-        data = request.json
+        data: typing.Union[dict, typing.Any] = request.json
         if data["study_type"] == "Interventional":
             required_fields = [
                 "design_allocation",

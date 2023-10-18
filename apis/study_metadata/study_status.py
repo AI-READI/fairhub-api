@@ -1,4 +1,5 @@
 """API routes for study status metadata"""
+import typing
 from flask import request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
@@ -86,7 +87,7 @@ class StudyStatusResource(Resource):
         except ValidationError as e:
             return e.message, 400
 
-        data = request.json
+        data: typing.Union[typing.Any, dict] = request.json
         if data["overall_status"] in ["Completed", "Terminated", "Suspended"]:
             if "why_stopped" not in data or not data["why_stopped"]:
                 return (

@@ -79,7 +79,7 @@ class DatasetResource(Resource):
         study = model.Study.query.get(study_id)
         if not is_granted("update_dataset", study):
             return "Access denied, you can not modify", 403
-        data = request.json
+        data: typing.Union[dict, typing.Any] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
         data_obj.update(data)
         model.db.session.commit()

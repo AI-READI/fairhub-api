@@ -1,4 +1,5 @@
 """API routes for study ipdsharing metadata"""
+import typing
 from flask import request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
@@ -72,7 +73,7 @@ class StudyIpdsharingResource(Resource):
         except ValidationError as e:
             return e.message, 400
 
-        data = request.json
+        data: typing.Union[dict, typing.Any] = request.json
         if data["ipd_sharing"] == "Yes":
             required_fields = [
                 "ipd_sharing_description",
