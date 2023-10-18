@@ -59,7 +59,7 @@ def create_app(config_module=None):
 
     allowed_origins = [
         "http://localhost:3000",
-        "https://brave-ground-*.centralus.2.azurestaticapps.net",
+        "https://brave-ground-07b6bfb10-datasetmetadata.centralus.2.azurestaticapps.net",
     ]
 
     # Only allow CORS origin for localhost:3000 and any subdomain of azurestaticapps.net/
@@ -67,7 +67,10 @@ def create_app(config_module=None):
         app,
         resources={
             "/*": {
-                "origins": allowed_origins,
+                "origins": [
+                    "http://localhost:3000",
+                    "https://brave-ground-07b6bfb10-datasetmetadata.centralus.2.azurestaticapps.net",
+                ],
             }
         },
         allow_headers=[
@@ -178,7 +181,11 @@ def create_app(config_module=None):
         )
         resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="lax")
 
-        resp.headers["Access-Control-Allow-Origin"] = allowed_origins
+        print("after request")
+        print(resp.headers)
+        print(request.headers.get("Origin"))
+
+        resp.headers["Access-Control-Allow-Origin"] = request.headers.get("Origin")
         # resp.headers["Access-Control-Allow-Credentials"] = "true"
         # resp.headers[
         #     "Access-Control-Allow-Headers"
