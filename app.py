@@ -64,7 +64,7 @@ def create_app(config_module=None):
             "/*": {
                 "origins": [
                     "http://localhost:3000",
-                    "https://brave-ground-07b6bfb10-datasetmetadata.centralus.2.azurestaticapps.net/",
+                    "https://brave-ground-07b6bfb10-datasetmetadata.centralus.2.azurestaticapps.net",
                 ],
             }
         },
