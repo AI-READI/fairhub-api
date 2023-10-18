@@ -86,12 +86,8 @@ class StudySponsorsResource(Resource):
             return e.message, 400
 
         data = request.json
-        if data["responsible_party_type"] == [
-            "Principal Investigator",
-            "Sponsor-Investigator",
-        ] and (
-            not data["responsible_party_investigator_name"]
-            or data["responsible_party_investigator_name"] == ""
+        if data["responsible_party_type"] in ["Principal Investigator", "Sponsor-Investigator"] and (
+            not data["responsible_party_investigator_name"] or data["responsible_party_investigator_name"] == ""
             or not data["responsible_party_investigator_title"]
             or data["responsible_party_investigator_title"] == ""
             or not data["responsible_party_investigator_affiliation"]
