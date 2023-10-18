@@ -63,7 +63,7 @@ def _create_user(_test_client):
     with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
         response = _test_client.post(
             "/auth/signup",
-            json={"email_address": "sample@gmail.com", "password": "test"},
+            json={"email_address": "sample@gmail.com", "password": "Testingyeshello11!"},
         )
 
         assert response.status_code == 201
@@ -76,7 +76,7 @@ def _login_user(_test_client):
     with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
         response = _test_client.post(
             "/auth/login",
-            json={"email_address": "sample@gmail.com", "password": "test"},
+            json={"email_address": "sample@gmail.com", "password": "Testingyeshello11!"},
         )
 
         assert response.status_code == 200
