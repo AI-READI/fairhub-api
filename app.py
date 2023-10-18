@@ -4,13 +4,13 @@ import importlib
 import os
 from datetime import timezone
 
+import logging
 import jwt
 from flask import Flask, request
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from sqlalchemy import MetaData
 
-import logging
 import config
 import model
 from apis import api
@@ -185,6 +185,9 @@ def create_app(config_module=None):
         )
         resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="lax")
 
+        print("after request")
+        print(request.headers.get("Origin"))
+
         resp.headers["Access-Control-Allow-Origin"] = request.headers.get("Origin")
         # resp.headers["Access-Control-Allow-Credentials"] = "true"
         # resp.headers[
@@ -196,7 +199,7 @@ def create_app(config_module=None):
         # ] = "Content-Type, Authorization, Access-Control-Allow-Origin,
         # Access-Control-Allow-Credentials"
 
-        # print(resp.headers)
+        print(resp.headers)
 
         return resp
 
