@@ -89,18 +89,26 @@ class StudySponsorsResource(Resource):
         if data["responsible_party_type"] in [
             "Principal Investigator",
             "Sponsor-Investigator",
-        ] and (
-            not data["responsible_party_investigator_name"]
-            or data["responsible_party_investigator_name"] == ""
-            or not data["responsible_party_investigator_title"]
-            or data["responsible_party_investigator_title"] == ""
-            or not data["responsible_party_investigator_affiliation"]
-            or data["responsible_party_investigator_affiliation"] == ""
-        ):
-            return (
-                "Principal Investigator name, title, and affiliation are required",
-                400,
-            )
+        ]:
+            if not data["responsible_party_investigator_name"]:
+                return ("Principal Investigator name is required", 400)
+
+            if not data["responsible_party_investigator_title"]:
+                return ("Principal Investigator title is required", 400)
+
+            if not data["responsible_party_investigator_affiliation"]:
+                return ("Principal Investigator affiliation is required", 400)
+
+            investigator_name = data["responsible_party_investigator_name"]
+            investigator_title = data["responsible_party_investigator_title"]
+            investigator_affiliation = data["responsible_party_investigator_affiliation"]
+
+            if investigator_name == "":
+                return ("Principal Investigator name cannot be empty", 400)
+            if investigator_title == "":
+                return ("Principal Investigator title cannot be empty", 400)
+            if investigator_affiliation == "":
+                return ("Principal Investigator affiliation cannot be empty", 400)
 
         study_ = model.Study.query.get(study_id)
 
