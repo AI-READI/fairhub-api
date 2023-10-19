@@ -69,7 +69,7 @@ def create_app(config_module=None):
             "/*": {
                 "origins": [
                     "http://localhost:3000",
-                    "https://brave-ground-*.centralus.2.azurestaticapps.net",
+                    "https://staging.fairhub.io",
                 ],
             }
         },

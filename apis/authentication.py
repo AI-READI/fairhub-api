@@ -227,6 +227,8 @@ def authentication():
     In addition, it handles error handling of expired token and non existed users"""
     g.user = None
 
+    print(request.cookies.get("token"))
+
     if "token" not in request.cookies:
         return
     token: str = (
