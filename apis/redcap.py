@@ -48,9 +48,7 @@ api = Namespace("redcap", description="REDCap API methods")
 # Register API Models
 #
 
-redcapProjectDataModel = api.model(
-    "REDCapProjectData", REDCapProjectDataModel
-)
+redcapProjectDataModel = api.model("REDCapProjectData", REDCapProjectDataModel)
 redcapReportParticipantsDataModel = api.model(
     "REDCapReportParticipantsDashboardData", REDCapReportParticipantsDataModel
 )
@@ -81,6 +79,7 @@ class REDCapProjectData(Resource):
         project = PyCapProject.export_project_info()
         return project
 
+
 @api.route("/reports/participants", methods=["GET"])
 class REDCapReportParticipantsData(Resource):
     @api.doc("get_redcap_report_participants")
@@ -100,6 +99,7 @@ class REDCapReportParticipantsData(Resource):
         )
         return response.json()
 
+
 @api.route("/reports/participant-values", methods=["GET"])
 class REDCapReportParticipantValuesData(Resource):
     @api.doc("get_redcap_report_participant_values_data")
@@ -118,6 +118,7 @@ class REDCapReportParticipantValuesData(Resource):
             },
         )
         return response.json()
+
 
 @api.route("/reports/repeat-surveys", methods=["GET"])
 class REDCapReportRepeatSurveysData(Resource):

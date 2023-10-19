@@ -237,5 +237,5 @@ REDCapReportParticipantValuesDataModel = {
     ),
     "scrcmpdat": fields.String(
         required=True, readonly=True, description="Screening survey completion date"
-    )
+    ),
 }

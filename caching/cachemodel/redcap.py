@@ -1,5 +1,6 @@
 from redis_om import JsonModel
 
+
 class REDCapProjectCacheModel(JsonModel):
     project_id: str
     project_title: str

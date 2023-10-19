@@ -77,6 +77,7 @@ class CachingProjectData(Resource):
         )
         return response.json()
 
+
 @api.route("/reports/participants", methods=["GET"])
 class CachingReportParticipantsData(Resource):
     @api.doc("get_caching_report_participants")
@@ -96,6 +97,7 @@ class CachingReportParticipantsData(Resource):
         )
         return response.json()
 
+
 @api.route("/reports/recruitment-dashboard", methods=["GET"])
 class CachingReportRecruitmentDashboardData(Resource):
     @api.doc("get_caching_report_recruitment_dashboard")
@@ -114,6 +116,7 @@ class CachingReportRecruitmentDashboardData(Resource):
             },
         )
         return response.json()
+
 
 # @api.route("/reports/participant-values", methods=["GET"])
 # class CachingReportParticipantValuesData(Resource):
