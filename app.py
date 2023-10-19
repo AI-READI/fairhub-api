@@ -61,14 +61,15 @@ def create_app(config_module=None):
     api.init_app(app)
     bcrypt.init_app(app)
 
-    # Only allow CORS origin for localhost:3000 and any subdomain of azurestaticapps.net/
+    # Only allow CORS origin for localhost:3000
+    # and any subdomain of azurestaticapps.net/
     CORS(
         app,
         resources={
             "/*": {
                 "origins": [
                     "http://localhost:3000",
-                    "https://brave-ground-07b6bfb10-datasetmetadata.centralus.2.azurestaticapps.net",
+                    "https://brave-ground-*.centralus.2.azurestaticapps.net",
                 ],
             }
         },
