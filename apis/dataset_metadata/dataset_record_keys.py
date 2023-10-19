@@ -1,3 +1,5 @@
+import typing
+
 from flask import request
 from flask_restx import Resource, fields
 
@@ -26,7 +28,7 @@ class DatasetRecordKeysResource(Resource):
         return [d.to_dict() for d in dataset_record_keys_]
 
     def put(self, study_id: int, dataset_id: int):
-        data = request.json
+        data: typing.Union[dict, typing.Any] = request.json
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_record_keys_ = dataset_.dataset_de_ident_level.update(data)
         model.db.session.commit()

@@ -3,6 +3,7 @@ import typing
 
 from flask import request
 from flask_restx import Resource, fields
+from jsonschema import ValidationError, validate
 
 import model
 from apis.study_metadata_namespace import api
@@ -45,6 +46,55 @@ class StudyInterventionResource(Resource):
 
     def post(self, study_id: int):
         """Create study intervention metadata"""
+        # Schema validation
+        schema = {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "Drug",
+                            "Device",
+                            "Biological/Vaccine",
+                            "Procedure/Surgery",
+                            "Radiation",
+                            "Behavioral",
+                            "Behavioral",
+                            "Genetic",
+                            "Dietary Supplement",
+                            "Combination Product",
+                            "Diagnostic Test",
+                            "Other",
+                        ],
+                    },
+                    "name": {"type": "string", "minLength": 1},
+                    "description": {"type": "string", "minLength": 1},
+                    "arm_group_label_list": {
+                        "type": "array",
+                        "items": {"type": "string", "minLength": 1},
+                        "minItems": 1,
+                        "uniqueItems": True,
+                    },
+                    "other_name_list": {
+                        "type": "array",
+                        "items": {"type": "string", "minLength": 1},
+                        "minItems": 1,
+                        "uniqueItems": True,
+                    },
+                },
+                "required": ["name", "type", "arm_group_label_list"],
+            },
+            "uniqueItems": True,
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return {"message": e.message}, 400
+
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403

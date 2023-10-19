@@ -3,6 +3,7 @@ import typing
 
 from flask import request
 from flask_restx import Resource, fields
+from jsonschema import ValidationError, validate
 
 import model
 from apis.study_metadata_namespace import api
@@ -47,6 +48,34 @@ class StudyOverallOfficialResource(Resource):
     @api.response(400, "Validation Error")
     def post(self, study_id: int):
         """Create study overall official metadata"""
+        # Schema validation
+        schema = {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": {
+                    "name": {"type": "string", "minLength": 1},
+                    "affiliation": {"type": "string", "minLength": 1},
+                    "role": {
+                        "type": "string",
+                        "enum": [
+                            "Study Chair",
+                            "Study Director",
+                            "Study Principal Investigator",
+                        ],
+                    },
+                },
+                "required": ["name", "affiliation", "role"],
+            },
+            "uniqueItems": True,
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+
         data: typing.Union[dict, typing.Any] = request.json
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):

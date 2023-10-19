@@ -17,7 +17,7 @@ def test_post_arm_metadata(_test_client, _login_user):
         json=[
             {
                 "label": "Label1",
-                "type": "Arm Type",
+                "type": "Experimental",
                 "description": "Arm Description",
                 "intervention_list": ["intervention1", "intervention2"],
             }
@@ -25,9 +25,10 @@ def test_post_arm_metadata(_test_client, _login_user):
     )
 
     response_data = json.loads(response.data)
+
     assert response.status_code == 200
     assert response_data["arms"][0]["label"] == "Label1"
-    assert response_data["arms"][0]["type"] == "Arm Type"
+    assert response_data["arms"][0]["type"] == "Experimental"
     assert response_data["arms"][0]["description"] == "Arm Description"
     assert response_data["arms"][0]["intervention_list"] == [
         "intervention1",
@@ -47,7 +48,7 @@ def test_get_arm_metadata(_test_client, _login_user):
     response_data = json.loads(response.data)
     assert response.status_code == 200
     assert response_data["arms"][0]["label"] == "Label1"
-    assert response_data["arms"][0]["type"] == "Arm Type"
+    assert response_data["arms"][0]["type"] == "Experimental"
     assert response_data["arms"][0]["description"] == "Arm Description"
     assert response_data["arms"][0]["intervention_list"] == [
         "intervention1",
@@ -80,7 +81,7 @@ def test_post_available_ipd_metadata(_test_client, _login_user):
         json=[
             {
                 "identifier": "identifier1",
-                "type": "type1",
+                "type": "Clinical Study Report",
                 "url": "google.com",
                 "comment": "comment1",
             }
@@ -92,7 +93,7 @@ def test_post_available_ipd_metadata(_test_client, _login_user):
     pytest.global_available_ipd_id = response_data[0]["id"]
 
     assert response_data[0]["identifier"] == "identifier1"
-    assert response_data[0]["type"] == "type1"
+    assert response_data[0]["type"] == "Clinical Study Report"
     assert response_data[0]["url"] == "google.com"
     assert response_data[0]["comment"] == "comment1"
 
@@ -138,9 +139,9 @@ def test_post_cc_metadata(_test_client, _login_user):
                 "name": "central-contact",
                 "affiliation": "affiliation",
                 "role": "role",
-                "phone": "phone",
-                "phone_ext": "phone_ext",
-                "email_address": "email_address",
+                "phone": "808",
+                "phone_ext": "909",
+                "email_address": "sample@gmail.com",
             }
         ],
     )
@@ -155,9 +156,9 @@ def test_post_cc_metadata(_test_client, _login_user):
     assert response_data[0]["name"] == "central-contact"
     assert response_data[0]["affiliation"] == "affiliation"
     # assert response_data[0]["role"] == "role"
-    assert response_data[0]["phone"] == "phone"
-    assert response_data[0]["phone_ext"] == "phone_ext"
-    assert response_data[0]["email_address"] == "email_address"
+    assert response_data[0]["phone"] == "808"
+    assert response_data[0]["phone_ext"] == "909"
+    assert response_data[0]["email_address"] == "sample@gmail.com"
     assert response_data[0]["central_contact"] is True
 
 
@@ -176,9 +177,9 @@ def test_get_cc_metadata(_test_client, _login_user):
     assert response_data[0]["name"] == "central-contact"
     assert response_data[0]["affiliation"] == "affiliation"
     # assert response_data[0]["role"] == "role"
-    assert response_data[0]["phone"] == "phone"
-    assert response_data[0]["phone_ext"] == "phone_ext"
-    assert response_data[0]["email_address"] == "email_address"
+    assert response_data[0]["phone"] == "808"
+    assert response_data[0]["phone_ext"] == "909"
+    assert response_data[0]["email_address"] == "sample@gmail.com"
     assert response_data[0]["central_contact"] is True
 
 
@@ -224,14 +225,14 @@ def test_put_collaborators_metadata(_test_client, _login_user):
     response = _test_client.put(
         f"/study/{study_id}/metadata/collaborators",
         json=[
-            "collaborator",
+            "collaborator1123",
         ],
     )
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
 
-    assert response_data[0] == "collaborator"
+    assert response_data[0] == "collaborator1123"
 
 
 # ------------------- CONDITIONS METADATA ------------------- #
@@ -259,7 +260,7 @@ def test_put_conditions_metadata(_test_client, _login_user):
     response = _test_client.put(
         f"/study/{study_id}/metadata/conditions",
         json=[
-            True,
+            "true",
             "conditions string",
             "keywords string",
             "size string",
@@ -336,20 +337,20 @@ def test_put_design_metadata(_test_client, _login_user):
         f"/study/{study_id}/metadata/design",
         json={
             "design_allocation": "dfasdfasd",
-            "study_type": "dffad",
-            "design_intervention_model": "eredf",
+            "study_type": "Interventional",
+            "design_intervention_model": "Treatment",
             "design_intervention_model_description": "dfadf",
-            "design_primary_purpose": "dfasder",
-            "design_masking": "dfdasdf",
+            "design_primary_purpose": "Parallel Assignment",
+            "design_masking": "Double",
             "design_masking_description": "tewsfdasf",
-            "design_who_masked_list": ["one", "two"],
-            "phase_list": ["three", "four"],
+            "design_who_masked_list": ["Participant", "Care Provider"],
+            "phase_list": ["N/A"],
             "enrollment_count": 3,
-            "enrollment_type": "dfasdf",
+            "enrollment_type": "Actual",
             "number_arms": 2,
-            "design_observational_model_list": ["yes", "dfasd"],
-            "design_time_perspective_list": ["uhh"],
-            "bio_spec_retention": "dfasdf",
+            "design_observational_model_list": ["Cohort", "Case-Control"],
+            "design_time_perspective_list": ["Other"],
+            "bio_spec_retention": "None Retained",
             "bio_spec_description": "dfasdf",
             "target_duration": "rewrwe",
             "number_groups_cohorts": 1,
@@ -359,20 +360,23 @@ def test_put_design_metadata(_test_client, _login_user):
     response_data = json.loads(response.data)
 
     assert response_data["design_allocation"] == "dfasdfasd"
-    assert response_data["study_type"] == "dffad"
-    assert response_data["design_intervention_model"] == "eredf"
+    assert response_data["study_type"] == "Interventional"
+    assert response_data["design_intervention_model"] == "Treatment"
     assert response_data["design_intervention_model_description"] == "dfadf"
-    assert response_data["design_primary_purpose"] == "dfasder"
-    assert response_data["design_masking"] == "dfdasdf"
+    assert response_data["design_primary_purpose"] == "Parallel Assignment"
+    assert response_data["design_masking"] == "Double"
     assert response_data["design_masking_description"] == "tewsfdasf"
-    assert response_data["design_who_masked_list"] == ["one", "two"]
-    assert response_data["phase_list"] == ["three", "four"]
+    assert response_data["design_who_masked_list"] == ["Participant", "Care Provider"]
+    assert response_data["phase_list"] == ["N/A"]
     assert response_data["enrollment_count"] == 3
-    assert response_data["enrollment_type"] == "dfasdf"
+    assert response_data["enrollment_type"] == "Actual"
     assert response_data["number_arms"] == 2
-    assert response_data["design_observational_model_list"] == ["yes", "dfasd"]
-    assert response_data["design_time_perspective_list"] == ["uhh"]
-    assert response_data["bio_spec_retention"] == "dfasdf"
+    assert response_data["design_observational_model_list"] == [
+        "Cohort",
+        "Case-Control",
+    ]
+    assert response_data["design_time_perspective_list"] == ["Other"]
+    assert response_data["bio_spec_retention"] == "None Retained"
     assert response_data["bio_spec_description"] == "dfasdf"
     assert response_data["target_duration"] == "rewrwe"
     assert response_data["number_groups_cohorts"] == 1
@@ -400,36 +404,36 @@ def test_put_eligibility_metadata(_test_client, _login_user):
     response = _test_client.put(
         f"/study/{study_id}/metadata/eligibility",
         json={
-            "gender": "nb",
-            "gender_based": "no",
+            "gender": "All",
+            "gender_based": "Yes",
             "gender_description": "none",
             "minimum_age_value": 18,
             "maximum_age_value": 61,
             "minimum_age_unit": "1",
             "maximum_age_unit": "2",
-            "healthy_volunteers": "3",
-            "inclusion_criteria": ["test"],
-            "exclusion_criteria": ["test", "ttest"],
+            "healthy_volunteers": "Yes",
+            "inclusion_criteria": ["tests"],
+            "exclusion_criteria": ["Probability Sample"],
             "study_population": "study_population",
-            "sampling_method": "test",
+            "sampling_method": "Probability Sample",
         },
     )
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
 
-    assert response_data["gender"] == "nb"
-    assert response_data["gender_based"] == "no"
+    assert response_data["gender"] == "All"
+    assert response_data["gender_based"] == "Yes"
     assert response_data["gender_description"] == "none"
     assert response_data["minimum_age_value"] == 18
     assert response_data["maximum_age_value"] == 61
     assert response_data["minimum_age_unit"] == "1"
     assert response_data["maximum_age_unit"] == "2"
-    assert response_data["healthy_volunteers"] == "3"
-    assert response_data["inclusion_criteria"] == ["test"]
-    assert response_data["exclusion_criteria"] == ["test", "ttest"]
+    assert response_data["healthy_volunteers"] == "Yes"
+    assert response_data["inclusion_criteria"] == ["tests"]
+    assert response_data["exclusion_criteria"] == ["Probability Sample"]
     assert response_data["study_population"] == "study_population"
-    assert response_data["sampling_method"] == "test"
+    assert response_data["sampling_method"] == "Probability Sample"
 
 
 # ------------------- IDENTIFICATION METADATA ------------------- #
@@ -440,9 +444,9 @@ def test_get_identification_metadata(_test_client, _login_user):
     THEN check that the response is valid and retrieves the identification metadata
     """
     # BUG: ENDPOINT NOT WORKING
-    # study_id = pytest.global_study_id["id"] # type: ignore
-    # response = _test_client.get(f"/study/{study_id}/metadata/identification")
-    # assert response.status_code == 200
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    response = _test_client.get(f"/study/{study_id}/metadata/identification")
+    assert response.status_code == 200
 
 
 def test_post_identification_metadata(_test_client, _login_user):
@@ -452,18 +456,20 @@ def test_post_identification_metadata(_test_client, _login_user):
     THEN check that the response is valid and creates the identification metadata
     """
     # BUG: ENDPOINT NOT WORKING
-    # study_id = pytest.global_study_id["id"] # type: ignore
-    # response = _test_client.post(
-    #     f"/study/{study_id}/metadata/identification",
-    #     json={
-    #         "identifier": "identifier",
-    #         "identifier_type": "identifier type",
-    #         "identifier_value": "identifier value",
-    #         "identifier_link": "identifier link",
-    #         "secondary": "secondary"
-    #     },
-    # )
-    # assert response.status_code == 200
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    response = _test_client.post(
+        f"/study/{study_id}/metadata/identification",
+        json={
+            "primary": {
+                "identifier": "first",
+                "identifier_type": "test",
+                "identifier_domain": "domain",
+                "identifier_link": "link",
+            },
+            "secondary": [],
+        },
+    )
+    assert response.status_code == 200
     # response_data = json.loads(response.data)
     # pytest.global_identification_id = response_data["id"]
 
@@ -504,11 +510,11 @@ def test_post_intervention_metadata(_test_client, _login_user):
         f"/study/{study_id}/metadata/intervention",
         json=[
             {
-                "type": "intervention type",
-                "name": "intervention name",
-                "description": "intervention description",
-                "arm_group_label_list": ["arm group 1", "arm group 2"],
-                "other_name_list": ["other name 1", "other name 2"],
+                "type": "Device",
+                "name": "name test",
+                "description": "desc",
+                "arm_group_label_list": ["test", "one"],
+                "other_name_list": ["uhh", "yes"],
             }
         ],
     )
@@ -516,11 +522,11 @@ def test_post_intervention_metadata(_test_client, _login_user):
     response_data = json.loads(response.data)
     pytest.global_intervention_id = response_data[0]["id"]
 
-    assert response_data[0]["type"] == "intervention type"
-    assert response_data[0]["name"] == "intervention name"
-    assert response_data[0]["description"] == "intervention description"
-    assert response_data[0]["arm_group_label_list"] == ["arm group 1", "arm group 2"]
-    assert response_data[0]["other_name_list"] == ["other name 1", "other name 2"]
+    assert response_data[0]["type"] == "Device"
+    assert response_data[0]["name"] == "name test"
+    assert response_data[0]["description"] == "desc"
+    assert response_data[0]["arm_group_label_list"] == ["test", "one"]
+    assert response_data[0]["other_name_list"] == ["uhh", "yes"]
 
 
 # ------------------- IPD SHARING METADATA ------------------- #
@@ -545,24 +551,27 @@ def test_put_ipdsharing_metadata(_test_client, _login_user):
     response = _test_client.put(
         f"/study/{study_id}/metadata/ipdsharing",
         json={
-            "ipd_sharing": "ipd sharing",
-            "ipd_sharing_description": "sharing description",
-            "ipd_sharing_info_type_list": ["type1", "type2"],
-            "ipd_sharing_time_frame": "time frame",
-            "ipd_sharing_access_criteria": "access criteria",
-            "ipd_sharing_url": "sharing url",
+            "ipd_sharing": "Yes",
+            "ipd_sharing_description": "yes",
+            "ipd_sharing_info_type_list": ["Study Protocol", "Analytical Code"],
+            "ipd_sharing_time_frame": "uh",
+            "ipd_sharing_access_criteria": "Study Protocol",
+            "ipd_sharing_url": "1",
         },
     )
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
 
-    assert response_data["ipd_sharing"] == "ipd sharing"
-    assert response_data["ipd_sharing_description"] == "sharing description"
-    assert response_data["ipd_sharing_info_type_list"] == ["type1", "type2"]
-    assert response_data["ipd_sharing_time_frame"] == "time frame"
-    assert response_data["ipd_sharing_access_criteria"] == "access criteria"
-    assert response_data["ipd_sharing_url"] == "sharing url"
+    assert response_data["ipd_sharing"] == "Yes"
+    assert response_data["ipd_sharing_description"] == "yes"
+    assert response_data["ipd_sharing_info_type_list"] == [
+        "Study Protocol",
+        "Analytical Code",
+    ]
+    assert response_data["ipd_sharing_time_frame"] == "uh"
+    assert response_data["ipd_sharing_access_criteria"] == "Study Protocol"
+    assert response_data["ipd_sharing_url"] == "1"
 
 
 # ------------------- LINK METADATA ------------------- #
@@ -586,14 +595,14 @@ def test_post_link_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]  # type: ignore
     response = _test_client.post(
         f"/study/{study_id}/metadata/link",
-        json=[{"url": "url link", "title": "title link"}],
+        json=[{"url": "google.com", "title": "google link"}],
     )
     assert response.status_code == 200
     response_data = json.loads(response.data)
     pytest.global_link_id = response_data[0]["id"]
 
-    assert response_data[0]["url"] == "url link"
-    assert response_data[0]["title"] == "title link"
+    assert response_data[0]["url"] == "google.com"
+    assert response_data[0]["title"] == "google link"
 
 
 def test_delete_link_metadata(_test_client, _login_user):
@@ -631,12 +640,12 @@ def test_post_location_metadata(_test_client, _login_user):
         f"/study/{study_id}/metadata/location",
         json=[
             {
-                "facility": "facility location",
-                "status": "status location",
-                "city": "city location",
-                "state": "California",
-                "zip": "zip location",
-                "country": "country location",
+                "facility": "test",
+                "status": "Withdrawn",
+                "city": "city",
+                "state": "ca",
+                "zip": "test",
+                "country": "yes",
             }
         ],
     )
@@ -644,12 +653,12 @@ def test_post_location_metadata(_test_client, _login_user):
     response_data = json.loads(response.data)
     pytest.global_location_id = response_data[0]["id"]
 
-    assert response_data[0]["facility"] == "facility location"
-    assert response_data[0]["status"] == "status location"
-    assert response_data[0]["city"] == "city location"
-    assert response_data[0]["state"] == "California"
-    assert response_data[0]["zip"] == "zip location"
-    assert response_data[0]["country"] == "country location"
+    assert response_data[0]["facility"] == "test"
+    assert response_data[0]["status"] == "Withdrawn"
+    assert response_data[0]["city"] == "city"
+    assert response_data[0]["state"] == "ca"
+    assert response_data[0]["zip"] == "test"
+    assert response_data[0]["country"] == "yes"
 
 
 def test_delete_location_metadata(_test_client, _login_user):
@@ -690,18 +699,18 @@ def test_put_other_metadata(_test_client, _login_user):
         f"/study/{study_id}/metadata/other",
         json={
             "oversight_has_dmc": False,
-            "conditions": ["TESTCONDITION"],
-            "keywords": ["TEST"],
-            "size": "0",
+            "conditions": ["true", "conditions", "keywords", "1"],
+            "keywords": ["true", "u"],
+            "size": 103,
         },
     )
     assert response.status_code == 200
     response_data = json.loads(response.data)
 
     assert response_data["oversight_has_dmc"] is False
-    assert response_data["conditions"] == ["TESTCONDITION"]
-    assert response_data["keywords"] == ["TEST"]
-    assert response_data["size"] == 0
+    assert response_data["conditions"] == ["true", "conditions", "keywords", "1"]
+    assert response_data["keywords"] == ["true", "u"]
+    assert response_data["size"] == 103
 
 
 # ------------------- OVERALL-OFFICIAL METADATA ------------------- #
@@ -725,21 +734,15 @@ def test_post_overall_official_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]  # type: ignore
     response = _test_client.post(
         f"/study/{study_id}/metadata/overall-official",
-        json=[
-            {
-                "name": "official name",
-                "affiliation": "official affiliation",
-                "role": "official role",
-            }
-        ],
+        json=[{"name": "test", "affiliation": "aff", "role": "Study Chair"}],
     )
     assert response.status_code == 200
     response_data = json.loads(response.data)
     pytest.global_overall_official_id = response_data[0]["id"]
 
-    assert response_data[0]["name"] == "official name"
-    assert response_data[0]["affiliation"] == "official affiliation"
-    assert response_data[0]["role"] == "official role"
+    assert response_data[0]["name"] == "test"
+    assert response_data[0]["affiliation"] == "aff"
+    assert response_data[0]["role"] == "Study Chair"
 
 
 def test_delete_overall_official_metadata(_test_client, _login_user):
@@ -812,7 +815,7 @@ def test_post_reference_metadata(_test_client, _login_user):
         json=[
             {
                 "identifier": "reference identifier",
-                "type": "reference type",
+                "type": "Yes",
                 "citation": "reference citation",
             }
         ],
@@ -822,7 +825,7 @@ def test_post_reference_metadata(_test_client, _login_user):
     pytest.global_reference_id = response_data[0]["id"]
 
     assert response_data[0]["identifier"] == "reference identifier"
-    assert response_data[0]["type"] == "reference type"
+    assert response_data[0]["type"] == "Yes"
     assert response_data[0]["citation"] == "reference citation"
 
 
@@ -864,7 +867,7 @@ def test_put_sponsors_metadata(_test_client, _login_user):
     response = _test_client.put(
         f"/study/{study_id}/metadata/sponsors",
         json={
-            "responsible_party_type": "party type",
+            "responsible_party_type": "Sponsor",
             "responsible_party_investigator_name": "party name",
             "responsible_party_investigator_title": "party title",
             "responsible_party_investigator_affiliation": "party affiliation",
@@ -874,7 +877,7 @@ def test_put_sponsors_metadata(_test_client, _login_user):
     assert response.status_code == 200
     response_data = json.loads(response.data)
 
-    assert response_data["responsible_party_type"] == "party type"
+    assert response_data["responsible_party_type"] == "Sponsor"
     assert response_data["responsible_party_investigator_name"] == "party name"
     assert response_data["responsible_party_investigator_title"] == "party title"
     assert (
@@ -906,20 +909,20 @@ def test_put_status_metadata(_test_client, _login_user):
     response = _test_client.put(
         f"/study/{study_id}/metadata/status",
         json={
-            "overall_status": "in progress",
-            "why_stopped": "not stopped",
-            "start_date": "no start",
-            "start_date_type": "date type",
-            "completion_date": "no completion",
-            "completion_date_type": "date type",
+            "overall_status": "Withdrawn",
+            "why_stopped": "test",
+            "start_date": "fff",
+            "start_date_type": "Actual",
+            "completion_date": "nuzzzll",
+            "completion_date_type": "Actual",
         },
     )
     assert response.status_code == 200
     response_data = json.loads(response.data)
 
-    assert response_data["overall_status"] == "in progress"
-    assert response_data["why_stopped"] == "not stopped"
-    assert response_data["start_date"] == "no start"
-    assert response_data["start_date_type"] == "date type"
-    assert response_data["completion_date"] == "no completion"
-    assert response_data["completion_date_type"] == "date type"
+    assert response_data["overall_status"] == "Withdrawn"
+    assert response_data["why_stopped"] == "test"
+    assert response_data["start_date"] == "fff"
+    assert response_data["start_date_type"] == "Actual"
+    assert response_data["completion_date"] == "nuzzzll"
+    assert response_data["completion_date_type"] == "Actual"

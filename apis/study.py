@@ -2,6 +2,7 @@ from typing import Any, Union
 
 from flask import g, request
 from flask_restx import Namespace, Resource, fields, reqparse
+from jsonschema import ValidationError, validate
 
 import model
 
@@ -55,7 +56,25 @@ class Studies(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def post(self):
+        """Create a new study"""
+        # Schema validation
+        schema = {
+            "type": "object",
+            "required": ["title", "image"],
+            "additionalProperties": False,
+            "properties": {
+                "title": {"type": "string", "minLength": 1},
+                "image": {"type": "string", "minLength": 1},
+            },
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+
         data: Union[Any, dict] = request.json
+
         add_study = model.Study.from_data(data)
         model.db.session.add(add_study)
         study_id = add_study.id
@@ -81,6 +100,23 @@ class StudyResource(Resource):
     @api.response(400, "Validation Error")
     @api.doc(description="Update a study's details")
     def put(self, study_id: int):
+        """Update a study"""
+        # Schema validation
+        schema = {
+            "type": "object",
+            "required": ["title", "image"],
+            "additionalProperties": False,
+            "properties": {
+                "title": {"type": "string", "minLength": 1},
+                "image": {"type": "string", "minLength": 1},
+            },
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+
         update_study = model.Study.query.get(study_id)
         if not is_granted("update_study", update_study):
             return "Access denied, you can not modify", 403

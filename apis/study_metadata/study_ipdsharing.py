@@ -1,6 +1,9 @@
 """API routes for study ipdsharing metadata"""
+import typing
+
 from flask import request
 from flask_restx import Resource, fields
+from jsonschema import ValidationError, validate
 
 import model
 from apis.study_metadata_namespace import api
@@ -38,6 +41,61 @@ class StudyIpdsharingResource(Resource):
 
     def put(self, study_id: int):
         """Create study ipdsharing metadata"""
+        # Schema validation
+        schema = {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "ipd_sharing": {"type": "string", "enum": ["Yes", "No", "Undecided"]},
+                "ipd_sharing_description": {"type": "string", "minLength": 1},
+                "ipd_sharing_info_type_list": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": [
+                            "Study Protocol",
+                            "Statistical Analysis Plan (SAP)",
+                            "Informed Consent Form (ICF)",
+                            "Clinical Study Report (CSR)",
+                            "Analytical Code",
+                        ],
+                    },
+                    "minItems": 1,
+                    "uniqueItems": True,
+                },
+                "ipd_sharing_time_frame": {"type": "string", "minLength": 1},
+                "ipd_sharing_access_criteria": {"type": "string", "minLength": 1},
+                "ipd_sharing_url": {"type": "string", "format": "uri", "minLength": 1},
+            },
+            "required": [
+                "ipd_sharing",
+                "ipd_sharing_description",
+                "ipd_sharing_info_type_list",
+                "ipd_sharing_time_frame",
+                "ipd_sharing_access_criteria",
+                "ipd_sharing_url",
+            ],
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+
+        data: typing.Union[dict, typing.Any] = request.json
+        if data["ipd_sharing"] == "Yes":
+            required_fields = [
+                "ipd_sharing_description",
+                "ipd_sharing_info_type_list",
+                "ipd_sharing_time_frame",
+                "ipd_sharing_access_criteria",
+                "ipd_sharing_url",
+            ]
+
+            for field in required_fields:
+                if field not in data:
+                    return f"Field {field} is required", 400
+
         study_ = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_):
             return "Access denied, you can not delete study", 403

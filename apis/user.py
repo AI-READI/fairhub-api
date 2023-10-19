@@ -1,7 +1,9 @@
 from typing import Any, Union
 
+from email_validator import EmailNotValidError, validate_email
 from flask import g, request
 from flask_restx import Namespace, Resource, fields
+from jsonschema import FormatChecker, ValidationError, validate
 
 import model
 
@@ -42,13 +44,62 @@ class UserDetailsEndpoint(Resource):
         return user_information
 
     @api.expect(study_model)
-    @api.marshal_with(study_model)
+    # @api.marshal_with(study_model)
     def put(self):
         """Updates user details"""
-        data: Union[Any, dict] = request.json
 
-        if data is None:
-            return {"message": "No data provided"}, 400
+        def validate_is_valid_email(instance):
+            print("within is_valid_email")
+            email_address = instance
+            print(email_address)
+            try:
+                validate_email(email_address)
+                return True
+            except EmailNotValidError as e:
+                raise ValidationError("Invalid email address format") from e
+
+        # Schema validation
+        # (profile_image is optional but additional properties are not allowed)
+        schema = {
+            "type": "object",
+            "required": [
+                "email_address",
+                "username",
+                "first_name",
+                "last_name",
+                "institution",
+                "orcid",
+                "location",
+                "timezone",
+            ],
+            "additionalProperties": False,
+            "properties": {
+                "email_address": {"type": "string", "format": "valid email"},
+                "username": {"type": "string", "minLength": 1},
+                "first_name": {"type": "string", "minLength": 1},
+                "last_name": {"type": "string", "minLength": 1},
+                "institution": {"type": "string", "minLength": 1},
+                "orcid": {"type": "string", "minLength": 1},
+                "location": {"type": "string", "minLength": 1},
+                "timezone": {"type": "string", "minLength": 1},
+                "profile_image": {"type": "string", "minLength": 1},  # optional
+            },
+        }
+
+        format_checker = FormatChecker()
+        format_checker.checks("valid email")(validate_is_valid_email)
+
+        try:
+            validate(
+                instance=request.json, schema=schema, format_checker=format_checker
+            )
+        except ValidationError as e:
+            # Verify if the user_information being sent
+            # back is okay for this 400 error, e.message is
+            # not being sent back
+            return e.message, 400
+
+        data: Union[Any, dict] = request.json
         user = model.User.query.get(g.user.id)
         # user.update(data) # don't update the username and email_address for now
         user_details = user.user_details
