@@ -215,7 +215,7 @@ class Login(Resource):
         resp = make_response(user.to_dict())
 
         resp.set_cookie(
-            "token", encoded_jwt_code, secure=True, httponly=True, samesite="lax"
+            "token", encoded_jwt_code, secure=True, httponly=True, samesite="None"
         )
         resp.status_code = 200
 
@@ -359,7 +359,7 @@ class Logout(Resource):
             "",
             secure=True,
             httponly=True,
-            samesite="lax",
+            samesite="None",
             expires=datetime.datetime.now(timezone.utc),
         )
         resp.status_code = 204

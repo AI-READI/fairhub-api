@@ -1,10 +1,10 @@
 """Entry point for the application."""
 import datetime
 import importlib
+import logging
 import os
 from datetime import timezone
 
-import logging
 import jwt
 from flask import Flask, request
 from flask_bcrypt import Bcrypt
@@ -69,7 +69,8 @@ def create_app(config_module=None):
             "/*": {
                 "origins": [
                     "http://localhost:3000",
-                    "https://staging.fairhub.io",
+                    "https:\/\/brave-ground-.*-.*.centralus.2.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
+                    "https://fairhub.io",
                 ],
             }
         },
@@ -163,7 +164,7 @@ def create_app(config_module=None):
                 "",
                 secure=True,
                 httponly=True,
-                samesite="lax",
+                samesite="None",
                 expires=datetime.datetime.now(timezone.utc),
             )
             return resp
@@ -179,13 +180,13 @@ def create_app(config_module=None):
             config.FAIRHUB_SECRET,
             algorithm="HS256",
         )
-        resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="lax")
+        resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="None")
 
         app.logger.info("after request")
         app.logger.info(request.headers.get("Origin"))
 
         resp.headers["Access-Control-Allow-Origin"] = request.headers.get("Origin")
-        # resp.headers["Access-Control-Allow-Credentials"] = "true"
+        resp.headers["Access-Control-Allow-Credentials"] = "true"
         # resp.headers[
         #     "Access-Control-Allow-Headers"
         # ] = "Content-Type, Authorization, Access-Control-Allow-Origin,
