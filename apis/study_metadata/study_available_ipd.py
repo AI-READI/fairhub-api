@@ -55,9 +55,9 @@ class StudyAvailableResource(Resource):
         # Schema validation
         schema = {
             "type": "array",
-            "additionalProperties": False,
             "items": {
                 "type": "object",
+                "additionalProperties": False,
                 "properties": {
                     "identifier": {"type": "string", "minLength": 1},
                     "type": {
@@ -77,6 +77,7 @@ class StudyAvailableResource(Resource):
                 },
                 "required": ["identifier", "type", "url"],
             },
+            "uniqueItems": True,
         }
 
         try:

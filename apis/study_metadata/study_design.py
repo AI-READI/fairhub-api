@@ -1,5 +1,6 @@
 """API routes for study design metadata"""
 import typing
+
 from flask import request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate

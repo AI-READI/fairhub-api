@@ -61,6 +61,7 @@ class StudyOtherResource(Resource):
                 },
                 "size": {"type": "integer"},
             },
+            "required": ["oversight_has_dmc", "conditions", "keywords", "size"],
         }
 
         try:

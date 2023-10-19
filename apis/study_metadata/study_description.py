@@ -45,6 +45,7 @@ class StudyDescriptionResource(Resource):
                 "brief_summary": {"type": "string", "minLength": 1},
                 "detailed_description": {"type": "string", "minLength": 1},
             },
+            "required": ["brief_summary", "detailed_description"],
         }
 
         try:

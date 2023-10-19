@@ -82,7 +82,7 @@ class UserDetailsEndpoint(Resource):
                 "orcid": {"type": "string", "minLength": 1},
                 "location": {"type": "string", "minLength": 1},
                 "timezone": {"type": "string", "minLength": 1},
-                "profile_image": {"type": "string", "minLength": 1},
+                "profile_image": {"type": "string", "minLength": 1},  # optional
             },
         }
 

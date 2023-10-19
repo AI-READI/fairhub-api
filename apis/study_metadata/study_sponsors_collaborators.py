@@ -53,7 +53,13 @@ class StudySponsorsResource(Resource):
         schema = {
             "type": "object",
             "additionalProperties": False,
-            "required": ["responsible_party_type"],
+            "required": [
+                "responsible_party_type",
+                "lead_sponsor_name",
+                "responsible_party_investigator_name",
+                "responsible_party_investigator_title",
+                "responsible_party_investigator_affiliation",
+            ],
             "properties": {
                 "responsible_party_type": {
                     "type": "string",

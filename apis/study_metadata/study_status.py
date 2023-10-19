@@ -1,5 +1,6 @@
 """API routes for study status metadata"""
 import typing
+
 from flask import request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
@@ -50,6 +51,9 @@ class StudyStatusResource(Resource):
                 "start_date",
                 "start_date_type",
                 "overall_status",
+                "why_stopped",
+                "completion_date",
+                "completion_date_type",
             ],
             "properties": {
                 "overall_status": {

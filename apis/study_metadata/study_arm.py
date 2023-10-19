@@ -50,9 +50,9 @@ class StudyArmResource(Resource):
         # Schema validation
         schema = {
             "type": "array",
-            "additionalProperties": False,
             "items": {
                 "type": "object",
+                "additionalProperties": False,
                 "properties": {
                     "label": {"type": "string", "minLength": 1},
                     "type": {
@@ -76,6 +76,7 @@ class StudyArmResource(Resource):
                 },
                 "required": ["label", "type", "description", "intervention_list"],
             },
+            "uniqueItems": True,
         }
 
         try:

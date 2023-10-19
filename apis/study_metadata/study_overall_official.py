@@ -51,9 +51,9 @@ class StudyOverallOfficialResource(Resource):
         # Schema validation
         schema = {
             "type": "array",
-            "additionalProperties": False,
             "items": {
                 "type": "object",
+                "additionalProperties": False,
                 "properties": {
                     "name": {"type": "string", "minLength": 1},
                     "affiliation": {"type": "string", "minLength": 1},
@@ -68,6 +68,7 @@ class StudyOverallOfficialResource(Resource):
                 },
                 "required": ["name", "affiliation", "role"],
             },
+            "uniqueItems": True,
         }
 
         try:

@@ -60,7 +60,6 @@ class StudyContactResource(Resource):
         # Schema validation
         schema = {
             "type": "array",
-            "additionalProperties": False,
             "items": {
                 "type": "object",
                 "additionalProperties": False,
@@ -91,7 +90,7 @@ class StudyContactResource(Resource):
                     "central_contact": {"type": "boolean"},
                 },
             },
-            "minItems": 1,
+            "uniqueItems": True,
         }
 
         format_checker = FormatChecker()

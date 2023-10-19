@@ -41,15 +41,16 @@ class StudyLinkResource(Resource):
         # Schema validation
         schema = {
             "type": "array",
-            "additionalProperties": False,
             "items": {
                 "type": "object",
+                "additionalProperties": False,
                 "properties": {
                     "url": {"type": "string", "format": "uri"},
                     "title": {"type": "string", "minLength": 1},
                 },
                 "required": ["url", "title"],
             },
+            "uniqueItems": True,
         }
 
         try:

@@ -46,16 +46,17 @@ class StudyReferenceResource(Resource):
         # Schema validation
         schema = {
             "type": "array",
-            "additionalProperties": False,
             "items": {
                 "type": "object",
+                "additionalProperties": False,
                 "properties": {
                     "identifier": {"type": "string", "minLength": 1},
                     "type": {"type": "string", "enum": ["Yes", "No"]},
                     "citation": {"type": "string", "minLength": 1},
                 },
-                "required": ["citation"],
+                "required": ["citation", "identifier", "type"],
             },
+            "uniqueItems": True,
         }
 
         try:

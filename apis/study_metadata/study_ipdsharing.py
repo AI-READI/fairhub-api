@@ -1,5 +1,6 @@
 """API routes for study ipdsharing metadata"""
 import typing
+
 from flask import request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
@@ -66,6 +67,14 @@ class StudyIpdsharingResource(Resource):
                 "ipd_sharing_access_criteria": {"type": "string", "minLength": 1},
                 "ipd_sharing_url": {"type": "string", "format": "uri", "minLength": 1},
             },
+            "required": [
+                "ipd_sharing",
+                "ipd_sharing_description",
+                "ipd_sharing_info_type_list",
+                "ipd_sharing_time_frame",
+                "ipd_sharing_access_criteria",
+                "ipd_sharing_url",
+            ],
         }
 
         try:
