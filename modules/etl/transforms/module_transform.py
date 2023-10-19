@@ -2,7 +2,7 @@
 from typing import Any, Callable, Union, List, Dict, Tuple
 from datetime import datetime
 import logging, re
-import vtypes
+import modules.etl.vtypes as vtypes
 # Third-Party Modules
 import pandas as pd
 
@@ -153,6 +153,9 @@ class ModuleTransform (object):
       for error in vtype.validation_errors:
         self.logger.warning(f"{error}")
 
+    if len(vtype.validation_errors) == 0:
+      self.logger.info(f"{self.key}:Complete - simpleTransform")
+
     return self
 
   def compoundTransform (self: object, df: pd.DataFrame) -> object:
@@ -188,6 +191,9 @@ class ModuleTransform (object):
 
         for error in vtype.validation_errors:
           self.logger.warning(f"{error}")
+
+    if len(vtype.validation_errors) == 0:
+      self.logger.info(f"{self.key}:Complete - compoundTransform")
 
     return self
 
@@ -226,6 +232,9 @@ class ModuleTransform (object):
 
         for error in vtype.validation_errors:
           self.logger.warning(f"{error}")
+
+    if len(vtype.validation_errors) == 0:
+      self.logger.info(f"{self.key}:Complete - mixedTransform")
 
     return self
 

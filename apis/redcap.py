@@ -3,20 +3,24 @@ import requests
 import json
 from flask import jsonify
 from flask_restx import Namespace, Resource, fields
-
-# Data Transforms
-from core import transforms
+from redcap import Project
 
 # REDCap API Models
-from apis.models import REDCapProjectDataModel
-from apis.models import REDCapReportParticipantsDataModel
-from apis.models import REDCapReportRecruitmentDataModel
+from apis.models.redcap import REDCapProjectDataModel
+from apis.models.redcap import REDCapReportParticipantsDataModel
+from apis.models.redcap import REDCapReportParticipantValuesDataModel
+from apis.models.redcap import REDCapReportRepeatSurveysDataModel
+from apis.models.redcap import REDCapReportSurveyCompletionsDataModel
 
 # In-Memory Cache Data Models
-from model.cache import DashboardCache
-from model.cache import ParticipantCache
-from model.cache import RecruitmentDashboardCache
-from model.cache import REDCapProjectCache
+from caching.cachemodel.dashboard import DashboardCacheModel
+from caching.cachemodel.dashboard import RecruitmentDashboardCacheModel
+from caching.cachemodel.participant import ParticipantCacheModel
+from caching.cachemodel.redcap import REDCapProjectCacheModel
+
+# REDCapETL
+from modules.etl.transforms import REDCapTransform
+from modules.etl.transforms import ModuleTransform
 
 # Import In-Memory Cache
 from __main__ import MEMORY_CACHE
@@ -44,12 +48,20 @@ api = Namespace("redcap", description="REDCap API methods")
 # Register API Models
 #
 
-redcapProjectDataModel = api.model("REDCapProjectData", REDCapProjectDataModel)
-redcapReportRecruitmentDataModel = api.model(
-    "REDCapReportRecruitmentDashboardData", REDCapReportRecruitmentDataModel
+redcapProjectDataModel = api.model(
+    "REDCapProjectData", REDCapProjectDataModel
 )
 redcapReportParticipantsDataModel = api.model(
     "REDCapReportParticipantsDashboardData", REDCapReportParticipantsDataModel
+)
+redcapReportParticipantValuesDataModel = api.model(
+    "REDCapReportParticipantValuesData", REDCapReportParticipantValuesDataModel
+)
+redcapReportRepeatSurveysDataModel = api.model(
+    "REDCapReportRepeatSurveysData", REDCapReportRepeatSurveysDataModel
+)
+redcapReportSurveyCompletionsDataModel = api.model(
+    "REDCapReportSurveyCompletionsData", REDCapReportSurveyCompletionsDataModel
 )
 
 #
@@ -57,10 +69,22 @@ redcapReportParticipantsDataModel = api.model(
 #
 
 
-@api.route("/project", methods=["GET"])
+@api.route("/project/<project_id>", methods=["GET"])
 class REDCapProjectData(Resource):
     @api.doc("get_redcap_project")
     @api.marshal_with(redcapProjectDataModel)
+    def get(self, project_id):
+        """
+        Get REDCap project
+        """
+        PyCapProject = Project(REDCAP_API_URL, REDCAP_API_TOKEN)
+        project = PyCapProject.export_project_info()
+        return project
+
+@api.route("/reports/participants", methods=["GET"])
+class REDCapReportParticipantsData(Resource):
+    @api.doc("get_redcap_report_participants")
+    @api.marshal_with(redcapReportParticipantsDataModel)
     def get(self):
         """
         Get REDCap project
@@ -76,11 +100,29 @@ class REDCapProjectData(Resource):
         )
         return response.json()
 
+@api.route("/reports/participant-values", methods=["GET"])
+class REDCapReportParticipantValuesData(Resource):
+    @api.doc("get_redcap_report_participant_values_data")
+    @api.marshal_with(redcapReportParticipantValuesDataModel)
+    def get(self):
+        """
+        Get REDCap project
+        """
+        response = requests.post(
+            REDCAP_API_URL,
+            data={
+                "token": REDCAP_API_TOKEN,
+                "content": "project",
+                "format": REDCAP_API_FORMAT,
+                "returnFormat": REDCAP_API_FORMAT,
+            },
+        )
+        return response.json()
 
-@api.route("/reports/participants", methods=["GET"])
-class REDCapProjectData(Resource):
-    @api.doc("get_redcap_report_participants")
-    @api.marshal_with(redcapProjectDataModel)
+@api.route("/reports/repeat-surveys", methods=["GET"])
+class REDCapReportRepeatSurveysData(Resource):
+    @api.doc("get_redcap_report_repeat_surveys")
+    @api.marshal_with(redcapReportRepeatSurveysDataModel)
     def get(self):
         """
         Get REDCap project
@@ -98,62 +140,14 @@ class REDCapProjectData(Resource):
 
 
 # This endpoint pulls the configured REDCap report and caches it
-@api.route("/reports/recruitment", methods=["GET"])
-class REDCapReportRecruitmentData(Resource):
-    @api.doc("get_redcap_report_recruitment")
-    @api.marshal_list_with(redcapReportRecruitmentDataModel)
+@api.route("/reports/survey-completions", methods=["GET"])
+class REDCapReportSurveyCompletionsData(Resource):
+    @api.doc("get_redcap_report_survey_completions")
+    @api.marshal_list_with(redcapReportSurveyCompletionsDataModel)
     def get(self):
         """
         Get REDCap report for recruitment dashboard Fairhub.io
         """
-        # dashboard_data = {
-        #     "name": "recruitmentDashboard",
-        #     "namespace": "recruitmentDashboard",
-        #     "endpoint": "/recruitment-dashboard",
-        #     "data": [
-        #         {
-        #             "module_name": "overview",
-        #             "gender": "gender",
-        #             "sex": "male",
-        #             "race": "race",
-        #             "ethnicity": "ethnicity",
-        #             "ancestry": "ancestry",
-        #             "phenotype": "phenotype",
-        #             "a1c": "a1c",
-        #             "recruitment_status": "recruitment_status",
-        #             "consent_status": "consent_status",
-        #             "communication_status": "communication_status",
-        #             "device_status_es": "device_status_es",
-        #             "device_status_cgm": "device_status_cgm",
-        #             "device_status_amw": "device_status_amw",
-        #             "device_status_all": "device_status_all",
-        #             "intervention_status": "intervention_status",
-        #         },
-        #         {
-        #             "module_name": "participant",
-        #             "gender": "gender",
-        #             "sex": "female",
-        #             "race": "race",
-        #             "ethnicity": "ethnicity",
-        #             "ancestry": "ancestry",
-        #             "phenotype": "phenotype",
-        #             "a1c": "a1c",
-        #             "recruitment_status": "recruitment_status",
-        #             "consent_status": "consent_status",
-        #             "communication_status": "communication_status",
-        #             "device_status_es": "device_status_es",
-        #             "device_status_cgm": "device_status_cgm",
-        #             "device_status_amw": "device_status_amw",
-        #             "device_status_all": "device_status_all",
-        #             "intervention_status": "intervention_status",
-        #         },
-        #     ],
-        # }
-        # dashboard_data = transforms.redcap_to_redis_recruitment_dashboard(dashboard_data)
-        # MEMORY_CACHE.set(
-        #     "transform_recruitment-dashboard",
-        #     dashboard_data
-        # )
         response = requests.post(
             REDCAP_API_URL,
             data={
@@ -181,53 +175,3 @@ class REDCapReportRecruitmentData(Resource):
             transformed_data[module] = getattr(transforms, module)()
 
         return transformed_data
-
-
-@api.route("/reports/recruitment/dm/<dm>", methods=["GET"])
-@api.param("dm", "The REDCap dm field value")
-class REDCapReportRecruitmentDataByDM(Resource):
-    @api.doc("get_redcap_report_recruitment_by_dm")
-    @api.marshal_list_with(redcapReportRecruitmentDataModel)
-    def get(self, dm):
-        """
-        Get REDCap report records by data manager sign-off status
-        """
-        response = requests.post(
-            REDCAP_API_URL,
-            data={
-                "token": REDCAP_API_TOKEN,
-                "format": REDCAP_API_FORMAT,
-                "returnFormat": REDCAP_API_FORMAT,
-                "report_id": REDCAP_DASHBOARD_REPORT_ID,
-                "content": "report",
-                "rawOrLabel": "raw",
-                "rawOrLabelHeaders": "raw",
-                "exportCheckboxLabel": "true",
-            },
-        )
-        return [row for row in response.json() if row["dm"] == dm]
-
-
-@api.route("/reports/recruitment/siteid/<siteid>", methods=["GET"])
-@api.param("siteid", "The REDCap siteid field value")
-class REDCapReportRecruitmentDataBySiteid(Resource):
-    @api.doc("get_redcap_report_recruitment_by_siteid")
-    @api.marshal_list_with(redcapReportRecruitmentDataModel)
-    def get(self, siteid):
-        """
-        Get REDCap report records by data generation site id
-        """
-        response = requests.post(
-            REDCAP_API_URL,
-            data={
-                "token": REDCAP_API_TOKEN,
-                "format": REDCAP_API_FORMAT,
-                "returnFormat": REDCAP_API_FORMAT,
-                "report_id": REDCAP_DASHBOARD_REPORT_ID,
-                "content": "report",
-                "rawOrLabel": "raw",
-                "rawOrLabelHeaders": "raw",
-                "exportCheckboxLabel": "true",
-            },
-        )
-        return [row for row in response.json() if row["siteid"] == siteid]

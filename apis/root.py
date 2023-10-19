@@ -1,6 +1,9 @@
 from flask_restx import Namespace, Resource
-from .models import FairhubAPIModel
 import os
+
+from apis.models.fairhub import FairhubAPIModel
+from apis.models.fairhub import FairhubDashboardModel
+from apis.models.fairhub import FairhubRecruitmentDashboardDataModel
 
 api = Namespace("/", description="Root level operations")
 
@@ -13,7 +16,6 @@ fairhubApiModel = api.model("FairhubApiModel", FairhubAPIModel)
 #
 # Root Endpoints
 #
-
 
 @api.route("/")
 class Index(Resource):

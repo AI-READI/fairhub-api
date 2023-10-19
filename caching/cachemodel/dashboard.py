@@ -1,7 +1,12 @@
-from redis_om import HashModel
+from redis_om import JsonModel, EmbeddedJsonModel
 
+class DashboardCacheModel(JsonModel):
+    name: str
+    varname: str
+    namespace: str
+    endpoint: str
 
-class REDCapDashboardETL(HashModel):
+class RecruitmentDashboardCacheModel(JsonModel):
     record_id: str
     studyid: str
     siteid: str

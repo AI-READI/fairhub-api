@@ -2,7 +2,6 @@ from .vtype import VType
 import pandas as pd
 from datetime import datetime
 
-
 class SingleTimeseries(VType):
     def __init__(self: object) -> None:
         super().__init__(

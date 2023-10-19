@@ -1,7 +1,6 @@
-from redis_om import HashModel
+from redis_om import JsonModel
 
-
-class REDCapProjectCache(HashModel):
+class REDCapProjectCacheModel(JsonModel):
     project_id: str
     project_title: str
     creation_time: str
