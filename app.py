@@ -68,7 +68,7 @@ def create_app(config_module=None):
         resources={
             "/*": {
                 "origins": [
-                    "http://localhost:5000",
+                    "http://localhost:3000",
                     "https:\/\/brave-ground-.*-.*.centralus.2.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
                     "https://fairhub.io",
                 ],

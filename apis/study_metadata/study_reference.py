@@ -50,8 +50,8 @@ class StudyReferenceResource(Resource):
                 "type": "object",
                 "additionalProperties": False,
                 "properties": {
-                    "identifier": {"type": "string", "minLength": 1},
-                    "type": {"type": "string", "enum": ["Yes", "No"]},
+                    "identifier": {"type": "string"},
+                    "type": {"type": ["string", "null"]},
                     "citation": {"type": "string", "minLength": 1},
                 },
                 "required": ["citation", "identifier", "type"],

@@ -54,23 +54,13 @@ class StudyArmResource(Resource):
                 "type": "object",
                 "additionalProperties": False,
                 "properties": {
+                    "id": {"type": "string"},
                     "label": {"type": "string", "minLength": 1},
-                    "type": {
-                        "type": "string",
-                        "enum": [
-                            "Experimental",
-                            "Active Comparator",
-                            "Placebo Comparator",
-                            "Sham Comparator",
-                            "No Intervention",
-                            "Other",
-                        ],
-                    },
-                    "description": {"type": "string", "minLength": 1},
+                    "type": {"type": ["string", "null"]},
+                    "description": {"type": "string"},
                     "intervention_list": {
                         "type": "array",
-                        "items": {"type": "string", "minLength": 1},
-                        "minItems": 1,
+                        "items": {"type": "string"},
                         "uniqueItems": True,
                     },
                 },

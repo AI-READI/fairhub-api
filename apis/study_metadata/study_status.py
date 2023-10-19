@@ -74,14 +74,13 @@ class StudyStatusResource(Resource):
                 "start_date": {"type": "string", "minLength": 1},
                 "start_date_type": {
                     "type": "string",
-                    "minLength": 1,
                     "enum": ["Actual", "Anticipated"],
                 },
-                "completion_date": {"type": "string", "minLength": 1},
+                "completion_date": {
+                    "type": ["string", "null"],
+                },
                 "completion_date_type": {
-                    "type": "string",
-                    "minLength": 1,
-                    "enum": ["Actual", "Anticipated"],
+                    "type": ["string", "null"],
                 },
             },
         }

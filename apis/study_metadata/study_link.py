@@ -46,7 +46,7 @@ class StudyLinkResource(Resource):
                 "additionalProperties": False,
                 "properties": {
                     "url": {"type": "string", "format": "uri"},
-                    "title": {"type": "string", "minLength": 1},
+                    "title": {"type": "string"},
                 },
                 "required": ["url", "title"],
             },

@@ -60,71 +60,19 @@ class StudyDesignResource(Resource):
             "additionalProperties": False,
             "required": ["study_type"],
             "properties": {
-                "design_allocation": {"type": "string", "minLength": 1},
+                "design_allocation": {"type": ["string", "null"]},
                 "study_type": {
-                    "type": "string",
-                    "oneOf": [
-                        {
-                            "enum": [
-                                "Interventional",
-                                "Observational",
-                                "Observational Patient Registry",
-                                "Expanded Access",
-                            ]
-                        }
-                    ],
+                    "type": ["string", "null"],
                 },
-                "design_intervention_model": {
-                    "type": "string",
-                    "oneOf": [
-                        {
-                            "enum": [
-                                "Treatment",
-                                "Prevention",
-                                "Diagnostic",
-                                "Supportive Care",
-                                "Screening",
-                                "Health Services Research",
-                                "Basic Science",
-                                "Device Feasibility",
-                            ]
-                        }
-                    ],
-                },
+                "design_intervention_model": {"type": ["string", "null"]},
                 "design_intervention_model_description": {
                     "type": "string",
-                    "minLength": 1,
                 },
-                "design_primary_purpose": {
+                "design_primary_purpose": {"type": ["string", "null"]},
+                "design_masking": {"type": ["string", "null"]},
+                "design_masking_description": {
                     "type": "string",
-                    "oneOf": [
-                        {
-                            "enum": [
-                                "Single Group Assignment",
-                                "Parallel Assignment",
-                                "Crossover Assignment",
-                                "Factorial Assignment",
-                                "Sequential Assignment",
-                            ]
-                        }
-                    ],
                 },
-                "design_masking": {
-                    "type": "string",
-                    "oneOf": [
-                        {
-                            "enum": [
-                                "None (open label)",
-                                "Blinded (no details)" "Single",
-                                "Double",
-                                "Triple",
-                                "Quadruple",
-                                "N/A",
-                            ]
-                        }
-                    ],
-                },
-                "design_masking_description": {"type": "string", "minLength": 1},
                 "design_who_masked_list": {
                     "type": "array",
                     "items": {
@@ -140,7 +88,6 @@ class StudyDesignResource(Resource):
                             },
                         ],
                     },
-                    "minItems": 1,
                     "uniqueItems": True,
                 },
                 "phase_list": {
@@ -162,7 +109,6 @@ class StudyDesignResource(Resource):
                             }
                         ],
                     },
-                    "minItems": 1,
                     "uniqueItems": True,
                 },
                 "enrollment_count": {"type": "integer"},
@@ -170,7 +116,7 @@ class StudyDesignResource(Resource):
                     "type": "string",
                     "enum": ["Actual", "Anticipated"],
                 },
-                "number_arms": {"type": "integer"},
+                "number_arms": {"type": ["integer", "null"]},
                 "design_observational_model_list": {
                     "type": "array",
                     "items": {
@@ -189,7 +135,6 @@ class StudyDesignResource(Resource):
                             }
                         ],
                     },
-                    "minItems": 1,
                     "uniqueItems": True,
                 },
                 "design_time_perspective_list": {
@@ -207,24 +152,16 @@ class StudyDesignResource(Resource):
                             }
                         ],
                     },
-                    "minItems": 1,
                     "uniqueItems": True,
                 },
-                "bio_spec_retention": {
+                "bio_spec_retention": {"type": ["string", "null"]},
+                "bio_spec_description": {
                     "type": "string",
-                    "oneOf": [
-                        {
-                            "enum": [
-                                "None Retained",
-                                "Samples With DNA",
-                                "Samples Without DNA",
-                            ]
-                        }
-                    ],
                 },
-                "bio_spec_description": {"type": "string", "minLength": 1},
-                "target_duration": {"type": "string", "minLength": 1},
-                "number_groups_cohorts": {"type": "integer"},
+                "target_duration": {
+                    "type": "string",
+                },
+                "number_groups_cohorts": {"type": ["integer", "null"]},
             },
         }
 

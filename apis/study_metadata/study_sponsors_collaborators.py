@@ -72,15 +72,12 @@ class StudySponsorsResource(Resource):
                 },
                 "responsible_party_investigator_name": {
                     "type": "string",
-                    "minLength": 1,
                 },
                 "responsible_party_investigator_title": {
                     "type": "string",
-                    "minLength": 1,
                 },
                 "responsible_party_investigator_affiliation": {
                     "type": "string",
-                    "minLength": 1,
                 },
                 "lead_sponsor_name": {"type": "string", "minLength": 1},
             },

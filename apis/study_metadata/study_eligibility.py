@@ -64,14 +64,19 @@ class StudyEligibilityResource(Resource):
                 "maximum_age_value": {"type": "integer"},
                 "minimum_age_unit": {"type": "string", "minLength": 1},
                 "maximum_age_unit": {"type": "string", "minLength": 1},
-                "healthy_volunteers": {"type": "string", "enum": ["Yes", "No"]},
-                "inclusion_criteria": {"type": "array", "items": {"type": "string"}},
-                "exclusion_criteria": {"type": "array", "items": {"type": "string"}},
-                "study_population": {"type": "string"},
-                "sampling_method": {
-                    "type": "string",
-                    "enum": ["Non-Probability Sample", "Probability Sample"],
+                "healthy_volunteers": {"type": ["string", "null"]},
+                "inclusion_criteria": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "uniqueItems": True,
                 },
+                "exclusion_criteria": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "uniqueItems": True,
+                },
+                "study_population": {"type": "string"},
+                "sampling_method": {"type": ["string", "null"]},
             },
         }
 

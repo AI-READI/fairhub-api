@@ -56,6 +56,7 @@ class StudyIdentificationResource(Resource):
                         "identifier": {"type": "string", "minLength": 1},
                         "identifier_type": {
                             "type": "string",
+                            "minLength": 1,
                         },
                         "identifier_domain": {
                             "type": "string",

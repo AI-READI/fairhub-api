@@ -72,10 +72,10 @@ class StudyAvailableResource(Resource):
                             "Other",
                         ],
                     },
-                    "comment": {"type": "string", "minLength": 1},
+                    "comment": {"type": "string"},
                     "url": {"type": "string", "format": "uri", "minLength": 1},
                 },
-                "required": ["identifier", "type", "url"],
+                "required": ["identifier", "type", "url", "comment"],
             },
             "uniqueItems": True,
         }

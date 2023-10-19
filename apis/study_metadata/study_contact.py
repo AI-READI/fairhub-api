@@ -77,14 +77,9 @@ class StudyContactResource(Resource):
                     "phone": {
                         "type": "string",
                         "minLength": 1,
-                        "maxLength": 30,
-                        "pattern": "^[0-9-]+$",
                     },
                     "phone_ext": {
                         "type": "string",
-                        "minLength": 1,
-                        "pattern": "^[0-9-]+$",
-                        "errorMessage": "Invalid phone extension",
                     },
                     "email_address": {"type": "string", "format": "email"},
                     "central_contact": {"type": "boolean"},

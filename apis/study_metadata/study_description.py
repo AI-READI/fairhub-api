@@ -43,7 +43,9 @@ class StudyDescriptionResource(Resource):
             "additionalProperties": False,
             "properties": {
                 "brief_summary": {"type": "string", "minLength": 1},
-                "detailed_description": {"type": "string", "minLength": 1},
+                "detailed_description": {
+                    "type": "string",
+                },
             },
             "required": ["brief_summary", "detailed_description"],
         }
