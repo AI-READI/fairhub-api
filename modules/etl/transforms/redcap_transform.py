@@ -19,52 +19,54 @@ class REDCapTransform(object):
         self.redcap_api_key = config["redcap_api_key"]
 
         # Set Transform Key
-        self.key = config["key"] \
-            if "key" in config \
-            else "redcap-transform"
+        self.key = config["key"] if "key" in config else "redcap-transform"
 
         # Data Config
-        self.index_columns = config["index_columns"] \
-            if "index_columns" in config \
-            else ["record_id"]
+        self.index_columns = (
+            config["index_columns"] if "index_columns" in config else ["record_id"]
+        )
 
         # REDCap Reports Config
-        self.reports_configs = config["reports"] \
-            if "reports" in config \
-            else []
+        self.reports_configs = config["reports"] if "reports" in config else []
 
         # Report Merging
-        self.merge_transformed_reports = config["merge_transformed_reports"] \
-            if "merge_transformed_reports" in config \
+        self.merge_transformed_reports = (
+            config["merge_transformed_reports"]
+            if "merge_transformed_reports" in config
             else []
+        )
 
         # Post Merge Transforms
-        self.post_merge_transforms = config["post_merge_transforms"] \
-            if "post_merge_transforms" in config \
-            else []
+        self.post_merge_transforms = (
+            config["post_merge_transforms"] if "post_merge_transforms" in config else []
+        )
 
         # Column Value Separator
-        self.multivalue_separator = config["multivalue_separator"] \
-            if "multivalue_separator" in config \
-            else "|"
+        self.multivalue_separator = (
+            config["multivalue_separator"] if "multivalue_separator" in config else "|"
+        )
 
         # CSV Float Format (Default: "%.2f")
-        self.csv_float_format = config["csv_float_format"] \
-            if "csv_float_format" in config \
-            else "%.2f"
+        self.csv_float_format = (
+            config["csv_float_format"] if "csv_float_format" in config else "%.2f"
+        )
 
-        self.missing_value_generic = config["missing_value_generic"] \
-            if "missing_value_generic" in config \
+        self.missing_value_generic = (
+            config["missing_value_generic"]
+            if "missing_value_generic" in config
             else "Value Unavailable"
+        )
 
         # Logging Config
-        self.logging_config = config["logging_config"] \
-            if "logging_config" in config \
+        self.logging_config = (
+            config["logging_config"]
+            if "logging_config" in config
             else {
                 "encoding": "utf-8",
                 "filename": "REDCapETL.log",
                 "level": logging.DEBUG,
             }
+        )
 
         # Configure Logging
         logging.basicConfig(**self.logging_config)
@@ -94,13 +96,22 @@ class REDCapTransform(object):
         self._field_rgx["calc"] = None
 
         # General Parsing Variables
-        self.none_values = [np.nan, pd.NaT, None, "nan", "NaN", "-", "", self.missing_value_generic]
+        self.none_values = [
+            np.nan,
+            pd.NaT,
+            None,
+            "nan",
+            "NaN",
+            "-",
+            "",
+            self.missing_value_generic,
+        ]
         self.none_map = {key: self.missing_value_generic for key in self.none_values}
         self.survey_instrument_map = {
             "2": "Complete",
             "1": "Unverified",
             "0": "Incomplete",
-            "" : self.missing_value_generic
+            "": self.missing_value_generic,
         }
 
         self.logger.info(f"Initialized")
@@ -451,9 +462,17 @@ class REDCapTransform(object):
     # Transform - Map Missing Values By Columns
     #
 
-    def _map_missing_values_by_columns (self: object, df: pd.DataFrame, columns: List[str], missing_value: Any = None, annotation: List[Dict[str, Any]] = []) -> pd.DataFrame:
-        columns = self._resolve_columns_with_dataframe(df = df, columns = columns)
-        missing_value = missing_value if missing_value is not None else self.missing_value_generic
+    def _map_missing_values_by_columns(
+        self: object,
+        df: pd.DataFrame,
+        columns: List[str],
+        missing_value: Any = None,
+        annotation: List[Dict[str, Any]] = [],
+    ) -> pd.DataFrame:
+        columns = self._resolve_columns_with_dataframe(df=df, columns=columns)
+        missing_value = (
+            missing_value if missing_value is not None else self.missing_value_generic
+        )
         for column in columns:
             for i, value in enumerate(df[column]):
                 if (len(str(value)) == 0) or (value in self.none_map.keys()):
@@ -464,12 +483,16 @@ class REDCapTransform(object):
         return df
 
     @classmethod
-    def map_missing_values_by_columns (self: object, df: pd.DataFrame, columns: List[str], missing_value: Any) -> pd.DataFrame:
+    def map_missing_values_by_columns(
+        self: object, df: pd.DataFrame, columns: List[str], missing_value: Any
+    ) -> pd.DataFrame:
         """
         Replace 0-length values or values with keys in
         self.none_map with self.missing_value_generic.
         """
-        return self._map_missing_values_by_columns(df = df, columns = columns, missing_value = missing_value)
+        return self._map_missing_values_by_columns(
+            df=df, columns=columns, missing_value=missing_value
+        )
 
     #
     # Transforms - Rows
@@ -510,15 +533,21 @@ class REDCapTransform(object):
     # Transforms - Aggregate Repeat Instruments by Index
     #
 
-    def _aggregate_repeat_instrument_column_by_index (self: object, df: pd.DataFrame, aggregator: str = "max", dtype: Callable = float, annotation: List[Dict[str, Any]] = []) -> pd.DataFrame:
+    def _aggregate_repeat_instrument_column_by_index(
+        self: object,
+        df: pd.DataFrame,
+        aggregator: Callable = "max",
+        dtype: Callable = float,
+        annotation: List[Dict[str, Any]] = [],
+    ) -> pd.DataFrame:
         new_columns = df["redcap_repeat_instrument"].unique()
         pivot = pd.pivot_table(
             df,
-            index       = self.index_columns,
-            columns     = ["redcap_repeat_instrument"],
-            values      = "redcap_repeat_instance",
-            aggfunc     = aggregator,
-            fill_value  = self.missing_value_generic
+            index=self.index_columns,
+            columns=["redcap_repeat_instrument"],
+            values="redcap_repeat_instance",
+            aggfunc=aggregator,
+            fill_value=self.missing_value_generic,
         )
         df = df.merge(pivot, how="inner", on=self.index_columns)
         df = df.drop_duplicates(self.index_columns, keep="first")
@@ -527,7 +556,9 @@ class REDCapTransform(object):
         return df
 
     @classmethod
-    def aggregate_repeat_instrument_by_index (self: object, df: pd.DataFrame, aggregator: str = "max", dtype: Callable = float) -> pd.DataFrame:
+    def aggregate_repeat_instrument_by_index(
+        self: object, df: pd.DataFrame, aggregator: str = "max", dtype: Callable = float
+    ) -> pd.DataFrame:
         """
         Pre-processing REDCap repeat_instrument so each instrument
         has its own column and the value. The value is computed
