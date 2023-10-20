@@ -1,4 +1,4 @@
-from typing import Any, Union, List
+from typing import Any, List, Union
 
 from flask import request
 from flask_restx import Resource, fields
@@ -48,24 +48,29 @@ class DatasetRelatedItemResource(Resource):
                     update_title.update(title)
 
                 for identifier in i["identifiers"]:
-                    update_identifier = model.DatasetRelatedItemIdentifier.query.get(identifier["id"])
+                    update_identifier = model.DatasetRelatedItemIdentifier.query.get(
+                        identifier["id"]
+                    )
                     update_identifier.update(identifier)
 
                 contributors_ = i["contributors"]
                 creators_ = i["creators"]
                 for c in contributors_:
-                    related_item_contributors_ = model.DatasetRelatedItemContributor.query.get(c["id"])
+                    related_item_contributors_ = (
+                        model.DatasetRelatedItemContributor.query.get(c["id"])
+                    )
                     related_item_contributors_.update(c)
                     model.db.session.add(related_item_contributors_)
                 for c in creators_:
-                    related_item_creators_ = model.DatasetRelatedItemContributor.query.get(c["id"])
+                    related_item_creators_ = (
+                        model.DatasetRelatedItemContributor.query.get(c["id"])
+                    )
                     related_item_creators_.update(c)
                     model.db.session.add(related_item_creators_)
 
                 # list_of_elements.append(dataset_related_item_.to_dict())
             elif "id" not in i or not i["id"]:
-                dataset_related_item_ = (model.DatasetRelatedItem.
-                                         from_data(data_obj, i))
+                dataset_related_item_ = model.DatasetRelatedItem.from_data(data_obj, i)
                 model.db.session.add(dataset_related_item_)
 
                 filtered_related_item = dataset_related_item_.query.filter_by(
@@ -92,12 +97,18 @@ class DatasetRelatedItemResource(Resource):
                 contributors_ = i["contributors"]
                 creators_ = i["creators"]
                 for c in contributors_:
-                    related_item_contributors_ = model.DatasetRelatedItemContributor.from_data(
-                        dataset_related_item_, c, False)
+                    related_item_contributors_ = (
+                        model.DatasetRelatedItemContributor.from_data(
+                            dataset_related_item_, c, False
+                        )
+                    )
                     model.db.session.add(related_item_contributors_)
                 for c in creators_:
-                    related_item_creators_ = model.DatasetRelatedItemContributor.from_data(
-                        dataset_related_item_, c, True)
+                    related_item_creators_ = (
+                        model.DatasetRelatedItemContributor.from_data(
+                            dataset_related_item_, c, True
+                        )
+                    )
                     model.db.session.add(related_item_creators_)
                 # list_of_elements.append(dataset_related_item_.to_dict())
 

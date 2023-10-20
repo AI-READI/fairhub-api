@@ -43,11 +43,8 @@ class DatasetRelatedItemContributor(db.Model):  # type: ignore
         return contributor_
 
     def update(self, data: dict):
-        self.name = data["name"] \
-            if "name" in data else ""
-        self.name_type = data["name_type"] \
-            if "name_type" in data else None
+        self.name = data["name"] if "name" in data else ""
+        self.name_type = data["name_type"] if "name_type" in data else None
         self.contributor_type = (
-            data["contributor_type"]
-            if "contributor_type" in data else None
+            data["contributor_type"] if "contributor_type" in data else None
         )

@@ -2,7 +2,6 @@ import datetime
 import uuid
 from datetime import timezone
 
-
 from ..db import db
 
 
@@ -24,16 +23,25 @@ class DatasetRelatedItem(db.Model):  # type: ignore
     dataset = db.relationship("Dataset", back_populates="dataset_related_item")
 
     dataset_related_item_contributor = db.relationship(
-        "DatasetRelatedItemContributor", back_populates="dataset_related_item"
+        "DatasetRelatedItemContributor",
+        back_populates="dataset_related_item",
+        cascade="all, delete",
     )
     dataset_related_item_identifier = db.relationship(
-        "DatasetRelatedItemIdentifier", back_populates="dataset_related_item"
+        "DatasetRelatedItemIdentifier",
+        back_populates="dataset_related_item",
+        cascade="all, delete",
     )
     dataset_related_item_other = db.relationship(
-        "DatasetRelatedItemOther", back_populates="dataset_related_item", uselist=False
+        "DatasetRelatedItemOther",
+        back_populates="dataset_related_item",
+        uselist=False,
+        cascade="all, delete",
     )
     dataset_related_item_title = db.relationship(
-        "DatasetRelatedItemTitle", back_populates="dataset_related_item"
+        "DatasetRelatedItemTitle",
+        back_populates="dataset_related_item",
+        cascade="all, delete",
     )
 
     def to_dict(self):
@@ -41,20 +49,19 @@ class DatasetRelatedItem(db.Model):  # type: ignore
             self.dataset_related_item_contributor,
             key=lambda creator: creator.created_at,
         )
-        creators = [creator for creator in sorted_contributors if creator.creator]
+        creators = [c for c in sorted_contributors if c.creator]
 
-        contributors = [
-            contributor for contributor in sorted_contributors if not contributor.creator]
+        contributors = [c for c in sorted_contributors if not c.creator]
 
         return {
             "id": self.id,
             "type": self.type,
             "relation_type": self.relation_type,
             "created_at": self.created_at,
-            "titles": [i.to_dict() for i in self.dataset_related_item_title],
+            "titles": [i.to_dict() for i in self.dataset_related_item_title],  # type: ignore
             "creators": [c.to_dict() for c in creators],
             "contributors": [c.to_dict() for c in contributors],
-            "identifiers": [i.to_dict() for i in self.dataset_related_item_identifier]
+            "identifiers": [i.to_dict() for i in self.dataset_related_item_identifier],  # type: ignore
         }
 
     @staticmethod

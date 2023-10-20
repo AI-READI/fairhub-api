@@ -55,19 +55,14 @@ class DatasetRelatedItemOther(db.Model):  # type: ignore
         return dataset_related_item_other
 
     def update(self, data: dict):
-        self.publication_year = data["publication_year"] \
-            if "publication_year" in data else None
+        self.publication_year = (
+            data["publication_year"] if "publication_year" in data else None
+        )
         self.volume = data["volume"] if "volume" in data else ""
         self.issue = data["issue"] if "issue" in data else ""
-        self.number_value = data["number_value"] \
-            if "number_value" in data else ""
-        self.number_type = data["number_type"] \
-            if "number_type" in data else None
-        self.first_page = data["first_page"] \
-            if "first_page" in data else ""
-        self.last_page = data["last_page"] \
-            if "last_page" in data else ""
-        self.publisher = data["publisher"] \
-            if "publisher" in data else ""
-        self.edition = data["edition"] \
-            if "edition" in data else ""
+        self.number_value = data["number_value"] if "number_value" in data else ""
+        self.number_type = data["number_type"] if "number_type" in data else None
+        self.first_page = data["first_page"] if "first_page" in data else ""
+        self.last_page = data["last_page"] if "last_page" in data else ""
+        self.publisher = data["publisher"] if "publisher" in data else ""
+        self.edition = data["edition"] if "edition" in data else ""
