@@ -45,8 +45,8 @@ class DatasetRelatedItemIdentifier(db.Model):  # type: ignore
         return identifier_
 
     def update(self, data: dict):
-        self.identifier = data["identifier"]
-        self.type = data["identifier_type"]
-        self.metadata_scheme = data["metadata_scheme"]
-        self.scheme_uri = data["scheme_uri"]
-        self.scheme_type = data["scheme_type"]
+        self.identifier = data["identifier"] if "identifier" in data else ""
+        self.type = data["identifier_type"] if "identifier_type" in data else None
+        self.metadata_scheme = data["metadata_scheme"] if "metadata_scheme" in data else ""
+        self.scheme_uri = data["scheme_uri"] if "scheme_uri" in data else ""
+        self.scheme_type = data["scheme_type"] if "scheme_type" in data else ""

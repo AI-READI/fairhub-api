@@ -6,6 +6,10 @@ from model.dataset_metadata.dataset_related_item_contributor import (
 from model.dataset_metadata.dataset_related_item_identifier import (
     DatasetRelatedItemIdentifier,
 )
+from model.dataset_metadata.creators import (
+    Creators,
+)
+
 from model.dataset_metadata.dataset_related_item_other import DatasetRelatedItemOther
 from model.dataset_metadata.dataset_related_item_title import DatasetRelatedItemTitle
 
@@ -23,6 +27,7 @@ from .dataset_metadata.dataset_record_keys import DatasetRecordKeys
 from .dataset_metadata.dataset_rights import DatasetRights
 from .dataset_metadata.dataset_subject import DatasetSubject
 from .dataset_metadata.dataset_title import DatasetTitle
+
 from .db import db
 from .email_verification import EmailVerification
 from .invited_study_contributor import StudyInvitedContributor
@@ -104,4 +109,5 @@ __all__ = [
     "TokenBlacklist",
     "UserDetails",
     "Notification",
+    "Creators"
 ]

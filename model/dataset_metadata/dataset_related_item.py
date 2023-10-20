@@ -2,7 +2,6 @@ import datetime
 import uuid
 from datetime import timezone
 
-import model
 
 from ..db import db
 
@@ -12,7 +11,7 @@ class DatasetRelatedItem(db.Model):  # type: ignore
         self.id = str(uuid.uuid4())
         self.dataset = dataset
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
-        self.dataset_related_item_other = model.DatasetRelatedItemOther(self)
+        # self.dataset_related_item_other = model.DatasetRelatedItemOther(self)
 
     __tablename__ = "dataset_related_item"
 
@@ -38,17 +37,24 @@ class DatasetRelatedItem(db.Model):  # type: ignore
     )
 
     def to_dict(self):
+        sorted_contributors = sorted(
+            self.dataset_related_item_contributor,
+            key=lambda creator: creator.created_at,
+        )
+        creators = [creator for creator in sorted_contributors if creator.creator]
+
+        contributors = [
+            contributor for contributor in sorted_contributors if not contributor.creator]
+
         return {
             "id": self.id,
             "type": self.type,
             "relation_type": self.relation_type,
             "created_at": self.created_at,
-            # "title": self.dataset_related_item_title.title
-            # if self.dataset_related_item_title
-            # else None,
-            # "title_type": self.dataset_related_item_title.type
-            # if self.dataset_related_item_title
-            # else None,
+            "titles": [i.to_dict() for i in self.dataset_related_item_title],
+            "creators": [c.to_dict() for c in creators],
+            "contributors": [c.to_dict() for c in contributors],
+            "identifiers": [i.to_dict() for i in self.dataset_related_item_identifier]
         }
 
     @staticmethod

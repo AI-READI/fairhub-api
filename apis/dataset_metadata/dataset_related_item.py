@@ -1,4 +1,4 @@
-from typing import Any, Union
+from typing import Any, Union, List
 
 from flask import request
 from flask_restx import Resource, fields
@@ -21,7 +21,7 @@ class DatasetRelatedItemResource(Resource):
     @api.doc("related item")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(dataset_related_item)
+    # @api.marshal_with(dataset_related_item)
     def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_related_item_ = dataset_.dataset_related_item
@@ -33,24 +33,36 @@ class DatasetRelatedItemResource(Resource):
     def post(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
-        list_of_elements = []
+        list_of_elements: List = []
         for i in data:
             if "id" in i and i["id"]:
                 dataset_related_item_ = model.DatasetRelatedItem.query.get(i["id"])
                 if not dataset_related_item_:
                     return f"{i['id']} Id is not found", 404
                 dataset_related_item_.update(i)
-                for item in dataset_related_item_.dataset_related_item_title:
-                    item.update(i)
-                    list_of_elements.append(item.to_dict())
-                for item in dataset_related_item_.dataset_related_item_contributor:
-                    item.update(i)
-                for item in dataset_related_item_.dataset_related_item_identifier:
-                    item.update(i)
-                for item in dataset_related_item_.dataset_related_item_other:
-                    item.update(i)
-                list_of_elements.append(dataset_related_item_.to_dict())
+                dataset_related_item_.dataset_related_item_other.update(i)
 
+                for title in i["titles"]:
+                    print(title)
+                    update_title = model.DatasetRelatedItemTitle.query.get(title["id"])
+                    update_title.update(title)
+
+                for identifier in i["identifiers"]:
+                    update_identifier = model.DatasetRelatedItemIdentifier.query.get(identifier["id"])
+                    update_identifier.update(identifier)
+
+                contributors_ = i["contributors"]
+                creators_ = i["creators"]
+                for c in contributors_:
+                    related_item_contributors_ = model.DatasetRelatedItemContributor.query.get(c["id"])
+                    related_item_contributors_.update(c)
+                    model.db.session.add(related_item_contributors_)
+                for c in creators_:
+                    related_item_creators_ = model.DatasetRelatedItemContributor.query.get(c["id"])
+                    related_item_creators_.update(c)
+                    model.db.session.add(related_item_creators_)
+
+                # list_of_elements.append(dataset_related_item_.to_dict())
             elif "id" not in i or not i["id"]:
                 dataset_related_item_ = (model.DatasetRelatedItem.
                                          from_data(data_obj, i))
@@ -60,22 +72,34 @@ class DatasetRelatedItemResource(Resource):
                     id=dataset_related_item_.id
                 ).first()
 
-                title_add = model.DatasetRelatedItemTitle.from_data(
-                    filtered_related_item, i
-                )
-                model.db.session.add(title_add)
+                for t in i["titles"]:
+                    title_add = model.DatasetRelatedItemTitle.from_data(
+                        filtered_related_item, t
+                    )
+                    model.db.session.add(title_add)
 
-                contributor_add = model.DatasetRelatedItemContributor.from_data(
-                    filtered_related_item, i
-                )
-                model.db.session.add(contributor_add)
+                for identifier in i["identifiers"]:
+                    identifier_add = model.DatasetRelatedItemIdentifier.from_data(
+                        filtered_related_item, identifier
+                    )
+                    model.db.session.add(identifier_add)
 
-                itentifier_add = model.DatasetRelatedItemIdentifier.from_data(
-                    filtered_related_item, i
-                )
-                model.db.session.add(itentifier_add)
+                    other_add = model.DatasetRelatedItemOther.from_data(
+                        filtered_related_item, i
+                    )
+                    model.db.session.add(other_add)
 
-                list_of_elements.append(dataset_related_item_.to_dict())
+                contributors_ = i["contributors"]
+                creators_ = i["creators"]
+                for c in contributors_:
+                    related_item_contributors_ = model.DatasetRelatedItemContributor.from_data(
+                        dataset_related_item_, c, False)
+                    model.db.session.add(related_item_contributors_)
+                for c in creators_:
+                    related_item_creators_ = model.DatasetRelatedItemContributor.from_data(
+                        dataset_related_item_, c, True)
+                    model.db.session.add(related_item_creators_)
+                # list_of_elements.append(dataset_related_item_.to_dict())
 
         model.db.session.commit()
 

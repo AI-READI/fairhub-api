@@ -41,5 +41,4 @@ class DatasetAccess(db.Model):  # type: ignore
         self.description = data["description"]
         self.url = data["url"]
         self.url_last_checked = datetime.datetime.now(datetime.timezone.utc).timestamp()
-        if "type" in data:
-            self.type = data["type"]
+        self.type = data["type"]

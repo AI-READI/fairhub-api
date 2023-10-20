@@ -39,5 +39,5 @@ class DatasetRelatedItemTitle(db.Model):  # type: ignore
         return dataset_related_item_title
 
     def update(self, data: dict):
-        self.type = data["title_type"]
+        self.type = data["type"]
         self.title = data["title"]

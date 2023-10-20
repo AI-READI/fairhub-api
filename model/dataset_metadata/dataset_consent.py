@@ -51,5 +51,4 @@ class DatasetConsent(db.Model):  # type: ignore
         self.research_type = data["research_type"]
         self.genetic_only = data["genetic_only"]
         self.no_methods = data["no_methods"]
-        if "details" in data:
-            self.details = data["details"]
+        self.details = data["details"]
