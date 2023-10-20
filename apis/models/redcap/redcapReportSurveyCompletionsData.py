@@ -4,7 +4,9 @@ REDCapReportSurveyCompletionsDataModel = {
     "record_id": fields.String(
         required=True, readonly=True, description="Participant record ID"
     ),
-    "studyid": fields.String(required=True, readonly=True, description="Study participant ID"),
+    "studyid": fields.String(
+        required=True, readonly=True, description="Study participant ID"
+    ),
     "screening_survey_complete": fields.String(
         required=True, readonly=True, description="Screening survey completed"
     ),

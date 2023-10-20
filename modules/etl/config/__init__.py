@@ -1,8 +1,8 @@
 from .aireadiconfig import (
-	redcapTransformConfig,
-	sexGenderTransformConfig,
-	raceEthnicityTransformConfig,
-	phenotypeTransformConfig,
-	studyWaypointsTransformConfig,
-	mixedTransformTestConfig
+    redcapTransformConfig,
+    sexGenderTransformConfig,
+    raceEthnicityTransformConfig,
+    phenotypeTransformConfig,
+    studyWaypointsTransformConfig,
+    mixedTransformTestConfig,
 )

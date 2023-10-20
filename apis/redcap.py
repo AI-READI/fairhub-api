@@ -47,9 +47,7 @@ api = Namespace("redcap", description="REDCap API methods")
 # Register API Models
 #
 
-redcapProjectDataModel = api.model(
-    "REDCapProjectData", REDCapProjectDataModel
-)
+redcapProjectDataModel = api.model("REDCapProjectData", REDCapProjectDataModel)
 redcapReportParticipantsDataModel = api.model(
     "REDCapReportParticipantsDashboardData", REDCapReportParticipantsDataModel
 )
@@ -84,6 +82,7 @@ class REDCapProjectData(Resource):
         project = PyCapProject.export_project_info()
         return project
 
+
 # @api.route("/project/<project_id>/reports/<report_id>", methods=["GET"])
 # class REDCapProjectData(Resource):
 #     @api.doc("get_redcap_project")
@@ -106,6 +105,7 @@ class REDCapProjectData(Resource):
 #         project = PyCapProject.export_project_info()
 #         return project
 
+
 @api.route("/project/<project_id>/reports/participants", methods=["GET"])
 class REDCapReportParticipantsData(Resource):
     @api.doc("get_redcap_report_participants")
@@ -122,6 +122,7 @@ class REDCapReportParticipantsData(Resource):
         participants = PyCapProject.export_report(247884)
         return participants
 
+
 @api.route("/project/<project_id>/reports/participant-values", methods=["GET"])
 class REDCapReportParticipantValuesData(Resource):
     @api.doc("get_redcap_report_participant_values_data")
@@ -134,6 +135,7 @@ class REDCapReportParticipantValuesData(Resource):
         participantValues = PyCapProject.export_report(242544)
         return participantValues
 
+
 @api.route("/project/<project_id>/reports/repeat-surveys", methods=["GET"])
 class REDCapReportRepeatSurveysData(Resource):
     @api.doc("get_redcap_report_repeat_surveys")
@@ -145,6 +147,7 @@ class REDCapReportRepeatSurveysData(Resource):
         PyCapProject = Project(REDCAP_API_URL, REDCAP_API_TOKEN)
         repeatSurveys = PyCapProject.export_report(259920)
         return repeatSurveys
+
 
 # This endpoint pulls the configured REDCap report and caches it
 @api.route("/project/<project_id>/reports/survey-completions", methods=["GET"])

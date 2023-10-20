@@ -27,30 +27,48 @@ api = Namespace("dashboards", description="Dashboard related operations")
 #
 
 fairhubDashboardModel = api.model("FairhubDashboard", FairhubDashboardModel)
-fairhubDashboardDatumModel = api.model("FairhubDashboardDatumModel", FairhubDashboardDatumModel)
+fairhubDashboardDatumModel = api.model(
+    "FairhubDashboardDatumModel", FairhubDashboardDatumModel
+)
 # Transform API Data Models
 fairhubRecruitmentDashboardDataModel = api.model(
-    "FairhubRecruitmentDashboardDataModel", {
+    "FairhubRecruitmentDashboardDataModel",
+    {
         "name": fields.String(required=True, description="Dashboard name"),
-        "data": fields.List(fields.Nested(fairhubDashboardDatumModel), required=True, description="Dashboard data"),
-    }
+        "data": fields.List(
+            fields.Nested(fairhubDashboardDatumModel),
+            required=True,
+            description="Dashboard data",
+        ),
+    },
 )
 fairhubRecruitmentDashboardCompoundDataModel = api.model(
-    "FairhubRecruitmentDashboardCompoundDataModel", {
+    "FairhubRecruitmentDashboardCompoundDataModel",
+    {
         "name": fields.String(required=True, description="Dashboard name"),
-        "data": fields.List(fields.Nested(fairhubDashboardDatumModel), required=True, description="Dashboard data"),
-    }
+        "data": fields.List(
+            fields.Nested(fairhubDashboardDatumModel),
+            required=True,
+            description="Dashboard data",
+        ),
+    },
 )
 fairhubRecruitmentDashboardMixedDataModel = api.model(
-    "FairhubRecruitmentDashboardMixedDataModel", {
+    "FairhubRecruitmentDashboardMixedDataModel",
+    {
         "name": fields.String(required=True, description="Dashboard name"),
-        "data": fields.List(fields.Nested(fairhubDashboardDatumModel), required=True, description="Dashboard data"),
-    }
+        "data": fields.List(
+            fields.Nested(fairhubDashboardDatumModel),
+            required=True,
+            description="Dashboard data",
+        ),
+    },
 )
 
 #
 # Dashboard Endpoints
 #
+
 
 @api.route("/<project_id>", methods=["GET"])
 class DashboardsList(Resource):
@@ -64,18 +82,20 @@ class DashboardsList(Resource):
         return {
             "name": "recruitment_dashboard",
             "namespace": "dashboard",
-            "endpoint": f"project/{project_id}/recruitment_dashboard"
+            "endpoint": f"project/{project_id}/recruitment_dashboard",
         }
+
 
 #
 # Study Dashboard Endpoints
 #
 
+
 @api.route("/<project_id>/recruitment_dashboard", methods=["GET"])
 class RecruitmentDashboard(Resource):
     @api.doc("get_recruitment_dashboard")
     @api.marshal_with(fairhubRecruitmentDashboardDataModel, as_list=True)
-    @MEMORY_CACHE.cached(timeout=60*60*24, key_prefix="recruitment_dashboard")
+    @MEMORY_CACHE.cached(timeout=60 * 60 * 24, key_prefix="recruitment_dashboard")
     def get(self, project_id: int):
         """
         Get study dashboard
@@ -103,21 +123,20 @@ class RecruitmentDashboard(Resource):
             "redcap_api_key": REDCAP_API_TOKEN,
         }
 
-        extract = transforms.REDCapTransform(config = redcapTransformConfig).merged
+        extract = transforms.REDCapTransform(config=redcapTransformConfig).merged
 
         cacheTransforms = [
             sexGenderTransformConfig,
             raceEthnicityTransformConfig,
             phenotypeTransformConfig,
-            studyWaypointsTransformConfig
+            studyWaypointsTransformConfig,
         ]
 
         # Structure Response
         response = []
         for module_method, config in cacheTransforms:
-            transformer = getattr(transforms.ModuleTransform(config), module_method)(extract)
-            response.append({
-                "name": config["key"],
-                "data": transformer.transformed
-            })
+            transformer = getattr(transforms.ModuleTransform(config), module_method)(
+                extract
+            )
+            response.append({"name": config["key"], "data": transformer.transformed})
         return response

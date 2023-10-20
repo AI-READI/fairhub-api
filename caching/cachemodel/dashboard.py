@@ -1,10 +1,12 @@
 from redis_om import JsonModel, EmbeddedJsonModel
 
+
 class DashboardCacheModel(JsonModel):
     name: str
     varname: str
     namespace: str
     endpoint: str
+
 
 class RecruitmentDashboardCacheModel(JsonModel):
     record_id: str
