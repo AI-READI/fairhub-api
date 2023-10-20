@@ -1,3 +1,4 @@
+from apis.authentication import is_granted
 from flask import request
 from flask_restx import Resource, fields
 
@@ -29,7 +30,10 @@ class DatasetRecordKeysResource(Resource):
     @api.doc("update record keys")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def put(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
+    def put(self, study_id: int, dataset_id: int):
+        study_obj = model.Study.query.get(study_id)
+        if not is_granted("dataset_metadata", study_obj):
+            return "Access denied, you can not make any change in dataset metadata", 403
         data = request.json
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_.dataset_record_keys.update(data)

@@ -156,9 +156,9 @@ class VersionList(Resource):
         if not is_granted("publish_version", study):
             return "Access denied, you can not modify", 403
         data: typing.Union[typing.Any, dict] = request.json
-        data["participants"] = [
-            model.Participant.query.get(i) for i in data["participants"]
-        ]
+        # data["participants"] = [
+        #     model.Participant.query.get(i) for i in data["participants"]
+        # ]
         data_obj = model.Dataset.query.get(dataset_id)
         dataset_versions = model.Version.from_data(data_obj, data)
         model.db.session.add(dataset_versions)

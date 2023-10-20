@@ -1,5 +1,6 @@
 from typing import Any, Union
 
+from apis.authentication import is_granted
 from flask import request
 from flask_restx import Resource
 
@@ -26,7 +27,10 @@ class DatasetContributorResource(Resource):
     @api.doc("update contributor")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def post(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
+    def post(self, study_id: int, dataset_id: int):
+        study_obj = model.Study.query.get(study_id)
+        if not is_granted("dataset_metadata", study_obj):
+            return "Access denied, you can not make any change in dataset metadata", 403
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
         list_of_elements = []
@@ -53,8 +57,13 @@ class DatasetContributorDelete(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def delete(
-        self, study_id: int, dataset_id: int, contributor_id: int
-    ):  # pylint: disable= unused-argument
+        self, study_id: int,
+            dataset_id: int,  # pylint: disable= unused-argument
+            contributor_id: int):
+
+        study_obj = model.Study.query.get(study_id)
+        if not is_granted("dataset_metadata", study_obj):
+            return "Access denied, you can not make any change in dataset metadata", 403
         contributor_ = model.DatasetContributor.query.get(contributor_id)
 
         model.db.session.delete(contributor_)
@@ -77,7 +86,10 @@ class DatasetCreatorResource(Resource):
     @api.doc("update creator")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def post(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
+    def post(self, study_id: int, dataset_id: int):
+        study_obj = model.Study.query.get(study_id)
+        if not is_granted("dataset_metadata", study_obj):
+            return "Access denied, you can not make any change in dataset metadata", 403
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
         list_of_elements = []
@@ -103,8 +115,12 @@ class DatasetCreatorDelete(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def delete(
-        self, study_id: int, dataset_id: int, creator_id: int
-    ):  # pylint: disable= unused-argument
+        self, study_id: int,
+            dataset_id: int,  # pylint: disable= unused-argument
+            creator_id: int):
+        study_obj = model.Study.query.get(study_id)
+        if not is_granted("dataset_metadata", study_obj):
+            return "Access denied, you can not make any change in dataset metadata", 403
         dataset_creator_ = model.DatasetContributor.query.get(creator_id)
         model.db.session.delete(dataset_creator_)
         model.db.session.commit()

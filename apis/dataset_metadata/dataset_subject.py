@@ -1,5 +1,6 @@
 from typing import Any, Union
 
+from apis.authentication import is_granted
 from flask import request
 from flask_restx import Resource, fields
 
@@ -34,7 +35,10 @@ class DatasetSubjectResource(Resource):
     @api.doc("update subject")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def post(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
+    def post(self, study_id: int, dataset_id: int):
+        study_obj = model.Study.query.get(study_id)
+        if not is_granted("dataset_metadata", study_obj):
+            return "Access denied, you can not make any change in dataset metadata", 403
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
         list_of_elements = []
@@ -64,6 +68,9 @@ class DatasetSubjectUpdate(Resource):
         dataset_id: int,  # pylint: disable= unused-argument
         subject_id: int,
     ):
+        study_obj = model.Study.query.get(study_id)
+        if not is_granted("dataset_metadata", study_obj):
+            return "Access denied, you can not make any change in dataset metadata", 403
         dataset_subject_ = model.DatasetSubject.query.get(subject_id)
 
         model.db.session.delete(dataset_subject_)

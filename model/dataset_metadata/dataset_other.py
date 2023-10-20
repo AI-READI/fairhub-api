@@ -7,17 +7,8 @@ from ..db import db
 class DatasetOther(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.dataset = dataset
-        self.resource_type = ""
-        self.language = None
-        self.managing_organization_name = ""
-        self.managing_organization_ror_id = ""
-        self.size = ""
-        self.standards_followed = ""
-        self.acknowledgement = ""
-        self.publisher = []
 
     __tablename__ = "dataset_other"
-
     resource_type = db.Column(db.String, nullable=False)
     language = db.Column(db.String, nullable=True)
     managing_organization_name = db.Column(db.String, nullable=False)
