@@ -6,9 +6,7 @@ from model.dataset_metadata.dataset_related_item_contributor import (
 from model.dataset_metadata.dataset_related_item_identifier import (
     DatasetRelatedItemIdentifier,
 )
-from model.dataset_metadata.creators import (
-    Creators,
-)
+
 
 from model.dataset_metadata.dataset_related_item_other import DatasetRelatedItemOther
 from model.dataset_metadata.dataset_related_item_title import DatasetRelatedItemTitle
@@ -108,6 +106,5 @@ __all__ = [
     "EmailVerification",
     "TokenBlacklist",
     "UserDetails",
-    "Notification",
-    "Creators"
+    "Notification"
 ]
