@@ -39,7 +39,6 @@ REDCAP_API_URL = os.environ["REDCAP_API_URL"]
 REDCAP_API_FORMAT = os.environ["REDCAP_API_FORMAT"]
 REDCAP_PROJECT_NAME = os.environ["REDCAP_PROJECT_NAME"]
 REDCAP_PROJECT_ID = os.environ["REDCAP_PROJECT_ID"]
-REDCAP_DASHBOARD_REPORT_ID = os.environ["REDCAP_DASHBOARD_REPORT_ID"]
 
 # Set API Namespace
 api = Namespace("redcap", description="REDCap API methods")
@@ -76,102 +75,86 @@ class REDCapProjectData(Resource):
     def get(self, project_id):
         """
         Get REDCap project
+
+        TODO: Will need to use project_id to query SQL/KeyVault to
+        get the correct REDCap API URL and token. For now,
+        we'll just assume we have access through globals.
         """
         PyCapProject = Project(REDCAP_API_URL, REDCAP_API_TOKEN)
         project = PyCapProject.export_project_info()
         return project
 
-@api.route("/reports/participants", methods=["GET"])
+# @api.route("/project/<project_id>/reports/<report_id>", methods=["GET"])
+# class REDCapProjectData(Resource):
+#     @api.doc("get_redcap_project")
+#     @api.marshal_with(redcapProjectDataModel)
+#     def get(self, project_id: int = 86847, report_id: int = None):
+#         """
+#         Get REDCap report by IDs
+
+#         TODO: Will need to use project_id to query SQL/KeyVault to
+#         get the correct REDCap API URL and token. For now,
+#         we'll just assume we have access through globals.
+
+#         Similarly, report_id needs to be retrieved. However, this
+#         may present an issue with flask_restx because we won't know
+#         the REDCap schema ahead of time unless we define an opinion-
+#         ated report schema that future studies will have to implement
+#         on their REDCap projects.
+#         """
+#         PyCapProject = Project(REDCAP_API_URL, REDCAP_API_TOKEN)
+#         project = PyCapProject.export_project_info()
+#         return project
+
+@api.route("/project/<project_id>/reports/participants", methods=["GET"])
 class REDCapReportParticipantsData(Resource):
     @api.doc("get_redcap_report_participants")
     @api.marshal_with(redcapReportParticipantsDataModel)
-    def get(self):
+    def get(self, project_id: int):
         """
         Get REDCap project
-        """
-        response = requests.post(
-            REDCAP_API_URL,
-            data={
-                "token": REDCAP_API_TOKEN,
-                "content": "project",
-                "format": REDCAP_API_FORMAT,
-                "returnFormat": REDCAP_API_FORMAT,
-            },
-        )
-        return response.json()
 
-@api.route("/reports/participant-values", methods=["GET"])
+        TODO: Will need to use project_id to query SQL/KeyVault to
+        get the correct REDCap API URL and token. For now,
+        we'll just assume we have access through globals.
+        """
+        PyCapProject = Project(REDCAP_API_URL, REDCAP_API_TOKEN)
+        participants = PyCapProject.export_report(247884)
+        return participants
+
+@api.route("/project/<project_id>/reports/participant-values", methods=["GET"])
 class REDCapReportParticipantValuesData(Resource):
     @api.doc("get_redcap_report_participant_values_data")
     @api.marshal_with(redcapReportParticipantValuesDataModel)
-    def get(self):
+    def get(self, project_id: int):
         """
         Get REDCap project
         """
-        response = requests.post(
-            REDCAP_API_URL,
-            data={
-                "token": REDCAP_API_TOKEN,
-                "content": "project",
-                "format": REDCAP_API_FORMAT,
-                "returnFormat": REDCAP_API_FORMAT,
-            },
-        )
-        return response.json()
+        PyCapProject = Project(REDCAP_API_URL, REDCAP_API_TOKEN)
+        participantValues = PyCapProject.export_report(242544)
+        return participantValues
 
-@api.route("/reports/repeat-surveys", methods=["GET"])
+@api.route("/project/<project_id>/reports/repeat-surveys", methods=["GET"])
 class REDCapReportRepeatSurveysData(Resource):
     @api.doc("get_redcap_report_repeat_surveys")
     @api.marshal_with(redcapReportRepeatSurveysDataModel)
-    def get(self):
+    def get(self, project_id: int):
         """
         Get REDCap project
         """
-        response = requests.post(
-            REDCAP_API_URL,
-            data={
-                "token": REDCAP_API_TOKEN,
-                "content": "project",
-                "format": REDCAP_API_FORMAT,
-                "returnFormat": REDCAP_API_FORMAT,
-            },
-        )
-        return response.json()
-
+        PyCapProject = Project(REDCAP_API_URL, REDCAP_API_TOKEN)
+        repeatSurveys = PyCapProject.export_report(259920)
+        return repeatSurveys
 
 # This endpoint pulls the configured REDCap report and caches it
-@api.route("/reports/survey-completions", methods=["GET"])
+@api.route("/project/<project_id>/reports/survey-completions", methods=["GET"])
 class REDCapReportSurveyCompletionsData(Resource):
     @api.doc("get_redcap_report_survey_completions")
     @api.marshal_list_with(redcapReportSurveyCompletionsDataModel)
-    def get(self):
+    def get(self, project_id: int):
         """
         Get REDCap report for recruitment dashboard Fairhub.io
         """
-        response = requests.post(
-            REDCAP_API_URL,
-            data={
-                "token": REDCAP_API_TOKEN,
-                "format": REDCAP_API_FORMAT,
-                "returnFormat": REDCAP_API_FORMAT,
-                "report_id": REDCAP_DASHBOARD_REPORT_ID,
-                "content": "report",
-                "rawOrLabel": "raw",
-                "rawOrLabelHeaders": "raw",
-                "exportCheckboxLabel": "true",
-            },
-        )
-        modules = [
-            "overview",
-            "progress",
-            "demographics",
-            "phenotype",
-            "device",
-            "contact",
-        ]
-        transformed_data = {}
-        print(response)
-        for module in modules:
-            transformed_data[module] = getattr(transforms, module)()
-
-        return transformed_data
+        PyCapProject = Project(REDCAP_API_URL, REDCAP_API_TOKEN)
+        surveyCompletions = PyCapProject.export_report(251954)
+        return surveyCompletions

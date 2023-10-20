@@ -118,8 +118,6 @@ survey_instrument_map = {
 #
 
 redcapTransformConfig = {
-	"redcap_api_url": REDCAP_API_URL,
-	"redcap_api_key": REDCAP_API_TOKEN,
 	"reports": [
 		("dashboard_data_generic", {"report_id": 242544}, [
 			("remap_values_by_columns", {
@@ -180,7 +178,7 @@ redcapTransformConfig = {
 
 # Sex & Gender Counts by Site
 sexGenderTransformConfig = ("simpleTransform", {
-	"key": "sex-and-gender-transform",
+	"key": "sex-and-gender",
 	"strict": True,
 	"transforms": {
 		"name": "Sex & Gender",
@@ -226,7 +224,7 @@ sexGenderTransformConfig = ("simpleTransform", {
 
 # Race & Ethnicity Counts by Site
 raceEthnicityTransformConfig = ("simpleTransform", {
-	"key": "race-and-ethnicity-transform",
+	"key": "race-and-ethnicity",
 	"strict": True,
 	"transforms": {
 		"name": "Race & Ethnicity",
@@ -273,7 +271,7 @@ raceEthnicityTransformConfig = ("simpleTransform", {
 
 # Phenotypes
 phenotypeTransformConfig = ("simpleTransform", {
-	"key": "phenotype-transform",
+	"key": "phenotype",
 	"strict": True,
 	"transforms": {
 		"name": "Type II Diabetes",
@@ -314,7 +312,7 @@ phenotypeTransformConfig = ("simpleTransform", {
 
 # Study Waypoints
 studyWaypointsTransformConfig = ("compoundTransform", {
-	"key": "study-waypoints-transform",
+	"key": "study-waypoints",
 	"strict": True,
 	"transforms": [{
 		"name": "Recruitment Survey",

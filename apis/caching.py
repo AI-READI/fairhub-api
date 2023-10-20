@@ -58,7 +58,7 @@ cachedRecruitmentDashboardDataModel = api.model(
 #
 
 
-@api.route("/project", methods=["GET"])
+@api.route("/project/<project_id>/caches`", methods=["GET", "POST"])
 class CachingProjectData(Resource):
     @api.doc("get_caching_project")
     @api.marshal_with(cachedProjectDataModel)
@@ -66,18 +66,15 @@ class CachingProjectData(Resource):
         """
         Get Caching project
         """
-        response = requests.post(
-            REDCAP_API_URL,
-            data={
-                "token": REDCAP_API_TOKEN,
-                "content": "project",
-                "format": REDCAP_API_FORMAT,
-                "returnFormat": REDCAP_API_FORMAT,
-            },
-        )
-        return response.json()
+        PyCapProject = Project(REDCAP_API_URL, REDCAP_API_TOKEN)
+        participantValues = PyCapProject.export_report(242544)
+        return participantValues
 
-@api.route("/reports/participants", methods=["GET"])
+        # dashboard_data = MEMORY_CACHE.get(f"transform_study-dashboard_{study_id}")
+        # print(dashboard_data)
+        # return dashboard_data
+
+@api.route("/reports/participants", methods=["GET", "POST"])
 class CachingReportParticipantsData(Resource):
     @api.doc("get_caching_report_participants")
     @api.marshal_with(cachedParticipantsDataModel)
@@ -85,18 +82,15 @@ class CachingReportParticipantsData(Resource):
         """
         Get Caching project
         """
-        response = requests.post(
-            REDCAP_API_URL,
-            data={
-                "token": REDCAP_API_TOKEN,
-                "content": "project",
-                "format": REDCAP_API_FORMAT,
-                "returnFormat": REDCAP_API_FORMAT,
-            },
-        )
-        return response.json()
+        return
 
-@api.route("/reports/recruitment-dashboard", methods=["GET"])
+    def post(self):
+        """
+        Get Caching project
+        """
+        return
+
+@api.route("/reports/recruitment-dashboard", methods=["GET", "POST"])
 class CachingReportRecruitmentDashboardData(Resource):
     @api.doc("get_caching_report_recruitment_dashboard")
     @api.marshal_with(cachedRecruitmentDashboardDataModel)

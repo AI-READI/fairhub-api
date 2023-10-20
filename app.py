@@ -43,6 +43,7 @@ from flask_caching import Cache
 MEMORY_CACHE = Cache(
     config={
         "CACHE_TYPE": "RedisCache",
+        "CACHE_DEBUG": True,
         "CACHE_DEFAULT_TIMEOUT": os.environ["CACHE_DEFAULT_TIMEOUT"],
         "CACHE_KEY_PREFIX": os.environ["CACHE_KEY_PREFIX"],
         "CACHE_REDIS_HOST": os.environ["CACHE_REDIS_HOST"],

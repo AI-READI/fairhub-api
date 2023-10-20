@@ -1,6 +1,5 @@
 from .fairhub.fairhubApi import FairhubAPIModel
-from .fairhub.fairhubDashboard import FairhubDashboardModel
-from .fairhub.fairhubRecruitmentDashboardData import FairhubRecruitmentDashboardDataModel
+from .fairhub.fairhubDashboard import FairhubDashboardModel, FairhubDashboardDatumModel
 from .redcap.redcapProjectData import REDCapProjectDataModel
 from .redcap.redcapReportParticipantsData import REDCapReportParticipantsDataModel
 from .redcap.redcapReportParticipantValuesData import REDCapReportParticipantValuesDataModel

@@ -2,8 +2,6 @@ from flask_restx import Namespace, Resource
 import os
 
 from apis.models.fairhub import FairhubAPIModel
-from apis.models.fairhub import FairhubDashboardModel
-from apis.models.fairhub import FairhubRecruitmentDashboardDataModel
 
 api = Namespace("/", description="Root level operations")
 
