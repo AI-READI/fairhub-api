@@ -58,10 +58,13 @@ class DatasetRelatedItem(db.Model):  # type: ignore
             "type": self.type,
             "relation_type": self.relation_type,
             "created_at": self.created_at,
-            "titles": [i.to_dict() for i in self.dataset_related_item_title],  # type: ignore
+            "titles": [i.to_dict() for
+                       i in self.dataset_related_item_title],  # type: ignore
             "creators": [c.to_dict() for c in creators],
-            "contributors": [c.to_dict() for c in contributors],
-            "identifiers": [i.to_dict() for i in self.dataset_related_item_identifier],  # type: ignore
+            "contributors": [c.to_dict()
+                             for c in contributors],
+            "identifiers": [i.to_dict() for
+                            i in self.dataset_related_item_identifier],  # type: ignore
         }
 
     @staticmethod
