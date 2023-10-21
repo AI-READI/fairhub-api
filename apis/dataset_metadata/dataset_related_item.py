@@ -34,15 +34,15 @@ class DatasetRelatedItemResource(Resource):
     def post(self, study_id: int, dataset_id: int):
         study_obj = model.Study.query.get(study_id)
         if not is_granted("dataset_metadata", study_obj):
-            return ("Access denied, you can not"
-                    " make any change in dataset metadata"), 403
+            return (
+                "Access denied, you can not" " make any change in dataset metadata"
+            ), 403
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
         list_of_elements: List = []
         for i in data:
             if "id" in i and i["id"]:
-                dataset_related_item_ = (
-                    model.DatasetRelatedItem.query.get(i["id"]))
+                dataset_related_item_ = model.DatasetRelatedItem.query.get(i["id"])
                 if not dataset_related_item_:
                     return f"{i['id']} Id is not found", 404
                 dataset_related_item_.update(i)
@@ -163,8 +163,7 @@ class DatasetRelatedItemResource(Resource):
         return [item.to_dict() for item in data_obj.dataset_related_item], 201
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>"
-           "/related-item/<related_item_id>")
+@api.route("/study/<study_id>/dataset/<dataset_id>" "/related-item/<related_item_id>")
 class DatasetRelatedItemUpdate(Resource):
     @api.doc("delete related item")
     @api.response(200, "Success")
@@ -250,7 +249,7 @@ class RelatedItemIdentifiersDelete(Resource):
         study_id: int,
         dataset_id: int,  # pylint: disable= unused-argument
         related_item_id: int,  # pylint: disable= unused-argument
-        identifier_id: int
+        identifier_id: int,
     ):
         study_obj = model.Study.query.get(study_id)
         if not is_granted("dataset_metadata", study_obj):
