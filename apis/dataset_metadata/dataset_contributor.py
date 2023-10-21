@@ -1,10 +1,10 @@
 from typing import Any, Union
 
-from apis.authentication import is_granted
 from flask import request
 from flask_restx import Resource
 
 import model
+from apis.authentication import is_granted
 from apis.dataset_metadata_namespace import api
 
 dataset_contributor = api.model(
@@ -57,10 +57,11 @@ class DatasetContributorDelete(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def delete(
-        self, study_id: int,
-            dataset_id: int,  # pylint: disable= unused-argument
-            contributor_id: int):
-
+        self,
+        study_id: int,
+        dataset_id: int,  # pylint: disable= unused-argument
+        contributor_id: int,
+    ):
         study_obj = model.Study.query.get(study_id)
         if not is_granted("dataset_metadata", study_obj):
             return "Access denied, you can not make any change in dataset metadata", 403
@@ -115,9 +116,11 @@ class DatasetCreatorDelete(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def delete(
-        self, study_id: int,
-            dataset_id: int,  # pylint: disable= unused-argument
-            creator_id: int):
+        self,
+        study_id: int,
+        dataset_id: int,  # pylint: disable= unused-argument
+        creator_id: int,
+    ):
         study_obj = model.Study.query.get(study_id)
         if not is_granted("dataset_metadata", study_obj):
             return "Access denied, you can not make any change in dataset metadata", 403

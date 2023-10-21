@@ -4,15 +4,15 @@ from ..db import db
 class DatasetRelatedItemOther(db.Model):  # type: ignore
     def __init__(self, dataset_related_item):
         self.dataset_related_item = dataset_related_item
-        # self.publication_year = None
-        # self.volume = ""
-        # self.issue = ""
-        # self.number_value = ""
-        # self.number_type = None
-        # self.first_page = ""
-        # self.last_page = ""
-        # self.publisher = ""
-        # self.edition = ""
+        self.publication_year = None
+        self.volume = ""
+        self.issue = ""
+        self.number_value = ""
+        self.number_type = None
+        self.first_page = ""
+        self.last_page = ""
+        self.publisher = ""
+        self.edition = ""
 
     __tablename__ = "dataset_related_item_other"
     publication_year = db.Column(db.BigInteger, nullable=True)

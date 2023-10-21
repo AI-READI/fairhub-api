@@ -1,10 +1,10 @@
 from typing import Any, Union
 
-from apis.authentication import is_granted
 from flask import request
 from flask_restx import Resource, fields
 
 import model
+from apis.authentication import is_granted
 from apis.dataset_metadata_namespace import api
 
 dataset_title = api.model(
@@ -64,7 +64,10 @@ class DatasetTitleResource(Resource):
         ):
             study_obj = model.Study.query.get(study_id)
             if not is_granted("dataset_metadata", study_obj):
-                return "Access denied, you can not make any change in dataset metadata", 403
+                return (
+                    "Access denied, you can not make any change in dataset metadata",
+                    403,
+                )
             dataset_title_ = model.DatasetTitle.query.get(title_id)
             model.db.session.delete(dataset_title_)
             model.db.session.commit()

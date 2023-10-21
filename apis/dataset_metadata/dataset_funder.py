@@ -1,10 +1,10 @@
 from typing import Any, Union
 
-from apis.authentication import is_granted
 from flask import request
 from flask_restx import Resource, fields
 
 import model
+from apis.authentication import is_granted
 from apis.dataset_metadata_namespace import api
 
 dataset_funder = api.model(
