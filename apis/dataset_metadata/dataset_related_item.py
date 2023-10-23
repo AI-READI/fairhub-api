@@ -46,22 +46,17 @@ class DatasetRelatedItemResource(Resource):
                 if not dataset_related_item_:
                     return f"{i['id']} Id is not found", 404
                 dataset_related_item_.update(i)
-                dataset_related_item_.dataset_related_item_other.update(i)
-
-                filtered_related_item = dataset_related_item_.query.filter_by(
-                    id=dataset_related_item_.id
-                ).first()
+                # dataset_related_item_.dataset_related_item_other.update(i)
 
                 for title in i["titles"]:
                     if "id" in title and title["id"]:
-                        print(title)
                         update_title = model.DatasetRelatedItemTitle.query.get(
                             title["id"]
                         )
                         update_title.update(title)
                     else:
                         title_add = model.DatasetRelatedItemTitle.from_data(
-                            filtered_related_item, title
+                            dataset_related_item_, title
                         )
                         model.db.session.add(title_add)
 
@@ -75,7 +70,7 @@ class DatasetRelatedItemResource(Resource):
                         update_identifier.update(identifier)
                     else:
                         identifier_add = model.DatasetRelatedItemIdentifier.from_data(
-                            filtered_related_item, identifier
+                            dataset_related_item_, identifier
                         )
                         model.db.session.add(identifier_add)
                 contributors_ = i["contributors"]
@@ -97,9 +92,8 @@ class DatasetRelatedItemResource(Resource):
 
                 for c in creators_:
                     if "id" in c and c["id"]:
-                        related_item_creators_ = (
-                            model.DatasetRelatedItemContributor.query.get(c["id"])
-                        )
+                        related_item_creators_ = model.DatasetRelatedItemContributor.query.get(c["id"])
+
                         related_item_creators_.update(c)
                     else:
                         related_item_creators_ = (
@@ -113,31 +107,18 @@ class DatasetRelatedItemResource(Resource):
             elif "id" not in i or not i["id"]:
                 dataset_related_item_ = model.DatasetRelatedItem.from_data(data_obj, i)
                 model.db.session.add(dataset_related_item_)
-                list_of_elements.append(dataset_related_item_.to_dict())
-
-                filtered_related_item = dataset_related_item_.query.filter_by(
-                    id=dataset_related_item_.id
-                ).first()
-
-                other_add = model.DatasetRelatedItemOther.from_data(
-                    filtered_related_item, i
-                )
-                model.db.session.add(other_add)
-                list_of_elements.append(other_add.to_dict())
 
                 for t in i["titles"]:
                     title_add = model.DatasetRelatedItemTitle.from_data(
-                        filtered_related_item, t
+                        dataset_related_item_, t
                     )
                     model.db.session.add(title_add)
-                    list_of_elements.append(title_add.to_dict())
 
                 for identifier in i["identifiers"]:
                     identifier_add = model.DatasetRelatedItemIdentifier.from_data(
-                        filtered_related_item, identifier
+                        dataset_related_item_, identifier
                     )
                     model.db.session.add(identifier_add)
-                    list_of_elements.append(identifier_add.to_dict())
 
                 contributors_ = i["contributors"]
                 creators_ = i["creators"]
@@ -148,7 +129,6 @@ class DatasetRelatedItemResource(Resource):
                         )
                     )
                     model.db.session.add(related_item_contributors_)
-                    list_of_elements.append(related_item_contributors_.to_dict())
 
                 for c in creators_:
                     related_item_creators_ = (
@@ -157,7 +137,6 @@ class DatasetRelatedItemResource(Resource):
                         )
                     )
                     model.db.session.add(related_item_creators_)
-                    list_of_elements.append(related_item_creators_.to_dict())
 
         model.db.session.commit()
         return [item.to_dict() for item in data_obj.dataset_related_item], 201

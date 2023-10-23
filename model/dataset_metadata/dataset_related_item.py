@@ -1,7 +1,7 @@
 import datetime
 import uuid
 from datetime import timezone
-
+import model
 from ..db import db
 
 
@@ -10,7 +10,7 @@ class DatasetRelatedItem(db.Model):  # type: ignore
         self.id = str(uuid.uuid4())
         self.dataset = dataset
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
-        # self.dataset_related_item_other = model.DatasetRelatedItemOther(self)
+        self.dataset_related_item_other = model.DatasetRelatedItemOther(self)
 
     __tablename__ = "dataset_related_item"
 
@@ -104,3 +104,4 @@ class DatasetRelatedItem(db.Model):  # type: ignore
     def update(self, data: dict):
         self.type = data["type"]
         self.relation_type = data["relation_type"]
+        self.dataset_related_item_other.update(data)
