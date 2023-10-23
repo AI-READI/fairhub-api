@@ -107,9 +107,18 @@ class Dataset(db.Model):  # type: ignore
         back_populates="dataset",
         cascade="all, delete"
     )
-    dataset_rights = db.relationship("DatasetRights", back_populates="dataset")
-    dataset_subject = db.relationship("DatasetSubject", back_populates="dataset")
-    dataset_title = db.relationship("DatasetTitle", back_populates="dataset")
+    dataset_rights = db.relationship(
+        "DatasetRights",
+        back_populates="dataset",
+        cascade="all, delete")
+    dataset_subject = db.relationship(
+        "DatasetSubject",
+        back_populates="dataset",
+        cascade="all, delete")
+    dataset_title = db.relationship(
+        "DatasetTitle",
+        back_populates="dataset",
+        cascade="all, delete")
 
     def to_dict(self):
         last_published = self.last_published()

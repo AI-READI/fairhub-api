@@ -36,4 +36,4 @@ class DatasetAlternateIdentifier(db.Model):  # type: ignore
 
     def update(self, data: dict):
         self.identifier = data["identifier"]
-        self.type = data["type"]
+        self.type = data["type"] if "type" in data else ""
