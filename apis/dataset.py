@@ -153,7 +153,7 @@ class VersionList(Resource):
     @api.doc("versions")
     def get(self, study_id: int, dataset_id: int):
         study = model.Study.query.get(study_id)
-        if not is_granted("publish_version", study):
+        if not is_granted("version", study):
             return "Access denied, you can not modify", 403
         dataset_obj = model.Dataset.query.get(dataset_id)
         return [i.to_dict() for i in dataset_obj.dataset_versions.all()], 200
@@ -163,7 +163,7 @@ class VersionList(Resource):
     @api.doc("version add")
     def post(self, study_id: int, dataset_id: int):
         study = model.Study.query.get(study_id)
-        if not is_granted("publish_version", study):
+        if not is_granted("version", study):
             return "Access denied, you can not modify", 403
 
         data: typing.Union[typing.Any, dict] = request.json
@@ -173,5 +173,21 @@ class VersionList(Resource):
         data_obj = model.Dataset.query.get(dataset_id)
         dataset_versions = model.Version.from_data(data_obj, data)
         model.db.session.add(dataset_versions)
+        model.db.session.commit()
+        return dataset_versions.to_dict()
+
+
+@api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/publish")
+class PublishResource(Resource):
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
+    @api.doc("version publish")
+    def post(self, study_id: int, dataset_id: int):
+        study = model.Study.query.get(study_id)
+        if not is_granted("publish_version", study):
+            return "Access denied, you can not modify", 403
+        data_obj = model.Dataset.query.get(dataset_id)
+        data: typing.Union[typing.Any, dict] = request.json
+        dataset_versions = model.Version.from_data(data_obj, data)
         model.db.session.commit()
         return dataset_versions.to_dict()

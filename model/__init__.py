@@ -52,7 +52,7 @@ from .token_blacklist import TokenBlacklist
 from .user import User
 from .user_details import UserDetails
 from .version import Version
-
+from .version_readme import VersionReadme
 __all__ = [
     "Study",
     "Dataset",
@@ -104,4 +104,5 @@ __all__ = [
     "TokenBlacklist",
     "UserDetails",
     "Notification",
+    "VersionReadme"
 ]
