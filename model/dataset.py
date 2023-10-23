@@ -85,16 +85,27 @@ class Dataset(db.Model):  # type: ignore
         cascade="all, delete",
     )
     dataset_other = db.relationship(
-        "DatasetOther", back_populates="dataset", uselist=False
+        "DatasetOther",
+        back_populates="dataset",
+        uselist=False,
+        cascade="all, delete"
     )
     dataset_readme = db.relationship(
-        "DatasetReadme", back_populates="dataset", uselist=False
+        "DatasetReadme",
+        back_populates="dataset",
+        uselist=False,
+        cascade="all, delete"
     )
     dataset_record_keys = db.relationship(
-        "DatasetRecordKeys", back_populates="dataset", uselist=False
+        "DatasetRecordKeys",
+        back_populates="dataset",
+        uselist=False,
+        cascade="all, delete"
     )
     dataset_related_item = db.relationship(
-        "DatasetRelatedItem", back_populates="dataset"
+        "DatasetRelatedItem",
+        back_populates="dataset",
+        cascade="all, delete"
     )
     dataset_rights = db.relationship("DatasetRights", back_populates="dataset")
     dataset_subject = db.relationship("DatasetSubject", back_populates="dataset")

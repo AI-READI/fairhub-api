@@ -114,7 +114,6 @@ class VersionResource(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
     @api.doc("dataset version")
-    @api.marshal_with(dataset_versions_model)
     def get(
         self, study_id: int, dataset_id: int, version_id: int
     ):  # pylint: disable= unused-argument
@@ -148,13 +147,25 @@ class VersionResource(Resource):
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version")
-@api.response(201, "Success")
-@api.response(400, "Validation Error")
 class VersionList(Resource):
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
+    @api.doc("versions")
+    def get(self, study_id: int, dataset_id: int):
+        study = model.Study.query.get(study_id)
+        if not is_granted("publish_version", study):
+            return "Access denied, you can not modify", 403
+        dataset_obj = model.Dataset.query.get(dataset_id)
+        return [i.to_dict() for i in dataset_obj.dataset_versions.all()], 200
+
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
+    @api.doc("version add")
     def post(self, study_id: int, dataset_id: int):
         study = model.Study.query.get(study_id)
         if not is_granted("publish_version", study):
             return "Access denied, you can not modify", 403
+
         data: typing.Union[typing.Any, dict] = request.json
         # data["participants"] = [
         #     model.Participant.query.get(i) for i in data["participants"]
@@ -163,4 +174,4 @@ class VersionList(Resource):
         dataset_versions = model.Version.from_data(data_obj, data)
         model.db.session.add(dataset_versions)
         model.db.session.commit()
-        return jsonify(dataset_versions.to_dict())
+        return dataset_versions.to_dict()

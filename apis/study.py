@@ -84,7 +84,6 @@ class StudyResource(Resource):
         update_study = model.Study.query.get(study_id)
         if not is_granted("update_study", update_study):
             return "Access denied, you can not modify", 403
-
         update_study.update(request.json)
         model.db.session.commit()
         return update_study.to_dict()
@@ -110,4 +109,4 @@ class StudyResource(Resource):
         studies = model.Study.query.filter(
             model.Study.study_contributors.any(model.User.id == g.user.id)
         ).all()
-        return [s.to_dict() for s in studies], 201
+        return 204
