@@ -43,18 +43,17 @@ class StudyIdentificationResource(Resource):
     @api.expect(study_identification)
     def post(self, study_id: int):
         """Create study identification metadata"""
-        data: typing.Union[dict, typing.Any] = request.json
-
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403
+        data: typing.Union[dict, typing.Any] = request.json
+        identifiers = [i for i in study_obj.study_identification if not i.secondary]
+        primary_identifier = identifiers[0] if len(identifiers) else None
         primary: dict = data["primary"]
-        primary["secondary"] = False
-
-        if "id" in primary and primary["id"]:
-            study_identification_ = model.StudyIdentification.query.get(primary["id"])
-            study_identification_.update(primary)
-        elif "id" not in primary or not primary["id"]:
+        # primary["secondary"] = False
+        if primary_identifier:
+            primary_identifier.update(primary)
+        else:
             study_identification_ = model.StudyIdentification.from_data(
                 study_obj, primary, False
             )
@@ -62,11 +61,10 @@ class StudyIdentificationResource(Resource):
 
         for i in data["secondary"]:
             i["secondary"] = True
-
             if "id" in i and i["id"]:
                 study_identification_ = model.StudyIdentification.query.get(i["id"])
                 study_identification_.update(i)
-            elif "id" not in i or not i["id"]:
+            else:
                 study_identification_ = model.StudyIdentification.from_data(
                     study_obj, i, True
                 )
@@ -90,10 +88,8 @@ class StudyIdentificationResource(Resource):
             study_identification_ = model.StudyIdentification.query.get(
                 identification_id
             )
-
             if not study_identification_.secondary:
                 return 400, "primary identifier can not be deleted"
-
             model.db.session.delete(study_identification_)
             model.db.session.commit()
 
