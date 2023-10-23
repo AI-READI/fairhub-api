@@ -280,4 +280,3 @@ class CurrentUsers(Resource):
         if not g.user:
             return None
         return g.user.to_dict()
-

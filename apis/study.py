@@ -106,7 +106,5 @@ class StudyResource(Resource):
         #     model.db.session.delete(p)
         model.db.session.delete(study)
         model.db.session.commit()
-        studies = model.Study.query.filter(
-            model.Study.study_contributors.any(model.User.id == g.user.id)
-        ).all()
+
         return 204

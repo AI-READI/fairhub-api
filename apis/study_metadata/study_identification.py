@@ -72,9 +72,9 @@ class StudyIdentificationResource(Resource):
 
         model.db.session.commit()
 
-        identifiers = model.Identifiers(study_obj)
+        final_identifiers = model.Identifiers(study_obj)
 
-        return identifiers.to_dict()
+        return final_identifiers.to_dict()
 
     @api.route("/study/<study_id>/metadata/identification/<identification_id>")
     class StudyIdentificationdUpdate(Resource):

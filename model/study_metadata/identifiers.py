@@ -14,9 +14,10 @@ class Identifiers:
         )
         return {
             "primary": [
-                identifier for identifier
-                in sorted_study_identifications
-                if not identifier.secondary][0].to_dict()
+                identifier
+                for identifier in sorted_study_identifications
+                if not identifier.secondary
+            ][0].to_dict()
             if len(
                 [
                     identifier

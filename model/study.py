@@ -21,14 +21,12 @@ class Study(db.Model):  # type: ignore
         self.created_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
         #
         self.study_status = model.StudyStatus(self)
-        self.study_sponsors_collaborators =\
-            model.StudySponsorsCollaborators(self)
+        self.study_sponsors_collaborators = model.StudySponsorsCollaborators(self)
         self.study_design = model.StudyDesign(self)
         self.study_eligibility = model.StudyEligibility(self)
         self.study_ipdsharing = model.StudyIpdsharing(self)
         self.study_description = model.StudyDescription(self)
-        (self.study_identification.append
-         (model.StudyIdentification(self, False)))
+        (self.study_identification.append(model.StudyIdentification(self, False)))
 
         self.study_other = model.StudyOther(self)
         # self.study_contributors = model.StudyContributor(self)

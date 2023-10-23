@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, Union
 
 from flask import request
 from flask_restx import Resource, fields
@@ -35,11 +35,11 @@ class DatasetRelatedItemResource(Resource):
         study_obj = model.Study.query.get(study_id)
         if not is_granted("dataset_metadata", study_obj):
             return (
-                "Access denied, you can not" " make any change in dataset metadata"
+                "Access denied, you can not"
+                " make any change in dataset metadata"  # noqa: E402
             ), 403
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
-        list_of_elements: List = []
         for i in data:
             if "id" in i and i["id"]:
                 dataset_related_item_ = model.DatasetRelatedItem.query.get(i["id"])
@@ -92,7 +92,9 @@ class DatasetRelatedItemResource(Resource):
 
                 for c in creators_:
                     if "id" in c and c["id"]:
-                        related_item_creators_ = model.DatasetRelatedItemContributor.query.get(c["id"])
+                        related_item_creators_ = (
+                            model.DatasetRelatedItemContributor.query.get(c["id"])
+                        )
 
                         related_item_creators_.update(c)
                     else:
@@ -142,7 +144,7 @@ class DatasetRelatedItemResource(Resource):
         return [item.to_dict() for item in data_obj.dataset_related_item], 201
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>" "/related-item/<related_item_id>")
+@api.route("/study/<study_id>/dataset/<dataset_id>/related-item/<related_item_id>")
 class DatasetRelatedItemUpdate(Resource):
     @api.doc("delete related item")
     @api.response(200, "Success")
