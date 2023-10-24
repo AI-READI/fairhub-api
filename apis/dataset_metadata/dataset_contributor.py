@@ -98,6 +98,7 @@ class DatasetCreatorResource(Resource):
         for i in data:
             i["creator"] = True
             if "id" in i and i["id"]:
+                i["contributor_type"] = None
                 dataset_creator_ = model.DatasetContributor.query.get(i["id"])
                 if not dataset_creator_:
                     return f"Study link {i['id']} Id is not found", 404
