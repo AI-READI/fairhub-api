@@ -35,5 +35,5 @@ class StudyInvitedContributor(db.Model):  # type: ignore
             "status": "invited",
             "role": self.permission,
             "email_address": self.email_address,
-            "token": self.token
+            "token": self.token,
         }
