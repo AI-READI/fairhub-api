@@ -8,7 +8,6 @@ import model
 
 from .authentication import is_granted
 
-
 api = Namespace("Contributor", description="Contributors", path="/")
 
 

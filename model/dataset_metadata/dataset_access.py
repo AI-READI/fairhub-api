@@ -1,5 +1,3 @@
-import datetime
-
 from model import Dataset
 
 from ..db import db
@@ -28,6 +26,7 @@ class DatasetAccess(db.Model):  # type: ignore
         return {
             "type": self.type,
             "description": self.description,
+            "url_last_checked": self.url_last_checked,
             "url": self.url,
         }
 
@@ -40,6 +39,6 @@ class DatasetAccess(db.Model):  # type: ignore
     def update(self, data: dict):
         self.description = data["description"]
         self.url = data["url"]
-        self.url_last_checked = datetime.datetime.now(datetime.timezone.utc).timestamp()
+        self.url_last_checked = data["url_last_checked"]
         self.type = data["type"]
         self.dataset.touch_dataset()

@@ -10,7 +10,7 @@ class DatasetDeIdentLevel(db.Model):  # type: ignore
         self.dates = False
         self.nonarr = False
         self.k_anon = False
-        self.details = False
+        self.details = ""
 
     __tablename__ = "dataset_de_ident_level"
 

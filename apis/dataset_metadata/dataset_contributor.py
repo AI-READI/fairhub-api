@@ -30,7 +30,7 @@ class DatasetContributorResource(Resource):
     def post(self, study_id: int, dataset_id: int):
         study_obj = model.Study.query.get(study_id)
         if not is_granted("dataset_metadata", study_obj):
-            return "Access denied, you can not make any change in dataset metadata", 403
+            return "Access denied, can't modify dataset metadata", 403
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
         list_of_elements = []
@@ -50,8 +50,9 @@ class DatasetContributorResource(Resource):
         return list_of_elements
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/"
-           "metadata/contributor/<contributor_id>")
+@api.route(
+    "/study/<study_id>/dataset/<dataset_id>/metadata/contributor/<contributor_id>"
+)
 class DatasetContributorDelete(Resource):
     @api.doc("delete contributor")
     @api.response(200, "Success")

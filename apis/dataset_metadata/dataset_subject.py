@@ -38,7 +38,7 @@ class DatasetSubjectResource(Resource):
     def post(self, study_id: int, dataset_id: int):
         study_obj = model.Study.query.get(study_id)
         if not is_granted("dataset_metadata", study_obj):
-            return "Access denied, you can not make any change in dataset metadata", 403
+            return "Access denied, you can't modify dataset metadata", 403
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
         list_of_elements = []
@@ -57,8 +57,7 @@ class DatasetSubjectResource(Resource):
         return list_of_elements
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/"
-           "subject/<subject_id>")
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/subject/<subject_id>")
 class DatasetSubjectUpdate(Resource):
     @api.doc("delete subject")
     @api.response(200, "Success")
@@ -71,7 +70,7 @@ class DatasetSubjectUpdate(Resource):
     ):
         study_obj = model.Study.query.get(study_id)
         if not is_granted("dataset_metadata", study_obj):
-            return "Access denied, you can not make any change in dataset metadata", 403
+            return "Access denied, you can't make change in dataset metadata", 403
         dataset_subject_ = model.DatasetSubject.query.get(subject_id)
 
         model.db.session.delete(dataset_subject_)

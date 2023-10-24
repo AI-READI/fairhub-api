@@ -41,11 +41,11 @@ class DatasetDescriptionResource(Resource):
         for i in data:
             if "id" in i and i["id"]:
                 dataset_description_ = model.DatasetDescription.query.get(i["id"])
-                if dataset_description_.type == "Abstract":
-                    return (
-                        "Abstract type can not be modified",
-                        403,
-                    )
+                # if dataset_description_.type == "Abstract":
+                #     return (
+                #         "Abstract type can not be modified",
+                #         403,
+                #     )
                 dataset_description_.update(i)
                 list_of_elements.append(dataset_description_.to_dict())
             elif "id" not in i or not i["id"]:
@@ -60,8 +60,10 @@ class DatasetDescriptionResource(Resource):
         model.db.session.commit()
         return list_of_elements
 
-    @api.route("/study/<study_id>/dataset/<dataset_id>/"
-               "metadata/description/<description_id>")
+    @api.route(
+        "/study/<study_id>/dataset/<dataset_id>/"
+        "metadata/description/<description_id>"
+    )
     class DatasetDescriptionUpdate(Resource):
         @api.doc("delete description")
         @api.response(200, "Success")

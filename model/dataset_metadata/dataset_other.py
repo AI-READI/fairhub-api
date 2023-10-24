@@ -14,7 +14,7 @@ class DatasetOther(db.Model):  # type: ignore
         self.size = ""
         self.standards_followed = ""
         self.acknowledgement = ""
-        self.publisher = []
+        self.publisher = ""
 
     __tablename__ = "dataset_other"
 
