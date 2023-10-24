@@ -8,6 +8,7 @@ import model
 
 from .authentication import is_granted
 
+
 api = Namespace("Contributor", description="Contributors", path="/")
 
 
@@ -48,7 +49,18 @@ class AddContributor(Resource):
         email_address = data["email_address"]
         user = model.User.query.filter_by(email_address=email_address).first()
         permission = data["role"]
+        # encoded_jwt_code = jwt.encode(
+        #     {
+        #         "user": user.id,
+        #         "exp": datetime.datetime.now(timezone.utc)
+        #         + datetime.timedelta(minutes=180),  # noqa: W503
+        #         "jti": str(uuid.uuid4()),
+        #     },  # noqa: W503
+        #     config.FAIRHUB_SECRET,
+        #     algorithm="HS256",
+        # )
         contributor_ = None
+
         try:
             if user:
                 contributor_ = study_obj.add_user_to_study(user, permission)

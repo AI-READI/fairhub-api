@@ -40,7 +40,6 @@ class DatasetContributorResource(Resource):
                 dataset_contributor_ = model.DatasetContributor.query.get(i["id"])
                 if not dataset_contributor_:
                     return f"Study link {i['id']} Id is not found", 404
-
                 dataset_contributor_.update(i)
                 list_of_elements.append(dataset_contributor_.to_dict())
             elif "id" not in i or not i["id"]:
@@ -103,6 +102,7 @@ class DatasetCreatorResource(Resource):
                 dataset_creator_.update(i)
                 list_of_elements.append(dataset_creator_.to_dict())
             elif "id" not in i or not i["id"]:
+                i["contributor_type"] = None
                 dataset_creator_ = model.DatasetContributor.from_data(data_obj, i)
                 model.db.session.add(dataset_creator_)
                 list_of_elements.append(dataset_creator_.to_dict())
