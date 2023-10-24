@@ -144,8 +144,9 @@ class DatasetRelatedItemResource(Resource):
         return [item.to_dict() for item in data_obj.dataset_related_item], 201
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/"
-           "metadata/related-item/<related_item_id>")
+@api.route(
+    "/study/<study_id>/dataset/<dataset_id>/" "metadata/related-item/<related_item_id>"
+)
 class DatasetRelatedItemUpdate(Resource):
     @api.doc("delete related item")
     @api.response(200, "Success")

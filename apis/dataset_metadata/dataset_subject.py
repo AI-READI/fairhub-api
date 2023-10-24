@@ -57,8 +57,7 @@ class DatasetSubjectResource(Resource):
         return list_of_elements
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/"
-           "subject/<subject_id>")
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/" "subject/<subject_id>")
 class DatasetSubjectUpdate(Resource):
     @api.doc("delete subject")
     @api.response(200, "Success")

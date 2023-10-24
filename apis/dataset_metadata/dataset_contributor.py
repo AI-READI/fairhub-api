@@ -50,8 +50,9 @@ class DatasetContributorResource(Resource):
         return list_of_elements
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/"
-           "metadata/contributor/<contributor_id>")
+@api.route(
+    "/study/<study_id>/dataset/<dataset_id>/" "metadata/contributor/<contributor_id>"
+)
 class DatasetContributorDelete(Resource):
     @api.doc("delete contributor")
     @api.response(200, "Success")
