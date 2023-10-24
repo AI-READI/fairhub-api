@@ -1,6 +1,7 @@
 """Entry point for the application."""
 import datetime
 import importlib
+import logging
 import os
 from datetime import timezone
 
@@ -28,6 +29,9 @@ def create_app(config_module=None):
     # `full` if you want to see all the details
     app.config["SWAGGER_UI_DOC_EXPANSION"] = "none"
     app.config["RESTX_MASK_SWAGGER"] = False
+
+    # set up logging
+    logging.basicConfig(level=logging.DEBUG)
 
     # Initialize config
     app.config.from_object(config_module or "config")
@@ -61,12 +65,15 @@ def create_app(config_module=None):
     bcrypt.init_app(app)
 
     # Only allow CORS origin for localhost:3000
+    # and any subdomain of azurestaticapps.net/
     CORS(
         app,
         resources={
             "/*": {
                 "origins": [
                     "http://localhost:3000",
+                    "https:\/\/brave-ground-.*-.*.centralus.2.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
+                    "https://fairhub.io",
                 ],
             }
         },
@@ -160,7 +167,7 @@ def create_app(config_module=None):
                 "",
                 secure=True,
                 httponly=True,
-                samesite="lax",
+                samesite="None",
                 expires=datetime.datetime.now(timezone.utc),
             )
             return resp
@@ -176,10 +183,13 @@ def create_app(config_module=None):
             config.FAIRHUB_SECRET,
             algorithm="HS256",
         )
-        resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="lax")
+        resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="None")
 
-        # resp.headers["Access-Control-Allow-Origin"] = "http://localhost:3000"
-        # resp.headers["Access-Control-Allow-Credentials"] = "true"
+        app.logger.info("after request")
+        app.logger.info(request.headers.get("Origin"))
+
+        resp.headers["Access-Control-Allow-Origin"] = request.headers.get("Origin")
+        resp.headers["Access-Control-Allow-Credentials"] = "true"
         # resp.headers[
         #     "Access-Control-Allow-Headers"
         # ] = "Content-Type, Authorization, Access-Control-Allow-Origin,
@@ -189,7 +199,7 @@ def create_app(config_module=None):
         # ] = "Content-Type, Authorization, Access-Control-Allow-Origin,
         # Access-Control-Allow-Credentials"
 
-        # print(resp.headers)
+        app.logger.info(resp.headers)
 
         return resp
 

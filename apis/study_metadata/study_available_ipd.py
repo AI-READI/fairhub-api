@@ -3,6 +3,7 @@ import typing
 
 from flask import request
 from flask_restx import Resource, fields
+from jsonschema import ValidationError, validate
 
 import model
 from apis.study_metadata_namespace import api
@@ -46,10 +47,45 @@ class StudyAvailableResource(Resource):
     )
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
+    # @api.marshal_with(study_available)
+    # marshal with will need to be removed to have validation errors return
     @api.expect(study_available)
-    @api.marshal_with(study_available)
     def post(self, study_id: int):
         """Create study available metadata"""
+        # Schema validation
+        schema = {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": {
+                    "identifier": {"type": "string", "minLength": 1},
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "Individual Participant Data Set",
+                            "Study Protocol",
+                            "Statistical Analysis Plan",
+                            "Informated Consent Form",
+                            "Clinical Study Report",
+                            "Analytic Code",
+                            "Other",
+                        ],
+                    },
+                    "comment": {"type": "string"},
+                    "url": {"type": "string", "format": "uri", "minLength": 1},
+                },
+                "required": ["identifier", "type", "url", "comment"],
+            },
+            "uniqueItems": True,
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            print(e.message)
+            return e.message, 400
+
         study = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study):
             return "Access denied, you can not delete study", 403

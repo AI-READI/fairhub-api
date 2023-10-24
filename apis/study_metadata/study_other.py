@@ -3,6 +3,7 @@ import typing
 
 from flask import request
 from flask_restx import Resource, fields
+from jsonschema import ValidationError, validate
 
 import model
 from apis.study_metadata_namespace import api
@@ -40,6 +41,34 @@ class StudyOtherResource(Resource):
 
     def put(self, study_id: int):
         """Update study other metadata"""
+        # Schema validation
+        schema = {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "oversight_has_dmc": {"type": "boolean"},
+                "conditions": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "minItems": 1,
+                    "uniqueItems": True,
+                },
+                "keywords": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "minItems": 1,
+                    "uniqueItems": True,
+                },
+                "size": {"type": "integer"},
+            },
+            "required": ["oversight_has_dmc", "conditions", "keywords", "size"],
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+
         study_ = model.Study.query.get(study_id)
 
         study_.study_other.update(request.json)
@@ -67,6 +96,19 @@ class StudyOversightResource(Resource):
 
     def put(self, study_id: int):
         """Update study oversight metadata"""
+        # Schema validation
+        schema = {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {"oversight_has_dmc": {"type": "boolean"}},
+            "required": ["oversight_has_dmc"],
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403
@@ -99,6 +141,20 @@ class StudyConditionsResource(Resource):
 
     def put(self, study_id: int):
         """Update study conditions metadata"""
+        # Schema validation
+        schema = {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1},
+            "minItems": 1,
+            "uniqueItems": True,
+            "additionalItems": False,
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+
         data: typing.Union[dict, typing.Any] = request.json
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):

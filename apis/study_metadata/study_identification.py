@@ -3,6 +3,7 @@ import typing
 
 from flask import request
 from flask_restx import Resource, fields
+from jsonschema import ValidationError, validate
 
 import model
 from apis.study_metadata_namespace import api
@@ -43,6 +44,41 @@ class StudyIdentificationResource(Resource):
     @api.expect(study_identification)
     def post(self, study_id: int):
         """Create study identification metadata"""
+        # Schema validation
+        schema = {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "primary": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "identifier": {"type": "string", "minLength": 1},
+                        "identifier_type": {
+                            "type": "string",
+                            "minLength": 1,
+                        },
+                        "identifier_domain": {
+                            "type": "string",
+                        },
+                        "identifier_link": {
+                            "type": "string",
+                        },
+                    },
+                },
+                "secondary": {
+                    "type": "array",
+                },
+            },
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+
+        data: typing.Union[dict, typing.Any] = request.json
+
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403

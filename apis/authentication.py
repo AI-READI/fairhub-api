@@ -9,8 +9,10 @@ from datetime import timezone
 from typing import Any, Union
 
 import jwt
+from email_validator import EmailNotValidError, validate_email
 from flask import g, make_response, request
 from flask_restx import Namespace, Resource, fields
+from jsonschema import FormatChecker, ValidationError, validate
 
 import model
 
@@ -46,10 +48,71 @@ class SignUpUser(Resource):
     def post(self):
         """signs up the new users and saves data in DB"""
         data: Union[Any, dict] = request.json
-        # TODO data[email doesnt exist then raise error; json validation library
-        pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
-        if not data["email_address"] or not re.match(pattern, data["email_address"]):
-            return "Email address is invalid", 422
+
+        def validate_is_valid_email(instance):
+            # Turn on check_deliverability
+            # for first-time validations like on account creation pages (but not
+            # login pages).
+            email_address = instance
+            try:
+                validate_email(email_address, check_deliverability=False)
+                return True
+            except EmailNotValidError as e:
+                raise ValidationError("Invalid email address format") from e
+
+        def validate_password(instance):
+            password = instance
+            # Check if password is at least 8 characters long
+            if len(password) < 8:
+                raise ValidationError("Password must be at least 8 characters long")
+
+            # Check if password contains at least one lowercase letter
+            if not re.search(r"[a-z]", password):
+                raise ValidationError(
+                    "Password must contain at least one lowercase letter"
+                )
+
+            # Check if password contains at least one uppercase letter
+            if not re.search(r"[A-Z]", password):
+                raise ValidationError(
+                    "Password must contain at least one uppercase letter"
+                )
+
+            # Check if password contains at least one digit
+            if not re.search(r"[0-9]", password):
+                raise ValidationError("Password must contain at least one digit")
+
+            # Check if password contains at least one special character
+            if not re.search(r"[~`!@#$%^&*()_+\-={[}\]|:;\"'<,>.?/]", password):
+                raise ValidationError(
+                    "Password must contain at least one special character"
+                )
+
+            return True
+
+        # Schema validation
+        schema = {
+            "type": "object",
+            "required": ["email_address", "password"],
+            "additionalProperties": False,
+            "properties": {
+                "email_address": {"type": "string", "format": "valid_email"},
+                "password": {
+                    "type": "string",
+                    "format": "password",
+                },
+            },
+        }
+
+        format_checker = FormatChecker()
+        format_checker.checks("valid_email")(validate_is_valid_email)
+        format_checker.checks("password")(validate_password)
+
+        try:
+            validate(instance=data, schema=schema, format_checker=format_checker)
+        except ValidationError as e:
+            return e.message, 400
+
         user = model.User.query.filter_by(
             email_address=data["email_address"]
         ).one_or_none()
@@ -80,8 +143,40 @@ class Login(Resource):
 
         email_address = data["email_address"]
 
-        user = model.User.query.filter_by(email_address=email_address).one_or_none()
+        def validate_is_valid_email(instance):
+            print("within is_valid_email")
+            email_address = instance
+            print(email_address)
+            try:
+                validate_email(email_address)
+                return True
+            except EmailNotValidError as e:
+                raise ValidationError("Invalid email address format") from e
 
+        # Schema validation
+        schema = {
+            "type": "object",
+            "required": ["email_address", "password"],
+            "additionalProperties": False,
+            "properties": {
+                "email_address": {
+                    "type": "string",
+                    "format": "valid email",
+                    "error_message": "Invalid email address",
+                },
+                "password": {"type": "string", "minLength": 8},
+            },
+        }
+
+        format_checker = FormatChecker()
+        format_checker.checks("valid email")(validate_is_valid_email)
+
+        try:
+            validate(instance=data, schema=schema, format_checker=format_checker)
+        except ValidationError as e:
+            return e.message, 400
+
+        user = model.User.query.filter_by(email_address=email_address).one_or_none()
         if not user:
             return "Invalid credentials", 401
 
@@ -120,7 +215,7 @@ class Login(Resource):
         resp = make_response(user.to_dict())
 
         resp.set_cookie(
-            "token", encoded_jwt_code, secure=True, httponly=True, samesite="lax"
+            "token", encoded_jwt_code, secure=True, httponly=True, samesite="None"
         )
         resp.status_code = 200
 
@@ -265,7 +360,7 @@ class Logout(Resource):
             "",
             secure=True,
             httponly=True,
-            samesite="lax",
+            samesite="None",
             expires=datetime.datetime.now(timezone.utc),
         )
         resp.status_code = 204
