@@ -52,3 +52,4 @@ class DatasetDeIdentLevel(db.Model):  # type: ignore
         self.nonarr = data["nonarr"]
         self.k_anon = data["k_anon"]
         self.details = data["details"]
+        self.dataset.touch_dataset()

@@ -67,3 +67,4 @@ class DatasetOther(db.Model):  # type: ignore
             self.publisher = data["publisher"]
         if "resource_type" in data:
             self.resource_type = data["resource_type"]
+        self.dataset.touch_dataset()

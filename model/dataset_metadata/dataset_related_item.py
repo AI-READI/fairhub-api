@@ -107,3 +107,4 @@ class DatasetRelatedItem(db.Model):  # type: ignore
         self.type = data["type"]
         self.relation_type = data["relation_type"]
         self.dataset_related_item_other.update(data)
+        self.dataset.touch_dataset()

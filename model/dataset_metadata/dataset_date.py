@@ -41,3 +41,4 @@ class DatasetDate(db.Model):  # type: ignore
         self.date = data["date"]
         self.type = data["type"]
         self.information = data["information"]
+        self.dataset.touch_dataset()

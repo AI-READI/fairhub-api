@@ -30,5 +30,5 @@ class DatasetRecordKeys(db.Model):  # type: ignore
 
     def update(self, data: dict):
         self.key_type = data["type"]
-        if "key_details" in data:
-            self.key_details = data["key_details"]
+        self.key_details = data["key_details"]
+        self.dataset.touch_dataset()

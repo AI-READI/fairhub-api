@@ -145,5 +145,5 @@ class Dataset(db.Model):  # type: ignore
         """Creates a new dataset from a dictionary"""
         self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
 
-    # def touch_dataset(self):
-    #     self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
+    def touch_dataset(self):
+        self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()

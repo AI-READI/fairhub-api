@@ -47,3 +47,4 @@ class DatasetSubject(db.Model):  # type: ignore
         self.scheme_uri = data["scheme_uri"]
         self.value_uri = data["value_uri"]
         self.classification_code = data["classification_code"]
+        self.dataset.touch_dataset()

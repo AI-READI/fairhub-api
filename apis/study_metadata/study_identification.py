@@ -77,16 +77,16 @@ class StudyIdentificationResource(Resource):
         except ValidationError as e:
             return e.message, 400
 
-        data: typing.Union[dict, typing.Any] = request.json
-
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403
+
         data: typing.Union[dict, typing.Any] = request.json
         identifiers = [i for i in study_obj.study_identification if not i.secondary]
         primary_identifier = identifiers[0] if len(identifiers) else None
+
         primary: dict = data["primary"]
-        # primary["secondary"] = False
+
         if primary_identifier:
             primary_identifier.update(primary)
         else:
@@ -121,11 +121,13 @@ class StudyIdentificationResource(Resource):
             study = model.Study.query.get(study_id)
             if not is_granted("study_metadata", study):
                 return "Access denied, you can not delete study", 403
+
             study_identification_ = model.StudyIdentification.query.get(
                 identification_id
             )
             if not study_identification_.secondary:
                 return 400, "primary identifier can not be deleted"
+
             model.db.session.delete(study_identification_)
             model.db.session.commit()
 

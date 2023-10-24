@@ -40,3 +40,4 @@ class DatasetTitle(db.Model):  # type: ignore
     def update(self, data: dict):
         self.title = data["title"]
         self.type = data["type"]
+        self.dataset.touch_dataset()

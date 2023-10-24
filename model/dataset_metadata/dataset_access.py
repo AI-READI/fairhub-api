@@ -42,3 +42,4 @@ class DatasetAccess(db.Model):  # type: ignore
         self.url = data["url"]
         self.url_last_checked = datetime.datetime.now(datetime.timezone.utc).timestamp()
         self.type = data["type"]
+        self.dataset.touch_dataset()

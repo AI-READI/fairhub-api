@@ -44,3 +44,4 @@ class DatasetContributorAffiliation(db.Model):  # type: ignore
         self.identifier = data["identifier"]
         self.identifier_scheme = data["identifier_scheme"]
         self.identifier_scheme_uri = data["identifier_scheme_uri"]
+        self.dataset.touch_dataset()

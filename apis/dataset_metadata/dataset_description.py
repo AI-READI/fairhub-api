@@ -51,7 +51,7 @@ class DatasetDescriptionResource(Resource):
             elif "id" not in i or not i["id"]:
                 if i["type"] == "Abstract":
                     return (
-                        "Abstract type in description" " can not be given",
+                        "Abstract type in description can not be given",
                         403,
                     )
                 dataset_description_ = model.DatasetDescription.from_data(data_obj, i)

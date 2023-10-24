@@ -52,3 +52,4 @@ class DatasetFunder(db.Model):  # type: ignore
         self.award_number = data["award_number"]
         self.award_uri = data["award_uri"]
         self.award_title = data["award_title"]
+        self.dataset.touch_dataset()

@@ -52,3 +52,4 @@ class DatasetConsent(db.Model):  # type: ignore
         self.genetic_only = data["genetic_only"]
         self.no_methods = data["no_methods"]
         self.details = data["details"]
+        self.dataset.touch_dataset()

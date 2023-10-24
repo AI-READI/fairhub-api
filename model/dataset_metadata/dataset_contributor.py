@@ -55,3 +55,4 @@ class DatasetContributor(db.Model):  # type: ignore
         self.creator = data["creator"]
         self.contributor_type = data["contributor_type"]
         self.affiliations = data["affiliations"]
+        self.dataset.touch_dataset()

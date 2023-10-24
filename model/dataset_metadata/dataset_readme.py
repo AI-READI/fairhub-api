@@ -27,3 +27,4 @@ class DatasetReadme(db.Model):  # type: ignore
 
     def update(self, data: dict):
         self.content = data["content"]
+        self.dataset.touch_dataset()

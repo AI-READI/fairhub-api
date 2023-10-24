@@ -44,3 +44,4 @@ class DatasetRights(db.Model):  # type: ignore
         self.uri = data["uri"]
         self.identifier = data["identifier"]
         self.identifier_scheme = data["identifier_scheme"]
+        self.dataset.touch_dataset()
