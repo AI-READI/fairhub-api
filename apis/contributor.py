@@ -44,15 +44,28 @@ class AddContributor(Resource):
         if not is_granted("invite_contributor", study_obj):
             return "Access denied, you can not modify", 403
         data: Union[dict, Any] = request.json
+
         email_address = data["email_address"]
         user = model.User.query.filter_by(email_address=email_address).first()
         permission = data["role"]
+        # encoded_jwt_code = jwt.encode(
+        #     {
+        #         "user": user.id,
+        #         "exp": datetime.datetime.now(timezone.utc)
+        #         + datetime.timedelta(minutes=180),  # noqa: W503
+        #         "jti": str(uuid.uuid4()),
+        #     },  # noqa: W503
+        #     config.FAIRHUB_SECRET,
+        #     algorithm="HS256",
+        # )
         contributor_ = None
+
         try:
             if user:
                 contributor_ = study_obj.add_user_to_study(user, permission)
             else:
                 contributor_ = study_obj.invite_user_to_study(email_address, permission)
+
         except model.StudyException as ex:
             return ex.args[0], 409
         model.db.session.commit()

@@ -13,11 +13,14 @@ class StudyIdentification(db.Model):  # type: ignore
         self.study = study
         self.secondary = secondary
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
+        self.identifier = ""
+        self.identifier_domain = ""
+        self.identifier_link = ""
 
     __tablename__ = "study_identification"
     id = db.Column(db.CHAR(36), primary_key=True)
     identifier = db.Column(db.String, nullable=False)
-    identifier_type = db.Column(db.String, nullable=False)
+    identifier_type = db.Column(db.String, nullable=True)
     identifier_domain = db.Column(db.String, nullable=False)
     identifier_link = db.Column(db.String, nullable=False)
     secondary = db.Column(db.BOOLEAN, nullable=False)

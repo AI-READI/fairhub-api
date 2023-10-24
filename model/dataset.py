@@ -16,6 +16,16 @@ class Dataset(db.Model):  # type: ignore
         self.id = str(uuid.uuid4())
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
 
+        self.dataset_access = model.DatasetAccess(self)
+        self.dataset_record_keys = model.DatasetRecordKeys(self)
+        self.dataset_de_ident_level = model.DatasetDeIdentLevel(self)
+        self.dataset_consent = model.DatasetConsent(self)
+        self.dataset_readme = model.DatasetReadme(self)
+        self.dataset_other = model.DatasetOther(self)
+
+        self.dataset_title.append(model.DatasetTitle(self))
+        self.dataset_description.append(model.DatasetDescription(self))
+
     __tablename__ = "dataset"
     id = db.Column(db.CHAR(36), primary_key=True)
     updated_on = db.Column(db.BigInteger, nullable=False)
@@ -37,16 +47,17 @@ class Dataset(db.Model):  # type: ignore
         lazy="dynamic",
         cascade="all, delete",
     )
-
     dataset_access = db.relationship(
         "DatasetAccess",
         back_populates="dataset",
         cascade="all, delete",
+        uselist=False,
     )
     dataset_consent = db.relationship(
         "DatasetConsent",
         back_populates="dataset",
         cascade="all, delete",
+        uselist=False,
     )
     dataset_date = db.relationship(
         "DatasetDate",
@@ -55,6 +66,7 @@ class Dataset(db.Model):  # type: ignore
     )
     dataset_de_ident_level = db.relationship(
         "DatasetDeIdentLevel",
+        uselist=False,
         back_populates="dataset",
         cascade="all, delete",
     )
@@ -74,18 +86,30 @@ class Dataset(db.Model):  # type: ignore
         back_populates="dataset",
         cascade="all, delete",
     )
-    dataset_managing_organization = db.relationship(
-        "DatasetManagingOrganization", back_populates="dataset"
+    dataset_other = db.relationship(
+        "DatasetOther", back_populates="dataset", uselist=False, cascade="all, delete"
     )
-    dataset_other = db.relationship("DatasetOther", back_populates="dataset")
-    dataset_readme = db.relationship("DatasetReadme", back_populates="dataset")
-    dataset_record_keys = db.relationship("DatasetRecordKeys", back_populates="dataset")
+    dataset_readme = db.relationship(
+        "DatasetReadme", back_populates="dataset", uselist=False, cascade="all, delete"
+    )
+    dataset_record_keys = db.relationship(
+        "DatasetRecordKeys",
+        back_populates="dataset",
+        uselist=False,
+        cascade="all, delete",
+    )
     dataset_related_item = db.relationship(
-        "DatasetRelatedItem", back_populates="dataset"
+        "DatasetRelatedItem", back_populates="dataset", cascade="all, delete"
     )
-    dataset_rights = db.relationship("DatasetRights", back_populates="dataset")
-    dataset_subject = db.relationship("DatasetSubject", back_populates="dataset")
-    dataset_title = db.relationship("DatasetTitle", back_populates="dataset")
+    dataset_rights = db.relationship(
+        "DatasetRights", back_populates="dataset", cascade="all, delete"
+    )
+    dataset_subject = db.relationship(
+        "DatasetSubject", back_populates="dataset", cascade="all, delete"
+    )
+    dataset_title = db.relationship(
+        "DatasetTitle", back_populates="dataset", cascade="all, delete"
+    )
 
     def to_dict(self):
         last_published = self.last_published()
@@ -96,6 +120,7 @@ class Dataset(db.Model):  # type: ignore
             "created_at": self.created_at,
             # "dataset_versions": [i.to_dict() for i in self.dataset_versions],
             "latest_version": last_published.id if last_published else None,
+            # "title": self.dataset_title.title if self.dataset_title else ""
         }
 
     def last_published(self):
@@ -119,4 +144,6 @@ class Dataset(db.Model):  # type: ignore
     def update(self):
         """Creates a new dataset from a dictionary"""
         self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
-        # self.dataset_versions = data["dataset_versions"]
+
+    def touch_dataset(self):
+        self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()

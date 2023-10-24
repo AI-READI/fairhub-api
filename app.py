@@ -44,8 +44,11 @@ def create_app(config_module=None):
     app.config.from_prefixed_env("FAIRHUB")
 
     # print(app.config)
-    if config.FAIRHUB_SECRET and len(config.FAIRHUB_SECRET) < 14:
-        raise RuntimeError("secret key should contain at least 14 characters")
+    if config.FAIRHUB_SECRET:
+        if len(config.FAIRHUB_SECRET) < 32:
+            raise RuntimeError("FAIRHUB_SECRET must be at least 32 characters long")
+    else:
+        raise RuntimeError("FAIRHUB_SECRET not set")
 
     if "DATABASE_URL" in app.config:
         # if "TESTING" in app_config and app_config["TESTING"]:

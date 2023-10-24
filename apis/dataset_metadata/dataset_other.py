@@ -1,9 +1,8 @@
-import typing
-
 from flask import request
 from flask_restx import Resource, fields
 
 import model
+from apis.authentication import is_granted
 from apis.dataset_metadata_namespace import api
 
 dataset_other = api.model(
@@ -26,14 +25,46 @@ class DatasetOtherResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(dataset_other)
-    def get(self, study_id: int, dataset_id: int):
+    def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_other_ = dataset_.dataset_other
-        return [d.to_dict() for d in dataset_other_]
-
-    def put(self, study_id: int, dataset_id: int):
-        data: typing.Union[dict, typing.Any] = request.json
-        dataset_ = model.Dataset.query.get(dataset_id)
-        dataset_other_ = dataset_.dataset_other.update(data)
-        model.db.session.commit()
         return dataset_other_.to_dict()
+
+    @api.doc("other update")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    @api.marshal_with(dataset_other)
+    def put(self, study_id: int, dataset_id: int):
+        study_obj = model.Study.query.get(study_id)
+        if not is_granted("dataset_metadata", study_obj):
+            return "Access denied, you can not make any change in dataset metadata", 403
+        data = request.json
+        dataset_ = model.Dataset.query.get(dataset_id)
+        dataset_.dataset_other.update(data)
+        model.db.session.commit()
+        return dataset_.dataset_other.to_dict()
+
+
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/publisher")
+class DatasetPublisherResource(Resource):
+    @api.doc("publisher")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    # @api.marshal_with(dataset_publisher)
+    def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
+        dataset_ = model.Dataset.query.get(dataset_id)
+        dataset_other_ = dataset_.dataset_other
+        return dataset_other_.to_dict()
+
+    @api.doc("update publisher")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    def put(self, study_id: int, dataset_id: int):
+        study_obj = model.Study.query.get(study_id)
+        if not is_granted("dataset_metadata", study_obj):
+            return "Access denied, you can not make any change in dataset metadata", 403
+        data = request.json
+        dataset_ = model.Dataset.query.get(dataset_id)
+        dataset_.dataset_other.update(data)
+        model.db.session.commit()
+        return dataset_.dataset_other.to_dict()

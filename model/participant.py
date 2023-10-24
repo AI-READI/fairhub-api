@@ -2,10 +2,9 @@ import datetime
 import uuid
 from datetime import timezone
 
-import model
-
 from .db import db
 from .study import Study
+from .version import version_participants
 
 
 class Participant(db.Model):  # type: ignore
@@ -30,7 +29,7 @@ class Participant(db.Model):  # type: ignore
     dataset_versions = db.relationship(
         "Version",
         back_populates="participants",
-        secondary=model.version.version_participants,
+        secondary=version_participants,
     )
 
     def to_dict(self):

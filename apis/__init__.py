@@ -10,23 +10,15 @@ from .dataset import api as dataset_api
 from .dataset_metadata.dataset_access import api as access
 from .dataset_metadata.dataset_alternate_identifier import api as alternate_identifier
 from .dataset_metadata.dataset_consent import api as consent
+from .dataset_metadata.dataset_contributor import api as dataset_contributor
 from .dataset_metadata.dataset_date import api as date
 from .dataset_metadata.dataset_de_ident_level import api as de_ident_level
 from .dataset_metadata.dataset_description import api as description
 from .dataset_metadata.dataset_funder import api as funder
-from .dataset_metadata.dataset_managing_organization import api as managing_organization
 from .dataset_metadata.dataset_other import api as dataset_other
 from .dataset_metadata.dataset_readme import api as readme
 from .dataset_metadata.dataset_record_keys import api as record_keys
 from .dataset_metadata.dataset_related_item import api as related_item
-from .dataset_metadata.dataset_related_item_contributor import (
-    api as related_item_contributor,
-)
-from .dataset_metadata.dataset_related_item_identifier import (
-    api as related_item_identifier,
-)
-from .dataset_metadata.dataset_related_item_other import api as related_item_other
-from .dataset_metadata.dataset_related_item_title import api as related_item_title
 from .dataset_metadata.dataset_rights import api as rights
 from .dataset_metadata.dataset_subject import api as subject
 from .dataset_metadata.dataset_title import api as title
@@ -69,16 +61,11 @@ __all__ = [
     "de_ident_level",
     "description",
     "funder",
-    "managing_organization",
     "dataset_other",
     "readme",
     "record_keys",
     "related_item",
-    "related_item_contributor",
-    "related_item_identifier",
     "api",
-    "related_item_other",
-    "related_item_title",
     "rights",
     "subject",
     "title",
@@ -101,6 +88,7 @@ __all__ = [
     "user",
     "identification",
     "study_description",
+    "dataset_contributor",
 ]
 
 

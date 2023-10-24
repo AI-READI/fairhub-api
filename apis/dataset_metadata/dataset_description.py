@@ -4,6 +4,7 @@ from flask import request
 from flask_restx import Resource, fields
 
 import model
+from apis.authentication import is_granted
 from apis.dataset_metadata_namespace import api
 
 dataset_description = api.model(
@@ -21,22 +22,38 @@ class DatasetDescriptionResource(Resource):
     @api.doc("description")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(dataset_description)
-    def get(self, study_id: int, dataset_id: int):
+    # @api.marshal_with(dataset_description)
+    def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_description_ = dataset_.dataset_description
         return [d.to_dict() for d in dataset_description_]
 
+    @api.doc("update description")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def post(self, study_id: int, dataset_id: int):
+        study_obj = model.Study.query.get(study_id)
+        if not is_granted("dataset_metadata", study_obj):
+            return "Access denied, you can not make any change in dataset metadata", 403
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
         list_of_elements = []
         for i in data:
             if "id" in i and i["id"]:
                 dataset_description_ = model.DatasetDescription.query.get(i["id"])
+                # if dataset_description_.type == "Abstract":
+                #     return (
+                #         "Abstract type can not be modified",
+                #         403,
+                #     )
                 dataset_description_.update(i)
                 list_of_elements.append(dataset_description_.to_dict())
             elif "id" not in i or not i["id"]:
+                if i["type"] == "Abstract":
+                    return (
+                        "Abstract type in description can not be given",
+                        403,
+                    )
                 dataset_description_ = model.DatasetDescription.from_data(data_obj, i)
                 model.db.session.add(dataset_description_)
                 list_of_elements.append(dataset_description_.to_dict())
@@ -44,11 +61,32 @@ class DatasetDescriptionResource(Resource):
         return list_of_elements
 
     @api.route(
-        "/study/<study_id>/dataset/<dataset_id>/metadata/description/<description_id>"
+        "/study/<study_id>/dataset/<dataset_id>/"
+        "metadata/description/<description_id>"
     )
     class DatasetDescriptionUpdate(Resource):
-        def delete(self, study_id: int, dataset_id: int, description_id: int):
+        @api.doc("delete description")
+        @api.response(200, "Success")
+        @api.response(400, "Validation Error")
+        def delete(
+            self,
+            study_id: int,
+            dataset_id: int,  # pylint: disable= unused-argument
+            description_id: int,
+        ):
+            study_obj = model.Study.query.get(study_id)
+            if not is_granted("dataset_metadata", study_obj):
+                return (
+                    "Access denied, you can not make any change in dataset metadata",
+                    403,
+                )
             dataset_description_ = model.DatasetDescription.query.get(description_id)
+            if dataset_description_.type == "Abstract":
+                return (
+                    "Abstract description can not be deleted",
+                    403,
+                )
             model.db.session.delete(dataset_description_)
             model.db.session.commit()
-            return dataset_description_.to_dict()
+
+            return 204

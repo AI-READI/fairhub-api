@@ -1,4 +1,6 @@
+import datetime
 import uuid
+from datetime import timezone
 
 from ..db import db
 
@@ -7,11 +9,15 @@ class DatasetDescription(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
+        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
+        self.description = ""
+        self.type = "Abstract"
 
     __tablename__ = "dataset_description"
     id = db.Column(db.CHAR(36), primary_key=True)
     description = db.Column(db.String, nullable=False)
-    description_type = db.Column(db.String, nullable=False)
+    type = db.Column(db.String, nullable=True)
+    created_at = db.Column(db.BigInteger, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
     dataset = db.relationship("Dataset", back_populates="dataset_description")
@@ -20,7 +26,8 @@ class DatasetDescription(db.Model):  # type: ignore
         return {
             "id": self.id,
             "description": self.description,
-            "description_type": self.description_type,
+            "type": self.type,
+            "created_at": self.created_at,
         }
 
     @staticmethod
@@ -31,4 +38,5 @@ class DatasetDescription(db.Model):  # type: ignore
 
     def update(self, data: dict):
         self.description = data["description"]
-        self.description_type = data["description_type"]
+        self.type = data["type"]
+        self.dataset.touch_dataset()

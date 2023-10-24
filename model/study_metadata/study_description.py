@@ -1,5 +1,3 @@
-import uuid
-
 from model import Study
 
 from ..db import db
@@ -9,26 +7,26 @@ class StudyDescription(db.Model):  # type: ignore
     """A study is a collection of datasets and participants"""
 
     def __init__(self, study: Study):
-        self.id = str(uuid.uuid4())
         self.study = study
         self.brief_summary = ""
         self.detailed_description = ""
 
     __tablename__ = "study_description"
 
-    id = db.Column(db.CHAR(36), primary_key=True)
     brief_summary = db.Column(db.String, nullable=False)
     detailed_description = db.Column(db.String, nullable=False)
 
     study_id = db.Column(
-        db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=False
+        db.CHAR(36),
+        db.ForeignKey("study.id", ondelete="CASCADE"),
+        primary_key=True,
+        nullable=False,
     )
     study = db.relationship("Study", back_populates="study_description")
 
     def to_dict(self):
         """Converts the study to a dictionary"""
         return {
-            "id": self.id,
             "brief_summary": self.brief_summary,
             "detailed_description": self.detailed_description,
         }

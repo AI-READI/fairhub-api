@@ -1,23 +1,21 @@
-import uuid
-
 from ..db import db
 
 
 class DatasetReadme(db.Model):  # type: ignore
     def __init__(self, dataset):
-        self.id = str(uuid.uuid4())
         self.dataset = dataset
+        self.content = ""
 
     __tablename__ = "dataset_readme"
-    id = db.Column(db.CHAR(36), primary_key=True)
     content = db.Column(db.String, nullable=False)
 
-    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
+    dataset_id = db.Column(
+        db.CHAR(36), db.ForeignKey("dataset.id"), primary_key=True, nullable=False
+    )
     dataset = db.relationship("Dataset", back_populates="dataset_readme")
 
     def to_dict(self):
         return {
-            "id": self.id,
             "content": self.content,
         }
 
@@ -29,3 +27,4 @@ class DatasetReadme(db.Model):  # type: ignore
 
     def update(self, data: dict):
         self.content = data["content"]
+        self.dataset.touch_dataset()

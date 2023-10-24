@@ -1,5 +1,3 @@
-import uuid
-
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 
@@ -12,46 +10,46 @@ class StudyEligibility(db.Model):  # type: ignore
     """A study is a collection of datasets and participants"""
 
     def __init__(self, study: Study):
-        self.id = str(uuid.uuid4())
         self.study = study
-        self.gender = ""
-        self.gender_based = ""
+        self.gender = None
+        self.gender_based = None
         self.gender_description = ""
-        self.minimum_age_value = 18
-        self.maximum_age_value = 60
-        self.minimum_age_unit = ""
-        self.maximum_age_unit = ""
-        self.healthy_volunteers = ""
+        self.minimum_age_value = None  # 18
+        self.maximum_age_value = None  # 60
+        self.minimum_age_unit = None
+        self.maximum_age_unit = None
+        self.healthy_volunteers = None
         self.inclusion_criteria = []
         self.exclusion_criteria = []
         self.study_population = ""
-        self.sampling_method = ""
+        self.sampling_method = None
 
     __tablename__ = "study_eligibility"
 
-    id = db.Column(db.CHAR(36), primary_key=True)
-    gender = db.Column(db.String, nullable=False)
-    gender_based = db.Column(db.String, nullable=False)
+    gender = db.Column(db.String, nullable=True)
+    gender_based = db.Column(db.String, nullable=True)
     gender_description = db.Column(db.String, nullable=False)
-    minimum_age_value = db.Column(db.Integer, nullable=False)
-    maximum_age_value = db.Column(db.Integer, nullable=False)
-    minimum_age_unit = db.Column(db.String, nullable=False)
-    maximum_age_unit = db.Column(db.String, nullable=False)
+    minimum_age_value = db.Column(db.Integer, nullable=True)
+    maximum_age_value = db.Column(db.Integer, nullable=True)
+    minimum_age_unit = db.Column(db.String, nullable=True)
+    maximum_age_unit = db.Column(db.String, nullable=True)
     healthy_volunteers = db.Column(db.String, nullable=True)
     inclusion_criteria = db.Column(ARRAY(String), nullable=False)
     exclusion_criteria = db.Column(ARRAY(String), nullable=False)
-    study_population = db.Column(db.String, nullable=True)
+    study_population = db.Column(db.String, nullable=False)
     sampling_method = db.Column(db.String, nullable=True)
 
     study_id = db.Column(
-        db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=False
+        db.CHAR(36),
+        db.ForeignKey("study.id", ondelete="CASCADE"),
+        primary_key=True,
+        nullable=False,
     )
     study = db.relationship("Study", back_populates="study_eligibility")
 
     def to_dict(self):
         """Converts the study to a dictionary"""
         return {
-            "id": self.id,
             "gender": self.gender,
             "gender_based": self.gender_based,
             "gender_description": self.gender_description,

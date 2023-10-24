@@ -120,7 +120,6 @@ class StudyResource(Resource):
         update_study = model.Study.query.get(study_id)
         if not is_granted("update_study", update_study):
             return "Access denied, you can not modify", 403
-
         update_study.update(request.json)
         model.db.session.commit()
         return update_study.to_dict()
@@ -132,18 +131,16 @@ class StudyResource(Resource):
         study = model.Study.query.get(study_id)
         if not is_granted("delete_study", study):
             return "Access denied, you can not delete study", 403
-        for d in study.dataset:
-            for version in d.dataset_versions:
-                version.participants.clear()
-        for d in study.dataset:
-            for version in d.dataset_versions:
-                model.db.session.delete(version)
-            model.db.session.delete(d)
-        for p in study.participants:
-            model.db.session.delete(p)
+        # for d in study.dataset:
+        #     for version in d.dataset_versions:
+        #         version.participants.clear()
+        # for d in study.dataset:
+        #     for version in d.dataset_versions:
+        #         model.db.session.delete(version)
+        #     model.db.session.delete(d)
+        # for p in study.participants:
+        #     model.db.session.delete(p)
         model.db.session.delete(study)
         model.db.session.commit()
-        studies = model.Study.query.filter(
-            model.Study.study_contributors.any(model.User.id == g.user.id)
-        ).all()
-        return [s.to_dict() for s in studies], 201
+
+        return 204

@@ -20,6 +20,7 @@ class Version(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.dataset = dataset
         self.id = str(uuid.uuid4())
+        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
 
     __tablename__ = "version"
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -32,9 +33,19 @@ class Version(db.Model):  # type: ignore
     created_at = db.Column(db.BigInteger, nullable=False)
     published_on = db.Column(db.BigInteger, nullable=False)
 
+    version_readme = db.relationship(
+        "VersionReadme",
+        uselist=False,
+        back_populates="version",
+        cascade="all, delete",
+    )
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
     dataset = db.relationship("Dataset", back_populates="dataset_versions")
-    participants = db.relationship("Participant", secondary=version_participants)
+    participants = db.relationship(
+        "Participant",
+        secondary=version_participants,
+        cascade="all, delete",
+    )
 
     def to_dict(self):
         return {
@@ -46,9 +57,10 @@ class Version(db.Model):  # type: ignore
             "created_at": self.created_at,
             "doi": self.doi,
             "published": self.published,
-            "participants": [p.id for p in self.participants]
-            if isinstance(self.participants, (list, set))
-            else [],
+            "readme": self.version_readme.content if self.version_readme else ""
+            # "participants": [p.id for p in self.participants]
+            # if isinstance(self.participants, (list, set))
+            # else [],
         }
 
     # [p.id for p in self.participants]
@@ -61,9 +73,9 @@ class Version(db.Model):  # type: ignore
 
     def update(self, data: dict):
         self.title = data["title"]
-        self.published = data["published"]
-        self.doi = data["doi"]
+        self.published = data["published"] if "published" in data else False
+        self.doi = data["doi"] if "doi" in data else ""
         self.published_on = datetime.datetime.now(timezone.utc).timestamp()
         self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
-        self.participants[:] = data["participants"]
-        self.changelog = data["changelog"]
+        # self.participants[:] = data["participants"]
+        self.changelog = data["changelog"] if "changelog" in data else ""

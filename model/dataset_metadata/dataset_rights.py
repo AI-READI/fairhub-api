@@ -1,4 +1,6 @@
+import datetime
 import uuid
+from datetime import timezone
 
 from ..db import db
 
@@ -7,6 +9,7 @@ class DatasetRights(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.id = str(uuid.uuid4())
         self.dataset = dataset
+        self.created_at = datetime.datetime.now(timezone.utc).timestamp()
 
     __tablename__ = "dataset_rights"
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -15,6 +18,7 @@ class DatasetRights(db.Model):  # type: ignore
     uri = db.Column(db.String, nullable=False)
     identifier = db.Column(db.String, nullable=False)
     identifier_scheme = db.Column(db.String, nullable=False)
+    created_at = db.Column(db.BigInteger, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
     dataset = db.relationship("Dataset", back_populates="dataset_rights")
@@ -26,6 +30,7 @@ class DatasetRights(db.Model):  # type: ignore
             "uri": self.uri,
             "identifier": self.identifier,
             "identifier_scheme": self.identifier_scheme,
+            "created_at": self.created_at,
         }
 
     @staticmethod
@@ -39,3 +44,4 @@ class DatasetRights(db.Model):  # type: ignore
         self.uri = data["uri"]
         self.identifier = data["identifier"]
         self.identifier_scheme = data["identifier_scheme"]
+        self.dataset.touch_dataset()

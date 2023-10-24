@@ -19,7 +19,7 @@ class StudyReference(db.Model):  # type: ignore
 
     id = db.Column(db.CHAR(36), primary_key=True)
     identifier = db.Column(db.String, nullable=False)
-    type = db.Column(db.String, nullable=False)
+    type = db.Column(db.String, nullable=True)
     citation = db.Column(db.String, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
 

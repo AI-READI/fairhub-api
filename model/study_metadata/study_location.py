@@ -19,7 +19,7 @@ class StudyLocation(db.Model):  # type: ignore
 
     id = db.Column(db.CHAR(36), primary_key=True)
     facility = db.Column(db.String, nullable=False)
-    status = db.Column(db.String, nullable=False)
+    status = db.Column(db.String, nullable=True)
     city = db.Column(db.String, nullable=False)
     state = db.Column(db.String, nullable=False)
     zip = db.Column(db.String, nullable=False)

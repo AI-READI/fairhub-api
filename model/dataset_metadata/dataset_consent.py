@@ -1,17 +1,20 @@
-import uuid
-
 from ..db import db
 
 
 class DatasetConsent(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.dataset = dataset
-        self.id = str(uuid.uuid4())
+        self.type = None
+        self.noncommercial = True
+        self.geog_restrict = True
+        self.research_type = True
+        self.genetic_only = True
+        self.no_methods = True
+        self.details = ""
 
     __tablename__ = "dataset_consent"
-    id = db.Column(db.CHAR(36), primary_key=True)
 
-    type = db.Column(db.String, nullable=False)
+    type = db.Column(db.String, nullable=True)
     noncommercial = db.Column(db.BOOLEAN, nullable=False)
     geog_restrict = db.Column(db.BOOLEAN, nullable=False)
     research_type = db.Column(db.BOOLEAN, nullable=False)
@@ -19,12 +22,13 @@ class DatasetConsent(db.Model):  # type: ignore
     no_methods = db.Column(db.BOOLEAN, nullable=False)
     details = db.Column(db.String, nullable=False)
 
-    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
+    dataset_id = db.Column(
+        db.CHAR(36), db.ForeignKey("dataset.id"), primary_key=True, nullable=False
+    )
     dataset = db.relationship("Dataset", back_populates="dataset_consent")
 
     def to_dict(self):
         return {
-            "id": self.id,
             "type": self.type,
             "noncommercial": self.noncommercial,
             "geog_restrict": self.geog_restrict,
@@ -48,3 +52,4 @@ class DatasetConsent(db.Model):  # type: ignore
         self.genetic_only = data["genetic_only"]
         self.no_methods = data["no_methods"]
         self.details = data["details"]
+        self.dataset.touch_dataset()

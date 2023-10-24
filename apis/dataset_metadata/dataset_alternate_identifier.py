@@ -4,6 +4,7 @@ from flask import request
 from flask_restx import Resource, fields
 
 import model
+from apis.authentication import is_granted
 from apis.dataset_metadata_namespace import api
 
 dataset_identifier = api.model(
@@ -11,24 +12,31 @@ dataset_identifier = api.model(
     {
         "id": fields.String(required=True),
         "identifier": fields.String(required=True),
-        "identifier_type": fields.String(required=True),
+        "type": fields.String(required=False),
         "alternate": fields.Boolean(required=True),
     },
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/identifier")
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/alternative-identifier")
 class DatasetAlternateIdentifierResource(Resource):
     @api.doc("identifier")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(dataset_identifier)
-    def get(self, study_id: int, dataset_id: int):
+    # @api.marshal_with(dataset_identifier)
+    def get(self, study_id: int, dataset_id: int):  # pylint: disable = unused-argument
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_identifier_ = dataset_.dataset_alternate_identifier
         return [d.to_dict() for d in dataset_identifier_]
 
+    @api.doc("update identifier")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def post(self, study_id: int, dataset_id: int):
+        study_obj = model.Study.query.get(study_id)
+        if not is_granted("dataset_metadata", study_obj):
+            return "Access denied, you can not make any change in dataset metadata", 403
+        # pylint: disable= unused-argument
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
         list_of_elements = []
@@ -51,13 +59,21 @@ class DatasetAlternateIdentifierResource(Resource):
         return list_of_elements
 
     @api.route(
-        "/study/<study_id>/dataset/<dataset_id>/metadata/identifier/<identifier_id>"
+        "/study/<study_id>/dataset/<dataset_id>/"
+        "metadata/alternative-identifier/<identifier_id>"
     )
     class DatasetAlternateIdentifierUpdate(Resource):
-        def put(self, study_id: int, dataset_id: int, identifier_id: int):
+        @api.doc("delete identifier")
+        @api.response(200, "Success")
+        @api.response(400, "Validation Error")
+        def delete(
+            self, study_id: int, dataset_id: int, identifier_id: int
+        ):  # pylint: disable= unused-argument
             dataset_identifier_ = model.DatasetAlternateIdentifier.query.get(
                 identifier_id
             )
-            dataset_identifier_.update(request.json)
+
+            model.db.session.delete(dataset_identifier_)
             model.db.session.commit()
-            return dataset_identifier_.to_dict()
+
+            return 204
