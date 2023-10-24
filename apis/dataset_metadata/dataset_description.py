@@ -31,7 +31,6 @@ class DatasetDescriptionResource(Resource):
     @api.doc("update description")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(dataset_description)
     def post(self, study_id: int, dataset_id: int):
         study_obj = model.Study.query.get(study_id)
         if not is_granted("dataset_metadata", study_obj):
@@ -42,9 +41,20 @@ class DatasetDescriptionResource(Resource):
         for i in data:
             if "id" in i and i["id"]:
                 dataset_description_ = model.DatasetDescription.query.get(i["id"])
+                if dataset_description_.type == "Abstract":
+                    return (
+                        "Abstract type can not be modified",
+                        403,
+                    )
                 dataset_description_.update(i)
                 list_of_elements.append(dataset_description_.to_dict())
             elif "id" not in i or not i["id"]:
+                if i["type"] == "Abstract":
+                    return (
+                        "Abstract type in description"
+                        " can not be given",
+                        403,
+                    )
                 dataset_description_ = model.DatasetDescription.from_data(data_obj, i)
                 model.db.session.add(dataset_description_)
                 list_of_elements.append(dataset_description_.to_dict())
@@ -69,7 +79,11 @@ class DatasetDescriptionResource(Resource):
                     403,
                 )
             dataset_description_ = model.DatasetDescription.query.get(description_id)
-
+            if dataset_description_.type == "Abstract":
+                return (
+                    "Abstract description can not be deleted",
+                    403,
+                )
             model.db.session.delete(dataset_description_)
             model.db.session.commit()
 

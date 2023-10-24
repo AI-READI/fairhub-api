@@ -10,7 +10,8 @@ class DatasetDescription(db.Model):  # type: ignore
         self.id = str(uuid.uuid4())
         self.dataset = dataset
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
-
+        self.description = ""
+        self.type = "Abstract"
     __tablename__ = "dataset_description"
     id = db.Column(db.CHAR(36), primary_key=True)
     description = db.Column(db.String, nullable=False)
