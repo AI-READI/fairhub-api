@@ -19,7 +19,7 @@ dataset_other = api.model(
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/other")
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/other")
 class DatasetOtherResource(Resource):
     @api.doc("other")
     @api.response(200, "Success")
@@ -45,7 +45,7 @@ class DatasetOtherResource(Resource):
         return dataset_.dataset_other.to_dict()
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/publisher")
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/publisher")
 class DatasetPublisherResource(Resource):
     @api.doc("publisher")
     @api.response(200, "Success")

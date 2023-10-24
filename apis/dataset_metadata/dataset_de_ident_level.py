@@ -20,7 +20,7 @@ de_ident_level = api.model(
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/de-identification-level")
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/de-identification-level")
 class DatasetDeIdentLevelResource(Resource):
     @api.doc("de_ident_level")
     @api.response(200, "Success")

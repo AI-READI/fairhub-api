@@ -17,7 +17,7 @@ dataset_related_item = api.model(
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/related-item")
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/related-item")
 class DatasetRelatedItemResource(Resource):
     @api.doc("related item")
     @api.response(200, "Success")
@@ -144,7 +144,8 @@ class DatasetRelatedItemResource(Resource):
         return [item.to_dict() for item in data_obj.dataset_related_item], 201
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/related-item/<related_item_id>")
+@api.route("/study/<study_id>/dataset/<dataset_id>/"
+           "metadata/related-item/<related_item_id>")
 class DatasetRelatedItemUpdate(Resource):
     @api.doc("delete related item")
     @api.response(200, "Success")
@@ -167,7 +168,7 @@ class DatasetRelatedItemUpdate(Resource):
 
 
 @api.route(
-    "/study/<study_id>/dataset/<dataset_id>/related-item/"
+    "/study/<study_id>/dataset/<dataset_id>/metadata/related-item/"
     "<related_item_id>/contributor/<contributor_id>"
 )
 class RelatedItemContributorsDelete(Resource):
@@ -194,7 +195,7 @@ class RelatedItemContributorsDelete(Resource):
 
 
 @api.route(
-    "/study/<study_id>/dataset/<dataset_id>/"
+    "/study/<study_id>/dataset/<dataset_id>/metadata/"
     "related-item/<related_item_id>/title/<title_id>"
 )
 class RelatedItemTitlesDelete(Resource):
@@ -218,8 +219,8 @@ class RelatedItemTitlesDelete(Resource):
 
 
 @api.route(
-    "/study/<study_id>/dataset/<dataset_id>/related-item/"
-    "<related_item_id>/identifier/<identifier_id>"
+    "/study/<study_id>/dataset/<dataset_id>/metadata/"
+    "related-item/<related_item_id>/identifier/<identifier_id>"
 )
 class RelatedItemIdentifiersDelete(Resource):
     @api.doc("delete related item identifier")
@@ -244,7 +245,7 @@ class RelatedItemIdentifiersDelete(Resource):
 
 
 @api.route(
-    "/study/<study_id>/dataset/<dataset_id>/related-item/"
+    "/study/<study_id>/dataset/<dataset_id>/metadata/related-item/"
     "<related_item_id>/creator/<creator_id>"  # pylint: disable = line-too-long
 )
 class RelatedItemCreatorDelete(Resource):

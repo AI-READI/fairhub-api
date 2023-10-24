@@ -22,7 +22,7 @@ dataset_funder = api.model(
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/funder")
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/funder")
 class DatasetFunderResource(Resource):
     @api.doc("funder")
     @api.response(200, "Success")
@@ -58,7 +58,7 @@ class DatasetFunderResource(Resource):
         return list_of_elements
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/funder/<funder_id>")
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/funder/<funder_id>")
 class DatasetFunderUpdate(Resource):
     @api.doc("delete funder")
     @api.response(200, "Success")

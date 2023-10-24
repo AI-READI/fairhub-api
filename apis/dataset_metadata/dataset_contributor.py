@@ -13,7 +13,7 @@ dataset_contributor = api.model(
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/contributor")
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/contributor")
 class DatasetContributorResource(Resource):
     @api.doc("contributor")
     @api.response(200, "Success")
@@ -50,7 +50,8 @@ class DatasetContributorResource(Resource):
         return list_of_elements
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/contributor/<contributor_id>")
+@api.route("/study/<study_id>/dataset/<dataset_id>/"
+           "metadata/contributor/<contributor_id>")
 class DatasetContributorDelete(Resource):
     @api.doc("delete contributor")
     @api.response(200, "Success")
@@ -72,7 +73,7 @@ class DatasetContributorDelete(Resource):
         return 204
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/creator")
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/creator")
 class DatasetCreatorResource(Resource):
     @api.doc("creator")
     @api.response(200, "Success")
@@ -110,7 +111,7 @@ class DatasetCreatorResource(Resource):
         return list_of_elements
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/creator/<creator_id>")
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/creator/<creator_id>")
 class DatasetCreatorDelete(Resource):
     @api.doc("delete creator")
     @api.response(200, "Success")

@@ -18,7 +18,7 @@ dataset_date = api.model(
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/date")
+@api.route("/study/<study_id>/dataset/metadata/<dataset_id>/date")
 class DatasetDateResource(Resource):
     @api.doc("date")
     @api.response(200, "Success")
@@ -54,7 +54,7 @@ class DatasetDateResource(Resource):
         return list_of_elements
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/date/<date_id>")
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/date/<date_id>")
 class DatasetDateDeleteResource(Resource):
     @api.doc("delete date")
     @api.response(200, "Success")

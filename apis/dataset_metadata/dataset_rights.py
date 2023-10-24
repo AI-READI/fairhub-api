@@ -19,7 +19,7 @@ dataset_rights = api.model(
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/rights")
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/rights")
 class DatasetRightsResource(Resource):
     @api.doc("rights")
     @api.response(200, "Success")
@@ -56,7 +56,7 @@ class DatasetRightsResource(Resource):
         return list_of_elements
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/rights/<rights_id>")
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/rights/<rights_id>")
 class DatasetRightsUpdate(Resource):
     @api.doc("delete rights")
     @api.response(200, "Success")

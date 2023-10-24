@@ -17,7 +17,7 @@ dataset_title = api.model(
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/title")
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/title")
 class DatasetTitleResource(Resource):
     @api.doc("title")
     @api.response(200, "Success")
@@ -61,7 +61,7 @@ class DatasetTitleResource(Resource):
         model.db.session.commit()
         return list_of_elements
 
-    @api.route("/study/<study_id>/dataset/<dataset_id>/title/<title_id>")
+    @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/title/<title_id>")
     class DatasetDescriptionUpdate(Resource):
         @api.doc("delete title")
         @api.response(200, "Success")

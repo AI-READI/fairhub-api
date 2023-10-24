@@ -15,7 +15,7 @@ dataset_record_keys = api.model(
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/record-keys")
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/record-keys")
 class DatasetRecordKeysResource(Resource):
     @api.doc("record keys")
     @api.response(200, "Success")

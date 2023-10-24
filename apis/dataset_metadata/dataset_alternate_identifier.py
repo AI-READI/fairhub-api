@@ -18,7 +18,7 @@ dataset_identifier = api.model(
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/alternative-identifier")
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/alternative-identifier")
 class DatasetAlternateIdentifierResource(Resource):
     @api.doc("identifier")
     @api.response(200, "Success")
@@ -59,7 +59,8 @@ class DatasetAlternateIdentifierResource(Resource):
         return list_of_elements
 
     @api.route(
-        "/study/<study_id>/dataset/<dataset_id>/alternative-identifier/<identifier_id>"
+        "/study/<study_id>/dataset/<dataset_id>/"
+        "metadata/alternative-identifier/<identifier_id>"
     )
     class DatasetAlternateIdentifierUpdate(Resource):
         @api.doc("delete identifier")
