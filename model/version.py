@@ -21,6 +21,7 @@ class Version(db.Model):  # type: ignore
         self.dataset = dataset
         self.id = str(uuid.uuid4())
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
+
     __tablename__ = "version"
     id = db.Column(db.CHAR(36), primary_key=True)
 
@@ -38,13 +39,8 @@ class Version(db.Model):  # type: ignore
         back_populates="version",
         cascade="all, delete",
     )
-    dataset_id = db.Column(
-        db.CHAR(36),
-        db.ForeignKey("dataset.id"),
-        nullable=False)
-    dataset = db.relationship(
-        "Dataset",
-        back_populates="dataset_versions")
+    dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
+    dataset = db.relationship("Dataset", back_populates="dataset_versions")
     participants = db.relationship(
         "Participant",
         secondary=version_participants,

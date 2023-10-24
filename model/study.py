@@ -26,8 +26,7 @@ class Study(db.Model):  # type: ignore
         self.study_eligibility = model.StudyEligibility(self)
         self.study_ipdsharing = model.StudyIpdsharing(self)
         self.study_description = model.StudyDescription(self)
-        self.study_identification.append(
-            model.StudyIdentification(self, False))
+        self.study_identification.append(model.StudyIdentification(self, False))
 
         self.study_other = model.StudyOther(self)
         # self.study_contributors = model.StudyContributor(self)

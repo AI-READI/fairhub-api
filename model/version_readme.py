@@ -6,18 +6,13 @@ class VersionReadme(db.Model):  # type: ignore
     content = db.Column(db.String, nullable=True)
 
     version_id = db.Column(
-        db.CHAR(36),
-        db.ForeignKey("version.id"),
-        primary_key=True,
-        nullable=False)
-    version = db.relationship(
-        "Version",
-        back_populates="version_readme")
+        db.CHAR(36), db.ForeignKey("version.id"), primary_key=True, nullable=False
+    )
+    version = db.relationship("Version", back_populates="version_readme")
 
     def to_dict(self):
         return {
             "content": self.content,
-
         }
 
     @staticmethod
