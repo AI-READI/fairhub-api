@@ -1,6 +1,7 @@
 import datetime
 import uuid
 
+import random
 from .db import db
 from .study import Study
 
@@ -15,7 +16,7 @@ class StudyInvitedContributor(db.Model):  # type: ignore
         self.invited_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
         self.email_address = email_address
         self.created_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
-        self.token = ""
+        self.token = random.randint(10 ** (7 - 1), (10 ** 7) - 1)
 
     __tablename__ = "invited_study_contributor"
     email_address = db.Column(db.String, nullable=False, primary_key=True)
