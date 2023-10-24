@@ -55,9 +55,16 @@ class DatasetList(Resource):
         if not is_granted("add_dataset", study):
             return "Access denied, you can not modify", 403
         # todo if study.participant id== different study Throw error
-        # data: typing.Union[typing.Any, dict] = request.json
+        data: typing.Union[typing.Any, dict] = request.json
         dataset_ = model.Dataset.from_data(study)
         model.db.session.add(dataset_)
+
+        title_element = model.DatasetTitle.query.filter_by(dataset_id=dataset_.id).first()
+        title_element.title = data["title"]
+
+        description_element = model.DatasetDescription.query.filter_by(dataset_id=dataset_.id).first()
+        description_element.description = data["description"]
+
         model.db.session.commit()
         return dataset_.to_dict()
 

@@ -23,6 +23,9 @@ class Dataset(db.Model):  # type: ignore
         self.dataset_readme = model.DatasetReadme(self)
         self.dataset_other = model.DatasetOther(self)
 
+        self.dataset_title.append(model.DatasetTitle(self))
+        self.dataset_description.append(model.DatasetDescription(self))
+
     __tablename__ = "dataset"
     id = db.Column(db.CHAR(36), primary_key=True)
     updated_on = db.Column(db.BigInteger, nullable=False)
@@ -44,7 +47,6 @@ class Dataset(db.Model):  # type: ignore
         lazy="dynamic",
         cascade="all, delete",
     )
-
     dataset_access = db.relationship(
         "DatasetAccess",
         back_populates="dataset",
@@ -118,6 +120,7 @@ class Dataset(db.Model):  # type: ignore
             "created_at": self.created_at,
             # "dataset_versions": [i.to_dict() for i in self.dataset_versions],
             "latest_version": last_published.id if last_published else None,
+            # "title": self.dataset_title.title if self.dataset_title else ""
         }
 
     def last_published(self):
@@ -141,4 +144,3 @@ class Dataset(db.Model):  # type: ignore
     def update(self):
         """Creates a new dataset from a dictionary"""
         self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
-        # self.dataset_versions = data["dataset_versions"]

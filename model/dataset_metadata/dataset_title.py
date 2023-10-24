@@ -10,7 +10,8 @@ class DatasetTitle(db.Model):  # type: ignore
         self.id = str(uuid.uuid4())
         self.dataset = dataset
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
-
+        self.title = ""
+        self.type = "MainTitle"
     __tablename__ = "dataset_title"
     id = db.Column(db.CHAR(36), primary_key=True)
     title = db.Column(db.String, nullable=False)
