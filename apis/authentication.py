@@ -50,7 +50,7 @@ class SignUpUser(Resource):
         """signs up the new users and saves data in DB"""
         data: Union[Any, dict] = request.json
         invite = model.StudyInvitedContributor.query.filter_by(
-           email_address=data["email_address"]
+            email_address=data["email_address"]
         ).one_or_none()
         if not invite:
             return "You are not validated", 403

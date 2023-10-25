@@ -203,6 +203,7 @@ class PublishResource(Resource):
         model.db.session.commit()
         return dataset_versions.to_dict()
 
+
 #
 # @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/dataset-metadata")
 # class VersionStudyMetadataResource(Resource):

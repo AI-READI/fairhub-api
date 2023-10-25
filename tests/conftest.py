@@ -66,7 +66,7 @@ def _create_user(_test_client):
             json={
                 "email_address": "sample@gmail.com",
                 "password": "Testingyeshello11!",
-                "code": "7654321"
+                "code": "7654321",
             },
         )
 
