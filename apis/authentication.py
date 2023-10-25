@@ -31,7 +31,7 @@ login_model = api.model(
     {
         "email_address": fields.String(required=True, default=""),
         "password": fields.String(required=True, default=""),
-        "token": fields.String(required=True, default="")
+        "token": fields.String(required=True, default=""),
     },
 )
 
@@ -110,7 +110,6 @@ class SignUpUser(Resource):
                     "format": "password",
                 },
                 "code": {"type": "string"},
-
             },
         }
 
