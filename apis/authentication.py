@@ -23,6 +23,8 @@ signup_model = api.model(
     {
         "email_address": fields.String(required=True, default="sample@gmail.com"),
         "password": fields.String(required=True, default=""),
+        "code": fields.String(required=True, default=""),
+
     },
 )
 
@@ -31,7 +33,6 @@ login_model = api.model(
     {
         "email_address": fields.String(required=True, default=""),
         "password": fields.String(required=True, default=""),
-        "token": fields.String(required=True, default=""),
     },
 )
 
