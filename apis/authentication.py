@@ -31,6 +31,7 @@ login_model = api.model(
     {
         "email_address": fields.String(required=True, default=""),
         "password": fields.String(required=True, default=""),
+        "token": fields.String(required=True, default="")
     },
 )
 
@@ -48,6 +49,13 @@ class SignUpUser(Resource):
     def post(self):
         """signs up the new users and saves data in DB"""
         data: Union[Any, dict] = request.json
+        tokens = model.StudyInvitedContributor.query.filter_by(
+            token=data["code"], email_address=data["email_address"]
+        ).one_or_none()
+        if not tokens:
+            return "You are not validated", 403
+        if tokens.token != data["code"]:
+            return "signup code does not match", 403
 
         def validate_is_valid_email(instance):
             # Turn on check_deliverability
@@ -93,7 +101,7 @@ class SignUpUser(Resource):
         # Schema validation
         schema = {
             "type": "object",
-            "required": ["email_address", "password"],
+            "required": ["email_address", "password", "code"],
             "additionalProperties": False,
             "properties": {
                 "email_address": {"type": "string", "format": "valid_email"},
@@ -101,6 +109,8 @@ class SignUpUser(Resource):
                     "type": "string",
                     "format": "password",
                 },
+                "code": {"type": "string"},
+
             },
         }
 
@@ -121,6 +131,7 @@ class SignUpUser(Resource):
         invitations = model.StudyInvitedContributor.query.filter_by(
             email_address=data["email_address"]
         ).all()
+
         new_user = model.User.from_data(data)
         for invite in invitations:
             invite.study.add_user_to_study(new_user, invite.permission)
