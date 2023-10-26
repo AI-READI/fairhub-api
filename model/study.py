@@ -27,6 +27,8 @@ class Study(db.Model):  # type: ignore
         self.study_ipdsharing = model.StudyIpdsharing(self)
         self.study_description = model.StudyDescription(self)
         self.study_identification.append(model.StudyIdentification(self, False))
+        # NOTE: this has not been tested yet
+        self.study_redcap = model.StudyRedcap(self)
 
         self.study_other = model.StudyOther(self)
         # self.study_contributors = model.StudyContributor(self)
@@ -98,6 +100,12 @@ class Study(db.Model):  # type: ignore
         "StudyIdentification",
         back_populates="study",
         cascade="all, delete",
+    )
+    #NOTE: This has not been tested yet
+    study_redcap = db.relationship(
+        "StudyRedcap",
+        back_populates = "study",
+        cascade="all, delete"
     )
     study_intervention = db.relationship(
         "StudyIntervention",

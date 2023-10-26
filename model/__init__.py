@@ -53,6 +53,7 @@ from .user import User
 from .user_details import UserDetails
 from .version import Version
 from .version_readme import VersionReadme
+from .study_redcap import StudyRedcap
 
 __all__ = [
     "Study",
@@ -106,4 +107,5 @@ __all__ = [
     "UserDetails",
     "Notification",
     "VersionReadme",
+    "StudyRedcap",
 ]

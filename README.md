@@ -90,16 +90,31 @@ If you would like to update the api, please follow the instructions below.
 The api uses a postgres database. You can run a postgres database locally using docker:
 
 ```bash
-docker-compose -f ./db-docker-compose.yml up
+docker-compose -f ./db-docker-compose.yaml up
 ```
 
 Close the database with:
 
 ```bash
-docker-compose -f ./db-docker-compose.yml down -v
+docker-compose -f ./db-docker-compose.yaml down -v
 ```
 
 This database will not persist data between runs.
+
+### Caching
+
+The api uses a redis cache. You can run a redis cache locally using docker, too:
+```bash
+docker-compose -f ./cache-docker-compose.yaml up
+```
+
+Shut down the cache with:
+
+```bash
+docker-compose -f ./cache-docker-compose.yaml down -v
+```
+
+Like the database, the cache will not persist between runs.
 
 ### API
 

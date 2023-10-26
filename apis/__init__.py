@@ -3,6 +3,7 @@ from flask_restx import Api, Resource
 
 from apis.dataset_metadata_namespace import api as dataset_metadata_namespace
 from apis.study_metadata_namespace import api as study_metadata_namespace
+from apis.redcap_data_namespace import api as redcap_data_namespace
 
 from .authentication import api as authentication
 from .contributor import api as contributors_api
@@ -41,6 +42,12 @@ from .study_metadata.study_reference import api as reference
 from .study_metadata.study_sponsors_collaborators import api as sponsors_collaborator
 from .study_metadata.study_status import api as status
 from .user import api as user
+from .redcap import api as redcap
+from .redcap_data.redcap_project_data import api as redcap_project_data
+from .redcap_data.redcap_report_participants_data import api as redcap_report_participants_data
+from .redcap_data.redcap_report_participant_values_data import api as redcap_report_participants_values_data
+from .redcap_data.redcap_report_repeat_surveys_data import api as redcap_report_repeat_surveys_data
+from .redcap_data.redcap_report_survey_completions_data import api as redcap_report_survey_completions_data
 
 api = Api(
     title="FAIRHUB",
@@ -51,6 +58,7 @@ api = Api(
 __all__ = [
     "dataset_metadata_namespace",
     "study_metadata_namespace",
+    "redcap_data_namespace",
     "authentication",
     "contributors_api",
     "dataset_api",
@@ -89,11 +97,18 @@ __all__ = [
     "identification",
     "study_description",
     "dataset_contributor",
+    "redcap",
+    "redcap_project_data",
+    "redcap_report_participants_data",
+    "redcap_report_participants_values_data",
+    "redcap_report_repeat_surveys_data",
+    "redcap_report_survey_completions_data",
 ]
 
 
 api.add_namespace(dataset_metadata_namespace)
 api.add_namespace(study_metadata_namespace)
+api.add_namespace(redcap_data_namespace)
 api.add_namespace(authentication)
 
 
@@ -112,3 +127,5 @@ api.add_namespace(dataset_api)
 api.add_namespace(participants_api)
 api.add_namespace(contributors_api)
 api.add_namespace(user)
+api.add_namespace(redcap)
+

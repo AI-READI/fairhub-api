@@ -31,7 +31,7 @@ classifiers = [
 
 
 [tool.poetry.dependencies]
-python = "^3.8.16"
+python = ">=3.10.12,<3.13"
 
 Flask = "^2.3.2"
 Flask-Cors = "^4.0.0"
@@ -53,6 +53,11 @@ python-dotenv = "^1.0.0"
 flask-bcrypt = "^1.0.1"
 pyjwt = "^2.8.0"
 email-validator = "^2.0.0.post2"
+flask-caching = "^2.1.0"
+pycap = "^2.4.0"
+redis = "^5.0.1"
+numpy = "^1.26.1"
+pandas = "^2.1.1"
 
 
 [tool.poetry.group.dev.dependencies]
