@@ -22,7 +22,7 @@ class StudyInvitedContributor(db.Model):  # type: ignore
     email_address = db.Column(db.String, nullable=False, primary_key=True)
     permission = db.Column(db.String, nullable=False)
     invited_on = db.Column(db.BigInteger, nullable=False)
-    token = db.Column(db.String, nullable=True)
+    token = db.Column(db.String, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
 
     study_id = db.Column(

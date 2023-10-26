@@ -215,5 +215,5 @@ class VersionList(Resource):
 #         study = model.Study.query.get(study_id)
 #         if not is_granted("dataset", study):
 #             return "Access denied, you can not modify", 403
-#
+#     version = dataset.dataset_version.get(version_id)
 #         pass
