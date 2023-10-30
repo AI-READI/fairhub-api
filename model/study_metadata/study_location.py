@@ -44,6 +44,14 @@ class StudyLocation(db.Model):  # type: ignore
             "created_at": self.created_at,
         }
 
+    def to_dict_metadata(self):
+        """Converts the study metadata to a dictionary"""
+        return {
+            "facility": self.facility,
+            "city": self.city,
+            "country": self.country,
+        }
+
     @staticmethod
     def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""

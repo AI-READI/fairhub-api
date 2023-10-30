@@ -172,6 +172,26 @@ class Study(db.Model):  # type: ignore
             "role": contributor_permission.to_dict()["role"],
         }
 
+    def to_dict_study_metadata(self):
+        return{
+            "study_arm": [i.to_dict_metadata() for i in self.study_arm],
+            "study_available_ipd": [i.to_dict_metadata() for i in self.study_available_ipd],
+            "study_contact": [i.to_dict_metadata() for i in self.study_contact],
+            "study_description": self.study_description.to_dict_metadata(),
+            "study_design": self.study_design.to_dict_metadata(),
+            "study_eligibility": self.study_eligibility.to_dict_metadata(),
+            "study_identification": [i.to_dict_metadata() for i in self.study_identification],
+            "study_intervention": [i.to_dict_metadata() for i in self.study_intervention],
+            "study_ipdsharing": self.study_ipdsharing.to_dict_metadata(),
+            "study_link": [i.to_dict_metadata() for i in self.study_link],
+            "study_location": [i.to_dict_metadata() for i in self.study_location],
+            "study_other": self.study_other.to_dict_metadata(),
+            "study_overall_official": [i.to_dict_metadata() for i in self.study_overall_official],
+            "study_reference": [i.to_dict_metadata() for i in self.study_reference],
+            "study_sponsors": self.study_sponsors_collaborators.to_dict_metadata(),
+            "study_status": self.study_status.to_dict_metadata()
+        }
+
     @staticmethod
     def from_data(data: dict):
         """Creates a new study from a dictionary"""

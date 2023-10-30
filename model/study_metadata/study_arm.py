@@ -43,6 +43,13 @@ class StudyArm(db.Model):  # type: ignore
             "created_at": self.created_at,
         }
 
+    def to_dict_metadata(self):
+        """Converts the study metadata to a dictionary"""
+        return {
+            "label": self.label,
+            "description": self.description,
+        }
+
     @staticmethod
     def from_data(study: model.Study, data: dict):
         """Creates a new study from a dictionary"""
