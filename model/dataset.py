@@ -126,28 +126,37 @@ class Dataset(db.Model):  # type: ignore
     def to_dict_dataset_metadata(self):
         return {
             "contributors": [
-                i.to_dict_metadata() for i in self.dataset_contributors  # type: ignore
+                i.to_dict_metadata()
+                for i in self.dataset_contributors  # type: ignore
             ],
             "access": self.dataset_access.to_dict_metadata(),
             "consent": self.dataset_consent.to_dict_metadata(),
-            "date": [i.to_dict_metadata() for i in self.dataset_date],  # type: ignore
-            "de_ident_level": self.dataset_de_ident_level.to_dict_metadata(),
+            "date": [i.to_dict_metadata() for
+                     i in self.dataset_date],  # type: ignore
+            "de_ident_level":
+                self.dataset_de_ident_level.to_dict_metadata(),
             "description": [
-                i.to_dict_metadata() for i in self.dataset_description  # type: ignore
+                i.to_dict_metadata() for
+                i in self.dataset_description  # type: ignore
             ],
-            " funder": [i.to_dict_metadata() for i in self.dataset_funder],  # type: ignore
+            " funder": [i.to_dict_metadata() for
+                        i in self.dataset_funder],  # type: ignore
             "alternate identifier": [
-                i.to_dict_metadata() for i in self.dataset_alternate_identifier  # type: ignore
+                i.to_dict_metadata() for
+                i in self.dataset_alternate_identifier  # type: ignore
             ],
-            "other": self.dataset_other.to_dict_metadata(),
+            "publisher": self.dataset_other.to_dict_publisher(),
             "record keys": self.dataset_record_keys.to_dict_metadata(),
             "related item": [
-                i.to_dict_metadata() for i in self.dataset_related_item  # type: ignore
+                i.to_dict_metadata() for i
+                in self.dataset_related_item  # type: ignore
             ],
-            "rights": [i.to_dict_metadata() for i in self.dataset_rights],  # type: ignore
-            "subjects": [i.to_dict_metadata() for i in self.dataset_subject],  # type: ignore
-            "title": [i.to_dict_metadata() for i in self.dataset_title],  # type: ignore
-            "publisher": [i.to_dict_publisher() for i in self.dataset_other],  # type: ignore
+            "rights": [i.to_dict_metadata() for
+                       i in self.dataset_rights],  # type: ignore
+            "subjects": [i.to_dict_metadata() for
+                         i in self.dataset_subject],  # type: ignore
+            "title": [i.to_dict_metadata() for
+                      i in self.dataset_title],  # type: ignore
         }
 
     def last_published(self):

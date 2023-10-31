@@ -175,29 +175,39 @@ class Study(db.Model):  # type: ignore
     def to_dict_study_metadata(self):
         # self.study_contact: Iterable = []
         return {
-            "arms": [i.to_dict_metadata() for i in self.study_arm],  # type: ignore
+            "arms": [i.to_dict_metadata() for
+                     i in self.study_arm],  # type: ignore
             "available ipd": [
-                i.to_dict_metadata() for i in self.study_available_ipd  # type: ignore
+                i.to_dict_metadata() for i
+                in self.study_available_ipd  # type: ignore
             ],
-            "contacts": [i.to_dict_metadata() for i in self.study_contact],  # type: ignore
+            "contacts": [i.to_dict_metadata()
+                         for i in self.study_contact],  # type: ignore
             "description": self.study_description.to_dict_metadata(),
             "design": self.study_design.to_dict_metadata(),
             "eligibility": self.study_eligibility.to_dict_metadata(),
             "identification": [
-                i.to_dict_metadata() for i in self.study_identification  # type: ignore
+                i.to_dict_metadata() for
+                i in self.study_identification  # type: ignore
             ],
             "intervention": [
-                i.to_dict_metadata() for i in self.study_intervention  # type: ignore
+                i.to_dict_metadata() for
+                i in self.study_intervention  # type: ignore
             ],
             "ipdsharing": self.study_ipdsharing.to_dict_metadata(),
-            "links": [i.to_dict_metadata() for i in self.study_link],  # type: ignore
-            "location": [i.to_dict_metadata() for i in self.study_location],  # type: ignore
+            "links": [i.to_dict_metadata() for
+                      i in self.study_link],  # type: ignore
+            "location": [i.to_dict_metadata() for
+                         i in self.study_location],  # type: ignore
             "overall_official": [
-                i.to_dict_metadata() for i in self.study_overall_official  # type: ignore
+                i.to_dict_metadata() for
+                i in self.study_overall_official  # type: ignore
             ],
-            "references": [i.to_dict_metadata() for i in self.study_reference],  # type: ignore
+            "references": [i.to_dict_metadata() for
+                           i in self.study_reference],  # type: ignore
             "sponsors": self.study_sponsors_collaborators.to_dict_metadata(),
-            "collaborators": self.study_sponsors_collaborators.collaborator_name,
+            "collaborators":
+                self.study_sponsors_collaborators.collaborator_name,
             "status": self.study_status.to_dict_metadata(),
             "oversight": self.study_other.oversight_has_dmc,
             "conditions": self.study_other.conditions,
