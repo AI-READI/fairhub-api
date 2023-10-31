@@ -113,15 +113,24 @@ class Dataset(db.Model):  # type: ignore
 
     def to_dict(self):
         last_published = self.last_published()
-        # last_modified = self.last_modified()
+        [print(type(i.title)) for i in self.dataset_title]
+        description = []
+        title = []
+        for i in self.dataset_description:
+            if i.description:
+                description.append(i.description)
+        for i in self.dataset_title:
+            if i.title:
+                title.append(i.title)
+                return {
+                    "id": self.id,
+                    "created_at": self.created_at,
 
-        return {
-            "id": self.id,
-            "created_at": self.created_at,
-            # "dataset_versions": [i.to_dict() for i in self.dataset_versions],
-            "latest_version": last_published.id if last_published else None,
-            # "title": self.dataset_title.title if self.dataset_title else ""
-        }
+                    # "dataset_versions": [i.to_dict() for i in self.dataset_versions],
+                    "latest_version": last_published.id if last_published else None,
+                    "title": "".join(title),
+                    "description": "".join(description),
+            }
 
     def to_dict_dataset_metadata(self):
         return {

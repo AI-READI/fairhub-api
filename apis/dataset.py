@@ -32,6 +32,8 @@ dataset = api.model(
         "created_at": fields.String(required=True),
         "dataset_versions": fields.Nested(dataset_versions_model, required=True),
         "latest_version": fields.String(required=True),
+        "title": fields.String(required=True),
+        "description": fields.String(required=True),
     },
 )
 
