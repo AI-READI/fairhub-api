@@ -43,7 +43,6 @@ class StudyLink(db.Model):  # type: ignore
             "url": self.url,
         }
 
-
     @staticmethod
     def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""

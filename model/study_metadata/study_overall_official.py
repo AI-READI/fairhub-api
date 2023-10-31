@@ -40,11 +40,7 @@ class StudyOverallOfficial(db.Model):  # type: ignore
 
     def to_dict_metadata(self):
         """Converts the study metadata to a dictionary"""
-        return {
-            "name": self.name,
-            "role": self.role
-
-        }
+        return {"name": self.name, "role": self.role}
 
     @staticmethod
     def from_data(study: Study, data: dict):

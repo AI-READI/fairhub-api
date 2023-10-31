@@ -54,7 +54,7 @@ class StudyContact(db.Model):  # type: ignore
             "name": self.name,
             "affiliation": self.affiliation,
             "phone": self.phone,
-            "email_address": self.email_address
+            "email_address": self.email_address,
         }
 
     @staticmethod

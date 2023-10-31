@@ -44,7 +44,7 @@ class StudyOther(db.Model):  # type: ignore
         """Converts the study metadata to a dictionary"""
         return {
             "oversight_has_dmc": self.oversight_has_dmc,
-            "conditions": self.conditions
+            "conditions": self.conditions,
         }
 
     @staticmethod

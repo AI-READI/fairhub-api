@@ -42,10 +42,7 @@ class StudyAvailableIpd(db.Model):  # type: ignore
 
     def to_dict_metadata(self):
         """Converts the study metadata to a dictionary"""
-        return {
-            "identifier": self.identifier,
-            "url": self.url
-        }
+        return {"identifier": self.identifier, "url": self.url}
 
     @staticmethod
     def from_data(study: model.StudyArm, data: dict):

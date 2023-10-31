@@ -92,7 +92,7 @@ class StudyDesign(db.Model):  # type: ignore
             "number_arms": self.number_arms,
             "enrollment_count": self.enrollment_count,
             "design_primary_purpose": self.design_primary_purpose,
-            "who_masked": self.design_who_masked_list
+            "who_masked": self.design_who_masked_list,
         }
 
     @staticmethod
