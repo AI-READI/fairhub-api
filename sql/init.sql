@@ -931,6 +931,46 @@ INSERT INTO "version_participants" ("dataset_version_id", "participant_id") VALU
 	('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000001');
 /*!40000 ALTER TABLE "version_participants" ENABLE KEYS */;
 
+-- Dumping structure for table public.study_redcap_project_api
+CREATE TABLE IF NOT EXISTS "study_redcap_project_api" (
+	"study_id" CHAR(36) NOT NULL,
+	"project_id" BIGINT NOT NULL,
+	"project_title" VARCHAR NOT NULL,
+	"project_api_url" VARCHAR NOT NULL,
+	"project_api_key" CHAR(32) NOT NULL,
+	"created_at" BIGINT NOT NULL,
+	"updated_on" BIGINT NOT NULL,
+	PRIMARY KEY ("study_id", "project_id"),
+	CONSTRAINT "study_redcap_project_api_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping data for table public.study_redcap_project_api: 1 rows
+/*!40000 ALTER TABLE "study_redcap_project_api" DISABLE KEYS */;
+INSERT INTO "study_redcap_project_api" ("study_id", "project_id", "project_title", "project_api_url", "project_api_key", "created_at", "updated_on") VALUES
+	('00000000-0000-0000-0000-000000000006', '666666', 'other-stuff', 'https://redcap.university.org/api', '0000000000000000AAAAAAAAAAAAAAA6', '2023-08-13 16:23:48', '2023-08-14 16:23:49');
+/*!40000 ALTER TABLE "study_redcap_project_api" ENABLE KEYS */;
+
+-- Dumping structure for table public.study_redcap_project_dashboard
+CREATE TABLE IF NOT EXISTS "study_redcap_project_dashboard" (
+	"study_id" CHAR(36) NOT NULL,
+	"project_id" BIGINT NOT NULL,
+	"dashboard_id" CHAR(36) NOT NULL,
+	"dashboard_name" VARCHAR NOT NULL,
+	"dashboard_modules" UNKNOWN NOT NULL,
+	"created_at" BIGINT NOT NULL,
+	"updated_on" BIGINT NOT NULL,
+	PRIMARY KEY ("study_id", "project_id", "dashboard_id"),
+	CONSTRAINT "study_redcap_project_dashboard_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT "study_redcap_project_dashboard_project_id_fkey" FOREIGN KEY ("project_id") REFERENCES "study_redcap_project_api" ("project_id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping data for table public.study_redcap_project_dashboard: 1 rows
+/*!40000 ALTER TABLE "study_redcap_project_dashboard" DISABLE KEYS */;
+INSERT INTO "study_redcap_project_dashboard" ("study_id", "project_id", "dashboard_id", "dashboard_name", "dashboard_modules", "created_at", "updated_on") VALUES
+	('00000000-0000-0000-0000-000000000006', '666666', '00000000-0000-0000-0000-000000000006', 'other-stuff', '{}', '2023-08-13 16:23:48', '2023-08-14 16:23:49');
+/*!40000 ALTER TABLE "study_redcap_project_dashboard" ENABLE KEYS */;
+
+
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;

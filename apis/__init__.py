@@ -2,8 +2,8 @@
 from flask_restx import Api, Resource
 
 from apis.dataset_metadata_namespace import api as dataset_metadata_namespace
-from apis.study_metadata_namespace import api as study_metadata_namespace
 from apis.redcap_data_namespace import api as redcap_data_namespace
+from apis.study_metadata_namespace import api as study_metadata_namespace
 
 from .authentication import api as authentication
 from .contributor import api as contributors_api
@@ -24,6 +24,20 @@ from .dataset_metadata.dataset_rights import api as rights
 from .dataset_metadata.dataset_subject import api as subject
 from .dataset_metadata.dataset_title import api as title
 from .participant import api as participants_api
+from .redcap import api as redcap
+from .redcap_data.redcap_project_data import api as redcap_project_data
+from .redcap_data.redcap_report_participant_values_data import (
+    api as redcap_report_participants_values_data,
+)
+from .redcap_data.redcap_report_participants_data import (
+    api as redcap_report_participants_data,
+)
+from .redcap_data.redcap_report_repeat_surveys_data import (
+    api as redcap_report_repeat_surveys_data,
+)
+from .redcap_data.redcap_report_survey_completions_data import (
+    api as redcap_report_survey_completions_data,
+)
 from .study import api as study_api
 from .study_metadata.study_arm import api as arm
 from .study_metadata.study_available_ipd import api as available_ipd
@@ -42,12 +56,6 @@ from .study_metadata.study_reference import api as reference
 from .study_metadata.study_sponsors_collaborators import api as sponsors_collaborator
 from .study_metadata.study_status import api as status
 from .user import api as user
-from .redcap import api as redcap
-from .redcap_data.redcap_project_data import api as redcap_project_data
-from .redcap_data.redcap_report_participants_data import api as redcap_report_participants_data
-from .redcap_data.redcap_report_participant_values_data import api as redcap_report_participants_values_data
-from .redcap_data.redcap_report_repeat_surveys_data import api as redcap_report_repeat_surveys_data
-from .redcap_data.redcap_report_survey_completions_data import api as redcap_report_survey_completions_data
 
 api = Api(
     title="FAIRHUB",
@@ -128,4 +136,3 @@ api.add_namespace(participants_api)
 api.add_namespace(contributors_api)
 api.add_namespace(user)
 api.add_namespace(redcap)
-

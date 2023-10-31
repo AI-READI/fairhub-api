@@ -62,7 +62,6 @@ class Study(db.Model):  # type: ignore
         lazy="dynamic",
         cascade="all, delete",
     )
-
     study_arm = db.relationship(
         "StudyArm",
         back_populates="study",
@@ -101,11 +100,13 @@ class Study(db.Model):  # type: ignore
         back_populates="study",
         cascade="all, delete",
     )
-    #NOTE: This has not been tested yet
-    study_redcap = db.relationship(
-        "StudyRedcap",
-        back_populates = "study",
-        cascade="all, delete"
+    # NOTE: Has not been tested
+    study_redcap_project_apis = db.relationship(
+        "StudyRedcapProjectApi", back_populates="study", cascade="all, delete"
+    )
+    # NOTE: Has not been tested
+    study_redcap_project_dashboards = db.relationship(
+        "StudyRedcapProjectDashboard", back_populates="study", cascade="all, delete"
     )
     study_intervention = db.relationship(
         "StudyIntervention",

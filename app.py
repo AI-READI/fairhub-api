@@ -8,21 +8,22 @@ from datetime import timezone
 import jwt
 from flask import Flask, request
 from flask_bcrypt import Bcrypt
-from flask_cors import CORS
 from flask_caching import Cache
+from flask_cors import CORS
 from sqlalchemy import MetaData
 
 import config
 import model
 import modules
-from caching import create_cache
 from apis import api
 from apis.authentication import UnauthenticatedException, authentication, authorization
 from apis.exception import ValidationException
+from caching import create_cache
 
 # from pyfairdatatools import __version__
 
 bcrypt = Bcrypt()
+
 
 def create_app(config_module=None):
     """Initialize the core application."""

@@ -303,6 +303,7 @@ def is_granted(permission: str, study=None):
             "study_metadata",
             "dataset_metadata",
             "make_owner",
+            # "redcap_access",
         ],
         "admin": [
             "admin",
@@ -320,6 +321,7 @@ def is_granted(permission: str, study=None):
             "participant",
             "study_metadata",
             "dataset_metadata",
+            # "redcap_access",
         ],
         "editor": [
             "editor",
@@ -333,6 +335,7 @@ def is_granted(permission: str, study=None):
             "study_metadata",
             "version",
             "dataset_metadata",
+            # "redcap_access",
         ],
         "viewer": ["viewer", "view"],
     }

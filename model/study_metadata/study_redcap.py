@@ -43,7 +43,7 @@ class StudyRedcap(db.Model):  # type: ignore
             "redcap_report_id_survey_completions": self.redcap_report_id_survey_completions,
             "redcap_report_id_repeat_surveys": self.redcap_report_id_repeat_surveys,
             "redcap_report_id_participant_values": self.redcap_report_id_participant_values,
-            "redcap_report_id_participants": self.redcap_report_id_participants
+            "redcap_report_id_participants": self.redcap_report_id_participants,
         }
 
     @staticmethod
@@ -59,9 +59,13 @@ class StudyRedcap(db.Model):  # type: ignore
         self.redcap_api_token = data["redcap_api_token"]
         self.redcap_api_url = data["redcap_api_url"]
         self.redcap_project_id = data["redcap_project_id"]
-        self.redcap_report_id_survey_completions = data["redcap_report_id_survey_completions"]
+        self.redcap_report_id_survey_completions = data[
+            "redcap_report_id_survey_completions"
+        ]
         self.redcap_report_id_repeat_surveys = data["redcap_report_id_repeat_surveys"]
-        self.redcap_report_id_participant_values = data["redcap_report_id_participant_values"]
+        self.redcap_report_id_participant_values = data[
+            "redcap_report_id_participant_values"
+        ]
         self.redcap_report_id_participants = data["redcap_report_id_participants"]
         self.study.touch()
 

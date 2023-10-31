@@ -48,12 +48,13 @@ from .study_metadata.study_overall_official import StudyOverallOfficial
 from .study_metadata.study_reference import StudyReference
 from .study_metadata.study_sponsors_collaborators import StudySponsorsCollaborators
 from .study_metadata.study_status import StudyStatus
+from .study_redcap_project_api import StudyRedcapProjectApi
+from .study_redcap_project_dashboard import StudyRedcapProjectDashboard
 from .token_blacklist import TokenBlacklist
 from .user import User
 from .user_details import UserDetails
 from .version import Version
 from .version_readme import VersionReadme
-from .study_redcap import StudyRedcap
 
 __all__ = [
     "Study",
@@ -95,6 +96,8 @@ __all__ = [
     "StudyLocation",
     "StudyOther",
     "StudyOverallOfficial",
+    "StudyRedcapProjectApi",
+    "StudyRedcapProjectDashboard",
     "StudyReference",
     "StudySponsorsCollaborators",
     "StudyStatus",
@@ -107,5 +110,4 @@ __all__ = [
     "UserDetails",
     "Notification",
     "VersionReadme",
-    "StudyRedcap",
 ]
