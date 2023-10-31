@@ -1,4 +1,5 @@
 import datetime
+import random
 import uuid
 
 from .db import db
@@ -15,13 +16,13 @@ class StudyInvitedContributor(db.Model):  # type: ignore
         self.invited_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
         self.email_address = email_address
         self.created_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
-        self.token = ""
+        self.token = random.randint(10 ** (7 - 1), (10**7) - 1)
 
     __tablename__ = "invited_study_contributor"
     email_address = db.Column(db.String, nullable=False, primary_key=True)
     permission = db.Column(db.String, nullable=False)
     invited_on = db.Column(db.BigInteger, nullable=False)
-    token = db.Column(db.String, nullable=True)
+    token = db.Column(db.String, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
 
     study_id = db.Column(

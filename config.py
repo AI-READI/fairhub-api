@@ -1,5 +1,9 @@
 """Configuration for the application."""
 from os import environ
+from dotenv import load_dotenv
+
+# Load environment variables from .env
+load_dotenv(".env")
 
 from dotenv import load_dotenv
 load_dotenv(".env")
