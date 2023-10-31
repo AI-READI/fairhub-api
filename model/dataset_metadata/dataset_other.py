@@ -44,6 +44,11 @@ class DatasetOther(db.Model):  # type: ignore
             "resource_type": self.resource_type,
         }
 
+    def to_dict_publisher(self):
+        return {
+            "managing_organization_name": self.managing_organization_name,
+        }
+
     @staticmethod
     def from_data(dataset, data: dict):
         dataset_other = DatasetOther(dataset)

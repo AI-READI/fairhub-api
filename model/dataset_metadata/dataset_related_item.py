@@ -52,7 +52,6 @@ class DatasetRelatedItem(db.Model):  # type: ignore
             key=lambda creator: creator.created_at,
         )
         creators = [c for c in sorted_contributors if c.creator]
-
         contributors = [c for c in sorted_contributors if not c.creator]
         return {
             "id": self.id,
@@ -95,6 +94,11 @@ class DatasetRelatedItem(db.Model):  # type: ignore
                 i.to_dict()
                 for i in self.dataset_related_item_identifier  # type: ignore
             ],
+        }
+
+    def to_dict_metadata(self):
+        return {
+            "relation_type": self.relation_type,
         }
 
     @staticmethod

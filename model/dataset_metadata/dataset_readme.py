@@ -19,6 +19,11 @@ class DatasetReadme(db.Model):  # type: ignore
             "content": self.content,
         }
 
+    def to_dict_metadata(self):
+        return {
+            "content": self.content,
+        }
+
     @staticmethod
     def from_data(dataset, data: dict):
         dataset_readme = DatasetReadme(dataset)

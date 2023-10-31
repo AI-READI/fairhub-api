@@ -38,6 +38,11 @@ class DatasetDeIdentLevel(db.Model):  # type: ignore
             "details": self.details,
         }
 
+    def to_dict_metadata(self):
+        return {
+            "direct": self.direct,
+        }
+
     @staticmethod
     def from_data(dataset, data: dict):
         dataset_de_ident_level = DatasetDeIdentLevel(dataset)

@@ -204,7 +204,9 @@ class VersionList(Resource):
 #         return dataset_versions.to_dict()
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/dataset-metadata")
+@api.route(
+    "/study/<study_id>/dataset/<dataset_id>/version/<version_id>/dataset-metadata"
+)
 class VersionStudyMetadataResource(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
@@ -213,13 +215,14 @@ class VersionStudyMetadataResource(Resource):
         study = model.Study.query.get(study_id)
         if not is_granted("version", study):
             return "Access denied, you can not modify", 403
-        version = (model.Version.query.filter_by
-                   (id=version_id, dataset_id=dataset_id).one_or_none())
+        version = model.Version.query.filter_by(
+            id=version_id, dataset_id=dataset_id
+        ).one_or_none()
         return version.dataset.to_dict_dataset_metadata()
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/study-metadata")
-class VersionStudyMetadataResource(Resource):
+class VersionDatasetMetadataResource(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
     @api.doc("version study metadata get")
@@ -227,7 +230,7 @@ class VersionStudyMetadataResource(Resource):
         study = model.Study.query.get(study_id)
         if not is_granted("version", study):
             return "Access denied, you can not modify", 403
-        version = (model.Version.query.filter_by
-                   (id=version_id, dataset_id=dataset_id).one_or_none())
+        version = model.Version.query.filter_by(
+            id=version_id, dataset_id=dataset_id
+        ).one_or_none()
         return version.dataset.study.to_dict_study_metadata()
-

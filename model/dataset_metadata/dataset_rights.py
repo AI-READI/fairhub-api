@@ -33,6 +33,11 @@ class DatasetRights(db.Model):  # type: ignore
             "created_at": self.created_at,
         }
 
+    def to_dict_metadata(self):
+        return {
+            "rights": self.rights,
+        }
+
     @staticmethod
     def from_data(dataset, data: dict):
         dataset_rights = DatasetRights(dataset)

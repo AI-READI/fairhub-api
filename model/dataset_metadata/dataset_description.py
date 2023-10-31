@@ -30,6 +30,12 @@ class DatasetDescription(db.Model):  # type: ignore
             "created_at": self.created_at,
         }
 
+    def to_dict_metadata(self):
+        return {
+            "id": self.id,
+            "description": self.description,
+        }
+
     @staticmethod
     def from_data(dataset, data: dict):
         dataset_description = DatasetDescription(dataset)
