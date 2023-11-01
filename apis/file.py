@@ -1,12 +1,11 @@
 """APIs for study files"""
-import datetime
 import importlib
 import os
 import uuid
+from datetime import datetime, timezone
 from urllib.parse import quote
 
 import requests
-from dateutil import tz
 from flask_restx import Namespace, Resource, reqparse
 
 api = Namespace("File", description="File operations", path="/")
@@ -47,9 +46,7 @@ class Files(Resource):
 
         storage_account_name = config.FAIRHUB_AZURE_STORAGE_ACCOUNT_NAME
         storage_account_sas_token = config.FAIRHUB_AZURE_READ_SAS_TOKEN
-        request_time = datetime.datetime.now(datetime.timezone.utc).strftime(
-            "%a, %d %b %Y %H:%M:%S GMT"
-        )
+        request_time = datetime.now(timezone.utc).strftime("%a, %d %b %Y %H:%M:%S GMT")
 
         container = "pooled-data-pilot"  # todo: this should be the study id
 
@@ -90,19 +87,20 @@ class Files(Resource):
                 data = {
                     "id": str(uuid.uuid4()),
                     "content_length": file["contentLength"],
-                    "created_at": file["creationTime"],
+                    # "created_at": file["creationTime"],
                     "name": file["name"],
                     "is_directory": bool("isDirectory" in file and file["isDirectory"]),
+                    "last_modified": file["lastModified"],
                 }
 
                 # convert lastModified to unix timestamp
                 if "lastModified" in file:
                     date_string = file["lastModified"]
-                    date_object = datetime.datetime.strptime(
+                    date_object = datetime.strptime(
                         date_string, "%a, %d %b %Y %H:%M:%S %Z"
                     )
-                    utc_timestamp = date_object.replace(tzinfo=tz.tzutc()).timestamp()
-                    data["updated_on"] = utc_timestamp
+
+                    data["updated_on"] = int(date_object.timestamp())
 
                 paths.append(data)
 
