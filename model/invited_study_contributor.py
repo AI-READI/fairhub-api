@@ -1,7 +1,7 @@
 import datetime
+import random
 import uuid
 
-import random
 from .db import db
 from .study import Study
 
