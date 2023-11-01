@@ -2,7 +2,6 @@
 import datetime
 import importlib
 import os
-
 from urllib.parse import quote
 
 import requests
@@ -23,7 +22,7 @@ class Files(Resource):
     @api.param("path", "The folder path on the file system")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def get(self, study_id):
+    def get(self, study_id):  # pylint: disable=unused-argument
         """Return a list of all files for a study"""
 
         # todo: anticipating that each study will have a folder in the storage account
