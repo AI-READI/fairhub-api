@@ -2,6 +2,7 @@
 import datetime
 import importlib
 import os
+import uuid
 from urllib.parse import quote
 
 import requests
@@ -87,10 +88,11 @@ class Files(Resource):
 
             for file in response_json["paths"]:
                 data = {
-                    "contentLength": file["contentLength"],
-                    "creationTime": file["creationTime"],
+                    "id": str(uuid.uuid4()),
+                    "content_length": file["contentLength"],
+                    "created_at": file["creationTime"],
                     "name": file["name"],
-                    "isDirectory": bool("isDirectory" in file and file["isDirectory"]),
+                    "is_directory": bool("isDirectory" in file and file["isDirectory"]),
                 }
 
                 # convert lastModified to unix timestamp
@@ -100,7 +102,7 @@ class Files(Resource):
                         date_string, "%a, %d %b %Y %H:%M:%S %Z"
                     )
                     utc_timestamp = date_object.replace(tzinfo=tz.tzutc()).timestamp()
-                    data["lastModified"] = utc_timestamp
+                    data["updated_on"] = utc_timestamp
 
                 paths.append(data)
 
