@@ -4,10 +4,9 @@ from datetime import datetime, timezone
 from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 
-from model import Study, StudyRedcapProjectApi
+from model import Study
 
 from .db import db
-from .study import Study
 
 
 class StudyRedcapProjectDashboard(db.Model):  # type: ignore

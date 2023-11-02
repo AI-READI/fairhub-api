@@ -4,7 +4,6 @@ from datetime import datetime, timezone
 from model import Study
 
 from .db import db
-from .study import Study
 
 
 class StudyRedcapProjectApi(db.Model):  # type: ignore

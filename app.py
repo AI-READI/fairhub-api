@@ -14,11 +14,9 @@ from sqlalchemy import MetaData
 
 import config
 import model
-import modules
 from apis import api
 from apis.authentication import UnauthenticatedException, authentication, authorization
 from apis.exception import ValidationException
-from caching import create_cache
 
 # from pyfairdatatools import __version__
 
@@ -45,8 +43,6 @@ def create_app(config_module=None):
     # csrf.init_app(app)
 
     app.config.from_prefixed_env("FAIRHUB")
-
-    # print(app.config)
     if config.FAIRHUB_SECRET:
         if len(config.FAIRHUB_SECRET) < 32:
             raise RuntimeError("FAIRHUB_SECRET must be at least 32 characters long")
@@ -63,34 +59,12 @@ def create_app(config_module=None):
         # throw error
         raise RuntimeError("FAIRHUB_DATABASE_URL not set")
 
-    # Update this for
-
-    cache = create_cache(app)
-
-    # for key in app.config:
-    #     if "CACHE" in key:
-    #         print(f"{key}: {app.config[key]}")
-    # if "CACHE_URL" in app.config:
-
-    #     app.config["CACHE_URL"] = app.config["CACHE_URL"]
-    #     app.config["CACHE_HOST"]= app.config["CACHE_HOST"] if "CACHE_HOST" in app.config["CACHE_HOST"] else "localhost"
-    #     app.config["CACHE_PORT"]= app.config["CACHE_PORT"] if "CACHE_PORT" in app.config["CACHE_PORT"] else 6379
-    #     app.config["CACHE_DB"]= app.config["CACHE_DB"] if "CACHE_DB" in app.config["CACHE_DB"] else 0
-    #     app.config["CACHE_DEFAULT_TIMEOUT"]= app.config["CACHE_DEFAULT_TIMEOUT"] if "CACHE_DEFAULT_TIMEOUT" in app.config else 86400
-    #     app.config["CACHE_KEY_PREFIX"]= app.config["CACHE_KEY_PREFIX"] if "CACHE_KEY_PREFIX" in app.config else "fairhub-io#"
-
-    #     cache = Cache(
-    #         config={
-    #             "CACHE_TYPE": "RedisCache",
-    #             "CACHE_DEBUG": False,
-    #             "CACHE_DEFAULT_TIMEOUT": app.config["CACHE_DEFAULT_TIMEOUT"],
-    #             "CACHE_KEY_PREFIX": app.config["CACHE_KEY_PREFIX"],
-    #             "CACHE_REDIS_HOST": app.config["CACHE_HOST"],
-    #             "CACHE_REDIS_PORT": app.config["CACHE_PORT"],
-    #             "CACHE_REDIS_DB": app.config["CACHE_DB"],
-    #             "CACHE_REDIS_URL": app.config["CACHE_URL"],
-    #         }
-    #     )
+    cache_config = {
+        key: value
+        for key, value in app.config.items()
+        if (len(key) > 5) and (key[0:5] == "CACHE")
+    }
+    cache = Cache(config=cache_config)
 
     # Moved down here to allow for loading of redis cache prior to API
     model.db.init_app(app)
@@ -106,6 +80,7 @@ def create_app(config_module=None):
             "/*": {
                 "origins": [
                     "http://localhost:3000",
+                    "https://localhost:3000",
                     "https:\/\/brave-ground-.*-.*.centralus.2.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
                     "https://fairhub.io",
                 ],
@@ -140,7 +115,7 @@ def create_app(config_module=None):
         metadata.reflect(bind=engine)
         table_names = [table.name for table in metadata.tables.values()]
         if len(table_names) == 0:
-            with engine.begin() as conn:
+            with engine.begin():
                 """Create the database schema."""
                 model.db.create_all()
 

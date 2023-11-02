@@ -45,14 +45,12 @@ redcap_project_dashboard_model = api.model(
 
 @api.route("/study/<study_id>/redcap/all")
 class RedcapProjectAPIs(Resource):
-    """Study Redcap Metadata"""
-
     @api.doc("redcap_project_apis")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_api_model, as_list=True)
     def get(self, study_id: int):
-        """Get study redcap"""
+        """List all study REDCap project API links"""
         study = model.Study.query.get(study_id)
         if is_granted("redcap_access", study):
             return "Access denied, you can not modify", 403
@@ -75,6 +73,7 @@ class RedcapProjectAPI(Resource):
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_api_model)
     def get(self, study_id: int):
+        """Get study REDCap project API link"""
         study = model.db.session.query(model.Study).get(study_id)
         if is_granted("redcap_access", study):
             return "Access denied, you can not modify", 403
@@ -88,7 +87,7 @@ class RedcapProjectAPI(Resource):
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_api_model)
     def put(self, study_id: int):
-        """Update study redcap"""
+        """Update study REDCap project API link"""
         study = model.Study.query.get(study_id)
         if is_granted("redcap_access", study):
             return "Access denied, you can not modify", 403
@@ -137,7 +136,7 @@ class RedcapProjectAPI(Resource):
                 f"redcap project_api_key is required for redcap access: {data['project_api_key']}",
                 400,
             )
-        if type(data["project_api_active"]) != bool:
+        if type(data["project_api_active"]) is not bool:
             return (
                 f"redcap project_api_active is required for redcap access: {data['project_api_active']}",
                 400,
@@ -157,7 +156,7 @@ class AddRedcapProjectAPI(Resource):
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_api_model)
     def post(self, study_id: int):
-        """Update study redcap"""
+        """Create new study REDCap project API link"""
         study = model.Study.query.get(study_id)
         if is_granted("redcap_access", study):
             return "Access denied, you can not modify", 403
@@ -207,7 +206,7 @@ class AddRedcapProjectAPI(Resource):
                 f"redcap project_api_key is required for redcap access: {data['project_api_key']}",
                 400,
             )
-        if type(data["project_api_active"]) != bool:
+        if type(data["project_api_active"]) is not bool:
             return (
                 f"redcap project_api_active is required for redcap access: {data['project_api_active']}",
                 400,
@@ -225,7 +224,7 @@ class DeleteRedcapProjectAPI(Resource):
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_api_model)
     def post(self, study_id: int):
-        """Delete study redcap metadata"""
+        """Delete study REDCap project API link"""
         study = model.Study.query.get(study_id)
         if is_granted("redcap_access", study):
             return "Access denied, you can not delete study", 403
@@ -234,112 +233,7 @@ class DeleteRedcapProjectAPI(Resource):
             project_id=data["project_id"]
         ).delete()
         model.db.session.commit()
-        return 204
-
-
-# @api.route("/study/<study_id>/redcap/<project_id>")
-# @api.expect(study_project_parser)
-# class RedcapProjectAPI(Resource):
-#     """Study Redcap Metadata"""
-
-#     @api.doc("redcap_project_api")
-#     @api.response(200, "Success")
-#     @api.response(400, "Validation Error")
-
-#     @api.marshal_with(redcap_project_api_model)
-#     def get(self, study_id: int, project_id: str):
-#         print(study_id, project_id)
-#         study = model.Study.query.get(study_id)
-#         if is_granted("redcap_access", study):
-#             return "Access denied, you can not modify", 403
-#         data: Union[Any, dict] = request.json
-#         redcap_project_api = model.StudyRedcapProjectApi.query.get(project_id)
-#         print(redcap_project_api.to_dict())
-#         return redcap_project_api.to_dict()
-
-#     @api.doc("redcap_project_api")
-#     @api.response(200, "Success")
-#     @api.response(400, "Validation Error")
-#     @api.marshal_with(redcap_project_api_model)
-#     def delete(self, study_id: int, project_id: str):
-#         """Delete study redcap metadata"""
-#         study = model.Study.query.get(study_id)
-#         if is_granted("redcap_access", study):
-#             return "Access denied, you can not delete study", 403
-#         data: Union[Any, dict] = request.json
-#         delete_redcap_project_api = model.StudyRedcapProjectApi.query.get(project_id)
-#         model.db.session.delete(delete_redcap_project_api)
-#         model.db.session.commit()
-#         return 204
-
-
-# @api.route("/study/<study_id>/redcap/<project_id>/edit")
-# @api.expect(study_project_parser)
-# class EditRedcapProjectAPI(Resource):
-#     @api.response(200, "Success")
-#     @api.response(400, "Validation Error")
-#     @api.marshal_with(redcap_project_api_model)
-#     def put(self, study_id: int, project_id: str):
-#         """Update study redcap"""
-#         study = model.Study.query.get(study_id)
-#         if is_granted("redcap_access", study):
-#             return "Access denied, you can not modify", 403
-#         # Schema validation
-#         data: Union[Any, dict] = request.json
-#         schema = {
-#             "type": "object",
-#             "additionalProperties": False,
-#             "required": [
-#                 "project_title",
-#                 "project_id",
-#                 "project_api_url",
-#                 "project_api_key",
-#                 "project_api_active",
-#             ],
-#             "properties": {
-#                 "project_title": {"type": "string", "minLength": 1},
-#                 "project_id": {"type": "string", "minLength": 5},
-#                 "project_api_url": {"type": "string", "minLength": 1},
-#                 "project_api_key": {"type": "string", "minLength": 32},
-#                 "project_api_active": {"type": "boolean"},
-#             },
-#         }
-
-#         try:
-#             validate(request.json, schema)
-#         except ValidationError as e:
-#             return e.message, 400
-
-#         if len(data["project_title"]) < 1:
-#             return (
-#                 f"redcap project_title is required for redcap access: {data['project_title']}",
-#                 400,
-#             )
-#         if len(data["project_id"]) < 1:
-#             return (
-#                 f"redcap project_id is required for redcap access: {data['project_id']}",
-#                 400,
-#             )
-#         if len(data["project_api_url"]) < 1:
-#             return (
-#                 f"redcap project_api_url is required for redcap access: {data['project_api_url']}",
-#                 400,
-#             )
-#         if len(data["project_api_key"]) < 1:
-#             return (
-#                 f"redcap project_api_key is required for redcap access: {data['project_api_key']}",
-#                 400,
-#             )
-#         if type(data["project_api_active"]) != bool:
-#             return (
-#                 f"redcap project_api_active is required for redcap access: {data['project_api_active']}",
-#                 400,
-#             )
-
-#         update_study_redcap_project_api = model.StudyRedcapProjectApi.query.get(data["project_id"])
-#         update_study_redcap_project_api.update(data)
-#         model.db.session.commit()
-#         return update_study_redcap_project_api.to_dict()
+        return delete_redcap_project_api, 204
 
 
 @api.route("/study/<study_id>/redcap/dashboards")
@@ -382,13 +276,15 @@ class RedcapProjectDashboard(Resource):
         )
         if is_granted("redcap_access", study):
             return "Access denied, you can not modify", 403
-        # redcap_project_dashboards = model.StudyRedcapProjectDashboard.query.all(study)
         redcap_project_dashboards = model.StudyRedcapProjectDashboard.query.filter_by(
             study=study,
             study_redcap_project_api=study_redcap_project_api,
             study_redcap_project_dashboard=study_redcap_project_dashboard,
         )
-        return redcap_project_dashboard.to_dict()
+        return [
+            redcap_project_dashboard.to_dict()
+            for redcap_project_dashboard in redcap_project_dashboards
+        ]
 
     @api.doc("redcap_project_dashboard")
     @api.response(200, "Success")
@@ -423,81 +319,3 @@ class RedcapProjectDashboard(Resource):
         model.db.session.commit()
 
         return 204
-
-
-# @api.route("/study/<study_id>/redcap/<redcap_project_id>")
-# class RedcapUpdate(Resource):
-#     @api.doc("redcap")
-#     @api.response(200, "Success")
-#     @api.response(400, "Validation Error")
-#     @api.marshal_with(redcap_project_api_model)
-#     def delete(self, study_id: int, redcap_project_id: str):
-#         """Delete study redcap metadata"""
-#         data: Union[Any, dict] = request.json
-#         if not is_granted("study_metadata", study_id):
-#             return "Access denied, you can not delete study", 403
-#         redcap_project_api = model.StudyRedcapProjectApi.query.get(data["project_id"])
-#         model.db.session.delete(redcap_project_api)
-#         model.db.session.commit()
-
-#         return 204
-
-#     @api.response(200, "Success")
-#     @api.response(400, "Validation Error")
-#     @api.marshal_with(redcap_model)
-#     def put(self, study_id: int):
-#         """Update study redcap"""
-#         # Schema validation
-#         schema = {
-#             "type": "object",
-#             "additionalProperties": False,
-#             "required": [
-#                 "redcap_api_token",
-#                 "redcap_api_url",
-#                 "redcap_project_id",
-#                 "redcap_report_id_survey_completions",
-#                 "redcap_report_id_repeat_surveys",
-#                 "redcap_report_id_participant_values",
-#                 "redcap_report_id_participants",
-#             ],
-#             "properties": {
-#                 "redcap_api_token": {"type": string, "minLength": 1},
-#                 "redcap_api_url": {"type": string, "minLength": 1},
-#                 "redcap_project_id": {"type": string, "minLength": 1},
-#                 "redcap_report_id_participants": {"type": string, "minLength": 1},
-#                 "redcap_report_id_survey_completions": {"type": string},
-#                 "redcap_report_id_repeat_surveys": {"type": string},
-#                 "redcap_report_id_participant_values": {"type": string},
-#             },
-#         }
-
-#         try:
-#             validate(request.json, schema)
-#         except ValidationError as e:
-#             return e.message, 400
-
-#         data: Union[Any, dict] = request.json
-#         if len(data["redcap_api_url"]) < 1:
-#             return (
-#                 f"recap_api_url is required for redcap access: {data['redcap_api_url']}",
-#                 400,
-#             )
-#         if len(data["redcap_api_token"]) < 1:
-#             return (
-#                 f"recap_api_token is required for redcap access: {data['redcap_api_token']}",
-#                 400,
-#             )
-#         if len(data["redcap_project_id"]) < 1:
-#             return (
-#                 f"recap_project_id is required for redcap access: {data['redcap_project_id']}",
-#                 400,
-#             )
-
-#         study_obj = model.Study.query.get(study_id)
-#         if not is_granted("viewer", study_id):
-#             return "Access denied, you can not modify", 403
-#         study = model.Study.query.get(study_id)
-#         study.study_redcap.update(request.json)
-#         model.db.session.commit()
-
-#         return study.study_redcap.to_dict()
