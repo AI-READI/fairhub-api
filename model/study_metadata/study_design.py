@@ -83,18 +83,6 @@ class StudyDesign(db.Model):  # type: ignore
             "number_groups_cohorts": self.number_groups_cohorts,
         }
 
-    def to_dict_metadata(self):
-        """Converts the study metadata to a dictionary"""
-        return {
-            "study_type": self.study_type,
-            "design_intervention_model": self.design_intervention_model,
-            "design_masking": self.design_masking,
-            "number_arms": self.number_arms,
-            "enrollment_count": self.enrollment_count,
-            "design_primary_purpose": self.design_primary_purpose,
-            "who_masked": self.design_who_masked_list,
-        }
-
     @staticmethod
     def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""

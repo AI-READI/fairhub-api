@@ -45,7 +45,11 @@ class StudyStatus(db.Model):  # type: ignore
 
     def to_dict_metadata(self):
         """Converts the study metadata to a dictionary"""
-        return {"overall_status": self.overall_status}
+        return {
+            "overall_status": self.overall_status,
+            "start_date": self.start_date,
+
+        }
 
     @staticmethod
     def from_data(study: Study, data: dict):

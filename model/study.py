@@ -177,24 +177,24 @@ class Study(db.Model):  # type: ignore
         return {
             "arms": [i.to_dict_metadata() for
                      i in self.study_arm],  # type: ignore
-            "available ipd": [
+            "available_ipd": [
                 i.to_dict_metadata() for i
                 in self.study_available_ipd  # type: ignore
             ],
             "contacts": [i.to_dict_metadata()
                          for i in self.study_contact],  # type: ignore
             "description": self.study_description.to_dict_metadata(),
-            "design": self.study_design.to_dict_metadata(),
+            "design": self.study_design.to_dict(),
             "eligibility": self.study_eligibility.to_dict_metadata(),
             "identification": [
                 i.to_dict_metadata() for
                 i in self.study_identification  # type: ignore
             ],
-            "intervention": [
+            "interventions": [
                 i.to_dict_metadata() for
                 i in self.study_intervention  # type: ignore
             ],
-            "ipdsharing": self.study_ipdsharing.to_dict_metadata(),
+            "ipd_sharing": self.study_ipdsharing.to_dict_metadata(),
             "links": [i.to_dict_metadata() for
                       i in self.study_link],  # type: ignore
             "location": [i.to_dict_metadata() for
