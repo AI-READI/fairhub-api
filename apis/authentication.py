@@ -103,7 +103,8 @@ class SignUpUser(Resource):
         # Schema validation
         schema = {
             "type": "object",
-            "required": ["email_address", "password", "code"],
+            # "required": ["email_address", "password", "code"],
+            "required": ["email_address", "password"],
             "additionalProperties": False,
             "properties": {
                 "email_address": {"type": "string", "format": "valid_email"},
@@ -111,7 +112,7 @@ class SignUpUser(Resource):
                     "type": "string",
                     "format": "password",
                 },
-                "code": {"type": "string"},
+                # "code": {"type": "string"},
             },
         }
 
@@ -182,7 +183,6 @@ class Login(Resource):
 
         format_checker = FormatChecker()
         format_checker.checks("valid email")(validate_is_valid_email)
-
         try:
             validate(instance=data, schema=schema, format_checker=format_checker)
         except ValidationError as e:

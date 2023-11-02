@@ -20,6 +20,7 @@ class StudyRedcapProjectApi(db.Model):  # type: ignore
     project_title = db.Column(db.String, nullable=False)
     project_api_url = db.Column(db.String, nullable=False)
     project_api_key = db.Column(db.String, nullable=False)
+    project_api_active = db.Column(db.Boolean, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
     updated_on = db.Column(db.BigInteger, nullable=False)
 
@@ -43,6 +44,7 @@ class StudyRedcapProjectApi(db.Model):  # type: ignore
             "project_id": self.project_id,
             "project_api_url": self.project_api_url,
             "project_api_key": self.project_api_key,
+            "project_api_active": self.project_api_active,
         }
 
     @staticmethod
@@ -58,6 +60,7 @@ class StudyRedcapProjectApi(db.Model):  # type: ignore
         self.project_id = data["project_id"]
         self.project_api_url = data["project_api_url"]
         self.project_api_key = data["project_api_key"]
+        self.project_api_active = data["project_api_active"]
         self.updated_on = datetime.now(timezone.utc).timestamp()
 
     def validate(self):

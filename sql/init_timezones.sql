@@ -1053,6 +1053,7 @@ CREATE TABLE IF NOT EXISTS "study_redcap_project_api" (
 	"project_title" VARCHAR NOT NULL,
 	"project_api_url" VARCHAR NOT NULL,
 	"project_api_key" CHAR(32) NOT NULL,
+	"project_api_active" BOOLEAN NOT NULL,
 	"created_at" BIGINT NOT NULL,
 	"updated_on" BIGINT NOT NULL,
 	PRIMARY KEY ("study_id", "project_id"),
@@ -1061,8 +1062,8 @@ CREATE TABLE IF NOT EXISTS "study_redcap_project_api" (
 
 -- Dumping data for table public.study_redcap_project_api: 1 rows
 /*!40000 ALTER TABLE "study_redcap_project_api" DISABLE KEYS */;
-INSERT INTO "study_redcap_project_api" ("study_id", "project_id", "project_title", "project_api_url", "project_api_key", "created_at", "updated_on") VALUES
-	('00000000-0000-0000-0000-000000000006', '666666', 'other-stuff', 'https://redcap.university.org/api', '0000000000000000AAAAAAAAAAAAAAA6', '2023-08-13 16:23:48', '2023-08-14 16:23:49');
+INSERT INTO "study_redcap_project_api" ("study_id", "project_id", "project_title", "project_api_url", "project_api_key", "project_api_active", "created_at", "updated_on") VALUES
+	('00000000-0000-0000-0000-000000000006', '666666', 'other-stuff', 'https://redcap.university.org/api', '0000000000000000AAAAAAAAAAAAAAA6', 0, '2023-08-13 16:23:48', '2023-08-14 16:23:49');
 /*!40000 ALTER TABLE "study_redcap_project_api" ENABLE KEYS */;
 
 -- Dumping structure for table public.study_redcap_project_dashboard

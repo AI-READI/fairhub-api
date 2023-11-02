@@ -63,12 +63,12 @@ INSERT INTO "version_participants" ("dataset_version_id", "participant_id") VALU
 	('00000000-0000-0000-0000-000000000003', '00000000-0000-0000-0000-000000000002'),
 	('00000000-0000-0000-0000-000000000002', '00000000-0000-0000-0000-000000000001');
 
-INSERT INTO "study_redcap_project_api" ("study_id", "project_id", "project_title", "project_api_url", "project_api_key", "updated_on", "created_at") VALUES
-	('00000000-0000-0000-0000-000000000001', '11111', 'ai-stuff', 'https://redcap.university.org/api', '0000000000000000AAAAAAAAAAAAAAA1', '2023-08-13 16:23:48', '2023-08-13 16:23:49'),
-	('00000000-0000-0000-0000-000000000002', '22222', 'dev-stuff', 'https://redcap.university.org/api', '0000000000000000AAAAAAAAAAAAAAA2', '2023-08-13 16:23:48', '2023-08-13 16:23:49'),
-	('00000000-0000-0000-0000-000000000003', '33333', 'ops-stuff', 'https://redcap.university.org/api', '0000000000000000AAAAAAAAAAAAAAA3', '2023-08-13 16:23:48', '2023-08-13 16:23:49'),
-	('00000000-0000-0000-0000-000000000004', '44444', 'data-stuff', 'https://redcap.university.org/api', '0000000000000000AAAAAAAAAAAAAAA4', '2023-08-13 16:23:48', '2023-08-13 16:23:49'),
-	('00000000-0000-0000-0000-000000000005', '55555', 'more-stuff', 'https://redcap.university.org/api', '0000000000000000AAAAAAAAAAAAAAA5', '2023-08-13 16:23:48', '2023-08-13 16:23:49');
+INSERT INTO "study_redcap_project_api" ("study_id", "project_id", "project_title", "project_api_url", "project_api_key", "project_api_active", "updated_on", "created_at") VALUES
+	('00000000-0000-0000-0000-000000000001', '11111', 'ai-stuff', 'https://redcap.university.org/api', '0000000000000000AAAAAAAAAAAAAAA1', 0, '2023-08-13 16:23:48', '2023-08-13 16:23:49'),
+	('00000000-0000-0000-0000-000000000002', '22222', 'dev-stuff', 'https://redcap.university.org/api', '0000000000000000AAAAAAAAAAAAAAA2', 0, '2023-08-13 16:23:48', '2023-08-13 16:23:49'),
+	('00000000-0000-0000-0000-000000000003', '33333', 'ops-stuff', 'https://redcap.university.org/api', '0000000000000000AAAAAAAAAAAAAAA3', 0, '2023-08-13 16:23:48', '2023-08-13 16:23:49'),
+	('00000000-0000-0000-0000-000000000004', '44444', 'data-stuff', 'https://redcap.university.org/api', '0000000000000000AAAAAAAAAAAAAAA4', 0, '2023-08-13 16:23:48', '2023-08-13 16:23:49'),
+	('00000000-0000-0000-0000-000000000005', '55555', 'more-stuff', 'https://redcap.university.org/api', '0000000000000000AAAAAAAAAAAAAAA5', 0, '2023-08-13 16:23:48', '2023-08-13 16:23:49');
 
 INSERT INTO "study_redcap_project_dashboard" ("study_id", "project_id", "dashboard_id", "dashboard_name", "dashboard_modules", "created_at", "updated_on") VALUES
 	('00000000-0000-0000-0000-000000000001', '11111', '10000000-0000-0000-0000-000000000000', 'recruitment', '{}', '2023-08-13 16:23:48', '2023-08-14 16:23:49'),

@@ -132,19 +132,17 @@ def create_app(config_module=None):
 
     # CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": "True"}})
 
-    #
-    # @app.cli.command("create-schema")
-    # def create_schema():
-    #     engine = model.db.session.get_bind()
-    #     metadata = MetaData()
-    #     metadata = MetaData()
-    #     metadata.reflect(bind=engine)
-    #     table_names = [table.name for table in metadata.tables.values()]
-    #     print(table_names)
-    #     if len(table_names) == 0:
-    #         with engine.begin() as conn:
-    #             """Create the database schema."""
-    #             model.db.create_all()
+    @app.cli.command("create-schema")
+    def create_schema():
+        engine = model.db.session.get_bind()
+        metadata = MetaData()
+        metadata = MetaData()
+        metadata.reflect(bind=engine)
+        table_names = [table.name for table in metadata.tables.values()]
+        if len(table_names) == 0:
+            with engine.begin() as conn:
+                """Create the database schema."""
+                model.db.create_all()
 
     @app.before_request
     def on_before_request():  # pylint: disable = inconsistent-return-statements
@@ -253,7 +251,6 @@ def create_app(config_module=None):
         metadata = MetaData()
         metadata.reflect(bind=engine)
         table_names = [table.name for table in metadata.tables.values()]
-        # print(table_names)
         if len(table_names) == 0:
             with engine.begin():
                 model.db.create_all()
