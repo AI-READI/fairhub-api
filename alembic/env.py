@@ -12,7 +12,7 @@ load_dotenv()
 
 config = context.config
 section = config.config_ini_section
-print(section, environ.get("FAIRHUB_DATABASE_URL"))
+
 config.set_section_option(
     section, "FAIRHUB_DATABASE_URL", str(environ.get("FAIRHUB_DATABASE_URL"))
 )
