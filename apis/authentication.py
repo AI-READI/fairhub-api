@@ -56,7 +56,14 @@ class SignUpUser(Resource):
         """signs up the new users and saves data in DB"""
         data: Union[Any, dict] = request.json
         if os.environ.get("FLASK_ENV") != "testing":
-            if data["email_address"] not in ["test@fairhub.io"]:
+            bypassed_emails = [
+                "test@fairhub.io",
+                "bpatel@fairhub.io",
+                "sanjay@fairhub.io",
+                "aydan@fairhub.io",
+            ]
+
+            if data["email_address"] not in bypassed_emails:
                 invite = model.StudyInvitedContributor.query.filter_by(
                     email_address=data["email_address"]
                 ).one_or_none()
