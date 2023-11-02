@@ -7,6 +7,7 @@ from redcap import Project
 import pandas as pd
 import numpy as np
 
+
 class RedcapTransform(object):
     def __init__(self, config: dict) -> None:
         #

@@ -62,12 +62,13 @@ class StudyRedcapProjectDashboard(db.Model):  # type: ignore
 
     def update(self, data: dict):
         """Updates the study from a dictionary"""
-        assignable = {key for key in self.__dict__.keys() if key.startswith("dashboard")}
+        assignable = {
+            key for key in self.__dict__.keys() if key.startswith("dashboard")
+        }
         for key, val in data.items():
-            if (key in assignable):
+            if key in assignable:
                 setattr(self, key, val)
         self.updated_on = datetime.now(timezone.utc).timestamp()
-
 
     def validate(self):
         """Validates the study"""

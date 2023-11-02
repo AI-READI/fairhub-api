@@ -12,7 +12,8 @@ from .authentication import is_granted
 api = Namespace("Redcap", description="Redcap operations", path="/")
 
 redcap_project_view_model = api.model(
-    "RedcapProjectAPI", {
+    "RedcapProjectAPI",
+    {
         "study_id": fields.String(required=True),
         "project_title": fields.String(required=True),
         "project_id": fields.String(required=True),
@@ -22,7 +23,8 @@ redcap_project_view_model = api.model(
 )
 
 redcap_project_api_model = api.model(
-    "RedcapProjectAPI", {
+    "RedcapProjectAPI",
+    {
         "study_id": fields.String(required=True),
         "project_title": fields.String(required=True),
         "project_id": fields.String(required=True),
@@ -33,7 +35,8 @@ redcap_project_api_model = api.model(
 )
 
 redcap_project_dashboard_model = api.model(
-    "RedcapProjectDashboard", {
+    "RedcapProjectDashboard",
+    {
         "project_id": fields.String(required=True),
         "dashboard_id": fields.String(
             required=True, readonly=True, description="REDCap dashboard ID"
@@ -50,6 +53,7 @@ redcap_project_dashboard_model = api.model(
     },
 )
 
+
 @api.route("/study/<study_id>/redcap/all")
 class RedcapProjectAPIs(Resource):
     @api.doc("redcap_project_apis")
@@ -63,13 +67,17 @@ class RedcapProjectAPIs(Resource):
             return "Access denied, you can not modify", 403
         # redcap_project_apis = model.StudyRedcapProjectApi.query.all(study)
         redcap_project_views = model.StudyRedcapProjectApi.query.filter_by(study=study)
-        return [redcap_project_view.to_dict() for redcap_project_view in redcap_project_views]
+        return [
+            redcap_project_view.to_dict()
+            for redcap_project_view in redcap_project_views
+        ]
+
 
 project_parser = reqparse.RequestParser().add_argument(
-    "project_id",
-    type=str,
-    help="REDCap project ID (pid)"
+    "project_id", type=str, help="REDCap project ID (pid)"
 )
+
+
 @api.route("/study/<study_id>/redcap")
 class RedcapProjectAPI(Resource):
     @api.doc(parser=project_parser)
@@ -82,7 +90,9 @@ class RedcapProjectAPI(Resource):
         if is_granted("redcap_access", study):
             return "Access denied, you can not modify", 403
         project_id = project_parser.parse_args()["project_id"]
-        redcap_project_view = model.db.session.query(model.StudyRedcapProjectApi).get(project_id)
+        redcap_project_view = model.db.session.query(model.StudyRedcapProjectApi).get(
+            project_id
+        )
         return redcap_project_view.to_dict(), 201
 
     @api.response(200, "Success")
@@ -137,10 +147,13 @@ class RedcapProjectAPI(Resource):
                 400,
             )
 
-        update_redcap_project_view = model.StudyRedcapProjectApi.query.get(data["project_id"])
+        update_redcap_project_view = model.StudyRedcapProjectApi.query.get(
+            data["project_id"]
+        )
         update_redcap_project_view.update(data)
         model.db.session.commit()
         return update_redcap_project_view, 201
+
 
 @api.route("/study/<study_id>/redcap/add")
 class AddRedcapProjectAPI(Resource):
@@ -209,6 +222,7 @@ class AddRedcapProjectAPI(Resource):
         model.db.session.commit()
         return add_redcap_project_api, 201
 
+
 @api.route("/study/<study_id>/redcap/delete")
 class DeleteRedcapProjectAPI(Resource):
     @api.response(200, "Success")
@@ -221,10 +235,11 @@ class DeleteRedcapProjectAPI(Resource):
             return "Access denied, you can not delete study", 403
         data: Union[Any, dict] = request.json
         delete_redcap_project_api = model.StudyRedcapProjectApi.query.filter_by(
-            project_id = data["project_id"]
+            project_id=data["project_id"]
         ).delete()
         model.db.session.commit()
         return delete_redcap_project_api, 204
+
 
 @api.route("/study/<study_id>/redcap/dashboards")
 class RedcapProjectDashboards(Resource):
@@ -240,8 +255,14 @@ class RedcapProjectDashboards(Resource):
         if is_granted("redcap_access", study):
             return "Access denied, you can not modify", 403
         # redcap_project_dashboards = model.StudyRedcapProjectDashboard.query.all(study)
-        redcap_project_dashboards = model.StudyRedcapProjectDashboard.query.filter_by(study=study)
-        return [redcap_project_dashboard.to_dict() for redcap_project_dashboard in redcap_project_dashboards]
+        redcap_project_dashboards = model.StudyRedcapProjectDashboard.query.filter_by(
+            study=study
+        )
+        return [
+            redcap_project_dashboard.to_dict()
+            for redcap_project_dashboard in redcap_project_dashboards
+        ]
+
 
 @api.route("/study/<study_id>/redcap/dashboard")
 class RedcapProjectDashboard(Resource):
@@ -255,7 +276,9 @@ class RedcapProjectDashboard(Resource):
         """Get study redcap"""
         study = model.Study.query.get(study_id)
         study_redcap_project_api = model.StudyRedcapProjectApi.query.get(project_id)
-        study_redcap_project_dashboard = model.StudyRedcapProjectDashboard.query.get(dashboard_id)
+        study_redcap_project_dashboard = model.StudyRedcapProjectDashboard.query.get(
+            dashboard_id
+        )
         if is_granted("redcap_access", study):
             return "Access denied, you can not modify", 403
         redcap_project_dashboards = model.StudyRedcapProjectDashboard.query.filter_by(
@@ -263,8 +286,10 @@ class RedcapProjectDashboard(Resource):
             study_redcap_project_api=study_redcap_project_api,
             study_redcap_project_dashboard=study_redcap_project_dashboard,
         )
-        return [redcap_project_dashboard.to_dict() for redcap_project_dashboard in redcap_project_dashboards]
-
+        return [
+            redcap_project_dashboard.to_dict()
+            for redcap_project_dashboard in redcap_project_dashboards
+        ]
 
     @api.doc("redcap_project_dashboard")
     @api.response(200, "Success")
@@ -275,7 +300,9 @@ class RedcapProjectDashboard(Resource):
         if is_granted("redcap_access", study):
             return "Access denied, you can not modify", 403
         data: Union[Any, dict] = request.json
-        update_redcap_project_dashboard = model.StudyRedcapProjectDashboard.query.get(data["project_id"])
+        update_redcap_project_dashboard = model.StudyRedcapProjectDashboard.query.get(
+            data["project_id"]
+        )
         update_redcap_project_dashboard.update(data)
         model.db.session.commit()
         return update_redcap_project_dashboard.to_dict()
@@ -290,7 +317,9 @@ class RedcapProjectDashboard(Resource):
         if is_granted("redcap_access", study):
             return "Access denied, you can not delete study", 403
         data: Union[Any, dict] = request.json
-        redcap_project_dashboard = model.StudyRedcapProjectDashboard.query.get(data["project_id"])
+        redcap_project_dashboard = model.StudyRedcapProjectDashboard.query.get(
+            data["project_id"]
+        )
         model.db.session.delete(redcap_project_dashboard)
         model.db.session.commit()
 

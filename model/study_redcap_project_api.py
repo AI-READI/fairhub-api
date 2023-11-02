@@ -57,7 +57,7 @@ class StudyRedcapProjectApi(db.Model):  # type: ignore
         """Updates the study from a dictionary"""
         assignable = {key for key in self.to_dict().keys() if key.startswith("project")}
         for key, val in data.items():
-            if (key in assignable):
+            if key in assignable:
                 setattr(self, key, val)
         self.updated_on = datetime.now(timezone.utc).timestamp()
 
