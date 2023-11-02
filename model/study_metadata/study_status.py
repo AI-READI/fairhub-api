@@ -48,7 +48,6 @@ class StudyStatus(db.Model):  # type: ignore
         return {
             "overall_status": self.overall_status,
             "start_date": self.start_date,
-
         }
 
     @staticmethod
