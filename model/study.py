@@ -180,8 +180,8 @@ class Study(db.Model):  # type: ignore
                 i.to_dict_metadata() for i in self.study_available_ipd  # type: ignore
             ],
             "contacts": [
-                i.to_dict_metadata() for i in self.study_contact
-            ],  # type: ignore
+                i.to_dict_metadata() for i in self.study_contact  # type: ignore
+            ],
             "description": self.study_description.to_dict_metadata(),
             "design": self.study_design.to_dict(),
             "eligibility": self.study_eligibility.to_dict_metadata(),
@@ -194,15 +194,15 @@ class Study(db.Model):  # type: ignore
             "ipd_sharing": self.study_ipdsharing.to_dict_metadata(),
             "links": [i.to_dict_metadata() for i in self.study_link],  # type: ignore
             "location": [
-                i.to_dict_metadata() for i in self.study_location
-            ],  # type: ignore
+                i.to_dict_metadata() for i in self.study_location  # type: ignore
+            ],
             "overall_official": [
                 i.to_dict_metadata()
                 for i in self.study_overall_official  # type: ignore
             ],
             "references": [
-                i.to_dict_metadata() for i in self.study_reference
-            ],  # type: ignore
+                i.to_dict_metadata() for i in self.study_reference  # type: ignore
+            ],
             "sponsors": self.study_sponsors_collaborators.to_dict_metadata(),
             "collaborators": self.study_sponsors_collaborators.collaborator_name,
             "status": self.study_status.to_dict_metadata(),
