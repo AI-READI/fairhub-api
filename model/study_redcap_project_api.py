@@ -55,11 +55,10 @@ class StudyRedcapProjectApi(db.Model):  # type: ignore
 
     def update(self, data: dict):
         """Updates the study from a dictionary"""
-        self.project_title = data["project_title"]
-        self.project_id = data["project_id"]
-        self.project_api_url = data["project_api_url"]
-        self.project_api_key = data["project_api_key"]
-        self.project_api_active = data["project_api_active"]
+        assignable = {key for key in self.to_dict().keys() if key.startswith("project")}
+        for key, val in data.items():
+            if (key in assignable):
+                setattr(self, key, val)
         self.updated_on = datetime.now(timezone.utc).timestamp()
 
     def validate(self):

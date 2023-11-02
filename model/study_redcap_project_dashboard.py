@@ -5,7 +5,6 @@ from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 
 from model import Study
-
 from .db import db
 
 
@@ -63,10 +62,12 @@ class StudyRedcapProjectDashboard(db.Model):  # type: ignore
 
     def update(self, data: dict):
         """Updates the study from a dictionary"""
-        self.dashboard_id = data["dashboard_id"]
-        self.dashboard_name = data["dashboard_name"]
-        self.dashboard_endpoint = data["dashboard_endpoint"]
+        assignable = {key for key in self.__dict__.keys() if key.startswith("dashboard")}
+        for key, val in data.items():
+            if (key in assignable):
+                setattr(self, key, val)
         self.updated_on = datetime.now(timezone.utc).timestamp()
+
 
     def validate(self):
         """Validates the study"""
