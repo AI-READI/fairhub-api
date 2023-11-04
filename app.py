@@ -42,7 +42,9 @@ def create_app(config_module=None):
     # csrf = CSRFProtect()
     # csrf.init_app(app)
 
+    # All configuration variables that start with FAIRHUB_ will be loaded
     app.config.from_prefixed_env("FAIRHUB")
+
     if config.FAIRHUB_SECRET:
         if len(config.FAIRHUB_SECRET) < 32:
             raise RuntimeError("FAIRHUB_SECRET must be at least 32 characters long")
@@ -50,14 +52,13 @@ def create_app(config_module=None):
         raise RuntimeError("FAIRHUB_SECRET not set")
 
     if "DATABASE_URL" in app.config:
-        # if "TESTING" in app_config and app_config["TESTING"]:
-        #     pass
-        # else:
-        #   print("DATABASE_URL: ", app.config["DATABASE_URL"])
         app.config["SQLALCHEMY_DATABASE_URI"] = app.config["DATABASE_URL"]
     else:
-        # throw error
         raise RuntimeError("FAIRHUB_DATABASE_URL not set")
+
+    # Testing for only one of the 5 required cache variables
+    if "CACHE_URL" not in app.config:
+        raise RuntimeError("FAIRHUB_CACHE_URL not set")
 
     cache_config = {
         key: value
