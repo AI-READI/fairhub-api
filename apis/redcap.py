@@ -93,6 +93,10 @@ class RedcapProjectAPI(Resource):
         redcap_project_view = model.db.session.query(model.StudyRedcapProjectApi).get(
             project_id
         )
+        
+        if redcap_project_view is None:
+            return {"error": "Project not found"}, 404
+        
         return redcap_project_view.to_dict(), 201
 
     @api.response(200, "Success")
