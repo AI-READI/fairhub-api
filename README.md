@@ -6,7 +6,7 @@
 
 You will need the following installed on your system:
 
-- Python 3.8+
+- Python 3.10+
 - [Pip](https://pip.pypa.io/en/stable/)
 - [Poetry](https://python-poetry.org/)
 - [Docker](https://www.docker.com/)
@@ -25,7 +25,7 @@ If you would like to update the api, please follow the instructions below.
    If you are using Anaconda, you can create a virtual environment with:
 
    ```bash
-   conda create -n fairhub-api-dev-env python=3.8
+   conda create -n fairhub-api-dev-env python=3.10
    conda activate fairhub-api-dev-env
    ```
 
@@ -104,6 +104,7 @@ This database will not persist data between runs.
 ### Caching
 
 The api uses a redis cache. You can run a redis cache locally using docker, too:
+
 ```bash
 docker-compose -f ./cache-docker-compose.yaml up
 ```
