@@ -1,14 +1,14 @@
 """API routes for redcap project"""
-import typing
+# import typing
 
-from flask import request
+# from flask import request
 from flask_restx import Resource, fields
-from jsonschema import ValidationError, validate
+# from jsonschema import ValidationError, validate
 
 import model
 from apis.redcap_data_namespace import api
 
-from ..authentication import is_granted
+# from ..authentication import is_granted
 
 # # REDCap Data Visualization ETL Configuration
 # from modules.etl.config import redcapTransformConfig
@@ -87,7 +87,6 @@ class RedcapProjectDataResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_data)
-    # @cache.cached()
     def get(self, study_id: int, redcap_project_id: str):
         """
         Get REDCap project
@@ -101,5 +100,4 @@ class RedcapProjectDataResource(Resource):
         PyCapProject = Project(
             study_redcap_["redcap_api_url"], study_redcap_["redcap_api_token"]
         )
-        project = PyCapProject.export_project_info()
-        return project
+        return PyCapProject.export_project_info()

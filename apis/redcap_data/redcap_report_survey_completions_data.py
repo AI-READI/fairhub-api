@@ -1,14 +1,14 @@
 """API routes for redcap report survey completions data"""
-import typing
+# import typing
 
-from flask import request
+# from flask import request
 from flask_restx import Resource, fields
-from jsonschema import ValidationError, validate
+# from jsonschema import ValidationError, validate
 
 import model
 from apis.redcap_data_namespace import api
 
-from ..authentication import is_granted
+# from ..authentication import is_granted
 
 # # REDCap Data Visualization ETL Configuration
 # from modules.etl.config import redcapTransformConfig
