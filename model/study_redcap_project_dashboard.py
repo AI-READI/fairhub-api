@@ -64,7 +64,9 @@ class StudyRedcapProjectDashboard(db.Model):  # type: ignore
     def update(self, data: dict):
         """Updates the study from a dictionary"""
         assignable = {
-            key for key in self.__dict__.keys() if key.startswith("dashboard")
+            key
+            for key in self.__dict__.keys()  # pylint: disable=consider-iterating-dictionary
+            if key.startswith("dashboard")
         }
         for key, val in data.items():
             if key in assignable:

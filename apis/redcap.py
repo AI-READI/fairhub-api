@@ -56,6 +56,8 @@ redcap_project_dashboard_model = api.model(
 
 @api.route("/study/<study_id>/redcap/all")
 class RedcapProjectAPIs(Resource):
+    """Study Redcap Metadata"""
+
     @api.doc("redcap_project_apis")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
@@ -80,6 +82,8 @@ project_parser = reqparse.RequestParser().add_argument(
 
 @api.route("/study/<study_id>/redcap")
 class RedcapProjectAPI(Resource):
+    """Study Redcap Metadata"""
+
     @api.doc(parser=project_parser)
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
@@ -93,10 +97,10 @@ class RedcapProjectAPI(Resource):
         redcap_project_view = model.db.session.query(model.StudyRedcapProjectApi).get(
             project_id
         )
-        
+
         if redcap_project_view is None:
             return {"error": "Project not found"}, 404
-        
+
         return redcap_project_view.to_dict(), 201
 
     @api.response(200, "Success")
@@ -132,22 +136,23 @@ class RedcapProjectAPI(Resource):
 
         if len(data["project_title"]) < 1:
             return (
-                f"redcap project_title is required for redcap access: {data['project_title']}",
+                f"redcap project_title is required for redcap access: {data['project_title']}",  # noqa E501 # pylint: disable=line-too-long
                 400,
             )
         if len(data["project_id"]) < 1:
             return (
-                f"redcap project_id is required for redcap access: {data['project_id']}",
+                f"redcap project_id is required for redcap access: {data['project_id']}",  # noqa E501 # pylint: disable=line-too-long
                 400,
             )
         if len(data["project_api_url"]) < 1:
             return (
-                f"redcap project_api_url is required for redcap access: {data['project_api_url']}",
+                f"redcap project_api_url is required for redcap access: {data['project_api_url']}",  # noqa E501 # pylint: disable=line-too-long
                 400,
             )
-        if type(data["project_api_active"]) is not bool:
+
+        if isinstance(data["project_api_active"], bool) is False:
             return (
-                f"redcap project_api_active is required for redcap access: {data['project_api_active']}",
+                f"redcap project_api_active is required for redcap access: {data['project_api_active']}",  # noqa E501 # pylint: disable=line-too-long
                 400,
             )
 
@@ -161,6 +166,8 @@ class RedcapProjectAPI(Resource):
 
 @api.route("/study/<study_id>/redcap/add")
 class AddRedcapProjectAPI(Resource):
+    """Study Redcap Metadata"""
+
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_view_model)
@@ -197,27 +204,27 @@ class AddRedcapProjectAPI(Resource):
 
         if len(data["project_title"]) < 1:
             return (
-                f"redcap project_title is required for redcap access: {data['project_title']}",
+                f"redcap project_title is required for redcap access: {data['project_title']}",  # noqa E501 # pylint: disable=line-too-long
                 400,
             )
         if len(data["project_id"]) < 1:
             return (
-                f"redcap project_id is required for redcap access: {data['project_id']}",
+                f"redcap project_id is required for redcap access: {data['project_id']}",  # noqa E501 # pylint: disable=line-too-long
                 400,
             )
         if len(data["project_api_url"]) < 1:
             return (
-                f"redcap project_api_url is required for redcap access: {data['project_api_url']}",
+                f"redcap project_api_url is required for redcap access: {data['project_api_url']}",  # noqa E501 # pylint: disable=line-too-long
                 400,
             )
         if len(data["project_api_key"]) < 1:
             return (
-                f"redcap project_api_key is required for redcap access: {data['project_api_key']}",
+                f"redcap project_api_key is required for redcap access: {data['project_api_key']}",  # noqa E501 # pylint: disable=line-too-long
                 400,
             )
-        if type(data["project_api_active"]) is not bool:
+        if isinstance(data["project_api_active"], bool) is False:
             return (
-                f"redcap project_api_active is required for redcap access: {data['project_api_active']}",
+                f"redcap project_api_active is required for redcap access: {data['project_api_active']}",  # noqa E501 # pylint: disable=line-too-long
                 400,
             )
 
@@ -229,6 +236,8 @@ class AddRedcapProjectAPI(Resource):
 
 @api.route("/study/<study_id>/redcap/delete")
 class DeleteRedcapProjectAPI(Resource):
+    """Study Redcap Metadata"""
+
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_view_model)
@@ -300,6 +309,7 @@ class RedcapProjectDashboard(Resource):
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_dashboard_model)
     def put(self, study_id: int):
+        """Update study redcap"""
         study = model.Study.query.get(study_id)
         if is_granted("redcap_access", study):
             return "Access denied, you can not modify", 403

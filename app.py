@@ -116,7 +116,7 @@ def create_app(config_module=None):
         table_names = [table.name for table in metadata.tables.values()]
         if len(table_names) == 0:
             with engine.begin():
-                """Create the database schema."""
+                # Create the database schema
                 model.db.create_all()
 
     @app.before_request

@@ -172,7 +172,9 @@ class RedcapReportSurveyCompletionsDataResource(Resource):
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_report_survey_completions_data)
     # @IN_MEMORY_CACHE.cached()
-    def get(self, study_id: int, redcap_project_id: str):
+    def get(
+        self, study_id: int, redcap_project_id: str
+    ):  # pylint: disable=unused-argument
         study_ = model.Study.query.get(study_id)
         study_redcap_ = study_.study_redcap.to_dict()
         PyCapProject = Project(

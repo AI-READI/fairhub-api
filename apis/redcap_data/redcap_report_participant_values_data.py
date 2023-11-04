@@ -96,7 +96,7 @@ redcap_report_participant_values_data = api.model(
         "dvrtnyn": fields.String(
             required=True,
             readonly=True,
-            description="Was the participant given device return instructions and shipping materials?",
+            description="Was the participant given device return instructions and shipping materials?",  # noqa: E501 # pylint: disable=line-too-long
         ),
         "dvrtnship": fields.String(
             required=True, readonly=True, description="Return shipping tracking number"
@@ -152,7 +152,9 @@ class RedcapReportParticipantValuesDataResource(Resource):
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_report_participant_values_data)
     # @IN_MEMORY_CACHE.cached()
-    def get(self, study_id: int, redcap_project_id: str):
+    def get(
+        self, study_id: int, redcap_project_id: str
+    ):  # pylint: disable=unused-argument
         study_ = model.Study.query.get(study_id)
         study_redcap_ = study_.study_redcap.to_dict()
         PyCapProject = Project(

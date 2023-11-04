@@ -55,7 +55,11 @@ class StudyRedcapProjectApi(db.Model):  # type: ignore
 
     def update(self, data: dict):
         """Updates the study from a dictionary"""
-        assignable = {key for key in self.to_dict().keys() if key.startswith("project")}
+        assignable = {
+            key
+            for key in self.to_dict().keys()  # pylint: disable=consider-iterating-dictionary
+            if key.startswith("project")
+        }
         for key, val in data.items():
             if key in assignable:
                 setattr(self, key, val)

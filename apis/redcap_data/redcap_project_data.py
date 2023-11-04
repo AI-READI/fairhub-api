@@ -84,11 +84,15 @@ redcap_project_data = api.model(
 
 @api.route("/study/<study_id>/redcap/<redcap_project_id>/project")
 class RedcapProjectDataResource(Resource):
+    """RedcapProjectDataResource"""
+
     @api.doc("project")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_data)
-    def get(self, study_id: int, redcap_project_id: str):
+    def get(
+        self, study_id: int, redcap_project_id: str
+    ):  # pylint: disable=unused-argument
         """
         Get REDCap project
 
