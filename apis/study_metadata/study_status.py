@@ -70,7 +70,7 @@ class StudyStatusResource(Resource):
                         "Completed",
                     ],
                 },
-                "why_stopped": {"type": "string", "minLength": 1},
+                "why_stopped": {"type": "string"},
                 "start_date": {"type": "string", "minLength": 1},
                 "start_date_type": {
                     "type": "string",

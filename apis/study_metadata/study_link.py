@@ -45,7 +45,8 @@ class StudyLinkResource(Resource):
                 "type": "object",
                 "additionalProperties": False,
                 "properties": {
-                    "url": {"type": "string", "format": "uri"},
+                    "id": {"type": "string"},
+                    "url": {"type": "string", "format": "uri", "minLength": 1},
                     "title": {"type": "string"},
                 },
                 "required": ["url", "title"],
@@ -70,13 +71,11 @@ class StudyLinkResource(Resource):
                     return f"Study link {i['id']} Id is not found", 404
                 study_link_.update(i)
 
-                list_of_elements.append(study_link_.to_dict())
-            elif "id" not in i or not i["id"]:
+            else:
                 study_link_ = model.StudyLink.from_data(study_obj, i)
                 model.db.session.add(study_link_)
 
-                list_of_elements.append(study_link_.to_dict())
-
+            list_of_elements.append(study_link_.to_dict())
         model.db.session.commit()
 
         return list_of_elements

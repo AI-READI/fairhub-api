@@ -53,6 +53,7 @@ class StudyInterventionResource(Resource):
                 "type": "object",
                 "additionalProperties": False,
                 "properties": {
+                    "id": {"type": "string"},
                     "type": {
                         "type": "string",
                         "enum": [
@@ -71,7 +72,7 @@ class StudyInterventionResource(Resource):
                         ],
                     },
                     "name": {"type": "string", "minLength": 1},
-                    "description": {"type": "string", "minLength": 1},
+                    "description": {"type": "string"},
                     "arm_group_label_list": {
                         "type": "array",
                         "items": {"type": "string", "minLength": 1},
@@ -81,7 +82,6 @@ class StudyInterventionResource(Resource):
                     "other_name_list": {
                         "type": "array",
                         "items": {"type": "string", "minLength": 1},
-                        "minItems": 1,
                         "uniqueItems": True,
                     },
                 },
@@ -104,12 +104,10 @@ class StudyInterventionResource(Resource):
             if "id" in i and i["id"]:
                 study_intervention_ = model.StudyIntervention.query.get(i["id"])
                 study_intervention_.update(i)
-                list_of_elements.append(study_intervention_.to_dict())
-            elif "id" not in i or not i["id"]:
+            else:
                 study_intervention_ = model.StudyIntervention.from_data(study_obj, i)
                 model.db.session.add(study_intervention_)
-                list_of_elements.append(study_intervention_.to_dict())
-
+            list_of_elements.append(study_intervention_.to_dict())
         model.db.session.commit()
 
         return list_of_elements
