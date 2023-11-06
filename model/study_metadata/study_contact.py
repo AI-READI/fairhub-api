@@ -51,6 +51,7 @@ class StudyContact(db.Model):  # type: ignore
     def to_dict_metadata(self):
         """Converts the study metadata to a dictionary"""
         return {
+            "id": self.id,
             "name": self.name,
             "affiliation": self.affiliation,
             "phone": self.phone,

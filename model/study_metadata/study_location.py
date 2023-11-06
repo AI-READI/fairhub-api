@@ -47,6 +47,7 @@ class StudyLocation(db.Model):  # type: ignore
     def to_dict_metadata(self):
         """Converts the study metadata to a dictionary"""
         return {
+            "id": self.id,
             "facility": self.facility,
             "city": self.city,
             "country": self.country,

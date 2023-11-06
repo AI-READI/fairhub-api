@@ -46,6 +46,7 @@ class StudyArm(db.Model):  # type: ignore
     def to_dict_metadata(self):
         """Converts the study metadata to a dictionary"""
         return {
+            "id": self.id,
             "label": self.label,
             "description": self.description,
         }

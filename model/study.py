@@ -174,6 +174,11 @@ class Study(db.Model):  # type: ignore
 
     def to_dict_study_metadata(self):
         # self.study_contact: Iterable = []
+        primary = [
+            i.to_dict_metadata() for i in
+            self.study_identification if not i.secondary  # type: ignore
+        ]
+
         return {
             "arms": [i.to_dict_metadata() for i in self.study_arm],  # type: ignore
             "available_ipd": [
@@ -185,18 +190,20 @@ class Study(db.Model):  # type: ignore
             "description": self.study_description.to_dict_metadata(),
             "design": self.study_design.to_dict(),
             "eligibility": self.study_eligibility.to_dict_metadata(),
-            "identification": [
-                i.to_dict_metadata() for i in self.study_identification  # type: ignore
+            "primary_identifier": primary[0] if len(primary) else None,
+            "secondary_identifiers": [
+                i.to_dict_metadata() for i in
+                self.study_identification if i.secondary  # type: ignore
             ],
             "interventions": [
                 i.to_dict_metadata() for i in self.study_intervention  # type: ignore
             ],
             "ipd_sharing": self.study_ipdsharing.to_dict_metadata(),
             "links": [i.to_dict_metadata() for i in self.study_link],  # type: ignore
-            "location": [
+            "locations": [
                 i.to_dict_metadata() for i in self.study_location  # type: ignore
             ],
-            "overall_official": [
+            "overall_officials": [
                 i.to_dict_metadata()
                 for i in self.study_overall_official  # type: ignore
             ],

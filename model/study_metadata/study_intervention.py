@@ -48,6 +48,7 @@ class StudyIntervention(db.Model):  # type: ignore
     def to_dict_metadata(self):
         """Converts the study metadata to a dictionary"""
         return {
+            "id": self.id,
             "type": self.type,
             "name": self.name,
             "arm_group_label_list": self.arm_group_label_list,

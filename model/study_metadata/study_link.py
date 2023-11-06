@@ -41,6 +41,7 @@ class StudyLink(db.Model):  # type: ignore
         return {
             "title": self.title,
             "url": self.url,
+            "id": self.id,
         }
 
     @staticmethod
