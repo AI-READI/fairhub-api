@@ -97,8 +97,32 @@ class DatasetRelatedItem(db.Model):  # type: ignore
         }
 
     def to_dict_metadata(self):
+        bigint_timestamp = self.dataset_related_item_other.publication_year
+        unix_timestamp = bigint_timestamp / 1000
+        datetime_obj = datetime.datetime.utcfromtimestamp(unix_timestamp)
+
+        sorted_contributors = sorted(
+            self.dataset_related_item_contributor,
+            key=lambda creator: creator.created_at,
+        )
+
+        creators = [c for c in sorted_contributors if c.creator]
+        contributors = [c for c in sorted_contributors if not c.creator]
         return {
-            "relation_type": self.relation_type,
+            "type": self.type,
+            "titles": [i.to_dict_metadata() for i
+                       in self.dataset_related_item_title],  # type: ignore
+            "identifiers": [
+                i.to_dict_metadata() for i in
+                self.dataset_related_item_identifier  # type: ignore
+            ],
+            "creators": [i.to_dict_metadata() for i in creators],  # type: ignore
+            "contributors": [
+                i.to_dict_metadata() for i in contributors  # type: ignore
+            ],
+            # "publication_year": self.dataset_related_item_other.publication_year,
+            "publication_year": datetime_obj.strftime("%Y"),
+            "publisher": self.dataset_related_item_other.publisher,
         }
 
     @staticmethod

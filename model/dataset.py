@@ -113,55 +113,60 @@ class Dataset(db.Model):  # type: ignore
 
     def to_dict(self):
         last_published = self.last_published()
-        [print(type(i.title)) for i in self.dataset_title]
-        description = []
-        title = []
-        for i in self.dataset_description:
-            if i.description:
-                description.append(i.description)
-        for i in self.dataset_title:
-            if i.title:
-                title.append(i.title)
-                return {
-                    "id": self.id,
-                    "created_at": self.created_at,
-                    # "dataset_versions": [i.to_dict() for i in self.dataset_versions],
-                    "latest_version": last_published.id if last_published else None,
-                    "title": "".join(title),
-                    "description": "".join(description),
-                }
+        return {
+            "id": self.id,
+            "created_at": self.created_at,
+            # "dataset_versions": [i.to_dict() for i in self.dataset_versions],
+            "latest_version": last_published.id if last_published else None,
+            "title": [i.title if i.title
+                      else None for i in self.dataset_title][  # type: ignore
+                0
+            ],
+            "description": [
+                i.description if i.type == "Abstract" else None
+                for i in self.dataset_description  # type: ignore
+            ][0],
+        }
 
     def to_dict_dataset_metadata(self):
         return {
             "contributors": [
-                i.to_dict_metadata() for i in self.dataset_contributors  # type: ignore
+                i.to_dict_metadata() for i
+                in self.dataset_contributors if not i.creator  # type: ignore
             ],
+            "about": self.dataset_other.to_dict_metadata(),
+            "publisher": self.dataset_other.to_dict_publisher(),  # type: ignore
             "access": self.dataset_access.to_dict_metadata(),
             "consent": self.dataset_consent.to_dict_metadata(),
-            "date": [i.to_dict_metadata() for i in self.dataset_date],  # type: ignore
-            "de_ident_level": self.dataset_de_ident_level.to_dict_metadata(),
-            "description": [
+            "dates": [i.to_dict_metadata() for i in self.dataset_date],  # type: ignore
+            "de_identification": self.dataset_de_ident_level.to_dict_metadata(),
+            "descriptions": [
                 i.to_dict_metadata() for i in self.dataset_description  # type: ignore
             ],
-            " funder": [
-                i.to_dict_metadata() for i in self.dataset_funder
-            ],  # type: ignore
-            "alternate identifier": [
+            "funders": [
+                i.to_dict_metadata() for i in self.dataset_funder  # type: ignore
+            ],
+            "identifiers": [
                 i.to_dict_metadata()
                 for i in self.dataset_alternate_identifier  # type: ignore
             ],
-            "publisher": self.dataset_other.to_dict_publisher(),
-            "record keys": self.dataset_record_keys.to_dict_metadata(),
-            "related item": [
+            "creators": [
+                i.to_dict_metadata() for i
+                in self.dataset_contributors if i.creator  # type: ignore
+            ],
+            "record_keys": self.dataset_record_keys.to_dict_metadata(),
+            "related_items": [
                 i.to_dict_metadata() for i in self.dataset_related_item  # type: ignore
             ],
             "rights": [
-                i.to_dict_metadata() for i in self.dataset_rights
-            ],  # type: ignore
+                i.to_dict_metadata() for i in self.dataset_rights  # type: ignore
+            ],
             "subjects": [
-                i.to_dict_metadata() for i in self.dataset_subject
-            ],  # type: ignore
-            "title": [i.to_dict_metadata() for i in self.dataset_title],  # type: ignore
+                i.to_dict_metadata() for i in self.dataset_subject  # type: ignore
+            ],
+            "titles": [
+                i.to_dict_metadata() for i in self.dataset_title  # type: ignore
+            ],
         }
 
     def last_published(self):

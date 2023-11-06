@@ -25,6 +25,7 @@ class DatasetRecordKeys(db.Model):  # type: ignore
     def to_dict_metadata(self):
         return {
             "key_type": self.key_type,
+            "key_details": self.key_details,
         }
 
     @staticmethod

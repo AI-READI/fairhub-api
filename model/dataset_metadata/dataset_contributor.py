@@ -43,7 +43,10 @@ class DatasetContributor(db.Model):  # type: ignore
     def to_dict_metadata(self):
         return {
             "id": self.id,
-            "name_identifier": self.name_identifier,
+            "name": self.name,
+            "name_type": self.name_identifier,
+            "contributor_type": self.contributor_type,
+            "creator": self.creator,
         }
 
     @staticmethod

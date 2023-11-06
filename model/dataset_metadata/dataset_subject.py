@@ -37,7 +37,9 @@ class DatasetSubject(db.Model):  # type: ignore
 
     def to_dict_metadata(self):
         return {
+            "id": self.id,
             "subject": self.subject,
+            "scheme": self.scheme,
         }
 
     @staticmethod

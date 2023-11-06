@@ -41,6 +41,7 @@ class DatasetDeIdentLevel(db.Model):  # type: ignore
     def to_dict_metadata(self):
         return {
             "direct": self.direct,
+            "type": self.type,
         }
 
     @staticmethod

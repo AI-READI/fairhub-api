@@ -31,6 +31,7 @@ class DatasetAlternateIdentifier(db.Model):  # type: ignore
     def to_dict_metadata(self):
         return {
             "id": self.id,
+            "type": self.type,
             "identifier": self.identifier,
         }
 

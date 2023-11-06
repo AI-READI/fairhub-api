@@ -32,6 +32,7 @@ class DatasetAccess(db.Model):  # type: ignore
 
     def to_dict_metadata(self):
         return {
+            "type": self.type,
             "description": self.description,
         }
 

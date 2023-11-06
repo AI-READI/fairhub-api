@@ -42,6 +42,7 @@ class DatasetFunder(db.Model):  # type: ignore
         return {
             "id": self.id,
             "name": self.name,
+            "identifier": self.identifier,
         }
 
     @staticmethod

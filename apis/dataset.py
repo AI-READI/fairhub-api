@@ -176,11 +176,12 @@ class VersionDatasetChangelog(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
     @api.doc("version changelog update")
-    def put(self, study_id: str, dataset_id: str, version_id: str):
+    def put(self, study_id: str,
+            dataset_id: str, version_id: str):  # pylint: disable= unused-argument
         study = model.Study.query.get(study_id)
         if not is_granted("version", study):
             return "Access denied, you can not modify", 403
-        data = request.json
+        data: typing.Union[typing.Any, dict] = request.json
         version_ = model.Version.query.get(version_id)
         version_.changelog = data["changelog"]
         model.db.session.commit()
@@ -204,7 +205,8 @@ class VersionDatasetReadme(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
     @api.doc("version changelog update")
-    def put(self, study_id: str, dataset_id: str, version_id: str):
+    def put(self, study_id: str,
+            dataset_id: str, version_id: str):  # pylint: disable= unused-argument
         study = model.Study.query.get(study_id)
         if not is_granted("version", study):
             return "Access denied, you can not modify", 403

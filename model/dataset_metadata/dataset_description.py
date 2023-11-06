@@ -34,6 +34,7 @@ class DatasetDescription(db.Model):  # type: ignore
         return {
             "id": self.id,
             "description": self.description,
+            "type": self.type,
         }
 
     @staticmethod

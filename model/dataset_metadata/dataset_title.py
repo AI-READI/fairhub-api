@@ -32,7 +32,9 @@ class DatasetTitle(db.Model):  # type: ignore
 
     def to_dict_metadata(self):
         return {
+            "id": self.id,
             "title": self.title,
+            "type": self.type,
         }
 
     @staticmethod
