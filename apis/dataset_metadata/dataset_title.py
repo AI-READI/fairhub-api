@@ -42,7 +42,7 @@ class DatasetTitleResource(Resource):
         for i in data:
             if "id" in i and i["id"]:
                 dataset_title_ = model.DatasetTitle.query.get(i["id"])
-                # if dataset_title_.type == "MainTitle":
+                # if dataset_title_.type == "Main Title":
                 #     return (
                 #         "Main Title type can not be modified",
                 #         403,
@@ -50,9 +50,9 @@ class DatasetTitleResource(Resource):
                 dataset_title_.update(i)
                 list_of_elements.append(dataset_title_.to_dict())
             elif "id" not in i or not i["id"]:
-                if i["type"] == "MainTitle":
+                if i["type"] == "Main Title":
                     return (
-                        "MainTitle type can not be given",
+                        "Main Title type can not be given",
                         403,
                     )
                 dataset_title_ = model.DatasetTitle.from_data(data_obj, i)
@@ -79,9 +79,9 @@ class DatasetTitleResource(Resource):
                     403,
                 )
             dataset_title_ = model.DatasetTitle.query.get(title_id)
-            if dataset_title_.type == "MainTitle":
+            if dataset_title_.type == "Main Title":
                 return (
-                    "MainTitle type can not be deleted",
+                    "Main Title type can not be deleted",
                     403,
                 )
             model.db.session.delete(dataset_title_)

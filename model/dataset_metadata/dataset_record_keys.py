@@ -18,8 +18,8 @@ class DatasetRecordKeys(db.Model):  # type: ignore
 
     def to_dict(self):
         return {
-            "key_type": self.key_type,
-            "key_details": self.key_details,
+            "type": self.key_type,
+            "details": self.key_details,
         }
 
     def to_dict_metadata(self):

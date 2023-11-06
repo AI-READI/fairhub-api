@@ -11,7 +11,7 @@ class DatasetTitle(db.Model):  # type: ignore
         self.dataset = dataset
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
         self.title = ""
-        self.type = "MainTitle"
+        self.type = "Main Title"
 
     __tablename__ = "dataset_title"
     id = db.Column(db.CHAR(36), primary_key=True)
