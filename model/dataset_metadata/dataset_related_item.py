@@ -110,11 +110,12 @@ class DatasetRelatedItem(db.Model):  # type: ignore
         contributors = [c for c in sorted_contributors if not c.creator]
         return {
             "type": self.type,
-            "titles": [i.to_dict_metadata() for i
-                       in self.dataset_related_item_title],  # type: ignore
+            "titles": [
+                i.to_dict_metadata() for i in self.dataset_related_item_title
+            ],  # type: ignore
             "identifiers": [
-                i.to_dict_metadata() for i in
-                self.dataset_related_item_identifier  # type: ignore
+                i.to_dict_metadata()
+                for i in self.dataset_related_item_identifier  # type: ignore
             ],
             "creators": [i.to_dict_metadata() for i in creators],  # type: ignore
             "contributors": [

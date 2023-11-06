@@ -175,8 +175,9 @@ class Study(db.Model):  # type: ignore
     def to_dict_study_metadata(self):
         # self.study_contact: Iterable = []
         primary = [
-            i.to_dict_metadata() for i in
-            self.study_identification if not i.secondary  # type: ignore
+            i.to_dict_metadata()
+            for i in self.study_identification
+            if not i.secondary  # type: ignore
         ]
 
         return {
@@ -192,8 +193,9 @@ class Study(db.Model):  # type: ignore
             "eligibility": self.study_eligibility.to_dict_metadata(),
             "primary_identifier": primary[0] if len(primary) else None,
             "secondary_identifiers": [
-                i.to_dict_metadata() for i in
-                self.study_identification if i.secondary  # type: ignore
+                i.to_dict_metadata()
+                for i in self.study_identification
+                if i.secondary  # type: ignore
             ],
             "interventions": [
                 i.to_dict_metadata() for i in self.study_intervention  # type: ignore

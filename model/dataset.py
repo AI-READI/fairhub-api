@@ -118,8 +118,9 @@ class Dataset(db.Model):  # type: ignore
             "created_at": self.created_at,
             # "dataset_versions": [i.to_dict() for i in self.dataset_versions],
             "latest_version": last_published.id if last_published else None,
-            "title": [i.title if i.title
-                      else None for i in self.dataset_title][  # type: ignore
+            "title": [
+                i.title if i.title else None for i in self.dataset_title
+            ][  # type: ignore
                 0
             ],
             "description": [
@@ -131,8 +132,9 @@ class Dataset(db.Model):  # type: ignore
     def to_dict_dataset_metadata(self):
         return {
             "contributors": [
-                i.to_dict_metadata() for i
-                in self.dataset_contributors if not i.creator  # type: ignore
+                i.to_dict_metadata()
+                for i in self.dataset_contributors
+                if not i.creator  # type: ignore
             ],
             "about": self.dataset_other.to_dict_metadata(),
             "publisher": self.dataset_other.to_dict_publisher(),  # type: ignore
@@ -151,8 +153,9 @@ class Dataset(db.Model):  # type: ignore
                 for i in self.dataset_alternate_identifier  # type: ignore
             ],
             "creators": [
-                i.to_dict_metadata() for i
-                in self.dataset_contributors if i.creator  # type: ignore
+                i.to_dict_metadata()
+                for i in self.dataset_contributors
+                if i.creator  # type: ignore
             ],
             "record_keys": self.dataset_record_keys.to_dict_metadata(),
             "related_items": [
