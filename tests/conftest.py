@@ -64,7 +64,7 @@ def _create_user(_test_client):
         response = _test_client.post(
             "/auth/signup",
             json={
-                "email_address": "ymir@fairhub.io",
+                "email_address": "sample@gmail.com",
                 "password": "Testingyeshello11!",
                 "code": "7654321",
             },
@@ -81,7 +81,7 @@ def _login_user(_test_client):
         response = _test_client.post(
             "/auth/login",
             json={
-                "email_address": "ymir@fairhub.io",
+                "email_address": "sample@gmail.com",
                 "password": "Testingyeshello11!",
             },
         )

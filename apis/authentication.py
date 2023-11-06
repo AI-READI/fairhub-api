@@ -22,7 +22,7 @@ api = Namespace("Authentication", description="Authentication paths", path="/")
 signup_model = api.model(
     "Signup",
     {
-        "email_address": fields.String(required=True, default=""),
+        "email_address": fields.String(required=True, default="sample@gmail.com"),
         "password": fields.String(required=True, default=""),
         "code": fields.String(required=True, default=""),
     },
@@ -58,7 +58,6 @@ class SignUpUser(Resource):
         if os.environ.get("FLASK_ENV") != "testing":
             bypassed_emails = [
                 "test@fairhub.io",
-                "ymir@fairhub.io",
                 "bpatel@fairhub.io",
                 "sanjay@fairhub.io",
                 "aydan@fairhub.io",
@@ -117,7 +116,8 @@ class SignUpUser(Resource):
         # Schema validation
         schema = {
             "type": "object",
-            "required": ["email_address", "password", "code"],
+            # "required": ["email_address", "password", "code"],
+            "required": ["email_address", "password"],
             "additionalProperties": False,
             "properties": {
                 "email_address": {"type": "string", "format": "valid_email"},
@@ -125,7 +125,7 @@ class SignUpUser(Resource):
                     "type": "string",
                     "format": "password",
                 },
-                "code": {"type": "string"},
+                # "code": {"type": "string"},
             },
         }
 

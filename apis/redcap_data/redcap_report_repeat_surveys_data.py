@@ -1,15 +1,14 @@
 """API routes for redcap report repeat surveys data"""
-# import typing
+import typing
 
-# from flask import request
+from flask import request
 from flask_restx import Resource, fields
-
-# from jsonschema import ValidationError, validate
+from jsonschema import ValidationError, validate
 
 import model
 from apis.redcap_data_namespace import api
 
-# from ..authentication import is_granted
+from ..authentication import is_granted
 
 # # REDCap Data Visualization ETL Configuration
 # from modules.etl.config import redcapTransformConfig
@@ -60,9 +59,7 @@ class RedcapReportRepeatSurveysDataResource(Resource):
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_report_repeat_surveys_data)
     # @IN_MEMORY_CACHE.cached()
-    def get(
-        self, study_id: int, redcap_project_id: str
-    ):  # pylint: disable=unused-argument
+    def get(self, study_id: int, redcap_project_id: str):
         study_ = model.Study.query.get(study_id)
         study_redcap_ = study_.study_redcap.to_dict()
         PyCapProject = Project(

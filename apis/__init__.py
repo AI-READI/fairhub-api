@@ -7,6 +7,7 @@ from apis.study_metadata_namespace import api as study_metadata_namespace
 
 from .authentication import api as authentication
 from .contributor import api as contributors_api
+from .dashboard import api as dashboard
 from .dataset import api as dataset_api
 from .dataset_metadata.dataset_access import api as access
 from .dataset_metadata.dataset_alternate_identifier import api as alternate_identifier
@@ -107,6 +108,7 @@ __all__ = [
     "study_description",
     "dataset_contributor",
     "redcap",
+    "dashboard",
     "redcap_project_data",
     "redcap_report_participants_data",
     "redcap_report_participants_values_data",
@@ -140,3 +142,4 @@ api.add_namespace(participants_api)
 api.add_namespace(contributors_api)
 api.add_namespace(user)
 api.add_namespace(redcap)
+api.add_namespace(dashboard)
