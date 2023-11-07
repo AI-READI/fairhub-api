@@ -16,8 +16,8 @@ load_dotenv(".env")
 os.environ["FLASK_ENV"] = "testing"
 
 # Set global variable for study ID
+# Study variables use for testing
 pytest.global_study_id = {}
-pytest.global_dataset_id = ""
 pytest.global_version_id = ""
 pytest.global_arm_id = ""
 pytest.global_available_ipd_id = ""
@@ -29,6 +29,9 @@ pytest.global_location_id = ""
 pytest.global_overall_official_id = ""
 pytest.global_reference_id = ""
 
+# Dataset variables use for testing
+pytest.global_dataset_id = ""
+pytest.global_alternative_identifier_id = ""
 
 # Create the flask app for testing
 @pytest.fixture()
