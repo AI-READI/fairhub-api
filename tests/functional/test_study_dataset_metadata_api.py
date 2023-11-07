@@ -194,3 +194,37 @@ def test_post_dataset_contributor_metadata(_test_client, _login_user):
     assert response_data[0]["contributor_type"] == "Con Type"
     assert response_data[0]["affiliations"]["leader"] is True
     assert response_data[0]["affiliations"]["type"] == "CEO"
+
+
+def test_get_dataset_contributor_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/contributor'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset contributor metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+    response = _test_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor"
+    )
+    assert response.status_code == 200
+
+
+def test_delete_dataset_contributor_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/contributor'
+    endpoint is requested (DELETE)
+    Then check that the response is valid and deletes the dataset contributor metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+    contributor_id = pytest.global_dataset_contributor_id
+    response = _test_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor/{contributor_id}"
+    )
+
+    assert response.status_code == 200
+
+
