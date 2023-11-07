@@ -598,3 +598,22 @@ def test_put_other_dataset_metadata(_test_client, _login_user):
     assert response_data["resource_type"] == "Resource Type"
     assert response_data["size"] == ["Size"]
     assert response_data["standards_followed"] == "Standards Followed"
+
+
+# ------------------- PUBLICATION METADATA ------------------- #
+def test_get_dataset_publisher_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    publisher metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+
+    response = _test_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/publisher"
+    )
+
+    assert response.status_code == 200
