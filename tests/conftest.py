@@ -36,6 +36,7 @@ pytest.global_dataset_contributor_id = ""
 pytest.global_dataset_creator_id = ""
 pytest.global_dataset_date_id = ""
 pytest.global_dataset_description_id = ""
+pytest.global_dataset_funder_id = ""
 
 
 # Create the flask app for testing
