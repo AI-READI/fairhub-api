@@ -47,14 +47,14 @@ class DatasetOther(db.Model):  # type: ignore
     def to_dict_metadata(self):
         return {
             "language": self.language,
-            "standards_followed": self.managing_organization_ror_id,
+            "standards_followed": self.standards_followed,
         }
 
     def to_dict_publisher(self):
         return {
             "managing_organization_name": self.managing_organization_name,
             "managing_organization_ror_id": self.managing_organization_ror_id,
-            "publisher": self.publisher
+            "publisher": self.publisher,
         }
 
     @staticmethod

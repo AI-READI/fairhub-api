@@ -111,8 +111,9 @@ class DatasetRelatedItem(db.Model):  # type: ignore
         return {
             "type": self.type,
             "titles": [
-                i.to_dict_metadata() for i in self.dataset_related_item_title
-            ],  # type: ignore
+                i.to_dict_metadata()
+                for i in self.dataset_related_item_title  # type: ignore
+            ],
             "identifiers": [
                 i.to_dict_metadata()
                 for i in self.dataset_related_item_identifier  # type: ignore
