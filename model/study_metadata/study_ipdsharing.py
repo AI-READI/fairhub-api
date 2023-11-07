@@ -51,7 +51,6 @@ class StudyIpdsharing(db.Model):  # type: ignore
         return {
             "ipd_sharing": self.ipd_sharing,
             "ipd_sharing_info_type_list": self.ipd_sharing_info_type_list,
-
         }
 
     @staticmethod
