@@ -43,6 +43,7 @@ class DatasetList(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(dataset)
+    @api.doc("view datasets")
     def get(self, study_id):
         study = model.Study.query.get(study_id)
         datasets = model.Dataset.query.filter_by(study=study)
@@ -50,7 +51,7 @@ class DatasetList(Resource):
 
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
-    @api.doc("update dataset")
+    @api.doc("add datasets")
     @api.expect(dataset)
     def post(self, study_id):
         study = model.Study.query.get(study_id)
@@ -79,6 +80,7 @@ class DatasetList(Resource):
 @api.route("/study/<study_id>/dataset/<dataset_id>")
 @api.response(201, "Success")
 @api.response(400, "Validation Error")
+@api.doc("view dataset")
 class DatasetResource(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
@@ -88,6 +90,7 @@ class DatasetResource(Resource):
 
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
+    @api.doc("update dataset")
     def put(self, study_id: int, dataset_id: int):
         study = model.Study.query.get(study_id)
         if not is_granted("update_dataset", study):
@@ -100,6 +103,7 @@ class DatasetResource(Resource):
 
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
+    @api.doc("delete dataset")
     def delete(self, study_id: int, dataset_id: int):
         study = model.Study.query.get(study_id)
         if not is_granted("delete_dataset", study):
@@ -130,9 +134,15 @@ class VersionResource(Resource):
     def get(
         self, study_id: int, dataset_id: int, version_id: int
     ):  # pylint: disable= unused-argument
+        study = model.Study.query.get(study_id)
+        if not is_granted("version", study):
+            return "Access denied, you can not modify", 403
         dataset_version = model.Version.query.get(version_id)
         return dataset_version.to_dict()
 
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
+    @api.doc("update dataset version")
     def put(
         self, study_id: int, dataset_id: int, version_id: int
     ):  # pylint: disable= unused-argument
@@ -144,6 +154,9 @@ class VersionResource(Resource):
         model.db.session.commit()
         return jsonify(data_version_obj.to_dict()), 201
 
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
+    @api.doc("delete dataset version")
     def delete(
         self, study_id: int, dataset_id: int, version_id: int
     ):  # pylint: disable= unused-argument
@@ -193,7 +206,7 @@ class VersionDatasetChangelog(Resource):
 class VersionDatasetReadme(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
-    @api.doc("version changelog")
+    @api.doc("version readme")
     def get(self, study_id: str, dataset_id: str, version_id: str):
         study = model.Study.query.get(study_id)
         if not is_granted("version", study):
@@ -205,7 +218,7 @@ class VersionDatasetReadme(Resource):
 
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
-    @api.doc("version changelog update")
+    @api.doc("version readme update")
     def put(
         self, study_id: str, dataset_id: str, version_id: str
     ):  # pylint: disable= unused-argument
@@ -223,7 +236,7 @@ class VersionDatasetReadme(Resource):
 class VersionList(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
-    @api.doc("versions")
+    @api.doc("view versions")
     def get(self, study_id: int, dataset_id: int):
         study = model.Study.query.get(study_id)
         if not is_granted("version", study):
@@ -266,6 +279,21 @@ class VersionList(Resource):
 #         return dataset_versions.to_dict()
 
 
+@api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/study-metadata")
+class VersionDatasetMetadataResource(Resource):
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
+    @api.doc("version study metadata get")
+    def get(self, study_id: str, dataset_id: str, version_id: str):
+        study = model.Study.query.get(study_id)
+        if not is_granted("version", study):
+            return "Access denied, you can not modify", 403
+        version = model.Version.query.filter_by(
+            id=version_id, dataset_id=dataset_id
+        ).one_or_none()
+        return version.dataset.study.to_dict_study_metadata()
+
+
 @api.route(
     "/study/<study_id>/dataset/<dataset_id>/version/<version_id>/dataset-metadata"
 )
@@ -281,18 +309,3 @@ class VersionStudyMetadataResource(Resource):
             id=version_id, dataset_id=dataset_id
         ).one_or_none()
         return version.dataset.to_dict_dataset_metadata()
-
-
-@api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/study-metadata")
-class VersionDatasetMetadataResource(Resource):
-    @api.response(201, "Success")
-    @api.response(400, "Validation Error")
-    @api.doc("version study metadata get")
-    def get(self, study_id: str, dataset_id: str, version_id: str):
-        study = model.Study.query.get(study_id)
-        if not is_granted("version", study):
-            return "Access denied, you can not modify", 403
-        version = model.Version.query.filter_by(
-            id=version_id, dataset_id=dataset_id
-        ).one_or_none()
-        return version.dataset.study.to_dict_study_metadata()
