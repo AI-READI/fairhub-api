@@ -53,6 +53,7 @@ class StudyInterventionResource(Resource):
                 "type": "object",
                 "additionalProperties": False,
                 "properties": {
+                    "id": {"type": "string"},
                     "type": {
                         "type": "string",
                         "enum": [

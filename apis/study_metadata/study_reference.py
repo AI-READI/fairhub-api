@@ -50,6 +50,7 @@ class StudyReferenceResource(Resource):
                 "type": "object",
                 "additionalProperties": False,
                 "properties": {
+                    "id": {"type": "string"},
                     "identifier": {"type": "string"},
                     "type": {"type": ["string", "null"]},
                     "citation": {"type": "string", "minLength": 1},

@@ -37,7 +37,7 @@ class DatasetOther(db.Model):  # type: ignore
             "language": self.language,
             "managing_organization_name": self.managing_organization_name,
             "managing_organization_ror_id": self.managing_organization_ror_id,
-            "standards_followed": self.managing_organization_ror_id,
+            "standards_followed": self.standards_followed,
             "acknowledgement": self.acknowledgement,
             "size": self.size,
             "publisher": self.publisher,
@@ -47,14 +47,14 @@ class DatasetOther(db.Model):  # type: ignore
     def to_dict_metadata(self):
         return {
             "language": self.language,
-            "resource_type": self.resource_type,
+            "standards_followed": self.managing_organization_ror_id,
         }
 
     def to_dict_publisher(self):
         return {
             "managing_organization_name": self.managing_organization_name,
             "managing_organization_ror_id": self.managing_organization_ror_id,
-            "publisher": self.publisher,
+            "publisher": self.publisher
         }
 
     @staticmethod
@@ -74,8 +74,7 @@ class DatasetOther(db.Model):  # type: ignore
             self.size = data["size"]
         if "acknowledgement" in data:
             self.acknowledgement = data["acknowledgement"]
-        if "standards_followed" in data:
-            self.standards_followed = data["standards_followed"]
+        self.standards_followed = data["standards_followed"]
         if "publisher" in data:
             self.publisher = data["publisher"]
         if "resource_type" in data:

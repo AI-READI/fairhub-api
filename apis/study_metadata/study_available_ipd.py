@@ -59,6 +59,7 @@ class StudyAvailableResource(Resource):
                 "type": "object",
                 "additionalProperties": False,
                 "properties": {
+                    "id": {"type": "string"},
                     "identifier": {"type": "string", "minLength": 1},
                     "type": {
                         "type": "string",
