@@ -50,6 +50,8 @@ class StudyIpdsharing(db.Model):  # type: ignore
         """Converts the study metadata to a dictionary"""
         return {
             "ipd_sharing": self.ipd_sharing,
+            "ipd_sharing_info_type_list": self.ipd_sharing_info_type_list,
+
         }
 
     @staticmethod

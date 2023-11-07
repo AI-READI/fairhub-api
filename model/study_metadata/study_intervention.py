@@ -51,7 +51,6 @@ class StudyIntervention(db.Model):  # type: ignore
             "id": self.id,
             "type": self.type,
             "name": self.name,
-            "arm_group_label_list": self.arm_group_label_list,
         }
 
     @staticmethod
