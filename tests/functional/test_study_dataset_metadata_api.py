@@ -549,3 +549,52 @@ def test_delete_dataset_funder_metadata(_test_client, _login_user):
     )
 
     assert response.status_code == 200
+
+
+# ------------------- OTHER METADATA ------------------- #
+def test_get_other_dataset_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    other metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+
+    response = _test_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/other")
+
+    assert response.status_code == 200
+
+
+def test_put_other_dataset_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}'
+    endpoint is requested (PUT)
+    Then check that the response is valid and updates the dataset
+    other metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+
+    response = _test_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/other",
+        json={
+            "acknowledgement": "Yes",
+            "language": "English",
+            "resource_type": "Resource Type",
+            "size": ["Size"],
+            "standards_followed": "Standards Followed",
+        },
+    )
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+
+    assert response_data["acknowledgement"] == "Yes"
+    assert response_data["language"] == "English"
+    assert response_data["resource_type"] == "Resource Type"
+    assert response_data["size"] == ["Size"]
+    assert response_data["standards_followed"] == "Standards Followed"
