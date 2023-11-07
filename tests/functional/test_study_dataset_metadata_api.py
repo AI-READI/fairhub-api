@@ -478,3 +478,18 @@ def test_delete_dataset_description_metadata(_test_client, _login_user):
     assert response.status_code == 200
 
 
+# ------------------- FUNDER METADATA ------------------- #
+def test_get_dataset_funder_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/funder'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    funder metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+
+    response = _test_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/funder")
+
+    assert response.status_code == 200
