@@ -33,6 +33,7 @@ pytest.global_reference_id = ""
 pytest.global_dataset_id = ""
 pytest.global_alternative_identifier_id = ""
 
+
 # Create the flask app for testing
 @pytest.fixture()
 def flask_app():

@@ -13,7 +13,9 @@ def test_get_dataset_access_metadata(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]
     dataset_id = pytest.global_dataset_id
-    response = _test_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/access")
+    response = _test_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/access"
+    )
     assert response.status_code == 200
 
 
@@ -60,7 +62,7 @@ def test_post_alternative_identifier(_test_client, _login_user):
                 "identifier": "identifier test",
                 "type": "type test",
             }
-        ]
+        ],
     )
 
     assert response.status_code == 200
@@ -113,7 +115,9 @@ def test_get_dataset_consent_metadata(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]
     dataset_id = pytest.global_dataset_id
-    response = _test_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/consent")
+    response = _test_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/consent"
+    )
     assert response.status_code == 200
 
 
@@ -134,8 +138,8 @@ def test_put_dataset_consent_metadata(_test_client, _login_user):
             "research_type": True,
             "genetic_only": True,
             "no_methods": True,
-            "details": "test"
-        }
+            "details": "test",
+        },
     )
 
     assert response.status_code == 200
@@ -154,7 +158,7 @@ def test_put_dataset_consent_metadata(_test_client, _login_user):
 def test_post_dataset_contributor_metadata(_test_client, _login_user):
     """
     Given a Flask application configured for testing and a study ID
-    When the '/study/{study_id}/dataset/{dataset_id}/metadata/contributor' 
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/contributor'
     endpoint is requested (POST)
     Then check that the response is valid and creates the dataset contributor metadata content
     """
