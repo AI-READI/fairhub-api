@@ -311,9 +311,7 @@ def test_get_dataset_date_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     dataset_id = pytest.global_dataset_id
 
-    response = _test_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/date"
-    )
+    response = _test_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/date")
 
     assert response.status_code == 200
 
@@ -330,11 +328,7 @@ def test_post_dataset_date_metadata(_test_client, _login_user):
 
     response = _test_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/date",
-        json=[{
-            "date": "2021-01-01",
-            "type": "Type",
-            "information": "Info"
-        }],
+        json=[{"date": "2021-01-01", "type": "Type", "information": "Info"}],
     )
 
     assert response.status_code == 200
@@ -403,7 +397,7 @@ def test_put_dataset_deidentification_metadata(_test_client, _login_user):
             "dates": True,
             "nonarr": True,
             "k_anon": True,
-            "details": "Details"
+            "details": "Details",
         },
     )
 
