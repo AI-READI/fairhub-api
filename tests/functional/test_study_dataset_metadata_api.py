@@ -302,3 +302,49 @@ def test_delete_dataset_creator_metadata(_test_client, _login_user):
     )
 
     assert response.status_code == 200
+
+
+# ------------------- DATE METADATA ------------------- #
+def test_get_dataset_date_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/date'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset date metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+
+    response = _test_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/date"
+    )
+
+    assert response.status_code == 200
+
+
+def test_post_dataset_date_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/date'
+    endpoint is requested (POST)
+    Then check that the response is valid and creates the dataset date metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+
+    response = _test_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/date",
+        json=[{
+            "date": "2021-01-01",
+            "type": "Type",
+            "information": "Info"
+        }],
+    )
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    pytest.global_dataset_date_id = response_data[0]["id"]
+
+    assert response_data[0]["date"] == "2021-01-01"
+    assert response_data[0]["type"] == "Type"
+    assert response_data[0]["information"] == "Info"
