@@ -1,9 +1,10 @@
+"""This module is used to authenticate users to the system and
+handle few authentication errors. Also, it sets token for logged user
+along with expiration date"""
 import datetime
 import importlib
 import os
 import re
-
-# import config
 import uuid
 from datetime import timezone
 from typing import Any, Union
@@ -37,11 +38,16 @@ login_model = api.model(
 
 
 class UnauthenticatedException(Exception):
+    """Exception raised when a user is not authenticated."""
+
+    # TODO: Implement this exception
     pass
 
 
 @api.route("/auth/signup")
 class SignUpUser(Resource):
+    """SignUpUser class is used to sign up new users to the system"""
+
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(signup_model)
@@ -50,7 +56,14 @@ class SignUpUser(Resource):
         """signs up the new users and saves data in DB"""
         data: Union[Any, dict] = request.json
         if os.environ.get("FLASK_ENV") != "testing":
-            if data["email_address"] not in ["test@fairhub.io"]:
+            bypassed_emails = [
+                "test@fairhub.io",
+                "bpatel@fairhub.io",
+                "sanjay@fairhub.io",
+                "aydan@fairhub.io",
+            ]
+
+            if data["email_address"] not in bypassed_emails:
                 invite = model.StudyInvitedContributor.query.filter_by(
                     email_address=data["email_address"]
                 ).one_or_none()
@@ -145,6 +158,8 @@ class SignUpUser(Resource):
 
 @api.route("/auth/login")
 class Login(Resource):
+    """Login class is used to login users to the system"""
+
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(login_model)
@@ -157,9 +172,8 @@ class Login(Resource):
         email_address = data["email_address"]
 
         def validate_is_valid_email(instance):
-            print("within is_valid_email")
             email_address = instance
-            print(email_address)
+
             try:
                 validate_email(email_address)
                 return True
@@ -353,16 +367,10 @@ def is_granted(permission: str, study=None):
     return permission in role[contributor.permission]
 
 
-#
-# def is_study_metadata(study_id: int):
-#     study_obj = model.Study.query.get(study_id)
-#     if not is_granted("study_metadata", study_obj):
-#         return "Access denied, you can not delete study", 403
-#
-
-
 @api.route("/auth/logout")
 class Logout(Resource):
+    """Logout class is used to log out users from the system"""
+
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def post(self):
@@ -380,14 +388,15 @@ class Logout(Resource):
         return resp
 
 
-@api.route("/auth/current-users")
-class CurrentUsers(Resource):
-    """function is used to see all logged users in
-    the system. For now, it is used for testing purposes"""
+# @api.route("/auth/current-users")
+# class CurrentUsers(Resource):
+#     """function is used to see all logged users in
+#     the system. For now, it is used for testing purposes"""
 
-    @api.response(200, "Success")
-    @api.response(400, "Validation Error")
-    def get(self):
-        if not g.user:
-            return None
-        return g.user.to_dict()
+#     @api.response(200, "Success")
+#     @api.response(400, "Validation Error")
+#     def get(self):
+#         """returns all logged users in the system"""
+#         if not g.user:
+#             return None
+#         return g.user.to_dict()
