@@ -162,3 +162,35 @@ def test_post_dataset_contributor_metadata(_test_client, _login_user):
     endpoint is requested (POST)
     Then check that the response is valid and creates the dataset contributor metadata content
     """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+    response = _test_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor",
+        json=[{
+            "name": "Name here",
+            "name_type": "Name type",
+            "name_identifier": "Name identifier",
+            "name_identifier_scheme": "Name Scheme ID",
+            "name_identifier_scheme_uri": "Name ID Scheme URI",
+            "creator": True,
+            "contributor_type": "Con Type",
+            "affiliations": {
+                "leader": True,
+                "type": "CEO"
+            }
+        }],
+    )
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    pytest.global_dataset_contributor_id = response_data[0]["id"]
+
+    assert response_data[0]["name"] == "Name here"
+    assert response_data[0]["name_type"] == "Name type"
+    assert response_data[0]["name_identifier"] == "Name identifier"
+    assert response_data[0]["name_identifier_scheme"] == "Name Scheme ID"
+    assert response_data[0]["name_identifier_scheme_uri"] == "Name ID Scheme URI"
+    assert response_data[0]["creator"] is True
+    assert response_data[0]["contributor_type"] == "Con Type"
+    assert response_data[0]["affiliations"]["leader"] is True
+    assert response_data[0]["affiliations"]["type"] == "CEO"

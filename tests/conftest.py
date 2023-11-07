@@ -32,6 +32,7 @@ pytest.global_reference_id = ""
 # Dataset variables use for testing
 pytest.global_dataset_id = ""
 pytest.global_alternative_identifier_id = ""
+pytest.global_dataset_contributor_id = ""
 
 
 # Create the flask app for testing
@@ -68,7 +69,7 @@ def _create_user(_test_client):
         response = _test_client.post(
             "/auth/signup",
             json={
-                "email_address": "sample@gmail.com",
+                "email_address": "test@fairhub.io",
                 "password": "Testingyeshello11!",
                 "code": "7654321",
             },
@@ -85,7 +86,7 @@ def _login_user(_test_client):
         response = _test_client.post(
             "/auth/login",
             json={
-                "email_address": "sample@gmail.com",
+                "email_address": "test@fairhub.io",
                 "password": "Testingyeshello11!",
             },
         )
