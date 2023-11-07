@@ -362,3 +362,58 @@ def test_delete_dataset_date_metadata(_test_client, _login_user):
     )
 
     assert response.status_code == 200
+
+
+# ------------------- DE-IDENTIFICATION LEVEL METADATA ------------------- #
+def test_get_dataset_deidentification_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/de-identification'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    de-identification metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+
+    response = _test_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/de-identification-level"
+    )
+
+    assert response.status_code == 200
+
+
+def test_put_dataset_deidentification_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/de-identification'
+    endpoint is requested (PUT)
+    Then check that the response is valid and updates the dataset
+    de-identification metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+
+    response = _test_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/de-identification-level",
+        json={
+            "type": "Level",
+            "direct": True,
+            "hipaa": True,
+            "dates": True,
+            "nonarr": True,
+            "k_anon": True,
+            "details": "Details"
+        },
+    )
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+
+    assert response_data["type"] == "Level"
+    assert response_data["direct"] is True
+    assert response_data["hipaa"] is True
+    assert response_data["dates"] is True
+    assert response_data["nonarr"] is True
+    assert response_data["k_anon"] is True
+    assert response_data["details"] == "Details"
