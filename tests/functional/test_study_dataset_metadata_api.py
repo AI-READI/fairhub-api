@@ -344,3 +344,21 @@ def test_post_dataset_date_metadata(_test_client, _login_user):
     assert response_data[0]["date"] == "2021-01-01"
     assert response_data[0]["type"] == "Type"
     assert response_data[0]["information"] == "Info"
+
+
+def test_delete_dataset_date_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/date'
+    endpoint is requested (DELETE)
+    Then check that the response is valid and deletes the dataset date metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+    date_id = pytest.global_dataset_date_id
+
+    response = _test_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/date/{date_id}"
+    )
+
+    assert response.status_code == 200
