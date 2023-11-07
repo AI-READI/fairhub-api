@@ -417,3 +417,22 @@ def test_put_dataset_deidentification_metadata(_test_client, _login_user):
     assert response_data["nonarr"] is True
     assert response_data["k_anon"] is True
     assert response_data["details"] == "Details"
+
+
+# ------------------- DESCRIPTION METADATA ------------------- #
+def test_get_dataset_descriptions_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/description'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    description metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+
+    response = _test_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/description"
+    )
+
+    assert response.status_code == 200
