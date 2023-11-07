@@ -166,19 +166,18 @@ def test_post_dataset_contributor_metadata(_test_client, _login_user):
     dataset_id = pytest.global_dataset_id
     response = _test_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor",
-        json=[{
-            "name": "Name here",
-            "name_type": "Name type",
-            "name_identifier": "Name identifier",
-            "name_identifier_scheme": "Name Scheme ID",
-            "name_identifier_scheme_uri": "Name ID Scheme URI",
-            "creator": False,
-            "contributor_type": "Con Type",
-            "affiliations": {
-                "leader": True,
-                "type": "CEO"
+        json=[
+            {
+                "name": "Name here",
+                "name_type": "Name type",
+                "name_identifier": "Name identifier",
+                "name_identifier_scheme": "Name Scheme ID",
+                "name_identifier_scheme_uri": "Name ID Scheme URI",
+                "creator": False,
+                "contributor_type": "Con Type",
+                "affiliations": {"leader": True, "type": "CEO"},
             }
-        }],
+        ],
     )
 
     assert response.status_code == 200
@@ -264,10 +263,7 @@ def test_post_dataset_creator_metadata(_test_client, _login_user):
             "name_identifier_scheme_uri": "Name ID Scheme URI",
             "creator": True,
             "contributor_type": "Con Type",
-            "affiliations": {
-                "leader": True,
-                "type": "CEO"
-            }
+            "affiliations": {"leader": True, "type": "CEO"},
         },
     )
 
