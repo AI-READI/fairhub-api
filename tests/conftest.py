@@ -33,6 +33,7 @@ pytest.global_reference_id = ""
 pytest.global_dataset_id = ""
 pytest.global_alternative_identifier_id = ""
 pytest.global_dataset_contributor_id = ""
+pytest.global_dataset_creator_id = ""
 
 
 # Create the flask app for testing

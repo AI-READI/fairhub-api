@@ -172,7 +172,7 @@ def test_post_dataset_contributor_metadata(_test_client, _login_user):
             "name_identifier": "Name identifier",
             "name_identifier_scheme": "Name Scheme ID",
             "name_identifier_scheme_uri": "Name ID Scheme URI",
-            "creator": True,
+            "creator": False,
             "contributor_type": "Con Type",
             "affiliations": {
                 "leader": True,
@@ -190,7 +190,7 @@ def test_post_dataset_contributor_metadata(_test_client, _login_user):
     assert response_data[0]["name_identifier"] == "Name identifier"
     assert response_data[0]["name_identifier_scheme"] == "Name Scheme ID"
     assert response_data[0]["name_identifier_scheme_uri"] == "Name ID Scheme URI"
-    assert response_data[0]["creator"] is True
+    assert response_data[0]["creator"] is False
     assert response_data[0]["contributor_type"] == "Con Type"
     assert response_data[0]["affiliations"]["leader"] is True
     assert response_data[0]["affiliations"]["type"] == "CEO"
@@ -228,3 +228,77 @@ def test_delete_dataset_contributor_metadata(_test_client, _login_user):
     assert response.status_code == 200
 
 
+# ------------------- CREATOR METADATA ------------------- #
+def test_get_dataset_creator_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/creator' endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset creator metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+
+    response = _test_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator"
+    )
+
+    assert response.status_code == 200
+
+
+def test_post_dataset_creator_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/creator' endpoint is requested (POST)
+    Then check that the response is valid and creates the dataset creator metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+
+    response = _test_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator",
+        json={
+            "name": "Name here",
+            "name_type": "Name type",
+            "name_identifier": "Name identifier",
+            "name_identifier_scheme": "Name Scheme ID",
+            "name_identifier_scheme_uri": "Name ID Scheme URI",
+            "creator": True,
+            "contributor_type": "Con Type",
+            "affiliations": {
+                "leader": True,
+                "type": "CEO"
+            }
+        },
+    )
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    pytest.global_dataset_creator_id = response_data[0]["id"]
+
+    assert response_data[0]["name"] == "Name here"
+    assert response_data[0]["name_type"] == "Name type"
+    assert response_data[0]["name_identifier"] == "Name identifier"
+    assert response_data[0]["name_identifier_scheme"] == "Name Scheme ID"
+    assert response_data[0]["name_identifier_scheme_uri"] == "Name ID Scheme URI"
+    assert response_data[0]["creator"] is True
+    assert response_data[0]["contributor_type"] == "Con Type"
+    assert response_data[0]["affiliations"]["leader"] is True
+    assert response_data[0]["affiliations"]["type"] == "CEO"
+
+
+def test_delete_dataset_creator_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/creator'
+    endpoint is requested (DELETE)
+    Then check that the response is valid and deletes the dataset creator metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+    creator_id = pytest.global_dataset_creator_id
+
+    response = _test_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator/{creator_id}"
+    )
+
+    assert response.status_code == 200
