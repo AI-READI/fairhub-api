@@ -71,7 +71,7 @@ class StudyDesignResource(Resource):
                 "design_primary_purpose": {"type": ["string", "null"]},
                 "design_masking": {"type": ["string", "null"]},
                 "design_masking_description": {
-                    "type": "string",
+                    "type": ["string", "null"],
                 },
                 "design_who_masked_list": {
                     "type": "array",
@@ -118,7 +118,7 @@ class StudyDesignResource(Resource):
                 },
                 "number_arms": {"type": ["integer", "null"]},
                 "design_observational_model_list": {
-                    "type": "array",
+                    "type": ["array", "null"],
                     "items": {
                         "type": "string",
                         "oneOf": [
@@ -138,7 +138,7 @@ class StudyDesignResource(Resource):
                     "uniqueItems": True,
                 },
                 "design_time_perspective_list": {
-                    "type": "array",
+                    "type": ["array", "null"],
                     "items": {
                         "type": "string",
                         "oneOf": [
@@ -156,10 +156,10 @@ class StudyDesignResource(Resource):
                 },
                 "bio_spec_retention": {"type": ["string", "null"]},
                 "bio_spec_description": {
-                    "type": "string",
+                    "type": ["string", "null"],
                 },
                 "target_duration": {
-                    "type": "string",
+                    "type": ["string", "null"],
                 },
                 "number_groups_cohorts": {"type": ["integer", "null"]},
             },
