@@ -55,6 +55,7 @@ class StudyOverallOfficialResource(Resource):
                 "type": "object",
                 "additionalProperties": False,
                 "properties": {
+                    "id": {"type": "string"},
                     "name": {"type": "string", "minLength": 1},
                     "affiliation": {"type": "string", "minLength": 1},
                     "role": {
@@ -85,14 +86,12 @@ class StudyOverallOfficialResource(Resource):
             if "id" in i and i["id"]:
                 study_overall_official_ = model.StudyOverallOfficial.query.get(i["id"])
                 study_overall_official_.update(i)
-                list_of_elements.append(study_overall_official_.to_dict())
-            elif "id" not in i or not i["id"]:
+            else:
                 study_overall_official_ = model.StudyOverallOfficial.from_data(
                     study_obj, i
                 )
                 model.db.session.add(study_overall_official_)
-                list_of_elements.append(study_overall_official_.to_dict())
-
+            list_of_elements.append(study_overall_official_.to_dict())
         model.db.session.commit()
 
         return list_of_elements

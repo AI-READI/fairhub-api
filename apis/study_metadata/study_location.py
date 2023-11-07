@@ -52,6 +52,7 @@ class StudyLocationResource(Resource):
             "items": {
                 "type": "object",
                 "properties": {
+                    "id": {"type": "string"},
                     "facility": {"type": "string", "minLength": 1},
                     "status": {
                         "type": "string",
@@ -89,12 +90,10 @@ class StudyLocationResource(Resource):
             if "id" in i and i["id"]:
                 study_location_ = model.StudyLocation.query.get(i["id"])
                 study_location_.update(i)
-                list_of_elements.append(study_location_.to_dict())
-            elif "id" not in i or not i["id"]:
+            else:
                 study_location_ = model.StudyLocation.from_data(study_obj, i)
                 model.db.session.add(study_location_)
-                list_of_elements.append(study_location_.to_dict())
-
+            list_of_elements.append(study_location_.to_dict())
         model.db.session.commit()
 
         return list_of_elements

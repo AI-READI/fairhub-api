@@ -50,6 +50,7 @@ class StudyReferenceResource(Resource):
                 "type": "object",
                 "additionalProperties": False,
                 "properties": {
+                    "id": {"type": "string"},
                     "identifier": {"type": "string"},
                     "type": {"type": ["string", "null"]},
                     "citation": {"type": "string", "minLength": 1},
@@ -73,12 +74,10 @@ class StudyReferenceResource(Resource):
             if "id" in i and i["id"]:
                 study_reference_ = model.StudyReference.query.get(i["id"])
                 study_reference_.update(i)
-                list_of_elements.append(study_reference_.to_dict())
-            elif "id" not in i or not i["id"]:
+            else:
                 study_reference_ = model.StudyReference.from_data(study_obj, i)
                 model.db.session.add(study_reference_)
-                list_of_elements.append(study_reference_.to_dict())
-
+            list_of_elements.append(study_reference_.to_dict())
         model.db.session.commit()
 
         return list_of_elements
