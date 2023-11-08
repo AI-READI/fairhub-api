@@ -971,3 +971,22 @@ def test_post_dataset_rights_metadata(_test_client, _login_user):
     assert response_data[0]["identifier_scheme"] == "Identifier Scheme"
     assert response_data[0]["rights"] == "Rights"
     assert response_data[0]["uri"] == "URI"
+
+
+def test_delete_dataset_rights_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study'
+    endpoint is requested (DELETE)
+    Then check that the response is valid and deletes the dataset
+    rights metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+    rights_id = pytest.global_dataset_rights_id
+
+    response = _test_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights/{rights_id}"
+    )
+
+    assert response.status_code == 200
