@@ -1007,3 +1007,34 @@ def test_get_dataset_subjects_metadata(_test_client, _login_user):
     response = _test_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/subject")
 
     assert response.status_code == 200
+
+
+def test_post_dataset_subjects_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/subject'
+    endpoint is requested (POST)
+    Then check that the response is valid and creates the dataset
+    subjects metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+
+    response = _test_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/subject",
+        json=[{
+            "scheme": "Scheme",
+            "scheme_uri": "Scheme URI",
+            "subject": "Subject",
+            "value_uri": "Value URI"
+        }],
+    )
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    pytest.global_dataset_subject_id = response_data[0]["id"]
+
+    assert response_data[0]["scheme"] == "Scheme"
+    assert response_data[0]["scheme_uri"] == "Scheme URI"
+    assert response_data[0]["subject"] == "Subject"
+    assert response_data[0]["value_uri"] == "Value URI"
