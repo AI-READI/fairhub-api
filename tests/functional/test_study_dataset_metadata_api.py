@@ -1038,3 +1038,22 @@ def test_post_dataset_subjects_metadata(_test_client, _login_user):
     assert response_data[0]["scheme_uri"] == "Scheme URI"
     assert response_data[0]["subject"] == "Subject"
     assert response_data[0]["value_uri"] == "Value URI"
+
+
+def test_delete_dataset_subject_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/subject/{subject_id}'
+    endpoint is requested (DELETE)
+    Then check that the response is valid and deletes the dataset
+    subject metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+    subject_id = pytest.global_dataset_subject_id
+
+    response = _test_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/subject/{subject_id}"
+    )
+
+    assert response.status_code == 200
