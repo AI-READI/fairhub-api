@@ -754,21 +754,25 @@ def test_post_dataset_related_item_metadata(_test_client, _login_user):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item",
         json=[
             {
-                "contributors": [{
-                    "name": "Ndafsdame",
-                    "contributor_type": "Con Type",
-                    "name_type": "Personal"
-                }],
+                "contributors": [
+                    {
+                        "name": "Ndafsdame",
+                        "contributor_type": "Con Type",
+                        "name_type": "Personal",
+                    }
+                ],
                 "creators": [{"name": "Name", "name_type": "Personal"}],
                 "edition": "Edition",
                 "first_page": "First Page",
-                "identifiers": [{
-                    "identifier": "Identifier", 
-                    "metadata_scheme": "Metadata Scheme", 
-                    "scheme_type": "Scheme Type", 
-                    "scheme_uri": "Scheme URI",
-                    "type": "ark"
-                }],
+                "identifiers": [
+                    {
+                        "identifier": "Identifier",
+                        "metadata_scheme": "Metadata Scheme",
+                        "scheme_type": "Scheme Type",
+                        "scheme_uri": "Scheme URI",
+                        "type": "ark",
+                    }
+                ],
                 "issue": "Issue",
                 "last_page": "Last Page",
                 "number_type": "Number Type",
@@ -778,7 +782,7 @@ def test_post_dataset_related_item_metadata(_test_client, _login_user):
                 "relation_type": "Relation Type",
                 "titles": [{"title": "Title", "type": "MainTitle"}],
                 "type": "Type",
-                "volume": "Volume"
+                "volume": "Volume",
             }
         ],
     )
@@ -786,6 +790,16 @@ def test_post_dataset_related_item_metadata(_test_client, _login_user):
     assert response.status_code == 200
     response_data = json.loads(response.data)
     pytest.global_dataset_related_item_id = response_data[0]["id"]
+    pytest.global_dataset_related_item_contributor_id = response_data[0][
+        "contributors"
+    ][0]["id"]
+    pytest.global_dataset_related_item_creator_id = response_data[0]["creators"][0][
+        "id"
+    ]
+    pytest.global_dataset_related_item_identifier_id = response_data[0]["identifiers"][
+        0
+    ]["id"]
+    pytest.global_dataset_related_item_title_id = response_data[0]["titles"][0]["id"]
 
     assert response_data[0]["contributors"][0]["name"] == "Ndafsdame"
     assert response_data[0]["contributors"][0]["contributor_type"] == "Con Type"
@@ -826,6 +840,26 @@ def test_delete_dataset_related_item_metadata(_test_client, _login_user):
 
     response = _test_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}"
+    )
+
+    assert response.status_code == 200
+
+
+def test_delete_dataset_related_item_contributor_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}'
+    endpoint is requested (DELETE)
+    Then check that the response is valid and deletes the dataset
+    related item metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+    related_item_id = pytest.global_dataset_related_item_id
+    contributor_id = pytest.global_dataset_related_item_contributor_id
+
+    response = _test_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/contributor/{contributor_id}"
     )
 
     assert response.status_code == 200
