@@ -976,7 +976,7 @@ def test_post_dataset_rights_metadata(_test_client, _login_user):
 def test_delete_dataset_rights_metadata(_test_client, _login_user):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
-    When the '/study'
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/rights'
     endpoint is requested (DELETE)
     Then check that the response is valid and deletes the dataset
     rights metadata content
@@ -988,5 +988,22 @@ def test_delete_dataset_rights_metadata(_test_client, _login_user):
     response = _test_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights/{rights_id}"
     )
+
+    assert response.status_code == 200
+
+
+# ------------------- SUBJECTS METADATA ------------------- #
+def test_get_dataset_subjects_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/subject'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    subjects metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+
+    response = _test_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/subject")
 
     assert response.status_code == 200
