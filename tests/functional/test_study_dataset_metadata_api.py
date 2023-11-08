@@ -940,3 +940,34 @@ def test_get_dataset_rights_metadata(_test_client, _login_user):
     response = _test_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/rights")
 
     assert response.status_code == 200
+
+
+def test_post_dataset_rights_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study'
+    endpoint is requested (POST)
+    Then check that the response is valid and creates the dataset
+    rights metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+
+    response = _test_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights",
+        json=[{
+            "identifier": "Identifier",
+            "identifier_scheme": "Identifier Scheme",
+            "rights": "Rights",
+            "uri": "URI"
+        }],
+    )
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    pytest.global_dataset_rights_id = response_data[0]["id"]
+
+    assert response_data[0]["identifier"] == "Identifier"
+    assert response_data[0]["identifier_scheme"] == "Identifier Scheme"
+    assert response_data[0]["rights"] == "Rights"
+    assert response_data[0]["uri"] == "URI"
