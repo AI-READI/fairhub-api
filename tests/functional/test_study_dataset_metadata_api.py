@@ -737,3 +737,76 @@ def test_get_dataset_related_item_metadata(_test_client, _login_user):
     )
 
     assert response.status_code == 200
+
+
+def test_post_dataset_related_item_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset'
+    endpoint is requested (POST)
+    Then check that the response is valid and creates the dataset
+    related item metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+
+    response = _test_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item",
+        json=[
+            {
+                "contributors": [{
+                    "name": "Ndafsdame",
+                    "contributor_type": "Con Type",
+                    "name_type": "Personal"
+                }],
+                "creators": [{"name": "Name", "name_type": "Personal"}],
+                "edition": "Edition",
+                "first_page": "First Page",
+                "identifiers": [{
+                    "identifier": "Identifier", 
+                    "metadata_scheme": "Metadata Scheme", 
+                    "scheme_type": "Scheme Type", 
+                    "scheme_uri": "Scheme URI",
+                    "type": "ark"
+                }],
+                "issue": "Issue",
+                "last_page": "Last Page",
+                "number_type": "Number Type",
+                "number_value": "Number Value",
+                "publication_year": 2013,
+                "publisher": "Publisher",
+                "relation_type": "Relation Type",
+                "titles": [{"title": "Title", "type": "MainTitle"}],
+                "type": "Type",
+                "volume": "Volume"
+            }
+        ],
+    )
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    pytest.global_dataset_related_item_id = response_data[0]["id"]
+
+    assert response_data[0]["contributors"][0]["name"] == "Ndafsdame"
+    assert response_data[0]["contributors"][0]["contributor_type"] == "Con Type"
+    assert response_data[0]["contributors"][0]["name_type"] == "Personal"
+    assert response_data[0]["creators"][0]["name"] == "Name"
+    assert response_data[0]["creators"][0]["name_type"] == "Personal"
+    assert response_data[0]["edition"] == "Edition"
+    assert response_data[0]["first_page"] == "First Page"
+    assert response_data[0]["identifiers"][0]["identifier"] == "Identifier"
+    assert response_data[0]["identifiers"][0]["metadata_scheme"] == "Metadata Scheme"
+    assert response_data[0]["identifiers"][0]["scheme_type"] == "Scheme Type"
+    assert response_data[0]["identifiers"][0]["scheme_uri"] == "Scheme URI"
+    assert response_data[0]["identifiers"][0]["type"] == "ark"
+    assert response_data[0]["issue"] == "Issue"
+    assert response_data[0]["last_page"] == "Last Page"
+    assert response_data[0]["number_type"] == "Number Type"
+    assert response_data[0]["number_value"] == "Number Value"
+    assert response_data[0]["publication_year"] == 2013
+    assert response_data[0]["publisher"] == "Publisher"
+    assert response_data[0]["relation_type"] == "Relation Type"
+    assert response_data[0]["titles"][0]["title"] == "Title"
+    assert response_data[0]["titles"][0]["type"] == "MainTitle"
+    assert response_data[0]["type"] == "Type"
+    assert response_data[0]["volume"] == "Volume"
