@@ -810,3 +810,22 @@ def test_post_dataset_related_item_metadata(_test_client, _login_user):
     assert response_data[0]["titles"][0]["type"] == "MainTitle"
     assert response_data[0]["type"] == "Type"
     assert response_data[0]["volume"] == "Volume"
+
+
+def test_delete_dataset_related_item_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}'
+    endpoint is requested (DELETE)
+    Then check that the response is valid and deletes the dataset
+    related item metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+    related_item_id = pytest.global_dataset_related_item_id
+
+    response = _test_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}"
+    )
+
+    assert response.status_code == 200
