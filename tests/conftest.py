@@ -47,6 +47,7 @@ def flask_app():
 
 
 # Create a test client for the app
+# pylint: disable=redefined-outer-name
 @pytest.fixture()
 def _test_client(flask_app):
     """A test client for the app."""
@@ -55,6 +56,7 @@ def _test_client(flask_app):
 
 
 # Empty local database for testing
+# pylint: disable=redefined-outer-name
 @pytest.fixture()
 def _empty_db(flask_app):
     """Empty the local database."""
@@ -96,3 +98,12 @@ def _login_user(_test_client):
         )
 
         assert response.status_code == 200
+
+
+@pytest.fixture()
+def _logged_in_client(_test_client, _login_user):
+    """A test client for the app."""
+    with _test_client.session_transaction() as sess:
+        sess["user_id"] = 1
+        sess["_fresh"] = True
+    yield _test_client

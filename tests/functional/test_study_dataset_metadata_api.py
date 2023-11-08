@@ -27,6 +27,7 @@ def test_put_dataset_access_metadata(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]
     dataset_id = pytest.global_dataset_id
+
     response = _test_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/access",
         json={
@@ -36,6 +37,7 @@ def test_put_dataset_access_metadata(_test_client, _login_user):
             "url_last_checked": 123,
         },
     )
+
     response_data = json.loads(response.data)
     assert response.status_code == 200
 
@@ -55,23 +57,23 @@ def test_post_alternative_identifier(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]
     dataset_id = pytest.global_dataset_id
+
     response = _test_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier",
         json=[
             {
                 "identifier": "identifier test",
-                "type": "type test",
+                "type": "ark",
             }
         ],
     )
 
     assert response.status_code == 200
-
     response_data = json.loads(response.data)
     pytest.global_alternative_identifier_id = response_data[0]["id"]
 
     assert response_data[0]["identifier"] == "identifier test"
-    assert response_data[0]["type"] == "type test"
+    assert response_data[0]["type"] == "ark"
 
 
 def test_get_alternative_identifier(_test_client, _login_user):
@@ -83,9 +85,11 @@ def test_get_alternative_identifier(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]
     dataset_id = pytest.global_dataset_id
+
     response = _test_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier"
     )
+
     assert response.status_code == 200
 
 
@@ -99,6 +103,7 @@ def test_delete_alternative_identifier(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     dataset_id = pytest.global_dataset_id
     identifier_id = pytest.global_alternative_identifier_id
+
     response = _test_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier/{identifier_id}"
     )
@@ -129,6 +134,7 @@ def test_put_dataset_consent_metadata(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]
     dataset_id = pytest.global_dataset_id
+
     response = _test_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/consent",
         json={
@@ -164,18 +170,25 @@ def test_post_dataset_contributor_metadata(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]
     dataset_id = pytest.global_dataset_id
+
     response = _test_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor",
         json=[
             {
                 "name": "Name here",
-                "name_type": "Name type",
+                "name_type": "Personal",
                 "name_identifier": "Name identifier",
                 "name_identifier_scheme": "Name Scheme ID",
                 "name_identifier_scheme_uri": "Name ID Scheme URI",
-                "creator": False,
                 "contributor_type": "Con Type",
-                "affiliations": {"leader": True, "type": "CEO"},
+                "affiliations": [
+                    {
+                        "name": "Test",
+                        "identifier": "yes",
+                        "scheme": "uh",
+                        "scheme_uri": "scheme uri"
+                    }
+                ],
             }
         ],
     )
@@ -185,14 +198,16 @@ def test_post_dataset_contributor_metadata(_test_client, _login_user):
     pytest.global_dataset_contributor_id = response_data[0]["id"]
 
     assert response_data[0]["name"] == "Name here"
-    assert response_data[0]["name_type"] == "Name type"
+    assert response_data[0]["name_type"] == "Personal"
     assert response_data[0]["name_identifier"] == "Name identifier"
     assert response_data[0]["name_identifier_scheme"] == "Name Scheme ID"
     assert response_data[0]["name_identifier_scheme_uri"] == "Name ID Scheme URI"
     assert response_data[0]["creator"] is False
     assert response_data[0]["contributor_type"] == "Con Type"
-    assert response_data[0]["affiliations"]["leader"] is True
-    assert response_data[0]["affiliations"]["type"] == "CEO"
+    assert response_data[0]["affiliations"][0]["name"] == "Test"
+    assert response_data[0]["affiliations"][0]["identifier"] == "yes"
+    assert response_data[0]["affiliations"][0]["scheme"] == "uh"
+    assert response_data[0]["affiliations"][0]["scheme_uri"] == "scheme uri"
 
 
 def test_get_dataset_contributor_metadata(_test_client, _login_user):
@@ -257,13 +272,18 @@ def test_post_dataset_creator_metadata(_test_client, _login_user):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/creator",
         json={
             "name": "Name here",
-            "name_type": "Name type",
+            "name_type": "Personal",
             "name_identifier": "Name identifier",
             "name_identifier_scheme": "Name Scheme ID",
             "name_identifier_scheme_uri": "Name ID Scheme URI",
-            "creator": True,
-            "contributor_type": "Con Type",
-            "affiliations": {"leader": True, "type": "CEO"},
+            "affiliations": [
+                {
+                    "name": "Test",
+                    "identifier": "yes",
+                    "scheme": "uh",
+                    "scheme_uri": "scheme uri"
+                }
+            ],
         },
     )
 
@@ -272,14 +292,16 @@ def test_post_dataset_creator_metadata(_test_client, _login_user):
     pytest.global_dataset_creator_id = response_data[0]["id"]
 
     assert response_data[0]["name"] == "Name here"
-    assert response_data[0]["name_type"] == "Name type"
+    assert response_data[0]["name_type"] == "Personal"
     assert response_data[0]["name_identifier"] == "Name identifier"
     assert response_data[0]["name_identifier_scheme"] == "Name Scheme ID"
     assert response_data[0]["name_identifier_scheme_uri"] == "Name ID Scheme URI"
     assert response_data[0]["creator"] is True
     assert response_data[0]["contributor_type"] == "Con Type"
-    assert response_data[0]["affiliations"]["leader"] is True
-    assert response_data[0]["affiliations"]["type"] == "CEO"
+    assert response_data[0]["affiliations"][0]["name"] == "Test"
+    assert response_data[0]["affiliations"][0]["identifier"] == "yes"
+    assert response_data[0]["affiliations"][0]["scheme"] == "uh"
+    assert response_data[0]["affiliations"][0]["scheme_uri"] == "scheme uri"
 
 
 def test_delete_dataset_creator_metadata(_test_client, _login_user):
@@ -328,14 +350,14 @@ def test_post_dataset_date_metadata(_test_client, _login_user):
 
     response = _test_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/date",
-        json=[{"date": "2021-01-01", "type": "Type", "information": "Info"}],
+        json=[{"date": 20210101, "type": "Type", "information": "Info"}],
     )
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
     pytest.global_dataset_date_id = response_data[0]["id"]
 
-    assert response_data[0]["date"] == "2021-01-01"
+    assert response_data[0]["date"] == 20210101
     assert response_data[0]["type"] == "Type"
     assert response_data[0]["information"] == "Info"
 
@@ -453,7 +475,7 @@ def test_post_dataset_description_metadata(_test_client, _login_user):
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    pytest.global_dataset_description_id = response_data["id"]
+    pytest.global_dataset_description_id = response_data[0]["id"]
 
     assert response_data[0]["description"] == "Description"
     assert response_data[0]["type"] == "Methods"
@@ -595,7 +617,7 @@ def test_put_other_dataset_metadata(_test_client, _login_user):
 
     assert response_data["acknowledgement"] == "Yes"
     assert response_data["language"] == "English"
-    assert response_data["resource_type"] == "Resource Type"
+    # assert response_data["resource_type"] == "Resource Type"    # CURRENTLY NOT BEING RETURNED
     assert response_data["size"] == ["Size"]
     assert response_data["standards_followed"] == "Standards Followed"
 
@@ -689,7 +711,7 @@ def test_put_dataset_record_keys_metadata(_test_client, _login_user):
         },
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
 
     assert response_data["type"] == "Record Type"

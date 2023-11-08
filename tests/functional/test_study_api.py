@@ -4,14 +4,14 @@ import json
 import pytest
 
 
-def test_post_study(_test_client, _login_user):
+def test_post_study(_logged_in_client):
     """
     Given a Flask application configured for testing and a study
     WHEN the '/study' endpoint is requested (POST)
     THEN check that the response is valid
     """
     # Crate a test using the Flask application configured for testing
-    response = _test_client.post(
+    response = _logged_in_client.post(
         "/study",
         json={
             "title": "Study Title",
@@ -26,20 +26,20 @@ def test_post_study(_test_client, _login_user):
     pytest.global_study_id = response_data
 
 
-def test_get_all_studies(_test_client, _login_user):
+def test_get_all_studies(_logged_in_client):
     """
     GIVEN a Flask application configured for testing
     WHEN the '/study' endpoint is requested (GET)
     THEN check that the response is valid
     """
-    response = _test_client.get("/study")
+    response = _logged_in_client.get("/study")
 
     response_data = json.loads(response.data)
     assert len(response_data) == 1  # Only one study created
     assert response.status_code == 200
 
 
-def test_update_study(_test_client, _login_user):
+def test_update_study(_logged_in_client):
     """
     GIVEN a study ID
     WHEN the '/study' endpoint is requested (PUT)
@@ -63,13 +63,13 @@ def test_update_study(_test_client, _login_user):
     # pytest.global_study_id = response_data
 
 
-def test_get_study_by_id(_test_client, _login_user):
+def test_get_study_by_id(_logged_in_client):
     """
     GIVEN a study ID
     WHEN the '/study/{study_id}' endpoint is requested (GET)
     THEN check that the response is valid
     """
-    response = _test_client.get(f"/study/{pytest.global_study_id['id']}")  # type: ignore # pylint: disable=line-too-long # noqa: E501
+    response = _logged_in_client.get(f"/study/{pytest.global_study_id['id']}")  # type: ignore # pylint: disable=line-too-long # noqa: E501
 
     # Convert the response data from JSON to a Python dictionary
     response_data = json.loads(response.data)
@@ -81,7 +81,7 @@ def test_get_study_by_id(_test_client, _login_user):
     assert response_data["image"] == pytest.global_study_id["image"]  # type: ignore
 
 
-def test_delete_studies_created(_test_client, _login_user):
+def test_delete_studies_created(_logged_in_client):
     """
     Given a Flask application configured for testing
     WHEN the '/study' endpoint is requested (DELETE)
