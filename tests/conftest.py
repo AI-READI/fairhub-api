@@ -37,7 +37,14 @@ pytest.global_dataset_creator_id = ""
 pytest.global_dataset_date_id = ""
 pytest.global_dataset_description_id = ""
 pytest.global_dataset_funder_id = ""
-
+pytest.global_dataset_related_item_id = ""
+pytest.global_dataset_related_item_contributor_id = ""
+pytest.global_dataset_related_item_creator_id = ""
+pytest.global_dataset_related_item_identifier_id = ""
+pytest.global_dataset_related_item_title_id = ""
+pytest.global_dataset_rights_id = ""
+pytest.global_dataset_subject_id = ""
+pytest.global_dataset_title_id = ""
 
 # Create the flask app for testing
 @pytest.fixture()
