@@ -718,3 +718,22 @@ def test_put_dataset_record_keys_metadata(_test_client, _login_user):
 
     assert response_data["type"] == "Record Type"
     assert response_data["details"] == "Details for Record Keys"
+
+
+# ------------------- RELATED ITEM METADATA ------------------- #
+def test_get_dataset_related_item_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    related item metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+
+    response = _test_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item"
+    )
+
+    assert response.status_code == 200
