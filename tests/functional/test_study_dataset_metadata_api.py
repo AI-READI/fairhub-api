@@ -1074,3 +1074,22 @@ def test_get_dataset_title_metadata(_test_client, _login_user):
     response = _test_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/title")
 
     assert response.status_code == 200
+
+
+def test_delete_dataset_title_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/title'
+    endpoint is requested (DELETE)
+    Then check that the response is valid and deletes the dataset
+    title metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+    title_id = pytest.global_dataset_title_id
+
+    response = _test_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/title/{title_id}"
+    )
+
+    assert response.status_code == 200
