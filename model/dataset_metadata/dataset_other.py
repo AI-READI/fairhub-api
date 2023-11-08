@@ -47,7 +47,8 @@ class DatasetOther(db.Model):  # type: ignore
     def to_dict_metadata(self):
         return {
             "language": self.language,
-            "standards_followed": self.standards_followed,
+            "size": self.size,
+            "resource_type": self.resource_type,
         }
 
     def to_dict_publisher(self):

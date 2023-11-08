@@ -98,9 +98,11 @@ class DatasetRelatedItem(db.Model):  # type: ignore
 
     def to_dict_metadata(self):
         bigint_timestamp = self.dataset_related_item_other.publication_year
-        unix_timestamp = bigint_timestamp / 1000
-        datetime_obj = datetime.datetime.utcfromtimestamp(unix_timestamp)
-
+        pub_year = ""
+        if bigint_timestamp:
+            unix_timestamp = bigint_timestamp / 1000
+            datetime_obj = datetime.datetime.utcfromtimestamp(unix_timestamp)
+            pub_year = datetime_obj.strftime("%Y")
         sorted_contributors = sorted(
             self.dataset_related_item_contributor,
             key=lambda creator: creator.created_at,
@@ -123,7 +125,7 @@ class DatasetRelatedItem(db.Model):  # type: ignore
                 i.to_dict_metadata() for i in contributors  # type: ignore
             ],
             # "publication_year": self.dataset_related_item_other.publication_year,
-            "publication_year": datetime_obj.strftime("%Y"),
+            "publication_year": pub_year if bigint_timestamp else None,
             "publisher": self.dataset_related_item_other.publisher,
         }
 
