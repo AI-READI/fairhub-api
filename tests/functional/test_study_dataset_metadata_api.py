@@ -863,3 +863,23 @@ def test_delete_dataset_related_item_contributor_metadata(_test_client, _login_u
     )
 
     assert response.status_code == 200
+
+
+def test_delete_dataset_related_item_creator_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}'
+    endpoint is requested (DELETE)
+    Then check that the response is valid and deletes the dataset
+    related item metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+    related_item_id = pytest.global_dataset_related_item_id
+    creator_id = pytest.global_dataset_related_item_creator_id
+
+    response = _test_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/creator/{creator_id}"
+    )
+
+    assert response.status_code == 200
