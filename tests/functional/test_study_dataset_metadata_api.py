@@ -617,3 +617,33 @@ def test_get_dataset_publisher_metadata(_test_client, _login_user):
     )
 
     assert response.status_code == 200
+
+
+def test_put_dataset_publisher_metadata(_test_client, _login_user):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}'
+    endpoint is requested (PUT)
+    Then check that the response is valid and updates the dataset
+    publisher metadata content
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+
+    response = _test_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/publisher",
+        json={
+            "publisher": "Publisher",
+            "managing_organization_name": "Managing Organization Name",
+            "managing_organization_ror_id": "Managing Organization ROR ID",
+        }
+    )
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+
+    assert response_data["publisher"] == "Publisher"
+    assert response_data["managing_organization_name"] == "Managing Organization Name"
+    assert response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
+
+
