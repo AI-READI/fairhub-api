@@ -186,7 +186,7 @@ def test_post_dataset_contributor_metadata(_test_client, _login_user):
                         "name": "Test",
                         "identifier": "yes",
                         "scheme": "uh",
-                        "scheme_uri": "scheme uri"
+                        "scheme_uri": "scheme uri",
                     }
                 ],
             }
@@ -281,7 +281,7 @@ def test_post_dataset_creator_metadata(_test_client, _login_user):
                     "name": "Test",
                     "identifier": "yes",
                     "scheme": "uh",
-                    "scheme_uri": "scheme uri"
+                    "scheme_uri": "scheme uri",
                 }
             ],
         },
@@ -467,10 +467,7 @@ def test_post_dataset_description_metadata(_test_client, _login_user):
 
     response = _test_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/description",
-        json=[{
-            "description": "Description",
-            "type": "Methods"
-        }],
+        json=[{"description": "Description", "type": "Methods"}],
     )
 
     assert response.status_code == 200
@@ -512,7 +509,9 @@ def test_get_dataset_funder_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     dataset_id = pytest.global_dataset_id
 
-    response = _test_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/funder")
+    response = _test_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/funder"
+    )
 
     assert response.status_code == 200
 
@@ -530,15 +529,17 @@ def test_post_dataset_funder_metadata(_test_client, _login_user):
 
     response = _test_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/funder",
-        json=[{
-            "name": "Name",
-            "award_number": "award number",
-            "award_title": "Award Title",
-            "award_uri": "Award URI",
-            "identifier": "Identifier",
-            "identifier_scheme_uri": "Identifier Scheme URI",
-            "identifier_type": "Identifier Type",
-        }]
+        json=[
+            {
+                "name": "Name",
+                "award_number": "award number",
+                "award_title": "Award Title",
+                "award_uri": "Award URI",
+                "identifier": "Identifier",
+                "identifier_scheme_uri": "Identifier Scheme URI",
+                "identifier_type": "Identifier Type",
+            }
+        ],
     )
 
     assert response.status_code == 200
@@ -585,7 +586,9 @@ def test_get_other_dataset_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     dataset_id = pytest.global_dataset_id
 
-    response = _test_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/other")
+    response = _test_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/other"
+    )
 
     assert response.status_code == 200
 
@@ -658,7 +661,7 @@ def test_put_dataset_publisher_metadata(_test_client, _login_user):
             "publisher": "Publisher",
             "managing_organization_name": "Managing Organization Name",
             "managing_organization_ror_id": "Managing Organization ROR ID",
-        }
+        },
     )
 
     assert response.status_code == 200
@@ -666,7 +669,9 @@ def test_put_dataset_publisher_metadata(_test_client, _login_user):
 
     assert response_data["publisher"] == "Publisher"
     assert response_data["managing_organization_name"] == "Managing Organization Name"
-    assert response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
+    assert (
+        response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
+    )
 
 
 # ------------------- README METADATA ------------------- #
@@ -705,10 +710,7 @@ def test_put_dataset_record_keys_metadata(_test_client, _login_user):
 
     response = _test_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/record-keys",
-        json={
-            "type": "Record Type",
-            "details": "Details for Record Keys"
-        },
+        json={"type": "Record Type", "details": "Details for Record Keys"},
     )
 
     assert response.status_code == 201
