@@ -26,3 +26,8 @@ def test_db_empty(_test_client, _empty_db, _create_user):
     """Test that the database is empty."""
     print("Database empty")
     print("User created for testing")
+
+
+def test_signin_user(_logged_in_client):
+    """Signs in user before testing."""
+    print("User signed in for testing")
