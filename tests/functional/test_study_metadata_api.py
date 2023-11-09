@@ -5,14 +5,14 @@ import pytest
 
 
 # ------------------- ARM METADATA ------------------- #
-def test_post_arm_metadata(_test_client, _login_user):
+def test_post_arm_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/arm' endpoint is requested (POST)
     THEN check that the response is vaild and create a new arm
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.post(
+    response = _logged_in_client.post(
         f"/study/{study_id}/metadata/arm",
         json=[
             {
@@ -37,14 +37,14 @@ def test_post_arm_metadata(_test_client, _login_user):
     pytest.global_arm_id = response_data["arms"][0]["id"]
 
 
-def test_get_arm_metadata(_test_client, _login_user):
+def test_get_arm_metadata(_logged_in_client):
     """
     GIVEN a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/arm/metadata' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the arm metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.get(f"/study/{study_id}/metadata/arm")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/arm")
     response_data = json.loads(response.data)
     assert response.status_code == 200
     assert response_data["arms"][0]["label"] == "Label1"
@@ -56,7 +56,7 @@ def test_get_arm_metadata(_test_client, _login_user):
     ]
 
 
-def test_delete_arm_metadata(_test_client, _login_user):
+def test_delete_arm_metadata(_logged_in_client):
     """
     GIVEN a Flask application configured for testing and a study ID and arm ID
     WHEN the '/study/{study_id}/arm/metadata' endpoint is requested (DELETE)
@@ -64,19 +64,19 @@ def test_delete_arm_metadata(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
     arm_id = pytest.global_arm_id
-    response = _test_client.delete(f"/study/{study_id}/metadata/arm/{arm_id}")
+    response = _logged_in_client.delete(f"/study/{study_id}/metadata/arm/{arm_id}")
     assert response.status_code == 200
 
 
 # ------------------- IPD METADATA ------------------- #
-def test_post_available_ipd_metadata(_test_client, _login_user):
+def test_post_available_ipd_metadata(_logged_in_client):
     """
     GIVEN a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/available-id' endpoint is requested (POST)
     THEN check that the response is vaild and new IPD was created
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.post(
+    response = _logged_in_client.post(
         f"/study/{study_id}/metadata/available-ipd",
         json=[
             {
@@ -98,18 +98,18 @@ def test_post_available_ipd_metadata(_test_client, _login_user):
     assert response_data[0]["comment"] == "comment1"
 
 
-def test_get_available_ipd_metadata(_test_client, _login_user):
+def test_get_available_ipd_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/available-id' endpoint is requested (GET)
     THEN check that the response is vaild and retrieves the available IPD(s)
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.get(f"/study/{study_id}/metadata/available-ipd")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/available-ipd")
     assert response.status_code == 200
 
 
-def test_delete_available_ipd_metadata(_test_client, _login_user):
+def test_delete_available_ipd_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID and available IPD ID
     WHEN the '/study/{study_id}/metadata/available-id' endpoint is requested (DELETE)
@@ -117,14 +117,14 @@ def test_delete_available_ipd_metadata(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
     available_ipd_id = pytest.global_available_ipd_id
-    response = _test_client.delete(
+    response = _logged_in_client.delete(
         f"/study/{study_id}/metadata/available-ipd/{available_ipd_id}"
     )
     assert response.status_code == 200
 
 
 # ------------------- CENTRAL CONTACT METADATA ------------------- #
-def test_post_cc_metadata(_test_client, _login_user):
+def test_post_cc_metadata(_logged_in_client):
     """
     GIVEN a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/central-contact' endpoint is requested (POST)
@@ -132,7 +132,7 @@ def test_post_cc_metadata(_test_client, _login_user):
     """
     # BUG: ROLE IS RETURNED AS NONE
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.post(
+    response = _logged_in_client.post(
         f"/study/{study_id}/metadata/central-contact",
         json=[
             {
@@ -162,7 +162,7 @@ def test_post_cc_metadata(_test_client, _login_user):
     assert response_data[0]["central_contact"] is True
 
 
-def test_get_cc_metadata(_test_client, _login_user):
+def test_get_cc_metadata(_logged_in_client):
     """
     GIVEN a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/central-contact' endpoint is requested (GET)
@@ -170,7 +170,7 @@ def test_get_cc_metadata(_test_client, _login_user):
     """
     # BUG: ROLE IS RETURNED AS NONE
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.get(f"/study/{study_id}/metadata/central-contact")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/central-contact")
     assert response.status_code == 200
     response_data = json.loads(response.data)
 
@@ -183,7 +183,7 @@ def test_get_cc_metadata(_test_client, _login_user):
     assert response_data[0]["central_contact"] is True
 
 
-def test_delete_cc_metadata(_test_client, _login_user):
+def test_delete_cc_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
         and central contact ID
@@ -193,25 +193,25 @@ def test_delete_cc_metadata(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
     central_contact_id = pytest.global_cc_id
-    response = _test_client.delete(
+    response = _logged_in_client.delete(
         f"/study/{study_id}/metadata/central-contact/{central_contact_id}"
     )
     assert response.status_code == 200
 
 
 #  ------------------- COLLABORATORS METADATA ------------------- #
-def test_get_collaborators_metadata(_test_client, _login_user):
+def test_get_collaborators_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/collaborators' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the collaborators metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.get(f"/study/{study_id}/metadata/collaborators")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/collaborators")
     assert response.status_code == 200
 
 
-def test_put_collaborators_metadata(_test_client, _login_user):
+def test_put_collaborators_metadata(_logged_in_client):
     """
     GIVEN a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/collaborators'
@@ -222,7 +222,7 @@ def test_put_collaborators_metadata(_test_client, _login_user):
     # RETURNS ['collaborator_name'] rather than ['collaborator']
     # (so it is storing the key rather than the value)
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.put(
+    response = _logged_in_client.put(
         f"/study/{study_id}/metadata/collaborators",
         json=[
             "collaborator1123",
@@ -236,18 +236,18 @@ def test_put_collaborators_metadata(_test_client, _login_user):
 
 
 # ------------------- CONDITIONS METADATA ------------------- #
-def test_get_conditions_metadata(_test_client, _login_user):
+def test_get_conditions_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/conditions' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the conditions metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.get(f"/study/{study_id}/metadata/conditions")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/conditions")
     assert response.status_code == 200
 
 
-def test_put_conditions_metadata(_test_client, _login_user):
+def test_put_conditions_metadata(_logged_in_client):
     """
     GIVEN a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/conditions' endpoint is requested (POST)
@@ -257,7 +257,7 @@ def test_put_conditions_metadata(_test_client, _login_user):
     # RESPONSE FOR THIS TEST LOOKS LIKE
     # ['conditions', 'keywords', 'oversight_has_dmc', 'size']
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.put(
+    response = _logged_in_client.put(
         f"/study/{study_id}/metadata/conditions",
         json=[
             "true",
@@ -280,25 +280,25 @@ def test_put_conditions_metadata(_test_client, _login_user):
 
 
 # ------------------- DESCRIPTION METADATA ------------------- #
-def test_get_description_metadata(_test_client, _login_user):
+def test_get_description_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/description' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the description metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.get(f"/study/{study_id}/metadata/description")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/description")
     assert response.status_code == 200
 
 
-def test_put_description_metadata(_test_client, _login_user):
+def test_put_description_metadata(_logged_in_client):
     """
     GIVEN a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/description' endpoint is requested (POST)
     THEN check that the response is valid and creates the description metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.put(
+    response = _logged_in_client.put(
         f"/study/{study_id}/metadata/description",
         json={
             "brief_summary": "brief_summary",
@@ -315,25 +315,25 @@ def test_put_description_metadata(_test_client, _login_user):
 
 
 # ------------------- DESIGN METADATA ------------------- #
-def test_get_design_metadata(_test_client, _login_user):
+def test_get_design_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/design' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the design metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.get(f"/study/{study_id}/metadata/design")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/design")
     assert response.status_code == 200
 
 
-def test_put_design_metadata(_test_client, _login_user):
+def test_put_design_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/design' endpoint is requested (PUT)
     THEN check that the response is valid and creates the design metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.put(
+    response = _logged_in_client.put(
         f"/study/{study_id}/metadata/design",
         json={
             "design_allocation": "dfasdfasd",
@@ -383,25 +383,25 @@ def test_put_design_metadata(_test_client, _login_user):
 
 
 # ------------------- ELIGIBILITY METADATA ------------------- #
-def test_get_eligibility_metadata(_test_client, _login_user):
+def test_get_eligibility_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/eligibility' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the eligibility metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.get(f"/study/{study_id}/metadata/eligibility")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/eligibility")
     assert response.status_code == 200
 
 
-def test_put_eligibility_metadata(_test_client, _login_user):
+def test_put_eligibility_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/eligibility' endpoint is requested (PUT)
     THEN check that the response is valid and updates the eligibility metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.put(
+    response = _logged_in_client.put(
         f"/study/{study_id}/metadata/eligibility",
         json={
             "gender": "All",
@@ -437,7 +437,7 @@ def test_put_eligibility_metadata(_test_client, _login_user):
 
 
 # ------------------- IDENTIFICATION METADATA ------------------- #
-def test_get_identification_metadata(_test_client, _login_user):
+def test_get_identification_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/identification' endpoint is requested (GET)
@@ -445,11 +445,11 @@ def test_get_identification_metadata(_test_client, _login_user):
     """
     # BUG: ENDPOINT NOT WORKING
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.get(f"/study/{study_id}/metadata/identification")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/identification")
     assert response.status_code == 200
 
 
-def test_post_identification_metadata(_test_client, _login_user):
+def test_post_identification_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/identification' endpoint is requested (POST)
@@ -457,7 +457,7 @@ def test_post_identification_metadata(_test_client, _login_user):
     """
     # BUG: ENDPOINT NOT WORKING
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.post(
+    response = _logged_in_client.post(
         f"/study/{study_id}/metadata/identification",
         json={
             "primary": {
@@ -474,7 +474,7 @@ def test_post_identification_metadata(_test_client, _login_user):
     # pytest.global_identification_id = response_data["id"]
 
 
-def test_delete_identification_metadata(_test_client, _login_user):
+def test_delete_identification_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/identification' endpoint is requested (GET)
@@ -483,30 +483,30 @@ def test_delete_identification_metadata(_test_client, _login_user):
     # BUG: ENDPOINT NOT WORKING
     # study_id = pytest.global_study_id["id"] # type: ignore
     # idenficiation_id = pytest.global_identification_id
-    # response = _test_client.delete(f"/study/{study_id}/metadata/identification/{identification_id}") # pylint: disable=line-too-long # noqa: E501
+    # response = _logged_in_client.delete(f"/study/{study_id}/metadata/identification/{identification_id}") # pylint: disable=line-too-long # noqa: E501
     # assert response.status_code == 200
 
 
 # ------------------- INTERVENTION METADATA ------------------- #
-def test_get_intervention_metadata(_test_client, _login_user):
+def test_get_intervention_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/intervention' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the intervention metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.get(f"/study/{study_id}/metadata/intervention")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/intervention")
     assert response.status_code == 200
 
 
-def test_post_intervention_metadata(_test_client, _login_user):
+def test_post_intervention_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/intervention' endpoint is requested (POST)
     THEN check that the response is valid and creates the intervention metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.post(
+    response = _logged_in_client.post(
         f"/study/{study_id}/metadata/intervention",
         json=[
             {
@@ -530,25 +530,25 @@ def test_post_intervention_metadata(_test_client, _login_user):
 
 
 # ------------------- IPD SHARING METADATA ------------------- #
-def test_get_ipdsharing_metadata(_test_client, _login_user):
+def test_get_ipdsharing_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/ipdsharing' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the ipdsharing metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.get(f"/study/{study_id}/metadata/ipdsharing")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/ipdsharing")
     assert response.status_code == 200
 
 
-def test_put_ipdsharing_metadata(_test_client, _login_user):
+def test_put_ipdsharing_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/ipdsharing' endpoint is requested (PUT)
     THEN check that the response is valid and updates the ipdsharing metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.put(
+    response = _logged_in_client.put(
         f"/study/{study_id}/metadata/ipdsharing",
         json={
             "ipd_sharing": "Yes",
@@ -575,25 +575,25 @@ def test_put_ipdsharing_metadata(_test_client, _login_user):
 
 
 # ------------------- LINK METADATA ------------------- #
-def test_get_link_metadata(_test_client, _login_user):
+def test_get_link_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/link' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the link metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.get(f"/study/{study_id}/metadata/link")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/link")
     assert response.status_code == 200
 
 
-def test_post_link_metadata(_test_client, _login_user):
+def test_post_link_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/link' endpoint is requested (POST)
     THEN check that the response is valid and creates the link metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.post(
+    response = _logged_in_client.post(
         f"/study/{study_id}/metadata/link",
         json=[{"url": "google.com", "title": "google link"}],
     )
@@ -605,7 +605,7 @@ def test_post_link_metadata(_test_client, _login_user):
     assert response_data[0]["title"] == "google link"
 
 
-def test_delete_link_metadata(_test_client, _login_user):
+def test_delete_link_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID and link ID
     WHEN the '/study/{study_id}/metadata/link/{link_id}' endpoint is requested (DELETE)
@@ -613,30 +613,30 @@ def test_delete_link_metadata(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
     link_id = pytest.global_link_id
-    response = _test_client.delete(f"/study/{study_id}/metadata/link/{link_id}")
+    response = _logged_in_client.delete(f"/study/{study_id}/metadata/link/{link_id}")
     assert response.status_code == 200
 
 
 # ------------------- LOCATION METADATA ------------------- #
-def test_get_location_metadata(_test_client, _login_user):
+def test_get_location_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/location' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the location metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.get(f"/study/{study_id}/metadata/location")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/location")
     assert response.status_code == 200
 
 
-def test_post_location_metadata(_test_client, _login_user):
+def test_post_location_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/location' endpoint is requested (POST)
     THEN check that the response is valid and creates the location metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.post(
+    response = _logged_in_client.post(
         f"/study/{study_id}/metadata/location",
         json=[
             {
@@ -661,7 +661,7 @@ def test_post_location_metadata(_test_client, _login_user):
     assert response_data[0]["country"] == "yes"
 
 
-def test_delete_location_metadata(_test_client, _login_user):
+def test_delete_location_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID and location ID
     WHEN the '/study/{study_id}/metadata/location/{location_id}'
@@ -670,12 +670,12 @@ def test_delete_location_metadata(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
     location_id = pytest.global_location_id
-    response = _test_client.delete(f"/study/{study_id}/metadata/location/{location_id}")
+    response = _logged_in_client.delete(f"/study/{study_id}/metadata/location/{location_id}")
     assert response.status_code == 200
 
 
 # ------------------- OTHER METADATA ------------------- #
-def test_get_other_metadata(_test_client, _login_user):
+def test_get_other_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/other' endpoint is requested (GET)
@@ -684,18 +684,18 @@ def test_get_other_metadata(_test_client, _login_user):
     # BUG: KEYWORDS RETURNS A STRING '[]' INSTEAD OF A LIST
     # BUG: CONDITIONS RETURNS A STRING '[]' INSTEAD OF A LIST (CONDITIONS ENDPOINT IS CAUSING WRONG RESPONSE HERE) # pylint: disable=line-too-long # noqa: E501
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.get(f"/study/{study_id}/metadata/other")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/other")
     assert response.status_code == 200
 
 
-def test_put_other_metadata(_test_client, _login_user):
+def test_put_other_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/other' endpoint is requested (PUT)
     THEN check that the response is valid and updates the other metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.put(
+    response = _logged_in_client.put(
         f"/study/{study_id}/metadata/other",
         json={
             "oversight_has_dmc": False,
@@ -714,25 +714,25 @@ def test_put_other_metadata(_test_client, _login_user):
 
 
 # ------------------- OVERALL-OFFICIAL METADATA ------------------- #
-def test_get_overall_official_metadata(_test_client, _login_user):
+def test_get_overall_official_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/overall-official' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the overall-official metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.get(f"/study/{study_id}/metadata/overall-official")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/overall-official")
     assert response.status_code == 200
 
 
-def test_post_overall_official_metadata(_test_client, _login_user):
+def test_post_overall_official_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/overall-official' endpoint is requested (POST)
     THEN check that the response is valid and creates the overall-official metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.post(
+    response = _logged_in_client.post(
         f"/study/{study_id}/metadata/overall-official",
         json=[{"name": "test", "affiliation": "aff", "role": "Study Chair"}],
     )
@@ -745,7 +745,7 @@ def test_post_overall_official_metadata(_test_client, _login_user):
     assert response_data[0]["role"] == "Study Chair"
 
 
-def test_delete_overall_official_metadata(_test_client, _login_user):
+def test_delete_overall_official_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a
         study ID and overall official ID
@@ -755,32 +755,32 @@ def test_delete_overall_official_metadata(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
     overall_official_id = pytest.global_overall_official_id
-    response = _test_client.delete(
+    response = _logged_in_client.delete(
         f"/study/{study_id}/metadata/overall-official/{overall_official_id}"
     )
     assert response.status_code == 200
 
 
 # ------------------- OVERSIGHT METADATA ------------------- #
-def test_get_oversight_metadata(_test_client, _login_user):
+def test_get_oversight_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/oversight' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the oversight metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.get(f"/study/{study_id}/metadata/oversight")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/oversight")
     assert response.status_code == 200
 
 
-def test_put_oversight_metadata(_test_client, _login_user):
+def test_put_oversight_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/oversight' endpoint is requested (PUT)
     THEN check that the response is valid and updates the oversight metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.put(
+    response = _logged_in_client.put(
         f"/study/{study_id}/metadata/oversight", json={"oversight_has_dmc": True}
     )
     assert response.status_code == 200
@@ -791,18 +791,18 @@ def test_put_oversight_metadata(_test_client, _login_user):
 
 
 # ------------------- REFERENCE METADATA ------------------- #
-def test_get_reference_metadata(_test_client, _login_user):
+def test_get_reference_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/reference' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the reference metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.get(f"/study/{study_id}/metadata/reference")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/reference")
     assert response.status_code == 200
 
 
-def test_post_reference_metadata(_test_client, _login_user):
+def test_post_reference_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/reference' endpoint is requested (POST)
@@ -810,7 +810,7 @@ def test_post_reference_metadata(_test_client, _login_user):
     """
     # BUG:? title key is not being returned in response (update: title isn't in the model) # pylint: disable=line-too-long # noqa: E501
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.post(
+    response = _logged_in_client.post(
         f"/study/{study_id}/metadata/reference",
         json=[
             {
@@ -829,7 +829,7 @@ def test_post_reference_metadata(_test_client, _login_user):
     assert response_data[0]["citation"] == "reference citation"
 
 
-def test_delete_reference_metadata(_test_client, _login_user):
+def test_delete_reference_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and
         a study ID and reference ID
@@ -839,32 +839,32 @@ def test_delete_reference_metadata(_test_client, _login_user):
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
     reference_id = pytest.global_reference_id
-    response = _test_client.delete(
+    response = _logged_in_client.delete(
         f"/study/{study_id}/metadata/reference/{reference_id}"
     )
     assert response.status_code == 200
 
 
 # ------------------- SPONSORS METADATA ------------------- #
-def test_get_sponsors_metadata(_test_client, _login_user):
+def test_get_sponsors_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/sponsors' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the sponsors metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.get(f"/study/{study_id}/metadata/sponsors")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/sponsors")
     assert response.status_code == 200
 
 
-def test_put_sponsors_metadata(_test_client, _login_user):
+def test_put_sponsors_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/sponsors' endpoint is requested (PUT)
     THEN check that the response is valid and updates the sponsors metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.put(
+    response = _logged_in_client.put(
         f"/study/{study_id}/metadata/sponsors",
         json={
             "responsible_party_type": "Sponsor",
@@ -888,25 +888,25 @@ def test_put_sponsors_metadata(_test_client, _login_user):
 
 
 # ------------------- STATUS METADATA ------------------- #
-def test_get_status_metadata(_test_client, _login_user):
+def test_get_status_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/metadata/status' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the status metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.get(f"/study/{study_id}/metadata/status")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/status")
     assert response.status_code == 200
 
 
-def test_put_status_metadata(_test_client, _login_user):
+def test_put_status_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
     WHEN the '/study/{study_id}/status' endpoint is requested (PUT)
     THEN check that the response is valid and updates the status metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
-    response = _test_client.put(
+    response = _logged_in_client.put(
         f"/study/{study_id}/metadata/status",
         json={
             "overall_status": "Withdrawn",
