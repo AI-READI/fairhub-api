@@ -111,4 +111,19 @@ def test_post_dataset_version(_logged_in_client):
     assert response_data["changelog"] == "changelog testing here"
 
 
+def test_get_all_dataset_versions(_logged_in_client):
+    """
+    Given a Flask application configured for testing, study ID and a dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/version' endpoint is requested (GET)
+    Then check that the response is valid and retrieves all dataset versions
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/version",
+    )
+
+    assert response.status_code == 200
+
 
