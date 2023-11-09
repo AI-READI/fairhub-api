@@ -1,3 +1,4 @@
+# pylint: disable=too-many-lines
 """Tests for the Study Metadata API endpoints"""
 import json
 
@@ -478,7 +479,7 @@ def test_delete_identification_metadata(_logged_in_client):
     WHEN the '/study/{study_id}/metadata/identification' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the identification metadata
     """
-    study_id = pytest.global_study_id["id"] # type: ignore
+    study_id = pytest.global_study_id["id"]     # type: ignore
     identification_id = pytest.global_identification_id
 
     response = _logged_in_client.delete(
