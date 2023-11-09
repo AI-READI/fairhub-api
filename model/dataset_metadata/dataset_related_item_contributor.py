@@ -41,6 +41,8 @@ class DatasetRelatedItemContributor(db.Model):  # type: ignore
             "id": self.id,
             "name": self.name,
             "name_type": self.name_type,
+            "contributor_type": self.contributor_type,
+
         }
 
     @staticmethod
