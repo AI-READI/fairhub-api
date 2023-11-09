@@ -20,7 +20,6 @@ class Dataset(db.Model):  # type: ignore
         self.dataset_record_keys = model.DatasetRecordKeys(self)
         self.dataset_de_ident_level = model.DatasetDeIdentLevel(self)
         self.dataset_consent = model.DatasetConsent(self)
-        self.dataset_readme = model.DatasetReadme(self)
         self.dataset_other = model.DatasetOther(self)
 
         self.dataset_title.append(model.DatasetTitle(self))
@@ -88,9 +87,6 @@ class Dataset(db.Model):  # type: ignore
     )
     dataset_other = db.relationship(
         "DatasetOther", back_populates="dataset", uselist=False, cascade="all, delete"
-    )
-    dataset_readme = db.relationship(
-        "DatasetReadme", back_populates="dataset", uselist=False, cascade="all, delete"
     )
     dataset_record_keys = db.relationship(
         "DatasetRecordKeys",
