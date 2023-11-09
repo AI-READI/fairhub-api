@@ -31,6 +31,7 @@ pytest.global_reference_id = ""
 
 # Dataset variables use for testing
 pytest.global_dataset_id = ""
+pytest.global_dataset_version_id = ""
 pytest.global_alternative_identifier_id = ""
 pytest.global_dataset_contributor_id = ""
 pytest.global_dataset_creator_id = ""
