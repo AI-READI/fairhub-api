@@ -92,11 +92,12 @@ class DatasetResource(Resource):
             return "Access denied, you can not modify", 403
         data: typing.Union[dict, typing.Any] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
+        print(data)
         data_obj.update(data)
         model.db.session.commit()
         return data_obj.to_dict()
 
-    @api.response(201, "Success")
+    @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def delete(self, study_id: int, dataset_id: int):
         study = model.Study.query.get(study_id)
@@ -107,8 +108,7 @@ class DatasetResource(Resource):
             model.db.session.delete(version)
         model.db.session.delete(data_obj)
         model.db.session.commit()
-        dataset_ = study.dataset
-        return [d.to_dict() for d in dataset_], 201
+        return 204
 
     # def delete(self, study_id: int, dataset_id: int, version_id: int):
     #     data_obj = Dataset.query.get(dataset_id)
