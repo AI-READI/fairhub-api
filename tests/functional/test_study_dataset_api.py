@@ -130,7 +130,8 @@ def test_get_all_dataset_versions(_logged_in_client):
 def test_get_dataset_version(_logged_in_client):
     """
     Given a Flask application configured for testing, study ID, dataset ID and version ID
-    When the '/study/{study_id}/dataset/{dataset_id}/version/{version_id}' endpoint is requested (GET)
+    When the '/study/{study_id}/dataset/{dataset_id}/version/{version_id}'
+    endpoint is requested (GET)
     Then check that the response is valid and retrieves the dataset version
     """
     study_id = pytest.global_study_id["id"]
