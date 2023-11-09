@@ -485,19 +485,27 @@ def test_post_identification_metadata(_logged_in_client):
                 "identifier_domain": "domain",
                 "identifier_link": "link",
             },
-            "secondary": [],
+            "secondary": [{
+                "identifier": "test",
+                "identifier_type": "test",
+                "identifier_domain": "dodfasdfmain",
+                "identifier_link": "link"
+            }],
         },
     )
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    pytest.global_identification_id = response_data["primary"]["id"]
+    pytest.global_identification_id = response_data["secondary"][0]["id"]
 
     assert response_data["primary"]["identifier"] == "first"
     assert response_data["primary"]["identifier_type"] == "test"
     assert response_data["primary"]["identifier_domain"] == "domain"
     assert response_data["primary"]["identifier_link"] == "link"
-    assert response_data["secondary"] == []
+    assert response_data["secondary"][0]["identifier"] == "test"
+    assert response_data["secondary"][0]["identifier_type"] == "test"
+    assert response_data["secondary"][0]["identifier_domain"] == "dodfasdfmain"
+    assert response_data["secondary"][0]["identifier_link"] == "link"
 
 
 def test_delete_identification_metadata(_logged_in_client):
@@ -513,9 +521,7 @@ def test_delete_identification_metadata(_logged_in_client):
         f"/study/{study_id}/metadata/identification/{identification_id}"
     )
 
-    assert response.status_code == 400
-    # RETURNS 400 DUE TO NOT BEING ABLE TO DELETE PRIMARY IDENTIFIER
-    # SECONDARY HAS NO ID THOUGH
+    assert response.status_code == 200
 
 
 # ------------------- INTERVENTION METADATA ------------------- #
