@@ -48,7 +48,7 @@ pytest.global_dataset_title_id = ""
 
 
 # Create the flask app for testing
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def flask_app():
     """An application for the tests."""
     yield create_app(config_module="pytest_config")
@@ -56,7 +56,7 @@ def flask_app():
 
 # Create a test client for the app
 # pylint: disable=redefined-outer-name
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def _test_client(flask_app):
     """A test client for the app."""
     with flask_app.test_client() as _test_client:
@@ -93,8 +93,8 @@ def _create_user(_test_client):
 
 
 # Fixture to sign in the user for module testing
-@pytest.fixture()
-def _login_user(_test_client):
+@pytest.fixture(scope="session")
+def _logged_in_client(_test_client):
     """Sign in the user for testing."""
     with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
         response = _test_client.post(
@@ -107,11 +107,4 @@ def _login_user(_test_client):
 
         assert response.status_code == 200
 
-
-@pytest.fixture()
-def _logged_in_client(_test_client, _login_user):
-    """A test client for the app."""
-    with _test_client.session_transaction() as sess:
-        sess["user_id"] = 1
-        sess["_fresh"] = True
-    yield _test_client
+        yield _test_client
