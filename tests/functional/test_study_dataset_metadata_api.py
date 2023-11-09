@@ -885,6 +885,7 @@ def test_delete_dataset_related_item_contributor_metadata(_logged_in_client):
     related_item_id = pytest.global_dataset_related_item_id
     contributor_id = pytest.global_dataset_related_item_contributor_id
 
+    # pylint: disable=line-too-long
     response = _logged_in_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/contributor/{contributor_id}"
     )
@@ -905,6 +906,7 @@ def test_delete_dataset_related_item_creator_metadata(_logged_in_client):
     related_item_id = pytest.global_dataset_related_item_id
     creator_id = pytest.global_dataset_related_item_creator_id
 
+    # pylint: disable=line-too-long
     response = _logged_in_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/creator/{creator_id}"
     )
@@ -925,6 +927,7 @@ def test_delete_dataset_related_item_identifier_metadata(_logged_in_client):
     related_item_id = pytest.global_dataset_related_item_id
     identifier_id = pytest.global_dataset_related_item_identifier_id
 
+    # pylint: disable=line-too-long
     response = _logged_in_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/identifier/{identifier_id}"
     )
@@ -945,6 +948,7 @@ def test_delete_dataset_related_item_title_metadata(_logged_in_client):
     related_item_id = pytest.global_dataset_related_item_id
     title_id = pytest.global_dataset_related_item_title_id
 
+    # pylint: disable=line-too-long
     response = _logged_in_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{title_id}"
     )
