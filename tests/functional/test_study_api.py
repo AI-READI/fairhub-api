@@ -45,22 +45,22 @@ def test_update_study(_logged_in_client):
     WHEN the '/study' endpoint is requested (PUT)
     THEN check that the study is updated with the inputed data
     """
-    # study_id = pytest.global_study_id["id"]
-    # response = _test_client.put(
-    #     f"/study/{study_id}",
-    #     json={
-    #         "id": pytest.global_study_id["id"],
-    #         "title": "Study Title Updated",
-    #         "image": pytest.global_study_id["image"],
-    #     },
-    # )
-    # response_data = json.loads(response.data)
+    study_id = pytest.global_study_id["id"]
+    response = _logged_in_client.put(
+        f"/study/{study_id}",
+        json={
+            "id": pytest.global_study_id["id"],
+            "title": "Study Title Updated",
+            "image": pytest.global_study_id["image"],
+        },
+    )
+    response_data = json.loads(response.data)
 
-    # assert response.status_code == 200
-    # assert response_data["title"] == "Study Title Updated"
-    # assert response_data["image"] == pytest.global_study_id["image"]
-    # assert response_data["id"] == pytest.global_study_id["id"]
-    # pytest.global_study_id = response_data
+    assert response.status_code == 200
+    assert response_data["title"] == "Study Title Updated"
+    assert response_data["image"] == pytest.global_study_id["image"]
+    assert response_data["id"] == pytest.global_study_id["id"]
+    pytest.global_study_id = response_data
 
 
 def test_get_study_by_id(_logged_in_client):
@@ -89,7 +89,19 @@ def test_delete_studies_created(_logged_in_client):
     THEN the '/study' endpoint is requested (GET)
     THEN check if the study created has been deleted
     """
-    print("delete study created")
-    # TODO: DELETE ENDPOINT NOT WORKING
-    # with flask_app._test_client() as _test_client:
-    #     response = _test_client.post("/study", json={
+    # create study first to then delete
+    response = _logged_in_client.post(
+        "/study",
+        json={
+            "title": "Delete Me",
+            "image": "https://api.dicebear.com/6.x/adventurer/svg",
+        },
+    )
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+
+    # delete study
+    response = _logged_in_client.delete(f"/study/{response_data['id']}")
+
+    assert response.status_code == 200
