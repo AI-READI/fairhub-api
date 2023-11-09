@@ -14,6 +14,7 @@ def test_get_dataset_access_metadata(_logged_in_client):
     """
     study_id = pytest.global_study_id["id"]
     dataset_id = pytest.global_dataset_id
+
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/access"
     )
@@ -121,9 +122,11 @@ def test_get_dataset_consent_metadata(_logged_in_client):
     """
     study_id = pytest.global_study_id["id"]
     dataset_id = pytest.global_dataset_id
+
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/consent"
     )
+
     assert response.status_code == 200
 
 
@@ -220,9 +223,11 @@ def test_get_dataset_contributor_metadata(_logged_in_client):
     """
     study_id = pytest.global_study_id["id"]
     dataset_id = pytest.global_dataset_id
+
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor"
     )
+
     assert response.status_code == 200
 
 
@@ -236,6 +241,7 @@ def test_delete_dataset_contributor_metadata(_logged_in_client):
     study_id = pytest.global_study_id["id"]
     dataset_id = pytest.global_dataset_id
     contributor_id = pytest.global_dataset_contributor_id
+
     response = _logged_in_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor/{contributor_id}"
     )
@@ -622,7 +628,7 @@ def test_put_other_dataset_metadata(_logged_in_client):
     assert response_data["language"] == "English"
     # assert response_data["resource_type"] == "Resource Type"    # CURRENTLY NOT BEING RETURNED
     assert response_data["size"] == ["Size"]
-    # assert response_data["standards_followed"] == "Standards Followed"
+    assert response_data["standards_followed"] == "Standards Followed"
     # ABOVE STATEMENT CURRENTLY NOT BEING UPDATED
 
 

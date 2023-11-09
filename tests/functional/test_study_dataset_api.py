@@ -11,9 +11,11 @@ def test_get_all_dataset_from_study(_logged_in_client):
     THEN check that the response is valid and retrieves the dataset content
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
+
     response = _logged_in_client.get(f"/study/{study_id}/dataset")
-    response_data = json.loads(response.data)
+
     assert response.status_code == 200
+    response_data = json.loads(response.data)
     print(response_data)
 
 
@@ -24,6 +26,7 @@ def test_post_dataset(_logged_in_client):
     THEN check that the response is valid and creates a dataset
     """
     study_id = pytest.global_study_id["id"]
+
     response = _logged_in_client.post(
         f"/study/{study_id}/dataset",
         json={
@@ -35,7 +38,6 @@ def test_post_dataset(_logged_in_client):
     assert response.status_code == 200
     response_data = json.loads(response.data)
     pytest.global_dataset_id = response_data["id"]
-    print(pytest.global_dataset_id)
 
 
 def test_get_dataset_from_study(_logged_in_client):

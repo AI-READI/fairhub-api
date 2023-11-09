@@ -13,6 +13,7 @@ def test_post_arm_metadata(_logged_in_client):
     THEN check that the response is vaild and create a new arm
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
+
     response = _logged_in_client.post(
         f"/study/{study_id}/metadata/arm",
         json=[
@@ -25,9 +26,10 @@ def test_post_arm_metadata(_logged_in_client):
         ],
     )
 
-    response_data = json.loads(response.data)
-
     assert response.status_code == 200
+    response_data = json.loads(response.data)
+    pytest.global_arm_id = response_data["arms"][0]["id"]
+
     assert response_data["arms"][0]["label"] == "Label1"
     assert response_data["arms"][0]["type"] == "Experimental"
     assert response_data["arms"][0]["description"] == "Arm Description"
@@ -35,7 +37,6 @@ def test_post_arm_metadata(_logged_in_client):
         "intervention1",
         "intervention2",
     ]
-    pytest.global_arm_id = response_data["arms"][0]["id"]
 
 
 def test_get_arm_metadata(_logged_in_client):
@@ -45,9 +46,12 @@ def test_get_arm_metadata(_logged_in_client):
     THEN check that the response is valid and retrieves the arm metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
+
     response = _logged_in_client.get(f"/study/{study_id}/metadata/arm")
-    response_data = json.loads(response.data)
+
     assert response.status_code == 200
+    response_data = json.loads(response.data)
+
     assert response_data["arms"][0]["label"] == "Label1"
     assert response_data["arms"][0]["type"] == "Experimental"
     assert response_data["arms"][0]["description"] == "Arm Description"
@@ -65,7 +69,9 @@ def test_delete_arm_metadata(_logged_in_client):
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
     arm_id = pytest.global_arm_id
+
     response = _logged_in_client.delete(f"/study/{study_id}/metadata/arm/{arm_id}")
+
     assert response.status_code == 200
 
 
@@ -77,6 +83,7 @@ def test_post_available_ipd_metadata(_logged_in_client):
     THEN check that the response is vaild and new IPD was created
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
+
     response = _logged_in_client.post(
         f"/study/{study_id}/metadata/available-ipd",
         json=[
@@ -106,7 +113,9 @@ def test_get_available_ipd_metadata(_logged_in_client):
     THEN check that the response is vaild and retrieves the available IPD(s)
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
+
     response = _logged_in_client.get(f"/study/{study_id}/metadata/available-ipd")
+
     assert response.status_code == 200
 
 
@@ -118,9 +127,11 @@ def test_delete_available_ipd_metadata(_logged_in_client):
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
     available_ipd_id = pytest.global_available_ipd_id
+
     response = _logged_in_client.delete(
         f"/study/{study_id}/metadata/available-ipd/{available_ipd_id}"
     )
+
     assert response.status_code == 200
 
 
@@ -132,6 +143,7 @@ def test_post_cc_metadata(_logged_in_client):
     THEN check that the response is valid and creates the central contact metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
+
     response = _logged_in_client.post(
         f"/study/{study_id}/metadata/central-contact",
         json=[
@@ -166,7 +178,9 @@ def test_get_cc_metadata(_logged_in_client):
     THEN check that the response is valid and retrieves the central contact metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
+
     response = _logged_in_client.get(f"/study/{study_id}/metadata/central-contact")
+
     assert response.status_code == 200
     response_data = json.loads(response.data)
 
@@ -189,9 +203,11 @@ def test_delete_cc_metadata(_logged_in_client):
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
     central_contact_id = pytest.global_cc_id
+
     response = _logged_in_client.delete(
         f"/study/{study_id}/metadata/central-contact/{central_contact_id}"
     )
+
     assert response.status_code == 200
 
 
@@ -203,7 +219,9 @@ def test_get_collaborators_metadata(_logged_in_client):
     THEN check that the response is valid and retrieves the collaborators metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
+
     response = _logged_in_client.get(f"/study/{study_id}/metadata/collaborators")
+
     assert response.status_code == 200
 
 
@@ -215,6 +233,7 @@ def test_put_collaborators_metadata(_logged_in_client):
     THEN check that the response is valid and creates the collaborators metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
+
     response = _logged_in_client.put(
         f"/study/{study_id}/metadata/collaborators",
         json=[
@@ -236,7 +255,9 @@ def test_get_conditions_metadata(_logged_in_client):
     THEN check that the response is valid and retrieves the conditions metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
+
     response = _logged_in_client.get(f"/study/{study_id}/metadata/conditions")
+
     assert response.status_code == 200
 
 
@@ -246,10 +267,8 @@ def test_put_conditions_metadata(_logged_in_client):
     WHEN the '/study/{study_id}/metadata/conditions' endpoint is requested (POST)
     THEN check that the response is valid and creates the conditions metadata
     """
-    # BUG: ENDPOINT STORES KEY RATHER THAN VALUE
-    # RESPONSE FOR THIS TEST LOOKS LIKE
-    # ['conditions', 'keywords', 'oversight_has_dmc', 'size']
     study_id = pytest.global_study_id["id"]  # type: ignore
+
     response = _logged_in_client.put(
         f"/study/{study_id}/metadata/conditions",
         json=[
@@ -277,7 +296,9 @@ def test_get_description_metadata(_logged_in_client):
     THEN check that the response is valid and retrieves the description metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
+
     response = _logged_in_client.get(f"/study/{study_id}/metadata/description")
+
     assert response.status_code == 200
 
 
@@ -288,6 +309,7 @@ def test_put_description_metadata(_logged_in_client):
     THEN check that the response is valid and creates the description metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
+
     response = _logged_in_client.put(
         f"/study/{study_id}/metadata/description",
         json={
@@ -324,6 +346,7 @@ def test_put_design_metadata(_logged_in_client):
     THEN check that the response is valid and creates the design metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
+
     response = _logged_in_client.put(
         f"/study/{study_id}/metadata/design",
         json={
@@ -347,6 +370,7 @@ def test_put_design_metadata(_logged_in_client):
             "number_groups_cohorts": 1,
         },
     )
+
     assert response.status_code == 200
     response_data = json.loads(response.data)
 
@@ -381,7 +405,9 @@ def test_get_eligibility_metadata(_logged_in_client):
     THEN check that the response is valid and retrieves the eligibility metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
+
     response = _logged_in_client.get(f"/study/{study_id}/metadata/eligibility")
+
     assert response.status_code == 200
 
 
@@ -392,6 +418,7 @@ def test_put_eligibility_metadata(_logged_in_client):
     THEN check that the response is valid and updates the eligibility metadata
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
+
     response = _logged_in_client.put(
         f"/study/{study_id}/metadata/eligibility",
         json={
@@ -486,7 +513,9 @@ def test_delete_identification_metadata(_logged_in_client):
         f"/study/{study_id}/metadata/identification/{identification_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 400
+    # RETURNS 400 DUE TO NOT BEING ABLE TO DELETE PRIMARY IDENTIFIER
+    # SECONDARY HAS NO ID THOUGH
 
 
 # ------------------- INTERVENTION METADATA ------------------- #

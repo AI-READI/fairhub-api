@@ -18,9 +18,10 @@ def test_post_study(_logged_in_client):
             "image": "https://api.dicebear.com/6.x/adventurer/svg",
         },
     )
-    response_data = json.loads(response.data)
 
     assert response.status_code == 200
+    response_data = json.loads(response.data)
+
     assert response_data["title"] == "Study Title"
     assert response_data["image"] == "https://api.dicebear.com/6.x/adventurer/svg"
     pytest.global_study_id = response_data
@@ -34,9 +35,10 @@ def test_get_all_studies(_logged_in_client):
     """
     response = _logged_in_client.get("/study")
 
-    response_data = json.loads(response.data)
-    assert len(response_data) == 1  # Only one study created
     assert response.status_code == 200
+    response_data = json.loads(response.data)
+
+    assert len(response_data) == 1  # Only one study created
 
 
 def test_update_study(_logged_in_client):
@@ -46,21 +48,22 @@ def test_update_study(_logged_in_client):
     THEN check that the study is updated with the inputed data
     """
     study_id = pytest.global_study_id["id"]
+
     response = _logged_in_client.put(
         f"/study/{study_id}",
         json={
-            "id": pytest.global_study_id["id"],
             "title": "Study Title Updated",
             "image": pytest.global_study_id["image"],
         },
     )
-    response_data = json.loads(response.data)
 
     assert response.status_code == 200
+    response_data = json.loads(response.data)
+    pytest.global_study_id = response_data
+
     assert response_data["title"] == "Study Title Updated"
     assert response_data["image"] == pytest.global_study_id["image"]
     assert response_data["id"] == pytest.global_study_id["id"]
-    pytest.global_study_id = response_data
 
 
 def test_get_study_by_id(_logged_in_client):
@@ -72,10 +75,10 @@ def test_get_study_by_id(_logged_in_client):
     response = _logged_in_client.get(f"/study/{pytest.global_study_id['id']}")  # type: ignore # pylint: disable=line-too-long # noqa: E501
 
     # Convert the response data from JSON to a Python dictionary
+    assert response.status_code == 200
     response_data = json.loads(response.data)
 
     # Check the response is correct
-    assert response.status_code == 200
     assert response_data["id"] == pytest.global_study_id["id"]  # type: ignore
     assert response_data["title"] == pytest.global_study_id["title"]  # type: ignore
     assert response_data["image"] == pytest.global_study_id["image"]  # type: ignore
