@@ -937,7 +937,9 @@ def test_get_dataset_rights_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     dataset_id = pytest.global_dataset_id
 
-    response = _test_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/rights")
+    response = _test_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights"
+    )
 
     assert response.status_code == 200
 
@@ -955,12 +957,14 @@ def test_post_dataset_rights_metadata(_test_client, _login_user):
 
     response = _test_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights",
-        json=[{
-            "identifier": "Identifier",
-            "identifier_scheme": "Identifier Scheme",
-            "rights": "Rights",
-            "uri": "URI"
-        }],
+        json=[
+            {
+                "identifier": "Identifier",
+                "identifier_scheme": "Identifier Scheme",
+                "rights": "Rights",
+                "uri": "URI",
+            }
+        ],
     )
 
     assert response.status_code == 200
@@ -1004,7 +1008,9 @@ def test_get_dataset_subjects_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     dataset_id = pytest.global_dataset_id
 
-    response = _test_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/subject")
+    response = _test_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/subject"
+    )
 
     assert response.status_code == 200
 
@@ -1022,12 +1028,14 @@ def test_post_dataset_subjects_metadata(_test_client, _login_user):
 
     response = _test_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/subject",
-        json=[{
-            "scheme": "Scheme",
-            "scheme_uri": "Scheme URI",
-            "subject": "Subject",
-            "value_uri": "Value URI"
-        }],
+        json=[
+            {
+                "scheme": "Scheme",
+                "scheme_uri": "Scheme URI",
+                "subject": "Subject",
+                "value_uri": "Value URI",
+            }
+        ],
     )
 
     assert response.status_code == 200
@@ -1071,7 +1079,9 @@ def test_get_dataset_title_metadata(_test_client, _login_user):
     study_id = pytest.global_study_id["id"]
     dataset_id = pytest.global_dataset_id
 
-    response = _test_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/title")
+    response = _test_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/title"
+    )
 
     assert response.status_code == 200
 
