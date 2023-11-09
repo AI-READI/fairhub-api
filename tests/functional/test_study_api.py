@@ -84,10 +84,8 @@ def test_get_study_by_id(_logged_in_client):
 def test_delete_studies_created(_logged_in_client):
     """
     Given a Flask application configured for testing
-    WHEN the '/study' endpoint is requested (DELETE)
+    WHEN the '/study/{study_id}' endpoint is requested (DELETE)
     THEN check that the response is valid (200)
-    THEN the '/study' endpoint is requested (GET)
-    THEN check if the study created has been deleted
     """
     # create study first to then delete
     response = _logged_in_client.post(
@@ -100,8 +98,9 @@ def test_delete_studies_created(_logged_in_client):
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
+    study_id = response_data["id"]
 
     # delete study
-    response = _logged_in_client.delete(f"/study/{response_data['id']}")
+    response = _logged_in_client.delete(f"/study/{study_id}")
 
     assert response.status_code == 200
