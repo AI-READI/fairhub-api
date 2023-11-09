@@ -144,3 +144,19 @@ def test_get_dataset_version(_logged_in_client):
     assert response.status_code == 200
 
 
+def test_put_dataset_version(_logged_in_client):
+    """
+    Given a Flask application configured for testing, study ID, dataset ID and version ID
+    When the '/study/{study_id}/dataset/{dataset_id}/version/{version_id}'
+    endpoint is requested (PUT)
+    Then check that the response is valid and updates the dataset version
+    """
+    # study_id = pytest.global_study_id["id"]
+    # dataset_id = pytest.global_dataset_id
+    # version_id = pytest.global_dataset_version_id
+
+    # response = _logged_in_client.put(
+    #     f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}",
+    #     json={}
+    # )
+    # WIP endpoint currently not implemented
