@@ -82,4 +82,33 @@ def test_delete_dataset_from_study(_logged_in_client):
     assert response.status_code == 200
 
 
-# Test PUT dataset endpoint still WIP
+def test_post_dataset_version(_logged_in_client):
+    """
+    Given a Flask application configured for testing, study ID and a dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/version' endpoint is requested (POST)
+    Then check that the response is valid and creates a dataset version
+    """
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/version",
+        json={
+            "title": "Dataset Version 1.0",
+            "published": False,
+            "doi": "doi:test",
+            "changelog": "changelog testing here"
+        },
+    )
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    pytest.global_dataset_version_id = response_data["id"]
+
+    assert response_data["title"] == "Dataset Version 1.0"
+    assert response_data["published"] is False
+    assert response_data["doi"] == "doi:test"
+    assert response_data["changelog"] == "changelog testing here"
+
+
+
