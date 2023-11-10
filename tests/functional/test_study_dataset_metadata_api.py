@@ -277,21 +277,23 @@ def test_post_dataset_creator_metadata(_logged_in_client):
 
     response = _logged_in_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/creator",
-        json=[{
-            "name": "Name here",
-            "name_type": "Personal",
-            "name_identifier": "Name identifier",
-            "name_identifier_scheme": "Name Scheme ID",
-            "name_identifier_scheme_uri": "Name ID Scheme URI",
-            "affiliations": [
-                {
-                    "name": "Test",
-                    "identifier": "yes",
-                    "scheme": "uh",
-                    "scheme_uri": "scheme uri",
-                }
-            ],
-        }],
+        json=[
+            {
+                "name": "Name here",
+                "name_type": "Personal",
+                "name_identifier": "Name identifier",
+                "name_identifier_scheme": "Name Scheme ID",
+                "name_identifier_scheme_uri": "Name ID Scheme URI",
+                "affiliations": [
+                    {
+                        "name": "Test",
+                        "identifier": "yes",
+                        "scheme": "uh",
+                        "scheme_uri": "scheme uri",
+                    }
+                ],
+            }
+        ],
     )
 
     assert response.status_code == 200
@@ -339,7 +341,9 @@ def test_get_dataset_date_metadata(_logged_in_client):
     study_id = pytest.global_study_id["id"]
     dataset_id = pytest.global_dataset_id
 
-    response = _logged_in_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/date")
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/date"
+    )
 
     assert response.status_code == 200
 
@@ -715,7 +719,7 @@ def test_put_dataset_readme_metadata(_logged_in_client):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/readme",
         json={
             "content": "This is the readme content",
-        }
+        },
     )
 
     assert response.status_code == 200
