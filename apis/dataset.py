@@ -57,7 +57,6 @@ class DatasetList(Resource):
         study = model.Study.query.get(study_id)
         if not is_granted("add_dataset", study):
             return "Access denied, you can not modify", 403
-        # todo if study.participant id== different study Throw error
         data: typing.Union[typing.Any, dict] = request.json
         dataset_ = model.Dataset.from_data(study)
         model.db.session.add(dataset_)
@@ -112,21 +111,14 @@ class DatasetResource(Resource):
         study = model.Study.query.get(study_id)
         if not is_granted("delete_dataset", study):
             return "Access denied, you can not modify", 403
+
         data_obj = model.Dataset.query.get(dataset_id)
         for version in data_obj.dataset_versions:
             model.db.session.delete(version)
+
         model.db.session.delete(data_obj)
         model.db.session.commit()
         return 204
-
-    # def delete(self, study_id: int, dataset_id: int, version_id: int):
-    #     data_obj = Dataset.query.get(dataset_id)
-    #     for version in data_obj.dataset_versions:
-    #         db.session.delete(version)
-    #         db.session.commit()
-    #     db.session.delete(data_obj)
-    #     db.session.commit()
-    #     return Response(status=204)
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>")
@@ -166,13 +158,10 @@ class VersionResource(Resource):
         study = model.Study.query.get(study_id)
         if not is_granted("delete_dataset", study):
             return "Access denied, you can not modify", 403
-        data_obj = model.Dataset.query.get(dataset_id)
-        for version in data_obj.dataset_versions:
-            model.db.session.delete(version)
-            model.db.session.commit()
-        model.db.session.delete(data_obj)
+        version_obj = model.Version.query.get(version_id)
+        model.db.session.delete(version_obj)
         model.db.session.commit()
-        return Response(status=204)
+        return 204
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/changelog")
@@ -245,6 +234,7 @@ class VersionList(Resource):
         if not is_granted("version", study):
             return "Access denied, you can not modify", 403
         dataset_obj = model.Dataset.query.get(dataset_id)
+        print([i.to_dict() for i in dataset_obj.dataset_versions.all()], "fddddddddddddddddddddddd")
         return [i.to_dict() for i in dataset_obj.dataset_versions.all()], 200
 
     @api.response(201, "Success")
@@ -277,7 +267,6 @@ class VersionList(Resource):
 #             return "Access denied, you can not modify", 403
 #         data_obj = model.Version.query.get(version_id)
 #         data: typing.Union[typing.Any, dict] = request.json
-#         dataset_versions = model.Version.from_data(data_obj, data)
 #         model.db.session.commit()
 #         return dataset_versions.to_dict()
 
