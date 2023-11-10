@@ -37,7 +37,7 @@ class DatasetOther(db.Model):  # type: ignore
             "language": self.language,
             "managing_organization_name": self.managing_organization_name,
             "managing_organization_ror_id": self.managing_organization_ror_id,
-            "standards_followed": self.managing_organization_ror_id,
+            "standards_followed": self.standards_followed,
             "acknowledgement": self.acknowledgement,
             "size": self.size,
             "publisher": self.publisher,

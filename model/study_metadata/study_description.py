@@ -27,6 +27,7 @@ class StudyDescription(db.Model):  # type: ignore
     def to_dict(self):
         """Converts the study to a dictionary"""
         return {
+            "id": self.study_id,
             "brief_summary": self.brief_summary,
             "detailed_description": self.detailed_description,
         }

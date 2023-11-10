@@ -126,7 +126,7 @@ class StudyIdentificationResource(Resource):
                 identification_id
             )
             if not study_identification_.secondary:
-                return 400, "primary identifier can not be deleted"
+                return "primary identifier can not be deleted", 400
 
             model.db.session.delete(study_identification_)
             model.db.session.commit()

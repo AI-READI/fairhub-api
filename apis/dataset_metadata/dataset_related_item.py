@@ -141,7 +141,7 @@ class DatasetRelatedItemResource(Resource):
                     "last_page": {"type": "string"},
                     "number_type": {"type": "string"},
                     "number_value": {"type": "string"},
-                    "publication_year": {"type": ["string", "null"]},
+                    "publication_year": {"type": ["integer", "null"]},
                     "publisher": {"type": "string"},
                     "relation_type": {"type": "string", "minLength": 1},
                     "titles": {

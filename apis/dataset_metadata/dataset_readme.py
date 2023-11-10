@@ -20,7 +20,7 @@ class DatasetReadmeResource(Resource):
     def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_readme_ = dataset_.dataset_readme
-        return [d.to_dict() for d in dataset_readme_]
+        return dataset_readme_.to_dict()
 
     def put(self, study_id: int, dataset_id: int):
         study_obj = model.Study.query.get(study_id)
@@ -28,6 +28,6 @@ class DatasetReadmeResource(Resource):
             return "Access denied, you can not make any change in dataset metadata", 403
         data = request.json
         dataset_ = model.Dataset.query.get(dataset_id)
-        dataset_readme_ = dataset_.dataset_readme.update(data)
+        dataset_.dataset_readme.update(data)
         model.db.session.commit()
-        return dataset_readme_.to_dict()
+        return dataset_.dataset_readme.to_dict()

@@ -16,6 +16,7 @@ class DatasetReadme(db.Model):  # type: ignore
 
     def to_dict(self):
         return {
+            "id": self.dataset_id,
             "content": self.content,
         }
 
