@@ -38,13 +38,6 @@ class DatasetRelatedItemIdentifier(db.Model):  # type: ignore
             "created_at": self.created_at,
         }
 
-    def to_dict_metadata(self):
-        return {
-            "id": self.id,
-            "identifier": self.identifier,
-            "type": self.type,
-        }
-
     @staticmethod
     def from_data(dataset_related_item, data: dict):
         identifier_ = DatasetRelatedItemIdentifier(dataset_related_item)

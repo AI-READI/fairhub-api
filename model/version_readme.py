@@ -2,10 +2,6 @@ from .db import db
 
 
 class VersionReadme(db.Model):  # type: ignore
-    def __init__(self, version):
-        self.version = version
-        self.content = ""
-
     __tablename__ = "version_readme"
     content = db.Column(db.String, nullable=True)
 
@@ -16,14 +12,14 @@ class VersionReadme(db.Model):  # type: ignore
 
     def to_dict(self):
         return {
-            "readme": self.content,
+            "content": self.content,
         }
 
     @staticmethod
-    def from_data(version, data: dict):
-        readme = VersionReadme(version)
-        readme.update(data)
-        return readme
+    def from_data(data: dict):
+        user = VersionReadme()
+        user.update(data)
+        return user
 
     def update(self, data: dict):
-        self.content = data["readme"]
+        self.content = data["content"]

@@ -38,14 +38,6 @@ class StudyOverallOfficial(db.Model):  # type: ignore
             "created_at": self.created_at,
         }
 
-    def to_dict_metadata(self):
-        """Converts the study metadata to a dictionary"""
-        return {
-            "name": self.name,
-            "role": self.role,
-            "affiliation": self.affiliation,
-        }
-
     @staticmethod
     def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""

@@ -160,6 +160,7 @@ class DatasetRelatedItemResource(Resource):
                                         "Subtitle",
                                         "TranslatedTitle",
                                         "OtherTitle",
+                                        "MainTitle",
                                     ],
                                 },
                             },

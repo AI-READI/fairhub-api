@@ -31,16 +31,6 @@ class DatasetDate(db.Model):  # type: ignore
             "created_at": self.created_at,
         }
 
-    def to_dict_metadata(self):
-        bigint_timestamp = self.date
-        unix_timestamp = bigint_timestamp / 1000
-        datetime_obj = datetime.datetime.utcfromtimestamp(unix_timestamp)
-        return {
-            "id": self.id,
-            "date": datetime_obj.strftime("%m-%d-%Y"),
-            "type": self.type,
-        }
-
     @staticmethod
     def from_data(dataset, data: dict):
         dataset_date = DatasetDate(dataset)
