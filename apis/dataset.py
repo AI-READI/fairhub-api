@@ -234,7 +234,10 @@ class VersionList(Resource):
         if not is_granted("version", study):
             return "Access denied, you can not modify", 403
         dataset_obj = model.Dataset.query.get(dataset_id)
-        print([i.to_dict() for i in dataset_obj.dataset_versions.all()], "fddddddddddddddddddddddd")
+        print(
+            [i.to_dict() for i in dataset_obj.dataset_versions.all()],
+            "fddddddddddddddddddddddd",
+        )
         return [i.to_dict() for i in dataset_obj.dataset_versions.all()], 200
 
     @api.response(201, "Success")
