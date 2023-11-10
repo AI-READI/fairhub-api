@@ -91,8 +91,7 @@ class StudyOversightResource(Resource):
         study_ = model.Study.query.get(study_id)
 
         study_oversight_has_dmc = study_.study_other.oversight_has_dmc
-
-        return study_oversight_has_dmc
+        return {"oversight": study_oversight_has_dmc}
 
     def put(self, study_id: int):
         """Update study oversight metadata"""

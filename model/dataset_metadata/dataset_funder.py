@@ -38,6 +38,13 @@ class DatasetFunder(db.Model):  # type: ignore
             "created_at": self.created_at,
         }
 
+    def to_dict_metadata(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "identifier": self.identifier,
+        }
+
     @staticmethod
     def from_data(dataset, data: dict):
         dataset_funder = DatasetFunder(dataset)

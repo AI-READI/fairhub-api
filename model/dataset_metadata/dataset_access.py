@@ -30,6 +30,12 @@ class DatasetAccess(db.Model):  # type: ignore
             "url": self.url,
         }
 
+    def to_dict_metadata(self):
+        return {
+            "type": self.type,
+            "description": self.description,
+        }
+
     @staticmethod
     def from_data(dataset: Dataset, data: dict):
         dataset_access = DatasetAccess(dataset)

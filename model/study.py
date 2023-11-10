@@ -172,6 +172,53 @@ class Study(db.Model):  # type: ignore
             "role": contributor_permission.to_dict()["role"],
         }
 
+    def to_dict_study_metadata(self):
+        # self.study_contact: Iterable = []
+        primary = [
+            i.to_dict_metadata()
+            for i in self.study_identification  # type: ignore
+            if not i.secondary
+        ]
+
+        return {
+            "arms": [i.to_dict_metadata() for i in self.study_arm],  # type: ignore
+            "available_ipd": [
+                i.to_dict_metadata() for i in self.study_available_ipd  # type: ignore
+            ],
+            "contacts": [
+                i.to_dict_metadata() for i in self.study_contact  # type: ignore
+            ],
+            "description": self.study_description.to_dict_metadata(),
+            "design": self.study_design.to_dict(),
+            "eligibility": self.study_eligibility.to_dict_metadata(),
+            "primary_identifier": primary[0] if len(primary) else None,
+            "secondary_identifiers": [
+                i.to_dict_metadata()
+                for i in self.study_identification  # type: ignore
+                if i.secondary
+            ],
+            "interventions": [
+                i.to_dict_metadata() for i in self.study_intervention  # type: ignore
+            ],
+            "ipd_sharing": self.study_ipdsharing.to_dict_metadata(),
+            "links": [i.to_dict_metadata() for i in self.study_link],  # type: ignore
+            "locations": [
+                i.to_dict_metadata() for i in self.study_location  # type: ignore
+            ],
+            "overall_officials": [
+                i.to_dict_metadata()
+                for i in self.study_overall_official  # type: ignore
+            ],
+            "references": [
+                i.to_dict_metadata() for i in self.study_reference  # type: ignore
+            ],
+            "sponsors": self.study_sponsors_collaborators.to_dict_metadata(),
+            "collaborators": self.study_sponsors_collaborators.collaborator_name,
+            "status": self.study_status.to_dict_metadata(),
+            "oversight": self.study_other.oversight_has_dmc,
+            "conditions": self.study_other.conditions,
+        }
+
     @staticmethod
     def from_data(data: dict):
         """Creates a new study from a dictionary"""

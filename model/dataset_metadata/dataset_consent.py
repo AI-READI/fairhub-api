@@ -38,6 +38,13 @@ class DatasetConsent(db.Model):  # type: ignore
             "details": self.details,
         }
 
+    def to_dict_metadata(self):
+        return {
+            "noncommercial": self.noncommercial,
+            "geog_restrict": self.geog_restrict,
+            "research_type": self.research_type,
+        }
+
     @staticmethod
     def from_data(dataset, data: dict):
         dataset_consent = DatasetConsent(dataset)

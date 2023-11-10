@@ -41,6 +41,13 @@ class StudyOther(db.Model):  # type: ignore
             "size": self.size,
         }
 
+    def to_dict_metadata(self):
+        """Converts the study metadata to a dictionary"""
+        return {
+            "oversight_has_dmc": self.oversight_has_dmc,
+            "conditions": self.conditions,
+        }
+
     @staticmethod
     def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""

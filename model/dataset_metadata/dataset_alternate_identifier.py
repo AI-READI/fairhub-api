@@ -28,6 +28,13 @@ class DatasetAlternateIdentifier(db.Model):  # type: ignore
             "created_at": self.created_at,
         }
 
+    def to_dict_metadata(self):
+        return {
+            "id": self.id,
+            "type": self.type,
+            "identifier": self.identifier,
+        }
+
     @staticmethod
     def from_data(dataset, data: dict):
         dataset_date = DatasetAlternateIdentifier(dataset)

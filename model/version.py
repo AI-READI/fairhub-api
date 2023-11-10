@@ -4,6 +4,7 @@ from datetime import timezone
 
 from sqlalchemy import Table
 
+import model
 from model.dataset import Dataset
 
 from .db import db
@@ -21,6 +22,7 @@ class Version(db.Model):  # type: ignore
         self.dataset = dataset
         self.id = str(uuid.uuid4())
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
+        self.version_readme = model.VersionReadme(self)
 
     __tablename__ = "version"
     id = db.Column(db.CHAR(36), primary_key=True)

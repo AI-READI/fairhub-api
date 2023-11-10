@@ -22,4 +22,7 @@ COPY core ./core
 COPY app.py .
 COPY config.py .
 
+# run database migrations
+RUN alembic upgrade head  
+
 CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
