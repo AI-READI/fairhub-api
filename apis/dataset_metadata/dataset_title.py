@@ -63,7 +63,6 @@ class DatasetTitleResource(Resource):
                             "Subtitle",
                             "TranslatedTitle",
                             "OtherTitle",
-                            "MainTitle",
                         ],
                     },
                 },
@@ -91,7 +90,7 @@ class DatasetTitleResource(Resource):
                 dataset_title_.update(i)
                 list_of_elements.append(dataset_title_.to_dict())
             elif "id" not in i or not i["id"]:
-                if i["type"] == "mainTitle"[0].upper() + "mainTitle"[1:]:
+                if i["type"] == "MainTitle":
                     return (
                         "Main Title type can not be given",
                         403,
@@ -123,7 +122,7 @@ class DatasetTitleResource(Resource):
                     403,
                 )
             dataset_title_ = model.DatasetTitle.query.get(title_id)
-            if dataset_title_.type == "mainTitle"[0].upper() + "mainTitle"[1:]:
+            if dataset_title_.type == "MainTitle":
                 return (
                     "Main Title type can not be deleted",
                     403,
