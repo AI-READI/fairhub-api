@@ -46,6 +46,13 @@ class StudyIpdsharing(db.Model):  # type: ignore
             "ipd_sharing_url": self.ipd_sharing_url,
         }
 
+    def to_dict_metadata(self):
+        """Converts the study metadata to a dictionary"""
+        return {
+            "ipd_sharing": self.ipd_sharing,
+            "ipd_sharing_info_type_list": self.ipd_sharing_info_type_list,
+        }
+
     @staticmethod
     def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""

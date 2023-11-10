@@ -45,6 +45,14 @@ class StudySponsorsCollaborators(db.Model):  # type: ignore
             "lead_sponsor_name": self.lead_sponsor_name,
         }
 
+    def to_dict_metadata(self):
+        """Converts the study metadata to a dictionary"""
+        return {
+            "responsible_party_type": self.responsible_party_type,
+            "responsible_party_investigator_name": self.responsible_party_investigator_name,
+            "lead_sponsor_name": self.lead_sponsor_name,
+        }
+
     @staticmethod
     def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""
