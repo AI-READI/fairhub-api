@@ -16,8 +16,8 @@ load_dotenv(".env")
 os.environ["FLASK_ENV"] = "testing"
 
 # Set global variable for study ID
+# Study variables use for testing
 pytest.global_study_id = {}
-pytest.global_dataset_id = ""
 pytest.global_version_id = ""
 pytest.global_arm_id = ""
 pytest.global_available_ipd_id = ""
@@ -29,16 +29,35 @@ pytest.global_location_id = ""
 pytest.global_overall_official_id = ""
 pytest.global_reference_id = ""
 
+# Dataset variables use for testing
+pytest.global_dataset_id = ""
+pytest.global_dataset_version_id = ""
+pytest.global_alternative_identifier_id = ""
+pytest.global_dataset_contributor_id = ""
+pytest.global_dataset_creator_id = ""
+pytest.global_dataset_date_id = ""
+pytest.global_dataset_description_id = ""
+pytest.global_dataset_funder_id = ""
+pytest.global_dataset_related_item_id = ""
+pytest.global_dataset_related_item_contributor_id = ""
+pytest.global_dataset_related_item_creator_id = ""
+pytest.global_dataset_related_item_identifier_id = ""
+pytest.global_dataset_related_item_title_id = ""
+pytest.global_dataset_rights_id = ""
+pytest.global_dataset_subject_id = ""
+pytest.global_dataset_title_id = ""
+
 
 # Create the flask app for testing
-@pytest.fixture()
+@pytest.fixture(scope="session")
 def flask_app():
     """An application for the tests."""
     yield create_app(config_module="pytest_config")
 
 
 # Create a test client for the app
-@pytest.fixture()
+# pylint: disable=redefined-outer-name
+@pytest.fixture(scope="session")
 def _test_client(flask_app):
     """A test client for the app."""
     with flask_app.test_client() as _test_client:
@@ -46,6 +65,7 @@ def _test_client(flask_app):
 
 
 # Empty local database for testing
+# pylint: disable=redefined-outer-name
 @pytest.fixture()
 def _empty_db(flask_app):
     """Empty the local database."""
@@ -64,7 +84,7 @@ def _create_user(_test_client):
         response = _test_client.post(
             "/auth/signup",
             json={
-                "email_address": "sample@gmail.com",
+                "email_address": "test@fairhub.io",
                 "password": "Testingyeshello11!",
                 "code": "7654321",
             },
@@ -74,16 +94,18 @@ def _create_user(_test_client):
 
 
 # Fixture to sign in the user for module testing
-@pytest.fixture()
-def _login_user(_test_client):
+@pytest.fixture(scope="session")
+def _logged_in_client(_test_client):
     """Sign in the user for testing."""
     with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
         response = _test_client.post(
             "/auth/login",
             json={
-                "email_address": "sample@gmail.com",
+                "email_address": "test@fairhub.io",
                 "password": "Testingyeshello11!",
             },
         )
 
         assert response.status_code == 200
+
+        yield _test_client

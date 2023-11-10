@@ -34,6 +34,7 @@ class StudyOther(db.Model):  # type: ignore
     def to_dict(self):
         """Converts the study to a dictionary"""
         return {
+            "id": self.study_id,
             "oversight_has_dmc": self.oversight_has_dmc,
             "conditions": self.conditions,
             "keywords": self.keywords,
