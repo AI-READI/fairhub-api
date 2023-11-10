@@ -75,7 +75,8 @@ class DatasetOther(db.Model):  # type: ignore
             self.size = data["size"]
         if "acknowledgement" in data:
             self.acknowledgement = data["acknowledgement"]
-        self.standards_followed = data["standards_followed"]
+        if "standards_followed" in data:
+            self.standards_followed = data["standards_followed"]
         if "publisher" in data:
             self.publisher = data["publisher"]
         if "resource_type" in data:
