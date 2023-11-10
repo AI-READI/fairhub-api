@@ -99,7 +99,7 @@ def test_post_dataset_version(_logged_in_client):
             "title": "Dataset Version 1.0",
             "published": False,
             "doi": "doi:test",
-            "changelog": "changelog testing here"
+            "changelog": "changelog testing here",
         },
     )
 
