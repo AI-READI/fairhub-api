@@ -44,20 +44,6 @@ class DatasetOther(db.Model):  # type: ignore
             "resource_type": self.resource_type,
         }
 
-    def to_dict_metadata(self):
-        return {
-            "language": self.language,
-            "size": self.size,
-            "resource_type": self.resource_type,
-        }
-
-    def to_dict_publisher(self):
-        return {
-            "managing_organization_name": self.managing_organization_name,
-            "managing_organization_ror_id": self.managing_organization_ror_id,
-            "publisher": self.publisher,
-        }
-
     @staticmethod
     def from_data(dataset, data: dict):
         dataset_other = DatasetOther(dataset)

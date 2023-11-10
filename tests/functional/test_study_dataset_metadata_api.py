@@ -50,23 +50,6 @@ def test_put_dataset_access_metadata(_logged_in_client):
 
 
 # ------------------- ALTERNATIVE IDENTIFIER METADATA ------------------- #
-def test_get_alternative_identifier(_logged_in_client):
-    """
-    Given a Flask application configured for testing and a study ID
-    When the '/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier'
-    endpoint is requested (GET)
-    Then check that the response is valid and retrieves the dataset alternative identifier content
-    """
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    dataset_id = pytest.global_dataset_id
-
-    response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier"
-    )
-
-    assert response.status_code == 200
-
-
 def test_post_alternative_identifier(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID
@@ -82,7 +65,7 @@ def test_post_alternative_identifier(_logged_in_client):
         json=[
             {
                 "identifier": "identifier test",
-                "type": "ARK",
+                "type": "ark",
             }
         ],
     )
@@ -92,7 +75,24 @@ def test_post_alternative_identifier(_logged_in_client):
     pytest.global_alternative_identifier_id = response_data[0]["id"]
 
     assert response_data[0]["identifier"] == "identifier test"
-    assert response_data[0]["type"] == "ARK"
+    assert response_data[0]["type"] == "ark"
+
+
+def test_get_alternative_identifier(_logged_in_client):
+    """
+    Given a Flask application configured for testing and a study ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset alternative identifier content
+    """
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier"
+    )
+
+    assert response.status_code == 200
 
 
 def test_delete_alternative_identifier(_logged_in_client):
@@ -685,6 +685,49 @@ def test_put_dataset_publisher_metadata(_logged_in_client):
     )
 
 
+# ------------------- README METADATA ------------------- #
+def test_get_dataset_readme_metadata(_logged_in_client):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/readme'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    readme metadata content
+    """
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/readme"
+    )
+
+    assert response.status_code == 200
+
+
+def test_put_dataset_readme_metadata(_logged_in_client):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/readme'
+    endpoint is requested (PUT)
+    Then check that the response is valid and updates the dataset
+    readme metadata content
+    """
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/readme",
+        json={
+            "content": "This is the readme content",
+        },
+    )
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+
+    assert response_data["content"] == "This is the readme content"
+
+
 # ------------------- RECORD KEYS METADATA ------------------- #
 def test_get_dataset_record_keys_metadata(_logged_in_client):
     """
@@ -723,8 +766,8 @@ def test_put_dataset_record_keys_metadata(_logged_in_client):
     assert response.status_code == 201
     response_data = json.loads(response.data)
 
-    assert response_data["type"] == "Record Type"
-    assert response_data["details"] == "Details for Record Keys"
+    assert response_data["key_type"] == "Record Type"
+    assert response_data["key_details"] == "Details for Record Keys"
 
 
 # ------------------- RELATED ITEM METADATA ------------------- #
@@ -749,7 +792,7 @@ def test_get_dataset_related_item_metadata(_logged_in_client):
 def test_post_dataset_related_item_metadata(_logged_in_client):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
-    When the '/study/{study_id}/dataset/{dataset_id}/metadata/related-item'
+    When the '/study/{study_id}/dataset'
     endpoint is requested (POST)
     Then check that the response is valid and creates the dataset
     related item metadata content
@@ -777,7 +820,7 @@ def test_post_dataset_related_item_metadata(_logged_in_client):
                         "metadata_scheme": "Metadata Scheme",
                         "scheme_type": "Scheme Type",
                         "scheme_uri": "Scheme URI",
-                        "type": "ARK",
+                        "type": "ark",
                     }
                 ],
                 "issue": "Issue",
@@ -819,7 +862,7 @@ def test_post_dataset_related_item_metadata(_logged_in_client):
     assert response_data[0]["identifiers"][0]["metadata_scheme"] == "Metadata Scheme"
     assert response_data[0]["identifiers"][0]["scheme_type"] == "Scheme Type"
     assert response_data[0]["identifiers"][0]["scheme_uri"] == "Scheme URI"
-    assert response_data[0]["identifiers"][0]["type"] == "ARK"
+    assert response_data[0]["identifiers"][0]["type"] == "ark"
     assert response_data[0]["issue"] == "Issue"
     assert response_data[0]["last_page"] == "Last Page"
     assert response_data[0]["number_type"] == "Number Type"

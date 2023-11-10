@@ -32,13 +32,6 @@ class DatasetRelatedItemTitle(db.Model):  # type: ignore
             "created_at": self.created_at,
         }
 
-    def to_dict_metadata(self):
-        return {
-            "id": self.id,
-            "title": self.title,
-            "type": self.type,
-        }
-
     @staticmethod
     def from_data(dataset_related_item, data: dict):
         dataset_related_item_title = DatasetRelatedItemTitle(dataset_related_item)

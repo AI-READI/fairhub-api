@@ -13,6 +13,7 @@ from ..authentication import is_granted
 study_design = api.model(
     "StudyDesign",
     {
+        "id": fields.String(required=True),
         "design_allocation": fields.String(required=True),
         "study_type": fields.String(required=True),
         "design_intervention_model": fields.String(required=True),
@@ -73,7 +74,7 @@ class StudyDesignResource(Resource):
                     "type": ["string", "null"],
                 },
                 "design_who_masked_list": {
-                    "type": ["array", "null"],
+                    "type": "array",
                     "items": {
                         "type": "string",
                         "oneOf": [
@@ -90,7 +91,7 @@ class StudyDesignResource(Resource):
                     "uniqueItems": True,
                 },
                 "phase_list": {
-                    "type": ["array", "null"],
+                    "type": "array",
                     "items": {
                         "type": "string",
                         "oneOf": [
@@ -110,9 +111,9 @@ class StudyDesignResource(Resource):
                     },
                     "uniqueItems": True,
                 },
-                "enrollment_count": {"type": ["integer", "null"]},
+                "enrollment_count": {"type": "integer"},
                 "enrollment_type": {
-                    "type": ["string", "null"],
+                    "type": "string",
                     "enum": ["Actual", "Anticipated"],
                 },
                 "number_arms": {"type": ["integer", "null"]},
@@ -127,7 +128,7 @@ class StudyDesignResource(Resource):
                                     "Case-Control",
                                     "Case-Only",
                                     "Case-Crossover",
-                                    "Ecologic or Community",
+                                    "Ecologic or Community Study",
                                     "Family-Based",
                                     "Other",
                                 ]
@@ -154,8 +155,12 @@ class StudyDesignResource(Resource):
                     "uniqueItems": True,
                 },
                 "bio_spec_retention": {"type": ["string", "null"]},
-                "bio_spec_description": {"type": ["string", "null"]},
-                "target_duration": {"type": ["string", "null"]},
+                "bio_spec_description": {
+                    "type": ["string", "null"],
+                },
+                "target_duration": {
+                    "type": ["string", "null"],
+                },
                 "number_groups_cohorts": {"type": ["integer", "null"]},
             },
         }

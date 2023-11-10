@@ -41,14 +41,6 @@ class StudyIdentification(db.Model):  # type: ignore
             "created_at": self.created_at,
         }
 
-    def to_dict_metadata(self):
-        """Converts the study metadata to a dictionary"""
-        return {
-            "identifier": self.identifier,
-            "identifier_type": self.identifier_type,
-            "id": self.id,
-        }
-
     @staticmethod
     def from_data(study: Study, data: dict, secondary):
         """Creates a new study from a dictionary"""
