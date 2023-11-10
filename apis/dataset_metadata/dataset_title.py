@@ -82,11 +82,6 @@ class DatasetTitleResource(Resource):
         for i in data:
             if "id" in i and i["id"]:
                 dataset_title_ = model.DatasetTitle.query.get(i["id"])
-                # if dataset_title_.type == "Main Title":
-                #     return (
-                #         "Main Title type can not be modified",
-                #         403,
-                #
                 dataset_title_.update(i)
                 list_of_elements.append(dataset_title_.to_dict())
             elif "id" not in i or not i["id"]:
