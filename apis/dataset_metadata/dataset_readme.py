@@ -20,7 +20,6 @@ class DatasetReadmeResource(Resource):
     def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_readme_ = dataset_.dataset_readme
-        print(dataset_readme_.to_dict())
         return dataset_readme_.to_dict()
 
     def put(self, study_id: int, dataset_id: int):

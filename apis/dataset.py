@@ -88,13 +88,16 @@ class DatasetResource(Resource):
     @api.response(400, "Validation Error")
     def put(self, study_id: int, dataset_id: int):
         study = model.Study.query.get(study_id)
+
         if not is_granted("update_dataset", study):
             return "Access denied, you can not modify", 403
+
         data: typing.Union[dict, typing.Any] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
-        print(data)
+
         data_obj.update(data)
         model.db.session.commit()
+
         return data_obj.to_dict()
 
     @api.response(200, "Success")

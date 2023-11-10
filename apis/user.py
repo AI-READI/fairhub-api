@@ -49,9 +49,8 @@ class UserDetailsEndpoint(Resource):
         """Updates user details"""
 
         def validate_is_valid_email(instance):
-            print("within is_valid_email")
             email_address = instance
-            print(email_address)
+
             try:
                 validate_email(email_address)
                 return True

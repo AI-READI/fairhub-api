@@ -47,13 +47,13 @@ def test_update_study(_logged_in_client):
     WHEN the '/study' endpoint is requested (PUT)
     THEN check that the study is updated with the inputed data
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
 
     response = _logged_in_client.put(
         f"/study/{study_id}",
         json={
             "title": "Study Title Updated",
-            "image": pytest.global_study_id["image"],
+            "image": pytest.global_study_id["image"],  # type: ignore
         },
     )
 
@@ -62,8 +62,8 @@ def test_update_study(_logged_in_client):
     pytest.global_study_id = response_data
 
     assert response_data["title"] == "Study Title Updated"
-    assert response_data["image"] == pytest.global_study_id["image"]
-    assert response_data["id"] == pytest.global_study_id["id"]
+    assert response_data["image"] == pytest.global_study_id["image"]  # type: ignore
+    assert response_data["id"] == pytest.global_study_id["id"]  # type: ignore
 
 
 def test_get_study_by_id(_logged_in_client):

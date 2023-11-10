@@ -12,7 +12,7 @@ def test_get_dataset_access_metadata(_logged_in_client):
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/access' endpoint is requested (GET)
     Then check that the response is valid and retrieves the dataset access metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
@@ -27,7 +27,7 @@ def test_put_dataset_access_metadata(_logged_in_client):
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/access' endpoint is requested (PUT)
     Then check that the response is valid and updates the dataset access metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.put(
@@ -57,7 +57,7 @@ def test_post_alternative_identifier(_logged_in_client):
     endpoint is requested (POST)
     Then check that the response is valid and creates the dataset alternative identifier
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.post(
@@ -85,7 +85,7 @@ def test_get_alternative_identifier(_logged_in_client):
     endpoint is requested (GET)
     Then check that the response is valid and retrieves the dataset alternative identifier content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
@@ -102,7 +102,7 @@ def test_delete_alternative_identifier(_logged_in_client):
     endpoint is requested (DELETE)
     Then check that the response is valid and deletes the dataset alternative identifier content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     identifier_id = pytest.global_alternative_identifier_id
 
@@ -120,7 +120,7 @@ def test_get_dataset_consent_metadata(_logged_in_client):
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/consent' endpoint is requested (GET)
     Then check that the response is valid and retrieves the dataset consent metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
@@ -136,7 +136,7 @@ def test_put_dataset_consent_metadata(_logged_in_client):
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/consent' endpoint is requested (PUT)
     Then check that the response is valid and updates the dataset consent metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.put(
@@ -172,7 +172,7 @@ def test_post_dataset_contributor_metadata(_logged_in_client):
     endpoint is requested (POST)
     Then check that the response is valid and creates the dataset contributor metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.post(
@@ -221,7 +221,7 @@ def test_get_dataset_contributor_metadata(_logged_in_client):
     endpoint is requested (GET)
     Then check that the response is valid and retrieves the dataset contributor metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
@@ -238,7 +238,7 @@ def test_delete_dataset_contributor_metadata(_logged_in_client):
     endpoint is requested (DELETE)
     Then check that the response is valid and deletes the dataset contributor metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     contributor_id = pytest.global_dataset_contributor_id
 
@@ -256,7 +256,7 @@ def test_get_dataset_creator_metadata(_logged_in_client):
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/creator' endpoint is requested (GET)
     Then check that the response is valid and retrieves the dataset creator metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
@@ -272,7 +272,7 @@ def test_post_dataset_creator_metadata(_logged_in_client):
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/creator' endpoint is requested (POST)
     Then check that the response is valid and creates the dataset creator metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.post(
@@ -319,7 +319,7 @@ def test_delete_dataset_creator_metadata(_logged_in_client):
     endpoint is requested (DELETE)
     Then check that the response is valid and deletes the dataset creator metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     creator_id = pytest.global_dataset_creator_id
 
@@ -338,7 +338,7 @@ def test_get_dataset_date_metadata(_logged_in_client):
     endpoint is requested (GET)
     Then check that the response is valid and retrieves the dataset date metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
@@ -355,7 +355,7 @@ def test_post_dataset_date_metadata(_logged_in_client):
     endpoint is requested (POST)
     Then check that the response is valid and creates the dataset date metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.post(
@@ -379,7 +379,7 @@ def test_delete_dataset_date_metadata(_logged_in_client):
     endpoint is requested (DELETE)
     Then check that the response is valid and deletes the dataset date metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     date_id = pytest.global_dataset_date_id
 
@@ -399,7 +399,7 @@ def test_get_dataset_deidentification_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     de-identification metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
@@ -417,7 +417,7 @@ def test_put_dataset_deidentification_metadata(_logged_in_client):
     Then check that the response is valid and updates the dataset
     de-identification metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.put(
@@ -454,7 +454,7 @@ def test_get_dataset_descriptions_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     description metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
@@ -472,7 +472,7 @@ def test_post_dataset_description_metadata(_logged_in_client):
     Then check that the response is valid and creates the dataset
     description metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.post(
@@ -496,7 +496,7 @@ def test_delete_dataset_description_metadata(_logged_in_client):
     Then check that the response is valid and deletes the dataset
     description metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     description_id = pytest.global_dataset_description_id
 
@@ -516,7 +516,7 @@ def test_get_dataset_funder_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     funder metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
@@ -534,7 +534,7 @@ def test_post_dataset_funder_metadata(_logged_in_client):
     Then check that the response is valid and creates the dataset
     funder metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.post(
@@ -573,7 +573,7 @@ def test_delete_dataset_funder_metadata(_logged_in_client):
     Then check that the response is valid and deletes the dataset
     funder metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     funder_id = pytest.global_dataset_funder_id
 
@@ -593,7 +593,7 @@ def test_get_other_dataset_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     other metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
@@ -611,7 +611,7 @@ def test_put_other_dataset_metadata(_logged_in_client):
     Then check that the response is valid and updates the dataset
     other metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.put(
@@ -645,7 +645,7 @@ def test_get_dataset_publisher_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     publisher metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
@@ -663,7 +663,7 @@ def test_put_dataset_publisher_metadata(_logged_in_client):
     Then check that the response is valid and updates the dataset
     publisher metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.put(
@@ -694,7 +694,7 @@ def test_get_dataset_readme_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     readme metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
@@ -712,7 +712,7 @@ def test_put_dataset_readme_metadata(_logged_in_client):
     Then check that the response is valid and updates the dataset
     readme metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.put(
@@ -737,7 +737,7 @@ def test_get_dataset_record_keys_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     record keys metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
@@ -755,7 +755,7 @@ def test_put_dataset_record_keys_metadata(_logged_in_client):
     Then check that the response is valid and updates the dataset
     record keys metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.put(
@@ -779,7 +779,7 @@ def test_get_dataset_related_item_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     related item metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
@@ -797,7 +797,7 @@ def test_post_dataset_related_item_metadata(_logged_in_client):
     Then check that the response is valid and creates the dataset
     related item metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.post(
@@ -884,7 +884,7 @@ def test_delete_dataset_related_item_contributor_metadata(_logged_in_client):
     Then check that the response is valid and deletes the dataset
     related item metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     related_item_id = pytest.global_dataset_related_item_id
     contributor_id = pytest.global_dataset_related_item_contributor_id
@@ -905,7 +905,7 @@ def test_delete_dataset_related_item_creator_metadata(_logged_in_client):
     Then check that the response is valid and deletes the dataset
     related item metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     related_item_id = pytest.global_dataset_related_item_id
     creator_id = pytest.global_dataset_related_item_creator_id
@@ -926,7 +926,7 @@ def test_delete_dataset_related_item_identifier_metadata(_logged_in_client):
     Then check that the response is valid and deletes the dataset
     related item metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     related_item_id = pytest.global_dataset_related_item_id
     identifier_id = pytest.global_dataset_related_item_identifier_id
@@ -947,7 +947,7 @@ def test_delete_dataset_related_item_title_metadata(_logged_in_client):
     Then check that the response is valid and deletes the dataset
     related item metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     related_item_id = pytest.global_dataset_related_item_id
     title_id = pytest.global_dataset_related_item_title_id
@@ -968,7 +968,7 @@ def test_delete_dataset_related_item_metadata(_logged_in_client):
     Then check that the response is valid and deletes the dataset
     related item metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     related_item_id = pytest.global_dataset_related_item_id
 
@@ -988,7 +988,7 @@ def test_get_dataset_rights_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     rights metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
@@ -1006,7 +1006,7 @@ def test_post_dataset_rights_metadata(_logged_in_client):
     Then check that the response is valid and creates the dataset
     rights metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.post(
@@ -1039,7 +1039,7 @@ def test_delete_dataset_rights_metadata(_logged_in_client):
     Then check that the response is valid and deletes the dataset
     rights metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     rights_id = pytest.global_dataset_rights_id
 
@@ -1059,7 +1059,7 @@ def test_get_dataset_subjects_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     subjects metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
@@ -1077,7 +1077,7 @@ def test_post_dataset_subjects_metadata(_logged_in_client):
     Then check that the response is valid and creates the dataset
     subjects metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.post(
@@ -1111,7 +1111,7 @@ def test_delete_dataset_subject_metadata(_logged_in_client):
     Then check that the response is valid and deletes the dataset
     subject metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     subject_id = pytest.global_dataset_subject_id
 
@@ -1131,7 +1131,7 @@ def test_get_dataset_title_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     title metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
@@ -1149,7 +1149,7 @@ def test_post_dataset_title_metadata(_logged_in_client):
     Then check that the response is valid and creates the dataset
     title metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.post(
@@ -1173,7 +1173,7 @@ def test_delete_dataset_title_metadata(_logged_in_client):
     Then check that the response is valid and deletes the dataset
     title metadata content
     """
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     title_id = pytest.global_dataset_title_id
 
