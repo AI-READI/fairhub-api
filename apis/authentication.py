@@ -69,7 +69,6 @@ class SignUpUser(Resource):
                 ).one_or_none()
                 if not invite:
                     return "You are not validated", 403
-                print(invite.token)
                 if invite.token != data["code"]:
                     return "signup code does not match", 403
 
