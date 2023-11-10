@@ -71,6 +71,7 @@ class StudyContactResource(Resource):
                     "email_address",
                 ],
                 "properties": {
+                    "id": {"type": "string"},
                     "name": {"type": "string", "minLength": 1},
                     "affiliation": {"type": "string", "minLength": 1},
                     "role": {"type": "string", "minLength": 1},

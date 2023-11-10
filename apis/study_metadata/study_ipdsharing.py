@@ -47,7 +47,7 @@ class StudyIpdsharingResource(Resource):
             "additionalProperties": False,
             "properties": {
                 "ipd_sharing": {"type": "string", "enum": ["Yes", "No", "Undecided"]},
-                "ipd_sharing_description": {"type": "string", "minLength": 1},
+                "ipd_sharing_description": {"type": "string"},
                 "ipd_sharing_info_type_list": {
                     "type": "array",
                     "items": {
@@ -60,12 +60,11 @@ class StudyIpdsharingResource(Resource):
                             "Analytical Code",
                         ],
                     },
-                    "minItems": 1,
                     "uniqueItems": True,
                 },
-                "ipd_sharing_time_frame": {"type": "string", "minLength": 1},
-                "ipd_sharing_access_criteria": {"type": "string", "minLength": 1},
-                "ipd_sharing_url": {"type": "string", "format": "uri", "minLength": 1},
+                "ipd_sharing_time_frame": {"type": "string"},
+                "ipd_sharing_access_criteria": {"type": "string"},
+                "ipd_sharing_url": {"type": "string", "format": "uri"},
             },
             "required": [
                 "ipd_sharing",

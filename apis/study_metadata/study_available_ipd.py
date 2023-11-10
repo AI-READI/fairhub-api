@@ -47,8 +47,6 @@ class StudyAvailableResource(Resource):
     )
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.marshal_with(study_available)
-    # marshal with will need to be removed to have validation errors return
     @api.expect(study_available)
     def post(self, study_id: int):
         """Create study available metadata"""
@@ -99,12 +97,10 @@ class StudyAvailableResource(Resource):
             if "id" in i and i["id"]:
                 study_available_ipd_ = model.StudyAvailableIpd.query.get(i["id"])
                 study_available_ipd_.update(i)
-                list_of_elements.append(study_available_ipd_.to_dict())
-            elif "id" not in i or not i["id"]:
+            else:
                 study_available_ipd_ = model.StudyAvailableIpd.from_data(study_obj, i)
                 model.db.session.add(study_available_ipd_)
-                list_of_elements.append(study_available_ipd_.to_dict())
-
+            list_of_elements.append(study_available_ipd_.to_dict())
         model.db.session.commit()
 
         return list_of_elements

@@ -21,6 +21,7 @@ from .dataset_metadata.dataset_related_item import api as related_item
 from .dataset_metadata.dataset_rights import api as rights
 from .dataset_metadata.dataset_subject import api as subject
 from .dataset_metadata.dataset_title import api as title
+from .file import api as file_api
 from .participant import api as participants_api
 from .study import api as study_api
 from .study_metadata.study_arm import api as arm
@@ -96,7 +97,9 @@ api.add_namespace(authentication)
 
 
 @api.route("/echo", endpoint="echo")
-class HelloWorld(Resource):
+class HelloEverynyan(Resource):
+    """Test if the server is active"""
+
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def get(self):
@@ -106,6 +109,7 @@ class HelloWorld(Resource):
 
 
 api.add_namespace(study_api)
+api.add_namespace(file_api)
 api.add_namespace(dataset_api)
 api.add_namespace(participants_api)
 api.add_namespace(contributors_api)
