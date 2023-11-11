@@ -22,7 +22,11 @@ COPY core ./core
 COPY app.py .
 COPY config.py .
 
-# run database migrations
-RUN alembic upgrade head  
+COPY alembic ./alembic
+COPY alembic.ini .
 
-CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
+COPY entrypoint.sh .
+
+RUN chmod +x entrypoint.sh
+
+ENTRYPOINT ["./entrypoint.sh"]
