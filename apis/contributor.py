@@ -42,7 +42,7 @@ class AddContributor(Resource):
     def post(self, study_id: int):
         study_obj = model.Study.query.get(study_id)
         if not is_granted("invite_contributor", study_obj):
-            return "Access denied, you can not modify", 403
+            return "Access denied, you can not modify study", 403
         data: Union[dict, Any] = request.json
 
         email_address = data["email_address"]

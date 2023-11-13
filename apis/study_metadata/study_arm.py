@@ -76,7 +76,7 @@ class StudyArmResource(Resource):
 
         study: model.Study = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         data: typing.Union[dict, typing.Any] = request.json
         study_obj = model.Study.query.get(study_id)
         for i in data:
