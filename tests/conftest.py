@@ -148,3 +148,51 @@ def _test_invite_study_contributor(_test_client):
     assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_viewer_token = response_data["token"]
+
+
+@pytest.fixture(scope="session")
+def _create_admin_user(_test_client):
+    """Create an admin user for testing."""
+    with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
+        response = _test_client.post(
+            "/auth/signup",
+            json={
+                "email_address": "admin@gmail.com",
+                "password": "Testingyeshello11!",
+                "code": pytest.global_admin_token
+            }
+        )
+
+        assert response.status_code == 201
+
+
+@pytest.fixture(scope="session")
+def _create_editor_user(_test_client):
+    """Create an editor user for testing."""
+    with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
+        response = _test_client.post(
+            "/auth/signup",
+            json={
+                "email_address": "editor@gmail.com",
+                "password": "Testingyeshello11!",
+                "code": pytest.global_editor_token
+            }
+        )
+
+        assert response.status_code == 201
+
+
+@pytest.fixture(scope="session")
+def _create_viewer_user(_test_client):
+    """Create a viewer user for testing."""
+    with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
+        response = _test_client.post(
+            "/auth/signup",
+            json={
+                "email_address": "viewer@gmail.com",
+                "password": "Testingyeshello11!",
+                "code": pytest.global_viewer_token
+            }
+        )
+
+        assert response.status_code == 201

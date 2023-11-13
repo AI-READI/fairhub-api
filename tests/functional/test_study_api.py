@@ -32,6 +32,20 @@ def test_invite_study_contributor(_test_invite_study_contributor):
     print("Contributors invited to study")
 
 
+def test_create_admin_user(_create_admin_user):
+    """Admin User created for permissions testing"""
+    print("Admin user created for testing")
+
+
+def test_create_editor_user(_create_editor_user):
+    """Editor User created for permissions testing"""
+    print("Editor user created for testing")
+
+
+def test_viewer_editor_user(_create_viewer_user):
+    """Viewer User created for permissions testing"""
+    print("Viewer user created for testing")
+
 def test_get_all_studies(_logged_in_client):
     """
     GIVEN a Flask application configured for testing
