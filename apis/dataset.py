@@ -56,7 +56,7 @@ class DatasetList(Resource):
     def post(self, study_id):
         study = model.Study.query.get(study_id)
         if not is_granted("add_dataset", study):
-            return "Access denied, you can not modify", 403
+            return "Access denied, you can not create a dataset", 403
         data: typing.Union[typing.Any, dict] = request.json
         dataset_ = model.Dataset.from_data(study)
         model.db.session.add(dataset_)
@@ -94,7 +94,7 @@ class DatasetResource(Resource):
         study = model.Study.query.get(study_id)
 
         if not is_granted("update_dataset", study):
-            return "Access denied, you can not modify", 403
+            return "Access denied, you can not modify dataset", 403
 
         data: typing.Union[dict, typing.Any] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
@@ -110,7 +110,7 @@ class DatasetResource(Resource):
     def delete(self, study_id: int, dataset_id: int):
         study = model.Study.query.get(study_id)
         if not is_granted("delete_dataset", study):
-            return "Access denied, you can not modify", 403
+            return "Access denied, you can not delete dataset", 403
 
         data_obj = model.Dataset.query.get(dataset_id)
         for version in data_obj.dataset_versions:
@@ -131,7 +131,7 @@ class VersionResource(Resource):
     ):  # pylint: disable= unused-argument
         study = model.Study.query.get(study_id)
         if not is_granted("version", study):
-            return "Access denied, you can not modify", 403
+            return "Access denied, you can not modify dataset", 403
         dataset_version = model.Version.query.get(version_id)
         return dataset_version.to_dict()
 
@@ -143,7 +143,7 @@ class VersionResource(Resource):
     ):  # pylint: disable= unused-argument
         study = model.Study.query.get(study_id)
         if not is_granted("publish_dataset", study):
-            return "Access denied, you can not modify", 403
+            return "Access denied, you can not modify dataset", 403
         data_version_obj = model.Version.query.get(version_id)
         data_version_obj.update(request.json)
         model.db.session.commit()
@@ -157,7 +157,7 @@ class VersionResource(Resource):
     ):  # pylint: disable= unused-argument
         study = model.Study.query.get(study_id)
         if not is_granted("delete_dataset", study):
-            return "Access denied, you can not modify", 403
+            return "Access denied, you can not delete dataset", 403
         version_obj = model.Version.query.get(version_id)
         model.db.session.delete(version_obj)
         model.db.session.commit()
@@ -186,7 +186,7 @@ class VersionDatasetChangelog(Resource):
     ):  # pylint: disable= unused-argument
         study = model.Study.query.get(study_id)
         if not is_granted("version", study):
-            return "Access denied, you can not modify", 403
+            return "Access denied, you can not modify dataset", 403
         data: typing.Union[typing.Any, dict] = request.json
         version_ = model.Version.query.get(version_id)
         version_.changelog = data["changelog"]
@@ -216,7 +216,7 @@ class VersionDatasetReadme(Resource):
     ):  # pylint: disable= unused-argument
         study = model.Study.query.get(study_id)
         if not is_granted("version", study):
-            return "Access denied, you can not modify", 403
+            return "Access denied, you can not modify dataset", 403
         data = request.json
         version_ = model.Version.query.get(version_id)
         version_.version_readme.update(data)
@@ -242,7 +242,7 @@ class VersionList(Resource):
     def post(self, study_id: int, dataset_id: int):
         study = model.Study.query.get(study_id)
         if not is_granted("version", study):
-            return "Access denied, you can not modify", 403
+            return "Access denied, you can not modify dataset", 403
 
         data: typing.Union[typing.Any, dict] = request.json
         # data["participants"] = [
