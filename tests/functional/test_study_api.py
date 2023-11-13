@@ -27,6 +27,11 @@ def test_post_study(_logged_in_client):
     pytest.global_study_id = response_data
 
 
+def test_invite_study_contributor(_test_invite_study_contributor):
+    """Invite contributors to study."""
+    print("Contributors invited to study")
+
+
 def test_get_all_studies(_logged_in_client):
     """
     GIVEN a Flask application configured for testing

@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 from app import create_app
 from model.db import db
 from pytest_config import TestConfig
+import json
 
 # Load environment variables from .env
 load_dotenv(".env")
@@ -114,3 +115,36 @@ def _logged_in_client(_test_client):
         assert response.status_code == 200
 
         yield _test_client
+
+@pytest.fixture(scope="session")
+def _test_invite_study_contributor(_test_client):
+    """Test invite study contributor."""
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _test_client.post(
+        f"/study/{study_id}/contributor",
+        json={"email_address": "editor@gmail.com", "role": "editor"},
+    )
+
+    assert response.status_code == 201
+    response_data = json.loads(response.data)
+
+    pytest.global_editor_token = response_data["token"]
+
+    response = _test_client.post(
+        f"/study/{study_id}/contributor",
+        json={"email_address": "admin@gmail.com", "role": "admin"},
+    )
+
+    assert response.status_code == 201
+    response_data = json.loads(response.data)
+    pytest.global_admin_token = response_data["token"]
+
+    response = _test_client.post(
+        f"/study/{study_id}/contributor",
+        json={"email_address": "viewer@gmail.com", "role": "viewer"},
+    )
+
+    assert response.status_code == 201
+    response_data = json.loads(response.data)
+    pytest.global_viewer_token = response_data["token"]
