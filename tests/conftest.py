@@ -47,6 +47,11 @@ pytest.global_dataset_rights_id = ""
 pytest.global_dataset_subject_id = ""
 pytest.global_dataset_title_id = ""
 
+# User token codes
+pytest.global_admin_token = ""
+pytest.global_editor_token = ""
+pytest.global_viewer_token = ""
+
 
 # Create the flask app for testing
 @pytest.fixture(scope="session")
