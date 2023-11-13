@@ -38,10 +38,7 @@ def test_invite_study_contributor(_test_client):
     """Test invite study contributor."""
     response = _test_client.post(
         "/study/1/contributor",
-        json={
-            "email_address": "editor@gmail.com",
-            "role": "editor"
-        },
+        json={"email_address": "editor@gmail.com", "role": "editor"},
     )
 
     assert response.status_code == 201
@@ -51,10 +48,7 @@ def test_invite_study_contributor(_test_client):
 
     response = _test_client.post(
         "/study/1/contributor",
-        json={
-            "email_address": "admin@gmail.com",
-            "role": "admin"
-        },
+        json={"email_address": "admin@gmail.com", "role": "admin"},
     )
 
     assert response.status_code == 201
@@ -63,10 +57,7 @@ def test_invite_study_contributor(_test_client):
 
     response = _test_client.post(
         "/study/1/contributor",
-        json={
-            "email_address": "viewer@gmail.com",
-            "role": "viewer"
-        },
+        json={"email_address": "viewer@gmail.com", "role": "viewer"},
     )
 
     assert response.status_code == 201
