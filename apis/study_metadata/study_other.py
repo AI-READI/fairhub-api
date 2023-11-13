@@ -71,6 +71,10 @@ class StudyOtherResource(Resource):
 
         study_ = model.Study.query.get(study_id)
 
+        # Check user permissions
+        if not is_granted("study_metadata", study_):
+            return "Access denied, you can not modify study", 403
+
         study_.study_other.update(request.json)
 
         model.db.session.commit()
@@ -110,7 +114,7 @@ class StudyOversightResource(Resource):
 
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         data: typing.Union[dict, typing.Any] = request.json
         study_oversight = study_obj.study_other.oversight_has_dmc = data[
             "oversight_has_dmc"
