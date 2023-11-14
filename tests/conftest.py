@@ -164,8 +164,8 @@ def _create_admin_user():
                 json={
                     "email_address": "admin@gmail.com",
                     "password": "Testingyeshello11!",
-                    "code": pytest.global_admin_token
-                }
+                    "code": pytest.global_admin_token,
+                },
             )
 
             assert response.status_code == 201
@@ -182,8 +182,8 @@ def _create_editor_user():
                 json={
                     "email_address": "editor@gmail.com",
                     "password": "Testingyeshello11!",
-                    "code": pytest.global_editor_token
-                }
+                    "code": pytest.global_editor_token,
+                },
             )
 
             assert response.status_code == 201
@@ -200,8 +200,8 @@ def _create_viewer_user():
                 json={
                     "email_address": "viewer@gmail.com",
                     "password": "Testingyeshello11!",
-                    "code": pytest.global_viewer_token
-                }
+                    "code": pytest.global_viewer_token,
+                },
             )
 
             assert response.status_code == 201
