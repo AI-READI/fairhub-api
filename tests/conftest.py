@@ -1,4 +1,5 @@
 """Defines fixtures available to all tests."""
+import json
 import os
 import unittest.mock
 
@@ -8,7 +9,6 @@ from dotenv import load_dotenv
 from app import create_app
 from model.db import db
 from pytest_config import TestConfig
-import json
 
 # Load environment variables from .env
 load_dotenv(".env")
@@ -58,7 +58,7 @@ pytest.global_viewer_token = ""
 @pytest.fixture(scope="session")
 def flask_app():
     """An application for the tests."""
-    yield create_app(config_module="pytest_config")
+    return create_app(config_module="pytest_config")
 
 
 # Create a test client for the app
@@ -92,7 +92,7 @@ def _create_user(_test_client):
             json={
                 "email_address": "test@fairhub.io",
                 "password": "Testingyeshello11!",
-                "code": "7654321",
+                "code": "",
             },
         )
 
@@ -101,22 +101,22 @@ def _create_user(_test_client):
 
 # Fixture to sign in the user for module testing
 @pytest.fixture(scope="session")
-def _logged_in_client():
+def _logged_in_client(flask_app):
     """Sign in the user for testing."""
-    flask_app = create_app(config_module="pytest_config")
-    with flask_app.test_client() as _test_client:
-        with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
-            response = _test_client.post(
-                "/auth/login",
-                json={
-                    "email_address": "test@fairhub.io",
-                    "password": "Testingyeshello11!",
-                },
-            )
+    with flask_app.app_context():
+        with flask_app.test_client() as _test_client:
+            with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
+                response = _test_client.post(
+                    "/auth/login",
+                    json={
+                        "email_address": "test@fairhub.io",
+                        "password": "Testingyeshello11!",
+                    },
+                )
 
-            assert response.status_code == 200
-
-            yield _test_client
+                assert response.status_code == 200
+                response.close()
+                yield _test_client
 
 
 @pytest.fixture(scope="session")
@@ -154,9 +154,8 @@ def _test_invite_study_contributor(_logged_in_client):
 
 
 @pytest.fixture(scope="session")
-def _create_admin_user():
+def _create_admin_user(flask_app):
     """Create an admin user for testing."""
-    flask_app = create_app(config_module="pytest_config")
     with flask_app.test_client() as _test_client:
         with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
             response = _test_client.post(
@@ -172,9 +171,8 @@ def _create_admin_user():
 
 
 @pytest.fixture(scope="session")
-def _create_editor_user():
+def _create_editor_user(flask_app):
     """Create an editor user for testing."""
-    flask_app = create_app(config_module="pytest_config")
     with flask_app.test_client() as _test_client:
         with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
             response = _test_client.post(
@@ -190,9 +188,8 @@ def _create_editor_user():
 
 
 @pytest.fixture(scope="session")
-def _create_viewer_user():
+def _create_viewer_user(flask_app):
     """Create a viewer user for testing."""
-    flask_app = create_app(config_module="pytest_config")
     with flask_app.test_client() as _test_client:
         with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
             response = _test_client.post(
@@ -208,57 +205,53 @@ def _create_viewer_user():
 
 
 @pytest.fixture(scope="session")
-def _admin_client():
-    """Create an admin user for testing."""
-    flask_app = create_app(config_module="pytest_config")
-    with flask_app.test_client() as _test_client:
-        with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
-            response = _test_client.post(
-                "/auth/login",
-                json={
-                    "email_address": "admin@gmail.com",
-                    "password": "Testingyeshello11!",
-                },
-            )
+def clients(flask_app):
+    """Signs in all clients needed for testing"""
+    ctx = flask_app.app_context()
+    ctx.push()
 
-            assert response.status_code == 200
+    _logged_in_client = flask_app.test_client()
+    _admin_client = flask_app.test_client()
+    _editor_client = flask_app.test_client()
+    _viewer_client = flask_app.test_client()
 
-            yield _test_client
+    with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
+        response = _logged_in_client.post(
+            "/auth/login",
+            json={
+                "email_address": "test@fairhub.io",
+                "password": "Testingyeshello11!",
+            },
+        )
+        assert response.status_code == 200
 
+        response = _admin_client.post(
+            "/auth/login",
+            json={
+                "email_address": "admin@gmail.com",
+                "password": "Testingyeshello11!",
+            },
+        )
+        assert response.status_code == 200
 
-@pytest.fixture(scope="session")
-def _editor_client():
-    """Create an admin user for testing."""
-    flask_app = create_app(config_module="pytest_config")
-    with flask_app.test_client() as _test_client:
-        with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
-            response = _test_client.post(
-                "/auth/login",
-                json={
-                    "email_address": "editor@gmail.com",
-                    "password": "Testingyeshello11!",
-                },
-            )
+        response = _editor_client.post(
+            "/auth/login",
+            json={
+                "email_address": "editor@gmail.com",
+                "password": "Testingyeshello11!",
+            },
+        )
+        assert response.status_code == 200
 
-            assert response.status_code == 200
+        response = _viewer_client.post(
+            "/auth/login",
+            json={
+                "email_address": "viewer@gmail.com",
+                "password": "Testingyeshello11!",
+            },
+        )
+        assert response.status_code == 200
 
-            yield _test_client
+    yield _logged_in_client, _admin_client, _editor_client, _viewer_client
 
-
-@pytest.fixture(scope="session")
-def _viewer_client():
-    """Create an admin user for testing."""
-    flask_app = create_app(config_module="pytest_config")
-    with flask_app.test_client() as _test_client:
-        with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
-            response = _test_client.post(
-                "/auth/login",
-                json={
-                    "email_address": "viewer@gmail.com",
-                    "password": "Testingyeshello11!",
-                },
-            )
-
-            assert response.status_code == 200
-
-            yield _test_client
+    ctx.pop()
