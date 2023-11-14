@@ -143,7 +143,7 @@ class VersionResource(Resource):
     ):  # pylint: disable= unused-argument
         study = model.Study.query.get(study_id)
         if not is_granted("publish_dataset", study):
-            return "Access denied, you can not modify dataset", 403
+            return "Access denied, you can not publish dataset", 403
         data_version_obj = model.Version.query.get(version_id)
         data_version_obj.update(request.json)
         model.db.session.commit()
