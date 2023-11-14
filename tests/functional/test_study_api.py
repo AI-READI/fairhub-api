@@ -47,27 +47,19 @@ def test_viewer_editor_user(_create_viewer_user):
     print("Viewer user created for testing")
 
 
-def test_signin_admin(_admin_client):
-    """Admin user signed in for testing"""
-    print("Admin user signed in for testing")
+def test_signin_all_clients(clients):
+    """Signs in all clients for verifying permissions before testing continues."""
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    print("All clients signed in for testing")
 
 
-def test_signin_editor(_editor_client):
-    """Editor user signed in for testing"""
-    print("Editor user signed in for testing")
-
-
-def test_signin_viewer(_viewer_client):
-    """Viewer user signed in for testing"""
-    print("Viewer user signed in for testing")
-
-
-def test_get_all_studies(_logged_in_client):
+def test_get_all_studies(clients):
     """
     GIVEN a Flask application configured for testing
     WHEN the '/study' endpoint is requested (GET)
     THEN check that the response is valid
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     response = _logged_in_client.get("/study")
 
     assert response.status_code == 200
@@ -76,12 +68,13 @@ def test_get_all_studies(_logged_in_client):
     assert len(response_data) == 1  # Only one study created
 
 
-def test_update_study(_logged_in_client):
+def test_update_study(clients):
     """
     GIVEN a study ID
     WHEN the '/study' endpoint is requested (PUT)
     THEN check that the study is updated with the inputed data
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
 
     response = _logged_in_client.put(
@@ -94,6 +87,7 @@ def test_update_study(_logged_in_client):
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
+    print(response_data)
     pytest.global_study_id = response_data
 
     assert response_data["title"] == "Study Title Updated"
@@ -101,12 +95,13 @@ def test_update_study(_logged_in_client):
     assert response_data["id"] == pytest.global_study_id["id"]  # type: ignore
 
 
-def test_get_study_by_id(_logged_in_client):
+def test_get_study_by_id(clients):
     """
     GIVEN a study ID
     WHEN the '/study/{study_id}' endpoint is requested (GET)
     THEN check that the response is valid
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     response = _logged_in_client.get(f"/study/{pytest.global_study_id['id']}")  # type: ignore # pylint: disable=line-too-long # noqa: E501
 
     # Convert the response data from JSON to a Python dictionary
@@ -119,12 +114,13 @@ def test_get_study_by_id(_logged_in_client):
     assert response_data["image"] == pytest.global_study_id["image"]  # type: ignore
 
 
-def test_delete_studies_created(_logged_in_client):
+def test_delete_studies_created(clients):
     """
     Given a Flask application configured for testing
     WHEN the '/study/{study_id}' endpoint is requested (DELETE)
     THEN check that the response is valid (200)
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     # create study first to then delete
     response = _logged_in_client.post(
         "/study",
@@ -137,6 +133,10 @@ def test_delete_studies_created(_logged_in_client):
     assert response.status_code == 200
     response_data = json.loads(response.data)
     study_id = response_data["id"]
+
+    viewer_response = _viewer_client.delete(f"/study/{study_id}")
+    print(viewer_response.status_code)
+    print(viewer_response.data)
 
     # delete study
     response = _logged_in_client.delete(f"/study/{study_id}")

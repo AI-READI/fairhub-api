@@ -1,6 +1,5 @@
 """Tests for API endpoints related to server launch"""
 import json
-import pytest
 
 
 def test_server_launch(_test_client):
@@ -11,9 +10,6 @@ def test_server_launch(_test_client):
     """
     # Create a test client using the Flask application configured for testing
     response = _test_client.get("/echo")
-
-    # Temporary test until we have authentication
-    # assert response.status_code == 403
 
     # Convert the response data from JSON to a Python dictionary
     response_data = json.loads(response.data)

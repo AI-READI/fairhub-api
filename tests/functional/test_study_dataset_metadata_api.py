@@ -6,12 +6,13 @@ import pytest
 
 
 # ------------------- ACCESS METADATA ------------------- #
-def test_get_dataset_access_metadata(_logged_in_client):
+def test_get_dataset_access_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/access' endpoint is requested (GET)
     Then check that the response is valid and retrieves the dataset access metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -21,12 +22,13 @@ def test_get_dataset_access_metadata(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_put_dataset_access_metadata(_logged_in_client):
+def test_put_dataset_access_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/access' endpoint is requested (PUT)
     Then check that the response is valid and updates the dataset access metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -50,13 +52,14 @@ def test_put_dataset_access_metadata(_logged_in_client):
 
 
 # ------------------- ALTERNATIVE IDENTIFIER METADATA ------------------- #
-def test_get_alternative_identifier(_logged_in_client):
+def test_get_alternative_identifier(clients):
     """
     Given a Flask application configured for testing and a study ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier'
     endpoint is requested (GET)
     Then check that the response is valid and retrieves the dataset alternative identifier content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -67,13 +70,14 @@ def test_get_alternative_identifier(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_post_alternative_identifier(_logged_in_client):
+def test_post_alternative_identifier(clients):
     """
     Given a Flask application configured for testing and a study ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier'
     endpoint is requested (POST)
     Then check that the response is valid and creates the dataset alternative identifier
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -95,13 +99,14 @@ def test_post_alternative_identifier(_logged_in_client):
     assert response_data[0]["type"] == "ARK"
 
 
-def test_delete_alternative_identifier(_logged_in_client):
+def test_delete_alternative_identifier(clients):
     """
     Given a Flask application configured for testing and a study ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier'
     endpoint is requested (DELETE)
     Then check that the response is valid and deletes the dataset alternative identifier content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     identifier_id = pytest.global_alternative_identifier_id
@@ -114,12 +119,13 @@ def test_delete_alternative_identifier(_logged_in_client):
 
 
 # ------------------- CONSENT METADATA ------------------- #
-def test_get_dataset_consent_metadata(_logged_in_client):
+def test_get_dataset_consent_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/consent' endpoint is requested (GET)
     Then check that the response is valid and retrieves the dataset consent metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -130,12 +136,13 @@ def test_get_dataset_consent_metadata(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_put_dataset_consent_metadata(_logged_in_client):
+def test_put_dataset_consent_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/consent' endpoint is requested (PUT)
     Then check that the response is valid and updates the dataset consent metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -165,13 +172,14 @@ def test_put_dataset_consent_metadata(_logged_in_client):
 
 
 # ------------------- CONTRIBUTOR METADATA ------------------- #
-def test_post_dataset_contributor_metadata(_logged_in_client):
+def test_post_dataset_contributor_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/contributor'
     endpoint is requested (POST)
     Then check that the response is valid and creates the dataset contributor metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -214,13 +222,14 @@ def test_post_dataset_contributor_metadata(_logged_in_client):
     assert response_data[0]["affiliations"][0]["scheme_uri"] == "scheme uri"
 
 
-def test_get_dataset_contributor_metadata(_logged_in_client):
+def test_get_dataset_contributor_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/contributor'
     endpoint is requested (GET)
     Then check that the response is valid and retrieves the dataset contributor metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -231,13 +240,14 @@ def test_get_dataset_contributor_metadata(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_delete_dataset_contributor_metadata(_logged_in_client):
+def test_delete_dataset_contributor_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/contributor'
     endpoint is requested (DELETE)
     Then check that the response is valid and deletes the dataset contributor metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     contributor_id = pytest.global_dataset_contributor_id
@@ -250,12 +260,13 @@ def test_delete_dataset_contributor_metadata(_logged_in_client):
 
 
 # ------------------- CREATOR METADATA ------------------- #
-def test_get_dataset_creator_metadata(_logged_in_client):
+def test_get_dataset_creator_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/creator' endpoint is requested (GET)
     Then check that the response is valid and retrieves the dataset creator metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -266,12 +277,13 @@ def test_get_dataset_creator_metadata(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_post_dataset_creator_metadata(_logged_in_client):
+def test_post_dataset_creator_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/creator' endpoint is requested (POST)
     Then check that the response is valid and creates the dataset creator metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -312,13 +324,14 @@ def test_post_dataset_creator_metadata(_logged_in_client):
     assert response_data[0]["affiliations"][0]["scheme_uri"] == "scheme uri"
 
 
-def test_delete_dataset_creator_metadata(_logged_in_client):
+def test_delete_dataset_creator_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/creator'
     endpoint is requested (DELETE)
     Then check that the response is valid and deletes the dataset creator metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     creator_id = pytest.global_dataset_creator_id
@@ -331,13 +344,14 @@ def test_delete_dataset_creator_metadata(_logged_in_client):
 
 
 # ------------------- DATE METADATA ------------------- #
-def test_get_dataset_date_metadata(_logged_in_client):
+def test_get_dataset_date_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/date'
     endpoint is requested (GET)
     Then check that the response is valid and retrieves the dataset date metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -348,13 +362,14 @@ def test_get_dataset_date_metadata(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_post_dataset_date_metadata(_logged_in_client):
+def test_post_dataset_date_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/date'
     endpoint is requested (POST)
     Then check that the response is valid and creates the dataset date metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -372,13 +387,14 @@ def test_post_dataset_date_metadata(_logged_in_client):
     assert response_data[0]["information"] == "Info"
 
 
-def test_delete_dataset_date_metadata(_logged_in_client):
+def test_delete_dataset_date_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/date'
     endpoint is requested (DELETE)
     Then check that the response is valid and deletes the dataset date metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     date_id = pytest.global_dataset_date_id
@@ -391,7 +407,7 @@ def test_delete_dataset_date_metadata(_logged_in_client):
 
 
 # ------------------- DE-IDENTIFICATION LEVEL METADATA ------------------- #
-def test_get_dataset_deidentification_metadata(_logged_in_client):
+def test_get_dataset_deidentification_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/de-identification'
@@ -399,6 +415,7 @@ def test_get_dataset_deidentification_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     de-identification metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -409,7 +426,7 @@ def test_get_dataset_deidentification_metadata(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_put_dataset_deidentification_metadata(_logged_in_client):
+def test_put_dataset_deidentification_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/de-identification'
@@ -417,6 +434,7 @@ def test_put_dataset_deidentification_metadata(_logged_in_client):
     Then check that the response is valid and updates the dataset
     de-identification metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -446,7 +464,7 @@ def test_put_dataset_deidentification_metadata(_logged_in_client):
 
 
 # ------------------- DESCRIPTION METADATA ------------------- #
-def test_get_dataset_descriptions_metadata(_logged_in_client):
+def test_get_dataset_descriptions_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/description'
@@ -454,6 +472,7 @@ def test_get_dataset_descriptions_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     description metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -464,7 +483,7 @@ def test_get_dataset_descriptions_metadata(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_post_dataset_description_metadata(_logged_in_client):
+def test_post_dataset_description_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/description'
@@ -472,6 +491,7 @@ def test_post_dataset_description_metadata(_logged_in_client):
     Then check that the response is valid and creates the dataset
     description metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -488,7 +508,7 @@ def test_post_dataset_description_metadata(_logged_in_client):
     assert response_data[0]["type"] == "Methods"
 
 
-def test_delete_dataset_description_metadata(_logged_in_client):
+def test_delete_dataset_description_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/description'
@@ -496,6 +516,7 @@ def test_delete_dataset_description_metadata(_logged_in_client):
     Then check that the response is valid and deletes the dataset
     description metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     description_id = pytest.global_dataset_description_id
@@ -508,7 +529,7 @@ def test_delete_dataset_description_metadata(_logged_in_client):
 
 
 # ------------------- FUNDER METADATA ------------------- #
-def test_get_dataset_funder_metadata(_logged_in_client):
+def test_get_dataset_funder_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/funder'
@@ -516,6 +537,7 @@ def test_get_dataset_funder_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     funder metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -526,7 +548,7 @@ def test_get_dataset_funder_metadata(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_post_dataset_funder_metadata(_logged_in_client):
+def test_post_dataset_funder_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/funder'
@@ -534,6 +556,7 @@ def test_post_dataset_funder_metadata(_logged_in_client):
     Then check that the response is valid and creates the dataset
     funder metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -565,7 +588,7 @@ def test_post_dataset_funder_metadata(_logged_in_client):
     assert response_data[0]["identifier_type"] == "Identifier Type"
 
 
-def test_delete_dataset_funder_metadata(_logged_in_client):
+def test_delete_dataset_funder_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/funder'
@@ -573,6 +596,7 @@ def test_delete_dataset_funder_metadata(_logged_in_client):
     Then check that the response is valid and deletes the dataset
     funder metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     funder_id = pytest.global_dataset_funder_id
@@ -585,7 +609,7 @@ def test_delete_dataset_funder_metadata(_logged_in_client):
 
 
 # ------------------- OTHER METADATA ------------------- #
-def test_get_other_dataset_metadata(_logged_in_client):
+def test_get_other_dataset_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}'
@@ -593,6 +617,7 @@ def test_get_other_dataset_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     other metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -603,7 +628,7 @@ def test_get_other_dataset_metadata(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_put_other_dataset_metadata(_logged_in_client):
+def test_put_other_dataset_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}'
@@ -611,6 +636,7 @@ def test_put_other_dataset_metadata(_logged_in_client):
     Then check that the response is valid and updates the dataset
     other metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -637,7 +663,7 @@ def test_put_other_dataset_metadata(_logged_in_client):
 
 
 # ------------------- PUBLICATION METADATA ------------------- #
-def test_get_dataset_publisher_metadata(_logged_in_client):
+def test_get_dataset_publisher_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}'
@@ -645,6 +671,7 @@ def test_get_dataset_publisher_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     publisher metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -655,7 +682,7 @@ def test_get_dataset_publisher_metadata(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_put_dataset_publisher_metadata(_logged_in_client):
+def test_put_dataset_publisher_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}'
@@ -663,6 +690,7 @@ def test_put_dataset_publisher_metadata(_logged_in_client):
     Then check that the response is valid and updates the dataset
     publisher metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -686,7 +714,7 @@ def test_put_dataset_publisher_metadata(_logged_in_client):
 
 
 # ------------------- RECORD KEYS METADATA ------------------- #
-def test_get_dataset_record_keys_metadata(_logged_in_client):
+def test_get_dataset_record_keys_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}'
@@ -694,6 +722,7 @@ def test_get_dataset_record_keys_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     record keys metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -704,7 +733,7 @@ def test_get_dataset_record_keys_metadata(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_put_dataset_record_keys_metadata(_logged_in_client):
+def test_put_dataset_record_keys_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}'
@@ -712,6 +741,7 @@ def test_put_dataset_record_keys_metadata(_logged_in_client):
     Then check that the response is valid and updates the dataset
     record keys metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -728,7 +758,7 @@ def test_put_dataset_record_keys_metadata(_logged_in_client):
 
 
 # ------------------- RELATED ITEM METADATA ------------------- #
-def test_get_dataset_related_item_metadata(_logged_in_client):
+def test_get_dataset_related_item_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}'
@@ -736,6 +766,7 @@ def test_get_dataset_related_item_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     related item metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -746,7 +777,7 @@ def test_get_dataset_related_item_metadata(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_post_dataset_related_item_metadata(_logged_in_client):
+def test_post_dataset_related_item_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/related-item'
@@ -754,6 +785,7 @@ def test_post_dataset_related_item_metadata(_logged_in_client):
     Then check that the response is valid and creates the dataset
     related item metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -833,7 +865,7 @@ def test_post_dataset_related_item_metadata(_logged_in_client):
     assert response_data[0]["volume"] == "Volume"
 
 
-def test_delete_dataset_related_item_contributor_metadata(_logged_in_client):
+def test_delete_dataset_related_item_contributor_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}'
@@ -841,6 +873,7 @@ def test_delete_dataset_related_item_contributor_metadata(_logged_in_client):
     Then check that the response is valid and deletes the dataset
     related item metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     related_item_id = pytest.global_dataset_related_item_id
@@ -854,7 +887,7 @@ def test_delete_dataset_related_item_contributor_metadata(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_delete_dataset_related_item_creator_metadata(_logged_in_client):
+def test_delete_dataset_related_item_creator_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}'
@@ -862,6 +895,7 @@ def test_delete_dataset_related_item_creator_metadata(_logged_in_client):
     Then check that the response is valid and deletes the dataset
     related item metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     related_item_id = pytest.global_dataset_related_item_id
@@ -875,7 +909,7 @@ def test_delete_dataset_related_item_creator_metadata(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_delete_dataset_related_item_identifier_metadata(_logged_in_client):
+def test_delete_dataset_related_item_identifier_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}'
@@ -883,6 +917,7 @@ def test_delete_dataset_related_item_identifier_metadata(_logged_in_client):
     Then check that the response is valid and deletes the dataset
     related item metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     related_item_id = pytest.global_dataset_related_item_id
@@ -896,7 +931,7 @@ def test_delete_dataset_related_item_identifier_metadata(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_delete_dataset_related_item_title_metadata(_logged_in_client):
+def test_delete_dataset_related_item_title_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}'
@@ -904,6 +939,7 @@ def test_delete_dataset_related_item_title_metadata(_logged_in_client):
     Then check that the response is valid and deletes the dataset
     related item metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     related_item_id = pytest.global_dataset_related_item_id
@@ -917,7 +953,7 @@ def test_delete_dataset_related_item_title_metadata(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_delete_dataset_related_item_metadata(_logged_in_client):
+def test_delete_dataset_related_item_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}'
@@ -925,6 +961,7 @@ def test_delete_dataset_related_item_metadata(_logged_in_client):
     Then check that the response is valid and deletes the dataset
     related item metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     related_item_id = pytest.global_dataset_related_item_id
@@ -937,7 +974,7 @@ def test_delete_dataset_related_item_metadata(_logged_in_client):
 
 
 # ------------------- RIGHTS METADATA ------------------- #
-def test_get_dataset_rights_metadata(_logged_in_client):
+def test_get_dataset_rights_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study'
@@ -945,6 +982,7 @@ def test_get_dataset_rights_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     rights metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -955,7 +993,7 @@ def test_get_dataset_rights_metadata(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_post_dataset_rights_metadata(_logged_in_client):
+def test_post_dataset_rights_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study'
@@ -963,6 +1001,7 @@ def test_post_dataset_rights_metadata(_logged_in_client):
     Then check that the response is valid and creates the dataset
     rights metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -988,7 +1027,7 @@ def test_post_dataset_rights_metadata(_logged_in_client):
     assert response_data[0]["uri"] == "URI"
 
 
-def test_delete_dataset_rights_metadata(_logged_in_client):
+def test_delete_dataset_rights_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/rights'
@@ -996,6 +1035,7 @@ def test_delete_dataset_rights_metadata(_logged_in_client):
     Then check that the response is valid and deletes the dataset
     rights metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     rights_id = pytest.global_dataset_rights_id
@@ -1008,7 +1048,7 @@ def test_delete_dataset_rights_metadata(_logged_in_client):
 
 
 # ------------------- SUBJECTS METADATA ------------------- #
-def test_get_dataset_subjects_metadata(_logged_in_client):
+def test_get_dataset_subjects_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/subject'
@@ -1016,6 +1056,7 @@ def test_get_dataset_subjects_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     subjects metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -1026,7 +1067,7 @@ def test_get_dataset_subjects_metadata(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_post_dataset_subjects_metadata(_logged_in_client):
+def test_post_dataset_subjects_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/subject'
@@ -1034,6 +1075,7 @@ def test_post_dataset_subjects_metadata(_logged_in_client):
     Then check that the response is valid and creates the dataset
     subjects metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -1060,7 +1102,7 @@ def test_post_dataset_subjects_metadata(_logged_in_client):
     assert response_data[0]["value_uri"] == "Value URI"
 
 
-def test_delete_dataset_subject_metadata(_logged_in_client):
+def test_delete_dataset_subject_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/subject/{subject_id}'
@@ -1068,6 +1110,7 @@ def test_delete_dataset_subject_metadata(_logged_in_client):
     Then check that the response is valid and deletes the dataset
     subject metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     subject_id = pytest.global_dataset_subject_id
@@ -1080,7 +1123,7 @@ def test_delete_dataset_subject_metadata(_logged_in_client):
 
 
 # ------------------- TITLE METADATA ------------------- #
-def test_get_dataset_title_metadata(_logged_in_client):
+def test_get_dataset_title_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/title'
@@ -1088,6 +1131,7 @@ def test_get_dataset_title_metadata(_logged_in_client):
     Then check that the response is valid and retrieves the dataset
     title metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -1098,7 +1142,7 @@ def test_get_dataset_title_metadata(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_post_dataset_title_metadata(_logged_in_client):
+def test_post_dataset_title_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/title'
@@ -1106,6 +1150,7 @@ def test_post_dataset_title_metadata(_logged_in_client):
     Then check that the response is valid and creates the dataset
     title metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
@@ -1122,7 +1167,7 @@ def test_post_dataset_title_metadata(_logged_in_client):
     assert response_data[0]["type"] == "Subtitle"
 
 
-def test_delete_dataset_title_metadata(_logged_in_client):
+def test_delete_dataset_title_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/title/{title_id}'
@@ -1130,6 +1175,7 @@ def test_delete_dataset_title_metadata(_logged_in_client):
     Then check that the response is valid and deletes the dataset
     title metadata content
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     title_id = pytest.global_dataset_title_id
