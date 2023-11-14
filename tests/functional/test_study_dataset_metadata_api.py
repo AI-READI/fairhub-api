@@ -19,7 +19,22 @@ def test_get_dataset_access_metadata(clients):
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/access"
     )
+
     assert response.status_code == 200
+
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/access"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/access"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/access"
+    )
+
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
 
 
 def test_put_dataset_access_metadata(clients):
@@ -50,6 +65,23 @@ def test_put_dataset_access_metadata(clients):
     assert response_data["url"] == "google.com"
     assert response_data["url_last_checked"] == 123
 
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/access",
+    )
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/access",
+    )
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/access",
+    )
+
+    print(admin_response.status_code)
+    print(editor_response.status_code)
+    print(viewer_response.status_code)
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
 
 # ------------------- ALTERNATIVE IDENTIFIER METADATA ------------------- #
 def test_get_alternative_identifier(clients):
@@ -68,6 +100,23 @@ def test_get_alternative_identifier(clients):
     )
 
     assert response.status_code == 200
+
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier"
+    )
+
+    print(admin_response.status_code)
+    print(editor_response.status_code)
+    print(viewer_response.status_code)
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
 
 
 def test_post_alternative_identifier(clients):
