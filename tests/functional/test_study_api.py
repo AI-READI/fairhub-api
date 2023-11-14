@@ -67,6 +67,20 @@ def test_get_all_studies(clients):
 
     assert len(response_data) == 1  # Only one study created
 
+    # Test responses for all clients and verify permissions
+    admin_response = _admin_client.get("/study")
+    editor_response = _editor_client.get("/study")
+    viewer_response = _viewer_client.get("/study")
+
+    print(admin_response.status_code)
+    assert admin_response.status_code == 200
+
+    print(editor_response.status_code)
+    assert editor_response.status_code == 200
+
+    print(viewer_response.status_code)
+    assert viewer_response.status_code == 200
+
 
 def test_update_study(clients):
     """
@@ -94,6 +108,51 @@ def test_update_study(clients):
     assert response_data["image"] == pytest.global_study_id["image"]  # type: ignore
     assert response_data["id"] == pytest.global_study_id["id"]  # type: ignore
 
+    admin_response = _admin_client.put(
+        f"/study/{study_id}",
+        json={
+            "title": "Admin Study Title",
+            "image": pytest.global_study_id["image"],  # type: ignore
+        },
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    print(admin_response_data)
+    pytest.global_study_id = admin_response_data
+
+    assert admin_response_data["title"] == "Admin Study Title"
+    assert admin_response_data["image"] == pytest.global_study_id["image"]  # type: ignore
+    assert admin_response_data["id"] == pytest.global_study_id["id"]  # type: ignore
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}",
+        json={
+            "title": "Editor Study Title",
+            "image": pytest.global_study_id["image"],  # type: ignore
+        },
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    print(editor_response_data)
+    pytest.global_study_id = editor_response_data
+
+    assert editor_response_data["title"] == "Editor Study Title"
+    assert editor_response_data["image"] == pytest.global_study_id["image"]  # type: ignore
+    assert editor_response_data["id"] == pytest.global_study_id["id"]  # type: ignore
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}",
+        json={
+            "title": "Viewer Study Title",
+            "image": pytest.global_study_id["image"],  # type: ignore
+        },
+    )
+
+    # response will be 403 due to Viewer permissions
+    assert viewer_response.status_code == 403
+
 
 def test_get_study_by_id(clients):
     """
@@ -102,7 +161,9 @@ def test_get_study_by_id(clients):
     THEN check that the response is valid
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    response = _logged_in_client.get(f"/study/{pytest.global_study_id['id']}")  # type: ignore # pylint: disable=line-too-long # noqa: E501
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}")
 
     # Convert the response data from JSON to a Python dictionary
     assert response.status_code == 200
@@ -112,6 +173,15 @@ def test_get_study_by_id(clients):
     assert response_data["id"] == pytest.global_study_id["id"]  # type: ignore
     assert response_data["title"] == pytest.global_study_id["title"]  # type: ignore
     assert response_data["image"] == pytest.global_study_id["image"]  # type: ignore
+
+    admin_response = _admin_client.get(f"/study/{study_id}")
+    editor_response = _editor_client.get(f"/study/{study_id}")
+    viewer_response = _viewer_client.get(f"/study/{study_id}")
+
+    # Verify all clients have access to study
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
 
 
 def test_delete_studies_created(clients):
@@ -134,9 +204,14 @@ def test_delete_studies_created(clients):
     response_data = json.loads(response.data)
     study_id = response_data["id"]
 
+    admin_response = _admin_client.delete(f"/study/{study_id}")
+    editor_response = _editor_client.delete(f"/study/{study_id}")
     viewer_response = _viewer_client.delete(f"/study/{study_id}")
-    print(viewer_response.status_code)
-    print(viewer_response.data)
+
+    # Verify all clients have no access to newly created study
+    assert admin_response.status_code == 403
+    assert editor_response.status_code == 403
+    assert viewer_response.status_code == 403
 
     # delete study
     response = _logged_in_client.delete(f"/study/{study_id}")
