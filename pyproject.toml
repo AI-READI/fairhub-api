@@ -56,6 +56,7 @@ pycap = "^2.4.0"
 redis = "^5.0.1"
 numpy = "^1.26.1"
 pandas = "^2.1.1"
+sqlalchemy-json = "^0.7.0"
 
 
 [tool.poetry.group.dev.dependencies]

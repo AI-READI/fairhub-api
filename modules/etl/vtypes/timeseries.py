@@ -7,7 +7,7 @@ class SingleTimeseries(VType):
     def __init__(self: object) -> None:
         super().__init__(
             "SingleTimeseries",
-            [("filterby", str), ("subgroup", str), ("color", str), ("x", datetime)],
+            [("filterby", str), ("subgroup", str), ("color", str), ("datetime", datetime)],
             pd._libs.tslibs.nattype.NaTType,
         )
 
@@ -20,7 +20,7 @@ class DoubleDiscreteTimeseries(VType):
                 ("filterby", str),
                 ("subgroup", str),
                 ("color", str),
-                ("x", datetime),
+                ("datetime", str),
                 ("y", int),
             ],
             pd._libs.tslibs.nattype.NaTType,
@@ -35,7 +35,7 @@ class DoubleContinuousTimeseries(VType):
                 ("filterby", str),
                 ("subgroup", str),
                 ("color", str),
-                ("x", datetime),
+                ("datetime", str),
                 ("y", float),
             ],
             pd._libs.tslibs.nattype.NaTType,

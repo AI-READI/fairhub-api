@@ -179,14 +179,14 @@ class RedcapProjectAPI(Resource):
             "type": "object",
             "additionalProperties": False,
             "required": [
-                "project_title",
                 "project_id",
+                "project_title",
                 "project_api_url",
                 "project_api_active",
             ],
             "properties": {
-                "project_title": {"type": "string", "minLength": 1},
                 "project_id": {"type": "string", "minLength": 1, "maxLength": 12},
+                "project_title": {"type": "string", "minLength": 1},
                 "project_api_url": {"type": "string", "minLength": 1},
                 "project_api_active": {"type": "boolean"},
             },
@@ -196,14 +196,14 @@ class RedcapProjectAPI(Resource):
         except ValidationError as e:
             return e.message, 400
 
-        if len(data["project_title"]) < 1:
-            return (
-                f"redcap project_title is required for redcap access: {data['project_title']}",
-                400,
-            )
         if len(data["project_id"]) < 1:
             return (
                 f"redcap project_id is required for redcap access: {data['project_id']}",
+                400,
+            )
+        if len(data["project_title"]) < 1:
+            return (
+                f"redcap project_title is required for redcap access: {data['project_title']}",
                 400,
             )
         if len(data["project_api_url"]) < 1:

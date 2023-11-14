@@ -2,21 +2,87 @@
 from typing import Any, Union
 
 from flask import request
+
+# from flask_caching import Cache
 from flask_restx import Namespace, Resource, fields, reqparse
 from jsonschema import ValidationError, validate
 
 import model
+from caching import cache
+from modules.etl import ModuleTransform, RedcapTransform
+from modules.etl.config import transformConfigs
 
 from .authentication import is_granted
 
 api = Namespace("Dashboard", description="Dashboard operations", path="/")
 
+datum_model = api.model(
+    "Datum",
+    {
+        "filterby": fields.String(
+            required=True, readonly=True, description="Filterby field"
+        ),
+        "group": fields.String(required=True, readonly=True, description="Group field"),
+        "color": fields.String(required=True, readonly=True, description="Color field"),
+        "subgroup": fields.String(
+            required=False, readonly=True, description="Subgroup field"
+        ),
+        "value": fields.Integer(
+            required=False, readonly=True, description="Value field"
+        ),
+        "x": fields.Float(required=False, readonly=True, description="X-axis field"),
+        "y": fields.Float(required=False, readonly=True, description="Y-axis field"),
+        "datetime": fields.String(
+            required=False, readonly=True, description="Date field"
+        ),
+    },
+)
+
+visualization_model = api.model(
+    "Visualization",
+    {
+        "id": fields.String(
+            required=True, readonly=True, description="Visualization ID"
+        ),
+        "data": fields.List(
+            fields.Nested(datum_model),
+            required=True,
+            readonly=True,
+            description="Visualization data",
+        ),
+    },
+)
+
+redcap_project_dashboard_module_model = api.model(
+    "RedcapProjectDashboardModule",
+    {
+        "name": fields.String(
+            required=True, readonly=True, description="Dashboard module name"
+        ),
+        "id": fields.String(
+            required=True, readonly=True, description="Dashboard module id"
+        ),
+        "reportId": fields.String(
+            required=True,
+            readonly=True,
+            description="Dashboard module associated REDCap report ID",
+        ),
+        "selected": fields.Boolean(
+            required=True, readonly=True, description="Dashboard module is selected"
+        ),
+        "visualizations": fields.List(
+            fields.Nested(visualization_model),
+            required=True,
+            readonly=True,
+            description="Visualizations",
+        ),
+    },
+)
 redcap_project_dashboard_model = api.model(
     "RedcapProjectDashboard",
     {
-        "study_id": fields.String(required=True, description="Study ID"),
         "project_id": fields.String(
-            required=True, description="REDCap project ID (pid)"
+            required=True, readonly=True, description="REDCap project ID (pid)"
         ),
         "dashboard_id": fields.String(
             required=True, readonly=True, description="REDCap dashboard ID"
@@ -24,17 +90,26 @@ redcap_project_dashboard_model = api.model(
         "dashboard_name": fields.String(
             required=True, readonly=True, description="REDCap dashboard name"
         ),
-        "dashboard_modules": fields.String(
-            required=True, readonly=True, description="REDCap dashboard name"
-        ),
-        "report_ids": fields.String(
-            required=True, readonly=True, description="REDCap project report IDs"
+        "dashboard_modules": fields.List(
+            fields.Nested(
+                redcap_project_dashboard_module_model,
+                required=True,
+                readonly=True,
+                description="REDCap dashboard module",
+            )
         ),
     },
 )
 
+# Parser
 dashboard_parser = reqparse.RequestParser()
 dashboard_parser.add_argument("dashboard_id", type=str, help="Dashboard ID")
+
+
+# Dashboard Cache Key
+def dashboard_cache_key():
+    print(request.get_json())
+    return ",".join([f"{key}={value}" for key, value in request.get_json().items()])
 
 
 @api.route("/study/<study_id>/dashboard/all")
@@ -88,7 +163,7 @@ class ConnectRedcapProjectDashboard(Resource):
                             {
                                 "type": "object",
                                 "properties": {
-                                    "key": {"type": "string", "minLength": 1},
+                                    "id": {"type": "string", "minLength": 1},
                                     "name": {"type": "string", "minLength": 1},
                                     "selected": {"type": "boolean"},
                                     "reportId": {"type": "string", "minLength": 0},
@@ -106,8 +181,6 @@ class ConnectRedcapProjectDashboard(Resource):
         except ValidationError as e:
             print(e)
             return e.message, 400
-        print("moduleslength", len(data["dashboard_modules"]))
-
         if len(data["project_id"]) < 1:
             return (
                 f"redcap project_id is required to connect a dashboard: {data['project_id']}",
@@ -123,11 +196,6 @@ class ConnectRedcapProjectDashboard(Resource):
                 f"dashboard dashboard_modules is required to connect a dashboard: {data['dashboard_name']}",
                 400,
             )
-        data["dashboard_modules"] = [
-            dashboard_module
-            for dashboard_module in data["dashboard_modules"]
-            if dashboard_module["selected"]
-        ]
         connect_redcap_project_dashboard = model.StudyRedcapProjectDashboard.from_data(
             study, data
         )
@@ -145,6 +213,7 @@ class RedcapProjectDashboard(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_dashboard_model)
+    @cache.cached(query_string=True)
     def get(self, study_id: int):
         """Get Study Redcap Project Dashboard"""
         study = model.db.session.query(model.Study).get(study_id)
@@ -154,10 +223,30 @@ class RedcapProjectDashboard(Resource):
         redcap_project_dashboard = model.db.session.query(
             model.StudyRedcapProjectDashboard
         ).get(dashboard_id)
+        # Execute REDCap Merge Transform
         redcap_project_dashboard = redcap_project_dashboard.to_dict()
+        project_id = redcap_project_dashboard["project_id"]
+        redcap_project_view = (
+            model.db.session.query(model.StudyRedcapProjectApi)
+            .get(project_id)
+            .to_dict()
+        )
+        redcap_etl_config = transformConfigs["redcap"]
+        redcap_etl_config["redcap_api_url"] = redcap_project_view["project_api_url"]
+        redcap_etl_config["redcap_api_key"] = redcap_project_view["project_api_key"]
+        mergedTransform = RedcapTransform(redcap_etl_config).merged
+        # Execute Dashboard Module Transforms
+        for dashboard_module in redcap_project_dashboard["dashboard_modules"]:
+            transform, module_etl_config = transformConfigs[dashboard_module["id"]]
+            dashboard_module["visualizations"] = {
+                "id": dashboard_module["id"],
+                "data": getattr(ModuleTransform(module_etl_config), transform)(
+                    mergedTransform
+                ).transformed,
+            }
+
         return redcap_project_dashboard, 201
 
-    @api.doc("redcap_project_dashboard")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_dashboard_model)
@@ -171,12 +260,12 @@ class RedcapProjectDashboard(Resource):
             "type": "object",
             "additionalProperties": False,
             "required": [
-                "project_id",
+                "dashboard_id",
                 "dashboard_name",
                 "dashboard_modules",
             ],
             "properties": {
-                "project_id": {"type": "string", "minLength": 1},
+                "dashboard_id": {"type": "string", "minLength": 36, "maxLength": 37},
                 "dashboard_name": {"type": "string", "minLength": 1},
                 "dashboard_modules": {
                     "type": "array",
@@ -185,7 +274,7 @@ class RedcapProjectDashboard(Resource):
                             {
                                 "type": "object",
                                 "properties": {
-                                    "key": {"type": "string", "minLength": 1},
+                                    "id": {"type": "string", "minLength": 1},
                                     "name": {"type": "string", "minLength": 1},
                                     "selected": {"type": "boolean"},
                                     "reportId": {"type": "string", "minLength": 0},
@@ -203,11 +292,10 @@ class RedcapProjectDashboard(Resource):
         except ValidationError as e:
             print(e)
             return e.message, 400
-        print("moduleslength", len(data["dashboard_modules"]))
 
-        if len(data["project_id"]) < 1:
+        if len(data["dashboard_id"]) < 1:
             return (
-                f"redcap project_id is required to connect a dashboard: {data['project_id']}",
+                f"dashboard dashboard_id is required to connect a dashboard: {data['dashboard_id']}",
                 400,
             )
         if len(data["dashboard_name"]) < 1:
@@ -220,11 +308,6 @@ class RedcapProjectDashboard(Resource):
                 f"dashboard dashboard_modules is required to connect a dashboard: {data['dashboard_name']}",
                 400,
             )
-        data["dashboard_modules"] = [
-            dashboard_module
-            for dashboard_module in data["dashboard_modules"]
-            if dashboard_module["selected"]
-        ]
         update_redcap_project_dashboard = model.StudyRedcapProjectDashboard.query.get(
             data["dashboard_id"]
         )

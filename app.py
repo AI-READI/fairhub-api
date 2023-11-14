@@ -8,7 +8,6 @@ from datetime import timezone
 import jwt
 from flask import Flask, request
 from flask_bcrypt import Bcrypt
-from flask_caching import Cache
 from flask_cors import CORS
 from sqlalchemy import MetaData
 
@@ -17,6 +16,7 @@ import model
 from apis import api
 from apis.authentication import UnauthenticatedException, authentication, authorization
 from apis.exception import ValidationException
+from caching import cache
 
 # from pyfairdatatools import __version__
 
@@ -41,8 +41,9 @@ def create_app(config_module=None):
     # TODO - fix this
     # csrf = CSRFProtect()
     # csrf.init_app(app)
-
+    # print(app.config)
     app.config.from_prefixed_env("FAIRHUB")
+
     if config.FAIRHUB_SECRET:
         if len(config.FAIRHUB_SECRET) < 32:
             raise RuntimeError("FAIRHUB_SECRET must be at least 32 characters long")
@@ -57,14 +58,6 @@ def create_app(config_module=None):
     else:
         raise RuntimeError("FAIRHUB_DATABASE_URL not set")
 
-    cache_config = {
-        key: value
-        for key, value in app.config.items()
-        if (len(key) > 5) and (key[0:5] == "CACHE")
-    }
-    cache = Cache(config=cache_config)
-
-    # Moved down here to allow for loading of redis cache prior to API
     model.db.init_app(app)
     cache.init_app(app)
     api.init_app(app)

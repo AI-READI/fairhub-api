@@ -13,13 +13,14 @@ class VType(object):
         self.name = name
         self.props = props
         self.missing_value = missing_value
-        self.validation_errors = []
+        # References
+        self.validation_errors: List[str] = []
 
     def __str__(self):
         return f"{self.__dict__}"
 
     def isvalid(
-        self: object, df: pd.DataFrame, accessors: Dict[str, Dict[str, str]]
+        self, df: pd.DataFrame, accessors: Dict[str, Dict[str, str]]
     ) -> bool:
         columns = df.columns
         for pname, ptype in self.props:

@@ -181,27 +181,27 @@ class RedcapTransform(object):
     # Getters
     #
 
-    def get_report_id(self: object, report_name: str) -> str:
+    def get_report_id(self, report_name: str) -> str:
         """
         Returns a str instance of the REDCap report ID.
         """
         return self.reports[report_name]["id"]
 
     def get_report_pycap(
-        self: object, report_name: str
+        self, report_name: str
     ) -> Union[List[Dict[str, Any]], str, pd.DataFrame]:
         """
         Returns a PyCap Report object containing the report.
         """
         return self.reports[report_name]["report"]
 
-    def get_report_df(self: object, report_name: str) -> pd.DataFrame:
+    def get_report_df(self, report_name: str) -> pd.DataFrame:
         """
         Returns a pd.DataFrame instance containing the report.
         """
         return self.reports[report_name]["df"]
 
-    def get_report_transformed_df(self: object, report_name: str) -> pd.DataFrame:
+    def get_report_transformed_df(self, report_name: str) -> pd.DataFrame:
         """
         Returns a pd.DataFrame instance containing the report
         with normalization transforms applied.
@@ -209,7 +209,7 @@ class RedcapTransform(object):
         return self.reports[report_name]["transformed"]
 
     def get_report_transforms(
-        self: object, report_name: str
+        self, report_name: str
     ) -> List[Tuple[str, Dict[str, Any]]]:
         """
         Returns a list of transforms that will be applied to
@@ -217,7 +217,7 @@ class RedcapTransform(object):
         """
         return self.reports[report_name]["transforms"]
 
-    def get_report_annotations(self: object, report_name: str) -> List[Dict[str, Any]]:
+    def get_report_annotations(self, report_name: str) -> List[Dict[str, Any]]:
         """
         Returns a list of annotations generated from the
         REDCap metadata API call.
@@ -229,7 +229,7 @@ class RedcapTransform(object):
     #
 
     # Applies Declared Transforms to Reports
-    def _apply_report_transforms(self: object, report_name: str) -> None:
+    def _apply_report_transforms(self, report_name: str) -> None:
         """
         Interal method that applies the transforms to each
         report as an idempotent transform stack.
@@ -247,7 +247,7 @@ class RedcapTransform(object):
         return self
 
     def apply_transform(
-        self: object,
+        self,
         df: pd.DataFrame,
         transform_name: str,
         transform_kwdargs: Dict[str, Any] = {},
@@ -263,7 +263,7 @@ class RedcapTransform(object):
     #
 
     def _drop_columns(
-        self: object,
+        self,
         df: pd.DataFrame,
         columns: List[str] = [],
         annotation: List[Dict[str, Any]] = [],
@@ -274,7 +274,7 @@ class RedcapTransform(object):
 
     @classmethod
     def drop_columns(
-        self: object, df: pd.DataFrame, columns: List[str]
+        self, df: pd.DataFrame, columns: List[str]
     ) -> pd.DataFrame:
         """
         Drop columns from pd.DataFrame.
@@ -286,7 +286,7 @@ class RedcapTransform(object):
     #
 
     def _keep_columns(
-        self: object,
+        self,
         df: pd.DataFrame,
         columns: List[str] = [],
         annotation: List[Dict[str, Any]] = [],
@@ -299,7 +299,7 @@ class RedcapTransform(object):
 
     @classmethod
     def keep_columns(
-        self: object, df: pd.DataFrame, columns: List[str]
+        self, df: pd.DataFrame, columns: List[str]
     ) -> pd.DataFrame:
         """
         Keep only selected columns in pd.DataFrame.
@@ -311,7 +311,7 @@ class RedcapTransform(object):
     #
 
     def _append_column_suffix(
-        self: object,
+        self,
         df: pd.DataFrame,
         columns: List[str] = [],
         suffix: str = "",
@@ -326,7 +326,7 @@ class RedcapTransform(object):
 
     @classmethod
     def append_column_suffix(
-        self: object,
+        self,
         df: pd.DataFrame,
         columns: List[str] = [],
         suffix: str = "",
@@ -349,7 +349,7 @@ class RedcapTransform(object):
     #
 
     def _prepend_column_prefix(
-        self: object,
+        self,
         df: pd.DataFrame,
         columns: List[str] = [],
         prefix: str = "",
@@ -364,7 +364,7 @@ class RedcapTransform(object):
 
     @classmethod
     def prepend_column_prefix(
-        self: object,
+        self,
         df: pd.DataFrame,
         columns: List[str] = [],
         prefix: str = "",
@@ -387,7 +387,7 @@ class RedcapTransform(object):
     #
 
     def _remap_values_by_columns(
-        self: object,
+        self,
         df: pd.DataFrame,
         columns: List[str],
         value_map: Dict[str, Any] = {},
@@ -427,7 +427,7 @@ class RedcapTransform(object):
 
     @classmethod
     def remap_values_by_columns(
-        self: object,
+        self,
         df: pd.DataFrame,
         columns: List[str],
         value_map: Dict[str, Any] = {},
@@ -463,7 +463,7 @@ class RedcapTransform(object):
     #
 
     def _map_missing_values_by_columns(
-        self: object,
+        self,
         df: pd.DataFrame,
         columns: List[str],
         missing_value: Any = None,
@@ -484,7 +484,7 @@ class RedcapTransform(object):
 
     @classmethod
     def map_missing_values_by_columns(
-        self: object, df: pd.DataFrame, columns: List[str], missing_value: Any
+        self, df: pd.DataFrame, columns: List[str], missing_value: Any
     ) -> pd.DataFrame:
         """
         Replace 0-length values or values with keys in
@@ -503,7 +503,7 @@ class RedcapTransform(object):
     #
 
     def _drop_rows(
-        self: object,
+        self,
         df: pd.DataFrame,
         columns: List[str] = [],
         condition: Callable = lambda column: column == "",
@@ -515,7 +515,7 @@ class RedcapTransform(object):
 
     @classmethod
     def drop_rows(
-        self: object,
+        self,
         df: pd.DataFrame,
         columns: List[str],
         condition: Callable = lambda column: column == "",
@@ -534,7 +534,7 @@ class RedcapTransform(object):
     #
 
     def _aggregate_repeat_instrument_column_by_index(
-        self: object,
+        self,
         df: pd.DataFrame,
         aggregator: Callable = "max",
         dtype: Callable = float,
@@ -557,7 +557,7 @@ class RedcapTransform(object):
 
     @classmethod
     def aggregate_repeat_instrument_by_index(
-        self: object, df: pd.DataFrame, aggregator: str = "max", dtype: Callable = float
+        self, df: pd.DataFrame, aggregator: str = "max", dtype: Callable = float
     ) -> pd.DataFrame:
         """
         Pre-processing REDCap repeat_instrument so each instrument
@@ -574,7 +574,7 @@ class RedcapTransform(object):
     #
 
     def _merge_reports(
-        self: object,
+        self,
         receiving_report_name: str,
         merge_steps: List[Tuple[str, Dict[str, Any]]],
     ) -> pd.DataFrame:
@@ -603,7 +603,7 @@ class RedcapTransform(object):
 
     # Transform Prelude - Get Applicable Transform Columns
     def _resolve_columns_with_dataframe(
-        self: object, df: pd.DataFrame, columns: List[str]
+        self, df: pd.DataFrame, columns: List[str]
     ) -> List[str]:
         """
         Internal utility function. Uses set logic to ensure
@@ -635,7 +635,7 @@ class RedcapTransform(object):
 
     #  Extract REDCap Type Metadata
     def _get_redcap_type_metadata(
-        self: object, df: pd.DataFrame
+        self, df: pd.DataFrame
     ) -> List[Dict[str, Any]]:
         """
         Extracts REDCap field name, type, and options (the
@@ -713,7 +713,7 @@ class RedcapTransform(object):
 
     # Export Untransformed (Raw) Reports
     def export_raw(
-        self: object, path: str = "", separator: str = "\t", filetype: str = ".tsv"
+        self, path: str = "", separator: str = "\t", filetype: str = ".tsv"
     ) -> object:
         for report_name, report_object in self.reports.items():
             filename = f"{report_name}_raw{filetype}"
@@ -729,7 +729,7 @@ class RedcapTransform(object):
 
     # Export Transformed Reports
     def export_transformed(
-        self: object, path: str = "", separator: str = "\t", filetype: str = ".tsv"
+        self, path: str = "", separator: str = "\t", filetype: str = ".tsv"
     ) -> object:
         for report_name, report_object in self.reports.items():
             filename = f"{report_name}_transformed{filetype}"
@@ -745,7 +745,7 @@ class RedcapTransform(object):
 
     # Export Merged Transforms
     def export_merged_transformed(
-        self: object, path: str = "", separator: str = "\t", filetype: str = ".tsv"
+        self, path: str = "", separator: str = "\t", filetype: str = ".tsv"
     ) -> object:
         filename = f"transformed-merged_redcap-extract{filetype}"
         filepath = os.path.join(path, filename)

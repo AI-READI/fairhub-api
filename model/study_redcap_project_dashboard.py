@@ -2,8 +2,7 @@ import uuid
 from dataclasses import dataclass
 from datetime import datetime, timezone
 
-from sqlalchemy import JSON
-from sqlalchemy.dialects.postgresql import ARRAY
+from sqlalchemy_json import NestedMutableJson
 
 from model import Study
 
@@ -28,7 +27,7 @@ class StudyRedcapProjectDashboard(db.Model):  # type: ignore
     dashboard_id: str = db.Column(db.CHAR(36), primary_key=True)
     dashboard_name: str = db.Column(db.String, nullable=False)
     dashboard_modules: list[dict[str, (str | bool | int)]] = db.Column(
-        ARRAY(JSON), nullable=True
+        NestedMutableJson, nullable=True
     )
     created_at: int = db.Column(db.BigInteger, nullable=False)
     updated_on: int = db.Column(db.BigInteger, nullable=False)

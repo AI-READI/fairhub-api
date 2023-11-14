@@ -10,7 +10,7 @@ import pandas as pd
 
 class ModuleTransform(object):
     def __init__(
-        self: object,
+        self,
         config: Dict[str, Dict[str, Any]],
         logging_config: Dict[str, str] = {},
     ) -> None:
@@ -76,7 +76,7 @@ class ModuleTransform(object):
 
         return
 
-    def _transformIsValid(self: object, transform: Tuple[int, Dict[str, Any]]) -> bool:
+    def _transformIsValid(self, transform: Tuple[int, Dict[str, Any]]) -> bool:
         """
         Transform validator
         """
@@ -105,11 +105,12 @@ class ModuleTransform(object):
         return valid
 
     def _setValueType(
-        self: object,
+        self,
         vtype: Any,
+        name: str,
         record: Dict[str, Any],
         key: str,
-        accessor: Dict[str, Dict[str, str | Callable]],
+        accessors: List[Dict[str, Dict[str, str | Callable]]],
     ) -> Any:
         """
         Element-wise type setting method. If value of
@@ -117,6 +118,7 @@ class ModuleTransform(object):
         value as the type defined for property in the
         vtype.
         """
+        accessor = accessors[key]
         for pname, _ptype in vtype.props:
             if pname == key:
                 # Accessor Typing
@@ -131,6 +133,14 @@ class ModuleTransform(object):
                         )
                 # Accessor Name
                 pvalue = record[accessor["field"]]
+                if "remap" in accessor and accessor["remap"] is not None:
+                    pvalue = accessor["remap"]({
+                        "name": name,
+                        "record": record,
+                        "value": pvalue,
+                        "key": key,
+                        "accessors": accessors,
+                    })
                 if pvalue != accessor["missing_value"]:
                     try:
                         pvalue = ptype(pvalue)
@@ -148,7 +158,7 @@ class ModuleTransform(object):
 
         return pvalue
 
-    def simpleTransform(self: object, df: pd.DataFrame) -> object:
+    def simpleTransform(self, df: pd.DataFrame) -> object:
         """
         Performs a pd.DataFrame.groupby transform. The
         df is first subset to the relevant fields. A
@@ -179,7 +189,7 @@ class ModuleTransform(object):
 
             for record in transformed.to_dict("records"):
                 record = {
-                    key: self._setValueType(vtype, record, key, accessor)
+                    key: self._setValueType(vtype, name, record, key, accessor)
                     for key, accessor in accessors.items()
                 }
                 record = {"name": name} | record
@@ -194,7 +204,7 @@ class ModuleTransform(object):
 
         return self
 
-    def compoundTransform(self: object, df: pd.DataFrame) -> object:
+    def compoundTransform(self, df: pd.DataFrame) -> object:
         """
         For each transform, performs a pd.DataFrame.groupby
         transform. The df is first subset to the relevant
@@ -214,7 +224,7 @@ class ModuleTransform(object):
                 transform["name"],
                 getattr(vtypes, transform["vtype"])(),
                 transform["method"],
-                transform["accessors"],
+                transform["accessors"]
             )
             if vtype.isvalid(df, accessors):
                 temp = df[
@@ -225,8 +235,9 @@ class ModuleTransform(object):
                 transformed = getattr(grouped, func)()
 
                 for record in transformed.to_dict("records"):
+                    print(name, record, accessors, "\n")
                     record = {
-                        key: self._setValueType(vtype, record, key, accessor)
+                        key: self._setValueType(vtype, name, record, key, accessors)
                         for key, accessor in accessors.items()
                     }
                     record = {"name": name} | record
@@ -241,7 +252,7 @@ class ModuleTransform(object):
 
         return self
 
-    def mixedTransform(self: object, df: pd.DataFrame) -> object:
+    def mixedTransform(self, df: pd.DataFrame) -> object:
         """
         For each transform, performs a pd.DataFrame.groupby
         transform. The df is first subset to the relevant
@@ -261,7 +272,7 @@ class ModuleTransform(object):
                 transform["name"],
                 getattr(vtypes, transform["vtype"])(),
                 transform["method"],
-                transform["accessors"],
+                transform["accessors"]
             )
             if vtype.isvalid(df, accessors):
                 temp = df[
@@ -274,7 +285,7 @@ class ModuleTransform(object):
                 subtransform = []
                 for record in transformed.to_dict("records"):
                     record = {
-                        key: self._setValueType(vtype, record, key, accessor)
+                        key: self._setValueType(vtype, name, record, key, accessor)
                         for key, accessor in accessors.items()
                     }
                     record = {"name": name} | record

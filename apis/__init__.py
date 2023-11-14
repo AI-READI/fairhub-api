@@ -2,7 +2,6 @@
 from flask_restx import Api, Resource
 
 from apis.dataset_metadata_namespace import api as dataset_metadata_namespace
-from apis.redcap_data_namespace import api as redcap_data_namespace
 from apis.study_metadata_namespace import api as study_metadata_namespace
 
 from .authentication import api as authentication
@@ -27,19 +26,6 @@ from .dataset_metadata.dataset_title import api as title
 from .file import api as file_api
 from .participant import api as participants_api
 from .redcap import api as redcap
-from .redcap_data.redcap_project_data import api as redcap_project_data
-from .redcap_data.redcap_report_participant_values_data import (
-    api as redcap_report_participants_values_data,
-)
-from .redcap_data.redcap_report_participants_data import (
-    api as redcap_report_participants_data,
-)
-from .redcap_data.redcap_report_repeat_surveys_data import (
-    api as redcap_report_repeat_surveys_data,
-)
-from .redcap_data.redcap_report_survey_completions_data import (
-    api as redcap_report_survey_completions_data,
-)
 from .study import api as study_api
 from .study_metadata.study_arm import api as arm
 from .study_metadata.study_available_ipd import api as available_ipd
@@ -68,7 +54,6 @@ api = Api(
 __all__ = [
     "dataset_metadata_namespace",
     "study_metadata_namespace",
-    "redcap_data_namespace",
     "authentication",
     "contributors_api",
     "dataset_api",
@@ -109,18 +94,19 @@ __all__ = [
     "dataset_contributor",
     "redcap",
     "dashboard",
-    "redcap_project_data",
-    "redcap_report_participants_data",
-    "redcap_report_participants_values_data",
-    "redcap_report_repeat_surveys_data",
-    "redcap_report_survey_completions_data",
 ]
-
 
 api.add_namespace(dataset_metadata_namespace)
 api.add_namespace(study_metadata_namespace)
-api.add_namespace(redcap_data_namespace)
 api.add_namespace(authentication)
+api.add_namespace(study_api)
+api.add_namespace(file_api)
+api.add_namespace(dataset_api)
+api.add_namespace(participants_api)
+api.add_namespace(contributors_api)
+api.add_namespace(user)
+api.add_namespace(redcap)
+api.add_namespace(dashboard)
 
 
 @api.route("/echo", endpoint="echo")
@@ -133,13 +119,3 @@ class HelloEverynyan(Resource):
         """Returns a simple 'Server Active' message"""
 
         return "Server active!"
-
-
-api.add_namespace(study_api)
-api.add_namespace(file_api)
-api.add_namespace(dataset_api)
-api.add_namespace(participants_api)
-api.add_namespace(contributors_api)
-api.add_namespace(user)
-api.add_namespace(redcap)
-api.add_namespace(dashboard)

@@ -134,8 +134,17 @@ class SignUpUser(Resource):
         format_checker.checks("password")(validate_password)
 
         try:
-            validate(instance=data, schema=schema, format_checker=format_checker)
+            # Remove the code property for dev purposes
+            data_no_code = {
+                "email_address": data["email_address"],
+                "password": data["password"],
+            }
+            validate(
+                instance=data_no_code, schema=schema, format_checker=format_checker
+            )
+            # validate(instance=data, schema=schema, format_checker=format_checker)
         except ValidationError as e:
+            print(e)
             return e.message, 400
 
         user = model.User.query.filter_by(
