@@ -67,20 +67,54 @@ def test_put_dataset_access_metadata(clients):
 
     admin_response = _admin_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/access",
-    )
-    editor_response = _editor_client.put(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/access",
-    )
-    viewer_response = _viewer_client.put(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/access",
+        json={
+            "type": "admin type",
+            "description": "admin description",
+            "url": "google.com",
+            "url_last_checked": 123,
+        }
     )
 
     print(admin_response.status_code)
-    print(editor_response.status_code)
-    print(viewer_response.status_code)
     assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+
+    assert admin_response_data["type"] == "admin type"
+    assert admin_response_data["description"] == "admin description"
+    assert admin_response_data["url"] == "google.com"
+    assert admin_response_data["url_last_checked"] == 123
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/access",
+        json={
+            "type": "editor type",
+            "description": "editor description",
+            "url": "google.com",
+            "url_last_checked": 123,
+        }
+    )
+
+    print(editor_response.status_code)
     assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+
+    assert editor_response_data["type"] == "editor type"
+    assert editor_response_data["description"] == "editor description"
+    assert editor_response_data["url"] == "google.com"
+    assert editor_response_data["url_last_checked"] == 123
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/access",
+        json={
+            "type": "viewer type",
+            "description": "viewer description",
+            "url": "google.com",
+            "url_last_checked": 123,
+        }
+    )
+
+    print(viewer_response.status_code)
+    assert viewer_response.status_code == 403
 
 
 # ------------------- ALTERNATIVE IDENTIFIER METADATA ------------------- #
@@ -146,6 +180,46 @@ def test_post_alternative_identifier(clients):
 
     assert response_data[0]["identifier"] == "identifier test"
     assert response_data[0]["type"] == "ARK"
+
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier",
+        json=[
+            {
+                "identifier": "admin test",
+                "type": "ARK",
+            }
+        ]
+    )
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier",
+        json=[
+            {
+                "identifier": "editor test",
+                "type": "ARK",
+            }
+        ]
+    )
+    viewer_response = _viewer_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier",
+        json=[
+            {
+                "identifier": "viewer test",
+                "type": "ARK",
+            }
+        ]
+    )
+
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 403
+
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+
+    assert admin_response_data[1]["identifier"] == "admin test"
+    assert admin_response_data[1]["type"] == "ARK"
+    assert editor_response_data[2]["identifier"] == "editor test"
+    assert editor_response_data[2]["type"] == "ARK"
 
 
 def test_delete_alternative_identifier(clients):
