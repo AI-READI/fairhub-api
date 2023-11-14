@@ -42,4 +42,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/fairhub:staging,${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/fairhub:{${{ steps.git_sha.outputs.sha }}
+          tags: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/fairhub:staging,${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/fairhub:${{ steps.git_sha.outputs.sha }}
