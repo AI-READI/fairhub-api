@@ -101,27 +101,30 @@ def _create_user(_test_client):
 
 # Fixture to sign in the user for module testing
 @pytest.fixture(scope="session")
-def _logged_in_client(_test_client):
+def _logged_in_client():
     """Sign in the user for testing."""
-    with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
-        response = _test_client.post(
-            "/auth/login",
-            json={
-                "email_address": "test@fairhub.io",
-                "password": "Testingyeshello11!",
-            },
-        )
+    flask_app = create_app(config_module="pytest_config")
+    with flask_app.test_client() as _test_client:
+        with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
+            response = _test_client.post(
+                "/auth/login",
+                json={
+                    "email_address": "test@fairhub.io",
+                    "password": "Testingyeshello11!",
+                },
+            )
 
-        assert response.status_code == 200
+            assert response.status_code == 200
 
-        yield _test_client
+            yield _test_client
+
 
 @pytest.fixture(scope="session")
-def _test_invite_study_contributor(_test_client):
+def _test_invite_study_contributor(_logged_in_client):
     """Test invite study contributor."""
     study_id = pytest.global_study_id["id"]  # type: ignore
 
-    response = _test_client.post(
+    response = _logged_in_client.post(
         f"/study/{study_id}/contributor",
         json={"email_address": "editor@gmail.com", "role": "editor"},
     )
@@ -131,7 +134,7 @@ def _test_invite_study_contributor(_test_client):
 
     pytest.global_editor_token = response_data["token"]
 
-    response = _test_client.post(
+    response = _logged_in_client.post(
         f"/study/{study_id}/contributor",
         json={"email_address": "admin@gmail.com", "role": "admin"},
     )
@@ -140,7 +143,7 @@ def _test_invite_study_contributor(_test_client):
     response_data = json.loads(response.data)
     pytest.global_admin_token = response_data["token"]
 
-    response = _test_client.post(
+    response = _logged_in_client.post(
         f"/study/{study_id}/contributor",
         json={"email_address": "viewer@gmail.com", "role": "viewer"},
     )
@@ -151,48 +154,111 @@ def _test_invite_study_contributor(_test_client):
 
 
 @pytest.fixture(scope="session")
-def _create_admin_user(_test_client):
+def _create_admin_user():
     """Create an admin user for testing."""
-    with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
-        response = _test_client.post(
-            "/auth/signup",
-            json={
-                "email_address": "admin@gmail.com",
-                "password": "Testingyeshello11!",
-                "code": pytest.global_admin_token
-            }
-        )
+    flask_app = create_app(config_module="pytest_config")
+    with flask_app.test_client() as _test_client:
+        with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
+            response = _test_client.post(
+                "/auth/signup",
+                json={
+                    "email_address": "admin@gmail.com",
+                    "password": "Testingyeshello11!",
+                    "code": pytest.global_admin_token
+                }
+            )
 
-        assert response.status_code == 201
+            assert response.status_code == 201
 
 
 @pytest.fixture(scope="session")
-def _create_editor_user(_test_client):
+def _create_editor_user():
     """Create an editor user for testing."""
-    with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
-        response = _test_client.post(
-            "/auth/signup",
-            json={
-                "email_address": "editor@gmail.com",
-                "password": "Testingyeshello11!",
-                "code": pytest.global_editor_token
-            }
-        )
+    flask_app = create_app(config_module="pytest_config")
+    with flask_app.test_client() as _test_client:
+        with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
+            response = _test_client.post(
+                "/auth/signup",
+                json={
+                    "email_address": "editor@gmail.com",
+                    "password": "Testingyeshello11!",
+                    "code": pytest.global_editor_token
+                }
+            )
 
-        assert response.status_code == 201
+            assert response.status_code == 201
 
 
 @pytest.fixture(scope="session")
-def _create_viewer_user(_test_client):
+def _create_viewer_user():
     """Create a viewer user for testing."""
-    with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
-        response = _test_client.post(
-            "/auth/signup",
-            json={
-                "email_address": "viewer@gmail.com",
-                "password": "Testingyeshello11!",
-                "code": pytest.global_viewer_token
-            }
-        )
+    flask_app = create_app(config_module="pytest_config")
+    with flask_app.test_client() as _test_client:
+        with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
+            response = _test_client.post(
+                "/auth/signup",
+                json={
+                    "email_address": "viewer@gmail.com",
+                    "password": "Testingyeshello11!",
+                    "code": pytest.global_viewer_token
+                }
+            )
 
-        assert response.status_code == 201
+            assert response.status_code == 201
+
+
+@pytest.fixture(scope="session")
+def _admin_client():
+    """Create an admin user for testing."""
+    flask_app = create_app(config_module="pytest_config")
+    with flask_app.test_client() as _test_client:
+        with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
+            response = _test_client.post(
+                "/auth/login",
+                json={
+                    "email_address": "admin@gmail.com",
+                    "password": "Testingyeshello11!",
+                },
+            )
+
+            assert response.status_code == 200
+
+            yield _test_client
+
+
+@pytest.fixture(scope="session")
+def _editor_client():
+    """Create an admin user for testing."""
+    flask_app = create_app(config_module="pytest_config")
+    with flask_app.test_client() as _test_client:
+        with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
+            response = _test_client.post(
+                "/auth/login",
+                json={
+                    "email_address": "editor@gmail.com",
+                    "password": "Testingyeshello11!",
+                },
+            )
+
+            assert response.status_code == 200
+
+            yield _test_client
+
+
+@pytest.fixture(scope="session")
+def _viewer_client():
+    """Create an admin user for testing."""
+    flask_app = create_app(config_module="pytest_config")
+    with flask_app.test_client() as _test_client:
+        with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
+            response = _test_client.post(
+                "/auth/login",
+                json={
+                    "email_address": "viewer@gmail.com",
+                    "password": "Testingyeshello11!",
+                },
+            )
+
+            assert response.status_code == 200
+
+            yield _test_client

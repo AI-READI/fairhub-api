@@ -32,34 +32,3 @@ def test_db_empty(_test_client, _empty_db, _create_user):
 def test_signin_user(_logged_in_client):
     """Signs in user before testing."""
     print("User signed in for testing")
-
-
-def test_invite_study_contributor(_test_client):
-    """Test invite study contributor."""
-    response = _test_client.post(
-        "/study/1/contributor",
-        json={"email_address": "editor@gmail.com", "role": "editor"},
-    )
-
-    assert response.status_code == 201
-    response_data = json.loads(response.data)
-
-    pytest.global_editor_token = response_data["token"]
-
-    response = _test_client.post(
-        "/study/1/contributor",
-        json={"email_address": "admin@gmail.com", "role": "admin"},
-    )
-
-    assert response.status_code == 201
-    response_data = json.loads(response.data)
-    pytest.global_admin_token = response_data["token"]
-
-    response = _test_client.post(
-        "/study/1/contributor",
-        json={"email_address": "viewer@gmail.com", "role": "viewer"},
-    )
-
-    assert response.status_code == 201
-    response_data = json.loads(response.data)
-    pytest.global_viewer_token = response_data["token"]

@@ -46,6 +46,22 @@ def test_viewer_editor_user(_create_viewer_user):
     """Viewer User created for permissions testing"""
     print("Viewer user created for testing")
 
+
+def test_signin_admin(_admin_client):
+    """Admin user signed in for testing"""
+    print("Admin user signed in for testing")
+
+
+def test_signin_editor(_editor_client):
+    """Editor user signed in for testing"""
+    print("Editor user signed in for testing")
+
+
+def test_signin_viewer(_viewer_client):
+    """Viewer user signed in for testing"""
+    print("Viewer user signed in for testing")
+
+
 def test_get_all_studies(_logged_in_client):
     """
     GIVEN a Flask application configured for testing
