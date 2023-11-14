@@ -4,12 +4,10 @@ on:
     push:
       branches:
         - staging
-        - deploy
     pull_request:
       types: [closed]
       branches:
         - staging
-        - deploy
     workflow_dispatch:
 
 jobs:
@@ -40,4 +38,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/fairhub:test
+          tags: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/fairhub:staging
