@@ -39,6 +39,56 @@ def test_post_arm_metadata(clients):
         "intervention2",
     ]
 
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/metadata/arm",
+        json=[
+            {
+                "label": "Admin Label",
+                "type": "Experimental",
+                "description": "Arm Description",
+                "intervention_list": ["intervention1", "intervention2"],
+            }
+        ],
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    pytest.global_admin_arm_id_admin = admin_response_data["arms"][1]["id"]
+
+    assert admin_response_data["arms"][1]["label"] == "Admin Label"
+
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/metadata/arm",
+        json=[
+            {
+                "label": "Editor Label",
+                "type": "Experimental",
+                "description": "Arm Description",
+                "intervention_list": ["intervention1", "intervention2"],
+            }
+        ],
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    pytest.global_editor_arm_id_editor = editor_response_data["arms"][2]["id"]
+
+    assert editor_response_data["arms"][2]["label"] == "Editor Label"
+
+    viewer_response = _viewer_client.post(
+        f"/study/{study_id}/metadata/arm",
+        json=[
+            {
+                "label": "Viewer Label",
+                "type": "Experimental",
+                "description": "Arm Description",
+                "intervention_list": ["intervention1", "intervention2"],
+            }
+        ],
+    )
+
+    assert viewer_response.status_code == 403
+
 
 def test_get_arm_metadata(clients):
     """
