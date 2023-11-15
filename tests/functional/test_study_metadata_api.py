@@ -100,8 +100,14 @@ def test_get_arm_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
 
     response = _logged_in_client.get(f"/study/{study_id}/metadata/arm")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/arm")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/arm")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/arm")
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
     response_data = json.loads(response.data)
 
     assert response_data["arms"][0]["label"] == "Label1"
