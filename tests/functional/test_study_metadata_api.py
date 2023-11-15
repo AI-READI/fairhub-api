@@ -178,6 +178,48 @@ def test_post_available_ipd_metadata(clients):
     assert response_data[0]["url"] == "google.com"
     assert response_data[0]["comment"] == "comment1"
 
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/metadata/available-ipd",
+        json=[
+            {
+                "identifier": "identifier2",
+                "type": "Clinical Study Report",
+                "url": "google.com",
+                "comment": "comment2",
+            }
+        ],
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    pytest.global_admin_available_ipd_id_admin = admin_response_data[1]["id"]
+
+    assert admin_response_data[1]["identifier"] == "identifier2"
+    assert admin_response_data[1]["type"] == "Clinical Study Report"
+    assert admin_response_data[1]["url"] == "google.com"
+    assert admin_response_data[1]["comment"] == "comment2"
+
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/metadata/available-ipd",
+        json=[
+            {
+                "identifier": "identifier3",
+                "type": "Clinical Study Report",
+                "url": "google.com",
+                "comment": "comment3",
+            }
+        ],
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    pytest.global_editor_available_ipd_id_editor = editor_response_data[2]["id"]
+
+    assert editor_response_data[2]["identifier"] == "identifier3"
+    assert editor_response_data[2]["type"] == "Clinical Study Report"
+    assert editor_response_data[2]["url"] == "google.com"
+    assert editor_response_data[2]["comment"] == "comment3"
+
 
 def test_get_available_ipd_metadata(clients):
     """

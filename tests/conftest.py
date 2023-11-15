@@ -39,6 +39,8 @@ pytest.global_dataset_contributor_id_admin = ""
 pytest.global_dataset_contributor_id_editor = ""
 pytest.global_editor_arm_id_admin = ""
 pytest.global_editor_arm_id_editor = ""
+pytest.global_editor_available_ipd_id_admin = ""
+pytest.global_editor_available_ipd_id_editor = ""
 
 # Dataset variables use for testing
 pytest.global_dataset_id = ""
