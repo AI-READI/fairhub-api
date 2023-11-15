@@ -994,9 +994,10 @@ def test_put_status_metadata(_logged_in_client):
         json={
             "overall_status": "Withdrawn",
             "why_stopped": "test",
-            "start_date": "fff",
+            "start_date": "2023-11-15 00:00:00",
             "start_date_type": "Actual",
-            "completion_date": "nuzzzll",
+            "completion_date": "2023-11-16 00:00:00",
+
             "completion_date_type": "Actual",
         },
     )
@@ -1006,7 +1007,7 @@ def test_put_status_metadata(_logged_in_client):
 
     assert response_data["overall_status"] == "Withdrawn"
     assert response_data["why_stopped"] == "test"
-    assert response_data["start_date"] == "fff"
+    assert response_data["start_date"] == "2023-11-15 00:00:00"
     assert response_data["start_date_type"] == "Actual"
-    assert response_data["completion_date"] == "nuzzzll"
+    assert response_data["completion_date"] == "2023-11-16 00:00:00"
     assert response_data["completion_date_type"] == "Actual"
