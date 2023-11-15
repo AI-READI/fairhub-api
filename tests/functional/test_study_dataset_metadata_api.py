@@ -330,6 +330,59 @@ def test_put_dataset_consent_metadata(clients):
     assert response_data["no_methods"] is True
     assert response_data["details"] == "test"
 
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/consent",
+        json={
+            "type": "admin test",
+            "noncommercial": True,
+            "geog_restrict": True,
+            "research_type": True,
+            "genetic_only": True,
+            "no_methods": True,
+            "details": "admin details test",
+        }
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+
+    assert admin_response_data["type"] == "admin test"
+    assert admin_response_data["details"] == "admin details test"
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/consent",
+        json={
+            "type": "editor test",
+            "noncommercial": True,
+            "geog_restrict": True,
+            "research_type": True,
+            "genetic_only": True,
+            "no_methods": True,
+            "details": "editor details test",
+        }
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+
+    assert editor_response_data["type"] == "editor test"
+    assert editor_response_data["details"] == "editor details test"
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/consent",
+        json={
+            "type": "viewer test",
+            "noncommercial": True,
+            "geog_restrict": True,
+            "research_type": True,
+            "genetic_only": True,
+            "no_methods": True,
+            "details": "viewer details test",
+        }
+    )
+
+    assert viewer_response.status_code == 403
+
 
 # ------------------- CONTRIBUTOR METADATA ------------------- #
 def test_post_dataset_contributor_metadata(clients):
