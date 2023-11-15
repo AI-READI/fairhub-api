@@ -525,8 +525,14 @@ def test_get_conditions_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
 
     response = _logged_in_client.get(f"/study/{study_id}/metadata/conditions")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/conditions")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/conditions")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/conditions")
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
 
 
 def test_put_conditions_metadata(clients):
