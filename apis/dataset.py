@@ -47,7 +47,7 @@ class DatasetList(Resource):
     def get(self, study_id):
         study = model.Study.query.get(study_id)
         datasets = model.Dataset.query.filter_by(study=study)
-        return [d.to_dict() for d in datasets]
+        return [d.to_dict() for d in datasets], 200
 
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
@@ -72,7 +72,7 @@ class DatasetList(Resource):
         description_element.description = data["description"]
 
         model.db.session.commit()
-        return dataset_.to_dict()
+        return dataset_.to_dict(), 201
 
 
 # TODO not finalized endpoint. have to set functionality
@@ -85,7 +85,7 @@ class DatasetResource(Resource):
     @api.response(400, "Validation Error")
     def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         data_obj = model.Dataset.query.get(dataset_id)
-        return data_obj.to_dict()
+        return data_obj.to_dict(), 200
 
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
@@ -102,7 +102,7 @@ class DatasetResource(Resource):
         data_obj.update(data)
         model.db.session.commit()
 
-        return data_obj.to_dict()
+        return data_obj.to_dict(), 200
 
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
@@ -133,7 +133,7 @@ class VersionResource(Resource):
         if not is_granted("version", study):
             return "Access denied, you can not modify", 403
         dataset_version = model.Version.query.get(version_id)
-        return dataset_version.to_dict()
+        return dataset_version.to_dict(), 200
 
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
@@ -147,7 +147,7 @@ class VersionResource(Resource):
         data_version_obj = model.Version.query.get(version_id)
         data_version_obj.update(request.json)
         model.db.session.commit()
-        return jsonify(data_version_obj.to_dict()), 201
+        return jsonify(data_version_obj.to_dict()), 200
 
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
@@ -192,7 +192,7 @@ class VersionList(Resource):
         dataset_versions = model.Version.from_data(data_obj, data)
         model.db.session.add(dataset_versions)
         model.db.session.commit()
-        return dataset_versions.to_dict()
+        return dataset_versions.to_dict(), 201
 
 
 # @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/publish")
@@ -222,7 +222,7 @@ class VersionDatasetMetadataResource(Resource):
         version = model.Version.query.filter_by(
             id=version_id, dataset_id=dataset_id
         ).one_or_none()
-        return version.dataset.study.to_dict_study_metadata()
+        return version.dataset.study.to_dict_study_metadata(), 200
 
 
 @api.route(
@@ -239,7 +239,7 @@ class VersionStudyMetadataResource(Resource):
         version = model.Version.query.filter_by(
             id=version_id, dataset_id=dataset_id
         ).one_or_none()
-        return version.dataset.to_dict_dataset_metadata()
+        return version.dataset.to_dict_dataset_metadata(), 200
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/changelog")
@@ -254,7 +254,7 @@ class VersionDatasetChangelog(Resource):
         version = model.Version.query.filter_by(
             id=version_id, dataset_id=dataset_id
         ).one_or_none()
-        return {"changelog": version.changelog}
+        return {"changelog": version.changelog}, 200
 
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
@@ -269,7 +269,7 @@ class VersionDatasetChangelog(Resource):
         version_ = model.Version.query.get(version_id)
         version_.changelog = data["changelog"]
         model.db.session.commit()
-        return version_.changelog
+        return version_.changelog, 200
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/readme")
@@ -299,4 +299,4 @@ class VersionDatasetReadme(Resource):
         version_ = model.Version.query.get(version_id)
         version_.version_readme.update(data)
         model.db.session.commit()
-        return version_.version_readme.to_dict()
+        return version_.version_readme.to_dict(), 200

@@ -32,7 +32,7 @@ class DatasetTitleResource(Resource):
         """Get dataset title"""
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_title_ = dataset_.dataset_title
-        return [d.to_dict() for d in dataset_title_]
+        return [d.to_dict() for d in dataset_title_], 200
 
     @api.doc("update title")
     @api.response(200, "Success")
@@ -94,7 +94,7 @@ class DatasetTitleResource(Resource):
                 model.db.session.add(dataset_title_)
                 list_of_elements.append(dataset_title_.to_dict())
         model.db.session.commit()
-        return list_of_elements
+        return list_of_elements, 201
 
     @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/title/<title_id>")
     class DatasetDescriptionUpdate(Resource):

@@ -19,7 +19,7 @@ def test_post_study(_logged_in_client):
         },
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
 
     assert response_data["title"] == "Study Title"
@@ -99,7 +99,7 @@ def test_delete_studies_created(_logged_in_client):
         },
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     study_id = response_data["id"]
 

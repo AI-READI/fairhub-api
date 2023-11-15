@@ -35,7 +35,7 @@ class DatasetDeIdentLevelResource(Resource):
         """Get dataset de-identification level"""
         dataset_ = model.Dataset.query.get(dataset_id)
         de_ident_level_ = dataset_.dataset_de_ident_level
-        return de_ident_level_.to_dict()
+        return de_ident_level_.to_dict(), 200
 
     @api.doc("update ident level")
     @api.response(200, "Success")
@@ -81,4 +81,4 @@ class DatasetDeIdentLevelResource(Resource):
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_.dataset_de_ident_level.update(data)
         model.db.session.commit()
-        return dataset_.dataset_de_ident_level.to_dict()
+        return dataset_.dataset_de_ident_level.to_dict(), 200

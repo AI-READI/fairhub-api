@@ -35,7 +35,7 @@ def test_post_dataset(_logged_in_client):
         },
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_id = response_data["id"]
 
@@ -72,7 +72,7 @@ def test_delete_dataset_from_study(_logged_in_client):
         },
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     dataset_id = response_data["id"]
 
@@ -104,7 +104,7 @@ def test_post_dataset_version(_logged_in_client):
         },
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_version_id = response_data["id"]
 

@@ -31,7 +31,7 @@ class DatasetRelatedItemResource(Resource):
         """Get dataset related item"""
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_related_item_ = dataset_.dataset_related_item
-        return [d.to_dict() for d in dataset_related_item_]
+        return [d.to_dict() for d in dataset_related_item_], 200
 
     @api.doc("update related item")
     @api.response(200, "Success")

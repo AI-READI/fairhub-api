@@ -87,7 +87,7 @@ def test_post_alternative_identifier(_logged_in_client):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_alternative_identifier_id = response_data[0]["id"]
 
@@ -197,7 +197,7 @@ def test_post_dataset_contributor_metadata(_logged_in_client):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_contributor_id = response_data[0]["id"]
 
@@ -296,7 +296,7 @@ def test_post_dataset_creator_metadata(_logged_in_client):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_creator_id = response_data[0]["id"]
 
@@ -363,7 +363,7 @@ def test_post_dataset_date_metadata(_logged_in_client):
         json=[{"date": 20210101, "type": "Type", "information": "Info"}],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_date_id = response_data[0]["id"]
 
@@ -480,7 +480,7 @@ def test_post_dataset_description_metadata(_logged_in_client):
         json=[{"description": "Description", "type": "Methods"}],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_description_id = response_data[0]["id"]
 
@@ -552,7 +552,7 @@ def test_post_dataset_funder_metadata(_logged_in_client):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_funder_id = response_data[0]["id"]
 
@@ -720,7 +720,7 @@ def test_put_dataset_record_keys_metadata(_logged_in_client):
         json={"type": "Record Type", "details": "Details for Record Keys"},
     )
 
-    assert response.status_code == 201
+    assert response.status_code == 200
     response_data = json.loads(response.data)
     assert response_data["type"] == "Record Type"
     assert response_data["details"] == "Details for Record Keys"
@@ -977,7 +977,7 @@ def test_post_dataset_rights_metadata(_logged_in_client):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_rights_id = response_data[0]["id"]
 
@@ -1049,7 +1049,7 @@ def test_post_dataset_subjects_metadata(_logged_in_client):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_subject_id = response_data[0]["id"]
 
@@ -1113,7 +1113,7 @@ def test_post_dataset_title_metadata(_logged_in_client):
         json=[{"title": "Title", "type": "Subtitle"}],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_title_id = response_data[0]["id"]
 

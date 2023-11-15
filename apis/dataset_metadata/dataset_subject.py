@@ -36,7 +36,7 @@ class DatasetSubjectResource(Resource):
         """Get dataset subject"""
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_subject_ = dataset_.dataset_subject
-        return [d.to_dict() for d in dataset_subject_]
+        return [d.to_dict() for d in dataset_subject_], 200
 
     @api.doc("update subject")
     @api.response(200, "Success")
@@ -92,7 +92,7 @@ class DatasetSubjectResource(Resource):
                 model.db.session.add(dataset_subject_)
                 list_of_elements.append(dataset_subject_.to_dict())
         model.db.session.commit()
-        return list_of_elements
+        return list_of_elements, 201
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/subject/<subject_id>")
