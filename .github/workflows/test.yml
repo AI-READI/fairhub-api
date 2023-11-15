@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8"]
+        python-version: ["3.10"]
     env:
       # These are simulated secrets for test workflow only.
       FAIRHUB_DATABASE_URL: postgresql://admin:root@localhost:5432/fairhub_local

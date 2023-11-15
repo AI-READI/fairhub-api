@@ -32,21 +32,21 @@ jobs:
         with:
           ref: staging
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          check-name: 'Format with Black'
+          check-name: 'Run formatter'
       
       - name: Wait for linting to pass
         uses: lewagon/wait-on-check-action@v1.3.1
         with:
           ref: staging
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          check-name: 'Lint with pylint'
+          check-name: 'Run linters (3.10)'
 
       - name: Wait for tests to pass
         uses: lewagon/wait-on-check-action@v1.3.1
         with:
           ref: staging
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          check-name: 'Run pytest (with capture)'
+          check-name: 'Run tests (3.10)'
 
       - name: Login to Azure Container Registry
         uses: azure/docker-login@v1
