@@ -72,7 +72,7 @@ def test_put_dataset_access_metadata(clients):
             "description": "admin description",
             "url": "google.com",
             "url_last_checked": 123,
-        }
+        },
     )
 
     print(admin_response.status_code)
@@ -91,7 +91,7 @@ def test_put_dataset_access_metadata(clients):
             "description": "editor description",
             "url": "google.com",
             "url_last_checked": 123,
-        }
+        },
     )
 
     print(editor_response.status_code)
@@ -110,7 +110,7 @@ def test_put_dataset_access_metadata(clients):
             "description": "viewer description",
             "url": "google.com",
             "url_last_checked": 123,
-        }
+        },
     )
 
     print(viewer_response.status_code)
@@ -188,7 +188,7 @@ def test_post_alternative_identifier(clients):
                 "identifier": "admin test",
                 "type": "ARK",
             }
-        ]
+        ],
     )
     editor_response = _editor_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier",
@@ -197,7 +197,7 @@ def test_post_alternative_identifier(clients):
                 "identifier": "editor test",
                 "type": "ARK",
             }
-        ]
+        ],
     )
     viewer_response = _viewer_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier",
@@ -206,7 +206,7 @@ def test_post_alternative_identifier(clients):
                 "identifier": "viewer test",
                 "type": "ARK",
             }
-        ]
+        ],
     )
 
     assert admin_response.status_code == 200
@@ -340,7 +340,7 @@ def test_put_dataset_consent_metadata(clients):
             "genetic_only": True,
             "no_methods": True,
             "details": "admin details test",
-        }
+        },
     )
 
     assert admin_response.status_code == 200
@@ -359,7 +359,7 @@ def test_put_dataset_consent_metadata(clients):
             "genetic_only": True,
             "no_methods": True,
             "details": "editor details test",
-        }
+        },
     )
 
     assert editor_response.status_code == 200
@@ -378,7 +378,7 @@ def test_put_dataset_consent_metadata(clients):
             "genetic_only": True,
             "no_methods": True,
             "details": "viewer details test",
-        }
+        },
     )
 
     assert viewer_response.status_code == 403
@@ -451,9 +451,9 @@ def test_post_dataset_contributor_metadata(clients):
                         "scheme": "uh",
                         "scheme_uri": "scheme uri",
                     }
-                ]
+                ],
             }
-        ]
+        ],
     )
 
     assert admin_response.status_code == 200
@@ -479,9 +479,9 @@ def test_post_dataset_contributor_metadata(clients):
                         "scheme": "uh",
                         "scheme_uri": "scheme uri",
                     }
-                ]
+                ],
             }
-        ]
+        ],
     )
 
     assert editor_response.status_code == 200
@@ -507,9 +507,9 @@ def test_post_dataset_contributor_metadata(clients):
                         "scheme": "uh",
                         "scheme_uri": "scheme uri",
                     }
-                ]
+                ],
             }
-        ]
+        ],
     )
 
     assert viewer_response.status_code == 403
