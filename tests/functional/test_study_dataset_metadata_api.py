@@ -529,8 +529,20 @@ def test_get_dataset_contributor_metadata(clients):
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor"
     )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor"
+    )
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
 
 
 def test_delete_dataset_contributor_metadata(clients):
@@ -544,12 +556,31 @@ def test_delete_dataset_contributor_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     contributor_id = pytest.global_dataset_contributor_id
+    admin_contributor_id = pytest.global_dataset_contributor_id_admin
+    editor_contributor_id = pytest.global_dataset_contributor_id_editor
+
+    # Verify Viewer cannot delete
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor/{contributor_id}"
+    )
+
+    assert viewer_response.status_code == 403
 
     response = _logged_in_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor/{contributor_id}"
     )
+    # pylint: disable=line-too-long
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor/{admin_contributor_id}"
+    )
+    # pylint: disable=line-too-long
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor/{editor_contributor_id}"
+    )
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
 
 
 # ------------------- CREATOR METADATA ------------------- #
