@@ -116,7 +116,7 @@ survey_instrument_map = {
 redcapTransformConfig = {
     "reports": [
         (
-            "participant_values",
+            "participant-value",
             {"report_id": 242544},
             [
                 ("remap_values_by_columns", {"columns": data_columns}),
@@ -125,7 +125,7 @@ redcapTransformConfig = {
             ],
         ),
         (
-            "instrument_statuses",
+            "instrument-status",
             {"report_id": 251954},
             [
                 (
@@ -137,7 +137,7 @@ redcapTransformConfig = {
             ],
         ),
         (
-            "repeat_instruments",
+            "repeat_instrument",
             {"report_id": 259920},
             [
                 ("drop_rows", {"columns": repeat_survey_columns}),
@@ -153,11 +153,11 @@ redcapTransformConfig = {
         ),
     ],
     "merge_transformed_reports": (
-        "participant_values",
+        "participant-value",
         [
-            ("instrument_statuses", {"on": index_columns, "how": "inner"}),
+            ("instrument-status", {"on": index_columns, "how": "inner"}),
             (
-                "repeat_instruments",
+                "repeat_instrument",
                 {"on": index_columns, "how": "outer"},
             ),
         ],
