@@ -562,6 +562,42 @@ def test_put_conditions_metadata(clients):
     assert response_data[2] == "keywords string"
     assert response_data[3] == "size string"
 
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/metadata/conditions",
+        json=[
+            "true",
+            "admin-conditions string",
+            "admin-keywords string",
+            "admin-size string",
+        ],
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+
+    assert admin_response_data[0] == "true"
+    assert admin_response_data[1] == "admin-conditions string"
+    assert admin_response_data[2] == "admin-keywords string"
+    assert admin_response_data[3] == "admin-size string"
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/metadata/conditions",
+        json=[
+            "true",
+            "editor-conditions string",
+            "editor-keywords string",
+            "editor-size string",
+        ],
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+
+    assert editor_response_data[0] == "true"
+    assert editor_response_data[1] == "editor-conditions string"
+    assert editor_response_data[2] == "editor-keywords string"
+    assert editor_response_data[3] == "editor-size string"
+
 
 # ------------------- DESCRIPTION METADATA ------------------- #
 def test_get_description_metadata(clients):
