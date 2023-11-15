@@ -597,8 +597,20 @@ def test_get_dataset_creator_metadata(clients):
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/creator"
     )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator"
+    )
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
 
 
 def test_post_dataset_creator_metadata(clients):
