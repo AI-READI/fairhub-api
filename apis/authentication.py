@@ -39,6 +39,7 @@ login_model = api.model(
 
 class UnauthenticatedException(Exception):
     """Exception raised when a user is not authenticated."""
+
     pass
 
 

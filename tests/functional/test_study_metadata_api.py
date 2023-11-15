@@ -997,7 +997,6 @@ def test_put_status_metadata(_logged_in_client):
             "start_date": "2023-11-15 00:00:00",
             "start_date_type": "Actual",
             "completion_date": "2023-11-16 00:00:00",
-
             "completion_date_type": "Actual",
         },
     )
