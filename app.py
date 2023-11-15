@@ -69,6 +69,9 @@ def create_app(config_module=None):
         "https://fairhub.io",
     ]
 
+    if app.debug:
+        cors_origins.append("http://localhost:3000")
+
     # Only allow CORS origin for localhost:3000
     # and any subdomain of azurestaticapps.net/
     CORS(
@@ -206,7 +209,7 @@ def create_app(config_module=None):
 
     @app.cli.command("destroy-schema")
     def destroy_schema():
-        """Create the database schema."""
+        """destroy the database schema."""
 
         # if db is azure, then skip
         if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
@@ -223,7 +226,8 @@ def create_app(config_module=None):
         metadata.reflect(bind=engine)
         table_names = [table.name for table in metadata.tables.values()]
 
-        if not table_names:
+        # The alembic table is created by default, so we need to check for more than 1 table
+        if len(table_names) <= 1:
             with engine.begin():
                 model.db.create_all()
     return app
