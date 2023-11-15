@@ -34,7 +34,8 @@ def test_get_version_dataset_metadata(_logged_in_client):
     version_id = pytest.global_version_id  # type: ignore
 
     response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/dataset-metadata")
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/dataset-metadata"
+    )
 
     assert response.status_code == 200
 
@@ -50,7 +51,8 @@ def test_get_version_readme(_logged_in_client):
     version_id = pytest.global_version_id  # type: ignore
 
     response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/readme")
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/readme"
+    )
 
     assert response.status_code == 200
 
@@ -68,9 +70,7 @@ def test_put_version_readme(_logged_in_client):
 
     response = _logged_in_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/readme",
-        json={
-            "readme": "readme test"
-        },
+        json={"readme": "readme test"},
     )
 
     assert response.status_code == 200
@@ -109,6 +109,7 @@ def test_get_version_changelog(_logged_in_client):
     version_id = pytest.global_version_id  # type: ignore
 
     response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/changelog")
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/changelog"
+    )
 
     assert response.status_code == 200
