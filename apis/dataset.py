@@ -164,66 +164,6 @@ class VersionResource(Resource):
         return 204
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/changelog")
-class VersionDatasetChangelog(Resource):
-    @api.response(201, "Success")
-    @api.response(400, "Validation Error")
-    @api.doc("version changelog")
-    def get(self, study_id: str, dataset_id: str, version_id: str):
-        study = model.Study.query.get(study_id)
-        if not is_granted("version", study):
-            return "Access denied, you can not modify", 403
-        version = model.Version.query.filter_by(
-            id=version_id, dataset_id=dataset_id
-        ).one_or_none()
-        return {"changelog": version.changelog}
-
-    @api.response(201, "Success")
-    @api.response(400, "Validation Error")
-    @api.doc("version changelog update")
-    def put(
-        self, study_id: str, dataset_id: str, version_id: str
-    ):  # pylint: disable= unused-argument
-        study = model.Study.query.get(study_id)
-        if not is_granted("version", study):
-            return "Access denied, you can not modify", 403
-        data: typing.Union[typing.Any, dict] = request.json
-        version_ = model.Version.query.get(version_id)
-        version_.changelog = data["changelog"]
-        model.db.session.commit()
-        return 201
-
-
-@api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/readme")
-class VersionDatasetReadme(Resource):
-    @api.response(201, "Success")
-    @api.response(400, "Validation Error")
-    @api.doc("version readme")
-    def get(self, study_id: str, dataset_id: str, version_id: str):
-        study = model.Study.query.get(study_id)
-        if not is_granted("version", study):
-            return "Access denied, you can not modify", 403
-        version = model.Version.query.filter_by(
-            id=version_id, dataset_id=dataset_id
-        ).one_or_none()
-        return version.version_readme.to_dict(), 200
-
-    @api.response(201, "Success")
-    @api.response(400, "Validation Error")
-    @api.doc("version readme update")
-    def put(
-        self, study_id: str, dataset_id: str, version_id: str
-    ):  # pylint: disable= unused-argument
-        study = model.Study.query.get(study_id)
-        if not is_granted("version", study):
-            return "Access denied, you can not modify", 403
-        data = request.json
-        version_ = model.Version.query.get(version_id)
-        version_.version_readme.update(data)
-        model.db.session.commit()
-        return 201
-
-
 @api.route("/study/<study_id>/dataset/<dataset_id>/version")
 class VersionList(Resource):
     @api.response(201, "Success")
@@ -300,3 +240,63 @@ class VersionStudyMetadataResource(Resource):
             id=version_id, dataset_id=dataset_id
         ).one_or_none()
         return version.dataset.to_dict_dataset_metadata()
+
+
+@api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/changelog")
+class VersionDatasetChangelog(Resource):
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
+    @api.doc("version changelog")
+    def get(self, study_id: str, dataset_id: str, version_id: str):
+        study = model.Study.query.get(study_id)
+        if not is_granted("version", study):
+            return "Access denied, you can not modify", 403
+        version = model.Version.query.filter_by(
+            id=version_id, dataset_id=dataset_id
+        ).one_or_none()
+        return {"changelog": version.changelog}
+
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
+    @api.doc("version changelog update")
+    def put(
+        self, study_id: str, dataset_id: str, version_id: str
+    ):  # pylint: disable= unused-argument
+        study = model.Study.query.get(study_id)
+        if not is_granted("version", study):
+            return "Access denied, you can not modify", 403
+        data: typing.Union[typing.Any, dict] = request.json
+        version_ = model.Version.query.get(version_id)
+        version_.changelog = data["changelog"]
+        model.db.session.commit()
+        return version_.changelog
+
+
+@api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/readme")
+class VersionDatasetReadme(Resource):
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
+    @api.doc("version readme")
+    def get(self, study_id: str, dataset_id: str, version_id: str):
+        study = model.Study.query.get(study_id)
+        if not is_granted("version", study):
+            return "Access denied, you can not modify", 403
+        version = model.Version.query.filter_by(
+            id=version_id, dataset_id=dataset_id
+        ).one_or_none()
+        return version.version_readme.to_dict(), 200
+
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
+    @api.doc("version readme update")
+    def put(
+        self, study_id: str, dataset_id: str, version_id: str
+    ):  # pylint: disable= unused-argument
+        study = model.Study.query.get(study_id)
+        if not is_granted("version", study):
+            return "Access denied, you can not modify", 403
+        data = request.json
+        version_ = model.Version.query.get(version_id)
+        version_.version_readme.update(data)
+        model.db.session.commit()
+        return version_.version_readme.to_dict()

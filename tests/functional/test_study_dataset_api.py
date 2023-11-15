@@ -106,7 +106,7 @@ def test_post_dataset_version(_logged_in_client):
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    pytest.global_dataset_version_id = response_data["id"]
+    pytest.global_version_id = response_data["id"]
 
     assert response_data["title"] == "Dataset Version 1.0"
     assert response_data["published"] is False
@@ -139,7 +139,7 @@ def test_get_dataset_version(_logged_in_client):
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
-    version_id = pytest.global_dataset_version_id
+    version_id = pytest.global_version_id
 
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}",
@@ -157,7 +157,7 @@ def test_put_dataset_version(_logged_in_client):
     """
     # study_id = pytest.global_study_id["id"]
     # dataset_id = pytest.global_dataset_id
-    # version_id = pytest.global_dataset_version_id
+    # version_id = pytest.global_version_id
 
     # response = _logged_in_client.put(
     #     f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}",
