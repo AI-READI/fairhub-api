@@ -70,7 +70,9 @@ class ModuleTransform(object):
             pass
 
         # Normalize Transforms to List Type, Check Validity, and Warn on Missing Attributes
-        self.transformList = self.transforms if type(self.transforms) == list else [self.transforms]
+        self.transformList = (
+            self.transforms if type(self.transforms) == list else [self.transforms]
+        )
         for transform in enumerate(self.transformList):
             self.valid = True if self._transformIsValid(transform) else False
         if self.strict and not self.valid:
@@ -116,7 +118,7 @@ class ModuleTransform(object):
         name: str,
         record: Dict[str, Any],
         key: str,
-        accessors: Dict[str, Dict[str, str|Callable]],
+        accessors: Dict[str, Dict[str, str | Callable]],
     ) -> Any:
         """
         Element-wise type setting method. If value of
@@ -141,13 +143,15 @@ class ModuleTransform(object):
                 # Accessor Name
                 pvalue = record[accessor["field"]]
                 if "remap" in accessor and accessor["remap"] is not None:
-                    pvalue = accessor["remap"]({
-                        "name": name,
-                        "record": record,
-                        "value": pvalue,
-                        "key": key,
-                        "accessors": accessors,
-                    })
+                    pvalue = accessor["remap"](
+                        {
+                            "name": name,
+                            "record": record,
+                            "value": pvalue,
+                            "key": key,
+                            "accessors": accessors,
+                        }
+                    )
                 if pvalue != accessor["missing_value"]:
                     try:
                         pvalue = ptype(pvalue)
@@ -177,12 +181,14 @@ class ModuleTransform(object):
         One transform for one VType.
         """
         self.transformed = []
-        transform = self.transformList.pop() # simple transforms have only one transform object
+        transform = (
+            self.transformList.pop()
+        )  # simple transforms have only one transform object
         name, vtype, methods, accessors = (
             transform["name"],
             getattr(vtypes, transform["vtype"])(),
             transform["methods"],
-            transform["accessors"]
+            transform["accessors"],
         )
         if vtype.isvalid(df, accessors):
             temp = df[
@@ -231,14 +237,18 @@ class ModuleTransform(object):
                 transform["name"],
                 getattr(vtypes, transform["vtype"])(),
                 transform["methods"],
-                transform["accessors"]
+                transform["accessors"],
             )
             if vtype.isvalid(df, accessors):
                 temp = df[
                     list(set(accessor["field"] for key, accessor in accessors.items()))
                 ]
                 for method in methods:
-                    groups, value, func = method["groups"], method["value"], method["func"]
+                    groups, value, func = (
+                        method["groups"],
+                        method["value"],
+                        method["func"],
+                    )
                     grouped = temp.groupby(groups, as_index=False)
                     temp = getattr(grouped, func)()
                 transformed = temp
@@ -280,14 +290,18 @@ class ModuleTransform(object):
                 transform["name"],
                 getattr(vtypes, transform["vtype"])(),
                 transform["methods"],
-                transform["accessors"]
+                transform["accessors"],
             )
             if vtype.isvalid(df, accessors):
                 temp = df[
                     list(set(accessor["field"] for key, accessor in accessors.items()))
                 ]
                 for method in methods:
-                    groups, value, func = method["groups"], method["value"], method["func"]
+                    groups, value, func = (
+                        method["groups"],
+                        method["value"],
+                        method["func"],
+                    )
                     grouped = temp.groupby(groups, as_index=False)
                     temp = getattr(grouped, func)()
                 transformed = temp

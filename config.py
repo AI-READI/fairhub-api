@@ -10,9 +10,11 @@ LOCAL_ENV_FILE = env_path.exists()
 # Load environment variables from .env
 config = dotenv_values(".env")
 
+
 def get_env(key):
     """Return environment variable from .env or native environment."""
     return config.get(key) if LOCAL_ENV_FILE else environ.get(key)
+
 
 FLASK_APP = get_env("FLASK_APP")
 FLASK_DEBUG = get_env("FLASK_DEBUG")

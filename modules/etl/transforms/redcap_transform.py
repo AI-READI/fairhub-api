@@ -273,9 +273,7 @@ class RedcapTransform(object):
         return df
 
     @classmethod
-    def drop_columns(
-        self, df: pd.DataFrame, columns: List[str]
-    ) -> pd.DataFrame:
+    def drop_columns(self, df: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
         """
         Drop columns from pd.DataFrame.
         """
@@ -298,9 +296,7 @@ class RedcapTransform(object):
         return df
 
     @classmethod
-    def keep_columns(
-        self, df: pd.DataFrame, columns: List[str]
-    ) -> pd.DataFrame:
+    def keep_columns(self, df: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
         """
         Keep only selected columns in pd.DataFrame.
         """
@@ -634,9 +630,7 @@ class RedcapTransform(object):
         return resolved_columns
 
     #  Extract REDCap Type Metadata
-    def _get_redcap_type_metadata(
-        self, df: pd.DataFrame
-    ) -> List[Dict[str, Any]]:
+    def _get_redcap_type_metadata(self, df: pd.DataFrame) -> List[Dict[str, Any]]:
         """
         Extracts REDCap field name, type, and options (the
         metadata) for each column in the target pd.DataFrame
