@@ -205,7 +205,13 @@ def create_app(config_module=None):
     @app.cli.command("destroy-schema")
     def destroy_schema():
         """Create the database schema."""
+        
+        # if db is azure, then skip
+        if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
+            return
+        
         engine = model.db.session.get_bind()
+        
         with engine.begin():
             model.db.drop_all()
 
