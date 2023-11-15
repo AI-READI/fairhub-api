@@ -385,8 +385,14 @@ def test_get_cc_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
 
     response = _logged_in_client.get(f"/study/{study_id}/metadata/central-contact")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/central-contact")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/central-contact")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/central-contact")
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
     response_data = json.loads(response.data)
 
     assert response_data[0]["name"] == "central-contact"
@@ -409,12 +415,26 @@ def test_delete_cc_metadata(clients):
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     central_contact_id = pytest.global_cc_id
+    admin_cc_id = pytest.global_admin_cc_id_admin
+    editor_cc_id = pytest.global_editor_cc_id_editor
 
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/metadata/central-contact/{central_contact_id}"
+    )
     response = _logged_in_client.delete(
         f"/study/{study_id}/metadata/central-contact/{central_contact_id}"
     )
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/metadata/central-contact/{admin_cc_id}"
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/metadata/central-contact/{editor_cc_id}"
+    )
 
+    assert viewer_response.status_code == 403
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
 
 
 #  ------------------- COLLABORATORS METADATA ------------------- #
