@@ -13,9 +13,9 @@ import pandas as pd
 
 
 class Mixed(VType):
-    def __init__(self: object) -> None:
+    def __init__(self) -> None:
         raise NotImplementedError
-        super().__init__(
+        super(Mixed, self).__init__(
             "Mixed",
             [
                 SingleCategorical,
@@ -33,7 +33,7 @@ class Mixed(VType):
         )
 
     def isvalid(
-        self: object, dfs: pd.DataFrame, accessorsList: List[Dict[str, Dict[str, str]]]
+        self, dfs: pd.DataFrame, accessorsList: List[Dict[str, Dict[str, str]]]
     ) -> bool:
         """
         Extends the VType.isvalid method to operate on a list

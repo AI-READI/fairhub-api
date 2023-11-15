@@ -308,6 +308,9 @@ class RedcapProjectDashboard(Resource):
                 f"dashboard dashboard_modules is required to connect a dashboard: {data['dashboard_name']}",
                 400,
             )
+        # Clear Redis Cache
+        # TODO: We want to clear the cache by dashboard_id, not the whole cache!
+        cache.clear()
         update_redcap_project_dashboard = model.StudyRedcapProjectDashboard.query.get(
             data["dashboard_id"]
         )

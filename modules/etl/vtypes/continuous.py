@@ -2,8 +2,8 @@ from .vtype import VType
 
 
 class SingleContinuous(VType):
-    def __init__(self: object) -> None:
-        super().__init__(
+    def __init__(self) -> None:
+        super(SingleContinuous, self).__init__(
             "SingleContinuous",
             [("filterby", str), ("group", str), ("color", str), ("x", float)],
             float,
@@ -11,8 +11,8 @@ class SingleContinuous(VType):
 
 
 class DoubleContinuous(VType):
-    def __init__(self: object) -> None:
-        super().__init__(
+    def __init__(self) -> None:
+        super(DoubleContinuous, self).__init__(
             "DoubleContinuous",
             [
                 ("filterby", str),

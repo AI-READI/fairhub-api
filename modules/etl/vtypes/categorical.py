@@ -2,8 +2,8 @@ from .vtype import VType
 
 
 class SingleCategorical(VType):
-    def __init__(self: object) -> None:
-        super().__init__(
+    def __init__(self) -> None:
+        super(SingleCategorical, self).__init__(
             "SingleCategorical",
             [
                 ("filterby", str),
@@ -16,8 +16,8 @@ class SingleCategorical(VType):
 
 
 class DoubleCategorical(VType):
-    def __init__(self: object) -> None:
-        super().__init__(
+    def __init__(self) -> None:
+        super(DoubleCategorical, self).__init__(
             "DoubleCategorical",
             [
                 ("filterby", str),

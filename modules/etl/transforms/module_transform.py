@@ -60,11 +60,17 @@ class ModuleTransform(object):
             raise ValueError(
                 f"ModuleTransform instantiation missing transforms argument"
             )
+        elif (type(self.transforms) != list) and (type(self.transforms) != dict):
+            self.valid = False
+            raise ValueError(
+                f"ModuleTransform argument transforms must be a list or dict type"
+            )
+        else:
+            # Transform attribute is there and has one of the correct types (list, dict)
+            pass
 
-        # Normalize Transforms List Type, Check Validity, and Warn on Missing Attributes
-        self.transformList = (
-            self.transforms if (type(self.transforms) == list) else [self.transforms]
-        )
+        # Normalize Transforms to List Type, Check Validity, and Warn on Missing Attributes
+        self.transformList = self.transforms if type(self.transforms) == list else [self.transforms]
         for transform in enumerate(self.transformList):
             self.valid = True if self._transformIsValid(transform) else False
         if self.strict and not self.valid:
@@ -92,9 +98,9 @@ class ModuleTransform(object):
                 f"{self.key}:Transform at index {index} in transforms list missing vtype property"
             )
             valid = False
-        if "method" not in transform:
+        if "methods" not in transform:
             self.logger.error(
-                f"{self.key}:Transform at index {index} in transforms list missing method property"
+                f"{self.key}:Transform at index {index} in transforms list missing methods property"
             )
             valid = False
         if "accessors" not in transform:
@@ -110,7 +116,7 @@ class ModuleTransform(object):
         name: str,
         record: Dict[str, Any],
         key: str,
-        accessors: List[Dict[str, Dict[str, str | Callable]]],
+        accessors: Dict[str, Dict[str, str|Callable]],
     ) -> Any:
         """
         Element-wise type setting method. If value of
@@ -118,6 +124,7 @@ class ModuleTransform(object):
         value as the type defined for property in the
         vtype.
         """
+        print(accessors, "\n")
         accessor = accessors[key]
         for pname, _ptype in vtype.props:
             if pname == key:
@@ -169,27 +176,27 @@ class ModuleTransform(object):
 
         One transform for one VType.
         """
-        transform = self.transformList.pop()
-        name, _vtype, method, accessors = (
-            transform["name"],
-            transform["vtype"],
-            transform["method"],
-            transform["accessors"],
-        )
-        vtype = getattr(vtypes, _vtype)()
-
         self.transformed = []
+        transform = self.transformList.pop() # simple transforms have only one transform object
+        name, vtype, methods, accessors = (
+            transform["name"],
+            getattr(vtypes, transform["vtype"])(),
+            transform["methods"],
+            transform["accessors"]
+        )
         if vtype.isvalid(df, accessors):
             temp = df[
                 list(set(accessor["field"] for key, accessor in accessors.items()))
             ]
-            groups, value, func = method["groups"], method["value"], method["func"]
-            grouped = temp.groupby(groups, as_index=False)
-            transformed = getattr(grouped, func)()
+            for method in methods:
+                groups, value, func = method["groups"], method["value"], method["func"]
+                grouped = temp.groupby(groups, as_index=False)
+                temp = getattr(grouped, func)()
+            transformed = temp
 
             for record in transformed.to_dict("records"):
                 record = {
-                    key: self._setValueType(vtype, name, record, key, accessor)
+                    key: self._setValueType(vtype, name, record, key, accessors)
                     for key, accessor in accessors.items()
                 }
                 record = {"name": name} | record
@@ -220,22 +227,23 @@ class ModuleTransform(object):
         self.transformed = []
 
         for transform in self.transformList:
-            name, vtype, method, accessors = (
+            name, vtype, methods, accessors = (
                 transform["name"],
                 getattr(vtypes, transform["vtype"])(),
-                transform["method"],
+                transform["methods"],
                 transform["accessors"]
             )
             if vtype.isvalid(df, accessors):
                 temp = df[
                     list(set(accessor["field"] for key, accessor in accessors.items()))
                 ]
-                groups, value, func = method["groups"], method["value"], method["func"]
-                grouped = temp.groupby(groups, as_index=False)
-                transformed = getattr(grouped, func)()
+                for method in methods:
+                    groups, value, func = method["groups"], method["value"], method["func"]
+                    grouped = temp.groupby(groups, as_index=False)
+                    temp = getattr(grouped, func)()
+                transformed = temp
 
                 for record in transformed.to_dict("records"):
-                    print(name, record, accessors, "\n")
                     record = {
                         key: self._setValueType(vtype, name, record, key, accessors)
                         for key, accessor in accessors.items()
@@ -268,24 +276,26 @@ class ModuleTransform(object):
         self.transformed = {}
 
         for transform in self.transformList:
-            name, vtype, method, accessors = (
+            name, vtype, methods, accessors = (
                 transform["name"],
                 getattr(vtypes, transform["vtype"])(),
-                transform["method"],
+                transform["methods"],
                 transform["accessors"]
             )
             if vtype.isvalid(df, accessors):
                 temp = df[
                     list(set(accessor["field"] for key, accessor in accessors.items()))
                 ]
-                groups, value, func = method["groups"], method["value"], method["func"]
-                grouped = temp.groupby(groups, as_index=False)
-                transformed = getattr(grouped, func)()
+                for method in methods:
+                    groups, value, func = method["groups"], method["value"], method["func"]
+                    grouped = temp.groupby(groups, as_index=False)
+                    temp = getattr(grouped, func)()
+                transformed = temp
 
                 subtransform = []
                 for record in transformed.to_dict("records"):
                     record = {
-                        key: self._setValueType(vtype, name, record, key, accessor)
+                        key: self._setValueType(vtype, name, record, key, accessors)
                         for key, accessor in accessors.items()
                     }
                     record = {"name": name} | record

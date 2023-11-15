@@ -12,9 +12,9 @@ import pandas as pd
 
 
 class Compound(VType):
-    def __init__(self: object) -> None:
+    def __init__(self) -> None:
         raise NotImplementedError
-        super().__init__(
+        super(Compound, self).__init__(
             "Compound",
             [
                 SingleCategorical,
@@ -31,13 +31,14 @@ class Compound(VType):
         )
 
     def isvalid(
-        self: object, dfs: pd.DataFrame, accessorsList: List[Dict[str, Dict[str, str]]]
+        self, dfs: pd.DataFrame, accessors: List[Dict[str, Dict[str, str]]]
     ) -> bool:
         """
         Extends the VType.isvalid method to operate on a list
         of pd.DataFrames and accessors.
         """
         valid = True
+        accessorsList = [accessors]
         for accessors in accessorsList:
             if not super(Compound, self).isvalid(df, accessors):
                 self.validation_errors.append(

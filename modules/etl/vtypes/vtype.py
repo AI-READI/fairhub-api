@@ -5,7 +5,7 @@ import pandas as pd
 
 class VType(object):
     def __init__(
-        self: object,
+        self,
         name: str,
         props: List[Tuple[str, Callable]],
         missing_value: Callable,

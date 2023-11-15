@@ -4,8 +4,8 @@ from datetime import datetime
 
 
 class SingleTimeseries(VType):
-    def __init__(self: object) -> None:
-        super().__init__(
+    def __init__(self) -> None:
+        super(SingleTimeseries, self).__init__(
             "SingleTimeseries",
             [("filterby", str), ("subgroup", str), ("color", str), ("datetime", datetime)],
             pd._libs.tslibs.nattype.NaTType,
@@ -13,8 +13,8 @@ class SingleTimeseries(VType):
 
 
 class DoubleDiscreteTimeseries(VType):
-    def __init__(self: object) -> None:
-        super().__init__(
+    def __init__(self) -> None:
+        super(DoubleDiscreteTimeseries, self).__init__(
             "DoubleDiscreteTimeseries",
             [
                 ("filterby", str),
@@ -28,8 +28,8 @@ class DoubleDiscreteTimeseries(VType):
 
 
 class DoubleContinuousTimeseries(VType):
-    def __init__(self: object) -> None:
-        super().__init__(
+    def __init__(self) -> None:
+        super(DoubleContinuousTimeseries, self).__init__(
             "DoubleContinuousTimeseries",
             [
                 ("filterby", str),
