@@ -643,6 +643,48 @@ def test_put_description_metadata(clients):
     assert response_data["brief_summary"] == "brief_summary"
     assert response_data["detailed_description"] == "detailed_description"
 
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/metadata/description",
+        json={
+            "brief_summary": "admin-brief_summary",
+            "detailed_description": "admin-detailed_description",
+        },
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+
+    assert admin_response_data["brief_summary"] == "admin-brief_summary"
+    assert admin_response_data["detailed_description"] == "admin-detailed_description"
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/metadata/description",
+        json={
+            "brief_summary": "editor-brief_summary",
+            "detailed_description": "editor-detailed_description",
+        },
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+
+    assert editor_response_data["brief_summary"] == "editor-brief_summary"
+    assert editor_response_data["detailed_description"] == "editor-detailed_description"
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/metadata/description",
+        json={
+            "brief_summary": "viewer-brief_summary",
+            "detailed_description": "viewer-detailed_description",
+        },
+    )
+
+    assert viewer_response.status_code == 200
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert viewer_response_data["brief_summary"] == "viewer-brief_summary"
+    assert viewer_response_data["detailed_description"] == "viewer-detailed_description"
+
 
 # ------------------- DESIGN METADATA ------------------- #
 def test_get_design_metadata(clients):
