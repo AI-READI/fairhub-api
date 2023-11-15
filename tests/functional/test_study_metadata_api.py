@@ -128,10 +128,23 @@ def test_delete_arm_metadata(clients):
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     arm_id = pytest.global_arm_id
-
+    admin_arm_id = pytest.global_admin_arm_id_admin
+    editor_arm_id = pytest.global_editor_arm_id_editor
+    
+    # Verify viewer cannot delete arm
+    viewer_response = _viewer_client.delete(f"/study/{study_id}/metadata/arm/{arm_id}")
     response = _logged_in_client.delete(f"/study/{study_id}/metadata/arm/{arm_id}")
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/metadata/arm/{admin_arm_id}"
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/metadata/arm/{editor_arm_id}"
+    )
 
+    assert viewer_response.status_code == 403
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
 
 
 # ------------------- IPD METADATA ------------------- #
