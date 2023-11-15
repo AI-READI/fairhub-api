@@ -722,7 +722,6 @@ def test_put_dataset_record_keys_metadata(_logged_in_client):
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
-
     assert response_data["type"] == "Record Type"
     assert response_data["details"] == "Details for Record Keys"
 

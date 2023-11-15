@@ -18,7 +18,6 @@ os.environ["FLASK_ENV"] = "testing"
 # Set global variable for study ID
 # Study variables use for testing
 pytest.global_study_id = {}
-pytest.global_version_id = ""
 pytest.global_arm_id = ""
 pytest.global_available_ipd_id = ""
 pytest.global_cc_id = ""
@@ -31,7 +30,7 @@ pytest.global_reference_id = ""
 
 # Dataset variables use for testing
 pytest.global_dataset_id = ""
-pytest.global_dataset_version_id = ""
+
 pytest.global_alternative_identifier_id = ""
 pytest.global_dataset_contributor_id = ""
 pytest.global_dataset_creator_id = ""
@@ -46,6 +45,8 @@ pytest.global_dataset_related_item_title_id = ""
 pytest.global_dataset_rights_id = ""
 pytest.global_dataset_subject_id = ""
 pytest.global_dataset_title_id = ""
+
+pytest.global_version_id = ""
 
 
 # Create the flask app for testing
@@ -85,7 +86,7 @@ def _create_user(_test_client):
             "/auth/signup",
             json={
                 "email_address": "test@fairhub.io",
-                "password": "Testingyeshello11!",
+                "password": "asdkj45@ksdSA",
                 "code": "7654321",
             },
         )
@@ -102,7 +103,7 @@ def _logged_in_client(_test_client):
             "/auth/login",
             json={
                 "email_address": "test@fairhub.io",
-                "password": "Testingyeshello11!",
+                "password": "asdkj45@ksdSA",
             },
         )
 
