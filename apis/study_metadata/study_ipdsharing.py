@@ -37,7 +37,7 @@ class StudyIpdsharingResource(Resource):
         """Get study ipdsharing metadata"""
         study_ = model.Study.query.get(study_id)
 
-        return study_.study_ipdsharing.to_dict()
+        return study_.study_ipdsharing.to_dict(), 200
 
     def put(self, study_id: int):
         """Create study ipdsharing metadata"""
@@ -100,4 +100,4 @@ class StudyIpdsharingResource(Resource):
             return "Access denied, you can not delete study", 403
         study_.study_ipdsharing.update(request.json)
         model.db.session.commit()
-        return study_.study_ipdsharing.to_dict()
+        return study_.study_ipdsharing.to_dict(), 200

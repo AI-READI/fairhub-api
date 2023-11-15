@@ -26,7 +26,7 @@ def test_post_arm_metadata(_logged_in_client):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_arm_id = response_data["arms"][0]["id"]
 
@@ -96,7 +96,7 @@ def test_post_available_ipd_metadata(_logged_in_client):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_available_ipd_id = response_data[0]["id"]
 
@@ -158,7 +158,7 @@ def test_post_cc_metadata(_logged_in_client):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_cc_id = response_data[0]["id"]
 
@@ -496,7 +496,7 @@ def test_post_identification_metadata(_logged_in_client):
         },
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_identification_id = response_data["secondary"][0]["id"]
 
@@ -561,7 +561,7 @@ def test_post_intervention_metadata(_logged_in_client):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_intervention_id = response_data[0]["id"]
 
@@ -647,7 +647,7 @@ def test_post_link_metadata(_logged_in_client):
         json=[{"url": "google.com", "title": "google link"}],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_link_id = response_data[0]["id"]
 
@@ -705,7 +705,7 @@ def test_post_location_metadata(_logged_in_client):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_location_id = response_data[0]["id"]
 
@@ -802,7 +802,7 @@ def test_post_overall_official_metadata(_logged_in_client):
         json=[{"name": "test", "affiliation": "aff", "role": "Study Chair"}],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_overall_official_id = response_data[0]["id"]
 
@@ -894,7 +894,7 @@ def test_post_reference_metadata(_logged_in_client):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_reference_id = response_data[0]["id"]
 

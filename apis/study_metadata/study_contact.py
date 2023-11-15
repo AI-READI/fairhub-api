@@ -42,7 +42,7 @@ class StudyContactResource(Resource):
 
         sorted_study_contact = sorted(study_contact_, key=lambda x: x.created_at)
 
-        return [s.to_dict() for s in sorted_study_contact if s.central_contact]
+        return [s.to_dict() for s in sorted_study_contact if s.central_contact], 200
 
     def post(self, study_id: int):
         """Create study contact metadata"""
@@ -119,7 +119,7 @@ class StudyContactResource(Resource):
 
         model.db.session.commit()
 
-        return list_of_elements
+        return list_of_elements, 201
 
     @api.route("/study/<study_id>/metadata/central-contact/<central_contact_id>")
     class StudyContactUpdate(Resource):
@@ -135,4 +135,4 @@ class StudyContactResource(Resource):
             model.db.session.delete(study_contact_)
             model.db.session.commit()
 
-            return study_contact_.to_dict()
+            return 204

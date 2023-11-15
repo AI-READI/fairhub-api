@@ -42,7 +42,7 @@ class StudyInterventionResource(Resource):
             study_intervention_, key=lambda x: x.created_at
         )
 
-        return [s.to_dict() for s in sorted_study_intervention]
+        return [s.to_dict() for s in sorted_study_intervention], 200
 
     def post(self, study_id: int):
         """Create study intervention metadata"""
@@ -110,7 +110,7 @@ class StudyInterventionResource(Resource):
             list_of_elements.append(study_intervention_.to_dict())
         model.db.session.commit()
 
-        return list_of_elements
+        return list_of_elements, 201
 
     @api.route("/study/<study_id>/metadata/intervention/<intervention_id>")
     class StudyInterventionUpdate(Resource):

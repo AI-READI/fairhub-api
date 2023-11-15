@@ -39,7 +39,7 @@ class StudyReferenceResource(Resource):
 
         sorted_study_reference = sorted(study_reference_, key=lambda x: x.created_at)
 
-        return [s.to_dict() for s in sorted_study_reference]
+        return [s.to_dict() for s in sorted_study_reference], 200
 
     def post(self, study_id: int):
         """Create study reference metadata"""
@@ -80,7 +80,7 @@ class StudyReferenceResource(Resource):
             list_of_elements.append(study_reference_.to_dict())
         model.db.session.commit()
 
-        return list_of_elements
+        return list_of_elements, 201
 
     @api.route("/study/<study_id>/metadata/reference/<reference_id>")
     class StudyReferenceUpdate(Resource):

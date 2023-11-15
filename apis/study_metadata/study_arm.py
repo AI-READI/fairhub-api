@@ -43,7 +43,7 @@ class StudyArmResource(Resource):
 
         arm = model.Arm(study_)
 
-        return arm.to_dict()
+        return arm.to_dict(), 200
 
     def post(self, study_id):
         """Create study arm metadata"""
@@ -91,7 +91,7 @@ class StudyArmResource(Resource):
 
         arms = model.Arm(study_obj)
 
-        return arms.to_dict()
+        return arms.to_dict(), 201
 
     # todo delete
     @api.route("/study/<study_id>/metadata/arm/<arm_id>")
