@@ -765,6 +765,130 @@ def test_put_design_metadata(clients):
     assert response_data["target_duration"] == "rewrwe"
     assert response_data["number_groups_cohorts"] == 1
 
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/metadata/design",
+        json={
+            "design_allocation": "admin-dfasdfasd",
+            "study_type": "Interventional",
+            "design_intervention_model": "Treatment",
+            "design_intervention_model_description": "dfadf",
+            "design_primary_purpose": "Parallel Assignment",
+            "design_masking": "Double",
+            "design_masking_description": "tewsfdasf",
+            "design_who_masked_list": ["Participant", "Care Provider"],
+            "phase_list": ["N/A"],
+            "enrollment_count": 3,
+            "enrollment_type": "Actual",
+            "number_arms": 2,
+            "design_observational_model_list": ["Cohort", "Case-Control"],
+            "design_time_perspective_list": ["Other"],
+            "bio_spec_retention": "None Retained",
+            "bio_spec_description": "dfasdf",
+            "target_duration": "rewrwe",
+            "number_groups_cohorts": 1,
+        },
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+
+    assert admin_response_data["design_allocation"] == "admin-dfasdfasd"
+    assert admin_response_data["study_type"] == "Interventional"
+    assert admin_response_data["design_intervention_model"] == "Treatment"
+    assert admin_response_data["design_intervention_model_description"] == "dfadf"
+    assert admin_response_data["design_primary_purpose"] == "Parallel Assignment"
+    assert admin_response_data["design_masking"] == "Double"
+    assert admin_response_data["design_masking_description"] == "tewsfdasf"
+    assert admin_response_data["design_who_masked_list"] == ["Participant", "Care Provider"]
+    assert admin_response_data["phase_list"] == ["N/A"]
+    assert admin_response_data["enrollment_count"] == 3
+    assert admin_response_data["enrollment_type"] == "Actual"
+    assert admin_response_data["number_arms"] == 2
+    assert admin_response_data["design_observational_model_list"] == [
+        "Cohort",
+        "Case-Control",
+    ]
+    assert admin_response_data["design_time_perspective_list"] == ["Other"]
+    assert admin_response_data["bio_spec_retention"] == "None Retained"
+    assert admin_response_data["bio_spec_description"] == "dfasdf"
+    assert admin_response_data["target_duration"] == "rewrwe"
+    assert admin_response_data["number_groups_cohorts"] == 1
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/metadata/design",
+        json={
+            "design_allocation": "editor-dfasdfasd",
+            "study_type": "Interventional",
+            "design_intervention_model": "Treatment",
+            "design_intervention_model_description": "dfadf",
+            "design_primary_purpose": "Parallel Assignment",
+            "design_masking": "Double",
+            "design_masking_description": "tewsfdasf",
+            "design_who_masked_list": ["Participant", "Care Provider"],
+            "phase_list": ["N/A"],
+            "enrollment_count": 3,
+            "enrollment_type": "Actual",
+            "number_arms": 2,
+            "design_observational_model_list": ["Cohort", "Case-Control"],
+            "design_time_perspective_list": ["Other"],
+            "bio_spec_retention": "None Retained",
+            "bio_spec_description": "dfasdf",
+            "target_duration": "rewrwe",
+            "number_groups_cohorts": 1,
+        },
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+
+    assert editor_response_data["design_allocation"] == "editor-dfasdfasd"
+    assert editor_response_data["study_type"] == "Interventional"
+    assert editor_response_data["design_intervention_model"] == "Treatment"
+    assert editor_response_data["design_intervention_model_description"] == "dfadf"
+    assert editor_response_data["design_primary_purpose"] == "Parallel Assignment"
+    assert editor_response_data["design_masking"] == "Double"
+    assert editor_response_data["design_masking_description"] == "tewsfdasf"
+    assert editor_response_data["design_who_masked_list"] == ["Participant", "Care Provider"]
+    assert editor_response_data["phase_list"] == ["N/A"]
+    assert editor_response_data["enrollment_count"] == 3
+    assert editor_response_data["enrollment_type"] == "Actual"
+    assert editor_response_data["number_arms"] == 2
+    assert editor_response_data["design_observational_model_list"] == [
+        "Cohort",
+        "Case-Control",
+    ]
+    assert editor_response_data["design_time_perspective_list"] == ["Other"]
+    assert editor_response_data["bio_spec_retention"] == "None Retained"
+    assert editor_response_data["bio_spec_description"] == "dfasdf"
+    assert editor_response_data["target_duration"] == "rewrwe"
+    assert editor_response_data["number_groups_cohorts"] == 1
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/metadata/design",
+        json={
+            "design_allocation": "viewer-dfasdfasd",
+            "study_type": "Interventional",
+            "design_intervention_model": "Treatment",
+            "design_intervention_model_description": "dfadf",
+            "design_primary_purpose": "Parallel Assignment",
+            "design_masking": "Double",
+            "design_masking_description": "tewsfdasf",
+            "design_who_masked_list": ["Participant", "Care Provider"],
+            "phase_list": ["N/A"],
+            "enrollment_count": 3,
+            "enrollment_type": "Actual",
+            "number_arms": 2,
+            "design_observational_model_list": ["Cohort", "Case-Control"],
+            "design_time_perspective_list": ["Other"],
+            "bio_spec_retention": "None Retained",
+            "bio_spec_description": "dfasdf",
+            "target_duration": "rewrwe",
+            "number_groups_cohorts": 1,
+        }
+    )
+
+    assert viewer_response.status_code == 403
+
 
 # ------------------- ELIGIBILITY METADATA ------------------- #
 def test_get_eligibility_metadata(clients):
