@@ -220,6 +220,20 @@ def test_post_available_ipd_metadata(clients):
     assert editor_response_data[2]["url"] == "google.com"
     assert editor_response_data[2]["comment"] == "comment3"
 
+    viewer_response = _viewer_client.post(
+        f"/study/{study_id}/metadata/available-ipd",
+        json=[
+            {
+                "identifier": "identifier4",
+                "type": "Clinical Study Report",
+                "url": "google.com",
+                "comment": "comment4",
+            }
+        ],
+    )
+
+    assert viewer_response.status_code == 403
+
 
 def test_get_available_ipd_metadata(clients):
     """
@@ -231,8 +245,14 @@ def test_get_available_ipd_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
 
     response = _logged_in_client.get(f"/study/{study_id}/metadata/available-ipd")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/available-ipd")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/available-ipd")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/available-ipd")
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
 
 
 def test_delete_available_ipd_metadata(clients):
