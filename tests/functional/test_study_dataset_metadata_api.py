@@ -215,6 +215,8 @@ def test_post_alternative_identifier(clients):
 
     admin_response_data = json.loads(admin_response.data)
     editor_response_data = json.loads(editor_response.data)
+    pytest.global_alternative_identifier_id_admin = admin_response_data[1]["id"]
+    pytest.global_alternative_identifier_id_editor = editor_response_data[2]["id"]
 
     assert admin_response_data[1]["identifier"] == "admin test"
     assert admin_response_data[1]["type"] == "ARK"
@@ -233,12 +235,35 @@ def test_delete_alternative_identifier(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     identifier_id = pytest.global_alternative_identifier_id
+    admin_identifier_id = pytest.global_alternative_identifier_id_admin
+    editor_identifier_id = pytest.global_alternative_identifier_id_editor
+
+    # verify Viewer cannot delete
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier/{identifier_id}"
+    )
+
+    assert viewer_response.status_code == 403
 
     response = _logged_in_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier/{identifier_id}"
     )
 
     assert response.status_code == 200
+
+    # pylint: disable=line-too-long
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier/{admin_identifier_id}"
+    )
+
+    assert admin_response.status_code == 200
+
+    # pylint: disable=line-too-long
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier/{editor_identifier_id}"
+    )
+
+    assert editor_response.status_code == 200
 
 
 # ------------------- CONSENT METADATA ------------------- #

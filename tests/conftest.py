@@ -17,7 +17,7 @@ load_dotenv(".env")
 os.environ["FLASK_ENV"] = "testing"
 
 # Set global variable for study ID
-# Study variables use for testing
+# Study variables for main client
 pytest.global_study_id = {}
 pytest.global_version_id = ""
 pytest.global_arm_id = ""
@@ -29,6 +29,10 @@ pytest.global_link_id = ""
 pytest.global_location_id = ""
 pytest.global_overall_official_id = ""
 pytest.global_reference_id = ""
+
+# study variables for admin client and editor client
+pytest.global_alternative_identifier_id_admin = ""
+pytest.global_alternative_identifier_id_editor = ""
 
 # Dataset variables use for testing
 pytest.global_dataset_id = ""
