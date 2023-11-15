@@ -1,3 +1,5 @@
+# Will be deployed to https://api.fairhub.io
+
 name: (main) Build and push api image to Azure Container Registry 
 
 on:
