@@ -1,6 +1,6 @@
 # Deployed to https://staging.api.fairhub.io
 
-name: Build and push Docker image to Azure Container Registry (staging)
+name: (staging) Build and push api image to Azure Container Registry 
 
 on:
     push:
@@ -12,13 +12,16 @@ on:
         - staging
     workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     name: Build and push Docker image
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
     runs-on: ubuntu-latest
     env:
-      FAIRHUB_DATABASE_URL: ${{ secrets.FAIRHUB_STAGING_DATABASE_URL }}
       AZURE_REGISTRY_LOGIN_SERVER: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}
       AZURE_REGISTRY_USERNAME: ${{ secrets.AZURE_REGISTRY_USERNAME }}
       AZURE_REGISTRY_PASSWORD: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
