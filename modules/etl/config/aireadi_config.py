@@ -187,11 +187,13 @@ overviewTransformConfig = (
             {
                 "name": "Recruitment Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "recruitment_survey_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "recruitment_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -229,11 +231,13 @@ overviewTransformConfig = (
             {
                 "name": "FAQ Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "faq_survey_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "faq_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -271,11 +275,13 @@ overviewTransformConfig = (
             {
                 "name": "Screening Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "screening_survey_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "screening_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -313,11 +319,13 @@ overviewTransformConfig = (
             {
                 "name": "Preconsent Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "preconsent_survey_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "preconsent_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -355,11 +363,13 @@ overviewTransformConfig = (
             {
                 "name": "Consent Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "consent_survey_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "consent_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -397,11 +407,16 @@ overviewTransformConfig = (
             {
                 "name": "Staff Consent Attestation Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "staff_consent_attestation_survey_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": [
+                            "siteid",
+                            "staff_consent_attestation_survey_complete",
+                        ],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -439,11 +454,13 @@ overviewTransformConfig = (
             {
                 "name": "Demographics Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "demographics_survey_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "demographics_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -481,11 +498,13 @@ overviewTransformConfig = (
             {
                 "name": "Health Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "health_survey_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "health_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -523,11 +542,13 @@ overviewTransformConfig = (
             {
                 "name": "Substance Use Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "substance_use_survey_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "substance_use_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -565,11 +586,13 @@ overviewTransformConfig = (
             {
                 "name": "CES-D-10 Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "cesd10_survey_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "cesd10_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -607,11 +630,13 @@ overviewTransformConfig = (
             {
                 "name": "PAID-5 DM Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "paid5_dm_survey_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "paid5_dm_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -649,11 +674,13 @@ overviewTransformConfig = (
             {
                 "name": "Diabetes Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "diabetes_survey_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "diabetes_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -691,11 +718,13 @@ overviewTransformConfig = (
             {
                 "name": "Dietary Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "dietary_survey_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "dietary_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -733,11 +762,13 @@ overviewTransformConfig = (
             {
                 "name": "Opthalmic Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "ophthalmic_survey_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "ophthalmic_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -775,11 +806,13 @@ overviewTransformConfig = (
             {
                 "name": "PhenX SDOH Combined Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "px_sdoh_combined_survey_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "px_sdoh_combined_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -817,11 +850,13 @@ overviewTransformConfig = (
             {
                 "name": "PhenX Food Insecurity Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "px_food_insecurity_survey_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "px_food_insecurity_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -859,11 +894,16 @@ overviewTransformConfig = (
             {
                 "name": "PhenX Neighborhood Environment Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "px_neighborhood_environment_survey_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": [
+                            "siteid",
+                            "px_neighborhood_environment_survey_complete",
+                        ],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -901,14 +941,16 @@ overviewTransformConfig = (
             {
                 "name": "PhenX Racial and Ethnic Discrimination Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": [
-                        "siteid",
-                        "px_racial_ethnic_discrimination_survey_complete",
-                    ],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": [
+                            "siteid",
+                            "px_racial_ethnic_discrimination_survey_complete",
+                        ],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -946,11 +988,13 @@ overviewTransformConfig = (
             {
                 "name": "Decline Participation Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "decline_participation_survey_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "decline_participation_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -988,11 +1032,13 @@ overviewTransformConfig = (
             {
                 "name": "Study Enrollment Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "study_enrollment_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "study_enrollment_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -1030,11 +1076,13 @@ overviewTransformConfig = (
             {
                 "name": "Driving Record",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "driving_record_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "driving_record_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -1072,11 +1120,13 @@ overviewTransformConfig = (
             {
                 "name": "Device Distribution",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "device_distribution_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "device_distribution_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -1114,11 +1164,13 @@ overviewTransformConfig = (
             {
                 "name": "Medications Assessment",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "meds_assessment_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "meds_assessment_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -1156,11 +1208,13 @@ overviewTransformConfig = (
             {
                 "name": "Physical Assessment",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "physical_assessment_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "physical_assessment_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -1198,11 +1252,13 @@ overviewTransformConfig = (
             {
                 "name": "BCVA",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "bcva_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "bcva_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -1240,11 +1296,13 @@ overviewTransformConfig = (
             {
                 "name": "Photopic MARS",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "photopic_mars_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "photopic_mars_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -1282,11 +1340,13 @@ overviewTransformConfig = (
             {
                 "name": "Mesopic MARS",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "mesopic_mars_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "mesopic_mars_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -1324,11 +1384,13 @@ overviewTransformConfig = (
             {
                 "name": "Monofilament",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "monofilament_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "monofilament_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -1366,11 +1428,13 @@ overviewTransformConfig = (
             {
                 "name": "MOCA",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "moca_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "moca_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -1408,11 +1472,13 @@ overviewTransformConfig = (
             {
                 "name": "ECG Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "ecg_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "ecg_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -1450,11 +1516,13 @@ overviewTransformConfig = (
             {
                 "name": "Lab Results Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "lab_results_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "lab_results_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -1492,11 +1560,13 @@ overviewTransformConfig = (
             {
                 "name": "Specimen Management",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "specimen_management_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "specimen_management_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -1534,11 +1604,13 @@ overviewTransformConfig = (
             {
                 "name": "Device Return",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "device_return_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "device_return_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -1576,11 +1648,13 @@ overviewTransformConfig = (
             {
                 "name": "Disposition Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "disposition_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "disposition_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -1618,11 +1692,13 @@ overviewTransformConfig = (
             {
                 "name": "Data Management Survey",
                 "vtype": "DoubleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "data_management_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "data_management_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -1670,11 +1746,13 @@ recruitmentTransformConfig = (
         "transforms": {
             "name": "Recruitment",
             "vtype": "DoubleDiscreteTimeseries",
-            "methods": [{
-                "groups": ["siteid", "scrcmpdat", "race"],
-                "value": "scrcmpdat",
-                "func": "count",
-            }],
+            "methods": [
+                {
+                    "groups": ["siteid", "scrcmpdat", "race"],
+                    "value": "scrcmpdat",
+                    "func": "count",
+                }
+            ],
             "accessors": {
                 "filterby": {
                     "name": "Site",
@@ -1703,7 +1781,11 @@ recruitmentTransformConfig = (
                     "name": "Cumulative Count (N)",
                     "field": "scrcmpdat",
                     "missing_value": missing_value_generic,
-                    "remap": lambda x: int(datetime.fromisoformat(x["record"]["scrcmpdat"]).strftime("%Y%m%d")),
+                    "remap": lambda x: int(
+                        datetime.fromisoformat(x["record"]["scrcmpdat"]).strftime(
+                            "%Y%m%d"
+                        )
+                    ),
                     # key, accessors, name, record
                     "astype": int,
                 },
@@ -1721,11 +1803,13 @@ sexGenderTransformConfig = (
         "transforms": {
             "name": "Sex & Gender",
             "vtype": "DoubleCategorical",
-            "methods": [{
-                "groups": ["siteid", "scrsex", "genderid"],
-                "value": "record_id",
-                "func": "count",
-            }],
+            "methods": [
+                {
+                    "groups": ["siteid", "scrsex", "genderid"],
+                    "value": "record_id",
+                    "func": "count",
+                }
+            ],
             "accessors": {
                 "filterby": {
                     "name": "Site",
@@ -1770,11 +1854,13 @@ raceEthnicityTransformConfig = (
         "transforms": {
             "name": "Race & Ethnicity",
             "vtype": "DoubleCategorical",
-            "methods": [{
-                "groups": ["siteid", "race", "ethnic"],
-                "value": "record_id",
-                "func": "count",
-            }],
+            "methods": [
+                {
+                    "groups": ["siteid", "race", "ethnic"],
+                    "value": "record_id",
+                    "func": "count",
+                }
+            ],
             "accessors": {
                 "filterby": {
                     "name": "Site",
@@ -1821,11 +1907,13 @@ phenotypesTransformConfig = (
             {
                 "name": "Prediabetes",
                 "vtype": "SingleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "mhterm_predm"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "mhterm_predm"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -1836,14 +1924,18 @@ phenotypesTransformConfig = (
                     "group": {
                         "name": "Prediabetes",
                         "field": "mhterm_predm",
-                        "remap": lambda x: "Prediabetes" if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes" else "No",
+                        "remap": lambda x: "Prediabetes"
+                        if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes"
+                        else "No",
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
                     "color": {
                         "name": "Prediabetes",
                         "field": "mhterm_predm",
-                        "remap": lambda x: "Prediabetes" if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes" else "No",
+                        "remap": lambda x: "Prediabetes"
+                        if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes"
+                        else "No",
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
@@ -1858,11 +1950,13 @@ phenotypesTransformConfig = (
             {
                 "name": "Type I Diabetes",
                 "vtype": "SingleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "mhterm_dm1"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "mhterm_dm1"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -1873,14 +1967,18 @@ phenotypesTransformConfig = (
                     "group": {
                         "name": "Type I Diabetes",
                         "field": "mhterm_dm1",
-                        "remap": lambda x: "Type I Diabetes" if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes" else "No",
+                        "remap": lambda x: "Type I Diabetes"
+                        if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes"
+                        else "No",
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
                     "color": {
                         "name": "Type I Diabetes",
                         "field": "mhterm_dm1",
-                        "remap": lambda x: "Type I Diabetes" if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes" else "No",
+                        "remap": lambda x: "Type I Diabetes"
+                        if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes"
+                        else "No",
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
@@ -1895,11 +1993,13 @@ phenotypesTransformConfig = (
             {
                 "name": "Type II Diabetes",
                 "vtype": "SingleCategorical",
-                "methods": [{
-                    "groups": ["siteid", "mhterm_dm2"],
-                    "value": "record_id",
-                    "func": "count",
-                }],
+                "methods": [
+                    {
+                        "groups": ["siteid", "mhterm_dm2"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
                 "accessors": {
                     "filterby": {
                         "name": "Site",
@@ -1910,14 +2010,18 @@ phenotypesTransformConfig = (
                     "group": {
                         "name": "Type II Diabetes",
                         "field": "mhterm_dm2",
-                        "remap": lambda x: "Type II Diabetes" if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes" else "No",
+                        "remap": lambda x: "Type II Diabetes"
+                        if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes"
+                        else "No",
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
                     "color": {
                         "name": "Type II Diabetes",
                         "field": "mhterm_dm2",
-                        "remap": lambda x: "Type II Diabetes" if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes" else "No",
+                        "remap": lambda x: "Type II Diabetes"
+                        if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes"
+                        else "No",
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
@@ -1928,7 +2032,7 @@ phenotypesTransformConfig = (
                         "astype": int,
                     },
                 },
-            }
+            },
         ],
     },
 )
@@ -1941,11 +2045,13 @@ currentMedicationsTransformConfig = (
         "transforms": {
             "name": "Current Medications",
             "vtype": "SingleCategorical",
-            "methods": [{
-                "groups": ["siteid", "current_medications_complete"],
-                "value": "record_id",
-                "func": "count",
-            }],
+            "methods": [
+                {
+                    "groups": ["siteid", "current_medications_complete"],
+                    "value": "record_id",
+                    "func": "count",
+                }
+            ],
             "accessors": {
                 "filterby": {
                     "name": "Site",

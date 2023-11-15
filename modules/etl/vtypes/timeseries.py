@@ -7,7 +7,12 @@ class SingleTimeseries(VType):
     def __init__(self) -> None:
         super(SingleTimeseries, self).__init__(
             "SingleTimeseries",
-            [("filterby", str), ("subgroup", str), ("color", str), ("datetime", datetime)],
+            [
+                ("filterby", str),
+                ("subgroup", str),
+                ("color", str),
+                ("datetime", datetime),
+            ],
             pd._libs.tslibs.nattype.NaTType,
         )
 

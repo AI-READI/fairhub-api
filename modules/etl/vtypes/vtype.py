@@ -19,9 +19,7 @@ class VType(object):
     def __str__(self):
         return f"{self.__dict__}"
 
-    def isvalid(
-        self, df: pd.DataFrame, accessors: Dict[str, Dict[str, str]]
-    ) -> bool:
+    def isvalid(self, df: pd.DataFrame, accessors: Dict[str, Dict[str, str]]) -> bool:
         columns = df.columns
         for pname, ptype in self.props:
             if pname in accessors.keys():
