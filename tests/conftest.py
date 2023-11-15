@@ -33,6 +33,10 @@ pytest.global_reference_id = ""
 # study variables for admin client and editor client
 pytest.global_alternative_identifier_id_admin = ""
 pytest.global_alternative_identifier_id_editor = ""
+pytest.global_dataset_contributor_id_admin = ""
+pytest.global_dataset_contributor_id_editor = ""
+pytest.global_dataset_contributor_id_admin = ""
+pytest.global_dataset_contributor_id_editor = ""
 
 # Dataset variables use for testing
 pytest.global_dataset_id = ""
