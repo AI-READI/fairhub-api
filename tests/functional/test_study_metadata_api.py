@@ -1106,6 +1106,94 @@ def test_post_identification_metadata(clients):
     assert response_data["secondary"][0]["identifier_domain"] == "dodfasdfmain"
     assert response_data["secondary"][0]["identifier_link"] == "link"
 
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/metadata/identification",
+        json={
+            "primary": {
+                "identifier": "admin-first",
+                "identifier_type": "test",
+                "identifier_domain": "domain",
+                "identifier_link": "link",
+            },
+            "secondary": [
+                {
+                    "identifier": "test",
+                    "identifier_type": "test",
+                    "identifier_domain": "dodfasdfmain",
+                    "identifier_link": "link",
+                }
+            ],
+        },
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(response.data)
+    pytest.global_identification_id_admin = response_data["secondary"][1]["id"]
+
+    assert admin_response_data["primary"]["identifier"] == "admin-first"
+    assert admin_response_data["primary"]["identifier_type"] == "test"
+    assert admin_response_data["primary"]["identifier_domain"] == "domain"
+    assert admin_response_data["primary"]["identifier_link"] == "link"
+    assert admin_response_data["secondary"][1]["identifier"] == "test"
+    assert admin_response_data["secondary"][1]["identifier_type"] == "test"
+    assert admin_response_data["secondary"][1]["identifier_domain"] == "dodfasdfmain"
+    assert admin_response_data["secondary"][1]["identifier_link"] == "link"
+
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/metadata/identification",
+        json={
+            "primary": {
+                "identifier": "editor-first",
+                "identifier_type": "test",
+                "identifier_domain": "domain",
+                "identifier_link": "link",
+            },
+            "secondary": [
+                {
+                    "identifier": "test",
+                    "identifier_type": "test",
+                    "identifier_domain": "dodfasdfmain",
+                    "identifier_link": "link",
+                }
+            ],
+        },
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(response.data)
+    pytest.global_identification_id = response_data["secondary"][2]["id"]
+
+    assert editor_response_data["primary"]["identifier"] == "first"
+    assert editor_response_data["primary"]["identifier_type"] == "test"
+    assert editor_response_data["primary"]["identifier_domain"] == "domain"
+    assert editor_response_data["primary"]["identifier_link"] == "link"
+    assert editor_response_data["secondary"][0]["identifier"] == "test"
+    assert editor_response_data["secondary"][0]["identifier_type"] == "test"
+    assert editor_response_data["secondary"][0]["identifier_domain"] == "dodfasdfmain"
+    assert editor_response_data["secondary"][0]["identifier_link"] == "link"
+
+    viewer_response = _viewer_client.post(
+        f"/study/{study_id}/metadata/identification",
+        json={
+            "primary": {
+                "identifier": "viewer-first",
+                "identifier_type": "test",
+                "identifier_domain": "domain",
+                "identifier_link": "link",
+            },
+            "secondary": [
+                {
+                    "identifier": "test",
+                    "identifier_type": "test",
+                    "identifier_domain": "dodfasdfmain",
+                    "identifier_link": "link",
+                }
+            ],
+        },
+    )
+
+    assert viewer_response.status_code == 403
+
 
 def test_delete_identification_metadata(clients):
     """
