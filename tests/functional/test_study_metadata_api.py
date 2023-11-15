@@ -1161,7 +1161,7 @@ def test_post_identification_metadata(clients):
 
     assert editor_response.status_code == 200
     editor_response_data = json.loads(response.data)
-    pytest.global_identification_id = response_data["secondary"][2]["id"]
+    pytest.global_identification_id_editor = response_data["secondary"][2]["id"]
 
     assert editor_response_data["primary"]["identifier"] == "first"
     assert editor_response_data["primary"]["identifier_type"] == "test"
@@ -1204,12 +1204,26 @@ def test_delete_identification_metadata(clients):
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     identification_id = pytest.global_identification_id
+    admin_identification_id = pytest.global_identification_id_admin
+    editor_identification_id = pytest.global_identification_id_editor
 
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/metadata/identification/{identification_id}"
+    )
     response = _logged_in_client.delete(
         f"/study/{study_id}/metadata/identification/{identification_id}"
     )
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/metadata/identification/{admin_identification_id}"
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/metadata/identification/{editor_identification_id}"
+    )
 
+    assert viewer_response.status_code == 403
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
 
 
 # ------------------- INTERVENTION METADATA ------------------- #
