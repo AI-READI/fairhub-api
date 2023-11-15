@@ -480,6 +480,39 @@ def test_put_collaborators_metadata(clients):
 
     assert response_data[0] == "collaborator1123"
 
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/metadata/collaborators",
+        json=[
+            "admin-collaborator1123",
+        ],
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+
+    assert admin_response_data[0] == "admin-collaborator1123"
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/metadata/collaborators",
+        json=[
+            "editor-collaborator1123",
+        ],
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+
+    assert editor_response_data[0] == "editor-collaborator1123"
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/metadata/collaborators",
+        json=[
+            "viewer-collaborator1123",
+        ],
+    )
+
+    assert viewer_response.status_code == 403
+
 
 # ------------------- CONDITIONS METADATA ------------------- #
 def test_get_conditions_metadata(clients):
