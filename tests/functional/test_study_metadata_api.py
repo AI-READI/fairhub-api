@@ -322,6 +322,58 @@ def test_post_cc_metadata(clients):
     assert response_data[0]["email_address"] == "sample@gmail.com"
     assert response_data[0]["central_contact"] is True
 
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/metadata/central-contact",
+        json=[
+            {
+                "name": "admin-central-contact",
+                "affiliation": "affiliation",
+                "role": "role",
+                "phone": "808",
+                "phone_ext": "909",
+                "email_address": "sample1@gmail.com",
+            }
+        ],
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    pytest.global_admin_cc_id_admin = admin_response_data[1]["id"]
+
+    assert admin_response_data[1]["name"] == "admin-central-contact"
+    assert admin_response_data[1]["affiliation"] == "affiliation"
+    assert admin_response_data[1]["role"] is None
+    assert admin_response_data[1]["phone"] == "808"
+    assert admin_response_data[1]["phone_ext"] == "909"
+    assert admin_response_data[1]["email_address"] == "sample1@gmail.com"
+    assert admin_response_data[1]["central_contact"] is True
+
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/metadata/central-contact",
+        json=[
+            {
+                "name": "editor-central-contact",
+                "affiliation": "affiliation",
+                "role": "role",
+                "phone": "808",
+                "phone_ext": "909",
+                "email_address": "sample2@gmail.com",
+            }
+        ],
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    pytest.global_editor_cc_id_editor = editor_response_data[2]["id"]
+
+    assert editor_response_data[2]["name"] == "editor-central-contact"
+    assert editor_response_data[2]["affiliation"] == "affiliation"
+    assert editor_response_data[2]["role"] is None
+    assert editor_response_data[2]["phone"] == "808"
+    assert editor_response_data[2]["phone_ext"] == "909"
+    assert editor_response_data[2]["email_address"] == "sample2@gmail.com"
+    assert editor_response_data[2]["central_contact"] is True
+
 
 def test_get_cc_metadata(clients):
     """
