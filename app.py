@@ -62,6 +62,12 @@ def create_app(config_module=None):
     model.db.init_app(app)
     api.init_app(app)
     bcrypt.init_app(app)
+    
+    cors_origins = [
+        "https://brave-ground-.*-.*.centralus.2.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
+        "https://staging.fairhub.io",
+        "https://fairhub.io",
+    ]
 
     # Only allow CORS origin for localhost:3000
     # and any subdomain of azurestaticapps.net/
@@ -69,11 +75,7 @@ def create_app(config_module=None):
         app,
         resources={
             "/*": {
-                "origins": [
-                    "http://localhost:3000",
-                    "https:\/\/brave-ground-.*-.*.centralus.2.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
-                    "https://fairhub.io",
-                ],
+                "origins": cors_origins,
             }
         },
         allow_headers=[
