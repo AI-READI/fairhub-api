@@ -264,12 +264,26 @@ def test_delete_available_ipd_metadata(clients):
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     available_ipd_id = pytest.global_available_ipd_id
+    admin_avail_ipd = pytest.global_admin_available_ipd_id_admin
+    editor_avail_ipd = pytest.global_editor_available_ipd_id_editor
 
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/metadata/available-ipd/{available_ipd_id}"
+    )
     response = _logged_in_client.delete(
         f"/study/{study_id}/metadata/available-ipd/{available_ipd_id}"
     )
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/metadata/available-ipd/{admin_avail_ipd}"
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/metadata/available-ipd/{editor_avail_ipd}"
+    )
 
+    assert viewer_response == 403
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
 
 
 # ------------------- CENTRAL CONTACT METADATA ------------------- #
