@@ -954,6 +954,94 @@ def test_put_eligibility_metadata(clients):
     assert response_data["study_population"] == "study_population"
     assert response_data["sampling_method"] == "Probability Sample"
 
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/metadata/eligibility",
+        json={
+            "gender": "All",
+            "gender_based": "Yes",
+            "gender_description": "admin-none",
+            "minimum_age_value": 18,
+            "maximum_age_value": 61,
+            "minimum_age_unit": "1",
+            "maximum_age_unit": "2",
+            "healthy_volunteers": "Yes",
+            "inclusion_criteria": ["tests"],
+            "exclusion_criteria": ["Probability Sample"],
+            "study_population": "study_population",
+            "sampling_method": "Probability Sample",
+        }
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+
+    assert admin_response_data["gender"] == "All"
+    assert admin_response_data["gender_based"] == "Yes"
+    assert admin_response_data["gender_description"] == "admin-none"
+    assert admin_response_data["minimum_age_value"] == 18
+    assert admin_response_data["maximum_age_value"] == 61
+    assert admin_response_data["minimum_age_unit"] == "1"
+    assert admin_response_data["maximum_age_unit"] == "2"
+    assert admin_response_data["healthy_volunteers"] == "Yes"
+    assert admin_response_data["inclusion_criteria"] == ["tests"]
+    assert admin_response_data["exclusion_criteria"] == ["Probability Sample"]
+    assert admin_response_data["study_population"] == "study_population"
+    assert admin_response_data["sampling_method"] == "Probability Sample"
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/metadata/eligibility",
+        json={
+            "gender": "All",
+            "gender_based": "Yes",
+            "gender_description": "editor-none",
+            "minimum_age_value": 18,
+            "maximum_age_value": 61,
+            "minimum_age_unit": "1",
+            "maximum_age_unit": "2",
+            "healthy_volunteers": "Yes",
+            "inclusion_criteria": ["tests"],
+            "exclusion_criteria": ["Probability Sample"],
+            "study_population": "study_population",
+            "sampling_method": "Probability Sample",
+        }
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+
+    assert editor_response_data["gender"] == "All"
+    assert editor_response_data["gender_based"] == "Yes"
+    assert editor_response_data["gender_description"] == "editor-none"
+    assert editor_response_data["minimum_age_value"] == 18
+    assert editor_response_data["maximum_age_value"] == 61
+    assert editor_response_data["minimum_age_unit"] == "1"
+    assert editor_response_data["maximum_age_unit"] == "2"
+    assert editor_response_data["healthy_volunteers"] == "Yes"
+    assert editor_response_data["inclusion_criteria"] == ["tests"]
+    assert editor_response_data["exclusion_criteria"] == ["Probability Sample"]
+    assert editor_response_data["study_population"] == "study_population"
+    assert editor_response_data["sampling_method"] == "Probability Sample"
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/metadata/eligibility",
+        json={
+            "gender": "All",
+            "gender_based": "Yes",
+            "gender_description": "viewer-none",
+            "minimum_age_value": 18,
+            "maximum_age_value": 61,
+            "minimum_age_unit": "1",
+            "maximum_age_unit": "2",
+            "healthy_volunteers": "Yes",
+            "inclusion_criteria": ["tests"],
+            "exclusion_criteria": ["Probability Sample"],
+            "study_population": "study_population",
+            "sampling_method": "Probability Sample",
+        }
+    )
+
+    assert viewer_response.status_code == 403
+
 
 # ------------------- IDENTIFICATION METADATA ------------------- #
 def test_get_identification_metadata(clients):
