@@ -1825,8 +1825,14 @@ def test_get_overall_official_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
 
     response = _logged_in_client.get(f"/study/{study_id}/metadata/overall-official")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/overall-official")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/overall-official")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/overall-official")
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
 
 
 def test_post_overall_official_metadata(clients):
