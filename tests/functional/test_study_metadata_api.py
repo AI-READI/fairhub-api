@@ -1857,6 +1857,39 @@ def test_post_overall_official_metadata(clients):
     assert response_data[0]["affiliation"] == "aff"
     assert response_data[0]["role"] == "Study Chair"
 
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/metadata/overall-official",
+        json=[{"name": "admin-test", "affiliation": "admin-aff", "role": "Study Chair"}],
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    pytest.global_overall_official_id_admin = admin_response[1]["id"]
+
+    assert admin_response_data[1]["name"] == "admin-test"
+    assert admin_response_data[1]["affiliation"] == "admin-aff"
+    assert admin_response_data[1]["role"] == "Study Chair"
+
+    editor_reponse = _editor_client.post(
+        f"/study/{study_id}/metadata/overall-official"
+        json=[{"name": "editor-test", "affiliation": "editor-aff", "role": "Study Chair"}],
+    )
+
+    assert editor_response.status_code == 200
+    editor_reponse_data = json.loads(editor_response.data)
+    pytest.global_overall_official_id_editor = editor_response[2]["id"]
+
+    assert editor_response_data[2]["name"] == "editor-test"
+    assert editor_reponse_data[2]["affiliaton"] == "editor-aff"
+    assert editor_reponse_data[2]["role"] == "Study Chair"
+
+    viewer_response = _viewer_client.post(
+        f"/study/{study_id}/metadata/overall-official"
+        json=[{"name": "viewer-test", "affiliation": "viewer-aff", "role": "Study Chair"}]
+    )
+
+    assert viewer_response.status_code == 403
+
 
 def test_delete_overall_official_metadata(clients):
     """

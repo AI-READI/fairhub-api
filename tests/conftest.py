@@ -51,6 +51,8 @@ pytest.global_link_id_admin = ""
 pytest.global_link_id_editor = ""
 pytest.global_location_id_admin = ""
 pytest.global_location_id_editor = ""
+pytest.global_overall_official_id_admin = ""
+pytest.global_overall_official_id_editor = ""
 
 # Dataset variables use for testing
 pytest.global_dataset_id = ""
