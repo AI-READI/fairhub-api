@@ -1279,6 +1279,67 @@ def test_post_intervention_metadata(clients):
     assert response_data[0]["arm_group_label_list"] == ["test", "one"]
     assert response_data[0]["other_name_list"] == ["uhh", "yes"]
 
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/metadata/intervention",
+        json=[
+            {
+                "type": "Device",
+                "name": "admin-name test",
+                "description": "desc",
+                "arm_group_label_list": ["test", "one"],
+                "other_name_list": ["uhh", "yes"],
+            }
+        ],
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(response.data)
+    pytest.global_intervention_id = response_data[0]["id"]
+
+    assert admin_response_data[0]["type"] == "Device"
+    assert admin_response_data[0]["name"] == "admin-name test"
+    assert admin_response_data[0]["description"] == "desc"
+    assert admin_response_data[0]["arm_group_label_list"] == ["test", "one"]
+    assert admin_response_data[0]["other_name_list"] == ["uhh", "yes"]
+
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/metadata/intervention",
+        json=[
+            {
+                "type": "Device",
+                "name": "editor-name test",
+                "description": "desc",
+                "arm_group_label_list": ["test", "one"],
+                "other_name_list": ["uhh", "yes"],
+            }
+        ],
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(response.data)
+    pytest.global_intervention_id_editor = response_data[2]["id"]
+
+    assert editor_response_data[2]["type"] == "Device"
+    assert editor_response_data[2]["name"] == "editor-name test"
+    assert editor_response_data[2]["description"] == "desc"
+    assert editor_response_data[2]["arm_group_label_list"] == ["test", "one"]
+    assert editor_response_data[2]["other_name_list"] == ["uhh", "yes"]
+
+    viewer_response = _viewer_client.post(
+        f"/study/{study_id}/metadata/intervention",
+        json=[
+            {
+                "type": "Device",
+                "name": "viewer-name test",
+                "description": "desc",
+                "arm_group_label_list": ["test", "one"],
+                "other_name_list": ["uhh", "yes"],
+            }
+        ],
+    )
+
+    assert viewer_response.status_code == 403
+
 
 # ------------------- IPD SHARING METADATA ------------------- #
 def test_get_ipdsharing_metadata(clients):
