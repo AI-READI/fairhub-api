@@ -1680,18 +1680,32 @@ def test_delete_location_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and location ID
     WHEN the '/study/{study_id}/metadata/location/{location_id}'
-        endpoint is requested (DELETE)
+    endpoint is requested (DELETE)
     THEN check that the response is valid and deletes the location metadata
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     location_id = pytest.global_location_id
+    admin_location_id = pytest.global_location_id_admin
+    editor_location_id = pytest.global_location_id_editor
 
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/metadata/location/{location_id}"
+    )
     response = _logged_in_client.delete(
         f"/study/{study_id}/metadata/location/{location_id}"
     )
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/metadata/location/{admin_location_id}"
+    )
+    editor_reponse = _editor_client.delete(
+        f"/study/{study_id}/metadata/location/{editor_location_id}"
+    )
 
+    assert viewer_response.status_code == 403
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
 
 
 # ------------------- OTHER METADATA ------------------- #
