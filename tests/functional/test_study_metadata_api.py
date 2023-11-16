@@ -142,9 +142,9 @@ def test_delete_arm_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 # ------------------- IPD METADATA ------------------- #
@@ -192,12 +192,12 @@ def test_post_available_ipd_metadata(clients):
 
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    pytest.global_admin_available_ipd_id_admin = admin_response_data[1]["id"]
+    pytest.global_available_ipd_id_admin = admin_response_data[0]["id"]
 
-    assert admin_response_data[1]["identifier"] == "identifier2"
-    assert admin_response_data[1]["type"] == "Clinical Study Report"
-    assert admin_response_data[1]["url"] == "google.com"
-    assert admin_response_data[1]["comment"] == "comment2"
+    assert admin_response_data[0]["identifier"] == "identifier2"
+    assert admin_response_data[0]["type"] == "Clinical Study Report"
+    assert admin_response_data[0]["url"] == "google.com"
+    assert admin_response_data[0]["comment"] == "comment2"
 
     editor_response = _editor_client.post(
         f"/study/{study_id}/metadata/available-ipd",
@@ -213,12 +213,12 @@ def test_post_available_ipd_metadata(clients):
 
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    pytest.global_editor_available_ipd_id_editor = editor_response_data[2]["id"]
+    pytest.global_available_ipd_id_editor = editor_response_data[0]["id"]
 
-    assert editor_response_data[2]["identifier"] == "identifier3"
-    assert editor_response_data[2]["type"] == "Clinical Study Report"
-    assert editor_response_data[2]["url"] == "google.com"
-    assert editor_response_data[2]["comment"] == "comment3"
+    assert editor_response_data[0]["identifier"] == "identifier3"
+    assert editor_response_data[0]["type"] == "Clinical Study Report"
+    assert editor_response_data[0]["url"] == "google.com"
+    assert editor_response_data[0]["comment"] == "comment3"
 
     viewer_response = _viewer_client.post(
         f"/study/{study_id}/metadata/available-ipd",
@@ -264,8 +264,8 @@ def test_delete_available_ipd_metadata(clients):
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     available_ipd_id = pytest.global_available_ipd_id
-    admin_avail_ipd = pytest.global_admin_available_ipd_id_admin
-    editor_avail_ipd = pytest.global_editor_available_ipd_id_editor
+    admin_avail_ipd = pytest.global_available_ipd_id_admin
+    editor_avail_ipd = pytest.global_available_ipd_id_editor
 
     viewer_response = _viewer_client.delete(
         f"/study/{study_id}/metadata/available-ipd/{available_ipd_id}"
@@ -280,7 +280,7 @@ def test_delete_available_ipd_metadata(clients):
         f"/study/{study_id}/metadata/available-ipd/{editor_avail_ipd}"
     )
 
-    assert viewer_response == 403
+    assert viewer_response.status_code == 403
     assert response.status_code == 200
     assert admin_response.status_code == 200
     assert editor_response.status_code == 200
@@ -338,15 +338,15 @@ def test_post_cc_metadata(clients):
 
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    pytest.global_admin_cc_id_admin = admin_response_data[1]["id"]
+    pytest.global_admin_cc_id_admin = admin_response_data[0]["id"]
 
-    assert admin_response_data[1]["name"] == "admin-central-contact"
-    assert admin_response_data[1]["affiliation"] == "affiliation"
-    assert admin_response_data[1]["role"] is None
-    assert admin_response_data[1]["phone"] == "808"
-    assert admin_response_data[1]["phone_ext"] == "909"
-    assert admin_response_data[1]["email_address"] == "sample1@gmail.com"
-    assert admin_response_data[1]["central_contact"] is True
+    assert admin_response_data[0]["name"] == "admin-central-contact"
+    assert admin_response_data[0]["affiliation"] == "affiliation"
+    assert admin_response_data[0]["role"] is None
+    assert admin_response_data[0]["phone"] == "808"
+    assert admin_response_data[0]["phone_ext"] == "909"
+    assert admin_response_data[0]["email_address"] == "sample1@gmail.com"
+    assert admin_response_data[0]["central_contact"] is True
 
     editor_response = _editor_client.post(
         f"/study/{study_id}/metadata/central-contact",
@@ -364,15 +364,15 @@ def test_post_cc_metadata(clients):
 
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    pytest.global_editor_cc_id_editor = editor_response_data[2]["id"]
+    pytest.global_editor_cc_id_editor = editor_response_data[0]["id"]
 
-    assert editor_response_data[2]["name"] == "editor-central-contact"
-    assert editor_response_data[2]["affiliation"] == "affiliation"
-    assert editor_response_data[2]["role"] is None
-    assert editor_response_data[2]["phone"] == "808"
-    assert editor_response_data[2]["phone_ext"] == "909"
-    assert editor_response_data[2]["email_address"] == "sample2@gmail.com"
-    assert editor_response_data[2]["central_contact"] is True
+    assert editor_response_data[0]["name"] == "editor-central-contact"
+    assert editor_response_data[0]["affiliation"] == "affiliation"
+    assert editor_response_data[0]["role"] is None
+    assert editor_response_data[0]["phone"] == "808"
+    assert editor_response_data[0]["phone_ext"] == "909"
+    assert editor_response_data[0]["email_address"] == "sample2@gmail.com"
+    assert editor_response_data[0]["central_contact"] is True
 
 
 def test_get_cc_metadata(clients):
@@ -679,11 +679,7 @@ def test_put_description_metadata(clients):
         },
     )
 
-    assert viewer_response.status_code == 200
-    viewer_response_data = json.loads(viewer_response.data)
-
-    assert viewer_response_data["brief_summary"] == "viewer-brief_summary"
-    assert viewer_response_data["detailed_description"] == "viewer-detailed_description"
+    assert viewer_response.status_code == 403
 
 
 # ------------------- DESIGN METADATA ------------------- #
@@ -914,7 +910,7 @@ def test_get_eligibility_metadata(clients):
     assert response.status_code == 200
     assert admin_response.status_code == 200
     assert editor_response.status_code == 200
-    assert viewer_response.status_code == 403
+    assert viewer_response.status_code == 200
 
 
 def test_put_eligibility_metadata(clients):
@@ -1133,8 +1129,11 @@ def test_post_identification_metadata(clients):
     )
 
     assert admin_response.status_code == 200
-    admin_response_data = json.loads(response.data)
-    pytest.global_identification_id_admin = response_data["secondary"][1]["id"]
+    admin_response_data = json.loads(admin_response.data)
+    print("ASD:LKJAS:DLKJ:ALSKJD:LKASJD:LKJTRERWERWERWKLEJRKL")
+    print(admin_response_data)
+    print("ASD:LKJAS:DLKJ:ALSKJD:LKASJD:LKJTRERWERWERWKLEJRKL")
+    pytest.global_identification_id_admin = admin_response_data["secondary"][1]["id"]
 
     assert admin_response_data["primary"]["identifier"] == "admin-first"
     assert admin_response_data["primary"]["identifier_type"] == "test"
@@ -1166,8 +1165,8 @@ def test_post_identification_metadata(clients):
     )
 
     assert editor_response.status_code == 200
-    editor_response_data = json.loads(response.data)
-    pytest.global_identification_id_editor = response_data["secondary"][2]["id"]
+    editor_response_data = json.loads(editor_response.data)
+    pytest.global_identification_id_editor = editor_response_data["secondary"][2]["id"]
 
     assert editor_response_data["primary"]["identifier"] == "editor-first"
     assert editor_response_data["primary"]["identifier_type"] == "test"
@@ -1219,6 +1218,14 @@ def test_delete_identification_metadata(clients):
     response = _logged_in_client.delete(
         f"/study/{study_id}/metadata/identification/{identification_id}"
     )
+    
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/identification")
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    print("*************************************")
+    print(admin_response_data)
+    print("*************************************")
+    
     admin_response = _admin_client.delete(
         f"/study/{study_id}/metadata/identification/{admin_identification_id}"
     )
@@ -1299,7 +1306,7 @@ def test_post_intervention_metadata(clients):
     )
 
     assert admin_response.status_code == 200
-    admin_response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
     pytest.global_intervention_id = response_data[0]["id"]
 
     assert admin_response_data[0]["type"] == "Device"
@@ -1322,14 +1329,14 @@ def test_post_intervention_metadata(clients):
     )
 
     assert editor_response.status_code == 200
-    editor_response_data = json.loads(response.data)
-    pytest.global_intervention_id_editor = response_data[2]["id"]
+    editor_response_data = json.loads(editor_response.data)
+    pytest.global_intervention_id_editor = response_data[0]["id"]
 
-    assert editor_response_data[2]["type"] == "Device"
-    assert editor_response_data[2]["name"] == "editor-name test"
-    assert editor_response_data[2]["description"] == "desc"
-    assert editor_response_data[2]["arm_group_label_list"] == ["test", "one"]
-    assert editor_response_data[2]["other_name_list"] == ["uhh", "yes"]
+    assert editor_response_data[0]["type"] == "Device"
+    assert editor_response_data[0]["name"] == "editor-name test"
+    assert editor_response_data[0]["description"] == "desc"
+    assert editor_response_data[0]["arm_group_label_list"] == ["test", "one"]
+    assert editor_response_data[0]["other_name_list"] == ["uhh", "yes"]
 
     viewer_response = _viewer_client.post(
         f"/study/{study_id}/metadata/intervention",
@@ -1418,13 +1425,13 @@ def test_put_ipdsharing_metadata(clients):
     admin_response_data = json.loads(admin_response.data)
 
     assert admin_response_data["ipd_sharing"] == "Yes"
-    assert admin_response_data["ipd_sharing_description"] == "admin-yes
+    assert admin_response_data["ipd_sharing_description"] == "admin-yes"
     assert admin_response_data["ipd_sharing_info_type_list"] == [
         "Study Protocol",
         "Analytical Code",
     ]
     assert admin_response_data["ipd_sharing_time_frame"] == "uh"
-    assert admin_response_data["ipd_sharing_access_criteria"] == "Study Protocol
+    assert admin_response_data["ipd_sharing_access_criteria"] == "Study Protocol"
     assert admin_response_data["ipd_sharing_url"] == "1"
 
     editor_response = _editor_client.put(
@@ -1516,10 +1523,10 @@ def test_post_link_metadata(clients):
 
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    pytest.global_link_id_admin = admin_response_data[1]["id"]
+    pytest.global_link_id_admin = admin_response_data[0]["id"]
 
-    assert admin_response_data[1]["url"] == "admin-google.com"
-    assert admin_response_data[1]["title"] == "admin-google link"
+    assert admin_response_data[0]["url"] == "admin-google.com"
+    assert admin_response_data[0]["title"] == "admin-google link"
 
     editor_response = _editor_client.post(
         f"/study/{study_id}/metadata/link",
@@ -1528,10 +1535,10 @@ def test_post_link_metadata(clients):
 
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    pytest.global_link_id_editor = editor_response_data[2]["id"]
+    pytest.global_link_id_editor = editor_response_data[0]["id"]
 
-    assert editor_response_data[2]["url"] == "editor-google.com"
-    assert editor_response_data[2]["title"] == "editor-google link"
+    assert editor_response_data[0]["url"] == "editor-google.com"
+    assert editor_response_data[0]["title"] == "editor-google link"
 
     viewer_response = _viewer_client.post(
         f"/study/{study_id}/metadata/link",
@@ -1557,7 +1564,7 @@ def test_delete_link_metadata(clients):
         f"/study/{study_id}/metadata/link/{link_id}"
     )
     response = _logged_in_client.delete(f"/study/{study_id}/metadata/link/{link_id}")
-    admin_reponse = _admin_client.delete(
+    admin_response = _admin_client.delete(
         f"/study/{study_id}/metadata/link/{admin_link_id}"
     )
     editor_response = _editor_client.delete(
@@ -1567,7 +1574,7 @@ def test_delete_link_metadata(clients):
     assert viewer_response.status_code == 403
     assert response.status_code == 200
     assert admin_response.status_code == 200
-    assert editor_resopnse.status_code == 200
+    assert editor_response.status_code == 200
 
 
 # ------------------- LOCATION METADATA ------------------- #
@@ -1641,14 +1648,14 @@ def test_post_location_metadata(clients):
 
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    pytest.global_location_id_admin = admin_response_data[1]["id"]
+    pytest.global_location_id_admin = admin_response_data[0]["id"]
 
-    assert admin_response_data[1]["facility"] == "test"
-    assert admin_response_data[1]["status"] == "Withdrawn"
-    assert admin_response_data[1]["city"] == "city"
-    assert admin_response_data[1]["state"] == "ca"
-    assert admin_response_data[1]["zip"] == "test"
-    assert admin_response_data[1]["country"] == "yes"
+    assert admin_response_data[0]["facility"] == "test"
+    assert admin_response_data[0]["status"] == "Withdrawn"
+    assert admin_response_data[0]["city"] == "city"
+    assert admin_response_data[0]["state"] == "ca"
+    assert admin_response_data[0]["zip"] == "test"
+    assert admin_response_data[0]["country"] == "yes"
 
     editor_response = _editor_client.post(
         f"/study/{study_id}/metadata/location",
@@ -1666,14 +1673,14 @@ def test_post_location_metadata(clients):
 
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    pytest.global_location_id_editor = editor_response_data[2]["id"]
+    pytest.global_location_id_editor = editor_response_data[0]["id"]
 
-    assert editor_response_data[2]["facility"] == "editor test"
-    assert editor_response_data[2]["status"] == "Withdrawn"
-    assert editor_response_data[2]["city"] == "city"
-    assert editor_response_data[2]["state"] == "ca"
-    assert editor_response_data[2]["zip"] == "test"
-    assert editor_response_data[2]["country"] == "yes"
+    assert editor_response_data[0]["facility"] == "editor test"
+    assert editor_response_data[0]["status"] == "Withdrawn"
+    assert editor_response_data[0]["city"] == "city"
+    assert editor_response_data[0]["state"] == "ca"
+    assert editor_response_data[0]["zip"] == "test"
+    assert editor_response_data[0]["country"] == "yes"
 
 
 def test_delete_location_metadata(clients):
@@ -1698,7 +1705,7 @@ def test_delete_location_metadata(clients):
     admin_response = _admin_client.delete(
         f"/study/{study_id}/metadata/location/{admin_location_id}"
     )
-    editor_reponse = _editor_client.delete(
+    editor_response = _editor_client.delete(
         f"/study/{study_id}/metadata/location/{editor_location_id}"
     )
 
@@ -1785,7 +1792,7 @@ def test_put_other_metadata(clients):
             "oversight_has_dmc": False,
             "conditions": ["true", "conditions editor", "keywords editor", "1"],
             "keywords": ["true", "u"],
-            "size"; 105
+            "size": 105
         }
     )
 
@@ -1793,7 +1800,7 @@ def test_put_other_metadata(clients):
     editor_response_data = json.loads(editor_response.data)
 
     assert editor_response_data["oversight_has_dmc"] is False
-    assert editor_resonse_data["conditions"] == [
+    assert editor_response_data["conditions"] == [
         "true",
         "conditions editor",
         "keywords editor",
@@ -1807,12 +1814,13 @@ def test_put_other_metadata(clients):
         json={
             "oversight_has_dmc": False,
             "conditions": ["true", "conditions viewer", "keywords viewer", "1"],
-            "keywords": ["true", "u"]
+            "keywords": ["true", "u"],
             "size": 106,
         }
     )
 
     assert viewer_response.status_code == 403
+
 
 # ------------------- OVERALL-OFFICIAL METADATA ------------------- #
 def test_get_overall_official_metadata(clients):
@@ -1864,27 +1872,27 @@ def test_post_overall_official_metadata(clients):
 
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    pytest.global_overall_official_id_admin = admin_response[1]["id"]
+    pytest.global_overall_official_id_admin = admin_response_data[0]["id"]
 
-    assert admin_response_data[1]["name"] == "admin-test"
-    assert admin_response_data[1]["affiliation"] == "admin-aff"
-    assert admin_response_data[1]["role"] == "Study Chair"
+    assert admin_response_data[0]["name"] == "admin-test"
+    assert admin_response_data[0]["affiliation"] == "admin-aff"
+    assert admin_response_data[0]["role"] == "Study Chair"
 
-    editor_reponse = _editor_client.post(
-        f"/study/{study_id}/metadata/overall-official"
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/metadata/overall-official",
         json=[{"name": "editor-test", "affiliation": "editor-aff", "role": "Study Chair"}],
     )
 
     assert editor_response.status_code == 200
-    editor_reponse_data = json.loads(editor_response.data)
-    pytest.global_overall_official_id_editor = editor_response[2]["id"]
+    editor_response_data = json.loads(editor_response.data)
+    pytest.global_overall_official_id_editor = editor_response_data[0]["id"]
 
-    assert editor_response_data[2]["name"] == "editor-test"
-    assert editor_reponse_data[2]["affiliaton"] == "editor-aff"
-    assert editor_reponse_data[2]["role"] == "Study Chair"
+    assert editor_response_data[0]["name"] == "editor-test"
+    assert editor_response_data[0]["affiliation"] == "editor-aff"
+    assert editor_response_data[0]["role"] == "Study Chair"
 
     viewer_response = _viewer_client.post(
-        f"/study/{study_id}/metadata/overall-official"
+        f"/study/{study_id}/metadata/overall-official",
         json=[{"name": "viewer-test", "affiliation": "viewer-aff", "role": "Study Chair"}]
     )
 
@@ -1902,12 +1910,26 @@ def test_delete_overall_official_metadata(clients):
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     overall_official_id = pytest.global_overall_official_id
+    oo_admin_id = pytest.global_overall_official_id_admin
+    oo_editor_id = pytest.global_overall_official_id_editor
 
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/metadata/overall-official/{overall_official_id}"
+    )
     response = _logged_in_client.delete(
         f"/study/{study_id}/metadata/overall-official/{overall_official_id}"
     )
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/metadata/overall-official/{oo_admin_id}"
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/metadata/overall-official/{oo_editor_id}"
+    )
 
+    assert viewer_response.status_code == 403
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
 
 
 # ------------------- OVERSIGHT METADATA ------------------- #
