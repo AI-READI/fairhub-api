@@ -1550,10 +1550,24 @@ def test_delete_link_metadata(clients):
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     link_id = pytest.global_link_id
+    admin_link_id = pytest.global_link_id_admin
+    editor_link_id = pytest.global_link_id_editor
 
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/metadata/link/{link_id}"
+    )
     response = _logged_in_client.delete(f"/study/{study_id}/metadata/link/{link_id}")
+    admin_reponse = _admin_client.delete(
+        f"/study/{study_id}/metadata/link/{admin_link_id}"
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/metadata/link/{editor_link_id}"
+    )
 
+    assert viewer_response.status_code == 403
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_resopnse.status_code == 200
 
 
 # ------------------- LOCATION METADATA ------------------- #
