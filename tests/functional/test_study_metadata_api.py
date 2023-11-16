@@ -1992,6 +1992,12 @@ def test_put_oversight_metadata(clients):
 
     assert editor_response_data is True
 
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/metadata/oversight", json={"oversight_has_dmc": False}
+    )
+
+    assert viewer_response.status_code == 403
+
 
 # ------------------- REFERENCE METADATA ------------------- #
 def test_get_reference_metadata(clients):
@@ -2004,8 +2010,14 @@ def test_get_reference_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
 
     response = _logged_in_client.get(f"/study/{study_id}/metadata/reference")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/reference")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/reference")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/reference")
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
 
 
 def test_post_reference_metadata(clients):
