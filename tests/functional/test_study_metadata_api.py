@@ -2111,12 +2111,26 @@ def test_delete_reference_metadata(clients):
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     reference_id = pytest.global_reference_id
+    admin_reference_id = pytest.global_reference_id_admin
+    editor_reference_id = pytest.global_reference_id_editor
 
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/metadata/reference/{reference_id}"
+    )
     response = _logged_in_client.delete(
         f"/study/{study_id}/metadata/reference/{reference_id}"
     )
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/metadata/reference/{admin_reference_id}"
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/metadata/reference/{editor_reference_id}"
+    )
 
+    assert viewer_response.status_code == 403
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
 
 
 # ------------------- SPONSORS METADATA ------------------- #
