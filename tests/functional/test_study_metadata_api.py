@@ -130,7 +130,7 @@ def test_delete_arm_metadata(clients):
     arm_id = pytest.global_arm_id
     admin_arm_id = pytest.global_admin_arm_id_admin
     editor_arm_id = pytest.global_editor_arm_id_editor
-    
+
     # Verify viewer cannot delete arm
     viewer_response = _viewer_client.delete(f"/study/{study_id}/metadata/arm/{arm_id}")
     response = _logged_in_client.delete(f"/study/{study_id}/metadata/arm/{arm_id}")
@@ -799,7 +799,10 @@ def test_put_design_metadata(clients):
     assert admin_response_data["design_primary_purpose"] == "Parallel Assignment"
     assert admin_response_data["design_masking"] == "Double"
     assert admin_response_data["design_masking_description"] == "tewsfdasf"
-    assert admin_response_data["design_who_masked_list"] == ["Participant", "Care Provider"]
+    assert admin_response_data["design_who_masked_list"] == [
+        "Participant",
+        "Care Provider",
+    ]
     assert admin_response_data["phase_list"] == ["N/A"]
     assert admin_response_data["enrollment_count"] == 3
     assert admin_response_data["enrollment_type"] == "Actual"
@@ -848,7 +851,10 @@ def test_put_design_metadata(clients):
     assert editor_response_data["design_primary_purpose"] == "Parallel Assignment"
     assert editor_response_data["design_masking"] == "Double"
     assert editor_response_data["design_masking_description"] == "tewsfdasf"
-    assert editor_response_data["design_who_masked_list"] == ["Participant", "Care Provider"]
+    assert editor_response_data["design_who_masked_list"] == [
+        "Participant",
+        "Care Provider",
+    ]
     assert editor_response_data["phase_list"] == ["N/A"]
     assert editor_response_data["enrollment_count"] == 3
     assert editor_response_data["enrollment_type"] == "Actual"
@@ -884,7 +890,7 @@ def test_put_design_metadata(clients):
             "bio_spec_description": "dfasdf",
             "target_duration": "rewrwe",
             "number_groups_cohorts": 1,
-        }
+        },
     )
 
     assert viewer_response.status_code == 403
@@ -969,7 +975,7 @@ def test_put_eligibility_metadata(clients):
             "exclusion_criteria": ["Probability Sample"],
             "study_population": "study_population",
             "sampling_method": "Probability Sample",
-        }
+        },
     )
 
     assert admin_response.status_code == 200
@@ -1003,7 +1009,7 @@ def test_put_eligibility_metadata(clients):
             "exclusion_criteria": ["Probability Sample"],
             "study_population": "study_population",
             "sampling_method": "Probability Sample",
-        }
+        },
     )
 
     assert editor_response.status_code == 200
@@ -1037,7 +1043,7 @@ def test_put_eligibility_metadata(clients):
             "exclusion_criteria": ["Probability Sample"],
             "study_population": "study_population",
             "sampling_method": "Probability Sample",
-        }
+        },
     )
 
     assert viewer_response.status_code == 403
