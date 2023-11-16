@@ -215,13 +215,18 @@ def test_post_alternative_identifier(clients):
 
     admin_response_data = json.loads(admin_response.data)
     editor_response_data = json.loads(editor_response.data)
-    pytest.global_alternative_identifier_id_admin = admin_response_data[1]["id"]
-    pytest.global_alternative_identifier_id_editor = editor_response_data[2]["id"]
+    print("############")
+    print(admin_response_data)
+    print("############")
+    print(editor_response_data)
+    print("############")
+    pytest.global_alternative_identifier_id_admin = admin_response_data[0]["id"]
+    pytest.global_alternative_identifier_id_editor = editor_response_data[0]["id"]
 
-    assert admin_response_data[1]["identifier"] == "admin test"
-    assert admin_response_data[1]["type"] == "ARK"
-    assert editor_response_data[2]["identifier"] == "editor test"
-    assert editor_response_data[2]["type"] == "ARK"
+    assert admin_response_data[0]["identifier"] == "admin test"
+    assert admin_response_data[0]["type"] == "ARK"
+    assert editor_response_data[0]["identifier"] == "editor test"
+    assert editor_response_data[0]["type"] == "ARK"
 
 
 def test_delete_alternative_identifier(clients):
@@ -242,27 +247,21 @@ def test_delete_alternative_identifier(clients):
     viewer_response = _viewer_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier/{identifier_id}"
     )
-
-    assert viewer_response.status_code == 403
-
     response = _logged_in_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier/{identifier_id}"
     )
-
-    assert response.status_code == 200
-
     # pylint: disable=line-too-long
     admin_response = _admin_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier/{admin_identifier_id}"
     )
-
-    assert admin_response.status_code == 200
-
     # pylint: disable=line-too-long
     editor_response = _editor_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier/{editor_identifier_id}"
     )
 
+    assert viewer_response.status_code == 403
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
     assert editor_response.status_code == 200
 
 
@@ -458,9 +457,9 @@ def test_post_dataset_contributor_metadata(clients):
 
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    pytest.global_dataset_contributor_id_admin = admin_response_data[1]["id"]
+    pytest.global_dataset_contributor_id_admin = admin_response_data[0]["id"]
 
-    assert admin_response_data[1]["name"] == "Admin Name here"
+    assert admin_response_data[0]["name"] == "Admin Name here"
 
     editor_response = _editor_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor",
@@ -486,9 +485,9 @@ def test_post_dataset_contributor_metadata(clients):
 
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    pytest.global_dataset_contributor_id_editor = editor_response_data[2]["id"]
+    pytest.global_dataset_contributor_id_editor = editor_response_data[0]["id"]
 
-    assert editor_response_data[2]["name"] == "Editor Name here"
+    assert editor_response_data[0]["name"] == "Editor Name here"
 
     viewer_response = _viewer_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor",
@@ -538,6 +537,9 @@ def test_get_dataset_contributor_metadata(clients):
     viewer_response = _viewer_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor"
     )
+    print("$$$$$$$")
+    print(viewer_response)
+    print("$$$$$$$")
 
     assert response.status_code == 200
     assert admin_response.status_code == 200
