@@ -1488,6 +1488,10 @@ def test_get_link_metadata(clients):
     admin_response = _admin_client.get(f"/study/{study_id}/metadata/link")
     editor_response = _editor_client.get(f"/study/{study_id}/metadata/link")
     viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/link")
+    print("viewer response below39584203984209384")
+    viewer_response_data = json.loads(viewer_response.data)
+    print(viewer_response_data)
+    print("viewer response below39584203984209384")
 
     assert response.status_code == 200
     assert admin_response.status_code == 200
@@ -1943,8 +1947,14 @@ def test_get_oversight_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
 
     response = _logged_in_client.get(f"/study/{study_id}/metadata/oversight")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/oversight")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/oversight")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/oversight")
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
 
 
 def test_put_oversight_metadata(clients):
@@ -1964,6 +1974,23 @@ def test_put_oversight_metadata(clients):
     response_data = json.loads(response.data)
 
     assert response_data is True
+
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/metadata/oversight", json={"oversight_has_dmc": False}
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+
+    assert admin_response_data is False
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/metadata/oversight", json={"oversight_has_dmc": True}
+    )
+
+    editor_response_data = json.loads(editor_response.data)
+
+    assert editor_response_data is True
 
 
 # ------------------- REFERENCE METADATA ------------------- #
