@@ -1466,8 +1466,14 @@ def test_get_location_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
 
     response = _logged_in_client.get(f"/study/{study_id}/metadata/location")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/location")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/location")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/location")
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
 
 
 def test_post_location_metadata(clients):
