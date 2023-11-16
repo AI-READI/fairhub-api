@@ -563,9 +563,6 @@ def test_delete_dataset_contributor_metadata(clients):
     viewer_response = _viewer_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor/{contributor_id}"
     )
-
-    assert viewer_response.status_code == 403
-
     response = _logged_in_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor/{contributor_id}"
     )
@@ -578,6 +575,7 @@ def test_delete_dataset_contributor_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor/{editor_contributor_id}"
     )
 
+    assert viewer_response.status_code == 403
     assert response.status_code == 200
     assert admin_response.status_code == 200
     assert editor_response.status_code == 200

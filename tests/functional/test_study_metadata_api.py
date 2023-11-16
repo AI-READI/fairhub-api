@@ -1169,14 +1169,14 @@ def test_post_identification_metadata(clients):
     editor_response_data = json.loads(response.data)
     pytest.global_identification_id_editor = response_data["secondary"][2]["id"]
 
-    assert editor_response_data["primary"]["identifier"] == "first"
+    assert editor_response_data["primary"]["identifier"] == "editor-first"
     assert editor_response_data["primary"]["identifier_type"] == "test"
     assert editor_response_data["primary"]["identifier_domain"] == "domain"
     assert editor_response_data["primary"]["identifier_link"] == "link"
-    assert editor_response_data["secondary"][0]["identifier"] == "test"
-    assert editor_response_data["secondary"][0]["identifier_type"] == "test"
-    assert editor_response_data["secondary"][0]["identifier_domain"] == "dodfasdfmain"
-    assert editor_response_data["secondary"][0]["identifier_link"] == "link"
+    assert editor_response_data["secondary"][2]["identifier"] == "test"
+    assert editor_response_data["secondary"][2]["identifier_type"] == "test"
+    assert editor_response_data["secondary"][2]["identifier_domain"] == "dodfasdfmain"
+    assert editor_response_data["secondary"][2]["identifier_link"] == "link"
 
     viewer_response = _viewer_client.post(
         f"/study/{study_id}/metadata/identification",
@@ -1401,6 +1401,70 @@ def test_put_ipdsharing_metadata(clients):
     assert response_data["ipd_sharing_time_frame"] == "uh"
     assert response_data["ipd_sharing_access_criteria"] == "Study Protocol"
     assert response_data["ipd_sharing_url"] == "1"
+
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/metadata/ipdsharing",
+        json={
+            "ipd_sharing": "Yes",
+            "ipd_sharing_description": "admin-yes",
+            "ipd_sharing_info_type_list": ["Study Protocol", "Analytical Code"],
+            "ipd_sharing_time_frame": "uh",
+            "ipd_sharing_access_criteria": "Study Protocol",
+            "ipd_sharing_url": "1",
+        }
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+
+    assert admin_response_data["ipd_sharing"] == "Yes"
+    assert admin_response_data["ipd_sharing_description"] == "admin-yes
+    assert admin_response_data["ipd_sharing_info_type_list"] == [
+        "Study Protocol",
+        "Analytical Code",
+    ]
+    assert admin_response_data["ipd_sharing_time_frame"] == "uh"
+    assert admin_response_data["ipd_sharing_access_criteria"] == "Study Protocol
+    assert admin_response_data["ipd_sharing_url"] == "1"
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/metadata/ipdsharing",
+        json={
+            "ipd_sharing": "Yes",
+            "ipd_sharing_description": "editor-yes",
+            "ipd_sharing_info_type_list": ["Study Protocol", "Analytical Code"],
+            "ipd_sharing_time_frame": "uh",
+            "ipd_sharing_access_criteria": "Study Protocol",
+            "ipd_sharing_url": "1",
+        }
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+
+    assert editor_response_data["ipd_sharing"] == "Yes"
+    assert editor_response_data["ipd_sharing_description"] == "editor-yes"
+    assert editor_response_data["ipd_sharing_info_type_list"] == [
+        "Study Protocol",
+        "Analytical Code",
+    ]
+    assert editor_response_data["ipd_sharing_time_frame"] == "uh"
+    assert editor_response_data["ipd_sharing_access_criteria"] == "Study Protocol"
+    assert editor_response_data["ipd_sharing_url"] == "1"
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/metadata/ipdsharing",
+        json={
+            "ipd_sharing": "Yes",
+            "ipd_sharing_description": "viewer-yes",
+            "ipd_sharing_info_type_list": ["Study Protocol", "Analytical Code"],
+            "ipd_sharing_time_frame": "uh",
+            "ipd_sharing_access_criteria": "Study Protocol",
+            "ipd_sharing_url": "1",
+        }
+    )
+
+    assert viewer_response.status_code == 403
 
 
 # ------------------- LINK METADATA ------------------- #
