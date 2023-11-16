@@ -2048,6 +2048,57 @@ def test_post_reference_metadata(clients):
     assert response_data[0]["type"] == "Yes"
     assert response_data[0]["citation"] == "reference citation"
 
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/metadata/reference",
+        json=[
+            {
+                "identifier": "admin-reference identifier",
+                "type": "Yes",
+                "citation": "admin-reference citation"
+            }
+        ]
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    pytest.global_reference_id_admin = admin_response_data[0]["id"]
+
+    assert admin_response_data[0]["identifier"] == "admin-reference identifier"
+    assert admin_response_data[0]["type"] == "Yes"
+    assert admin_response_data[0]["citation"] == "admin-reference citation"
+
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/metadata/reference"
+        json=[
+            {
+                "identifier": "editor-reference identifier",
+                "type": "Yes",
+                "citation": "editor-reference citation"
+            }
+        ]
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    pytest.global_reference_id_editor = editor_response_data[0]["id"]
+
+    assert editor_response_data[0]["identifier"] == "editor-reference identifier"
+    assert editor_response_data[0]["type"] == "Yes"
+    assert editor_response_data[0]["citation"] == "editor-reference citation"
+
+    viewer_response = _viewer_client.post(
+        f"/study/{study_id}/metadata/reference",
+        json=[
+            {
+                "identifier": "viewer-reference identifier",
+                "type": "Yes",
+                "citation": "editor-reference citation"
+            }
+        ]
+    )
+
+    assert viewer_response.status_code == 403
+
 
 def test_delete_reference_metadata(clients):
     """
