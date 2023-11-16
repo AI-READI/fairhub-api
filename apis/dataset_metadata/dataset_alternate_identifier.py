@@ -126,9 +126,13 @@ class DatasetAlternateIdentifierResource(Resource):
             self, study_id: int, dataset_id: int, identifier_id: int
         ):  # pylint: disable= unused-argument
             """Delete dataset alternate identifier"""
+            study_obj = model.Study.query.get(study_id)
             dataset_identifier_ = model.DatasetAlternateIdentifier.query.get(
                 identifier_id
             )
+
+            if not is_granted("dataset_metadata", study_obj):
+                return "Access denied, you can not make any change in dataset metadata", 403
 
             model.db.session.delete(dataset_identifier_)
             model.db.session.commit()
