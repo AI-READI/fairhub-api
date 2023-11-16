@@ -1719,8 +1719,14 @@ def test_get_other_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
 
     response = _logged_in_client.get(f"/study/{study_id}/metadata/other")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/other")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/other")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/other")
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
 
 
 def test_put_other_metadata(clients):
@@ -1750,6 +1756,63 @@ def test_put_other_metadata(clients):
     assert response_data["keywords"] == ["true", "u"]
     assert response_data["size"] == 103
 
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/metadata/other",
+        json={
+            "oversight_has_dmc": False,
+            "conditions": ["true", "conditions admin", "keywords admin", "1"],
+            "keywords": ["true", "u"],
+            "size": 104,
+        }
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+
+    assert admin_response_data["oversight_has_dmc"] is False
+    assert admin_response_data["conditions"] == [
+        "true",
+        "conditions admin",
+        "keywords admin",
+        "1"
+    ]
+    assert admin_response_data["keywords"] == ["true", "u"]
+    assert admin_response_data["size"] == 104
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/metadata/other",
+        json={
+            "oversight_has_dmc": False,
+            "conditions": ["true", "conditions editor", "keywords editor", "1"],
+            "keywords": ["true", "u"],
+            "size"; 105
+        }
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+
+    assert editor_response_data["oversight_has_dmc"] is False
+    assert editor_resonse_data["conditions"] == [
+        "true",
+        "conditions editor",
+        "keywords editor",
+        "1"
+    ]
+    assert editor_response_data["keywords"] == ["true", "u"]
+    assert editor_response_data["size"] == 105
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/metadata/other",
+        json={
+            "oversight_has_dmc": False,
+            "conditions": ["true", "conditions viewer", "keywords viewer", "1"],
+            "keywords": ["true", "u"]
+            "size": 106,
+        }
+    )
+
+    assert viewer_response.status_code == 403
 
 # ------------------- OVERALL-OFFICIAL METADATA ------------------- #
 def test_get_overall_official_metadata(clients):
