@@ -1625,6 +1625,56 @@ def test_post_location_metadata(clients):
     assert response_data[0]["zip"] == "test"
     assert response_data[0]["country"] == "yes"
 
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/metadata/location",
+        json=[
+            {
+                "facility": "test",
+                "status": "Withdrawn",
+                "city": "city",
+                "state": "ca",
+                "zip": "test",
+                "country": "yes",
+            }
+        ]
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    pytest.global_location_id_admin = admin_response_data[1]["id"]
+
+    assert admin_response_data[1]["facility"] == "test"
+    assert admin_response_data[1]["status"] == "Withdrawn"
+    assert admin_response_data[1]["city"] == "city"
+    assert admin_response_data[1]["state"] == "ca"
+    assert admin_response_data[1]["zip"] == "test"
+    assert admin_response_data[1]["country"] == "yes"
+
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/metadata/location",
+        json=[
+            {
+                "facility": "editor test",
+                "status": "Withdrawn",
+                "city": "city",
+                "state": "ca",
+                "zip": "test",
+                "country": "yes",
+            }
+        ]
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    pytest.global_location_id_editor = editor_response_data[2]["id"]
+
+    assert editor_response_data[2]["facility"] == "editor test"
+    assert editor_response_data[2]["status"] == "Withdrawn"
+    assert editor_response_data[2]["city"] == "city"
+    assert editor_response_data[2]["state"] == "ca"
+    assert editor_response_data[2]["zip"] == "test"
+    assert editor_response_data[2]["country"] == "yes"
+
 
 def test_delete_location_metadata(clients):
     """
