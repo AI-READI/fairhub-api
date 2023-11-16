@@ -1352,8 +1352,14 @@ def test_get_ipdsharing_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
 
     response = _logged_in_client.get(f"/study/{study_id}/metadata/ipdsharing")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/ipdsharing")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/ipdsharing")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/ipdsharing")
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
 
 
 def test_put_ipdsharing_metadata(clients):
@@ -1402,8 +1408,14 @@ def test_get_link_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
 
     response = _logged_in_client.get(f"/study/{study_id}/metadata/link")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/link")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/link")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/link")
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
 
 
 def test_post_link_metadata(clients):
