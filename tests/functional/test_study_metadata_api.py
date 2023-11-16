@@ -1509,6 +1509,37 @@ def test_post_link_metadata(clients):
     assert response_data[0]["url"] == "google.com"
     assert response_data[0]["title"] == "google link"
 
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/metadata/link",
+        json=[{"url": "admin-google.com", "title": "admin-google link"}],
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    pytest.global_link_id_admin = admin_response_data[1]["id"]
+
+    assert admin_response_data[1]["url"] == "admin-google.com"
+    assert admin_response_data[1]["title"] == "admin-google link"
+
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/metadata/link",
+        json=[{"url": "editor-google.com", "title": "editor-google link"}],
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    pytest.global_link_id_editor = editor_response_data[2]["id"]
+
+    assert editor_response_data[2]["url"] == "editor-google.com"
+    assert editor_response_data[2]["title"] == "editor-google link"
+
+    viewer_response = _viewer_client.post(
+        f"/study/{study_id}/metadata/link",
+        json=[{"url": "viewer-google.com", "title": "viewer-google link"}],
+    )
+
+    assert viewer_response.status_code == 403
+
 
 def test_delete_link_metadata(clients):
     """

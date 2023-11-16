@@ -47,6 +47,8 @@ pytest.global_identification_id_admin = ""
 pytest.global_identification_id_editor = ""
 pytest.global_intervention_id_admin = ""
 pytest.global_intervention_id_editor = ""
+pytest.global_link_id_admin = ""
+pytest.global_link_id_editor = ""
 
 # Dataset variables use for testing
 pytest.global_dataset_id = ""
