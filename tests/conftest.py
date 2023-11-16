@@ -86,7 +86,7 @@ def _create_user(_test_client):
             "/auth/signup",
             json={
                 "email_address": "test@fairhub.io",
-                "password": "asdkj45@ksdSA",
+                "password": "Testingyeshello11!",
                 "code": "7654321",
             },
         )
@@ -103,7 +103,7 @@ def _logged_in_client(_test_client):
             "/auth/login",
             json={
                 "email_address": "test@fairhub.io",
-                "password": "asdkj45@ksdSA",
+                "password": "Testingyeshello11!",
             },
         )
 
