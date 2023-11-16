@@ -1,7 +1,7 @@
 """API routes for study available ipd metadata"""
 import typing
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -120,4 +120,4 @@ class StudyLocationUpdate(Resource):
         model.db.session.delete(study_available_)
         model.db.session.commit()
 
-        return 204
+        return Response(status=204)

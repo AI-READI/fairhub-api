@@ -1,7 +1,7 @@
 """API routes for study arm metadata"""
 import typing
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -107,4 +107,4 @@ class StudyArmResource(Resource):
             model.db.session.delete(study_arm_)
             model.db.session.commit()
 
-            return 204
+            return Response(status=204)

@@ -81,7 +81,7 @@ def test_delete_dataset_from_study(_logged_in_client):
         f"/study/{study_id}/dataset/{dataset_id}",
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
 
 
 def test_post_dataset_version(_logged_in_client):

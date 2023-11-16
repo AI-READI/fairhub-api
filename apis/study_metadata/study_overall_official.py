@@ -1,7 +1,7 @@
 """API routes for study overall official metadata"""
 import typing
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -111,4 +111,4 @@ class StudyOverallOfficialResource(Resource):
             model.db.session.delete(study_overall_official_)
             model.db.session.commit()
 
-            return 204
+            return Response(status=204)

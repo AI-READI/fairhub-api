@@ -72,7 +72,7 @@ def test_delete_arm_metadata(_logged_in_client):
 
     response = _logged_in_client.delete(f"/study/{study_id}/metadata/arm/{arm_id}")
 
-    assert response.status_code == 200
+    assert response.status_code == 204
 
 
 # ------------------- IPD METADATA ------------------- #
@@ -132,7 +132,7 @@ def test_delete_available_ipd_metadata(_logged_in_client):
         f"/study/{study_id}/metadata/available-ipd/{available_ipd_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
 
 
 # ------------------- CENTRAL CONTACT METADATA ------------------- #
@@ -208,7 +208,7 @@ def test_delete_cc_metadata(_logged_in_client):
         f"/study/{study_id}/metadata/central-contact/{central_contact_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
 
 
 #  ------------------- COLLABORATORS METADATA ------------------- #
@@ -523,7 +523,7 @@ def test_delete_identification_metadata(_logged_in_client):
         f"/study/{study_id}/metadata/identification/{identification_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
 
 
 # ------------------- INTERVENTION METADATA ------------------- #
@@ -666,7 +666,7 @@ def test_delete_link_metadata(_logged_in_client):
 
     response = _logged_in_client.delete(f"/study/{study_id}/metadata/link/{link_id}")
 
-    assert response.status_code == 200
+    assert response.status_code == 204
 
 
 # ------------------- LOCATION METADATA ------------------- #
@@ -731,7 +731,7 @@ def test_delete_location_metadata(_logged_in_client):
         f"/study/{study_id}/metadata/location/{location_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
 
 
 # ------------------- OTHER METADATA ------------------- #
@@ -826,7 +826,7 @@ def test_delete_overall_official_metadata(_logged_in_client):
         f"/study/{study_id}/metadata/overall-official/{overall_official_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
 
 
 # ------------------- OVERSIGHT METADATA ------------------- #
@@ -918,7 +918,7 @@ def test_delete_reference_metadata(_logged_in_client):
         f"/study/{study_id}/metadata/reference/{reference_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
 
 
 # ------------------- SPONSORS METADATA ------------------- #

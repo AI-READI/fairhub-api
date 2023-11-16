@@ -1,7 +1,7 @@
 """API routes for study reference metadata"""
 import typing
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -97,4 +97,4 @@ class StudyReferenceResource(Resource):
 
             model.db.session.commit()
 
-            return 204
+            return Response(status=204)

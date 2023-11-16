@@ -106,4 +106,4 @@ def test_delete_studies_created(_logged_in_client):
     # delete study
     response = _logged_in_client.delete(f"/study/{study_id}")
 
-    assert response.status_code == 200
+    assert response.status_code == 204
