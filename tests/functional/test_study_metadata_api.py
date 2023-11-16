@@ -2068,7 +2068,7 @@ def test_post_reference_metadata(clients):
     assert admin_response_data[0]["citation"] == "admin-reference citation"
 
     editor_response = _editor_client.post(
-        f"/study/{study_id}/metadata/reference"
+        f"/study/{study_id}/metadata/reference",
         json=[
             {
                 "identifier": "editor-reference identifier",
