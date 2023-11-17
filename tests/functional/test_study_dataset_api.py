@@ -101,11 +101,38 @@ def test_get_dataset_from_study(clients):
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
+    admin_dataset_id = pytest.global_dataset_id_admin
+    editor_dataset_id = pytest.global_dataset_id_editor
 
     response = _logged_in_client.get(f"/study/{study_id}/dataset/{dataset_id}")
+    admin_response = _admin_client.get(f"/study/{study_id}/dataset/{dataset_id}")
+    editor_response = _editor_client.get(f"/study/{study_id}/dataset/{dataset_id}")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/dataset/{dataset_id}")
 
     assert response.status_code == 200
-    # response_data = json.loads(response.data)
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response = _logged_in_client.get(f"/study/{study_id}/dataset/{admin_dataset_id}")
+    admin_response = _admin_client.get(f"/study/{study_id}/dataset/{admin_dataset_id}")
+    editor_response = _editor_client.get(f"/study/{study_id}/dataset/{admin_dataset_id}")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/dataset/{admin_dataset_id}")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response = _logged_in_client.get(f"/study/{study_id}/dataset/{editor_dataset_id}")
+    admin_response = _admin_client.get(f"/study/{study_id}/dataset/{editor_dataset_id}")
+    editor_response = _editor_client.get(f"/study/{study_id}/dataset/{editor_dataset_id}")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/dataset/{editor_dataset_id}")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
 
 
 def test_delete_dataset_from_study(clients):
