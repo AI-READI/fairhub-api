@@ -14,8 +14,14 @@ def test_get_all_dataset_from_study(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
 
     response = _logged_in_client.get(f"/study/{study_id}/dataset")
+    admin_response = _admin_client.get(f"/study/{study_id}/dataset")
+    editor_response = _editor_client.get(f"/study/{study_id}/dataset")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/dataset")
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
     # response_data = json.loads(response.data)
     # print(response_data)
 
