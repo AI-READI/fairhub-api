@@ -970,6 +970,69 @@ def test_put_dataset_deidentification_metadata(clients):
     assert response_data["k_anon"] is True
     assert response_data["details"] == "Details"
 
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/de-identification-level",
+        json={
+            "type": "Level",
+            "direct": True,
+            "hipaa": True,
+            "dates": True,
+            "nonarr": True,
+            "k_anon": True,
+            "details": "Details",
+        },
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+
+    assert admin_response_data["type"] == "Level"
+    assert admin_response_data["direct"] is True
+    assert admin_response_data["hipaa"] is True
+    assert admin_response_data["dates"] is True
+    assert admin_response_data["nonarr"] is True
+    assert admin_response_data["k_anon"] is True
+    assert admin_response_data["details"] == "Details"
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/de-identification-level",
+        json={
+            "type": "Level",
+            "direct": True,
+            "hipaa": True,
+            "dates": True,
+            "nonarr": True,
+            "k_anon": True,
+            "details": "Details",
+        },
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+
+    assert editor_response_data["type"] == "Level"
+    assert editor_response_data["direct"] is True
+    assert editor_response_data["hipaa"] is True
+    assert editor_response_data["dates"] is True
+    assert editor_response_data["nonarr"] is True
+    assert editor_response_data["k_anon"] is True
+    assert editor_response_data["details"] == "Details"
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/de-identification-level",
+        json={
+            "type": "Level",
+            "direct": True,
+            "hipaa": True,
+            "dates": True,
+            "nonarr": True,
+            "k_anon": True,
+            "details": "Details",
+        },
+    )
+
+    assert viewer_response.status_code == 403
+
 
 # ------------------- DESCRIPTION METADATA ------------------- #
 def test_get_dataset_descriptions_metadata(clients):
