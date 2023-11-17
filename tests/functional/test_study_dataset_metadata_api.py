@@ -215,11 +215,6 @@ def test_post_alternative_identifier(clients):
 
     admin_response_data = json.loads(admin_response.data)
     editor_response_data = json.loads(editor_response.data)
-    print("############")
-    print(admin_response_data)
-    print("############")
-    print(editor_response_data)
-    print("############")
     pytest.global_alternative_identifier_id_admin = admin_response_data[0]["id"]
     pytest.global_alternative_identifier_id_editor = editor_response_data[0]["id"]
 
@@ -537,9 +532,6 @@ def test_get_dataset_contributor_metadata(clients):
     viewer_response = _viewer_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor"
     )
-    print("$$$$$$$")
-    print(viewer_response)
-    print("$$$$$$$")
 
     assert response.status_code == 200
     assert admin_response.status_code == 200
@@ -658,6 +650,101 @@ def test_post_dataset_creator_metadata(clients):
     assert response_data[0]["affiliations"][0]["identifier"] == "yes"
     assert response_data[0]["affiliations"][0]["scheme"] == "uh"
     assert response_data[0]["affiliations"][0]["scheme_uri"] == "scheme uri"
+
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator",
+        json=[
+            {
+                "name": "admin Name here",
+                "name_type": "Personal",
+                "name_identifier": "Name identifier",
+                "name_identifier_scheme": "Name Scheme ID",
+                "name_identifier_scheme_uri": "Name ID Scheme URI",
+                "affiliations": [
+                    {
+                        "name": "Test",
+                        "identifier": "yes",
+                        "scheme": "uh",
+                        "scheme_uri": "scheme uri",
+                    }
+                ],
+            }
+        ],
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    pytest.global_dataset_creator_id_admin = admin_response_data[0]["id"]
+
+    assert admin_response_data[0]["name"] == "admin Name here"
+    assert admin_response_data[0]["name_type"] == "Personal"
+    assert admin_response_data[0]["name_identifier"] == "Name identifier"
+    assert admin_response_data[0]["name_identifier_scheme"] == "Name Scheme ID"
+    assert admin_response_data[0]["name_identifier_scheme_uri"] == "Name ID Scheme URI"
+    assert admin_response_data[0]["creator"] is True
+    assert admin_response_data[0]["affiliations"][0]["name"] == "Test"
+    assert admin_response_data[0]["affiliations"][0]["identifier"] == "yes"
+    assert admin_response_data[0]["affiliations"][0]["scheme"] == "uh"
+    assert admin_response_data[0]["affiliations"][0]["scheme_uri"] == "scheme uri"
+
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator",
+        json=[
+            {
+                "name": "Editor Name here",
+                "name_type": "Personal",
+                "name_identifier": "Name identifier",
+                "name_identifier_scheme": "Name Scheme ID",
+                "name_identifier_scheme_uri": "Name ID Scheme URI",
+                "affiliations": [
+                    {
+                        "name": "Test",
+                        "identifier": "yes",
+                        "scheme": "uh",
+                        "scheme_uri": "scheme uri",
+                    }
+                ],
+            }
+        ],
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(response.data)
+    pytest.global_dataset_creator_id_editor = response_data[0]["id"]
+
+    assert editor_response_data[0]["name"] == "Editor Name here"
+    assert editor_response_data[0]["name_type"] == "Personal"
+    assert editor_response_data[0]["name_identifier"] == "Name identifier"
+    assert editor_response_data[0]["name_identifier_scheme"] == "Name Scheme ID"
+    assert editor_response_data[0]["name_identifier_scheme_uri"] == "Name ID Scheme URI"
+    assert editor_response_data[0]["creator"] is True
+    assert editor_response_data[0]["affiliations"][0]["name"] == "Test"
+    assert editor_response_data[0]["affiliations"][0]["identifier"] == "yes"
+    assert editor_response_data[0]["affiliations"][0]["scheme"] == "uh"
+    assert editor_response_data[0]["affiliations"][0]["scheme_uri"] == "scheme uri"
+
+    viewer_response = _viewer_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator",
+        json=[
+            {
+                "name": "Viewer Name here",
+                "name_type": "Personal",
+                "name_identifier": "Name identifier",
+                "name_identifier_scheme": "Name Scheme ID",
+                "name_identifier_scheme_uri": "Name ID Scheme URI",
+                "affiliations": [
+                    {
+                        "name": "Test",
+                        "identifier": "yes",
+                        "scheme": "uh",
+                        "scheme_uri": "scheme uri",
+                    }
+                ],
+            }
+        ],
+    )
+
+    assert viewer_response.status_code == 403
 
 
 def test_delete_dataset_creator_metadata(clients):
