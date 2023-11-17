@@ -1218,14 +1218,14 @@ def test_delete_identification_metadata(clients):
     response = _logged_in_client.delete(
         f"/study/{study_id}/metadata/identification/{identification_id}"
     )
-    
+
     admin_response = _admin_client.get(f"/study/{study_id}/metadata/identification")
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
     print("*************************************")
     print(admin_response_data)
     print("*************************************")
-    
+
     admin_response = _admin_client.delete(
         f"/study/{study_id}/metadata/identification/{admin_identification_id}"
     )
@@ -1418,7 +1418,7 @@ def test_put_ipdsharing_metadata(clients):
             "ipd_sharing_time_frame": "uh",
             "ipd_sharing_access_criteria": "Study Protocol",
             "ipd_sharing_url": "1",
-        }
+        },
     )
 
     assert admin_response.status_code == 200
@@ -1443,7 +1443,7 @@ def test_put_ipdsharing_metadata(clients):
             "ipd_sharing_time_frame": "uh",
             "ipd_sharing_access_criteria": "Study Protocol",
             "ipd_sharing_url": "1",
-        }
+        },
     )
 
     assert editor_response.status_code == 200
@@ -1468,7 +1468,7 @@ def test_put_ipdsharing_metadata(clients):
             "ipd_sharing_time_frame": "uh",
             "ipd_sharing_access_criteria": "Study Protocol",
             "ipd_sharing_url": "1",
-        }
+        },
     )
 
     assert viewer_response.status_code == 403
@@ -1647,7 +1647,7 @@ def test_post_location_metadata(clients):
                 "zip": "test",
                 "country": "yes",
             }
-        ]
+        ],
     )
 
     assert admin_response.status_code == 200
@@ -1672,7 +1672,7 @@ def test_post_location_metadata(clients):
                 "zip": "test",
                 "country": "yes",
             }
-        ]
+        ],
     )
 
     assert editor_response.status_code == 200
@@ -1774,7 +1774,7 @@ def test_put_other_metadata(clients):
             "conditions": ["true", "conditions admin", "keywords admin", "1"],
             "keywords": ["true", "u"],
             "size": 104,
-        }
+        },
     )
 
     assert admin_response.status_code == 200
@@ -1785,7 +1785,7 @@ def test_put_other_metadata(clients):
         "true",
         "conditions admin",
         "keywords admin",
-        "1"
+        "1",
     ]
     assert admin_response_data["keywords"] == ["true", "u"]
     assert admin_response_data["size"] == 104
@@ -1796,8 +1796,8 @@ def test_put_other_metadata(clients):
             "oversight_has_dmc": False,
             "conditions": ["true", "conditions editor", "keywords editor", "1"],
             "keywords": ["true", "u"],
-            "size": 105
-        }
+            "size": 105,
+        },
     )
 
     assert editor_response.status_code == 200
@@ -1808,7 +1808,7 @@ def test_put_other_metadata(clients):
         "true",
         "conditions editor",
         "keywords editor",
-        "1"
+        "1",
     ]
     assert editor_response_data["keywords"] == ["true", "u"]
     assert editor_response_data["size"] == 105
@@ -1820,7 +1820,7 @@ def test_put_other_metadata(clients):
             "conditions": ["true", "conditions viewer", "keywords viewer", "1"],
             "keywords": ["true", "u"],
             "size": 106,
-        }
+        },
     )
 
     assert viewer_response.status_code == 403
@@ -1871,7 +1871,9 @@ def test_post_overall_official_metadata(clients):
 
     admin_response = _admin_client.post(
         f"/study/{study_id}/metadata/overall-official",
-        json=[{"name": "admin-test", "affiliation": "admin-aff", "role": "Study Chair"}],
+        json=[
+            {"name": "admin-test", "affiliation": "admin-aff", "role": "Study Chair"}
+        ],
     )
 
     assert admin_response.status_code == 200
@@ -1884,7 +1886,9 @@ def test_post_overall_official_metadata(clients):
 
     editor_response = _editor_client.post(
         f"/study/{study_id}/metadata/overall-official",
-        json=[{"name": "editor-test", "affiliation": "editor-aff", "role": "Study Chair"}],
+        json=[
+            {"name": "editor-test", "affiliation": "editor-aff", "role": "Study Chair"}
+        ],
     )
 
     assert editor_response.status_code == 200
@@ -1897,7 +1901,9 @@ def test_post_overall_official_metadata(clients):
 
     viewer_response = _viewer_client.post(
         f"/study/{study_id}/metadata/overall-official",
-        json=[{"name": "viewer-test", "affiliation": "viewer-aff", "role": "Study Chair"}]
+        json=[
+            {"name": "viewer-test", "affiliation": "viewer-aff", "role": "Study Chair"}
+        ],
     )
 
     assert viewer_response.status_code == 403
@@ -2054,9 +2060,9 @@ def test_post_reference_metadata(clients):
             {
                 "identifier": "admin-reference identifier",
                 "type": "Yes",
-                "citation": "admin-reference citation"
+                "citation": "admin-reference citation",
             }
-        ]
+        ],
     )
 
     assert admin_response.status_code == 200
@@ -2073,9 +2079,9 @@ def test_post_reference_metadata(clients):
             {
                 "identifier": "editor-reference identifier",
                 "type": "Yes",
-                "citation": "editor-reference citation"
+                "citation": "editor-reference citation",
             }
-        ]
+        ],
     )
 
     assert editor_response.status_code == 200
@@ -2092,9 +2098,9 @@ def test_post_reference_metadata(clients):
             {
                 "identifier": "viewer-reference identifier",
                 "type": "Yes",
-                "citation": "editor-reference citation"
+                "citation": "editor-reference citation",
             }
-        ]
+        ],
     )
 
     assert viewer_response.status_code == 403
@@ -2194,19 +2200,31 @@ def test_put_sponsors_metadata(clients):
             "responsible_party_investigator_title": "admin sponsor title",
             "responsible_party_investigator_affiliation": "admin sponsor affiliation",
             "lead_sponsor_name": "admin sponsor name",
-        }
+        },
     )
 
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
 
     assert admin_response_data["responsible_party_type"] == "Sponsor"
-    assert admin_response_data["responsible_party_investigation_name"] == "admin sponsor name"
-    assert admin_response_data["responsible_party_investigator_title"] == "admin sponsor title"
+    assert (
+        admin_response_data["responsible_party_investigation_name"]
+        == "admin sponsor name"
+    )
+    assert (
+        admin_response_data["responsible_party_investigator_title"]
+        == "admin sponsor title"
+    )
     # pylint: disable=line-too-long
-    assert admin_response_data["responsible_party_investigator_affiliation"] == "admin sponsor affiliation"
+    assert (
+        admin_response_data["responsible_party_investigator_affiliation"]
+        == "admin sponsor affiliation"
+    )
     # pylint: disable=line-too-long
-    assert admin_response_data["responsible_party_investigator_affiliation"] == "admin sponsor affiliation"
+    assert (
+        admin_response_data["responsible_party_investigator_affiliation"]
+        == "admin sponsor affiliation"
+    )
     assert admin_response_data["lead_sponsor_name"] == "admin sponsor name"
 
     # TODO: add editor and viewer tests

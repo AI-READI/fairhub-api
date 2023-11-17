@@ -132,7 +132,10 @@ class DatasetAlternateIdentifierResource(Resource):
             )
 
             if not is_granted("dataset_metadata", study_obj):
-                return "Access denied, you can not make any change in dataset metadata", 403
+                return (
+                    "Access denied, you can not make any change in dataset metadata",
+                    403,
+                )
 
             model.db.session.delete(dataset_identifier_)
             model.db.session.commit()
