@@ -882,11 +882,24 @@ def test_delete_dataset_date_metadata(clients):
     dataset_id = pytest.global_dataset_id
     date_id = pytest.global_dataset_date_id
 
+    # Verify Viewer cannot delete
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/date/{date_id}"
+    )
     response = _logged_in_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/date/{date_id}"
     )
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/date/{date_id}"
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/date/{date_id}"
+    )
 
+    assert viewer_response.status_code == 403
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
 
 
 # ------------------- DE-IDENTIFICATION LEVEL METADATA ------------------- #
