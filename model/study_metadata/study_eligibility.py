@@ -71,11 +71,8 @@ class StudyEligibility(db.Model):  # type: ignore
         """Converts the study metadata to a dictionary"""
         return {
             "gender": self.gender,
-            "gender_based": self.gender_based,
             "minimum_age_value": self.minimum_age_value,
-            "maximum_age_value": self.maximum_age_value,
-            "inclusion_criteria": self.inclusion_criteria,
-            "exclusion_criteria": self.exclusion_criteria,
+
         }
 
     @staticmethod

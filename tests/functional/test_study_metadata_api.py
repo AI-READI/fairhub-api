@@ -572,6 +572,19 @@ def test_post_intervention_metadata(_logged_in_client):
     assert response_data[0]["other_name_list"] == ["uhh", "yes"]
 
 
+def test_delete_intervention_metadata(_logged_in_client):
+    """
+    Given a Flask application configured for testing and a study ID and link ID
+    WHEN the '/study/{study_id}/metadata/intervention/{intervention_id}' endpoint is requested (DELETE)
+    THEN check that the response is valid and deletes the link metadata
+    """
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    intervention_id = pytest.global_intervention_id
+
+    response = _logged_in_client.delete(f"/study/{study_id}/metadata/intervention/{intervention_id}")
+    assert response.status_code == 204
+
+
 # ------------------- IPD SHARING METADATA ------------------- #
 def test_get_ipdsharing_metadata(_logged_in_client):
     """
@@ -760,7 +773,7 @@ def test_put_other_metadata(_logged_in_client):
         f"/study/{study_id}/metadata/other",
         json={
             "oversight_has_dmc": False,
-            "conditions": ["true", "conditions", "keywords", "1"],
+            "conditions": ["c"],
             "keywords": ["true", "u"],
             "size": 103,
         },
@@ -770,7 +783,7 @@ def test_put_other_metadata(_logged_in_client):
     response_data = json.loads(response.data)
 
     assert response_data["oversight_has_dmc"] is False
-    assert response_data["conditions"] == ["true", "conditions", "keywords", "1"]
+    assert response_data["conditions"] == ["c"]
     assert response_data["keywords"] == ["true", "u"]
     assert response_data["size"] == 103
 

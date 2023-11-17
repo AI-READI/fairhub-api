@@ -1,6 +1,6 @@
 import typing
 
-from flask import jsonify, request
+from flask import jsonify, request, Response
 from flask_restx import Namespace, Resource, fields
 
 import model
@@ -118,7 +118,7 @@ class DatasetResource(Resource):
 
         model.db.session.delete(data_obj)
         model.db.session.commit()
-        return 204
+        return Response(status=204)
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>")
@@ -161,7 +161,7 @@ class VersionResource(Resource):
         version_obj = model.Version.query.get(version_id)
         model.db.session.delete(version_obj)
         model.db.session.commit()
-        return 204
+        return Response(status=204)
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version")
