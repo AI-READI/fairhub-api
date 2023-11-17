@@ -2203,7 +2203,9 @@ def test_put_sponsors_metadata(clients):
     assert admin_response_data["responsible_party_type"] == "Sponsor"
     assert admin_response_data["responsible_party_investigation_name"] == "admin sponsor name"
     assert admin_response_data["responsible_party_investigator_title"] == "admin sponsor title"
+    # pylint: disable=line-too-long
     assert admin_response_data["responsible_party_investigator_affiliation"] == "admin sponsor affiliation"
+    # pylint: disable=line-too-long
     assert admin_response_data["responsible_party_investigator_affiliation"] == "admin sponsor affiliation"
     assert admin_response_data["lead_sponsor_name"] == "admin sponsor name"
 
@@ -2259,3 +2261,47 @@ def test_put_status_metadata(clients):
     assert response_data["start_date_type"] == "Actual"
     assert response_data["completion_date"] == "nuzzzll"
     assert response_data["completion_date_type"] == "Actual"
+
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/metadata/status",
+        json={
+            "overall_status": "Withdrawn",
+            "why_stopped": "admin-test",
+            "start_date": "test",
+            "start_date_type": "Actual",
+            "completion_date": "admin date",
+            "completion_date_type": "Actual",
+        },
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+
+    assert admin_response_data["overall_status"] == "Withdrawn"
+    assert admin_response_data["why_stopped"] == "admin-test"
+    assert admin_response_data["start_date"] == "test"
+    assert admin_response_data["start_date_type"] == "Actual"
+    assert admin_response_data["completion_date"] == "admin date"
+    assert admin_response_data["completion_date_type"] == "Actual"
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/metadata/status",
+        json={
+            "overall_status": "Withdrawn",
+            "why_stopped": "editor-test",
+            "start_date": "start date",
+            "start_date_type": "Actual",
+            "completion_date": "completion date",
+            "completion_date_type": "Actual",
+        },
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+
+    assert editor_response_data["overall_status"] == "Withdrawn"
+    assert editor_response_data["why_stopped"] == "editor-test"
+    assert editor_response_data["start_date"] == "start date"
+    assert editor_response_data["start_date_type"] == "Actual"
+    assert editor_response_data["completion_date"] == "completion date"
+    assert editor_response_data["completion_date_type"] == "Actual"
