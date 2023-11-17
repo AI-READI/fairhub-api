@@ -758,12 +758,27 @@ def test_delete_dataset_creator_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     creator_id = pytest.global_dataset_creator_id
+    admin_creator_id = pytest.global_dataset_creator_id_admin
+    editor_creator_id = pytest.global_dataset_creator_id_editor
 
+    # Verify Viewer cannot delete
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator/{creator_id}"
+    )
     response = _logged_in_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/creator/{creator_id}"
     )
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator/{admin_creator_id}"
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator/{editor_creator_id}"
+    )
 
+    assert viewer_response.status_code == 403
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
 
 
 # ------------------- DATE METADATA ------------------- #

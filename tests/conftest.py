@@ -59,6 +59,8 @@ pytest.global_reference_id_editor = ""
 # dataset variables for admin client and editor client
 pytest.global_dataset_id_admin = ""
 pytest.global_dataset_id_editor = ""
+pytest.global_dataset_creator_id_admin = ""
+pytest.global_dataset_creator_id_editor = ""
 
 # Dataset variables use for testing
 pytest.global_dataset_id = ""
