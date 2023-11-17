@@ -2190,7 +2190,7 @@ def test_put_sponsors_metadata(clients):
         f"/study/{study_id}/metadata/sponsors",
         json={
             "responsible_party_type": "Sponsor",
-            "responsible_party_investigation_name": "admin sponsor name",
+            "responsible_party_investigator_name": "admin sponsor name",
             "responsible_party_investigator_title": "admin sponsor title",
             "responsible_party_investigator_affiliation": "admin sponsor affiliation",
             "lead_sponsor_name": "admin sponsor name",
@@ -2208,6 +2208,8 @@ def test_put_sponsors_metadata(clients):
     # pylint: disable=line-too-long
     assert admin_response_data["responsible_party_investigator_affiliation"] == "admin sponsor affiliation"
     assert admin_response_data["lead_sponsor_name"] == "admin sponsor name"
+
+    # TODO: add editor and viewer tests
 
 
 # ------------------- STATUS METADATA ------------------- #
