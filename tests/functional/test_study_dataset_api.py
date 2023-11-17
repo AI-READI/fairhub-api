@@ -47,6 +47,50 @@ def test_post_dataset(clients):
     response_data = json.loads(response.data)
     pytest.global_dataset_id = response_data["id"]
 
+    assert response_data["title"] == "Dataset Title"
+    assert response_data["description"] == "Dataset Description"
+
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/dataset",
+        json={
+            "title": "Dataset Title",
+            "description": "Dataset Description",
+        },
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    pytest.global_dataset_id_admin = admin_response_data["id"]\
+
+    assert admin_response_data["title"] == "Dataset Title"
+    assert admin_response_data["description"] == "Dataset Description"
+
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/dataset",
+        json={
+            "title": "Dataset Title",
+            "description": "Dataset Description",
+        },
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    pytest.global_dataset_id_editor = editor_response_data["id"]
+
+    assert editor_response_data["title"] == "Dataset Title"
+    assert editor_response_data["description"] == "Dataset Description"
+
+    viewer_response = _viewer_client.post(
+        f"/study/{study_id}/dataset",
+        json={
+            "title": "Dataset Title",
+            "description": "Dataset Description",
+        },
+    )
+
+    # response will be 403 due to Viewer permissions
+    assert viewer_response.status_code == 403
+
 
 def test_get_dataset_from_study(clients):
     """
