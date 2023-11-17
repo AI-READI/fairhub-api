@@ -2219,8 +2219,14 @@ def test_get_status_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
 
     response = _logged_in_client.get(f"/study/{study_id}/metadata/status")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/status")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/status")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/status")
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
 
 
 def test_put_status_metadata(clients):
