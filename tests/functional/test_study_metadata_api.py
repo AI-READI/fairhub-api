@@ -2186,6 +2186,27 @@ def test_put_sponsors_metadata(clients):
     )
     assert response_data["lead_sponsor_name"] == "sponsor name"
 
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/metadata/sponsors",
+        json={
+            "responsible_party_type": "Sponsor",
+            "responsible_party_investigation_name": "admin sponsor name",
+            "responsible_party_investigator_title": "admin sponsor title",
+            "responsible_party_investigator_affiliation": "admin sponsor affiliation",
+            "lead_sponsor_name": "admin sponsor name",
+        }
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+
+    assert admin_response_data["responsible_party_type"] == "Sponsor"
+    assert admin_response_data["responsible_party_investigation_name"] == "admin sponsor name"
+    assert admin_response_data["responsible_party_investigator_title"] == "admin sponsor title"
+    assert admin_response_data["responsible_party_investigator_affiliation"] == "admin sponsor affiliation"
+    assert admin_response_data["responsible_party_investigator_affiliation"] == "admin sponsor affiliation"
+    assert admin_response_data["lead_sponsor_name"] == "admin sponsor name"
+
 
 # ------------------- STATUS METADATA ------------------- #
 def test_get_status_metadata(clients):
