@@ -796,8 +796,20 @@ def test_get_dataset_date_metadata(clients):
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/date"
     )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/date"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/date"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/date"
+    )
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
 
 
 def test_post_dataset_date_metadata(clients):
@@ -823,6 +835,39 @@ def test_post_dataset_date_metadata(clients):
     assert response_data[0]["date"] == 20210101
     assert response_data[0]["type"] == "Type"
     assert response_data[0]["information"] == "Info"
+
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/date",
+        json=[{"date": 20210101, "type": "Type", "information": "Info"}],
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    pytest.global_dataset_date_id_admin = admin_response_data[0]["id"]
+
+    assert admin_response_data[0]["date"] == 20210101
+    assert admin_response_data[0]["type"] == "Type"
+    assert admin_response_data[0]["information"] == "Info"
+
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/date",
+        json=[{"date": 20210101, "type": "Type", "information": "Info"}],
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    pytest.global_dataset_date_id_editor = editor_response_data[0]["id"]
+
+    assert editor_response_data[0]["date"] == 20210101
+    assert editor_response_data[0]["type"] == "Type"
+    assert editor_response_data[0]["information"] == "Info"
+
+    viewer_response = _viewer_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/date",
+        json=[{"date": 20210101, "type": "Type", "information": "Info"}],
+    )
+
+    assert viewer_response.status_code == 403
 
 
 def test_delete_dataset_date_metadata(clients):
