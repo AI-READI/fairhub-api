@@ -1135,11 +1135,24 @@ def test_delete_dataset_description_metadata(clients):
     dataset_id = pytest.global_dataset_id
     description_id = pytest.global_dataset_description_id
 
+    # Verify Viewer cannot delete
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/description/{description_id}"
+    )
     response = _logged_in_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/description/{description_id}"
+    )
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/description/{description_id}"
+    )
+    editor_response = _editor_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/description/{description_id}"
     )
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 403
 
 
 # ------------------- FUNDER METADATA ------------------- #
