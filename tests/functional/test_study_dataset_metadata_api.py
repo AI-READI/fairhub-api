@@ -1226,6 +1226,79 @@ def test_post_dataset_funder_metadata(clients):
     assert response_data[0]["identifier_scheme_uri"] == "Identifier Scheme URI"
     assert response_data[0]["identifier_type"] == "Identifier Type"
 
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/funder",
+        json=[
+            {
+                "name": "Admin Name",
+                "award_number": "award number",
+                "award_title": "Award Title",
+                "award_uri": "Award URI",
+                "identifier": "Identifier",
+                "identifier_scheme_uri": "Identifier Scheme URI",
+                "identifier_type": "Identifier Type",
+            }
+        ],
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    pytest.global_dataset_funder_id_admin = admin_response_data[0]["id"]
+
+    assert admin_response_data[0]["name"] == "Admin Name"
+    assert admin_response_data[0]["award_number"] == "award number"
+    assert admin_response_data[0]["award_title"] == "Award Title"
+    assert admin_response_data[0]["award_uri"] == "Award URI"
+    assert admin_response_data[0]["identifier"] == "Identifier"
+    assert admin_response_data[0]["identifier_scheme_uri"] == "Identifier Scheme URI"
+    assert admin_response_data[0]["identifier_type"] == "Identifier Type"
+
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/funder",
+        json=[
+            {
+                "name": "Editor Name",
+                "award_number": "award number",
+                "award_title": "Award Title",
+                "award_uri": "Award URI",
+                "identifier": "Identifier",
+                "identifier_scheme_uri": "Identifier Scheme URI",
+                "identifier_type": "Identifier Type",
+            }
+        ],
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    pytest.global_dataset_funder_id_editor = editor_response_data[0]["id"]
+
+    assert editor_response_data[0]["name"] == "Editor Name"
+    assert editor_response_data[0]["award_number"] == "award number"
+    assert editor_response_data[0]["award_title"] == "Award Title"
+    assert editor_response_data[0]["award_uri"] == "Award URI"
+    assert editor_response_data[0]["identifier"] == "Identifier"
+    assert (
+        editor_response_data[0]["identifier_scheme_uri"] == "Identifier Scheme URI"
+    )  # pylint: disable=line-too-long
+    assert editor_response_data[0]["identifier_type"] == "Identifier Type"
+
+    viewer_response = _viewer_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/funder",
+        json=[
+            {
+                "name": "Viewer Name",
+                "award_number": "award number",
+                "award_title": "Award Title",
+                "award_uri": "Award URI",
+                "identifier": "Identifier",
+                "identifier_scheme_uri": "Identifier Scheme URI",
+                "identifier_type": "Identifier Type",
+            }
+        ],
+    )
+
+    assert viewer_response.status_code == 403
+
 
 def test_delete_dataset_funder_metadata(clients):
     """
