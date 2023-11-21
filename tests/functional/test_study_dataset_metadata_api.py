@@ -1868,8 +1868,51 @@ def test_get_other_dataset_metadata(clients):
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/other"
     )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/other"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/other"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/other"
+    )
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    # Editor was the last to update the metadata successfully so
+    # the response should reflect that
+    assert response_data["acknowledgement"] == "Yes"
+    assert response_data["language"] == "English"
+    assert response_data["resource_type"] == "Editor Resource Type"
+    assert response_data["size"] == ["Size"]
+    assert response_data["standards_followed"] == "Standards Followed"
+
+    assert admin_response_data["acknowledgement"] == "Yes"
+    assert admin_response_data["language"] == "English"
+    assert admin_response_data["resource_type"] == "Editor Resource Type"
+    assert admin_response_data["size"] == ["Size"]
+    assert admin_response_data["standards_followed"] == "Standards Followed"
+
+    assert editor_response_data["acknowledgement"] == "Yes"
+    assert editor_response_data["language"] == "English"
+    assert editor_response_data["resource_type"] == "Editor Resource Type"
+    assert editor_response_data["size"] == ["Size"]
+    assert editor_response_data["standards_followed"] == "Standards Followed"
+
+    assert viewer_response_data["acknowledgement"] == "Yes"
+    assert viewer_response_data["language"] == "English"
+    assert viewer_response_data["resource_type"] == "Editor Resource Type"
+    assert viewer_response_data["size"] == ["Size"]
+    assert viewer_response_data["standards_followed"] == "Standards Followed"
 
 
 # ------------------- PUBLICATION METADATA ------------------- #
