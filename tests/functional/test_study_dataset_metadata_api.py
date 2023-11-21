@@ -2333,17 +2333,17 @@ def test_post_dataset_related_item_metadata(clients):
 
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    pytest.global_dataset_related_item_id = editor_response_data[2]["id"]
+    pytest.global_dataset_related_item_id_editor = editor_response_data[2]["id"]
     pytest.global_dataset_related_item_contributor_id = editor_response_data[2][
         "contributors"
     ][0]["id"]
-    pytest.global_dataset_related_item_creator_id = editor_response_data[2]["creators"][0][
+    pytest.global_dataset_related_item_creator_id_editor = editor_response_data[2]["creators"][0][
         "id"
     ]
-    pytest.global_dataset_related_item_identifier_id = editor_response_data[2]["identifiers"][
+    pytest.global_related_item_identifier_id_editor = editor_response_data[2]["identifiers"][
         0
     ]["id"]
-    pytest.global_dataset_related_item_title_id = editor_response_data[2]["titles"][0]["id"]
+    pytest.global_related_item_title_id_editor = editor_response_data[2]["titles"][0]["id"]
 
     assert editor_response_data[2]["contributors"][0]["name"] == "Editor Ndafsdame"
     assert editor_response_data[2]["contributors"][0]["contributor_type"] == "Editor Con Type"
@@ -2359,14 +2359,14 @@ def test_post_dataset_related_item_metadata(clients):
     assert editor_response_data[2]["identifiers"][0]["type"] == "ARK"
     assert editor_response_data[2]["issue"] == "Editor Issue"
     assert editor_response_data[2]["last_page"] == "Editor Last Page"
-    assert editor_response_data[2]["number_type"] == "Editor Number Type
+    assert editor_response_data[2]["number_type"] == "Editor Number Type"
     assert editor_response_data[2]["number_value"] == "Editor Number Value"
     assert editor_response_data[2]["publication_year"] == 2013
     assert editor_response_data[2]["publisher"] == "Editor Publisher"
     assert editor_response_data[2]["relation_type"] == "Editor Relation Type"
     assert editor_response_data[2]["titles"][0]["title"] == "Editor Title"
     assert editor_response_data[2]["titles"][0]["type"] == "MainTitle"
-    assert editor_response_data[2]["type"] == "Editor Type
+    assert editor_response_data[2]["type"] == "Editor Type"
     assert editor_response_data[2]["volume"] == "Editor Volume"
 
     viewer_client = _viewer_client.post(
@@ -2438,7 +2438,12 @@ def test_get_dataset_related_item_metadata(clients):
     assert admin_response.status_code == 200
     assert editor_response.status_code == 200
     assert viewer_response.status_code == 200
-    
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
     assert response_data[0]["contributors"][0]["name"] == "Ndafsdame"
     assert response_data[0]["contributors"][0]["contributor_type"] == "Con Type"
     assert response_data[0]["contributors"][0]["name_type"] == "Personal"
@@ -2499,14 +2504,14 @@ def test_get_dataset_related_item_metadata(clients):
     assert response_data[2]["identifiers"][0]["type"] == "ARK"
     assert response_data[2]["issue"] == "Editor Issue"
     assert response_data[2]["last_page"] == "Editor Last Page"
-    assert response_data[2]["number_type"] == "Editor Number Type
+    assert response_data[2]["number_type"] == "Editor Number Type"
     assert response_data[2]["number_value"] == "Editor Number Value"
     assert response_data[2]["publication_year"] == 2013
     assert response_data[2]["publisher"] == "Editor Publisher"
     assert response_data[2]["relation_type"] == "Editor Relation Type"
     assert response_data[2]["titles"][0]["title"] == "Editor Title"
     assert response_data[2]["titles"][0]["type"] == "MainTitle"
-    assert response_data[2]["type"] == "Editor Type
+    assert response_data[2]["type"] == "Editor Type"
     assert response_data[2]["volume"] == "Editor Volume"
 
     assert admin_response_data[0]["contributors"][0]["name"] == "Ndafsdame"
@@ -2569,14 +2574,14 @@ def test_get_dataset_related_item_metadata(clients):
     assert admin_response_data[2]["identifiers"][0]["type"] == "ARK"
     assert admin_response_data[2]["issue"] == "Editor Issue"
     assert admin_response_data[2]["last_page"] == "Editor Last Page"
-    assert admin_response_data[2]["number_type"] == "Editor Number Type
+    assert admin_response_data[2]["number_type"] == "Editor Number Type"
     assert admin_response_data[2]["number_value"] == "Editor Number Value"
     assert admin_response_data[2]["publication_year"] == 2013
     assert admin_response_data[2]["publisher"] == "Editor Publisher"
     assert admin_response_data[2]["relation_type"] == "Editor Relation Type"
     assert admin_response_data[2]["titles"][0]["title"] == "Editor Title"
     assert admin_response_data[2]["titles"][0]["type"] == "MainTitle"
-    assert admin_response_data[2]["type"] == "Editor Type
+    assert admin_response_data[2]["type"] == "Editor Type"
     assert admin_response_data[2]["volume"] == "Editor Volume"
 
     assert editor_response_data[0]["contributors"][0]["name"] == "Ndafsdame"
@@ -2639,14 +2644,14 @@ def test_get_dataset_related_item_metadata(clients):
     assert editor_response_data[2]["identifiers"][0]["type"] == "ARK"
     assert editor_response_data[2]["issue"] == "Editor Issue"
     assert editor_response_data[2]["last_page"] == "Editor Last Page"
-    assert editor_response_data[2]["number_type"] == "Editor Number Type
+    assert editor_response_data[2]["number_type"] == "Editor Number Type"
     assert editor_response_data[2]["number_value"] == "Editor Number Value"
     assert editor_response_data[2]["publication_year"] == 2013
     assert editor_response_data[2]["publisher"] == "Editor Publisher"
     assert editor_response_data[2]["relation_type"] == "Editor Relation Type"
     assert editor_response_data[2]["titles"][0]["title"] == "Editor Title"
     assert editor_response_data[2]["titles"][0]["type"] == "MainTitle"
-    assert editor_response_data[2]["type"] == "Editor Type
+    assert editor_response_data[2]["type"] == "Editor Type"
     assert editor_response_data[2]["volume"] == "Editor Volume"
 
     assert viewer_response_data[0]["contributors"][0]["name"] == "Ndafsdame"
@@ -2709,14 +2714,14 @@ def test_get_dataset_related_item_metadata(clients):
     assert viewer_response_data[2]["identifiers"][0]["type"] == "ARK"
     assert viewer_response_data[2]["issue"] == "Editor Issue"
     assert viewer_response_data[2]["last_page"] == "Editor Last Page"
-    assert viewer_response_data[2]["number_type"] == "Editor Number Type
+    assert viewer_response_data[2]["number_type"] == "Editor Number Type"
     assert viewer_response_data[2]["number_value"] == "Editor Number Value"
     assert viewer_response_data[2]["publication_year"] == 2013
     assert viewer_response_data[2]["publisher"] == "Editor Publisher"
     assert viewer_response_data[2]["relation_type"] == "Editor Relation Type"
     assert viewer_response_data[2]["titles"][0]["title"] == "Editor Title"
     assert viewer_response_data[2]["titles"][0]["type"] == "MainTitle"
-    assert viewer_response_data[2]["type"] == "Editor Type
+    assert viewer_response_data[2]["type"] == "Editor Type"
     assert viewer_response_data[2]["volume"] == "Editor Volume"
 
 
@@ -2733,13 +2738,30 @@ def test_delete_dataset_related_item_contributor_metadata(clients):
     dataset_id = pytest.global_dataset_id
     related_item_id = pytest.global_dataset_related_item_id
     contributor_id = pytest.global_dataset_related_item_contributor_id
+    admin_con_id = pytest.global_dataset_related_item_contributor_id_admin
+    editor_con_id = pytest.global_dataset_related_item_contributor_id_editor
 
+    # pylint: disable=line-too-long
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/contributor/{contributor_id}"
+    )
     # pylint: disable=line-too-long
     response = _logged_in_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/contributor/{contributor_id}"
     )
+    # pylint: disable=line-too-long
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/contributor/{admin_con_id}"
+    )
+    # pylint: disable=line-too-long
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/contributor/{editor_con_id}"
+    )
 
+    assert viewer_response.status_code == 403
     assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 def test_delete_dataset_related_item_creator_metadata(clients):
@@ -2755,13 +2777,30 @@ def test_delete_dataset_related_item_creator_metadata(clients):
     dataset_id = pytest.global_dataset_id
     related_item_id = pytest.global_dataset_related_item_id
     creator_id = pytest.global_dataset_related_item_creator_id
+    admin_creator_id = pytest.global_dataset_related_item_creator_id_admin
+    editor_creator_id = pytest.global_dataset_related_item_creator_id_editor
 
+    # pylint: disable=line-too-long
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/creator/{creator_id}"
+    )
     # pylint: disable=line-too-long
     response = _logged_in_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/creator/{creator_id}"
     )
+    # pylint: disable=line-too-long
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/creator/{admin_creator_id}"
+    )
+    # pylint: disable=line-too-long
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/creator/{editor_creator_id}"
+    )
 
+    assert viewer_response.status_code == 403
     assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 def test_delete_dataset_related_item_identifier_metadata(clients):
