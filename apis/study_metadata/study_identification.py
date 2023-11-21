@@ -1,7 +1,7 @@
 """API routes for study identification metadata"""
 import typing
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -131,4 +131,4 @@ class StudyIdentificationResource(Resource):
             model.db.session.delete(study_identification_)
             model.db.session.commit()
 
-            return 204
+            Response(status=204)
