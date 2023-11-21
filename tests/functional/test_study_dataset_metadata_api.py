@@ -1916,25 +1916,6 @@ def test_get_other_dataset_metadata(clients):
 
 
 # ------------------- PUBLICATION METADATA ------------------- #
-def test_get_dataset_publisher_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID and dataset ID
-    When the '/study/{study_id}/dataset/{dataset_id}'
-    endpoint is requested (GET)
-    Then check that the response is valid and retrieves the dataset
-    publisher metadata content
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    dataset_id = pytest.global_dataset_id
-
-    response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/publisher"
-    )
-
-    assert response.status_code == 200
-
-
 def test_put_dataset_publisher_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
@@ -1965,6 +1946,67 @@ def test_put_dataset_publisher_metadata(clients):
         response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
     )
 
+
+def test_get_dataset_publisher_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    publisher metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/publisher"
+    )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/publisher"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/publisher"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/publisher"
+    )
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    # Editor was the last to update the metadata successfully so
+    # the response should reflect that
+    assert response_data["publisher"] == "Publisher"
+    assert response_data["managing_organization_name"] == "Managing Editor Organization Name"
+    assert (
+        response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
+    )
+
+    assert admin_response_data["publisher"] == "Publisher"
+    assert admin_response_data["managing_organization_name"] == "Managing Editor Organization Name"
+    assert (
+        admin_response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
+    )
+
+    assert editor_response_data["publisher"] == "Publisher"
+    assert editor_response_data["managing_organization_name"] == "Managing Editor Organization Name"
+    assert (
+        editor_response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
+    )
+
+    assert viewer_response_data["publisher"] == "Publisher"
+    assert viewer_response_data["managing_organization_name"] == "Managing Editor Organization Name"
+    assert (
+        viewer_response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
+    )
 
 # ------------------- RECORD KEYS METADATA ------------------- #
 def test_get_dataset_record_keys_metadata(clients):
