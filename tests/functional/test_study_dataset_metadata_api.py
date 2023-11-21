@@ -111,6 +111,10 @@ def test_delete_alternative_identifier(_logged_in_client):
     )
 
     assert response.status_code == 204
+    response_get = _logged_in_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier")
+    assert response_get.status_code == 200
+
+    assert len(json.loads(response_get.data)) == 0
 
 
 # ------------------- CONSENT METADATA ------------------- #
@@ -248,6 +252,11 @@ def test_delete_dataset_contributor_metadata(_logged_in_client):
 
     assert response.status_code == 204
 
+    response_get = _logged_in_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor")
+    assert response_get.status_code == 200
+
+    assert len(json.loads(response_get.data)) == 0
+
 
 # ------------------- CREATOR METADATA ------------------- #
 def test_get_dataset_creator_metadata(_logged_in_client):
@@ -329,6 +338,11 @@ def test_delete_dataset_creator_metadata(_logged_in_client):
 
     assert response.status_code == 204
 
+    response_get = _logged_in_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/creator")
+    assert response_get.status_code == 200
+
+    assert len(json.loads(response_get.data)) == 0
+
 
 # ------------------- DATE METADATA ------------------- #
 def test_get_dataset_date_metadata(_logged_in_client):
@@ -388,6 +402,11 @@ def test_delete_dataset_date_metadata(_logged_in_client):
     )
 
     assert response.status_code == 204
+
+    response_get = _logged_in_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/date")
+    assert response_get.status_code == 200
+
+    assert len(json.loads(response_get.data)) == 0
 
 
 # ------------------- DE-IDENTIFICATION LEVEL METADATA ------------------- #
@@ -506,6 +525,9 @@ def test_delete_dataset_description_metadata(_logged_in_client):
 
     assert response.status_code == 204
 
+    response_get = _logged_in_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/description")
+    assert (len(json.loads(response_get.data)) == 1 and json.loads(response_get.data)[0]["type"] == "Abstract")
+
 
 # ------------------- FUNDER METADATA ------------------- #
 def test_get_dataset_funder_metadata(_logged_in_client):
@@ -582,6 +604,10 @@ def test_delete_dataset_funder_metadata(_logged_in_client):
     )
 
     assert response.status_code == 204
+
+    response_get = _logged_in_client.get(f"/study/{study_id}/dataset/{dataset_id}/metadata/funder")
+    assert response_get.status_code == 200
+    assert len(json.loads(response_get.data)) == 0
 
 
 # ------------------- OTHER METADATA ------------------- #
@@ -786,7 +812,7 @@ def test_post_dataset_related_item_metadata(_logged_in_client):
                 "publication_year": 2013,
                 "publisher": "Publisher",
                 "relation_type": "Relation Type",
-                "titles": [{"title": "Title", "type": "MainTitle"}],
+                "titles": [{"title": "Title", "type": "MainTitle"}, {"title": "Title", "type": "Subtitle"}],
                 "type": "Type",
                 "volume": "Volume",
             }
@@ -828,6 +854,8 @@ def test_post_dataset_related_item_metadata(_logged_in_client):
     assert response_data[0]["relation_type"] == "Relation Type"
     assert response_data[0]["titles"][0]["title"] == "Title"
     assert response_data[0]["titles"][0]["type"] == "MainTitle"
+    assert response_data[0]["titles"][1]["title"] == "Title"
+    assert response_data[0]["titles"][1]["type"] == "Subtitle"
     assert response_data[0]["type"] == "Type"
     assert response_data[0]["volume"] == "Volume"
 
@@ -852,6 +880,12 @@ def test_delete_dataset_related_item_contributor_metadata(_logged_in_client):
 
     assert response.status_code == 204
 
+    response_get = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item"
+    )
+    assert response_get.status_code == 200
+    assert len(json.loads(response_get.data)[0]["contributors"]) == 0
+
 
 def test_delete_dataset_related_item_creator_metadata(_logged_in_client):
     """
@@ -872,6 +906,12 @@ def test_delete_dataset_related_item_creator_metadata(_logged_in_client):
     )
 
     assert response.status_code == 204
+
+    response_get = (
+        _logged_in_client.get
+        (f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item"))
+
+    assert len(json.loads(response_get.data)[0]["creators"]) == 0
 
 
 def test_delete_dataset_related_item_identifier_metadata(_logged_in_client):
@@ -894,6 +934,13 @@ def test_delete_dataset_related_item_identifier_metadata(_logged_in_client):
 
     assert response.status_code == 204
 
+    response_get = (
+        _logged_in_client.get
+        (f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item"))
+
+    assert response_get.status_code == 200
+    assert len(json.loads(response_get.data)[0]["identifiers"]) == 0
+
 
 def test_delete_dataset_related_item_title_metadata(_logged_in_client):
     """
@@ -906,14 +953,33 @@ def test_delete_dataset_related_item_title_metadata(_logged_in_client):
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     related_item_id = pytest.global_dataset_related_item_id
-    title_id = pytest.global_dataset_related_item_title_id
-
+    # title_id = pytest.global_dataset_related_item_title_id
     # pylint: disable=line-too-long
-    response = _logged_in_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{title_id}"
-    )
+    response_get = (
+        _logged_in_client.get
+        (f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item"))
 
-    assert response.status_code == 204
+    # titles_to_delete = [
+    #     # f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{title_id}"
+    #     for i in json.loads(response_get.data)[0]["titles"]
+    #     if i["type"] != "MainTitle"
+    # ]
+
+    for i in json.loads(response_get.data)[0]["titles"]:
+        if i["type"] != "MainTitle":
+            t_id = i["id"]
+            response = (
+                _logged_in_client.delete
+                (f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{t_id}"))
+            assert response.status_code == 204
+
+    response_get = (
+        _logged_in_client.get
+        (f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item"))
+
+    assert response_get.status_code == 200
+    assert (len(json.loads(response_get.data)[0]["titles"]) == 1
+            and json.loads(response_get.data)[0]["titles"][0]["type"] == "MainTitle")
 
 
 def test_delete_dataset_related_item_metadata(_logged_in_client):
@@ -933,6 +999,12 @@ def test_delete_dataset_related_item_metadata(_logged_in_client):
     )
 
     assert response.status_code == 204
+    response_get = (
+        _logged_in_client.get
+        (f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item"))
+
+    assert response_get.status_code == 200
+    assert len(json.loads(response_get.data)) == 0
 
 
 # ------------------- RIGHTS METADATA ------------------- #
@@ -1004,6 +1076,13 @@ def test_delete_dataset_rights_metadata(_logged_in_client):
     )
 
     assert response.status_code == 204
+
+    response_get = (
+        _logged_in_client.get
+        (f"/study/{study_id}/dataset/{dataset_id}/metadata/rights"))
+    assert response_get.status_code == 200
+
+    assert len(json.loads(response_get.data)) == 0
 
 
 # ------------------- SUBJECTS METADATA ------------------- #
@@ -1077,6 +1156,13 @@ def test_delete_dataset_subject_metadata(_logged_in_client):
 
     assert response.status_code == 204
 
+    response_get = (
+        _logged_in_client.get
+        (f"/study/{study_id}/dataset/{dataset_id}/metadata/subject"))
+    assert response_get.status_code == 200
+
+    assert len(json.loads(response_get.data)) == 0
+
 
 # ------------------- TITLE METADATA ------------------- #
 def test_get_dataset_title_metadata(_logged_in_client):
@@ -1138,3 +1224,9 @@ def test_delete_dataset_title_metadata(_logged_in_client):
     )
 
     assert response.status_code == 204
+
+    response_get = (
+        _logged_in_client.get
+        (f"/study/{study_id}/dataset/{dataset_id}/metadata/title"))
+    assert response_get.status_code == 200
+    assert (len(json.loads(response_get.data)) == 1 and json.loads(response_get.data)[0]["type"] == "MainTitle")

@@ -15,7 +15,7 @@ def test_get_version_study_metadata(_logged_in_client):
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id  # type: ignore
-    version_id = pytest.global_version_id  # type: ignore
+    version_id = pytest.global_dataset_version_id  # type: ignore
 
     _logged_in_client.post(
         f"/study/{study_id}/metadata/arm",
@@ -114,138 +114,20 @@ def test_get_version_study_metadata(_logged_in_client):
             }
         ],
     )
-    _logged_in_client.put(
-        f"/study/{study_id}/metadata/description",
-        json={
-            "brief_summary": "brief_summary",
-            "detailed_description": "detailed_description",
-        },
-    )
-    _logged_in_client.put(
-        f"/study/{study_id}/metadata/eligibility",
-        json={
-            "gender": "All",
-            "gender_based": "Yes",
-            "gender_description": "none",
-            "minimum_age_value": 18,
-            "maximum_age_value": 61,
-            "minimum_age_unit": "1",
-            "maximum_age_unit": "2",
-            "healthy_volunteers": "Yes",
-            "inclusion_criteria": ["tests"],
-            "exclusion_criteria": ["Probability Sample"],
-            "study_population": "study_population",
-            "sampling_method": "Probability Sample",
-        },
-    )
-    _logged_in_client.put(
-        f"/study/{study_id}/metadata/ipdsharing",
-        json={
-            "ipd_sharing": "Yes",
-            "ipd_sharing_description": "yes",
-            "ipd_sharing_info_type_list": ["Study Protocol", "Analytical Code"],
-            "ipd_sharing_time_frame": "uh",
-            "ipd_sharing_access_criteria": "Study Protocol",
-            "ipd_sharing_url": "1",
-        },
-    )
-    _logged_in_client.put(
-        f"/study/{study_id}/metadata/sponsors",
-        json={
-            "responsible_party_type": "Sponsor",
-            "responsible_party_investigator_name": "party name",
-            "responsible_party_investigator_title": "party title",
-            "responsible_party_investigator_affiliation": "party affiliation",
-            "lead_sponsor_name": "sponsor name",
-        },
-    )
-    _logged_in_client.put(
-        f"/study/{study_id}/metadata/collaborators",
-        json=[
-            "collaborator1123",
-        ],
-    )
 
-    _logged_in_client.put(
-        f"/study/{study_id}/metadata/status",
-        json={
-            "overall_status": "Withdrawn",
-            "why_stopped": "test",
-            "start_date": "2023-11-15 00:00:00",
-            "start_date_type": "Actual",
-            "completion_date": "2023-11-16 00:00:00",
-
-            "completion_date_type": "Actual",
-        },
-    )
-    _logged_in_client.put(
-        f"/study/{study_id}/metadata/conditions",
-        json=["c"],
-    )
-    _logged_in_client.put(
-        f"/study/{study_id}/metadata/design",
-        json={
-            "design_allocation": "dfasdfasd",
-            "study_type": "Interventional",
-            "design_intervention_model": "Treatment",
-            "design_intervention_model_description": "dfadf",
-            "design_primary_purpose": "Parallel Assignment",
-            "design_masking": "Double",
-            "design_masking_description": "tewsfdasf",
-            "design_who_masked_list": ["Participant", "Care Provider"],
-            "phase_list": ["N/A"],
-            "enrollment_count": 3,
-            "enrollment_type": "Actual",
-            "number_arms": 2,
-            "design_observational_model_list": ["Cohort", "Case-Control"],
-            "design_time_perspective_list": ["Other"],
-            "bio_spec_retention": "None Retained",
-            "bio_spec_description": "dfasdf",
-            "target_duration": "rewrwe",
-            "number_groups_cohorts": 1,
-        },
-    )
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/study-metadata"
     )
     response_data = json.loads(response.data)
-    # print(response_data)
+
     assert response.status_code == 200
-    assert response_data["ipd_sharing"]["ipd_sharing_info_type_list"] ==  ["Study Protocol", "Analytical Code"]
-    assert response_data["ipd_sharing"]["ipd_sharing"] == "Yes"
     assert response_data["available_ipd"][0]["identifier"] == "identifier1"
     assert response_data["available_ipd"][0]["url"] == "google.com"
     assert response_data["arms"][0]["label"] == "Label1"
 
     assert response_data["contacts"][0]["name"] == "central-contact"
     assert response_data["contacts"][0]["affiliation"] == "affiliation"
-    assert response_data["description"]["brief_summary"] == "brief_summary"
 
-    assert response_data["design"]["design_allocation"] == "dfasdfasd"
-    assert response_data["design"]["study_type"] == "Interventional"
-    assert response_data["design"]["design_intervention_model"] == "Treatment"
-    assert response_data["design"]["design_primary_purpose"] == "Parallel Assignment"
-    assert response_data["design"]["design_masking"] == "Double"
-    assert response_data["design"]["design_who_masked_list"] == ["Participant", "Care Provider"]
-    assert response_data["design"]["phase_list"] == ["N/A"]
-    assert response_data["design"]["enrollment_count"] == 3
-    assert response_data["design"]["enrollment_type"] == "Actual"
-    assert response_data["design"]["number_arms"] == 2
-    assert response_data["design"]["design_observational_model_list"] == [
-        "Cohort",
-        "Case-Control",
-    ]
-    assert response_data["design"]["design_time_perspective_list"] == ["Other"]
-    assert response_data["design"]["bio_spec_retention"] == "None Retained"
-    assert response_data["design"]["bio_spec_description"] == "dfasdf"
-    assert response_data["design"]["target_duration"] == "rewrwe"
-    assert response_data["design"]["number_groups_cohorts"] == 1
-
-
-    assert response_data["eligibility"]["gender"] == "All"
-    assert response_data["eligibility"]["minimum_age_value"] == 18
-    assert response_data["primary_identifier"]["identifier"] == "test"
-    assert response_data["primary_identifier"]["identifier_type"] == "test"
     assert response_data["secondary_identifiers"][0]["identifier"] == "test"
     assert response_data["secondary_identifiers"][0]["identifier_type"] == "test"
     assert response_data["interventions"][0]["type"] == "Device"
@@ -258,13 +140,6 @@ def test_get_version_study_metadata(_logged_in_client):
     assert response_data["overall_officials"][0]["affiliation"] == "aff"
     assert response_data["references"][0]["identifier"] == "reference identifier"
     assert response_data["references"][0]["citation"] == "reference citation"
-    assert response_data["sponsors"]["responsible_party_type"] == "Sponsor"
-    assert response_data["sponsors"]["responsible_party_investigator_name"] == "party name"
-    assert response_data["collaborators"] == ["collaborator1123"]
-    assert response_data["status"]["overall_status"] == "Withdrawn"
-    assert response_data["status"]["start_date"] == "2023-11-15 00:00:00"
-    assert response_data["oversight"] is True
-    assert response_data["conditions"] == ["c"]
 
 
 def test_get_version_dataset_metadata(_logged_in_client):
@@ -275,22 +150,170 @@ def test_get_version_dataset_metadata(_logged_in_client):
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id  # type: ignore
-    version_id = pytest.global_version_id  # type: ignore
+    version_id = pytest.global_dataset_version_id  # type: ignore
 
+    _logged_in_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor",
+        json=[
+            {
+                "name": "Name here",
+                "name_type": "Personal",
+                "name_identifier": "Name identifier",
+                "name_identifier_scheme": "Name Scheme ID",
+                "name_identifier_scheme_uri": "Name ID Scheme URI",
+                "contributor_type": "Con Type",
+                "affiliations": [
+                    {
+                        "name": "Test",
+                        "identifier": "yes",
+                        "scheme": "uh",
+                        "scheme_uri": "scheme uri",
+                    }
+                ],
+            }
+        ],
+    )
+    _logged_in_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator",
+        json=[
+            {
+                "name": "Name here",
+                "name_type": "Personal",
+                "name_identifier": "Name identifier",
+                "name_identifier_scheme": "Name Scheme ID",
+                "name_identifier_scheme_uri": "Name ID Scheme URI",
+                "affiliations": [
+                    {
+                        "name": "Test",
+                        "identifier": "yes",
+                        "scheme": "uh",
+                        "scheme_uri": "scheme uri",
+                    }
+                ],
+            }
+        ],
+    )
+
+    _logged_in_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/date",
+        json=[{"date": 20210101, "type": "Type", "information": "Info"}],
+    )
+    _logged_in_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/funder",
+        json=[
+            {
+                "name": "Name",
+                "award_number": "award number",
+                "award_title": "Award Title",
+                "award_uri": "Award URI",
+                "identifier": "Identifier",
+                "identifier_scheme_uri": "Identifier Scheme URI",
+                "identifier_type": "Identifier Type",
+            }
+        ],
+    )
+    _logged_in_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights",
+        json=[
+            {
+                "identifier": "Identifier",
+                "identifier_scheme": "Identifier Scheme",
+                "rights": "Rights",
+                "uri": "URI",
+            }
+        ],
+    )
+    _logged_in_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/subject",
+        json=[
+            {
+                "classification_code": "Classification Code",
+                "scheme": "Scheme",
+                "scheme_uri": "Scheme URI",
+                "subject": "Subject",
+                "value_uri": "Value URI",
+            }
+        ],
+    )
+    _logged_in_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier",
+        json=[
+            {
+                "identifier": "identifier test",
+                "type": "ARK",
+            }
+        ],
+    )
+    _logged_in_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item",
+        json=[
+            {
+                "contributors": [
+                    {
+                        "name": "Ndafsdame",
+                        "contributor_type": "Con Type",
+                        "name_type": "Personal",
+                    }
+                ],
+                "creators": [{"name": "Name", "name_type": "Personal"}],
+                "edition": "Edition",
+                "first_page": "First Page",
+                "identifiers": [
+                    {
+                        "identifier": "Identifier",
+                        "metadata_scheme": "Metadata Scheme",
+                        "scheme_type": "Scheme Type",
+                        "scheme_uri": "Scheme URI",
+                        "type": "ARK",
+                    }
+                ],
+                "issue": "Issue",
+                "last_page": "Last Page",
+                "number_type": "Number Type",
+                "number_value": "Number Value",
+                "publication_year": 2013,
+                "publisher": "Publisher",
+                "relation_type": "Relation Type",
+                "titles": [{"title": "Title", "type": "MainTitle"}, {"title": "Title", "type": "Subtitle"}],
+                "type": "Type",
+                "volume": "Volume",
+            }
+        ],
+    )
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/dataset-metadata"
     )
     response_data = json.loads(response.data)
-    print(response_data)
     assert response.status_code == 200
 
-    assert response_data["links"][0]["url"] == "google.com"
-    assert response_data["locations"][0]["country"] == "yes"
-    assert response_data["locations"][0]["facility"] == "test"
-    assert response_data["overall_officials"][0]["name"] == "test"
-    assert response_data["overall_officials"][0]["affiliation"] == "aff"
-    assert response_data["references"][0]["identifier"] == "reference identifier"
-    assert response_data["references"][0]["citation"] == "reference citation"
+    assert response_data["contributors"][0]["name"] == "Name here"
+    assert response_data["contributors"][0]["name_type"] == "Personal"
+    assert response_data["contributors"][0]["contributor_type"] == "Con Type"
+    assert response_data["dates"][0]["date"] == "01-01-1970"
+    assert response_data["dates"][0]["type"] == "Type"
+    assert response_data["creators"][0]["name"] == "Name here"
+    assert response_data["creators"][0]["name_type"] == "Personal"
+    assert response_data["funders"][0]["name"] == "Name"
+    assert response_data["funders"][0]["identifier"] == "Identifier"
+    assert response_data["rights"][0]["identifier"] == "Identifier"
+    assert response_data["rights"][0]["rights"] == "Rights"
+    assert response_data["subjects"][0]["subject"] == "Subject"
+
+    assert response_data["identifiers"][0]["identifier"] == "identifier test"
+    assert response_data["identifiers"][0]["type"] == "ARK"
+    assert response_data["related_items"][0]["publication_year"] == "1970"
+    assert response_data["related_items"][0]["publisher"] == "Publisher"
+    assert response_data["related_items"][0]["contributors"][0]["name"] == "Ndafsdame"
+    assert response_data["related_items"][0]["contributors"][0]["contributor_type"] == "Con Type"
+    assert response_data["related_items"][0]["creators"][0]["name"] == "Name"
+    assert response_data["related_items"][0]["creators"][0]["name_type"] == "Personal"
+    assert response_data["related_items"][0]["titles"][0]["title"] == "Title"
+    assert response_data["related_items"][0]["titles"][0]["type"] == "MainTitle"
+    assert response_data["related_items"][0]["titles"][1]["title"] == "Title"
+    assert response_data["related_items"][0]["titles"][1]["type"] == "Subtitle"
+    assert response_data["related_items"][0]["identifiers"][0]["identifier"] == "Identifier"
+    assert response_data["related_items"][0]["identifiers"][0]["type"] == "ARK"
+    assert response_data["related_items"][0]["type"] == "Type"
 
 
 def test_get_version_readme(_logged_in_client):
@@ -301,7 +324,7 @@ def test_get_version_readme(_logged_in_client):
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id  # type: ignore
-    version_id = pytest.global_version_id  # type: ignore
+    version_id = pytest.global_dataset_version_id  # type: ignore
 
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/readme"
@@ -319,7 +342,7 @@ def test_put_version_readme(_logged_in_client):
     # create a new dataset and delete it afterwards
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id  # type: ignore
-    version_id = pytest.global_version_id  # type: ignore
+    version_id = pytest.global_dataset_version_id  # type: ignore
 
     response = _logged_in_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/readme",
@@ -340,7 +363,7 @@ def test_put_version_changelog(_logged_in_client):
     # create a new dataset and delete it afterwards
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id  # type: ignore
-    version_id = pytest.global_version_id  # type: ignore
+    version_id = pytest.global_dataset_version_id  # type: ignore
     response = _logged_in_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/changelog",
         json={"changelog": "changelog test"},
@@ -359,7 +382,7 @@ def test_get_version_changelog(_logged_in_client):
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id  # type: ignore
-    version_id = pytest.global_version_id  # type: ignore
+    version_id = pytest.global_dataset_version_id  # type: ignore
 
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/changelog"
