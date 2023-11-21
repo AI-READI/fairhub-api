@@ -243,12 +243,27 @@ def test_delete_dataset_from_study(clients):
     response_data = json.loads(response.data)
     dataset_id = response_data["id"]
 
+    # Try to delete dataset with other clients (should not be possible)
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}",
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}",
+    )
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}"
+    )
+
+    assert admin_response.status_code == 403
+    assert editor_response.status_code == 403
+    assert viewer_response.status_code == 403
+
     # delete dataset
-    response = _logged_in_client.delete(
+    delete_response = _logged_in_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}",
     )
 
-    assert response.status_code == 200
+    assert delete_response.status_code == 204
 
 
 def test_post_dataset_version(clients):
