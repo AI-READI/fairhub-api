@@ -1,7 +1,7 @@
 """APIs for dataset date metadata"""
 from typing import Any, Union
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -108,4 +108,4 @@ class DatasetDateDeleteResource(Resource):
 
         model.db.session.delete(date_)
         model.db.session.commit()
-        return 204
+        Response(status=204)
