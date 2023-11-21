@@ -1767,25 +1767,6 @@ def test_delete_dataset_funder_metadata(clients):
 
 
 # ------------------- OTHER METADATA ------------------- #
-def test_get_other_dataset_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID and dataset ID
-    When the '/study/{study_id}/dataset/{dataset_id}'
-    endpoint is requested (GET)
-    Then check that the response is valid and retrieves the dataset
-    other metadata content
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    dataset_id = pytest.global_dataset_id
-
-    response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/other"
-    )
-
-    assert response.status_code == 200
-
-
 def test_put_other_dataset_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
@@ -1814,10 +1795,81 @@ def test_put_other_dataset_metadata(clients):
 
     assert response_data["acknowledgement"] == "Yes"
     assert response_data["language"] == "English"
-    # assert response_data["resource_type"] == "Resource Type"    # CURRENTLY NOT BEING RETURNED
+    assert response_data["resource_type"] == "Resource Type"    # CURRENTLY NOT BEING RETURNED
     assert response_data["size"] == ["Size"]
     assert response_data["standards_followed"] == "Standards Followed"
-    # ABOVE STATEMENT CURRENTLY NOT BEING UPDATED
+
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/other",
+        json={
+            "acknowledgement": "Yes",
+            "language": "English",
+            "resource_type": "Admin Resource Type",
+            "size": ["Size"],
+            "standards_followed": "Standards Followed",
+        }
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+
+    assert admin_response_data["acknowledgement"] == "Yes"
+    assert admin_response_data["language"] == "English"
+    assert admin_response_data["resource_type"] == "Admin Resource Type"
+    assert admin_response_data["size"] == ["Size"]
+    assert admin_response_data["standards_followed"] == "Standards Followed"
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/other",
+        json={
+            "acknowledgement": "Yes",
+            "language": "English",
+            "resource_type": "Editor Resource Type",
+            "size": ["Size"],
+            "standards_followed": "Standards Followed",
+        }
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+
+    assert editor_response_data["acknowledgement"] == "Yes"
+    assert editor_response_data["language"] == "English"
+    assert editor_response_data["resource_type"] == "Editor Resource Type"
+    assert editor_response_data["size"] == ["Size"]
+    assert editor_response_data["standards_followed"] == "Standards Followed"
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/other",
+        json={
+            "acknowledgement": "Yes",
+            "language": "English",
+            "resource_type": "Viewer Resource Type",
+            "size": ["Size"],
+            "standards_followed": "Standards Followed",
+        }
+    )
+
+    assert viewer_response.status_code == 403
+
+
+def test_get_other_dataset_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    other metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/other"
+    )
+
+    assert response.status_code == 200
 
 
 # ------------------- PUBLICATION METADATA ------------------- #
