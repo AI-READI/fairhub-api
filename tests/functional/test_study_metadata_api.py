@@ -69,10 +69,11 @@ def test_delete_arm_metadata(_logged_in_client):
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
     arm_id = pytest.global_arm_id
-
     response = _logged_in_client.delete(f"/study/{study_id}/metadata/arm/{arm_id}")
 
     assert response.status_code == 204
+    response_get = _logged_in_client.get(f"/study/{study_id}/metadata/arm")
+    assert len(json.loads(response_get.data)["arms"]) == 0
 
 
 # ------------------- IPD METADATA ------------------- #
@@ -133,6 +134,9 @@ def test_delete_available_ipd_metadata(_logged_in_client):
     )
 
     assert response.status_code == 204
+    response_get = _logged_in_client.get(f"/study/{study_id}/metadata/available-ipd")
+
+    assert len(json.loads(response_get.data)) == 0
 
 
 # ------------------- CENTRAL CONTACT METADATA ------------------- #
@@ -209,6 +213,9 @@ def test_delete_cc_metadata(_logged_in_client):
     )
 
     assert response.status_code == 204
+    response_get = _logged_in_client.get(f"/study/{study_id}/metadata/central-contact")
+
+    assert len(json.loads(response_get.data)) == 0
 
 
 #  ------------------- COLLABORATORS METADATA ------------------- #
@@ -522,8 +529,11 @@ def test_delete_identification_metadata(_logged_in_client):
     response = _logged_in_client.delete(
         f"/study/{study_id}/metadata/identification/{identification_id}"
     )
-
     assert response.status_code == 204
+
+    response_get = _logged_in_client.get(f"/study/{study_id}/metadata/identification")
+    # print(response_get.data)
+    assert len(json.loads(response_get.data)["secondary"]) == 0
 
 
 # ------------------- INTERVENTION METADATA ------------------- #
@@ -583,6 +593,9 @@ def test_delete_intervention_metadata(_logged_in_client):
 
     response = _logged_in_client.delete(f"/study/{study_id}/metadata/intervention/{intervention_id}")
     assert response.status_code == 204
+    response_get = _logged_in_client.get(f"/study/{study_id}/metadata/intervention")
+
+    assert len(json.loads(response_get.data)) == 0
 
 
 # ------------------- IPD SHARING METADATA ------------------- #
@@ -681,6 +694,10 @@ def test_delete_link_metadata(_logged_in_client):
 
     assert response.status_code == 204
 
+    response_get = _logged_in_client.get(f"/study/{study_id}/metadata/link")
+
+    assert len(json.loads(response_get.data)) == 0
+
 
 # ------------------- LOCATION METADATA ------------------- #
 def test_get_location_metadata(_logged_in_client):
@@ -745,6 +762,10 @@ def test_delete_location_metadata(_logged_in_client):
     )
 
     assert response.status_code == 204
+
+    response_get = _logged_in_client.get(f"/study/{study_id}/metadata/location")
+
+    assert len(json.loads(response_get.data)) == 0
 
 
 # ------------------- OTHER METADATA ------------------- #
@@ -840,6 +861,9 @@ def test_delete_overall_official_metadata(_logged_in_client):
     )
 
     assert response.status_code == 204
+    response_get = _logged_in_client.get(f"/study/{study_id}/metadata/overall-official")
+
+    assert len(json.loads(response_get.data)) == 0
 
 
 # ------------------- OVERSIGHT METADATA ------------------- #
@@ -932,6 +956,9 @@ def test_delete_reference_metadata(_logged_in_client):
     )
 
     assert response.status_code == 204
+    response_get = _logged_in_client.get(f"/study/{study_id}/metadata/reference")
+
+    assert len(json.loads(response_get.data)) == 0
 
 
 # ------------------- SPONSORS METADATA ------------------- #
