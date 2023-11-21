@@ -2238,6 +2238,171 @@ def test_post_dataset_related_item_metadata(clients):
     assert response_data[0]["type"] == "Type"
     assert response_data[0]["volume"] == "Volume"
 
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item",
+        json=[
+            {
+                "contributors": [
+                    {
+                        "name": "Admin Ndafsdame",
+                        "contributor_type": "Admin Con Type",
+                        "name_type": "Personal",
+                    }
+                ],
+                "creators": [{"name": "Admin Name", "name_type": "Personal"}],
+                "edition": "Admin Edition",
+                "first_page": "Admin First Page",
+                "identifiers": [
+                    {
+                        "identifier": "Admin Identifier",
+                        "metadata_scheme": "Admin Metadata Scheme",
+                        "scheme_type": "Admin Scheme Type",
+                        "scheme_uri": "Admin Scheme URI",
+                        "type": "ARK",
+                    }
+                ],
+                "issue": "Admin Issue",
+                "last_page": "Admin Last Page",
+                "number_type": "Admin Number Type",
+                "number_value": "Admin Number Value",
+                "publication_year": 2013,
+                "publisher": "Admin Publisher",
+                "relation_type": "Admin Relation Type",
+                "titles": [{"title": "Admin Title", "type": "MainTitle"}],
+                "type": "Admin Type",
+                "volume": "Admin Volume",
+            }
+        ]
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    pytest.global_dataset_related_item_id_admin = admin_response_data[0]["id"]
+    pytest.global_dataset_related_item_contributor_id_admin = admin_response_data[1][
+        "contributors"
+    ][0]["id"]
+    pytest.global_dataset_related_item_creator_id_admin = admin_response_data[1]["creators"][0][
+        "id"
+    ]
+    pytest.global_dataset_related_item_identifier_id_admin = admin_response_data[1]["identifiers"][
+        0
+    ]["id"]
+    pytest.global_dataset_related_item_title_id_admin = admin_response_data[1]["titles"][0]["id"]
+
+    assert admin_response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
+    assert admin_response_data[1]["contributors"][0]["contributor_type"] == "Admin Con Type"
+    assert admin_response_data[1]["contributors"][0]["name_type"] == "Personal"
+    assert admin_response_data[1]["creators"][0]["name"] == "Admin Name"
+    assert admin_response_data[1]["creators"][0]["name_type"] == "Personal"
+    assert admin_response_data[1]["edition"] == "Admin Edition"
+    assert admin_response_data[1]["first_page"] == "Admin First Page"
+    assert admin_response_data[1]["identifiers"][0]["identifier"] == "Admin Identifier"
+    assert admin_response_data[1]["identifiers"][0]["metadata_scheme"] == "Admin Metadata Scheme"
+    assert admin_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
+    assert admin_response_data[1]["identifiers"][0]["scheme_uri"] == "Admin Scheme URI"
+    assert admin_response_data[1]["identifiers"][0]["type"] == "ARK"
+    assert admin_response_data[1]["issue"] == "Admin Issue"
+    assert admin_response_data[1]["last_page"] == "Admin Last Page"
+    assert admin_response_data[1]["number_type"] == "Admin Number Type"
+    assert admin_response_data[1]["number_value"] == "Admin Number Value"
+    assert admin_response_data[1]["publication_year"] == 2013
+    assert admin_response_data[1]["publisher"] == "Admin Publisher"
+    assert admin_response_data[1]["relation_type"] == "Admin Relation Type"
+    assert admin_response_data[1]["titles"][0]["title"] == "Admin Title"
+    assert admin_response_data[1]["titles"][0]["type"] == "MainTitle"
+    assert admin_response_data[1]["type"] == "Admin Type"
+    assert admin_response_data[1]["volume"] == "Admin Volume"
+
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item",
+        json=[
+            {
+                "contributors": [
+                    {
+                        "name": "Editor Ndafsdame",
+                        "contributor_type": "Editor Con Type",
+                        "name_type": "Personal",
+                    }
+                ],
+                "creators": [{"name": "Editor Name", "name_type": "Personal"}],
+                "edition": "Editor Edition",
+                "first_page": "Editor First Page",
+                "identifiers": [
+                    {
+                        "identifier": "Editor Identifier",
+                        "metadata_scheme": "Editor Metadata Scheme",
+                        "scheme_type": "Editor Scheme Type",
+                        "scheme_uri": "Editor Scheme URI",
+                        "type": "ARK",
+                    }
+                ],
+                "issue": "Editor Issue",
+                "last_page": "Editor Last Page",
+                "number_type": "Editor Number Type",
+                "number_value": "Editor Number Value",
+                "publication_year": 2013,
+                "publisher": "Editor Publisher",
+                "relation_type": "Editor Relation Type",
+                "titles": [{"title": "Editor Title", "type": "MainTitle"}],
+                "type": "Editor Type",
+                "volume": "Editor Volume",
+            }
+        ]
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    pytest.global_dataset_related_item_id = editor_response_data[2]["id"]
+    pytest.global_dataset_related_item_contributor_id = editor_response_data[2][
+        "contributors"
+    ][0]["id"]
+    pytest.global_dataset_related_item_creator_id = editor_response_data[2]["creators"][0][
+        "id"
+    ]
+    pytest.global_dataset_related_item_identifier_id = editor_response_data[2]["identifiers"][
+        0
+    ]["id"]
+    pytest.global_dataset_related_item_title_id = editor_response_data[2]["titles"][0]["id"]
+
+    viewer_client = _viewer_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item",
+        json=[
+            {
+                "contributors": [
+                    {
+                        "name": "Viewer Ndafsdame",
+                        "contributor_type": "Viewer Con Type",
+                        "name_type": "Personal",
+                    }
+                ],
+                "creators": [{"name": "Viewer Name", "name_type": "Personal"}],
+                "edition": "Viewer Edition",
+                "first_page": "Viewer First Page",
+                "identifiers": [
+                    {
+                        "identifier": "Viewer Identifier",
+                        "metadata_scheme": "Viewer Metadata Scheme",
+                        "scheme_type": "Viewer Scheme Type",
+                        "scheme_uri": "Viewer Scheme URI",
+                        "type": "ARK",
+                    }
+                ],
+                "issue": "Viewer Issue",
+                "last_page": "Viewer Last Page",
+                "number_type": "Viewer Number Type",
+                "number_value": "Viewer Number Value",
+                "publication_year": 2013,
+                "publisher": "Viewer Publisher",
+                "relation_type": "Viewer Relation Type",
+                "titles": [{"title": "Viewer Title", "type": "MainTitle"}],
+                "type": "Viewer Type",
+                "volume": "Viewer Volume",
+            }
+        ]
+    )
+
+    assert viewer_client.status_code == 403
+
 
 def test_delete_dataset_related_item_contributor_metadata(clients):
     """
