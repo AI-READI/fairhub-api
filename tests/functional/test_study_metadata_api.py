@@ -591,7 +591,9 @@ def test_delete_intervention_metadata(_logged_in_client):
     study_id = pytest.global_study_id["id"]  # type: ignore
     intervention_id = pytest.global_intervention_id
 
-    response = _logged_in_client.delete(f"/study/{study_id}/metadata/intervention/{intervention_id}")
+    response = _logged_in_client.delete(
+        f"/study/{study_id}/metadata/intervention/{intervention_id}"
+    )
     assert response.status_code == 204
     response_get = _logged_in_client.get(f"/study/{study_id}/metadata/intervention")
 

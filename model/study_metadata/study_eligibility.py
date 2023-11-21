@@ -72,7 +72,6 @@ class StudyEligibility(db.Model):  # type: ignore
         return {
             "gender": self.gender,
             "minimum_age_value": self.minimum_age_value,
-
         }
 
     @staticmethod
