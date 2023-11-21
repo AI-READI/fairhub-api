@@ -4,28 +4,6 @@ import json
 import pytest
 
 
-def test_get_all_dataset_from_study(clients):
-    """
-    GIVEN a Flask application configured for testing and a study ID
-    WHEN the '/dataset/{study_id}' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the dataset content
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/dataset")
-    admin_response = _admin_client.get(f"/study/{study_id}/dataset")
-    editor_response = _editor_client.get(f"/study/{study_id}/dataset")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/dataset")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-    # response_data = json.loads(response.data)
-    # print(response_data)
-
-
 def test_post_dataset(clients):
     """
     GIVEN a Flask application configured for testing and a study ID
@@ -53,22 +31,22 @@ def test_post_dataset(clients):
     admin_response = _admin_client.post(
         f"/study/{study_id}/dataset",
         json={
-            "title": "Dataset Title",
-            "description": "Dataset Description",
+            "title": "Admin Dataset Title",
+            "description": "Admin Dataset Description",
         },
     )
 
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
     pytest.global_dataset_id_admin = admin_response_data["id"]
-    assert admin_response_data["title"] == "Dataset Title"
-    assert admin_response_data["description"] == "Dataset Description"
+    assert admin_response_data["title"] == "Admin Dataset Title"
+    assert admin_response_data["description"] == "Admin Dataset Description"
 
     editor_response = _editor_client.post(
         f"/study/{study_id}/dataset",
         json={
-            "title": "Dataset Title",
-            "description": "Dataset Description",
+            "title": "Editor Dataset Title",
+            "description": "Editor Dataset Description",
         },
     )
 
@@ -76,19 +54,52 @@ def test_post_dataset(clients):
     editor_response_data = json.loads(editor_response.data)
     pytest.global_dataset_id_editor = editor_response_data["id"]
 
-    assert editor_response_data["title"] == "Dataset Title"
-    assert editor_response_data["description"] == "Dataset Description"
+    assert editor_response_data["title"] == "Editor Dataset Title"
+    assert editor_response_data["description"] == "Editor Dataset Description"
 
     viewer_response = _viewer_client.post(
         f"/study/{study_id}/dataset",
         json={
-            "title": "Dataset Title",
-            "description": "Dataset Description",
+            "title": "Viewer Dataset Title",
+            "description": "Viewer Dataset Description",
         },
     )
 
     # response will be 403 due to Viewer permissions
     assert viewer_response.status_code == 403
+
+
+def test_get_all_dataset_from_study(clients):
+    """
+    GIVEN a Flask application configured for testing and a study ID
+    WHEN the '/dataset/{study_id}' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the dataset content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}/dataset")
+    admin_response = _admin_client.get(f"/study/{study_id}/dataset")
+    editor_response = _editor_client.get(f"/study/{study_id}/dataset")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/dataset")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert len(response_data) == 3
+    assert len(admin_response_data) == 3
+    assert len(editor_response_data) == 3
+    assert len(viewer_response_data) == 3
+
+    assert response_data[0]["title"] == "Dataset Title"
+    assert response_data[0]["description"] == "Dataset Description"
 
 
 def test_get_dataset_from_study(clients):
