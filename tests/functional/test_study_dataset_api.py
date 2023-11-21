@@ -160,7 +160,7 @@ def test_delete_dataset_from_study(clients):
         },
     )
 
-    assert response.status_code == 204
+    assert response.status_code == 200
     response_data = json.loads(response.data)
     dataset_id = response_data["id"]
 

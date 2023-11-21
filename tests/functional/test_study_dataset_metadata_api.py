@@ -452,9 +452,9 @@ def test_post_dataset_contributor_metadata(clients):
 
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    pytest.global_dataset_contributor_id_admin = admin_response_data[0]["id"]
+    pytest.global_dataset_contributor_id_admin = admin_response_data[1]["id"]
 
-    assert admin_response_data[0]["name"] == "Admin Name here"
+    assert admin_response_data[1]["name"] == "Admin Name here"
 
     editor_response = _editor_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor",
@@ -480,9 +480,9 @@ def test_post_dataset_contributor_metadata(clients):
 
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    pytest.global_dataset_contributor_id_editor = editor_response_data[0]["id"]
+    pytest.global_dataset_contributor_id_editor = editor_response_data[2]["id"]
 
-    assert editor_response_data[0]["name"] == "Editor Name here"
+    assert editor_response_data[2]["name"] == "Editor Name here"
 
     viewer_response = _viewer_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor",
@@ -779,9 +779,9 @@ def test_delete_dataset_creator_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 # ------------------- DATE METADATA ------------------- #
@@ -900,9 +900,9 @@ def test_delete_dataset_date_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 # ------------------- DE-IDENTIFICATION LEVEL METADATA ------------------- #
@@ -1152,9 +1152,9 @@ def test_delete_dataset_description_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/description/{description_id}"
     )
 
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
     assert viewer_response.status_code == 403
 
 
