@@ -101,7 +101,6 @@ def test_update_study(clients):
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    print(response_data)
     pytest.global_study_id = response_data
 
     assert response_data["title"] == "Study Title Updated"
@@ -118,7 +117,6 @@ def test_update_study(clients):
 
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    print(admin_response_data)
     pytest.global_study_id = admin_response_data
 
     assert admin_response_data["title"] == "Admin Study Title"
@@ -135,7 +133,6 @@ def test_update_study(clients):
 
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    print(editor_response_data)
     pytest.global_study_id = editor_response_data
 
     assert editor_response_data["title"] == "Editor Study Title"
@@ -164,24 +161,37 @@ def test_get_study_by_id(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
 
     response = _logged_in_client.get(f"/study/{study_id}")
+    admin_response = _admin_client.get(f"/study/{study_id}")
+    editor_response = _editor_client.get(f"/study/{study_id}")
+    viewer_response = _viewer_client.get(f"/study/{study_id}")
 
-    # Convert the response data from JSON to a Python dictionary
+    # Verify all clients have access to study
+    # Then convert the response data from JSON to a Python dictionary
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
     assert response.status_code == 200
     response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
 
     # Check the response is correct
     assert response_data["id"] == pytest.global_study_id["id"]  # type: ignore
     assert response_data["title"] == pytest.global_study_id["title"]  # type: ignore
     assert response_data["image"] == pytest.global_study_id["image"]  # type: ignore
 
-    admin_response = _admin_client.get(f"/study/{study_id}")
-    editor_response = _editor_client.get(f"/study/{study_id}")
-    viewer_response = _viewer_client.get(f"/study/{study_id}")
+    assert admin_response_data["id"] == pytest.global_study_id["id"]  # type: ignore
+    assert admin_response_data["title"] == pytest.global_study_id["title"]  # type: ignore
+    assert admin_response_data["image"] == pytest.global_study_id["image"]  # type: ignore
 
-    # Verify all clients have access to study
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
+    assert editor_response_data["id"] == pytest.global_study_id["id"]  # type: ignore
+    assert editor_response_data["title"] == pytest.global_study_id["title"]  # type: ignore
+    assert editor_response_data["image"] == pytest.global_study_id["image"]  # type: ignore
+
+    assert viewer_response_data["id"] == pytest.global_study_id["id"]  # type: ignore
+    assert viewer_response_data["title"] == pytest.global_study_id["title"]  # type: ignore
+    assert viewer_response_data["image"] == pytest.global_study_id["image"]  # type: ignore
 
 
 def test_delete_studies_created(clients):
@@ -191,7 +201,9 @@ def test_delete_studies_created(clients):
     THEN check that the response is valid (200)
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    # create study first to then delete
+    
+    # Create a temporary study to delete as the original study
+    # Is needed to test all other endpoints
     response = _logged_in_client.post(
         "/study",
         json={
@@ -209,11 +221,12 @@ def test_delete_studies_created(clients):
     viewer_response = _viewer_client.delete(f"/study/{study_id}")
 
     # Verify all clients have no access to newly created study
+    # They are only invited contributors to the original study created at the start of testing
     assert admin_response.status_code == 403
     assert editor_response.status_code == 403
     assert viewer_response.status_code == 403
 
-    # delete study
+    # delete temporary study
     response = _logged_in_client.delete(f"/study/{study_id}")
 
     assert response.status_code == 204
