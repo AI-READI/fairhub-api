@@ -2132,25 +2132,6 @@ def test_get_dataset_record_keys_metadata(clients):
 
 
 # ------------------- RELATED ITEM METADATA ------------------- #
-def test_get_dataset_related_item_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID and dataset ID
-    When the '/study/{study_id}/dataset/{dataset_id}'
-    endpoint is requested (GET)
-    Then check that the response is valid and retrieves the dataset
-    related item metadata content
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    dataset_id = pytest.global_dataset_id
-
-    response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item"
-    )
-
-    assert response.status_code == 200
-
-
 def test_post_dataset_related_item_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
@@ -2364,6 +2345,30 @@ def test_post_dataset_related_item_metadata(clients):
     ]["id"]
     pytest.global_dataset_related_item_title_id = editor_response_data[2]["titles"][0]["id"]
 
+    assert editor_response_data[2]["contributors"][0]["name"] == "Editor Ndafsdame"
+    assert editor_response_data[2]["contributors"][0]["contributor_type"] == "Editor Con Type"
+    assert editor_response_data[2]["contributors"][0]["name_type"] == "Personal"
+    assert editor_response_data[2]["creators"][0]["name"] == "Editor Name"
+    assert editor_response_data[2]["creators"][0]["name_type"] == "Personal"
+    assert editor_response_data[2]["edition"] == "Editor Edition"
+    assert editor_response_data[2]["first_page"] == "Editor First Page"
+    assert editor_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
+    assert editor_response_data[2]["identifiers"][0]["metadata_scheme"] == "Editor Metadata Scheme"
+    assert editor_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
+    assert editor_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
+    assert editor_response_data[2]["identifiers"][0]["type"] == "ARK"
+    assert editor_response_data[2]["issue"] == "Editor Issue"
+    assert editor_response_data[2]["last_page"] == "Editor Last Page"
+    assert editor_response_data[2]["number_type"] == "Editor Number Type
+    assert editor_response_data[2]["number_value"] == "Editor Number Value"
+    assert editor_response_data[2]["publication_year"] == 2013
+    assert editor_response_data[2]["publisher"] == "Editor Publisher"
+    assert editor_response_data[2]["relation_type"] == "Editor Relation Type"
+    assert editor_response_data[2]["titles"][0]["title"] == "Editor Title"
+    assert editor_response_data[2]["titles"][0]["type"] == "MainTitle"
+    assert editor_response_data[2]["type"] == "Editor Type
+    assert editor_response_data[2]["volume"] == "Editor Volume"
+
     viewer_client = _viewer_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item",
         json=[
@@ -2402,6 +2407,317 @@ def test_post_dataset_related_item_metadata(clients):
     )
 
     assert viewer_client.status_code == 403
+
+
+def test_get_dataset_related_item_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    related item metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item"
+    )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item"
+    )
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+    
+    assert response_data[0]["contributors"][0]["name"] == "Ndafsdame"
+    assert response_data[0]["contributors"][0]["contributor_type"] == "Con Type"
+    assert response_data[0]["contributors"][0]["name_type"] == "Personal"
+    assert response_data[0]["creators"][0]["name"] == "Name"
+    assert response_data[0]["creators"][0]["name_type"] == "Personal"
+    assert response_data[0]["edition"] == "Edition"
+    assert response_data[0]["first_page"] == "First Page"
+    assert response_data[0]["identifiers"][0]["identifier"] == "Identifier"
+    assert response_data[0]["identifiers"][0]["metadata_scheme"] == "Metadata Scheme"
+    assert response_data[0]["identifiers"][0]["scheme_type"] == "Scheme Type"
+    assert response_data[0]["identifiers"][0]["scheme_uri"] == "Scheme URI"
+    assert response_data[0]["identifiers"][0]["type"] == "ARK"
+    assert response_data[0]["issue"] == "Issue"
+    assert response_data[0]["last_page"] == "Last Page"
+    assert response_data[0]["number_type"] == "Number Type"
+    assert response_data[0]["number_value"] == "Number Value"
+    assert response_data[0]["publication_year"] == 2013
+    assert response_data[0]["publisher"] == "Publisher"
+    assert response_data[0]["relation_type"] == "Relation Type"
+    assert response_data[0]["titles"][0]["title"] == "Title"
+    assert response_data[0]["titles"][0]["type"] == "MainTitle"
+    assert response_data[0]["type"] == "Type"
+    assert response_data[0]["volume"] == "Volume"
+    assert response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
+    assert response_data[1]["contributors"][0]["contributor_type"] == "Admin Con Type"
+    assert response_data[1]["contributors"][0]["name_type"] == "Personal"
+    assert response_data[1]["creators"][0]["name"] == "Admin Name"
+    assert response_data[1]["creators"][0]["name_type"] == "Personal"
+    assert response_data[1]["edition"] == "Admin Edition"
+    assert response_data[1]["first_page"] == "Admin First Page"
+    assert response_data[1]["identifiers"][0]["identifier"] == "Admin Identifier"
+    assert response_data[1]["identifiers"][0]["metadata_scheme"] == "Admin Metadata Scheme"
+    assert response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
+    assert response_data[1]["identifiers"][0]["scheme_uri"] == "Admin Scheme URI"
+    assert response_data[1]["identifiers"][0]["type"] == "ARK"
+    assert response_data[1]["issue"] == "Admin Issue"
+    assert response_data[1]["last_page"] == "Admin Last Page"
+    assert response_data[1]["number_type"] == "Admin Number Type"
+    assert response_data[1]["number_value"] == "Admin Number Value"
+    assert response_data[1]["publication_year"] == 2013
+    assert response_data[1]["publisher"] == "Admin Publisher"
+    assert response_data[1]["relation_type"] == "Admin Relation Type"
+    assert response_data[1]["titles"][0]["title"] == "Admin Title"
+    assert response_data[1]["titles"][0]["type"] == "MainTitle"
+    assert response_data[1]["type"] == "Admin Type"
+    assert response_data[1]["volume"] == "Admin Volume"
+    assert response_data[2]["contributors"][0]["name"] == "Editor Ndafsdame"
+    assert response_data[2]["contributors"][0]["contributor_type"] == "Editor Con Type"
+    assert response_data[2]["contributors"][0]["name_type"] == "Personal"
+    assert response_data[2]["creators"][0]["name"] == "Editor Name"
+    assert response_data[2]["creators"][0]["name_type"] == "Personal"
+    assert response_data[2]["edition"] == "Editor Edition"
+    assert response_data[2]["first_page"] == "Editor First Page"
+    assert response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
+    assert response_data[2]["identifiers"][0]["metadata_scheme"] == "Editor Metadata Scheme"
+    assert response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
+    assert response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
+    assert response_data[2]["identifiers"][0]["type"] == "ARK"
+    assert response_data[2]["issue"] == "Editor Issue"
+    assert response_data[2]["last_page"] == "Editor Last Page"
+    assert response_data[2]["number_type"] == "Editor Number Type
+    assert response_data[2]["number_value"] == "Editor Number Value"
+    assert response_data[2]["publication_year"] == 2013
+    assert response_data[2]["publisher"] == "Editor Publisher"
+    assert response_data[2]["relation_type"] == "Editor Relation Type"
+    assert response_data[2]["titles"][0]["title"] == "Editor Title"
+    assert response_data[2]["titles"][0]["type"] == "MainTitle"
+    assert response_data[2]["type"] == "Editor Type
+    assert response_data[2]["volume"] == "Editor Volume"
+
+    assert admin_response_data[0]["contributors"][0]["name"] == "Ndafsdame"
+    assert admin_response_data[0]["contributors"][0]["contributor_type"] == "Con Type"
+    assert admin_response_data[0]["contributors"][0]["name_type"] == "Personal"
+    assert admin_response_data[0]["creators"][0]["name"] == "Name"
+    assert admin_response_data[0]["creators"][0]["name_type"] == "Personal"
+    assert admin_response_data[0]["edition"] == "Edition"
+    assert admin_response_data[0]["first_page"] == "First Page"
+    assert admin_response_data[0]["identifiers"][0]["identifier"] == "Identifier"
+    assert admin_response_data[0]["identifiers"][0]["metadata_scheme"] == "Metadata Scheme"
+    assert admin_response_data[0]["identifiers"][0]["scheme_type"] == "Scheme Type"
+    assert admin_response_data[0]["identifiers"][0]["scheme_uri"] == "Scheme URI"
+    assert admin_response_data[0]["identifiers"][0]["type"] == "ARK"
+    assert admin_response_data[0]["issue"] == "Issue"
+    assert admin_response_data[0]["last_page"] == "Last Page"
+    assert admin_response_data[0]["number_type"] == "Number Type"
+    assert admin_response_data[0]["number_value"] == "Number Value"
+    assert admin_response_data[0]["publication_year"] == 2013
+    assert admin_response_data[0]["publisher"] == "Publisher"
+    assert admin_response_data[0]["relation_type"] == "Relation Type"
+    assert admin_response_data[0]["titles"][0]["title"] == "Title"
+    assert admin_response_data[0]["titles"][0]["type"] == "MainTitle"
+    assert admin_response_data[0]["type"] == "Type"
+    assert admin_response_data[0]["volume"] == "Volume"
+    assert admin_response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
+    assert admin_response_data[1]["contributors"][0]["contributor_type"] == "Admin Con Type"
+    assert admin_response_data[1]["contributors"][0]["name_type"] == "Personal"
+    assert admin_response_data[1]["creators"][0]["name"] == "Admin Name"
+    assert admin_response_data[1]["creators"][0]["name_type"] == "Personal"
+    assert admin_response_data[1]["edition"] == "Admin Edition"
+    assert admin_response_data[1]["first_page"] == "Admin First Page"
+    assert admin_response_data[1]["identifiers"][0]["identifier"] == "Admin Identifier"
+    assert admin_response_data[1]["identifiers"][0]["metadata_scheme"] == "Admin Metadata Scheme"
+    assert admin_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
+    assert admin_response_data[1]["identifiers"][0]["scheme_uri"] == "Admin Scheme URI"
+    assert admin_response_data[1]["identifiers"][0]["type"] == "ARK"
+    assert admin_response_data[1]["issue"] == "Admin Issue"
+    assert admin_response_data[1]["last_page"] == "Admin Last Page"
+    assert admin_response_data[1]["number_type"] == "Admin Number Type"
+    assert admin_response_data[1]["number_value"] == "Admin Number Value"
+    assert admin_response_data[1]["publication_year"] == 2013
+    assert admin_response_data[1]["publisher"] == "Admin Publisher"
+    assert admin_response_data[1]["relation_type"] == "Admin Relation Type"
+    assert admin_response_data[1]["titles"][0]["title"] == "Admin Title"
+    assert admin_response_data[1]["titles"][0]["type"] == "MainTitle"
+    assert admin_response_data[1]["type"] == "Admin Type"
+    assert admin_response_data[1]["volume"] == "Admin Volume"
+    assert admin_response_data[2]["contributors"][0]["name"] == "Editor Ndafsdame"
+    assert admin_response_data[2]["contributors"][0]["contributor_type"] == "Editor Con Type"
+    assert admin_response_data[2]["contributors"][0]["name_type"] == "Personal"
+    assert admin_response_data[2]["creators"][0]["name"] == "Editor Name"
+    assert admin_response_data[2]["creators"][0]["name_type"] == "Personal"
+    assert admin_response_data[2]["edition"] == "Editor Edition"
+    assert admin_response_data[2]["first_page"] == "Editor First Page"
+    assert admin_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
+    assert admin_response_data[2]["identifiers"][0]["metadata_scheme"] == "Editor Metadata Scheme"
+    assert admin_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
+    assert admin_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
+    assert admin_response_data[2]["identifiers"][0]["type"] == "ARK"
+    assert admin_response_data[2]["issue"] == "Editor Issue"
+    assert admin_response_data[2]["last_page"] == "Editor Last Page"
+    assert admin_response_data[2]["number_type"] == "Editor Number Type
+    assert admin_response_data[2]["number_value"] == "Editor Number Value"
+    assert admin_response_data[2]["publication_year"] == 2013
+    assert admin_response_data[2]["publisher"] == "Editor Publisher"
+    assert admin_response_data[2]["relation_type"] == "Editor Relation Type"
+    assert admin_response_data[2]["titles"][0]["title"] == "Editor Title"
+    assert admin_response_data[2]["titles"][0]["type"] == "MainTitle"
+    assert admin_response_data[2]["type"] == "Editor Type
+    assert admin_response_data[2]["volume"] == "Editor Volume"
+
+    assert editor_response_data[0]["contributors"][0]["name"] == "Ndafsdame"
+    assert editor_response_data[0]["contributors"][0]["contributor_type"] == "Con Type"
+    assert editor_response_data[0]["contributors"][0]["name_type"] == "Personal"
+    assert editor_response_data[0]["creators"][0]["name"] == "Name"
+    assert editor_response_data[0]["creators"][0]["name_type"] == "Personal"
+    assert editor_response_data[0]["edition"] == "Edition"
+    assert editor_response_data[0]["first_page"] == "First Page"
+    assert editor_response_data[0]["identifiers"][0]["identifier"] == "Identifier"
+    assert editor_response_data[0]["identifiers"][0]["metadata_scheme"] == "Metadata Scheme"
+    assert editor_response_data[0]["identifiers"][0]["scheme_type"] == "Scheme Type"
+    assert editor_response_data[0]["identifiers"][0]["scheme_uri"] == "Scheme URI"
+    assert editor_response_data[0]["identifiers"][0]["type"] == "ARK"
+    assert editor_response_data[0]["issue"] == "Issue"
+    assert editor_response_data[0]["last_page"] == "Last Page"
+    assert editor_response_data[0]["number_type"] == "Number Type"
+    assert editor_response_data[0]["number_value"] == "Number Value"
+    assert editor_response_data[0]["publication_year"] == 2013
+    assert editor_response_data[0]["publisher"] == "Publisher"
+    assert editor_response_data[0]["relation_type"] == "Relation Type"
+    assert editor_response_data[0]["titles"][0]["title"] == "Title"
+    assert editor_response_data[0]["titles"][0]["type"] == "MainTitle"
+    assert editor_response_data[0]["type"] == "Type"
+    assert editor_response_data[0]["volume"] == "Volume"
+    assert editor_response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
+    assert editor_response_data[1]["contributors"][0]["contributor_type"] == "Admin Con Type"
+    assert editor_response_data[1]["contributors"][0]["name_type"] == "Personal"
+    assert editor_response_data[1]["creators"][0]["name"] == "Admin Name"
+    assert editor_response_data[1]["creators"][0]["name_type"] == "Personal"
+    assert editor_response_data[1]["edition"] == "Admin Edition"
+    assert editor_response_data[1]["first_page"] == "Admin First Page"
+    assert editor_response_data[1]["identifiers"][0]["identifier"] == "Admin Identifier"
+    assert editor_response_data[1]["identifiers"][0]["metadata_scheme"] == "Admin Metadata Scheme"
+    assert editor_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
+    assert editor_response_data[1]["identifiers"][0]["scheme_uri"] == "Admin Scheme URI"
+    assert editor_response_data[1]["identifiers"][0]["type"] == "ARK"
+    assert editor_response_data[1]["issue"] == "Admin Issue"
+    assert editor_response_data[1]["last_page"] == "Admin Last Page"
+    assert editor_response_data[1]["number_type"] == "Admin Number Type"
+    assert editor_response_data[1]["number_value"] == "Admin Number Value"
+    assert editor_response_data[1]["publication_year"] == 2013
+    assert editor_response_data[1]["publisher"] == "Admin Publisher"
+    assert editor_response_data[1]["relation_type"] == "Admin Relation Type"
+    assert editor_response_data[1]["titles"][0]["title"] == "Admin Title"
+    assert editor_response_data[1]["titles"][0]["type"] == "MainTitle"
+    assert editor_response_data[1]["type"] == "Admin Type"
+    assert editor_response_data[1]["volume"] == "Admin Volume"
+    assert editor_response_data[2]["contributors"][0]["name"] == "Editor Ndafsdame"
+    assert editor_response_data[2]["contributors"][0]["contributor_type"] == "Editor Con Type"
+    assert editor_response_data[2]["contributors"][0]["name_type"] == "Personal"
+    assert editor_response_data[2]["creators"][0]["name"] == "Editor Name"
+    assert editor_response_data[2]["creators"][0]["name_type"] == "Personal"
+    assert editor_response_data[2]["edition"] == "Editor Edition"
+    assert editor_response_data[2]["first_page"] == "Editor First Page"
+    assert editor_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
+    assert editor_response_data[2]["identifiers"][0]["metadata_scheme"] == "Editor Metadata Scheme"
+    assert editor_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
+    assert editor_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
+    assert editor_response_data[2]["identifiers"][0]["type"] == "ARK"
+    assert editor_response_data[2]["issue"] == "Editor Issue"
+    assert editor_response_data[2]["last_page"] == "Editor Last Page"
+    assert editor_response_data[2]["number_type"] == "Editor Number Type
+    assert editor_response_data[2]["number_value"] == "Editor Number Value"
+    assert editor_response_data[2]["publication_year"] == 2013
+    assert editor_response_data[2]["publisher"] == "Editor Publisher"
+    assert editor_response_data[2]["relation_type"] == "Editor Relation Type"
+    assert editor_response_data[2]["titles"][0]["title"] == "Editor Title"
+    assert editor_response_data[2]["titles"][0]["type"] == "MainTitle"
+    assert editor_response_data[2]["type"] == "Editor Type
+    assert editor_response_data[2]["volume"] == "Editor Volume"
+
+    assert viewer_response_data[0]["contributors"][0]["name"] == "Ndafsdame"
+    assert viewer_response_data[0]["contributors"][0]["contributor_type"] == "Con Type"
+    assert viewer_response_data[0]["contributors"][0]["name_type"] == "Personal"
+    assert viewer_response_data[0]["creators"][0]["name"] == "Name"
+    assert viewer_response_data[0]["creators"][0]["name_type"] == "Personal"
+    assert viewer_response_data[0]["edition"] == "Edition"
+    assert viewer_response_data[0]["first_page"] == "First Page"
+    assert viewer_response_data[0]["identifiers"][0]["identifier"] == "Identifier"
+    assert viewer_response_data[0]["identifiers"][0]["metadata_scheme"] == "Metadata Scheme"
+    assert viewer_response_data[0]["identifiers"][0]["scheme_type"] == "Scheme Type"
+    assert viewer_response_data[0]["identifiers"][0]["scheme_uri"] == "Scheme URI"
+    assert viewer_response_data[0]["identifiers"][0]["type"] == "ARK"
+    assert viewer_response_data[0]["issue"] == "Issue"
+    assert viewer_response_data[0]["last_page"] == "Last Page"
+    assert viewer_response_data[0]["number_type"] == "Number Type"
+    assert viewer_response_data[0]["number_value"] == "Number Value"
+    assert viewer_response_data[0]["publication_year"] == 2013
+    assert viewer_response_data[0]["publisher"] == "Publisher"
+    assert viewer_response_data[0]["relation_type"] == "Relation Type"
+    assert viewer_response_data[0]["titles"][0]["title"] == "Title"
+    assert viewer_response_data[0]["titles"][0]["type"] == "MainTitle"
+    assert viewer_response_data[0]["type"] == "Type"
+    assert viewer_response_data[0]["volume"] == "Volume"
+    assert viewer_response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
+    assert viewer_response_data[1]["contributors"][0]["contributor_type"] == "Admin Con Type"
+    assert viewer_response_data[1]["contributors"][0]["name_type"] == "Personal"
+    assert viewer_response_data[1]["creators"][0]["name"] == "Admin Name"
+    assert viewer_response_data[1]["creators"][0]["name_type"] == "Personal"
+    assert viewer_response_data[1]["edition"] == "Admin Edition"
+    assert viewer_response_data[1]["first_page"] == "Admin First Page"
+    assert viewer_response_data[1]["identifiers"][0]["identifier"] == "Admin Identifier"
+    assert viewer_response_data[1]["identifiers"][0]["metadata_scheme"] == "Admin Metadata Scheme"
+    assert viewer_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
+    assert viewer_response_data[1]["identifiers"][0]["scheme_uri"] == "Admin Scheme URI"
+    assert viewer_response_data[1]["identifiers"][0]["type"] == "ARK"
+    assert viewer_response_data[1]["issue"] == "Admin Issue"
+    assert viewer_response_data[1]["last_page"] == "Admin Last Page"
+    assert viewer_response_data[1]["number_type"] == "Admin Number Type"
+    assert viewer_response_data[1]["number_value"] == "Admin Number Value"
+    assert viewer_response_data[1]["publication_year"] == 2013
+    assert viewer_response_data[1]["publisher"] == "Admin Publisher"
+    assert viewer_response_data[1]["relation_type"] == "Admin Relation Type"
+    assert viewer_response_data[1]["titles"][0]["title"] == "Admin Title"
+    assert viewer_response_data[1]["titles"][0]["type"] == "MainTitle"
+    assert viewer_response_data[1]["type"] == "Admin Type"
+    assert viewer_response_data[1]["volume"] == "Admin Volume"
+    assert viewer_response_data[2]["contributors"][0]["name"] == "Editor Ndafsdame"
+    assert viewer_response_data[2]["contributors"][0]["contributor_type"] == "Editor Con Type"
+    assert viewer_response_data[2]["contributors"][0]["name_type"] == "Personal"
+    assert viewer_response_data[2]["creators"][0]["name"] == "Editor Name"
+    assert viewer_response_data[2]["creators"][0]["name_type"] == "Personal"
+    assert viewer_response_data[2]["edition"] == "Editor Edition"
+    assert viewer_response_data[2]["first_page"] == "Editor First Page"
+    assert viewer_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
+    assert viewer_response_data[2]["identifiers"][0]["metadata_scheme"] == "Editor Metadata Scheme"
+    assert viewer_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
+    assert viewer_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
+    assert viewer_response_data[2]["identifiers"][0]["type"] == "ARK"
+    assert viewer_response_data[2]["issue"] == "Editor Issue"
+    assert viewer_response_data[2]["last_page"] == "Editor Last Page"
+    assert viewer_response_data[2]["number_type"] == "Editor Number Type
+    assert viewer_response_data[2]["number_value"] == "Editor Number Value"
+    assert viewer_response_data[2]["publication_year"] == 2013
+    assert viewer_response_data[2]["publisher"] == "Editor Publisher"
+    assert viewer_response_data[2]["relation_type"] == "Editor Relation Type"
+    assert viewer_response_data[2]["titles"][0]["title"] == "Editor Title"
+    assert viewer_response_data[2]["titles"][0]["type"] == "MainTitle"
+    assert viewer_response_data[2]["type"] == "Editor Type
+    assert viewer_response_data[2]["volume"] == "Editor Volume"
 
 
 def test_delete_dataset_related_item_contributor_metadata(clients):
