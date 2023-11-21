@@ -2242,9 +2242,18 @@ def test_put_sponsors_metadata(clients):
     editor_response_data = json.loads(editor_response.data)
 
     assert editor_response_data["responsible_party_type"] == "Sponsor"
-    assert editor_response_data["responsible_party_investigator_name"] == "editor sponsor name"
-    assert editor_response_data["responsible_party_investigator_title"] == "editor sponsor title"
-    assert editor_response_data["responsible_party_investigator_affiliation"] == "editor sponsor affiliation"  # noqa: E501
+    assert (
+        editor_response_data["responsible_party_investigator_name"]
+        == "editor sponsor name"
+    )
+    assert (
+        editor_response_data["responsible_party_investigator_title"]
+        == "editor sponsor title"
+    )
+    assert (
+        editor_response_data["responsible_party_investigator_affiliation"]
+        == "editor sponsor affiliation"
+    )  # noqa: E501
     assert editor_response_data["lead_sponsor_name"] == "editor sponsor name"
 
     viewer_response = _viewer_client.put(

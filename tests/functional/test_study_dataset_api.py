@@ -60,8 +60,7 @@ def test_post_dataset(clients):
 
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    pytest.global_dataset_id_admin = admin_response_data["id"]\
-
+    pytest.global_dataset_id_admin = admin_response_data["id"]
     assert admin_response_data["title"] == "Dataset Title"
     assert admin_response_data["description"] == "Dataset Description"
 
@@ -116,8 +115,12 @@ def test_get_dataset_from_study(clients):
 
     response = _logged_in_client.get(f"/study/{study_id}/dataset/{admin_dataset_id}")
     admin_response = _admin_client.get(f"/study/{study_id}/dataset/{admin_dataset_id}")
-    editor_response = _editor_client.get(f"/study/{study_id}/dataset/{admin_dataset_id}")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/dataset/{admin_dataset_id}")
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{admin_dataset_id}"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{admin_dataset_id}"
+    )
 
     assert response.status_code == 200
     assert admin_response.status_code == 200
@@ -126,8 +129,12 @@ def test_get_dataset_from_study(clients):
 
     response = _logged_in_client.get(f"/study/{study_id}/dataset/{editor_dataset_id}")
     admin_response = _admin_client.get(f"/study/{study_id}/dataset/{editor_dataset_id}")
-    editor_response = _editor_client.get(f"/study/{study_id}/dataset/{editor_dataset_id}")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/dataset/{editor_dataset_id}")
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{editor_dataset_id}"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{editor_dataset_id}"
+    )
 
     assert response.status_code == 200
     assert admin_response.status_code == 200
