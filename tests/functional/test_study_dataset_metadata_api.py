@@ -2816,13 +2816,30 @@ def test_delete_dataset_related_item_identifier_metadata(clients):
     dataset_id = pytest.global_dataset_id
     related_item_id = pytest.global_dataset_related_item_id
     identifier_id = pytest.global_dataset_related_item_identifier_id
+    admin_id_id = pytest.global_dataset_related_item_identifier_id_admin
+    editor_id_id = pytest.global_dataset_related_item_identifier_id_editor
 
+    # pylint: disable=line-too-long
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/identifier/{identifier_id}"
+    )
     # pylint: disable=line-too-long
     response = _logged_in_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/identifier/{identifier_id}"
     )
+    # pylint: disable=line-too-long
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/identifier/{admin_id_id}"
+    )
+    # pylint: disable=line-too-long
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/identifier/{editor_id_id}"
+    )
 
+    assert viewer_response.status_code == 403
     assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 def test_delete_dataset_related_item_title_metadata(clients):
