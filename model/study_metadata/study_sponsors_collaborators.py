@@ -50,8 +50,8 @@ class StudySponsorsCollaborators(db.Model):  # type: ignore
         return {
             "responsible_party_type": self.responsible_party_type,
             "responsible_party_investigator_name": self.responsible_party_investigator_name,
+            # "collaborator_name": self.collaborator_name,
             "lead_sponsor_name": self.lead_sponsor_name,
-            "collaborator_name": self.collaborator_name,
         }
 
     @staticmethod

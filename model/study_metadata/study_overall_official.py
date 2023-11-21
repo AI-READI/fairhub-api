@@ -42,8 +42,8 @@ class StudyOverallOfficial(db.Model):  # type: ignore
         """Converts the study metadata to a dictionary"""
         return {
             "name": self.name,
-            "role": self.role,
             "affiliation": self.affiliation,
+            "role": self.role,
         }
 
     @staticmethod

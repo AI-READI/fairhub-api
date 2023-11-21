@@ -1,7 +1,7 @@
 """API routes for study location metadata"""
 import typing
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -41,7 +41,7 @@ class StudyLocationResource(Resource):
 
         sorted_study_location = sorted(study_location_, key=lambda x: x.created_at)
 
-        return [s.to_dict() for s in sorted_study_location]
+        return [s.to_dict() for s in sorted_study_location], 200
 
     def post(self, study_id: int):
         """Create study location metadata"""
@@ -96,7 +96,7 @@ class StudyLocationResource(Resource):
             list_of_elements.append(study_location_.to_dict())
         model.db.session.commit()
 
-        return list_of_elements
+        return list_of_elements, 201
 
 
 @api.route("/study/<study_id>/metadata/location/<location_id>")
@@ -114,4 +114,4 @@ class StudyLocationUpdate(Resource):
 
         model.db.session.commit()
 
-        return 204
+        return Response(status=204)

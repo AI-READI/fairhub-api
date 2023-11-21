@@ -2,7 +2,7 @@
 
 from typing import Any, Union
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -35,7 +35,7 @@ class DatasetRightsResource(Resource):
         """Get dataset rights"""
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_rights_ = dataset_.dataset_rights
-        return [d.to_dict() for d in dataset_rights_]
+        return [d.to_dict() for d in dataset_rights_], 200
 
     @api.doc("update rights")
     @api.response(200, "Success")
@@ -84,7 +84,7 @@ class DatasetRightsResource(Resource):
                 model.db.session.add(dataset_rights_)
                 list_of_elements.append(dataset_rights_.to_dict())
         model.db.session.commit()
-        return list_of_elements
+        return list_of_elements, 201
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/rights/<rights_id>")
@@ -109,4 +109,4 @@ class DatasetRightsUpdate(Resource):
         model.db.session.delete(dataset_rights_)
         model.db.session.commit()
 
-        return 204
+        return Response(status=204)

@@ -26,7 +26,7 @@ def test_post_arm_metadata(_logged_in_client):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_arm_id = response_data["arms"][0]["id"]
 
@@ -69,10 +69,11 @@ def test_delete_arm_metadata(_logged_in_client):
     """
     study_id = pytest.global_study_id["id"]  # type: ignore
     arm_id = pytest.global_arm_id
-
     response = _logged_in_client.delete(f"/study/{study_id}/metadata/arm/{arm_id}")
 
-    assert response.status_code == 200
+    assert response.status_code == 204
+    response_get = _logged_in_client.get(f"/study/{study_id}/metadata/arm")
+    assert len(json.loads(response_get.data)["arms"]) == 0
 
 
 # ------------------- IPD METADATA ------------------- #
@@ -96,7 +97,7 @@ def test_post_available_ipd_metadata(_logged_in_client):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_available_ipd_id = response_data[0]["id"]
 
@@ -132,7 +133,10 @@ def test_delete_available_ipd_metadata(_logged_in_client):
         f"/study/{study_id}/metadata/available-ipd/{available_ipd_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
+    response_get = _logged_in_client.get(f"/study/{study_id}/metadata/available-ipd")
+
+    assert len(json.loads(response_get.data)) == 0
 
 
 # ------------------- CENTRAL CONTACT METADATA ------------------- #
@@ -158,7 +162,7 @@ def test_post_cc_metadata(_logged_in_client):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_cc_id = response_data[0]["id"]
 
@@ -208,7 +212,10 @@ def test_delete_cc_metadata(_logged_in_client):
         f"/study/{study_id}/metadata/central-contact/{central_contact_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
+    response_get = _logged_in_client.get(f"/study/{study_id}/metadata/central-contact")
+
+    assert len(json.loads(response_get.data)) == 0
 
 
 #  ------------------- COLLABORATORS METADATA ------------------- #
@@ -496,7 +503,7 @@ def test_post_identification_metadata(_logged_in_client):
         },
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_identification_id = response_data["secondary"][0]["id"]
 
@@ -522,8 +529,11 @@ def test_delete_identification_metadata(_logged_in_client):
     response = _logged_in_client.delete(
         f"/study/{study_id}/metadata/identification/{identification_id}"
     )
+    assert response.status_code == 204
 
-    assert response.status_code == 200
+    response_get = _logged_in_client.get(f"/study/{study_id}/metadata/identification")
+    # print(response_get.data)
+    assert len(json.loads(response_get.data)["secondary"]) == 0
 
 
 # ------------------- INTERVENTION METADATA ------------------- #
@@ -561,7 +571,7 @@ def test_post_intervention_metadata(_logged_in_client):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_intervention_id = response_data[0]["id"]
 
@@ -570,6 +580,24 @@ def test_post_intervention_metadata(_logged_in_client):
     assert response_data[0]["description"] == "desc"
     assert response_data[0]["arm_group_label_list"] == ["test", "one"]
     assert response_data[0]["other_name_list"] == ["uhh", "yes"]
+
+
+def test_delete_intervention_metadata(_logged_in_client):
+    """
+    Given a Flask application configured for testing and a study ID and link ID
+    WHEN the '/study/{study_id}/metadata/intervention/{intervention_id}' endpoint is requested (DELETE)
+    THEN check that the response is valid and deletes the link metadata
+    """
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    intervention_id = pytest.global_intervention_id
+
+    response = _logged_in_client.delete(
+        f"/study/{study_id}/metadata/intervention/{intervention_id}"
+    )
+    assert response.status_code == 204
+    response_get = _logged_in_client.get(f"/study/{study_id}/metadata/intervention")
+
+    assert len(json.loads(response_get.data)) == 0
 
 
 # ------------------- IPD SHARING METADATA ------------------- #
@@ -647,7 +675,7 @@ def test_post_link_metadata(_logged_in_client):
         json=[{"url": "google.com", "title": "google link"}],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_link_id = response_data[0]["id"]
 
@@ -666,7 +694,11 @@ def test_delete_link_metadata(_logged_in_client):
 
     response = _logged_in_client.delete(f"/study/{study_id}/metadata/link/{link_id}")
 
-    assert response.status_code == 200
+    assert response.status_code == 204
+
+    response_get = _logged_in_client.get(f"/study/{study_id}/metadata/link")
+
+    assert len(json.loads(response_get.data)) == 0
 
 
 # ------------------- LOCATION METADATA ------------------- #
@@ -705,7 +737,7 @@ def test_post_location_metadata(_logged_in_client):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_location_id = response_data[0]["id"]
 
@@ -731,7 +763,11 @@ def test_delete_location_metadata(_logged_in_client):
         f"/study/{study_id}/metadata/location/{location_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
+
+    response_get = _logged_in_client.get(f"/study/{study_id}/metadata/location")
+
+    assert len(json.loads(response_get.data)) == 0
 
 
 # ------------------- OTHER METADATA ------------------- #
@@ -760,7 +796,7 @@ def test_put_other_metadata(_logged_in_client):
         f"/study/{study_id}/metadata/other",
         json={
             "oversight_has_dmc": False,
-            "conditions": ["true", "conditions", "keywords", "1"],
+            "conditions": ["c"],
             "keywords": ["true", "u"],
             "size": 103,
         },
@@ -770,7 +806,7 @@ def test_put_other_metadata(_logged_in_client):
     response_data = json.loads(response.data)
 
     assert response_data["oversight_has_dmc"] is False
-    assert response_data["conditions"] == ["true", "conditions", "keywords", "1"]
+    assert response_data["conditions"] == ["c"]
     assert response_data["keywords"] == ["true", "u"]
     assert response_data["size"] == 103
 
@@ -802,7 +838,7 @@ def test_post_overall_official_metadata(_logged_in_client):
         json=[{"name": "test", "affiliation": "aff", "role": "Study Chair"}],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_overall_official_id = response_data[0]["id"]
 
@@ -826,7 +862,10 @@ def test_delete_overall_official_metadata(_logged_in_client):
         f"/study/{study_id}/metadata/overall-official/{overall_official_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
+    response_get = _logged_in_client.get(f"/study/{study_id}/metadata/overall-official")
+
+    assert len(json.loads(response_get.data)) == 0
 
 
 # ------------------- OVERSIGHT METADATA ------------------- #
@@ -894,7 +933,7 @@ def test_post_reference_metadata(_logged_in_client):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_reference_id = response_data[0]["id"]
 
@@ -918,7 +957,10 @@ def test_delete_reference_metadata(_logged_in_client):
         f"/study/{study_id}/metadata/reference/{reference_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
+    response_get = _logged_in_client.get(f"/study/{study_id}/metadata/reference")
+
+    assert len(json.loads(response_get.data)) == 0
 
 
 # ------------------- SPONSORS METADATA ------------------- #
@@ -994,9 +1036,9 @@ def test_put_status_metadata(_logged_in_client):
         json={
             "overall_status": "Withdrawn",
             "why_stopped": "test",
-            "start_date": "fff",
+            "start_date": "2023-11-15 00:00:00",
             "start_date_type": "Actual",
-            "completion_date": "nuzzzll",
+            "completion_date": "2023-11-16 00:00:00",
             "completion_date_type": "Actual",
         },
     )
@@ -1006,7 +1048,7 @@ def test_put_status_metadata(_logged_in_client):
 
     assert response_data["overall_status"] == "Withdrawn"
     assert response_data["why_stopped"] == "test"
-    assert response_data["start_date"] == "fff"
+    assert response_data["start_date"] == "2023-11-15 00:00:00"
     assert response_data["start_date_type"] == "Actual"
-    assert response_data["completion_date"] == "nuzzzll"
+    assert response_data["completion_date"] == "2023-11-16 00:00:00"
     assert response_data["completion_date_type"] == "Actual"

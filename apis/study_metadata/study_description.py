@@ -32,7 +32,7 @@ class StudyDescriptionResource(Resource):
 
         study_description_ = study_.study_description
 
-        return study_description_.to_dict()
+        return study_description_.to_dict(), 200
 
     def put(self, study_id: int):
         """Update study description metadata"""
@@ -64,4 +64,4 @@ class StudyDescriptionResource(Resource):
 
         model.db.session.commit()
 
-        return study_.study_description.to_dict()
+        return study_.study_description.to_dict(), 200

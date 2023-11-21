@@ -54,7 +54,6 @@ class DatasetOther(db.Model):  # type: ignore
     def to_dict_publisher(self):
         return {
             "managing_organization_name": self.managing_organization_name,
-            "managing_organization_ror_id": self.managing_organization_ror_id,
             "publisher": self.publisher,
         }
 

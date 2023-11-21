@@ -1,7 +1,7 @@
 """APIs for dataset date metadata"""
 from typing import Any, Union
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -32,7 +32,7 @@ class DatasetDateResource(Resource):
         """Get dataset date"""
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_date_ = dataset_.dataset_date
-        return [d.to_dict() for d in dataset_date_]
+        return [d.to_dict() for d in dataset_date_], 200
 
     @api.doc("update date")
     @api.response(200, "Success")
@@ -87,7 +87,7 @@ class DatasetDateResource(Resource):
                 model.db.session.add(dataset_date_)
                 list_of_elements.append(dataset_date_.to_dict())
         model.db.session.commit()
-        return list_of_elements
+        return list_of_elements, 201
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/date/<date_id>")
@@ -108,4 +108,4 @@ class DatasetDateDeleteResource(Resource):
 
         model.db.session.delete(date_)
         model.db.session.commit()
-        return 204
+        return Response(status=204)

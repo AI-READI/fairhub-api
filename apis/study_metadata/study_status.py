@@ -39,7 +39,7 @@ class StudyStatusResource(Resource):
 
         study_status_ = study_.study_status
 
-        return study_status_.to_dict()
+        return study_status_.to_dict(), 200
 
     def put(self, study_id: int):
         """Update study status metadata"""
@@ -107,4 +107,4 @@ class StudyStatusResource(Resource):
 
         model.db.session.commit()
 
-        return study.study_status.to_dict()
+        return study.study_status.to_dict(), 200

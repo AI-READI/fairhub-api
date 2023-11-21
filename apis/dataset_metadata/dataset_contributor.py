@@ -1,7 +1,7 @@
 """API for dataset contributor metadata"""
 from typing import Any, Union
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource
 from jsonschema import ValidationError, validate
 
@@ -28,7 +28,9 @@ class DatasetContributorResource(Resource):
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_contributor_ = dataset_.dataset_contributors
 
-        return [d.to_dict() for d in dataset_contributor_ if not d.to_dict()["creator"]]
+        return [
+            d.to_dict() for d in dataset_contributor_ if not d.to_dict()["creator"]
+        ], 200
 
     @api.doc("update contributor")
     @api.response(200, "Success")
@@ -129,7 +131,7 @@ class DatasetContributorResource(Resource):
                 model.db.session.add(dataset_contributor_)
                 list_of_elements.append(dataset_contributor_.to_dict())
         model.db.session.commit()
-        return list_of_elements
+        return list_of_elements, 201
 
 
 @api.route(
@@ -156,7 +158,7 @@ class DatasetContributorDelete(Resource):
         model.db.session.delete(contributor_)
         model.db.session.commit()
 
-        return 204
+        return Response(status=204)
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/creator")
@@ -171,7 +173,8 @@ class DatasetCreatorResource(Resource):
         """Get dataset creator"""
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_creator_ = dataset_.dataset_contributors
-        return [d.to_dict() for d in dataset_creator_ if d.to_dict()["creator"]]
+        # TODO d.creator
+        return [d.to_dict() for d in dataset_creator_ if d.to_dict()["creator"]], 200
 
     @api.doc("update creator")
     @api.response(200, "Success")
@@ -269,7 +272,7 @@ class DatasetCreatorResource(Resource):
                 model.db.session.add(dataset_creator_)
                 list_of_elements.append(dataset_creator_.to_dict())
         model.db.session.commit()
-        return list_of_elements
+        return list_of_elements, 201
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/creator/<creator_id>")
@@ -291,4 +294,4 @@ class DatasetCreatorDelete(Resource):
         model.db.session.delete(dataset_creator_)
         model.db.session.commit()
 
-        return 204
+        return Response(status=204)
