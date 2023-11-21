@@ -117,4 +117,4 @@ class StudyLocationUpdate(Resource):
 
         model.db.session.commit()
 
-        Response(status=204)
+        return Response(status=204)

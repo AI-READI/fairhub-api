@@ -134,4 +134,4 @@ class StudyIdentificationResource(Resource):
             model.db.session.delete(study_identification_)
             model.db.session.commit()
 
-            Response(status=204)
+            return Response(status=204)

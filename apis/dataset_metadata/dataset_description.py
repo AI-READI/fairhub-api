@@ -134,4 +134,4 @@ class DatasetDescriptionResource(Resource):
             model.db.session.delete(dataset_description_)
             model.db.session.commit()
 
-            Response(status=204)
+            return Response(status=204)

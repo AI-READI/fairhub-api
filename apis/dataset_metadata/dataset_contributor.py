@@ -156,7 +156,7 @@ class DatasetContributorDelete(Resource):
         model.db.session.delete(contributor_)
         model.db.session.commit()
 
-        Response(status=204)
+        return Response(status=204)
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/creator")
@@ -291,4 +291,4 @@ class DatasetCreatorDelete(Resource):
         model.db.session.delete(dataset_creator_)
         model.db.session.commit()
 
-        Response(status=204)
+        return Response(status=204)

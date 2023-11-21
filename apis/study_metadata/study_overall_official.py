@@ -111,4 +111,4 @@ class StudyOverallOfficialResource(Resource):
             model.db.session.delete(study_overall_official_)
             model.db.session.commit()
 
-            Response(status=204)
+            return Response(status=204)

@@ -108,4 +108,4 @@ class DatasetDateDeleteResource(Resource):
 
         model.db.session.delete(date_)
         model.db.session.commit()
-        Response(status=204)
+        return Response(status=204)

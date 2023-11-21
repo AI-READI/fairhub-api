@@ -327,7 +327,7 @@ class DatasetRelatedItemUpdate(Resource):
         model.db.session.delete(dataset_related_item_)
         model.db.session.commit()
 
-        Response(status=204)
+        return Response(status=204)
 
 
 @api.route(
@@ -357,7 +357,7 @@ class RelatedItemContributorsDelete(Resource):
         model.db.session.delete(dataset_contributors_)
         model.db.session.commit()
 
-        Response(status=204)
+        return Response(status=204)
 
 
 @api.route(
@@ -384,7 +384,7 @@ class RelatedItemTitlesDelete(Resource):
         dataset_title_ = model.DatasetRelatedItemTitle.query.get(title_id)
         model.db.session.delete(dataset_title_)
         model.db.session.commit()
-        Response(status=204)
+        return Response(status=204)
 
 
 @api.route(
@@ -413,7 +413,7 @@ class RelatedItemIdentifiersDelete(Resource):
         )
         model.db.session.delete(dataset_identifier_)
         model.db.session.commit()
-        Response(status=204)
+        return Response(status=204)
 
 
 @api.route(
@@ -440,4 +440,4 @@ class RelatedItemCreatorDelete(Resource):
         dataset_creator_ = model.DatasetRelatedItemContributor.query.get(creator_id)
         model.db.session.delete(dataset_creator_)
         model.db.session.commit()
-        Response(status=204)
+        return Response(status=204)

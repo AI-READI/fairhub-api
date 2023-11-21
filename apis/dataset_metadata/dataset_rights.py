@@ -109,4 +109,4 @@ class DatasetRightsUpdate(Resource):
         model.db.session.delete(dataset_rights_)
         model.db.session.commit()
 
-        Response(status=204)
+        return Response(status=204)

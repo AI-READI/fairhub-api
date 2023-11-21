@@ -155,7 +155,7 @@ class ContributorResource(Resource):
 
             model.db.session.commit()
 
-            Response(status=204)
+            return Response(status=204)
 
         user = model.User.query.get(user_id)
 
@@ -218,4 +218,4 @@ class AssignOwner(Resource):
 
         existing_owner.permission = "admin"
         model.db.session.commit()
-        Response(status=204)
+        return Response(status=204)
