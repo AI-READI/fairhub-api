@@ -1946,6 +1946,53 @@ def test_put_dataset_publisher_metadata(clients):
         response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
     )
 
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/publisher",
+        json={
+            "publisher": "Publisher",
+            "managing_organization_name": "Managing Admin Organization Name",
+            "managing_organization_ror_id": "Managing Organization ROR ID",
+        }
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+
+    assert admin_response_data["publisher"] == "Publisher"
+    assert admin_response_data["managing_organization_name"] == "Managing Admin Organization Name"
+    assert (
+        admin_response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
+    )
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/publisher",
+        json={
+            "publisher": "Publisher",
+            "managing_organization_name": "Managing Editor Organization Name",
+            "managing_organization_ror_id": "Managing Organization ROR ID",
+        }
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+
+    assert editor_response_data["publisher"] == "Publisher"
+    assert editor_response_data["managing_organization_name"] == "Managing Editor Organization Name"
+    assert (
+        editor_response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
+    )
+
+    viewer_response = _viewer_client.put(
+        f'/study/{study_id}/dataset/{dataset_id}/metadata/publisher',
+        json={
+            "publisher": "Publisher",
+            "managing_organization_name": "Managing Viewer Organization Name",
+            "managing_organization_ror_id": "Managing Organization ROR ID",
+        }
+    )
+
+    assert viewer_response.status_code == 403
+
 
 def test_get_dataset_publisher_metadata(clients):
     """
