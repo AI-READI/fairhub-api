@@ -1344,6 +1344,62 @@ def test_get_dataset_deidentification_metadata(clients):
     assert viewer_response_data["details"] == "Details"
 
 # ------------------- DESCRIPTION METADATA ------------------- #
+def test_post_dataset_description_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/description'
+    endpoint is requested (POST)
+    Then check that the response is valid and creates the dataset
+    description metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/description",
+        json=[{"description": "Description", "type": "Methods"}],
+    )
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    pytest.global_dataset_description_id = response_data[0]["id"]
+
+    assert response_data[0]["description"] == "Description"
+    assert response_data[0]["type"] == "Methods"
+
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/description",
+        json=[{"description": "Admin Description", "type": "Methods"}],
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    pytest.global_dataset_description_id_admin = admin_response_data[0]["id"]
+
+    assert admin_response_data[0]["description"] == "Admin Description"
+    assert admin_response_data[0]["type"] == "Methods"
+
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/description",
+        json=[{"description": "Editor Description", "type": "Methods"}],
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    pytest.global_dataset_description_id_editor = editor_response_data[0]["id"]
+
+    assert editor_response_data[0]["description"] == "Editor Description"
+    assert editor_response_data[0]["type"] == "Methods"
+
+    viewer_response = _viewer_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/description",
+        json=[{"description": "Viewer Description", "type": "Methods"}],
+    )
+
+    assert viewer_response.status_code == 403
+
+
 def test_get_dataset_descriptions_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
@@ -1374,62 +1430,43 @@ def test_get_dataset_descriptions_metadata(clients):
     assert editor_response.status_code == 200
     assert viewer_response.status_code == 200
 
-
-def test_post_dataset_description_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID and dataset ID
-    When the '/study/{study_id}/dataset/{dataset_id}/metadata/description'
-    endpoint is requested (POST)
-    Then check that the response is valid and creates the dataset
-    description metadata content
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    dataset_id = pytest.global_dataset_id
-
-    response = _logged_in_client.post(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/description",
-        json=[{"description": "Description", "type": "Methods"}],
-    )
-
-    assert response.status_code == 200
     response_data = json.loads(response.data)
-    pytest.global_dataset_description_id = response_data[0]["id"]
+    admin_response = json.loads(admin_response.data)
+    editor_response = json.loads(editor_response.data)
+    viewer_response = json.loads(viewer_response.data)
+
+    assert len(response_data) == 3
+    assert len(admin_response) == 3
+    assert len(editor_response) == 3
+    assert len(viewer_response) == 3
 
     assert response_data[0]["description"] == "Description"
     assert response_data[0]["type"] == "Methods"
-
-    admin_response = _admin_client.post(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/description",
-        json=[{"description": "Description", "type": "Methods"}],
-    )
-
-    assert admin_response.status_code == 200
-    admin_response_data = json.loads(admin_response.data)
-    pytest.global_dataset_description_id_admin = admin_response_data[0]["id"]
+    assert response_data[1]["description"] == "Admin Description"
+    assert response_data[1]["type"] == "Methods"
+    assert response_data[2]["description"] == "Editor Description"
+    assert response_data[2]["type"] == "Methods"
 
     assert admin_response_data[0]["description"] == "Description"
     assert admin_response_data[0]["type"] == "Methods"
-
-    editor_response = _editor_client.post(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/description",
-        json=[{"description": "Description", "type": "Methods"}],
-    )
-
-    assert editor_response.status_code == 200
-    editor_response_data = json.loads(editor_response.data)
-    pytest.global_dataset_description_id_editor = editor_response_data[0]["id"]
+    assert admin_response_data[1]["description"] == "Admin Description"
+    assert admin_response_data[1]["type"] == "Methods"
+    assert admin_response_data[2]["description"] == "Editor Description"
+    assert admin_response_data[2]["type"] == "Methods"
 
     assert editor_response_data[0]["description"] == "Description"
     assert editor_response_data[0]["type"] == "Methods"
+    assert editor_response_data[1]["description"] == "Admin Description"
+    assert editor_response_data[1]["type"] == "Methods"
+    assert editor_response_data[2]["description"] == "Editor Description"
+    assert editor_response_data[2]["type"] == "Methods"
 
-    viewer_response = _viewer_client.post(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/description",
-        json=[{"description": "Description", "type": "Methods"}],
-    )
-
-    assert viewer_response.status_code == 403
-
+    assert viewer_response_data[0]["description"] == "Description"
+    assert viewer_response_data[0]["type"] == "Methods"
+    assert viewer_response_data[1]["description"] == "Admin Description"
+    assert viewer_response_data[1]["type"] == "Methods"
+    assert viewer_response_data[2]["description"] == "Editor Description"
+    assert viewer_response_data[2]["type"] == "Methods"
 
 def test_delete_dataset_description_metadata(clients):
     """
