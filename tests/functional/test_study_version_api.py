@@ -324,7 +324,7 @@ def test_get_version_dataset_metadata(_logged_in_client):
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/dataset-metadata"
     )
     response_data = json.loads(response.data)
-    print(response_data)
+    # print(response_data)
 
     assert response.status_code == 200
 

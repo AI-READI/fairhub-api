@@ -109,7 +109,7 @@ def test_delete_studies_created(_logged_in_client):
     assert response.status_code == 204
 
     response_get = _logged_in_client.get(
-        f"/study"
+        "/study"
     )
     assert response_get.status_code == 200
     assert len(json.loads(response_get.data)) == 1
