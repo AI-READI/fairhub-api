@@ -1,7 +1,7 @@
 """API endpoints for dataset alternate identifier"""
 from typing import Any, Union
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -140,4 +140,4 @@ class DatasetAlternateIdentifierResource(Resource):
             model.db.session.delete(dataset_identifier_)
             model.db.session.commit()
 
-            return 204
+            Response(status=204)
