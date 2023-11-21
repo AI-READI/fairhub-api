@@ -1176,37 +1176,6 @@ def test_delete_dataset_date_metadata(clients):
 
 
 # ------------------- DE-IDENTIFICATION LEVEL METADATA ------------------- #
-def test_get_dataset_deidentification_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID and dataset ID
-    When the '/study/{study_id}/dataset/{dataset_id}/metadata/de-identification'
-    endpoint is requested (GET)
-    Then check that the response is valid and retrieves the dataset
-    de-identification metadata content
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    dataset_id = pytest.global_dataset_id
-
-    response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/de-identification-level"
-    )
-    admin_response = _admin_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/de-identification-level"
-    )
-    editor_response = _editor_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/de-identification-level"
-    )
-    viewer_response = _viewer_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/de-identification-level"
-    )
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-
 def test_put_dataset_deidentification_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
@@ -1306,6 +1275,73 @@ def test_put_dataset_deidentification_metadata(clients):
 
     assert viewer_response.status_code == 403
 
+
+def test_get_dataset_deidentification_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/de-identification'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    de-identification metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/de-identification-level"
+    )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/de-identification-level"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/de-identification-level"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/de-identification-level"
+    )
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data["type"] == "Level"
+    assert response_data["direct"] is True
+    assert response_data["hipaa"] is True
+    assert response_data["dates"] is True
+    assert response_data["nonarr"] is True
+    assert response_data["k_anon"] is True
+    assert response_data["details"] == "Details"
+
+    assert admin_response_data["type"] == "Level"
+    assert admin_response_data["direct"] is True
+    assert admin_response_data["hipaa"] is True
+    assert admin_response_data["dates"] is True
+    assert admin_response_data["nonarr"] is True
+    assert admin_response_data["k_anon"] is True
+    assert admin_response_data["details"] == "Details"
+
+    assert editor_response_data["type"] == "Level"
+    assert editor_response_data["direct"] is True
+    assert editor_response_data["hipaa"] is True
+    assert editor_response_data["dates"] is True
+    assert editor_response_data["nonarr"] is True
+    assert editor_response_data["k_anon"] is True
+    assert editor_response_data["details"] == "Details"
+
+    assert viewer_response_data["type"] == "Level"
+    assert viewer_response_data["direct"] is True
+    assert viewer_response_data["hipaa"] is True
+    assert viewer_response_data["dates"] is True
+    assert viewer_response_data["nonarr"] is True
+    assert viewer_response_data["k_anon"] is True
+    assert viewer_response_data["details"] == "Details"
 
 # ------------------- DESCRIPTION METADATA ------------------- #
 def test_get_dataset_descriptions_metadata(clients):
