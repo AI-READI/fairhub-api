@@ -93,6 +93,7 @@ def test_get_all_dataset_from_study(clients):
     editor_response_data = json.loads(editor_response.data)
     viewer_response_data = json.loads(viewer_response.data)
 
+    # Three datasets should be returned
     assert len(response_data) == 3
     assert len(admin_response_data) == 3
     assert len(editor_response_data) == 3
@@ -100,6 +101,31 @@ def test_get_all_dataset_from_study(clients):
 
     assert response_data[0]["title"] == "Dataset Title"
     assert response_data[0]["description"] == "Dataset Description"
+    assert response_data[1]["title"] == "Admin Dataset Title"
+    assert response_data[1]["description"] == "Admin Dataset Description"
+    assert response_data[2]["title"] == "Editor Dataset Title"
+    assert response_data[2]["description"] == "Editor Dataset Description"
+
+    assert admin_response_data[0]["title"] == "Dataset Title"
+    assert admin_response_data[0]["description"] == "Dataset Description"
+    assert admin_response_data[1]["title"] == "Admin Dataset Title"
+    assert admin_response_data[1]["description"] == "Admin Dataset Description"
+    assert admin_response_data[2]["title"] == "Editor Dataset Title"
+    assert admin_response_data[2]["description"] == "Editor Dataset Description"
+
+    assert editor_response_data[0]["title"] == "Dataset Title"
+    assert editor_response_data[0]["description"] == "Dataset Description"
+    assert editor_response_data[1]["title"] == "Admin Dataset Title"
+    assert editor_response_data[1]["description"] == "Admin Dataset Description"
+    assert editor_response_data[2]["title"] == "Editor Dataset Title"
+    assert editor_response_data[2]["description"] == "Editor Dataset Description"
+
+    assert viewer_response_data[0]["title"] == "Dataset Title"
+    assert viewer_response_data[0]["description"] == "Dataset Description"
+    assert viewer_response_data[1]["title"] == "Admin Dataset Title"
+    assert viewer_response_data[1]["description"] == "Admin Dataset Description"
+    assert viewer_response_data[2]["title"] == "Editor Dataset Title"
+    assert viewer_response_data[2]["description"] == "Editor Dataset Description"
 
 
 def test_get_dataset_from_study(clients):
