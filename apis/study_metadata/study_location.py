@@ -1,7 +1,7 @@
 """API routes for study location metadata"""
 import typing
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -114,4 +114,4 @@ class StudyLocationUpdate(Resource):
 
         model.db.session.commit()
 
-        return 204
+        Response(status=204)
