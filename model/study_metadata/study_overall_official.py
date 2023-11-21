@@ -43,6 +43,8 @@ class StudyOverallOfficial(db.Model):  # type: ignore
         return {
             "name": self.name,
             "affiliation": self.affiliation,
+            "role": self.role,
+
         }
 
     @staticmethod
