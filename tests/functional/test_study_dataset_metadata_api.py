@@ -669,35 +669,6 @@ def test_delete_dataset_contributor_metadata(clients):
 
 
 # ------------------- CREATOR METADATA ------------------- #
-def test_get_dataset_creator_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    When the '/study/{study_id}/dataset/{dataset_id}/metadata/creator' endpoint is requested (GET)
-    Then check that the response is valid and retrieves the dataset creator metadata content
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    dataset_id = pytest.global_dataset_id
-
-    response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator"
-    )
-    admin_response = _admin_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator"
-    )
-    editor_response = _editor_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator"
-    )
-    viewer_response = _viewer_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator"
-    )
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-
 def test_post_dataset_creator_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
@@ -838,6 +809,169 @@ def test_post_dataset_creator_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
+
+
+def test_get_dataset_creator_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/creator' endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset creator metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator"
+    )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/creator"
+    )
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert len(response_data) == 3
+    assert len(admin_response_data) == 3
+    assert len(editor_response_data) == 3
+    assert len(viewer_response_data) == 3
+
+    assert response_data[0]["name"] == "Name here"
+    assert response_data[0]["name_type"] == "Personal"
+    assert response_data[0]["name_identifier"] == "Name identifier"
+    assert response_data[0]["name_identifier_scheme"] == "Name Scheme ID"
+    assert response_data[0]["name_identifier_scheme_uri"] == "Name ID Scheme URI"
+    assert response_data[0]["creator"] is True
+    assert response_data[0]["affiliations"][0]["name"] == "Test"
+    assert response_data[0]["affiliations"][0]["identifier"] == "yes"
+    assert response_data[0]["affiliations"][0]["scheme"] == "uh
+    assert response_data[0]["affiliations"][0]["scheme_uri"] == "scheme uri"
+    assert response_data[1]["name"] == "admin Name here"
+    assert response_data[1]["name_type"] == "Personal"
+    assert response_data[1]["name_identifier"] == "Name identifier"
+    assert response_data[1]["name_identifier_scheme"] == "Name Scheme ID"
+    assert response_data[1]["name_identifier_scheme_uri"] == "Name ID Scheme URI"
+    assert response_data[1]["creator"] is True
+    assert response_data[1]["affiliations"][0]["name"] == "Test"
+    assert response_data[1]["affiliations"][0]["identifier"] == "yes"
+    assert response_data[1]["affiliations"][0]["scheme"] == "uh"
+    assert response_data[1]["affiliations"][0]["scheme_uri"] == "scheme uri"
+    assert response_data[2]["name"] == "Editor Name here"
+    assert response_data[2]["name_type"] == "Personal"
+    assert response_data[2]["name_identifier"] == "Name identifier"
+    assert response_data[2]["name_identifier_scheme"] == "Name Scheme ID"
+    assert response_data[2]["name_identifier_scheme_uri"] == "Name ID Scheme URI"
+    assert response_data[2]["creator"] is True
+    assert response_data[2]["affiliations"][0]["name"] == "Test"
+    assert response_data[2]["affiliations"][0]["identifier"] == "yes"
+    assert response_data[2]["affiliations"][0]["scheme"] == "uh"
+    assert response_data[2]["affiliations"][0]["scheme_uri"] == "scheme uri"
+
+    assert admin_response_data[0]["name"] == "Name here"
+    assert admin_response_data[0]["name_type"] == "Personal"
+    assert admin_response_data[0]["name_identifier"] == "Name identifier"
+    assert admin_response_data[0]["name_identifier_scheme"] == "Name Scheme ID"
+    assert admin_response_data[0]["name_identifier_scheme_uri"] == "Name ID Scheme URI"
+    assert admin_response_data[0]["creator"] is True
+    assert admin_response_data[0]["affiliations"][0]["name"] == "Test"
+    assert admin_response_data[0]["affiliations"][0]["identifier"] == "yes"
+    assert admin_response_data[0]["affiliations"][0]["scheme"] == "uh
+    assert admin_response_data[0]["affiliations"][0]["scheme_uri"] == "scheme uri"
+    assert admin_response_data[1]["name"] == "admin Name here"
+    assert admin_response_data[1]["name_type"] == "Personal"
+    assert admin_response_data[1]["name_identifier"] == "Name identifier"
+    assert admin_response_data[1]["name_identifier_scheme"] == "Name Scheme ID"
+    assert admin_response_data[1]["name_identifier_scheme_uri"] == "Name ID Scheme URI"
+    assert admin_response_data[1]["creator"] is True
+    assert admin_response_data[1]["affiliations"][0]["name"] == "Test"
+    assert admin_response_data[1]["affiliations"][0]["identifier"] == "yes"
+    assert admin_response_data[1]["affiliations"][0]["scheme"] == "uh"
+    assert admin_response_data[1]["affiliations"][0]["scheme_uri"] == "scheme uri"
+    assert admin_response_data[2]["name"] == "Editor Name here"
+    assert admin_response_data[2]["name_type"] == "Personal"
+    assert admin_response_data[2]["name_identifier"] == "Name identifier"
+    assert admin_response_data[2]["name_identifier_scheme"] == "Name Scheme ID"
+    assert admin_response_data[2]["name_identifier_scheme_uri"] == "Name ID Scheme URI"
+    assert admin_response_data[2]["creator"] is True
+    assert admin_response_data[2]["affiliations"][0]["name"] == "Test"
+    assert admin_response_data[2]["affiliations"][0]["identifier"] == "yes"
+    assert admin_response_data[2]["affiliations"][0]["scheme"] == "uh"
+    assert admin_response_data[2]["affiliations"][0]["scheme_uri"] == "scheme uri"
+
+    assert editor_response_data[0]["name"] == "Name here"
+    assert editor_response_data[0]["name_type"] == "Personal"
+    assert editor_response_data[0]["name_identifier"] == "Name identifier"
+    assert editor_response_data[0]["name_identifier_scheme"] == "Name Scheme ID"
+    assert editor_response_data[0]["name_identifier_scheme_uri"] == "Name ID Scheme URI"
+    assert editor_response_data[0]["creator"] is True
+    assert editor_response_data[0]["affiliations"][0]["name"] == "Test"
+    assert editor_response_data[0]["affiliations"][0]["identifier"] == "yes"
+    assert editor_response_data[0]["affiliations"][0]["scheme"] == "uh
+    assert editor_response_data[0]["affiliations"][0]["scheme_uri"] == "scheme uri"
+    assert editor_response_data[1]["name"] == "admin Name here"
+    assert editor_response_data[1]["name_type"] == "Personal"
+    assert editor_response_data[1]["name_identifier"] == "Name identifier"
+    assert editor_response_data[1]["name_identifier_scheme"] == "Name Scheme ID"
+    assert editor_response_data[1]["name_identifier_scheme_uri"] == "Name ID Scheme URI"
+    assert editor_response_data[1]["creator"] is True
+    assert editor_response_data[1]["affiliations"][0]["name"] == "Test"
+    assert editor_response_data[1]["affiliations"][0]["identifier"] == "yes"
+    assert editor_response_data[1]["affiliations"][0]["scheme"] == "uh"
+    assert editor_response_data[1]["affiliations"][0]["scheme_uri"] == "scheme uri"
+    assert editor_response_data[2]["name"] == "Editor Name here"
+    assert editor_response_data[2]["name_type"] == "Personal"
+    assert editor_response_data[2]["name_identifier"] == "Name identifier"
+    assert editor_response_data[2]["name_identifier_scheme"] == "Name Scheme ID"
+    assert editor_response_data[2]["name_identifier_scheme_uri"] == "Name ID Scheme URI"
+    assert editor_response_data[2]["creator"] is True
+    assert editor_response_data[2]["affiliations"][0]["name"] == "Test"
+    assert editor_response_data[2]["affiliations"][0]["identifier"] == "yes"
+    assert editor_response_data[2]["affiliations"][0]["scheme"] == "uh"
+    assert editor_response_data[2]["affiliations"][0]["scheme_uri"] == "scheme uri"
+
+    assert viewer_response_data[0]["name"] == "Name here"
+    assert viewer_response_data[0]["name_type"] == "Personal"
+    assert viewer_response_data[0]["name_identifier"] == "Name identifier"
+    assert viewer_response_data[0]["name_identifier_scheme"] == "Name Scheme ID"
+    assert viewer_response_data[0]["name_identifier_scheme_uri"] == "Name ID Scheme URI"
+    assert viewer_response_data[0]["creator"] is True
+    assert viewer_response_data[0]["affiliations"][0]["name"] == "Test"
+    assert viewer_response_data[0]["affiliations"][0]["identifier"] == "yes"
+    assert viewer_response_data[0]["affiliations"][0]["scheme"] == "uh
+    assert viewer_response_data[0]["affiliations"][0]["scheme_uri"] == "scheme uri"
+    assert viewer_response_data[1]["name"] == "admin Name here"
+    assert viewer_response_data[1]["name_type"] == "Personal"
+    assert viewer_response_data[1]["name_identifier"] == "Name identifier"
+    assert viewer_response_data[1]["name_identifier_scheme"] == "Name Scheme ID"
+    assert viewer_response_data[1]["name_identifier_scheme_uri"] == "Name ID Scheme URI"
+    assert viewer_response_data[1]["creator"] is True
+    assert viewer_response_data[1]["affiliations"][0]["name"] == "Test"
+    assert viewer_response_data[1]["affiliations"][0]["identifier"] == "yes"
+    assert viewer_response_data[1]["affiliations"][0]["scheme"] == "uh"
+    assert viewer_response_data[1]["affiliations"][0]["scheme_uri"] == "scheme uri"
+    assert viewer_response_data[2]["name"] == "Editor Name here"
+    assert viewer_response_data[2]["name_type"] == "Personal"
+    assert viewer_response_data[2]["name_identifier"] == "Name identifier"
+    assert viewer_response_data[2]["name_identifier_scheme"] == "Name Scheme ID"
+    assert viewer_response_data[2]["name_identifier_scheme_uri"] == "Name ID Scheme URI"
+    assert viewer_response_data[2]["creator"] is True
+    assert viewer_response_data[2]["affiliations"][0]["name"] == "Test"
+    assert viewer_response_data[2]["affiliations"][0]["identifier"] == "yes"
+    assert viewer_response_data[2]["affiliations"][0]["scheme"] == "uh"
+    assert viewer_response_data[2]["affiliations"][0]["scheme_uri"] == "scheme uri"
 
 
 def test_delete_dataset_creator_metadata(clients):
