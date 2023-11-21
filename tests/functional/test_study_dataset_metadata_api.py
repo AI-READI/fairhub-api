@@ -2055,26 +2055,8 @@ def test_get_dataset_publisher_metadata(clients):
         viewer_response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
     )
 
+
 # ------------------- RECORD KEYS METADATA ------------------- #
-def test_get_dataset_record_keys_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID and dataset ID
-    When the '/study/{study_id}/dataset/{dataset_id}'
-    endpoint is requested (GET)
-    Then check that the response is valid and retrieves the dataset
-    record keys metadata content
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    dataset_id = pytest.global_dataset_id
-
-    response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/record-keys"
-    )
-
-    assert response.status_code == 200
-
-
 def test_put_dataset_record_keys_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
@@ -2097,6 +2079,56 @@ def test_put_dataset_record_keys_metadata(clients):
 
     assert response_data["type"] == "Record Type"
     assert response_data["details"] == "Details for Record Keys"
+
+
+def test_get_dataset_record_keys_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    record keys metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/record-keys"
+    )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/record-keys"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/record-keys"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/record-keys"
+    )
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    # Editor was the last to update the metadata successfully so
+    # the response should reflect that
+    assert response_data["type"] == "Record Type"
+    assert response_data["details"] == "Editor Details for Record Keys"
+
+    assert admin_response_data["type"] == "Record Type"
+    assert admin_response_data["details"] == "Editor Details for Record Keys"
+
+    assert editor_response_data["type"] == "Record Type"
+    assert editor_response_data["details"] == "Editor Details for Record Keys"
+
+    assert viewer_response_data["type"] == "Record Type"
+    assert viewer_response_data["details"] == "Editor Details for Record Keys"
 
 
 # ------------------- RELATED ITEM METADATA ------------------- #
