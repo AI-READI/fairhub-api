@@ -86,6 +86,9 @@ class StudyReferenceResource(Resource):
     class StudyReferenceUpdate(Resource):
         """Study Reference Metadata"""
 
+        @api.doc("delete reference")
+        @api.response(204, "Success")
+        @api.response(400, "Validation Error")
         def delete(self, study_id: int, reference_id: int):
             """Delete study reference metadata"""
             study_obj = model.Study.query.get(study_id)

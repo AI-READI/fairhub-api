@@ -137,7 +137,7 @@ class StudyResource(Resource):
 
         return update_study.to_dict()
 
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     @api.doc(description="Delete a study")
     def delete(self, study_id: int):

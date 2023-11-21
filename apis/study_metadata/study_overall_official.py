@@ -98,7 +98,7 @@ class StudyOverallOfficialResource(Resource):
 
     @api.route("/study/<study_id>/metadata/overall-official/<overall_official_id>")
     class StudyOverallOfficialUpdate(Resource):
-        @api.response(200, "Success")
+        @api.response(204, "Success")
         @api.response(400, "Validation Error")
         def delete(self, study_id: int, overall_official_id: int):
             """Delete study overall official metadata"""

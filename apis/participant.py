@@ -62,7 +62,7 @@ class UpdateParticipant(Resource):
         model.db.session.commit()
         return update_participant.to_dict()
 
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(self, study_id: int, participant_id: int):
         if is_granted("viewer", study_id):

@@ -104,7 +104,7 @@ class DatasetResource(Resource):
 
         return data_obj.to_dict()
 
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     @api.doc("delete dataset")
     def delete(self, study_id: int, dataset_id: int):
@@ -149,7 +149,7 @@ class VersionResource(Resource):
         model.db.session.commit()
         return jsonify(data_version_obj.to_dict()), 201
 
-    @api.response(201, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     @api.doc("delete dataset version")
     def delete(

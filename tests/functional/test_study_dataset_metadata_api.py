@@ -577,10 +577,14 @@ def test_delete_dataset_contributor_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor/{editor_contributor_id}"
     )
 
+    print("$$$$$$$$$$")
+    print(response.status_code)
+    print(json.loads(response.data))
+    print("$$$$$$$$$$`")
     assert viewer_response.status_code == 403
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 # ------------------- CREATOR METADATA ------------------- #

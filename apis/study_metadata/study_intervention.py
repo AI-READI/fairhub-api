@@ -116,6 +116,9 @@ class StudyInterventionResource(Resource):
     class StudyInterventionUpdate(Resource):
         """Study Intervention Metadata"""
 
+        @api.doc("Delete Study Interventions")
+        @api.response(204, "Success")
+        @api.response(400, "Validation Error")
         def delete(self, study_id: int, intervention_id: int):
             """Delete study intervention metadata"""
             study_obj = model.Study.query.get(study_id)

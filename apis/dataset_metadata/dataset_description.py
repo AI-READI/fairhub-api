@@ -110,7 +110,7 @@ class DatasetDescriptionResource(Resource):
         """Dataset Description Update Resource"""
 
         @api.doc("delete description")
-        @api.response(200, "Success")
+        @api.response(204, "Success")
         @api.response(400, "Validation Error")
         def delete(
             self,

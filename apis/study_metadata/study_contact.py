@@ -125,6 +125,9 @@ class StudyContactResource(Resource):
     class StudyContactUpdate(Resource):
         """Study Contact Metadata"""
 
+        @api.doc("Delete Study contacts")
+        @api.response(204, "Success")
+        @api.response(400, "Validation Error")
         def delete(self, study_id: int, central_contact_id: int):
             """Delete study contact metadata"""
             study = model.Study.query.get(study_id)

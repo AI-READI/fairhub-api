@@ -116,6 +116,9 @@ class StudyIdentificationResource(Resource):
     class StudyIdentificationdUpdate(Resource):
         """Study Identification Metadata"""
 
+        @api.doc("Delete Study Identifications")
+        @api.response(204, "Success")
+        @api.response(400, "Validation Error")
         def delete(self, study_id: int, identification_id: int):
             """Delete study identification metadata"""
             study = model.Study.query.get(study_id)

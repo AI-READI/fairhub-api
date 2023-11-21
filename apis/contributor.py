@@ -115,7 +115,7 @@ class ContributorResource(Resource):
         return grantee.to_dict(), 200
 
     @api.doc("contributor delete")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(self, study_id: int, user_id: str):
         study = model.Study.query.get(study_id)

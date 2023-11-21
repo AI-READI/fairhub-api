@@ -100,7 +100,7 @@ class DatasetSubjectUpdate(Resource):
     """Dataset Subject Update Resource"""
 
     @api.doc("delete subject")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self,

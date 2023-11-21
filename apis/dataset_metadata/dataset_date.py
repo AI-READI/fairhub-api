@@ -95,7 +95,7 @@ class DatasetDateDeleteResource(Resource):
     """Dataset Date Delete Resource"""
 
     @api.doc("delete date")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self, study_id: int, dataset_id: int, date_id: int

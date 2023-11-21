@@ -84,6 +84,9 @@ class StudyLinkResource(Resource):
     class StudyLinkUpdate(Resource):
         """Study Link Metadata"""
 
+        @api.doc("Delete study links")
+        @api.response(204, "Success")
+        @api.response(400, "Validation Error")
         def delete(self, study_id: int, link_id: int):
             """Delete study link metadata"""
             study_obj = model.Study.query.get(study_id)

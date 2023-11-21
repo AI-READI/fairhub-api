@@ -120,7 +120,7 @@ class DatasetAlternateIdentifierResource(Resource):
         """Dataset Alternate Identifier Update Resource"""
 
         @api.doc("delete identifier")
-        @api.response(200, "Success")
+        @api.response(204, "Success")
         @api.response(400, "Validation Error")
         def delete(
             self, study_id: int, dataset_id: int, identifier_id: int
