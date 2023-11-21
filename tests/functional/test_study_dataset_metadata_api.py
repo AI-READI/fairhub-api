@@ -253,7 +253,7 @@ def test_get_alternative_identifier(clients):
     assert response_data[1]["type"] == "ARK"
     assert response_data[2]["identifier"] == "editor test"
     assert response_data[2]["type"] == "ARK"
-    
+
     assert admin_response_data[0]["identifier"] == "identifier test"
     assert admin_response_data[0]["type"] == "ARK"
     assert admin_response_data[1]["identifier"] == "admin test"
@@ -857,7 +857,7 @@ def test_get_dataset_creator_metadata(clients):
     assert response_data[0]["creator"] is True
     assert response_data[0]["affiliations"][0]["name"] == "Test"
     assert response_data[0]["affiliations"][0]["identifier"] == "yes"
-    assert response_data[0]["affiliations"][0]["scheme"] == "uh
+    assert response_data[0]["affiliations"][0]["scheme"] == "uh"
     assert response_data[0]["affiliations"][0]["scheme_uri"] == "scheme uri"
     assert response_data[1]["name"] == "admin Name here"
     assert response_data[1]["name_type"] == "Personal"
@@ -888,7 +888,7 @@ def test_get_dataset_creator_metadata(clients):
     assert admin_response_data[0]["creator"] is True
     assert admin_response_data[0]["affiliations"][0]["name"] == "Test"
     assert admin_response_data[0]["affiliations"][0]["identifier"] == "yes"
-    assert admin_response_data[0]["affiliations"][0]["scheme"] == "uh
+    assert admin_response_data[0]["affiliations"][0]["scheme"] == "uh"
     assert admin_response_data[0]["affiliations"][0]["scheme_uri"] == "scheme uri"
     assert admin_response_data[1]["name"] == "admin Name here"
     assert admin_response_data[1]["name_type"] == "Personal"
@@ -919,7 +919,7 @@ def test_get_dataset_creator_metadata(clients):
     assert editor_response_data[0]["creator"] is True
     assert editor_response_data[0]["affiliations"][0]["name"] == "Test"
     assert editor_response_data[0]["affiliations"][0]["identifier"] == "yes"
-    assert editor_response_data[0]["affiliations"][0]["scheme"] == "uh
+    assert editor_response_data[0]["affiliations"][0]["scheme"] == "uh"
     assert editor_response_data[0]["affiliations"][0]["scheme_uri"] == "scheme uri"
     assert editor_response_data[1]["name"] == "admin Name here"
     assert editor_response_data[1]["name_type"] == "Personal"
@@ -950,7 +950,7 @@ def test_get_dataset_creator_metadata(clients):
     assert viewer_response_data[0]["creator"] is True
     assert viewer_response_data[0]["affiliations"][0]["name"] == "Test"
     assert viewer_response_data[0]["affiliations"][0]["identifier"] == "yes"
-    assert viewer_response_data[0]["affiliations"][0]["scheme"] == "uh
+    assert viewer_response_data[0]["affiliations"][0]["scheme"] == "uh"
     assert viewer_response_data[0]["affiliations"][0]["scheme_uri"] == "scheme uri"
     assert viewer_response_data[1]["name"] == "admin Name here"
     assert viewer_response_data[1]["name_type"] == "Personal"
@@ -1343,6 +1343,7 @@ def test_get_dataset_deidentification_metadata(clients):
     assert viewer_response_data["k_anon"] is True
     assert viewer_response_data["details"] == "Details"
 
+
 # ------------------- DESCRIPTION METADATA ------------------- #
 def test_post_dataset_description_metadata(clients):
     """
@@ -1431,9 +1432,9 @@ def test_get_dataset_descriptions_metadata(clients):
     assert viewer_response.status_code == 200
 
     response_data = json.loads(response.data)
-    admin_response = json.loads(admin_response.data)
-    editor_response = json.loads(editor_response.data)
-    viewer_response = json.loads(viewer_response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
 
     assert len(response_data) == 3
     assert len(admin_response) == 3
@@ -1467,6 +1468,7 @@ def test_get_dataset_descriptions_metadata(clients):
     assert viewer_response_data[1]["type"] == "Methods"
     assert viewer_response_data[2]["description"] == "Editor Description"
     assert viewer_response_data[2]["type"] == "Methods"
+
 
 def test_delete_dataset_description_metadata(clients):
     """
@@ -1502,37 +1504,6 @@ def test_delete_dataset_description_metadata(clients):
 
 
 # ------------------- FUNDER METADATA ------------------- #
-def test_get_dataset_funder_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID and dataset ID
-    When the '/study/{study_id}/dataset/{dataset_id}/metadata/funder'
-    endpoint is requested (GET)
-    Then check that the response is valid and retrieves the dataset
-    funder metadata content
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    dataset_id = pytest.global_dataset_id
-
-    response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/funder"
-    )
-    admin_response = _admin_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/funder"
-    )
-    editor_response = _editor_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/funder"
-    )
-    viewer_response = _viewer_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/funder"
-    )
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-
 def test_post_dataset_funder_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
@@ -1644,6 +1615,135 @@ def test_post_dataset_funder_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
+
+
+def test_get_dataset_funder_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/funder'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    funder metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/funder"
+    )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/funder"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/funder"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/funder"
+    )
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert len(response_data) == 3
+    assert len(admin_response_data) == 3
+    assert len(editor_response_data) == 3
+    assert len(viewer_response_data) == 3
+
+    assert response_data[0]["name"] == "Name"
+    assert response_data[0]["award_number"] == "award number"
+    assert response_data[0]["award_title"] == "Award Title"
+    assert response_data[0]["award_uri"] == "Award URI"
+    assert response_data[0]["identifier"] == "Identifier"
+    assert response_data[0]["identifier_scheme_uri"] == "Identifier Scheme URI"
+    assert response_data[0]["identifier_type"] == "Identifier Type"
+    assert response_data[1]["name"] == "Admin Name"
+    assert response_data[1]["award_number"] == "award number"
+    assert response_data[1]["award_title"] == "Award Title"
+    assert response_data[1]["award_uri"] == "Award URI"
+    assert response_data[1]["identifier"] == "Identifier"
+    assert response_data[1]["identifier_scheme_uri"] == "Identifier Scheme URI"
+    assert response_data[1]["identifier_type"] == "Identifier Type"
+    assert response_data[2]["name"] == "Editor Name"
+    assert response_data[2]["award_number"] == "award number"
+    assert response_data[2]["award_title"] == "Award Title"
+    assert response_data[2]["award_uri"] == "Award URI"
+    assert response_data[2]["identifier"] == "Identifier"
+    assert response_data[2]["identifier_scheme_uri"] == "Identifier Scheme URI"
+    assert response_data[2]["identifier_type"] == "Identifier Type"
+
+    assert admin_response_data[0]["name"] == "Name"
+    assert admin_response_data[0]["award_number"] == "award number"
+    assert admin_response_data[0]["award_title"] == "Award Title"
+    assert admin_response_data[0]["award_uri"] == "Award URI"
+    assert admin_response_data[0]["identifier"] == "Identifier"
+    assert admin_response_data[0]["identifier_scheme_uri"] == "Identifier Scheme URI"
+    assert admin_response_data[0]["identifier_type"] == "Identifier Type"
+    assert admin_response_data[1]["name"] == "Admin Name"
+    assert admin_response_data[1]["award_number"] == "award number"
+    assert admin_response_data[1]["award_title"] == "Award Title"
+    assert admin_response_data[1]["award_uri"] == "Award URI"
+    assert admin_response_data[1]["identifier"] == "Identifier"
+    assert admin_response_data[1]["identifier_scheme_uri"] == "Identifier Scheme URI"
+    assert admin_response_data[1]["identifier_type"] == "Identifier Type"
+    assert admin_response_data[2]["name"] == "Editor Name"
+    assert admin_response_data[2]["award_number"] == "award number"
+    assert admin_response_data[2]["award_title"] == "Award Title"
+    assert admin_response_data[2]["award_uri"] == "Award URI"
+    assert admin_response_data[2]["identifier"] == "Identifier"
+    assert admin_response_data[2]["identifier_scheme_uri"] == "Identifier Scheme URI"
+    assert admin_response_data[2]["identifier_type"] == "Identifier Type"
+
+    assert editor_response_data[0]["name"] == "Name"
+    assert editor_response_data[0]["award_number"] == "award number"
+    assert editor_response_data[0]["award_title"] == "Award Title"
+    assert editor_response_data[0]["award_uri"] == "Award URI"
+    assert editor_response_data[0]["identifier"] == "Identifier"
+    assert editor_response_data[0]["identifier_scheme_uri"] == "Identifier Scheme URI"
+    assert editor_response_data[0]["identifier_type"] == "Identifier Type"
+    assert editor_response_data[1]["name"] == "Admin Name"
+    assert editor_response_data[1]["award_number"] == "award number"
+    assert editor_response_data[1]["award_title"] == "Award Title"
+    assert editor_response_data[1]["award_uri"] == "Award URI"
+    assert editor_response_data[1]["identifier"] == "Identifier"
+    assert editor_response_data[1]["identifier_scheme_uri"] == "Identifier Scheme URI"
+    assert editor_response_data[1]["identifier_type"] == "Identifier Type"
+    assert editor_response_data[2]["name"] == "Editor Name"
+    assert editor_response_data[2]["award_number"] == "award number"
+    assert editor_response_data[2]["award_title"] == "Award Title"
+    assert editor_response_data[2]["award_uri"] == "Award URI"
+    assert editor_response_data[2]["identifier"] == "Identifier"
+    assert editor_response_data[2]["identifier_scheme_uri"] == "Identifier Scheme URI"
+    assert editor_response_data[2]["identifier_type"] == "Identifier Type"
+
+    assert viewer_response_data[0]["name"] == "Name"
+    assert viewer_response_data[0]["award_number"] == "award number"
+    assert viewer_response_data[0]["award_title"] == "Award Title"
+    assert viewer_response_data[0]["award_uri"] == "Award URI"
+    assert viewer_response_data[0]["identifier"] == "Identifier"
+    assert viewer_response_data[0]["identifier_scheme_uri"] == "Identifier Scheme URI"
+    assert viewer_response_data[0]["identifier_type"] == "Identifier Type"
+    assert viewer_response_data[1]["name"] == "Admin Name"
+    assert viewer_response_data[1]["award_number"] == "award number"
+    assert viewer_response_data[1]["award_title"] == "Award Title"
+    assert viewer_response_data[1]["award_uri"] == "Award URI"
+    assert viewer_response_data[1]["identifier"] == "Identifier"
+    assert viewer_response_data[1]["identifier_scheme_uri"] == "Identifier Scheme URI"
+    assert viewer_response_data[1]["identifier_type"] == "Identifier Type"
+    assert viewer_response_data[2]["name"] == "Editor Name"
+    assert viewer_response_data[2]["award_number"] == "award number"
+    assert viewer_response_data[2]["award_title"] == "Award Title"
+    assert viewer_response_data[2]["award_uri"] == "Award URI"
+    assert viewer_response_data[2]["identifier"] == "Identifier"
+    assert viewer_response_data[2]["identifier_scheme_uri"] == "Identifier Scheme URI"
+    assert viewer_response_data[2]["identifier_type"] == "Identifier Type"
 
 
 def test_delete_dataset_funder_metadata(clients):
