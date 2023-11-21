@@ -6,37 +6,6 @@ import pytest
 
 
 # ------------------- ACCESS METADATA ------------------- #
-def test_get_dataset_access_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    When the '/study/{study_id}/dataset/{dataset_id}/metadata/access' endpoint is requested (GET)
-    Then check that the response is valid and retrieves the dataset access metadata content
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    dataset_id = pytest.global_dataset_id
-
-    response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/access"
-    )
-
-    assert response.status_code == 200
-
-    admin_response = _admin_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/access"
-    )
-    editor_response = _editor_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/access"
-    )
-    viewer_response = _viewer_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/access"
-    )
-
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-
 def test_put_dataset_access_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
@@ -115,6 +84,61 @@ def test_put_dataset_access_metadata(clients):
 
     print(viewer_response.status_code)
     assert viewer_response.status_code == 403
+
+
+def test_get_dataset_access_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/access' endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset access metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/access"
+    )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/access"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/access"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/access"
+    )
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    # Since editor was the last successful PUT request, the response data should match
+    assert response_data["type"] == "editor type"
+    assert response_data["description"] == "editor description"
+    assert response_data["url"] == "google.com"
+    assert response_data["url_last_checked"] == 123
+
+    assert admin_response_data["type"] == "editor type"
+    assert admin_response_data["description"] == "editor description"
+    assert admin_response_data["url"] == "google.com"
+    assert admin_response_data["url_last_checked"] == 123
+
+    assert editor_response_data["type"] == "editor type"
+    assert editor_response_data["description"] == "editor description"
+    assert editor_response_data["url"] == "google.com"
+    assert editor_response_data["url_last_checked"] == 123
+
+    assert viewer_response_data["type"] == "editor type"
+    assert viewer_response_data["description"] == "editor description"
+    assert viewer_response_data["url"] == "google.com"
+    assert viewer_response_data["url_last_checked"] == 123
 
 
 # ------------------- ALTERNATIVE IDENTIFIER METADATA ------------------- #
