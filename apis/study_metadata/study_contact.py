@@ -2,7 +2,7 @@
 import typing
 
 from email_validator import EmailNotValidError, validate_email
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import FormatChecker, ValidationError, validate
 
@@ -138,4 +138,4 @@ class StudyContactResource(Resource):
             model.db.session.delete(study_contact_)
             model.db.session.commit()
 
-            return study_contact_.to_dict()
+            return Response(status=204)
