@@ -150,6 +150,20 @@ def test_get_dataset_from_study(clients):
     assert editor_response.status_code == 200
     assert viewer_response.status_code == 200
 
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data["title"] == "Dataset Title"
+    assert response_data["description"] == "Dataset Description"
+    assert admin_response_data["title"] == "Dataset Title"
+    assert admin_response_data["description"] == "Dataset Description"
+    assert editor_response_data["title"] == "Dataset Title"
+    assert editor_response_data["description"] == "Dataset Description"
+    assert viewer_response_data["title"] == "Dataset Title"
+    assert viewer_response_data["description"] == "Dataset Description"
+
     response = _logged_in_client.get(f"/study/{study_id}/dataset/{admin_dataset_id}")
     admin_response = _admin_client.get(f"/study/{study_id}/dataset/{admin_dataset_id}")
     editor_response = _editor_client.get(
@@ -164,6 +178,20 @@ def test_get_dataset_from_study(clients):
     assert editor_response.status_code == 200
     assert viewer_response.status_code == 200
 
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data["title"] == "Admin Dataset Title"
+    assert response_data["description"] == "Admin Dataset Description"
+    assert admin_response_data["title"] == "Admin Dataset Title"
+    assert admin_response_data["description"] == "Admin Dataset Description"
+    assert editor_response_data["title"] == "Admin Dataset Title"
+    assert editor_response_data["description"] == "Admin Dataset Description"
+    assert viewer_response_data["title"] == "Admin Dataset Title"
+    assert viewer_response_data["description"] == "Admin Dataset Description"
+
     response = _logged_in_client.get(f"/study/{study_id}/dataset/{editor_dataset_id}")
     admin_response = _admin_client.get(f"/study/{study_id}/dataset/{editor_dataset_id}")
     editor_response = _editor_client.get(
@@ -177,6 +205,20 @@ def test_get_dataset_from_study(clients):
     assert admin_response.status_code == 200
     assert editor_response.status_code == 200
     assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response = json.loads(admin_response.data)
+    editor_response = json.loads(editor_response.data)
+    viewer_response = json.loads(viewer_response.data)
+
+    assert response_data["title"] == "Editor Dataset Title"
+    assert response_data["description"] == "Editor Dataset Description"
+    assert admin_response_data["title"] == "Editor Dataset Title"
+    assert admin_response_data["description"] == "Editor Dataset Description"
+    assert editor_response_data["title"] == "Editor Dataset Title"
+    assert editor_response_data["description"] == "Editor Dataset Description"
+    assert viewer_response_data["title"] == "Editor Dataset Title"
+    assert viewer_response_data["description"] == "Editor Dataset Description"
 
 
 def test_delete_dataset_from_study(clients):
