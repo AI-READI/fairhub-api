@@ -2,7 +2,7 @@
 
 from typing import Any, Union
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -134,4 +134,4 @@ class DatasetDescriptionResource(Resource):
             model.db.session.delete(dataset_description_)
             model.db.session.commit()
 
-            return 204
+            Response(status=204)
