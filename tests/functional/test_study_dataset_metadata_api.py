@@ -142,41 +142,6 @@ def test_get_dataset_access_metadata(clients):
 
 
 # ------------------- ALTERNATIVE IDENTIFIER METADATA ------------------- #
-def test_get_alternative_identifier(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    When the '/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier'
-    endpoint is requested (GET)
-    Then check that the response is valid and retrieves the dataset alternative identifier content
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    dataset_id = pytest.global_dataset_id
-
-    response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier"
-    )
-
-    assert response.status_code == 200
-
-    admin_response = _admin_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier"
-    )
-    editor_response = _editor_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier"
-    )
-    viewer_response = _viewer_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier"
-    )
-
-    print(admin_response.status_code)
-    print(editor_response.status_code)
-    print(viewer_response.status_code)
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-
 def test_post_alternative_identifier(clients):
     """
     Given a Flask application configured for testing and a study ID
@@ -246,6 +211,69 @@ def test_post_alternative_identifier(clients):
     assert admin_response_data[0]["type"] == "ARK"
     assert editor_response_data[0]["identifier"] == "editor test"
     assert editor_response_data[0]["type"] == "ARK"
+
+
+def test_get_alternative_identifier(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset alternative identifier content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier"
+    )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier"
+    )
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data[0]["identifier"] == "identifier test"
+    assert response_data[0]["type"] == "ARK"
+    assert response_data[1]["identifier"] == "admin test"
+    assert response_data[1]["type"] == "ARK"
+    assert response_data[2]["identifier"] == "editor test"
+    assert response_data[2]["type"] == "ARK"
+    
+    assert admin_response_data[0]["identifier"] == "identifier test"
+    assert admin_response_data[0]["type"] == "ARK"
+    assert admin_response_data[1]["identifier"] == "admin test"
+    assert admin_response_data[1]["type"] == "ARK"
+    assert admin_response_data[2]["identifier"] == "editor test"
+    assert admin_response_data[2]["type"] == "ARK"
+
+    assert editor_response_data[0]["identifier"] == "identifier test"
+    assert editor_response_data[0]["type"] == "ARK"
+    assert editor_response_data[1]["identifier"] == "admin test"
+    assert editor_response_data[1]["type"] == "ARK"
+    assert editor_response_data[2]["identifier"] == "editor test"
+    assert editor_response_data[2]["type"] == "ARK"
+
+    assert viewer_response_data[0]["identifier"] == "identifier test"
+    assert viewer_response_data[0]["type"] == "ARK"
+    assert viewer_response_data[1]["identifier"] == "admin test"
+    assert viewer_response_data[1]["type"] == "ARK"
+    assert viewer_response_data[2]["identifier"] == "editor test"
+    assert viewer_response_data[2]["type"] == "ARK"
 
 
 def test_delete_alternative_identifier(clients):
