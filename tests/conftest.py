@@ -46,7 +46,7 @@ pytest.global_dataset_rights_id = ""
 pytest.global_dataset_subject_id = ""
 pytest.global_dataset_title_id = ""
 
-pytest.global_version_id = ""
+pytest.global_dataset_version_id = ""
 
 
 # Create the flask app for testing

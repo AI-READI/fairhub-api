@@ -97,7 +97,7 @@ class DatasetTitleResource(Resource):
         return list_of_elements, 201
 
     @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/title/<title_id>")
-    class DatasetDescriptionUpdate(Resource):
+    class DatasetTitleDelete(Resource):
         """Dataset Title Update Resource"""
 
         @api.doc("delete title")

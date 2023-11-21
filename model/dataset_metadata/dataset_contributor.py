@@ -44,7 +44,7 @@ class DatasetContributor(db.Model):  # type: ignore
         return {
             "id": self.id,
             "name": self.name,
-            "name_type": self.name_identifier,
+            "name_type": self.name_type,
             "contributor_type": self.contributor_type,
             "creator": self.creator,
         }
