@@ -44,7 +44,6 @@ class StudyOverallOfficial(db.Model):  # type: ignore
             "name": self.name,
             "affiliation": self.affiliation,
             "role": self.role,
-
         }
 
     @staticmethod

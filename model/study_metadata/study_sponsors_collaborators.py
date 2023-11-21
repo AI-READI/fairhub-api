@@ -52,7 +52,6 @@ class StudySponsorsCollaborators(db.Model):  # type: ignore
             "responsible_party_investigator_name": self.responsible_party_investigator_name,
             # "collaborator_name": self.collaborator_name,
             "lead_sponsor_name": self.lead_sponsor_name,
-
         }
 
     @staticmethod

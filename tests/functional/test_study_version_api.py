@@ -150,7 +150,10 @@ def test_get_version_study_metadata(_logged_in_client):
     assert response_data["design"]["design_primary_purpose"] == "Parallel Assignment"
     assert response_data["design"]["design_masking"] == "Double"
     assert response_data["design"]["design_masking_description"] == "tewsfdasf"
-    assert response_data["design"]["design_who_masked_list"] == ["Participant", "Care Provider"]
+    assert response_data["design"]["design_who_masked_list"] == [
+        "Participant",
+        "Care Provider",
+    ]
     assert response_data["design"]["phase_list"] == ["N/A"]
     assert response_data["design"]["enrollment_count"] == 3
     assert response_data["design"]["enrollment_type"] == "Actual"
@@ -170,14 +173,19 @@ def test_get_version_study_metadata(_logged_in_client):
     assert response_data["primary_identifier"]["identifier_type"] == "test"
     assert response_data["status"]["overall_status"] == "Withdrawn"
     assert response_data["status"]["start_date"] == "2023-11-15 00:00:00"
-    assert response_data["sponsors"]["responsible_party_investigator_name"] == "party name"
+    assert (
+        response_data["sponsors"]["responsible_party_investigator_name"] == "party name"
+    )
     assert response_data["sponsors"]["responsible_party_type"] == "Sponsor"
     assert response_data["sponsors"]["lead_sponsor_name"] == "sponsor name"
-    assert response_data["collaborators"] == ['collaborator1123']
-    assert response_data["conditions"] == ['c']
+    assert response_data["collaborators"] == ["collaborator1123"]
+    assert response_data["conditions"] == ["c"]
 
     assert response_data["ipd_sharing"]["ipd_sharing"] == "Yes"
-    assert response_data["ipd_sharing"]["ipd_sharing_info_type_list"] == ['Study Protocol', 'Analytical Code']
+    assert response_data["ipd_sharing"]["ipd_sharing_info_type_list"] == [
+        "Study Protocol",
+        "Analytical Code",
+    ]
 
     assert response_data["oversight"] is True
 
@@ -355,7 +363,10 @@ def test_get_version_dataset_metadata(_logged_in_client):
     assert response_data["de_identification"]["direct"] is True
     assert response_data["de_identification"]["type"] == "Level"
     assert response_data["publisher"]["publisher"] == "Publisher"
-    assert response_data["publisher"]["managing_organization_name"] == "Managing Organization Name"
+    assert (
+        response_data["publisher"]["managing_organization_name"]
+        == "Managing Organization Name"
+    )
 
     assert response_data["identifiers"][0]["identifier"] == "identifier test"
     assert response_data["identifiers"][0]["type"] == "ARK"
