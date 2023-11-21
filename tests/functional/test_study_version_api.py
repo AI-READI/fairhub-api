@@ -314,7 +314,10 @@ def test_get_version_dataset_metadata(_logged_in_client):
                 "publication_year": 2013,
                 "publisher": "Publisher",
                 "relation_type": "Relation Type",
-                "titles": [{"title": "Title", "type": "MainTitle"}, {"title": "Title", "type": "Subtitle"}],
+                "titles": [
+                    {"title": "Title", "type": "MainTitle"},
+                    {"title": "Title", "type": "Subtitle"},
+                ],
                 "type": "Type",
                 "volume": "Volume",
             }
@@ -359,14 +362,20 @@ def test_get_version_dataset_metadata(_logged_in_client):
     assert response_data["related_items"][0]["publication_year"] == "1970"
     assert response_data["related_items"][0]["publisher"] == "Publisher"
     assert response_data["related_items"][0]["contributors"][0]["name"] == "Ndafsdame"
-    assert response_data["related_items"][0]["contributors"][0]["contributor_type"] == "Con Type"
+    assert (
+        response_data["related_items"][0]["contributors"][0]["contributor_type"]
+        == "Con Type"
+    )
     assert response_data["related_items"][0]["creators"][0]["name"] == "Name"
     assert response_data["related_items"][0]["creators"][0]["name_type"] == "Personal"
     assert response_data["related_items"][0]["titles"][0]["title"] == "Title"
     assert response_data["related_items"][0]["titles"][0]["type"] == "MainTitle"
     assert response_data["related_items"][0]["titles"][1]["title"] == "Title"
     assert response_data["related_items"][0]["titles"][1]["type"] == "Subtitle"
-    assert response_data["related_items"][0]["identifiers"][0]["identifier"] == "Identifier"
+    assert (
+        response_data["related_items"][0]["identifiers"][0]["identifier"]
+        == "Identifier"
+    )
     assert response_data["related_items"][0]["identifiers"][0]["type"] == "ARK"
     assert response_data["related_items"][0]["type"] == "Type"
 
