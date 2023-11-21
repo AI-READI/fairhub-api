@@ -2208,7 +2208,7 @@ def test_put_sponsors_metadata(clients):
 
     assert admin_response_data["responsible_party_type"] == "Sponsor"
     assert (
-        admin_response_data["responsible_party_investigation_name"]
+        admin_response_data["responsible_party_investigator_name"]
         == "admin sponsor name"
     )
     assert (
