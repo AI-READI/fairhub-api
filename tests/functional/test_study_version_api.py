@@ -119,7 +119,7 @@ def test_get_version_study_metadata(_logged_in_client):
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/study-metadata"
     )
     response_data = json.loads(response.data)
-
+    # print(response_data)
     assert response.status_code == 200
     assert response_data["available_ipd"][0]["identifier"] == "identifier1"
     assert response_data["available_ipd"][0]["url"] == "google.com"
@@ -137,9 +137,49 @@ def test_get_version_study_metadata(_logged_in_client):
     assert response_data["locations"][0]["country"] == "yes"
     assert response_data["locations"][0]["facility"] == "test"
     assert response_data["overall_officials"][0]["name"] == "test"
+    assert response_data["overall_officials"][0]["role"] == "Study Chair"
     assert response_data["overall_officials"][0]["affiliation"] == "aff"
     assert response_data["references"][0]["identifier"] == "reference identifier"
     assert response_data["references"][0]["citation"] == "reference citation"
+
+    assert response_data["description"]["brief_summary"] == "brief_summary"
+    assert response_data["design"]["design_allocation"] == "dfasdfasd"
+
+    assert response_data["design"]["study_type"] == "Interventional"
+    assert response_data["design"]["design_intervention_model"] == "Treatment"
+    assert response_data["design"]["design_primary_purpose"] == "Parallel Assignment"
+    assert response_data["design"]["design_masking"] == "Double"
+    assert response_data["design"]["design_masking_description"] == "tewsfdasf"
+    assert response_data["design"]["design_who_masked_list"] == ["Participant", "Care Provider"]
+    assert response_data["design"]["phase_list"] == ["N/A"]
+    assert response_data["design"]["enrollment_count"] == 3
+    assert response_data["design"]["enrollment_type"] == "Actual"
+    assert response_data["design"]["number_arms"] == 2
+    assert response_data["design"]["design_observational_model_list"] == [
+        "Cohort",
+        "Case-Control",
+    ]
+    assert response_data["design"]["design_time_perspective_list"] == ["Other"]
+    assert response_data["design"]["bio_spec_retention"] == "None Retained"
+    assert response_data["design"]["target_duration"] == "rewrwe"
+    assert response_data["design"]["number_groups_cohorts"] == 1
+    assert response_data["eligibility"]["gender"] == "All"
+    assert response_data["eligibility"]["gender_based"] == "Yes"
+    assert response_data["eligibility"]["minimum_age_value"] == 18
+    assert response_data["primary_identifier"]["identifier"] == "test"
+    assert response_data["primary_identifier"]["identifier_type"] == "test"
+    assert response_data["status"]["overall_status"] == "Withdrawn"
+    assert response_data["status"]["start_date"] == "2023-11-15 00:00:00"
+    assert response_data["sponsors"]["responsible_party_investigator_name"] == "party name"
+    assert response_data["sponsors"]["responsible_party_type"] == "Sponsor"
+    assert response_data["sponsors"]["lead_sponsor_name"] == "sponsor name"
+    assert response_data["collaborators"] == ['collaborator1123']
+    assert response_data["conditions"] == ['c']
+
+    assert response_data["ipd_sharing"]["ipd_sharing"] == "Yes"
+    assert response_data["ipd_sharing"]["ipd_sharing_info_type_list"] == ['Study Protocol', 'Analytical Code']
+
+    assert response_data["oversight"] is True
 
 
 def test_get_version_dataset_metadata(_logged_in_client):
@@ -284,6 +324,8 @@ def test_get_version_dataset_metadata(_logged_in_client):
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/dataset-metadata"
     )
     response_data = json.loads(response.data)
+    print(response_data)
+
     assert response.status_code == 200
 
     assert response_data["contributors"][0]["name"] == "Name here"
@@ -298,6 +340,19 @@ def test_get_version_dataset_metadata(_logged_in_client):
     assert response_data["rights"][0]["identifier"] == "Identifier"
     assert response_data["rights"][0]["rights"] == "Rights"
     assert response_data["subjects"][0]["subject"] == "Subject"
+    assert response_data["about"]["language"] == "English"
+
+    assert response_data["about"]["resource_type"] == "Resource Type"
+    assert response_data["about"]["size"] == ["Size"]
+    assert response_data["access"]["type"] == "type"
+    assert response_data["access"]["description"] == "description"
+    assert response_data["consent"]["noncommercial"] is True
+    assert response_data["consent"]["geog_restrict"] is True
+    assert response_data["consent"]["research_type"] is True
+    assert response_data["de_identification"]["direct"] is True
+    assert response_data["de_identification"]["type"] == "Level"
+    assert response_data["publisher"]["publisher"] == "Publisher"
+    assert response_data["publisher"]["managing_organization_name"] == "Managing Organization Name"
 
     assert response_data["identifiers"][0]["identifier"] == "identifier test"
     assert response_data["identifiers"][0]["type"] == "ARK"
