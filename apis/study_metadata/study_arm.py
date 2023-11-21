@@ -95,6 +95,9 @@ class StudyArmResource(Resource):
 
     # todo delete
     @api.route("/study/<study_id>/metadata/arm/<arm_id>")
+    @api.doc("Delete Study Arms")
+    @api.response(204, "Success")
+    @api.response(400, "Validation Error")
     class StudyArmUpdate(Resource):
         """Study Arm Metadata"""
 

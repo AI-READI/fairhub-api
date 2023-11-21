@@ -255,9 +255,9 @@ def test_delete_alternative_identifier(clients):
     )
 
     assert viewer_response.status_code == 403
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 # ------------------- CONSENT METADATA ------------------- #
@@ -569,10 +569,13 @@ def test_delete_dataset_contributor_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor/{editor_contributor_id}"
     )
 
+    print("$$$$$$$$$$")
+    print(response.status_code)
+    print("$$$$$$$$$$`")
     assert viewer_response.status_code == 403
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 # ------------------- CREATOR METADATA ------------------- #
@@ -1317,7 +1320,7 @@ def test_delete_dataset_funder_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/funder/{funder_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
 
 
 # ------------------- OTHER METADATA ------------------- #
@@ -1596,7 +1599,7 @@ def test_delete_dataset_related_item_contributor_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/contributor/{contributor_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
 
 
 def test_delete_dataset_related_item_creator_metadata(clients):
@@ -1618,7 +1621,7 @@ def test_delete_dataset_related_item_creator_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/creator/{creator_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
 
 
 def test_delete_dataset_related_item_identifier_metadata(clients):
@@ -1640,7 +1643,7 @@ def test_delete_dataset_related_item_identifier_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/identifier/{identifier_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
 
 
 def test_delete_dataset_related_item_title_metadata(clients):
@@ -1662,7 +1665,7 @@ def test_delete_dataset_related_item_title_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{title_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
 
 
 def test_delete_dataset_related_item_metadata(clients):
@@ -1682,7 +1685,7 @@ def test_delete_dataset_related_item_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
 
 
 # ------------------- RIGHTS METADATA ------------------- #
@@ -1756,7 +1759,7 @@ def test_delete_dataset_rights_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights/{rights_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
 
 
 # ------------------- SUBJECTS METADATA ------------------- #
@@ -1831,7 +1834,7 @@ def test_delete_dataset_subject_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/subject/{subject_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
 
 
 # ------------------- TITLE METADATA ------------------- #
@@ -1896,4 +1899,4 @@ def test_delete_dataset_title_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/title/{title_id}"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204

@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from typing import Any, Dict, List, Union
 
-from flask import g, request
+from flask import g, request, Response
 from flask_restx import Namespace, Resource, fields
 
 import model
@@ -115,7 +115,7 @@ class ContributorResource(Resource):
         return grantee.to_dict(), 200
 
     @api.doc("contributor delete")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(self, study_id: int, user_id: str):
         study = model.Study.query.get(study_id)
@@ -155,7 +155,7 @@ class ContributorResource(Resource):
 
             model.db.session.commit()
 
-            return 204
+            return Response(status=204)
 
         user = model.User.query.get(user_id)
 
@@ -177,7 +177,7 @@ class ContributorResource(Resource):
                 return "you must transfer ownership before removing yourself", 422
             model.db.session.delete(grantee)
             model.db.session.commit()
-            return 204
+            return Response(status=204)
         if not is_granted("delete_contributor", study):
             return (
                 "Access denied, you are not authorized to change this permission",
@@ -188,7 +188,7 @@ class ContributorResource(Resource):
             return f"User cannot delete {grantee.permission}", 403
         model.db.session.delete(grantee)
         model.db.session.commit()
-        return 204
+        return Response(status=204)
 
 
 @api.route("/study/<study_id>/contributor/owner/<user_id>")
@@ -218,4 +218,4 @@ class AssignOwner(Resource):
 
         existing_owner.permission = "admin"
         model.db.session.commit()
-        return 204
+        return Response(status=204)

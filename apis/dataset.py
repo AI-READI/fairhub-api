@@ -1,6 +1,6 @@
 import typing
 
-from flask import jsonify, request
+from flask import jsonify, request, Response
 from flask_restx import Namespace, Resource, fields
 
 import model
@@ -104,7 +104,7 @@ class DatasetResource(Resource):
 
         return data_obj.to_dict()
 
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     @api.doc("delete dataset")
     def delete(self, study_id: int, dataset_id: int):
@@ -118,7 +118,7 @@ class DatasetResource(Resource):
 
         model.db.session.delete(data_obj)
         model.db.session.commit()
-        return 204
+        return Response(status=204)
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>")
@@ -149,7 +149,7 @@ class VersionResource(Resource):
         model.db.session.commit()
         return jsonify(data_version_obj.to_dict()), 201
 
-    @api.response(201, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     @api.doc("delete dataset version")
     def delete(
@@ -161,7 +161,7 @@ class VersionResource(Resource):
         version_obj = model.Version.query.get(version_id)
         model.db.session.delete(version_obj)
         model.db.session.commit()
-        return 204
+        return Response(status=204)
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/changelog")

@@ -1,7 +1,7 @@
 """API for dataset related item"""
 from typing import Any, Union
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -310,7 +310,7 @@ class DatasetRelatedItemUpdate(Resource):
     """Dataset Related Item Update Resource"""
 
     @api.doc("delete related item")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self,
@@ -327,7 +327,7 @@ class DatasetRelatedItemUpdate(Resource):
         model.db.session.delete(dataset_related_item_)
         model.db.session.commit()
 
-        return 204
+        return Response(status=204)
 
 
 @api.route(
@@ -338,7 +338,7 @@ class RelatedItemContributorsDelete(Resource):
     """Dataset Related Item Contributors Delete Resource"""
 
     @api.doc("delete related item contributors")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self,
@@ -357,7 +357,7 @@ class RelatedItemContributorsDelete(Resource):
         model.db.session.delete(dataset_contributors_)
         model.db.session.commit()
 
-        return 204
+        return Response(status=204)
 
 
 @api.route(
@@ -368,7 +368,7 @@ class RelatedItemTitlesDelete(Resource):
     """Dataset Related Item Titles Delete Resource"""
 
     @api.doc("delete related item title")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self,
@@ -384,7 +384,7 @@ class RelatedItemTitlesDelete(Resource):
         dataset_title_ = model.DatasetRelatedItemTitle.query.get(title_id)
         model.db.session.delete(dataset_title_)
         model.db.session.commit()
-        return 204
+        return Response(status=204)
 
 
 @api.route(
@@ -395,7 +395,7 @@ class RelatedItemIdentifiersDelete(Resource):
     """Dataset Related Item Identifiers Delete Resource"""
 
     @api.doc("delete related item identifier")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self,
@@ -413,7 +413,7 @@ class RelatedItemIdentifiersDelete(Resource):
         )
         model.db.session.delete(dataset_identifier_)
         model.db.session.commit()
-        return 204
+        return Response(status=204)
 
 
 @api.route(
@@ -424,7 +424,7 @@ class RelatedItemCreatorDelete(Resource):
     """Dataset Related Item Creator Delete Resource"""
 
     @api.doc("delete related item creator")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self,
@@ -440,4 +440,4 @@ class RelatedItemCreatorDelete(Resource):
         dataset_creator_ = model.DatasetRelatedItemContributor.query.get(creator_id)
         model.db.session.delete(dataset_creator_)
         model.db.session.commit()
-        return 204
+        return Response(status=204)

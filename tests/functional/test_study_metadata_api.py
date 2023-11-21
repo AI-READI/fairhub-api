@@ -281,9 +281,9 @@ def test_delete_available_ipd_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 # ------------------- CENTRAL CONTACT METADATA ------------------- #
@@ -432,9 +432,9 @@ def test_delete_cc_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 #  ------------------- COLLABORATORS METADATA ------------------- #
@@ -1234,9 +1234,9 @@ def test_delete_identification_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 # ------------------- INTERVENTION METADATA ------------------- #
@@ -1576,9 +1576,9 @@ def test_delete_link_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 # ------------------- LOCATION METADATA ------------------- #
@@ -1714,9 +1714,9 @@ def test_delete_location_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 # ------------------- OTHER METADATA ------------------- #
@@ -1937,9 +1937,9 @@ def test_delete_overall_official_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 # ------------------- OVERSIGHT METADATA ------------------- #
@@ -2134,9 +2134,9 @@ def test_delete_reference_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 # ------------------- SPONSORS METADATA ------------------- #
@@ -2208,7 +2208,7 @@ def test_put_sponsors_metadata(clients):
 
     assert admin_response_data["responsible_party_type"] == "Sponsor"
     assert (
-        admin_response_data["responsible_party_investigation_name"]
+        admin_response_data["responsible_party_investigator_name"]
         == "admin sponsor name"
     )
     assert (

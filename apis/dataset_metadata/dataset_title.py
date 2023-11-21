@@ -1,7 +1,7 @@
 """API for dataset title metadata"""
 from typing import Any, Union
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -101,7 +101,7 @@ class DatasetTitleResource(Resource):
         """Dataset Title Update Resource"""
 
         @api.doc("delete title")
-        @api.response(200, "Success")
+        @api.response(204, "Success")
         @api.response(400, "Validation Error")
         def delete(
             self,
@@ -124,4 +124,4 @@ class DatasetTitleResource(Resource):
                 )
             model.db.session.delete(dataset_title_)
             model.db.session.commit()
-            return 204
+            return Response(status=204)

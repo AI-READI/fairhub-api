@@ -1,7 +1,7 @@
 """API routes for study available ipd metadata"""
 import typing
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -110,6 +110,9 @@ class StudyAvailableResource(Resource):
 class StudyLocationUpdate(Resource):
     """Study Available Metadata"""
 
+    @api.doc("delete available-ipd")
+    @api.response(204, "Success")
+    @api.response(400, "Validation Error")
     def delete(self, study_id: int, available_ipd_id: int):
         """Delete study available metadata"""
         study_obj = model.Study.query.get(study_id)
@@ -120,4 +123,4 @@ class StudyLocationUpdate(Resource):
         model.db.session.delete(study_available_)
         model.db.session.commit()
 
-        return 204
+        return Response(status=204)

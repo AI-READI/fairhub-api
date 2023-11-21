@@ -1,7 +1,7 @@
 """API for dataset contributor metadata"""
 from typing import Any, Union
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource
 from jsonschema import ValidationError, validate
 
@@ -139,7 +139,7 @@ class DatasetContributorDelete(Resource):
     """Dataset Contributor Delete Resource"""
 
     @api.doc("delete contributor")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self,
@@ -156,7 +156,7 @@ class DatasetContributorDelete(Resource):
         model.db.session.delete(contributor_)
         model.db.session.commit()
 
-        return 204
+        return Response(status=204)
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/creator")
@@ -275,7 +275,7 @@ class DatasetCreatorResource(Resource):
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/creator/<creator_id>")
 class DatasetCreatorDelete(Resource):
     @api.doc("delete creator")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self,
@@ -291,4 +291,4 @@ class DatasetCreatorDelete(Resource):
         model.db.session.delete(dataset_creator_)
         model.db.session.commit()
 
-        return 204
+        return Response(status=204)

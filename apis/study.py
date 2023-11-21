@@ -1,7 +1,7 @@
 """APIs for study operations""" ""
 from typing import Any, Union
 
-from flask import g, request
+from flask import g, request, Response
 from flask_restx import Namespace, Resource, fields, reqparse
 from jsonschema import ValidationError, validate
 
@@ -137,7 +137,7 @@ class StudyResource(Resource):
 
         return update_study.to_dict()
 
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     @api.doc(description="Delete a study")
     def delete(self, study_id: int):
@@ -160,4 +160,4 @@ class StudyResource(Resource):
         model.db.session.delete(study)
         model.db.session.commit()
 
-        return 204
+        return Response(status=204)

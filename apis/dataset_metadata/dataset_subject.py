@@ -2,7 +2,7 @@
 
 from typing import Any, Union
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -100,7 +100,7 @@ class DatasetSubjectUpdate(Resource):
     """Dataset Subject Update Resource"""
 
     @api.doc("delete subject")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self,
@@ -117,4 +117,4 @@ class DatasetSubjectUpdate(Resource):
         model.db.session.delete(dataset_subject_)
         model.db.session.commit()
 
-        return 204
+        return Response(status=204)

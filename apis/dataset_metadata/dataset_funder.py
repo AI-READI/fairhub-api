@@ -1,7 +1,7 @@
 """API endpoints for dataset funder"""
 from typing import Any, Union
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -104,7 +104,7 @@ class DatasetFunderUpdate(Resource):
     """Dataset Funder Update Resource"""
 
     @api.doc("delete funder")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self,
@@ -121,4 +121,4 @@ class DatasetFunderUpdate(Resource):
         model.db.session.delete(dataset_funder_)
         model.db.session.commit()
 
-        return 204
+        return Response(status=204)
