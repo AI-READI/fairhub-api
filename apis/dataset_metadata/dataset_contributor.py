@@ -28,7 +28,9 @@ class DatasetContributorResource(Resource):
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_contributor_ = dataset_.dataset_contributors
 
-        return [d.to_dict() for d in dataset_contributor_ if not d.to_dict()["creator"]], 200
+        return [
+            d.to_dict() for d in dataset_contributor_ if not d.to_dict()["creator"]
+        ], 200
 
     @api.doc("update contributor")
     @api.response(200, "Success")
