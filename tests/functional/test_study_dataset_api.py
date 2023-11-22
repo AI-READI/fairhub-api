@@ -250,9 +250,7 @@ def test_delete_dataset_from_study(clients):
     editor_response = _editor_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}",
     )
-    viewer_response = _viewer_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}"
-    )
+    viewer_response = _viewer_client.delete(f"/study/{study_id}/dataset/{dataset_id}")
 
     assert admin_response.status_code == 403
     assert editor_response.status_code == 403

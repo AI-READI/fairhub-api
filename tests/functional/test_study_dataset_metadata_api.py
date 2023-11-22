@@ -1795,7 +1795,9 @@ def test_put_other_dataset_metadata(clients):
 
     assert response_data["acknowledgement"] == "Yes"
     assert response_data["language"] == "English"
-    assert response_data["resource_type"] == "Resource Type"    # CURRENTLY NOT BEING RETURNED
+    assert (
+        response_data["resource_type"] == "Resource Type"
+    )  # CURRENTLY NOT BEING RETURNED
     assert response_data["size"] == ["Size"]
     assert response_data["standards_followed"] == "Standards Followed"
 
@@ -1807,7 +1809,7 @@ def test_put_other_dataset_metadata(clients):
             "resource_type": "Admin Resource Type",
             "size": ["Size"],
             "standards_followed": "Standards Followed",
-        }
+        },
     )
 
     assert admin_response.status_code == 200
@@ -1827,7 +1829,7 @@ def test_put_other_dataset_metadata(clients):
             "resource_type": "Editor Resource Type",
             "size": ["Size"],
             "standards_followed": "Standards Followed",
-        }
+        },
     )
 
     assert editor_response.status_code == 200
@@ -1847,7 +1849,7 @@ def test_put_other_dataset_metadata(clients):
             "resource_type": "Viewer Resource Type",
             "size": ["Size"],
             "standards_followed": "Standards Followed",
-        }
+        },
     )
 
     assert viewer_response.status_code == 403
@@ -1952,16 +1954,20 @@ def test_put_dataset_publisher_metadata(clients):
             "publisher": "Publisher",
             "managing_organization_name": "Managing Admin Organization Name",
             "managing_organization_ror_id": "Managing Organization ROR ID",
-        }
+        },
     )
 
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
 
     assert admin_response_data["publisher"] == "Publisher"
-    assert admin_response_data["managing_organization_name"] == "Managing Admin Organization Name"
     assert (
-        admin_response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
+        admin_response_data["managing_organization_name"]
+        == "Managing Admin Organization Name"
+    )
+    assert (
+        admin_response_data["managing_organization_ror_id"]
+        == "Managing Organization ROR ID"
     )
 
     editor_response = _editor_client.put(
@@ -1970,25 +1976,29 @@ def test_put_dataset_publisher_metadata(clients):
             "publisher": "Publisher",
             "managing_organization_name": "Managing Editor Organization Name",
             "managing_organization_ror_id": "Managing Organization ROR ID",
-        }
+        },
     )
 
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
 
     assert editor_response_data["publisher"] == "Publisher"
-    assert editor_response_data["managing_organization_name"] == "Managing Editor Organization Name"
     assert (
-        editor_response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
+        editor_response_data["managing_organization_name"]
+        == "Managing Editor Organization Name"
+    )
+    assert (
+        editor_response_data["managing_organization_ror_id"]
+        == "Managing Organization ROR ID"
     )
 
     viewer_response = _viewer_client.put(
-        f'/study/{study_id}/dataset/{dataset_id}/metadata/publisher',
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/publisher",
         json={
             "publisher": "Publisher",
             "managing_organization_name": "Managing Viewer Organization Name",
             "managing_organization_ror_id": "Managing Organization ROR ID",
-        }
+        },
     )
 
     assert viewer_response.status_code == 403
@@ -2032,27 +2042,42 @@ def test_get_dataset_publisher_metadata(clients):
     # Editor was the last to update the metadata successfully so
     # the response should reflect that
     assert response_data["publisher"] == "Publisher"
-    assert response_data["managing_organization_name"] == "Managing Editor Organization Name"
+    assert (
+        response_data["managing_organization_name"]
+        == "Managing Editor Organization Name"
+    )
     assert (
         response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
     )
 
     assert admin_response_data["publisher"] == "Publisher"
-    assert admin_response_data["managing_organization_name"] == "Managing Editor Organization Name"
     assert (
-        admin_response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
+        admin_response_data["managing_organization_name"]
+        == "Managing Editor Organization Name"
+    )
+    assert (
+        admin_response_data["managing_organization_ror_id"]
+        == "Managing Organization ROR ID"
     )
 
     assert editor_response_data["publisher"] == "Publisher"
-    assert editor_response_data["managing_organization_name"] == "Managing Editor Organization Name"
     assert (
-        editor_response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
+        editor_response_data["managing_organization_name"]
+        == "Managing Editor Organization Name"
+    )
+    assert (
+        editor_response_data["managing_organization_ror_id"]
+        == "Managing Organization ROR ID"
     )
 
     assert viewer_response_data["publisher"] == "Publisher"
-    assert viewer_response_data["managing_organization_name"] == "Managing Editor Organization Name"
     assert (
-        viewer_response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
+        viewer_response_data["managing_organization_name"]
+        == "Managing Editor Organization Name"
+    )
+    assert (
+        viewer_response_data["managing_organization_ror_id"]
+        == "Managing Organization ROR ID"
     )
 
 
@@ -2253,7 +2278,7 @@ def test_post_dataset_related_item_metadata(clients):
                 "type": "Admin Type",
                 "volume": "Admin Volume",
             }
-        ]
+        ],
     )
 
     assert admin_response.status_code == 200
@@ -2262,24 +2287,34 @@ def test_post_dataset_related_item_metadata(clients):
     pytest.global_dataset_related_item_contributor_id_admin = admin_response_data[1][
         "contributors"
     ][0]["id"]
-    pytest.global_dataset_related_item_creator_id_admin = admin_response_data[1]["creators"][0][
-        "id"
-    ]
-    pytest.global_dataset_related_item_identifier_id_admin = admin_response_data[1]["identifiers"][
-        0
-    ]["id"]
-    pytest.global_dataset_related_item_title_id_admin = admin_response_data[1]["titles"][0]["id"]
+    pytest.global_dataset_related_item_creator_id_admin = admin_response_data[1][
+        "creators"
+    ][0]["id"]
+    pytest.global_dataset_related_item_identifier_id_admin = admin_response_data[1][
+        "identifiers"
+    ][0]["id"]
+    pytest.global_dataset_related_item_title_id_admin = admin_response_data[1][
+        "titles"
+    ][0]["id"]
 
     assert admin_response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
-    assert admin_response_data[1]["contributors"][0]["contributor_type"] == "Admin Con Type"
+    assert (
+        admin_response_data[1]["contributors"][0]["contributor_type"]
+        == "Admin Con Type"
+    )
     assert admin_response_data[1]["contributors"][0]["name_type"] == "Personal"
     assert admin_response_data[1]["creators"][0]["name"] == "Admin Name"
     assert admin_response_data[1]["creators"][0]["name_type"] == "Personal"
     assert admin_response_data[1]["edition"] == "Admin Edition"
     assert admin_response_data[1]["first_page"] == "Admin First Page"
     assert admin_response_data[1]["identifiers"][0]["identifier"] == "Admin Identifier"
-    assert admin_response_data[1]["identifiers"][0]["metadata_scheme"] == "Admin Metadata Scheme"
-    assert admin_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
+    assert (
+        admin_response_data[1]["identifiers"][0]["metadata_scheme"]
+        == "Admin Metadata Scheme"
+    )
+    assert (
+        admin_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
+    )
     assert admin_response_data[1]["identifiers"][0]["scheme_uri"] == "Admin Scheme URI"
     assert admin_response_data[1]["identifiers"][0]["type"] == "ARK"
     assert admin_response_data[1]["issue"] == "Admin Issue"
@@ -2328,7 +2363,7 @@ def test_post_dataset_related_item_metadata(clients):
                 "type": "Editor Type",
                 "volume": "Editor Volume",
             }
-        ]
+        ],
     )
 
     assert editor_response.status_code == 200
@@ -2337,25 +2372,39 @@ def test_post_dataset_related_item_metadata(clients):
     pytest.global_dataset_related_item_contributor_id = editor_response_data[2][
         "contributors"
     ][0]["id"]
-    pytest.global_dataset_related_item_creator_id_editor = editor_response_data[2]["creators"][0][
+    pytest.global_dataset_related_item_creator_id_editor = editor_response_data[2][
+        "creators"
+    ][0]["id"]
+    pytest.global_related_item_identifier_id_editor = editor_response_data[2][
+        "identifiers"
+    ][0]["id"]
+    pytest.global_related_item_title_id_editor = editor_response_data[2]["titles"][0][
         "id"
     ]
-    pytest.global_related_item_identifier_id_editor = editor_response_data[2]["identifiers"][
-        0
-    ]["id"]
-    pytest.global_related_item_title_id_editor = editor_response_data[2]["titles"][0]["id"]
 
     assert editor_response_data[2]["contributors"][0]["name"] == "Editor Ndafsdame"
-    assert editor_response_data[2]["contributors"][0]["contributor_type"] == "Editor Con Type"
+    assert (
+        editor_response_data[2]["contributors"][0]["contributor_type"]
+        == "Editor Con Type"
+    )
     assert editor_response_data[2]["contributors"][0]["name_type"] == "Personal"
     assert editor_response_data[2]["creators"][0]["name"] == "Editor Name"
     assert editor_response_data[2]["creators"][0]["name_type"] == "Personal"
     assert editor_response_data[2]["edition"] == "Editor Edition"
     assert editor_response_data[2]["first_page"] == "Editor First Page"
-    assert editor_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
-    assert editor_response_data[2]["identifiers"][0]["metadata_scheme"] == "Editor Metadata Scheme"
-    assert editor_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
-    assert editor_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
+    assert (
+        editor_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
+    )
+    assert (
+        editor_response_data[2]["identifiers"][0]["metadata_scheme"]
+        == "Editor Metadata Scheme"
+    )
+    assert (
+        editor_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
+    )
+    assert (
+        editor_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
+    )
     assert editor_response_data[2]["identifiers"][0]["type"] == "ARK"
     assert editor_response_data[2]["issue"] == "Editor Issue"
     assert editor_response_data[2]["last_page"] == "Editor Last Page"
@@ -2403,7 +2452,7 @@ def test_post_dataset_related_item_metadata(clients):
                 "type": "Viewer Type",
                 "volume": "Viewer Volume",
             }
-        ]
+        ],
     )
 
     assert viewer_client.status_code == 403
@@ -2475,7 +2524,9 @@ def test_get_dataset_related_item_metadata(clients):
     assert response_data[1]["edition"] == "Admin Edition"
     assert response_data[1]["first_page"] == "Admin First Page"
     assert response_data[1]["identifiers"][0]["identifier"] == "Admin Identifier"
-    assert response_data[1]["identifiers"][0]["metadata_scheme"] == "Admin Metadata Scheme"
+    assert (
+        response_data[1]["identifiers"][0]["metadata_scheme"] == "Admin Metadata Scheme"
+    )
     assert response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
     assert response_data[1]["identifiers"][0]["scheme_uri"] == "Admin Scheme URI"
     assert response_data[1]["identifiers"][0]["type"] == "ARK"
@@ -2498,7 +2549,10 @@ def test_get_dataset_related_item_metadata(clients):
     assert response_data[2]["edition"] == "Editor Edition"
     assert response_data[2]["first_page"] == "Editor First Page"
     assert response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
-    assert response_data[2]["identifiers"][0]["metadata_scheme"] == "Editor Metadata Scheme"
+    assert (
+        response_data[2]["identifiers"][0]["metadata_scheme"]
+        == "Editor Metadata Scheme"
+    )
     assert response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
     assert response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
     assert response_data[2]["identifiers"][0]["type"] == "ARK"
@@ -2522,7 +2576,9 @@ def test_get_dataset_related_item_metadata(clients):
     assert admin_response_data[0]["edition"] == "Edition"
     assert admin_response_data[0]["first_page"] == "First Page"
     assert admin_response_data[0]["identifiers"][0]["identifier"] == "Identifier"
-    assert admin_response_data[0]["identifiers"][0]["metadata_scheme"] == "Metadata Scheme"
+    assert (
+        admin_response_data[0]["identifiers"][0]["metadata_scheme"] == "Metadata Scheme"
+    )
     assert admin_response_data[0]["identifiers"][0]["scheme_type"] == "Scheme Type"
     assert admin_response_data[0]["identifiers"][0]["scheme_uri"] == "Scheme URI"
     assert admin_response_data[0]["identifiers"][0]["type"] == "ARK"
@@ -2538,15 +2594,23 @@ def test_get_dataset_related_item_metadata(clients):
     assert admin_response_data[0]["type"] == "Type"
     assert admin_response_data[0]["volume"] == "Volume"
     assert admin_response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
-    assert admin_response_data[1]["contributors"][0]["contributor_type"] == "Admin Con Type"
+    assert (
+        admin_response_data[1]["contributors"][0]["contributor_type"]
+        == "Admin Con Type"
+    )
     assert admin_response_data[1]["contributors"][0]["name_type"] == "Personal"
     assert admin_response_data[1]["creators"][0]["name"] == "Admin Name"
     assert admin_response_data[1]["creators"][0]["name_type"] == "Personal"
     assert admin_response_data[1]["edition"] == "Admin Edition"
     assert admin_response_data[1]["first_page"] == "Admin First Page"
     assert admin_response_data[1]["identifiers"][0]["identifier"] == "Admin Identifier"
-    assert admin_response_data[1]["identifiers"][0]["metadata_scheme"] == "Admin Metadata Scheme"
-    assert admin_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
+    assert (
+        admin_response_data[1]["identifiers"][0]["metadata_scheme"]
+        == "Admin Metadata Scheme"
+    )
+    assert (
+        admin_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
+    )
     assert admin_response_data[1]["identifiers"][0]["scheme_uri"] == "Admin Scheme URI"
     assert admin_response_data[1]["identifiers"][0]["type"] == "ARK"
     assert admin_response_data[1]["issue"] == "Admin Issue"
@@ -2561,15 +2625,23 @@ def test_get_dataset_related_item_metadata(clients):
     assert admin_response_data[1]["type"] == "Admin Type"
     assert admin_response_data[1]["volume"] == "Admin Volume"
     assert admin_response_data[2]["contributors"][0]["name"] == "Editor Ndafsdame"
-    assert admin_response_data[2]["contributors"][0]["contributor_type"] == "Editor Con Type"
+    assert (
+        admin_response_data[2]["contributors"][0]["contributor_type"]
+        == "Editor Con Type"
+    )
     assert admin_response_data[2]["contributors"][0]["name_type"] == "Personal"
     assert admin_response_data[2]["creators"][0]["name"] == "Editor Name"
     assert admin_response_data[2]["creators"][0]["name_type"] == "Personal"
     assert admin_response_data[2]["edition"] == "Editor Edition"
     assert admin_response_data[2]["first_page"] == "Editor First Page"
     assert admin_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
-    assert admin_response_data[2]["identifiers"][0]["metadata_scheme"] == "Editor Metadata Scheme"
-    assert admin_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
+    assert (
+        admin_response_data[2]["identifiers"][0]["metadata_scheme"]
+        == "Editor Metadata Scheme"
+    )
+    assert (
+        admin_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
+    )
     assert admin_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
     assert admin_response_data[2]["identifiers"][0]["type"] == "ARK"
     assert admin_response_data[2]["issue"] == "Editor Issue"
@@ -2592,7 +2664,10 @@ def test_get_dataset_related_item_metadata(clients):
     assert editor_response_data[0]["edition"] == "Edition"
     assert editor_response_data[0]["first_page"] == "First Page"
     assert editor_response_data[0]["identifiers"][0]["identifier"] == "Identifier"
-    assert editor_response_data[0]["identifiers"][0]["metadata_scheme"] == "Metadata Scheme"
+    assert (
+        editor_response_data[0]["identifiers"][0]["metadata_scheme"]
+        == "Metadata Scheme"
+    )
     assert editor_response_data[0]["identifiers"][0]["scheme_type"] == "Scheme Type"
     assert editor_response_data[0]["identifiers"][0]["scheme_uri"] == "Scheme URI"
     assert editor_response_data[0]["identifiers"][0]["type"] == "ARK"
@@ -2608,15 +2683,23 @@ def test_get_dataset_related_item_metadata(clients):
     assert editor_response_data[0]["type"] == "Type"
     assert editor_response_data[0]["volume"] == "Volume"
     assert editor_response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
-    assert editor_response_data[1]["contributors"][0]["contributor_type"] == "Admin Con Type"
+    assert (
+        editor_response_data[1]["contributors"][0]["contributor_type"]
+        == "Admin Con Type"
+    )
     assert editor_response_data[1]["contributors"][0]["name_type"] == "Personal"
     assert editor_response_data[1]["creators"][0]["name"] == "Admin Name"
     assert editor_response_data[1]["creators"][0]["name_type"] == "Personal"
     assert editor_response_data[1]["edition"] == "Admin Edition"
     assert editor_response_data[1]["first_page"] == "Admin First Page"
     assert editor_response_data[1]["identifiers"][0]["identifier"] == "Admin Identifier"
-    assert editor_response_data[1]["identifiers"][0]["metadata_scheme"] == "Admin Metadata Scheme"
-    assert editor_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
+    assert (
+        editor_response_data[1]["identifiers"][0]["metadata_scheme"]
+        == "Admin Metadata Scheme"
+    )
+    assert (
+        editor_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
+    )
     assert editor_response_data[1]["identifiers"][0]["scheme_uri"] == "Admin Scheme URI"
     assert editor_response_data[1]["identifiers"][0]["type"] == "ARK"
     assert editor_response_data[1]["issue"] == "Admin Issue"
@@ -2631,16 +2714,28 @@ def test_get_dataset_related_item_metadata(clients):
     assert editor_response_data[1]["type"] == "Admin Type"
     assert editor_response_data[1]["volume"] == "Admin Volume"
     assert editor_response_data[2]["contributors"][0]["name"] == "Editor Ndafsdame"
-    assert editor_response_data[2]["contributors"][0]["contributor_type"] == "Editor Con Type"
+    assert (
+        editor_response_data[2]["contributors"][0]["contributor_type"]
+        == "Editor Con Type"
+    )
     assert editor_response_data[2]["contributors"][0]["name_type"] == "Personal"
     assert editor_response_data[2]["creators"][0]["name"] == "Editor Name"
     assert editor_response_data[2]["creators"][0]["name_type"] == "Personal"
     assert editor_response_data[2]["edition"] == "Editor Edition"
     assert editor_response_data[2]["first_page"] == "Editor First Page"
-    assert editor_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
-    assert editor_response_data[2]["identifiers"][0]["metadata_scheme"] == "Editor Metadata Scheme"
-    assert editor_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
-    assert editor_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
+    assert (
+        editor_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
+    )
+    assert (
+        editor_response_data[2]["identifiers"][0]["metadata_scheme"]
+        == "Editor Metadata Scheme"
+    )
+    assert (
+        editor_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
+    )
+    assert (
+        editor_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
+    )
     assert editor_response_data[2]["identifiers"][0]["type"] == "ARK"
     assert editor_response_data[2]["issue"] == "Editor Issue"
     assert editor_response_data[2]["last_page"] == "Editor Last Page"
@@ -2662,7 +2757,10 @@ def test_get_dataset_related_item_metadata(clients):
     assert viewer_response_data[0]["edition"] == "Edition"
     assert viewer_response_data[0]["first_page"] == "First Page"
     assert viewer_response_data[0]["identifiers"][0]["identifier"] == "Identifier"
-    assert viewer_response_data[0]["identifiers"][0]["metadata_scheme"] == "Metadata Scheme"
+    assert (
+        viewer_response_data[0]["identifiers"][0]["metadata_scheme"]
+        == "Metadata Scheme"
+    )
     assert viewer_response_data[0]["identifiers"][0]["scheme_type"] == "Scheme Type"
     assert viewer_response_data[0]["identifiers"][0]["scheme_uri"] == "Scheme URI"
     assert viewer_response_data[0]["identifiers"][0]["type"] == "ARK"
@@ -2678,15 +2776,23 @@ def test_get_dataset_related_item_metadata(clients):
     assert viewer_response_data[0]["type"] == "Type"
     assert viewer_response_data[0]["volume"] == "Volume"
     assert viewer_response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
-    assert viewer_response_data[1]["contributors"][0]["contributor_type"] == "Admin Con Type"
+    assert (
+        viewer_response_data[1]["contributors"][0]["contributor_type"]
+        == "Admin Con Type"
+    )
     assert viewer_response_data[1]["contributors"][0]["name_type"] == "Personal"
     assert viewer_response_data[1]["creators"][0]["name"] == "Admin Name"
     assert viewer_response_data[1]["creators"][0]["name_type"] == "Personal"
     assert viewer_response_data[1]["edition"] == "Admin Edition"
     assert viewer_response_data[1]["first_page"] == "Admin First Page"
     assert viewer_response_data[1]["identifiers"][0]["identifier"] == "Admin Identifier"
-    assert viewer_response_data[1]["identifiers"][0]["metadata_scheme"] == "Admin Metadata Scheme"
-    assert viewer_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
+    assert (
+        viewer_response_data[1]["identifiers"][0]["metadata_scheme"]
+        == "Admin Metadata Scheme"
+    )
+    assert (
+        viewer_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
+    )
     assert viewer_response_data[1]["identifiers"][0]["scheme_uri"] == "Admin Scheme URI"
     assert viewer_response_data[1]["identifiers"][0]["type"] == "ARK"
     assert viewer_response_data[1]["issue"] == "Admin Issue"
@@ -2701,16 +2807,28 @@ def test_get_dataset_related_item_metadata(clients):
     assert viewer_response_data[1]["type"] == "Admin Type"
     assert viewer_response_data[1]["volume"] == "Admin Volume"
     assert viewer_response_data[2]["contributors"][0]["name"] == "Editor Ndafsdame"
-    assert viewer_response_data[2]["contributors"][0]["contributor_type"] == "Editor Con Type"
+    assert (
+        viewer_response_data[2]["contributors"][0]["contributor_type"]
+        == "Editor Con Type"
+    )
     assert viewer_response_data[2]["contributors"][0]["name_type"] == "Personal"
     assert viewer_response_data[2]["creators"][0]["name"] == "Editor Name"
     assert viewer_response_data[2]["creators"][0]["name_type"] == "Personal"
     assert viewer_response_data[2]["edition"] == "Editor Edition"
     assert viewer_response_data[2]["first_page"] == "Editor First Page"
-    assert viewer_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
-    assert viewer_response_data[2]["identifiers"][0]["metadata_scheme"] == "Editor Metadata Scheme"
-    assert viewer_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
-    assert viewer_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
+    assert (
+        viewer_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
+    )
+    assert (
+        viewer_response_data[2]["identifiers"][0]["metadata_scheme"]
+        == "Editor Metadata Scheme"
+    )
+    assert (
+        viewer_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
+    )
+    assert (
+        viewer_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
+    )
     assert viewer_response_data[2]["identifiers"][0]["type"] == "ARK"
     assert viewer_response_data[2]["issue"] == "Editor Issue"
     assert viewer_response_data[2]["last_page"] == "Editor Last Page"
