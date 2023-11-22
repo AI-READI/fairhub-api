@@ -2855,13 +2855,30 @@ def test_delete_dataset_related_item_title_metadata(clients):
     dataset_id = pytest.global_dataset_id
     related_item_id = pytest.global_dataset_related_item_id
     title_id = pytest.global_dataset_related_item_title_id
+    admin_t_id = pytest.global_dataset_related_item_title_id_admin
+    editor_t_id = pytest.global_dataset_related_item_title_id_editor
 
+    # pylint: disable=line-too-long
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{title_id}"
+    )
     # pylint: disable=line-too-long
     response = _logged_in_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{title_id}"
     )
+    # pylint: disable=line-too-long
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{admin_t_id}"
+    )
+    # pylint: disable=line-too-long
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{editor_t_id}"
+    )
 
+    assert viewer_response.status_code == 403
     assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 def test_delete_dataset_related_item_metadata(clients):
@@ -2876,12 +2893,26 @@ def test_delete_dataset_related_item_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     related_item_id = pytest.global_dataset_related_item_id
+    admin_ri_id = pytest.global_dataset_related_item_id_admin
+    editor_ri_id = pytest.global_dataset_related_item_id_editor
 
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}"
+    )
     response = _logged_in_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}"
     )
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{admin_ri_id}"
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{editor_ri_id}"
+    )
 
+    assert viewer_response.status_code == 403
     assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 # ------------------- RIGHTS METADATA ------------------- #
