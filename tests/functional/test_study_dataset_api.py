@@ -238,30 +238,48 @@ def test_delete_dataset_from_study(clients):
             "description": "Dataset Description",
         },
     )
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/dataset",
+        json={
+            "title": "Admin Delete Me",
+            "description": "Dataset Description",
+        },
+    )
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/dataset",
+        json={
+            "title": "Editor Delete Me",
+            "description": "Dataset Description",
+        },
+    )
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+
     response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
     dataset_id = response_data["id"]
+    admin_dataset_id = admin_response_data["id"]
+    editor_dataset_id = editor_response_data["id"]
 
-    # Try to delete dataset with other clients (should not be possible)
-    admin_response = _admin_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}",
-    )
-    editor_response = _editor_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}",
-    )
+    # delete temporary datasets
     viewer_response = _viewer_client.delete(f"/study/{study_id}/dataset/{dataset_id}")
-
-    assert admin_response.status_code == 403
-    assert editor_response.status_code == 403
-    assert viewer_response.status_code == 403
-
-    # delete dataset
     delete_response = _logged_in_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}",
     )
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/dataset/{admin_dataset_id}",
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/dataset/{editor_dataset_id}",
+    )
 
+    assert viewer_response.status_code == 403
     assert delete_response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 def test_post_dataset_version(clients):
