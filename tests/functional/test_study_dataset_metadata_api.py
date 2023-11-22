@@ -542,7 +542,7 @@ def test_post_dataset_contributor_metadata(clients):
 
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    pytest.global_dataset_contributor_id_admin = admin_response_data[1]["id"]
+    pytest.global_dataset_contributor_id_admin = admin_response_data[0]["id"]
 
     assert admin_response_data[1]["name"] == "Admin Name here"
 
@@ -570,9 +570,9 @@ def test_post_dataset_contributor_metadata(clients):
 
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    pytest.global_dataset_contributor_id_editor = editor_response_data[2]["id"]
+    pytest.global_dataset_contributor_id_editor = editor_response_data[0]["id"]
 
-    assert editor_response_data[2]["name"] == "Editor Name here"
+    assert editor_response_data[0]["name"] == "Editor Name here"
 
     viewer_response = _viewer_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor",
@@ -773,7 +773,7 @@ def test_post_dataset_creator_metadata(clients):
     )
 
     assert editor_response.status_code == 200
-    editor_response_data = json.loads(response.data)
+    editor_response_data = json.loads(editor_response.data)
     pytest.global_dataset_creator_id_editor = response_data[0]["id"]
 
     assert editor_response_data[0]["name"] == "Editor Name here"
@@ -1436,10 +1436,10 @@ def test_get_dataset_descriptions_metadata(clients):
     editor_response_data = json.loads(editor_response.data)
     viewer_response_data = json.loads(viewer_response.data)
 
-    assert len(response_data) == 3
-    assert len(admin_response) == 3
-    assert len(editor_response) == 3
-    assert len(viewer_response) == 3
+    assert len(response_data) == 4
+    assert len(admin_response) == 4
+    assert len(editor_response) == 4
+    assert len(viewer_response) == 4
 
     assert response_data[0]["description"] == "Description"
     assert response_data[0]["type"] == "Methods"
@@ -1447,6 +1447,9 @@ def test_get_dataset_descriptions_metadata(clients):
     assert response_data[1]["type"] == "Methods"
     assert response_data[2]["description"] == "Editor Description"
     assert response_data[2]["type"] == "Methods"
+    assert response_data[3]["description"] == "Viewer Description"
+    assert response_data[3]["type"] == "Methods"
+    assert response_data[3]["description"] == "Viewer fasdfasDescription"
 
     assert admin_response_data[0]["description"] == "Description"
     assert admin_response_data[0]["type"] == "Methods"
