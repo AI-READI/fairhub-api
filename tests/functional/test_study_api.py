@@ -201,7 +201,7 @@ def test_delete_studies_created(clients):
     THEN check that the response is valid (200)
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    
+
     # Create a temporary study to delete as the original study
     # Is needed to test all other endpoints
     response = _logged_in_client.post(
