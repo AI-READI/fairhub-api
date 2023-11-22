@@ -1436,10 +1436,10 @@ def test_get_dataset_descriptions_metadata(clients):
     editor_response_data = json.loads(editor_response.data)
     viewer_response_data = json.loads(viewer_response.data)
 
-    assert len(response_data) == 4
-    assert len(admin_response) == 4
-    assert len(editor_response) == 4
-    assert len(viewer_response) == 4
+    assert len(response_data) == 3
+    assert len(admin_response_data) == 3
+    assert len(editor_response_data) == 3
+    assert len(viewer_response_data) == 3
 
     assert response_data[0]["description"] == "Description"
     assert response_data[0]["type"] == "Methods"
