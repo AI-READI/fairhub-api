@@ -544,7 +544,7 @@ def test_post_dataset_contributor_metadata(clients):
     admin_response_data = json.loads(admin_response.data)
     pytest.global_dataset_contributor_id_admin = admin_response_data[0]["id"]
 
-    assert admin_response_data[1]["name"] == "Admin Name here"
+    assert admin_response_data[0]["name"] == "Admin Name here"
 
     editor_response = _editor_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor",
