@@ -207,9 +207,9 @@ def test_get_dataset_from_study(clients):
     assert viewer_response.status_code == 200
 
     response_data = json.loads(response.data)
-    admin_response = json.loads(admin_response.data)
-    editor_response = json.loads(editor_response.data)
-    viewer_response = json.loads(viewer_response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
 
     assert response_data["title"] == "Editor Dataset Title"
     assert response_data["description"] == "Editor Dataset Description"
