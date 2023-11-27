@@ -2125,6 +2125,35 @@ def test_put_dataset_record_keys_metadata(clients):
     assert response_data["type"] == "Record Type"
     assert response_data["details"] == "Details for Record Keys"
 
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/record-keys",
+        json={"type": "Record Type", "details": "Admin Details for Record Keys"},
+    )
+
+    assert admin_response.status_code == 201
+    admin_response_data = json.loads(admin_response.data)
+
+    assert admin_response_data["type"] == "Record Type"
+    assert admin_response_data["details"] == "Admin Details for Record Keys"
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/record-keys",
+        json={"type": "Record Type", "details": "Editor Details for Record Keys"},
+    )
+
+    assert editor_response.status_code == 201
+    editor_response_data = json.loads(editor_response.data)
+
+    assert editor_response_data["type"] == "Record Type"
+    assert editor_response_data["details"] == "Editor Details for Record Keys"
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/record-keys",
+        json={"type": "Record Type", "details": "Viewer Details for Record Keys"},
+    )
+
+    assert viewer_response.status_code == 403
+
 
 def test_get_dataset_record_keys_metadata(clients):
     """
