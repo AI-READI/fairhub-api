@@ -3080,25 +3080,6 @@ def test_delete_dataset_related_item_metadata(clients):
 
 
 # ------------------- RIGHTS METADATA ------------------- #
-def test_get_dataset_rights_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID and dataset ID
-    When the '/study'
-    endpoint is requested (GET)
-    Then check that the response is valid and retrieves the dataset
-    rights metadata content
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    dataset_id = pytest.global_dataset_id
-
-    response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights"
-    )
-
-    assert response.status_code == 200
-
-
 def test_post_dataset_rights_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
@@ -3133,6 +3114,25 @@ def test_post_dataset_rights_metadata(clients):
     assert response_data[0]["uri"] == "URI"
 
 
+def test_get_dataset_rights_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    rights metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights"
+    )
+
+    assert response.status_code == 200
+
+
 def test_delete_dataset_rights_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
@@ -3154,25 +3154,6 @@ def test_delete_dataset_rights_metadata(clients):
 
 
 # ------------------- SUBJECTS METADATA ------------------- #
-def test_get_dataset_subjects_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID and dataset ID
-    When the '/study/{study_id}/dataset/{dataset_id}/metadata/subject'
-    endpoint is requested (GET)
-    Then check that the response is valid and retrieves the dataset
-    subjects metadata content
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    dataset_id = pytest.global_dataset_id
-
-    response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/subject"
-    )
-
-    assert response.status_code == 200
-
-
 def test_post_dataset_subjects_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
@@ -3208,6 +3189,25 @@ def test_post_dataset_subjects_metadata(clients):
     assert response_data[0]["value_uri"] == "Value URI"
 
 
+def test_get_dataset_subjects_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/subject'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    subjects metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/subject"
+    )
+
+    assert response.status_code == 200
+
+
 def test_delete_dataset_subject_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
@@ -3229,25 +3229,6 @@ def test_delete_dataset_subject_metadata(clients):
 
 
 # ------------------- TITLE METADATA ------------------- #
-def test_get_dataset_title_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID and dataset ID
-    When the '/study/{study_id}/dataset/{dataset_id}/metadata/title'
-    endpoint is requested (GET)
-    Then check that the response is valid and retrieves the dataset
-    title metadata content
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    dataset_id = pytest.global_dataset_id
-
-    response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/title"
-    )
-
-    assert response.status_code == 200
-
-
 def test_post_dataset_title_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
@@ -3271,6 +3252,25 @@ def test_post_dataset_title_metadata(clients):
 
     assert response_data[0]["title"] == "Title"
     assert response_data[0]["type"] == "Subtitle"
+
+
+def test_get_dataset_title_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/title'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    title metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/title"
+    )
+
+    assert response.status_code == 200
 
 
 def test_delete_dataset_title_metadata(clients):
