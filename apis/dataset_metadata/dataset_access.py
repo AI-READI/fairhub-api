@@ -32,7 +32,7 @@ class DatasetAccessResource(Resource):
         """Get dataset access"""
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_access_ = dataset_.dataset_access
-        return dataset_access_.to_dict()
+        return dataset_access_.to_dict(), 200
 
     @api.doc("update access")
     @api.response(200, "Success")
@@ -69,4 +69,4 @@ class DatasetAccessResource(Resource):
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_.dataset_access.update(request.json)
         model.db.session.commit()
-        return dataset_.dataset_access.to_dict()
+        return dataset_.dataset_access.to_dict(), 200

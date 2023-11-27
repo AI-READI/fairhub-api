@@ -25,7 +25,7 @@ If you would like to update the api, please follow the instructions below.
    If you are using Anaconda, you can create a virtual environment with:
 
    ```bash
-   conda create -n fairhub-api-dev-env python=3.8
+   conda create -n fairhub-api-dev-env python=3.10
    conda activate fairhub-api-dev-env
    ```
 
@@ -38,7 +38,15 @@ If you would like to update the api, please follow the instructions below.
 
    You can also use version 1.2.0 of Poetry, but you will need to run `poetry lock` after installing the dependencies.
 
-3. Add your modifications and run the tests:
+3. Add your environment variables. An example is provided at `.env.example`
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Make sure to update the values in `.env` to match your local setup.
+
+4. Add your modifications and run the tests:
 
    ```bash
    poetry run pytest
@@ -50,42 +58,30 @@ If you would like to update the api, please follow the instructions below.
     poetry add <package-name>
    ```
 
-4. Format the code:
+5. Format the code:
 
    ```bash
    poe format
    ```
 
-5. Check the code quality:
+6. Check the code quality:
 
    ```bash
-   poetry run flake8 pyfairdatatools tests
+   poe typecheck
+   poe lint
+   poe flake8
    ```
 
-6. Run the tests and check the code coverage:
+   You can also use `poe precommit` to run both formatting and linting.
+
+7. Run the tests and check the code coverage:
 
    ```bash
    poe test
-   poe test --cov=pyfairdatatools
+   poe test_with_capture # if you want to see console output
    ```
 
-7. Build the package:
-
-   Update the version number in `pyproject.toml` and `pyfairdatatools/__init__.py` and then run:
-
-   ```text
-   poetry build
-   ```
-
-8. Publish the package:
-
-   ```bash
-   poetry publish
-   ```
-
-## Docker
-
-### Database
+## Database
 
 The api uses a postgres database. You can run a postgres database locally using docker:
 
@@ -100,24 +96,6 @@ docker-compose -f ./db-docker-compose.yml down -v
 ```
 
 This database will not persist data between runs.
-
-### API
-
-If you would like to run the api locally, you can use docker.
-
-1. Build the docker image:
-
-   ```bash
-   docker build --tag fairhub-flask-api:local .
-   ```
-
-   You can set the `--tag` to whatever you want. We recommend to use `fairhub-flask-api:local`.
-
-2. Run the docker image:
-
-   ```bash
-   docker run -p 5000:5000 -e FAIRHUB_DATABASE_URL=postgres://connection-string fairhub-flask-api:local
-   ```
 
 ## License
 

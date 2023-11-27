@@ -37,7 +37,7 @@ class StudyOtherResource(Resource):
 
         study_other_ = study_.study_other
 
-        return study_other_.to_dict()
+        return study_other_.to_dict(), 200
 
     def put(self, study_id: int):
         """Update study other metadata"""
@@ -79,7 +79,7 @@ class StudyOtherResource(Resource):
 
         model.db.session.commit()
 
-        return study_.study_other.to_dict()
+        return study_.study_other.to_dict(), 200
 
 
 @api.route("/study/<study_id>/metadata/oversight")
@@ -95,7 +95,7 @@ class StudyOversightResource(Resource):
         study_ = model.Study.query.get(study_id)
 
         study_oversight_has_dmc = study_.study_other.oversight_has_dmc
-        return {"oversight": study_oversight_has_dmc}
+        return {"oversight": study_oversight_has_dmc}, 200
 
     def put(self, study_id: int):
         """Update study oversight metadata"""
@@ -122,7 +122,7 @@ class StudyOversightResource(Resource):
         study_obj.touch()
         model.db.session.commit()
 
-        return study_oversight
+        return study_oversight, 200
 
 
 # todo: rename class
@@ -140,7 +140,7 @@ class StudyConditionsResource(Resource):
 
         study_other_conditions = study_.study_other.conditions
 
-        return study_other_conditions
+        return study_other_conditions, 200
 
     def put(self, study_id: int):
         """Update study conditions metadata"""
@@ -166,4 +166,4 @@ class StudyConditionsResource(Resource):
         study_obj.touch()
         model.db.session.commit()
 
-        return study_obj.study_other.conditions
+        return study_obj.study_other.conditions, 200

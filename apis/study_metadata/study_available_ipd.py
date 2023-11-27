@@ -40,7 +40,7 @@ class StudyAvailableResource(Resource):
             study_available_ipd_, key=lambda x: x.created_at
         )
 
-        return [s.to_dict() for s in sorted_study_available_ipd]
+        return [s.to_dict() for s in sorted_study_available_ipd], 200
 
     @api.doc(
         description="An array of objects are expected within the payload with the keys demonstrated below to create an available-ipd"  # noqa E501
@@ -103,7 +103,7 @@ class StudyAvailableResource(Resource):
             list_of_elements.append(study_available_ipd_.to_dict())
         model.db.session.commit()
 
-        return list_of_elements
+        return list_of_elements, 201
 
 
 @api.route("/study/<study_id>/metadata/available-ipd/<available_ipd_id>")

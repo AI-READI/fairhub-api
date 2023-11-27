@@ -51,7 +51,7 @@ class Studies(Resource):
 
         studies = model.Study.query.filter(model.Study.id.in_(study_ids)).all()
 
-        return [s.to_dict() for s in studies]
+        return [s.to_dict() for s in studies], 200
 
     @api.expect(study_model)
     @api.response(200, "Success")
@@ -88,7 +88,7 @@ class Studies(Resource):
 
         model.db.session.commit()
 
-        return study_.to_dict()
+        return study_.to_dict(), 201
 
 
 @api.route("/study/<study_id>")
@@ -103,7 +103,7 @@ class StudyResource(Resource):
         """Return a study's details"""
         study1 = model.Study.query.get(study_id)
 
-        return study1.to_dict()
+        return study1.to_dict(), 200
 
     @api.expect(study_model)
     @api.response(200, "Success")
@@ -135,7 +135,7 @@ class StudyResource(Resource):
         update_study.update(request.json)
         model.db.session.commit()
 
-        return update_study.to_dict()
+        return update_study.to_dict(), 200
 
     @api.response(204, "Success")
     @api.response(400, "Validation Error")

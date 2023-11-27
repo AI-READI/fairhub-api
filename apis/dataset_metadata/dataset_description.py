@@ -32,7 +32,7 @@ class DatasetDescriptionResource(Resource):
         """Get dataset description"""
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_description_ = dataset_.dataset_description
-        return [d.to_dict() for d in dataset_description_]
+        return [d.to_dict() for d in dataset_description_], 200
 
     @api.doc("update description")
     @api.response(200, "Success")
@@ -100,7 +100,7 @@ class DatasetDescriptionResource(Resource):
                 model.db.session.add(dataset_description_)
                 list_of_elements.append(dataset_description_.to_dict())
         model.db.session.commit()
-        return list_of_elements
+        return list_of_elements, 201
 
     @api.route(
         "/study/<study_id>/dataset/<dataset_id>/"

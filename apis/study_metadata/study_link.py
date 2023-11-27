@@ -34,7 +34,7 @@ class StudyLinkResource(Resource):
         study_ = model.Study.query.get(study_id)
         study_link_ = study_.study_link
         sorted_study_link_ = sorted(study_link_, key=lambda x: x.created_at)
-        return [s.to_dict() for s in sorted_study_link_]
+        return [s.to_dict() for s in sorted_study_link_], 200
 
     def post(self, study_id: int):
         """Create study link metadata"""
@@ -78,7 +78,7 @@ class StudyLinkResource(Resource):
             list_of_elements.append(study_link_.to_dict())
         model.db.session.commit()
 
-        return list_of_elements
+        return list_of_elements, 201
 
     @api.route("/study/<study_id>/metadata/link/<link_id>")
     class StudyLinkUpdate(Resource):

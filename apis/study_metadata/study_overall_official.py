@@ -42,7 +42,7 @@ class StudyOverallOfficialResource(Resource):
             study_overall_official_, key=lambda x: x.created_at
         )
 
-        return [i.to_dict() for i in sorted_study_overall]
+        return [i.to_dict() for i in sorted_study_overall], 200
 
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
@@ -94,7 +94,7 @@ class StudyOverallOfficialResource(Resource):
             list_of_elements.append(study_overall_official_.to_dict())
         model.db.session.commit()
 
-        return list_of_elements
+        return list_of_elements, 201
 
     @api.route("/study/<study_id>/metadata/overall-official/<overall_official_id>")
     class StudyOverallOfficialUpdate(Resource):

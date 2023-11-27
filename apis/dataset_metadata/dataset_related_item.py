@@ -31,7 +31,7 @@ class DatasetRelatedItemResource(Resource):
         """Get dataset related item"""
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_related_item_ = dataset_.dataset_related_item
-        return [d.to_dict() for d in dataset_related_item_]
+        return [d.to_dict() for d in dataset_related_item_], 200
 
     @api.doc("update related item")
     @api.response(200, "Success")
@@ -382,6 +382,11 @@ class RelatedItemTitlesDelete(Resource):
         if not is_granted("dataset_metadata", study_obj):
             return "Access denied, you can not make any change in dataset metadata", 403
         dataset_title_ = model.DatasetRelatedItemTitle.query.get(title_id)
+        if dataset_title_.type == "MainTitle":
+            return (
+                "Main Title type can not be deleted",
+                403,
+            )
         model.db.session.delete(dataset_title_)
         model.db.session.commit()
         return Response(status=204)

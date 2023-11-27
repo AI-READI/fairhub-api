@@ -163,7 +163,7 @@ def test_post_alternative_identifier(clients):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_alternative_identifier_id = response_data[0]["id"]
 
@@ -502,7 +502,7 @@ def test_post_dataset_contributor_metadata(clients):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_contributor_id = response_data[0]["id"]
 
@@ -700,7 +700,7 @@ def test_post_dataset_creator_metadata(clients):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_creator_id = response_data[0]["id"]
 
@@ -1028,7 +1028,7 @@ def test_post_dataset_date_metadata(clients):
         json=[{"date": 20210101, "type": "Type", "information": "Info"}],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_date_id = response_data[0]["id"]
 
@@ -1367,7 +1367,7 @@ def test_post_dataset_descriptions_metadata(clients):
         json=[{"description": "Description", "type": "Methods"}],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_description_id = response_data[0]["id"]
 
@@ -1548,7 +1548,7 @@ def test_post_dataset_funder_metadata(clients):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_funder_id = response_data[0]["id"]
 
@@ -2116,9 +2116,8 @@ def test_put_dataset_record_keys_metadata(clients):
         json={"type": "Record Type", "details": "Details for Record Keys"},
     )
 
-    assert response.status_code == 201
+    assert response.status_code == 200
     response_data = json.loads(response.data)
-
     assert response_data["type"] == "Record Type"
     assert response_data["details"] == "Details for Record Keys"
 
@@ -2245,7 +2244,10 @@ def test_post_dataset_related_item_metadata(clients):
                 "publication_year": 2013,
                 "publisher": "Publisher",
                 "relation_type": "Relation Type",
-                "titles": [{"title": "Title", "type": "MainTitle"}],
+                "titles": [
+                    {"title": "Title", "type": "MainTitle"},
+                    {"title": "Title", "type": "Subtitle"},
+                ],
                 "type": "Type",
                 "volume": "Volume",
             }
@@ -2287,6 +2289,8 @@ def test_post_dataset_related_item_metadata(clients):
     assert response_data[0]["relation_type"] == "Relation Type"
     assert response_data[0]["titles"][0]["title"] == "Title"
     assert response_data[0]["titles"][0]["type"] == "MainTitle"
+    assert response_data[0]["titles"][1]["title"] == "Title"
+    assert response_data[0]["titles"][1]["type"] == "Subtitle"
     assert response_data[0]["type"] == "Type"
     assert response_data[0]["volume"] == "Volume"
 
@@ -3026,9 +3030,8 @@ def test_delete_dataset_related_item_title_metadata(clients):
     viewer_response = _viewer_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{title_id}"
     )
-    # pylint: disable=line-too-long
-    response = _logged_in_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{title_id}"
+    response_get = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item"
     )
     # pylint: disable=line-too-long
     admin_response = _admin_client.delete(
@@ -3104,7 +3107,7 @@ def test_post_dataset_rights_metadata(clients):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_rights_id = response_data[0]["id"]
 
@@ -3130,7 +3133,7 @@ def test_get_dataset_rights_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
 
 
 def test_delete_dataset_rights_metadata(clients):
@@ -3179,7 +3182,7 @@ def test_post_dataset_subjects_metadata(clients):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_subject_id = response_data[0]["id"]
 
@@ -3205,24 +3208,30 @@ def test_get_dataset_subjects_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/subject"
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 204
+
+    response_get = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/subject"
+    )
+    assert response_get.status_code == 200
+
+    assert len(json.loads(response_get.data)) == 0
 
 
 def test_delete_dataset_subject_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
-    When the '/study/{study_id}/dataset/{dataset_id}/metadata/subject/{subject_id}'
-    endpoint is requested (DELETE)
-    Then check that the response is valid and deletes the dataset
-    subject metadata content
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/subject'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    subjects metadata content
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
-    subject_id = pytest.global_dataset_subject_id
 
-    response = _logged_in_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/subject/{subject_id}"
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/subject"
     )
 
     assert response.status_code == 204
@@ -3246,7 +3255,7 @@ def test_post_dataset_title_metadata(clients):
         json=[{"title": "Title", "type": "Subtitle"}],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_title_id = response_data[0]["id"]
 

@@ -45,7 +45,7 @@ class StudySponsorsResource(Resource):
 
         study_sponsors_collaborators_ = study_.study_sponsors_collaborators
 
-        return study_sponsors_collaborators_.to_dict()
+        return study_sponsors_collaborators_.to_dict(), 200
 
     def put(self, study_id: int):
         """Update study sponsors metadata"""
@@ -125,7 +125,7 @@ class StudySponsorsResource(Resource):
 
         model.db.session.commit()
 
-        return study_.study_sponsors_collaborators.to_dict()
+        return study_.study_sponsors_collaborators.to_dict(), 200
 
 
 @api.route("/study/<study_id>/metadata/collaborators")
@@ -142,7 +142,7 @@ class StudyCollaboratorsResource(Resource):
 
         study_collaborators_ = study_.study_sponsors_collaborators.collaborator_name
 
-        return study_collaborators_
+        return study_collaborators_, 200
 
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
@@ -166,4 +166,4 @@ class StudyCollaboratorsResource(Resource):
         study_obj.study_sponsors_collaborators.collaborator_name = data
         study_obj.touch()
         model.db.session.commit()
-        return study_obj.study_sponsors_collaborators.collaborator_name
+        return study_obj.study_sponsors_collaborators.collaborator_name, 200

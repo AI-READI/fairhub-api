@@ -27,7 +27,7 @@ def test_post_arm_metadata(clients):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_arm_id = response_data["arms"][0]["id"]
 
@@ -169,7 +169,7 @@ def test_post_available_ipd_metadata(clients):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_available_ipd_id = response_data[0]["id"]
 
@@ -310,7 +310,7 @@ def test_post_cc_metadata(clients):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_cc_id = response_data[0]["id"]
 
@@ -1095,7 +1095,7 @@ def test_post_identification_metadata(clients):
         },
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_identification_id = response_data["secondary"][0]["id"]
 
@@ -1218,6 +1218,7 @@ def test_delete_identification_metadata(clients):
     response = _logged_in_client.delete(
         f"/study/{study_id}/metadata/identification/{identification_id}"
     )
+    assert response.status_code == 204
 
     admin_response = _admin_client.get(f"/study/{study_id}/metadata/identification")
     assert admin_response.status_code == 200
@@ -1282,7 +1283,7 @@ def test_post_intervention_metadata(clients):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_intervention_id = response_data[0]["id"]
 
@@ -1513,7 +1514,7 @@ def test_post_link_metadata(clients):
         json=[{"url": "google.com", "title": "google link"}],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_link_id = response_data[0]["id"]
 
@@ -1625,7 +1626,7 @@ def test_post_location_metadata(clients):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_location_id = response_data[0]["id"]
 
@@ -1753,7 +1754,7 @@ def test_put_other_metadata(clients):
         f"/study/{study_id}/metadata/other",
         json={
             "oversight_has_dmc": False,
-            "conditions": ["true", "conditions", "keywords", "1"],
+            "conditions": ["c"],
             "keywords": ["true", "u"],
             "size": 103,
         },
@@ -1763,7 +1764,7 @@ def test_put_other_metadata(clients):
     response_data = json.loads(response.data)
 
     assert response_data["oversight_has_dmc"] is False
-    assert response_data["conditions"] == ["true", "conditions", "keywords", "1"]
+    assert response_data["conditions"] == ["c"]
     assert response_data["keywords"] == ["true", "u"]
     assert response_data["size"] == 103
 
@@ -1861,7 +1862,7 @@ def test_post_overall_official_metadata(clients):
         json=[{"name": "test", "affiliation": "aff", "role": "Study Chair"}],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_overall_official_id = response_data[0]["id"]
 
@@ -2046,7 +2047,7 @@ def test_post_reference_metadata(clients):
         ],
     )
 
-    assert response.status_code == 200
+    assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_reference_id = response_data[0]["id"]
 
@@ -2305,9 +2306,9 @@ def test_put_status_metadata(clients):
         json={
             "overall_status": "Withdrawn",
             "why_stopped": "test",
-            "start_date": "fff",
+            "start_date": "2023-11-15 00:00:00",
             "start_date_type": "Actual",
-            "completion_date": "nuzzzll",
+            "completion_date": "2023-11-16 00:00:00",
             "completion_date_type": "Actual",
         },
     )
@@ -2317,9 +2318,9 @@ def test_put_status_metadata(clients):
 
     assert response_data["overall_status"] == "Withdrawn"
     assert response_data["why_stopped"] == "test"
-    assert response_data["start_date"] == "fff"
+    assert response_data["start_date"] == "2023-11-15 00:00:00"
     assert response_data["start_date_type"] == "Actual"
-    assert response_data["completion_date"] == "nuzzzll"
+    assert response_data["completion_date"] == "2023-11-16 00:00:00"
     assert response_data["completion_date_type"] == "Actual"
 
     admin_response = _admin_client.put(

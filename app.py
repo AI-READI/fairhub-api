@@ -10,6 +10,7 @@ from flask import Flask, request
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from sqlalchemy import MetaData
+from waitress import serve
 
 import config
 import model
@@ -41,21 +42,19 @@ def create_app(config_module=None):
     # csrf = CSRFProtect()
     # csrf.init_app(app)
 
-    app.config.from_prefixed_env("FAIRHUB")
-
-    # print(app.config)
     if config.FAIRHUB_SECRET:
         if len(config.FAIRHUB_SECRET) < 32:
             raise RuntimeError("FAIRHUB_SECRET must be at least 32 characters long")
     else:
         raise RuntimeError("FAIRHUB_SECRET not set")
 
-    if "DATABASE_URL" in app.config:
+    if config.FAIRHUB_DATABASE_URL:
         # if "TESTING" in app_config and app_config["TESTING"]:
         #     pass
         # else:
         #   print("DATABASE_URL: ", app.config["DATABASE_URL"])
-        app.config["SQLALCHEMY_DATABASE_URI"] = app.config["DATABASE_URL"]
+        # app.config["SQLALCHEMY_DATABASE_URI"] = app.config["DATABASE_URL"]
+        app.config["SQLALCHEMY_DATABASE_URI"] = config.FAIRHUB_DATABASE_URL
     else:
         # throw error
         raise RuntimeError("FAIRHUB_DATABASE_URL not set")
@@ -64,17 +63,22 @@ def create_app(config_module=None):
     api.init_app(app)
     bcrypt.init_app(app)
 
+    cors_origins = [
+        "https://brave-ground-.*-.*.centralus.2.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
+        "https://staging.fairhub.io",
+        "https://fairhub.io",
+    ]
+
+    if app.debug:
+        cors_origins.append("http://localhost:3000")
+
     # Only allow CORS origin for localhost:3000
     # and any subdomain of azurestaticapps.net/
     CORS(
         app,
         resources={
             "/*": {
-                "origins": [
-                    "http://localhost:3000",
-                    "https:\/\/brave-ground-.*-.*.centralus.2.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
-                    "https://fairhub.io",
-                ],
+                "origins": cors_origins,
             }
         },
         allow_headers=[
@@ -141,11 +145,7 @@ def create_app(config_module=None):
         if "token" not in request.cookies:
             return resp
 
-        token: str = (
-            request.cookies.get("token")
-            if request.cookies.get("token")
-            else ""  # type: ignore
-        )
+        token: str = request.cookies.get("token") or ""  # type: ignore
 
         # Determine the appropriate configuration module based on the testing context
         if os.environ.get("FLASK_ENV") == "testing":
@@ -209,8 +209,14 @@ def create_app(config_module=None):
 
     @app.cli.command("destroy-schema")
     def destroy_schema():
-        """Create the database schema."""
+        """destroy the database schema."""
+
+        # if db is azure, then skip
+        if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
+            return
+
         engine = model.db.session.get_bind()
+
         with engine.begin():
             model.db.drop_all()
 
@@ -219,8 +225,9 @@ def create_app(config_module=None):
         metadata = MetaData()
         metadata.reflect(bind=engine)
         table_names = [table.name for table in metadata.tables.values()]
-        # print(table_names)
-        if len(table_names) == 0:
+
+        # The alembic table is created by default, so we need to check for more than 1 table
+        if len(table_names) <= 1:
             with engine.begin():
                 model.db.create_all()
     return app
@@ -238,4 +245,5 @@ if __name__ == "__main__":
 
     flask_app = create_app()
 
-    flask_app.run(host="0.0.0.0", port=port)
+    # flask_app.run(host="0.0.0.0", port=port)
+    serve(flask_app, port=port)

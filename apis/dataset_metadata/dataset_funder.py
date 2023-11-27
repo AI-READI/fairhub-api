@@ -36,7 +36,7 @@ class DatasetFunderResource(Resource):
         """Get dataset funder"""
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_funder_ = dataset_.dataset_funder
-        return [d.to_dict() for d in dataset_funder_]
+        return [d.to_dict() for d in dataset_funder_], 200
 
     @api.doc("update funder")
     @api.response(200, "Success")
@@ -96,7 +96,7 @@ class DatasetFunderResource(Resource):
                 model.db.session.add(dataset_funder_)
                 list_of_elements.append(dataset_funder_.to_dict())
         model.db.session.commit()
-        return list_of_elements
+        return list_of_elements, 201
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/funder/<funder_id>")

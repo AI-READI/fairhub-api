@@ -36,7 +36,7 @@ class StudyIdentificationResource(Resource):
         """Get study identification metadata"""
         study_ = model.Study.query.get(study_id)
         identifiers = model.Identifiers(study_)
-        return identifiers.to_dict()
+        return identifiers.to_dict(), 200
 
     @api.doc("identification add")
     @api.response(200, "Success")
@@ -110,7 +110,7 @@ class StudyIdentificationResource(Resource):
 
         final_identifiers = model.Identifiers(study_obj)
 
-        return final_identifiers.to_dict()
+        return final_identifiers.to_dict(), 201
 
     @api.route("/study/<study_id>/metadata/identification/<identification_id>")
     class StudyIdentificationdUpdate(Resource):

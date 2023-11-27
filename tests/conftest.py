@@ -19,7 +19,6 @@ os.environ["FLASK_ENV"] = "testing"
 # Set global variable for study ID
 # Study variables for main client
 pytest.global_study_id = {}
-pytest.global_version_id = ""
 pytest.global_arm_id = ""
 pytest.global_available_ipd_id = ""
 pytest.global_cc_id = ""
@@ -83,7 +82,7 @@ pytest.global_dataset_related_item_identifier_id_editor = ""
 
 # Dataset variables use for testing
 pytest.global_dataset_id = ""
-pytest.global_dataset_version_id = ""
+
 pytest.global_alternative_identifier_id = ""
 pytest.global_dataset_contributor_id = ""
 pytest.global_dataset_creator_id = ""
@@ -98,6 +97,8 @@ pytest.global_dataset_related_item_title_id = ""
 pytest.global_dataset_rights_id = ""
 pytest.global_dataset_subject_id = ""
 pytest.global_dataset_title_id = ""
+
+pytest.global_dataset_version_id = ""
 
 # User token codes
 pytest.global_admin_token = ""
