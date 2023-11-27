@@ -1448,7 +1448,7 @@ def test_get_dataset_descriptions_metadata(clients):
     assert len(editor_response_data) == 4
     assert len(viewer_response_data) == 4
 
-    assert response_data[0]["description"] == "Description Description"
+    assert response_data[0]["description"] == "Dataset Description"
     assert response_data[0]["type"] == "Abstract"
     assert response_data[1]["description"] == "Description"
     assert response_data[1]["type"] == "Methods"
@@ -1456,11 +1456,8 @@ def test_get_dataset_descriptions_metadata(clients):
     assert response_data[2]["type"] == "Methods"
     assert response_data[3]["description"] == "Editor Description"
     assert response_data[3]["type"] == "Methods"
-    assert response_data[4]["description"] == "Viewer Description"
-    assert response_data[4]["type"] == "Methods"
-    assert response_data[4]["description"] == "Viewer fasdfasDescription"
 
-    assert admin_response_data[0]["description"] == "Description Description"
+    assert admin_response_data[0]["description"] == "Dataset Description"
     assert admin_response_data[0]["type"] == "Abstract"
     assert admin_response_data[1]["description"] == "Description"
     assert admin_response_data[1]["type"] == "Methods"
@@ -1469,7 +1466,7 @@ def test_get_dataset_descriptions_metadata(clients):
     assert admin_response_data[3]["description"] == "Editor Description"
     assert admin_response_data[3]["type"] == "Methods"
 
-    assert editor_response_data[0]["description"] == "Description Description"
+    assert editor_response_data[0]["description"] == "Dataset Description"
     assert editor_response_data[0]["type"] == "Abstract"
     assert editor_response_data[1]["description"] == "Description"
     assert editor_response_data[1]["type"] == "Methods"
@@ -1478,7 +1475,7 @@ def test_get_dataset_descriptions_metadata(clients):
     assert editor_response_data[3]["description"] == "Editor Description"
     assert editor_response_data[3]["type"] == "Methods"
 
-    assert viewer_response_data[0]["description"] == "Description Description"
+    assert viewer_response_data[0]["description"] == "Dataset Description"
     assert viewer_response_data[0]["type"] == "Abstract"
     assert viewer_response_data[1]["description"] == "Description"
     assert viewer_response_data[1]["type"] == "Methods"
@@ -2330,9 +2327,9 @@ def test_post_dataset_related_item_metadata(clients):
         ],
     )
 
-    assert admin_response.status_code == 200
+    assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
-    pytest.global_dataset_related_item_id_admin = admin_response_data[0]["id"]
+    pytest.global_dataset_related_item_id_admin = admin_response_data[1]["id"]
     pytest.global_dataset_related_item_contributor_id_admin = admin_response_data[1][
         "contributors"
     ][0]["id"]
@@ -2415,7 +2412,7 @@ def test_post_dataset_related_item_metadata(clients):
         ],
     )
 
-    assert editor_response.status_code == 200
+    assert editor_response.status_code == 201
     editor_response_data = json.loads(editor_response.data)
     pytest.global_dataset_related_item_id_editor = editor_response_data[2]["id"]
     pytest.global_dataset_related_item_contributor_id_editor = editor_response_data[2][
@@ -2424,10 +2421,10 @@ def test_post_dataset_related_item_metadata(clients):
     pytest.global_dataset_related_item_creator_id_editor = editor_response_data[2][
         "creators"
     ][0]["id"]
-    pytest.global_related_item_identifier_id_editor = editor_response_data[2][
+    pytest.global_dataset_related_item_identifier_id_editor = editor_response_data[2][
         "identifiers"
     ][0]["id"]
-    pytest.global_related_item_title_id_editor = editor_response_data[2]["titles"][0][
+    pytest.global_dataset_related_item_title_id_editor = editor_response_data[2]["titles"][0][
         "id"
     ]
 
