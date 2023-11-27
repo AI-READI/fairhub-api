@@ -72,6 +72,14 @@ pytest.global_related_item_identifier_id_editor = ""
 pytest.global_related_item_title_id_admin = ""
 pytest.global_related_item_title_id_editor = ""
 
+pytest.global_dataset_related_item_identifier_id_admin = ""
+pytest.global_dataset_related_item_title_id_admin = ""
+pytest.global_dataset_related_item_contributor_id_admin = ""
+pytest.global_dataset_related_item_id_admin = ""
+pytest.global_dataset_related_item_contributor_id_editor = ""
+pytest.global_dataset_description_id_admin = ""
+pytest.global_dataset_description_id_editor = ""
+
 # Dataset variables use for testing
 pytest.global_dataset_id = ""
 pytest.global_dataset_version_id = ""

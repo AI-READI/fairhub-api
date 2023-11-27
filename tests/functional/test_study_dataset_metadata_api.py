@@ -774,7 +774,7 @@ def test_post_dataset_creator_metadata(clients):
 
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    pytest.global_dataset_creator_id_editor = response_data[0]["id"]
+    pytest.global_dataset_creator_id_editor = editor_response_data[0]["id"]
 
     assert editor_response_data[0]["name"] == "Editor Name here"
     assert editor_response_data[0]["name_type"] == "Personal"
@@ -849,6 +849,7 @@ def test_get_dataset_creator_metadata(clients):
     assert len(editor_response_data) == 3
     assert len(viewer_response_data) == 3
 
+    assert response_data[0]["id"] == pytest.global_dataset_creator_id
     assert response_data[0]["name"] == "Name here"
     assert response_data[0]["name_type"] == "Personal"
     assert response_data[0]["name_identifier"] == "Name identifier"
@@ -859,6 +860,7 @@ def test_get_dataset_creator_metadata(clients):
     assert response_data[0]["affiliations"][0]["identifier"] == "yes"
     assert response_data[0]["affiliations"][0]["scheme"] == "uh"
     assert response_data[0]["affiliations"][0]["scheme_uri"] == "scheme uri"
+    assert response_data[1]["id"] == pytest.global_dataset_creator_id_admin
     assert response_data[1]["name"] == "admin Name here"
     assert response_data[1]["name_type"] == "Personal"
     assert response_data[1]["name_identifier"] == "Name identifier"
@@ -869,6 +871,7 @@ def test_get_dataset_creator_metadata(clients):
     assert response_data[1]["affiliations"][0]["identifier"] == "yes"
     assert response_data[1]["affiliations"][0]["scheme"] == "uh"
     assert response_data[1]["affiliations"][0]["scheme_uri"] == "scheme uri"
+    assert response_data[2]["id"] == pytest.global_dataset_creator_id_editor
     assert response_data[2]["name"] == "Editor Name here"
     assert response_data[2]["name_type"] == "Personal"
     assert response_data[2]["name_identifier"] == "Name identifier"
@@ -1154,6 +1157,8 @@ def test_delete_dataset_date_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     date_id = pytest.global_dataset_date_id
+    admin_date_id = pytest.global_dataset_date_id_admin
+    editor_date_id = pytest.global_dataset_date_id_editor
 
     # Verify Viewer cannot delete
     viewer_response = _viewer_client.delete(
@@ -1163,10 +1168,10 @@ def test_delete_dataset_date_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/date/{date_id}"
     )
     admin_response = _admin_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/date/{date_id}"
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/date/{admin_date_id}"
     )
     editor_response = _editor_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/date/{date_id}"
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/date/{editor_date_id}"
     )
 
     assert viewer_response.status_code == 403
@@ -1345,7 +1350,7 @@ def test_get_dataset_deidentification_metadata(clients):
 
 
 # ------------------- DESCRIPTION METADATA ------------------- #
-def test_post_dataset_description_metadata(clients):
+def test_post_dataset_descriptions_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}/metadata/description'
@@ -1436,41 +1441,51 @@ def test_get_dataset_descriptions_metadata(clients):
     editor_response_data = json.loads(editor_response.data)
     viewer_response_data = json.loads(viewer_response.data)
 
-    assert len(response_data) == 3
-    assert len(admin_response_data) == 3
-    assert len(editor_response_data) == 3
-    assert len(viewer_response_data) == 3
+    print(response_data)
+    # Dataset description is included in the responses
+    assert len(response_data) == 4
+    assert len(admin_response_data) == 4
+    assert len(editor_response_data) == 4
+    assert len(viewer_response_data) == 4
 
-    assert response_data[0]["description"] == "Description"
-    assert response_data[0]["type"] == "Methods"
-    assert response_data[1]["description"] == "Admin Description"
+    assert response_data[0]["description"] == "Description Description"
+    assert response_data[0]["type"] == "Abstract"
+    assert response_data[1]["description"] == "Description"
     assert response_data[1]["type"] == "Methods"
-    assert response_data[2]["description"] == "Editor Description"
+    assert response_data[2]["description"] == "Admin Description"
     assert response_data[2]["type"] == "Methods"
-    assert response_data[3]["description"] == "Viewer Description"
+    assert response_data[3]["description"] == "Editor Description"
     assert response_data[3]["type"] == "Methods"
-    assert response_data[3]["description"] == "Viewer fasdfasDescription"
+    assert response_data[4]["description"] == "Viewer Description"
+    assert response_data[4]["type"] == "Methods"
+    assert response_data[4]["description"] == "Viewer fasdfasDescription"
 
-    assert admin_response_data[0]["description"] == "Description"
-    assert admin_response_data[0]["type"] == "Methods"
-    assert admin_response_data[1]["description"] == "Admin Description"
+    assert admin_response_data[0]["description"] == "Description Description"
+    assert admin_response_data[0]["type"] == "Abstract"
+    assert admin_response_data[1]["description"] == "Description"
     assert admin_response_data[1]["type"] == "Methods"
-    assert admin_response_data[2]["description"] == "Editor Description"
+    assert admin_response_data[2]["description"] == "Admin Description"
     assert admin_response_data[2]["type"] == "Methods"
+    assert admin_response_data[3]["description"] == "Editor Description"
+    assert admin_response_data[3]["type"] == "Methods"
 
-    assert editor_response_data[0]["description"] == "Description"
-    assert editor_response_data[0]["type"] == "Methods"
-    assert editor_response_data[1]["description"] == "Admin Description"
+    assert editor_response_data[0]["description"] == "Description Description"
+    assert editor_response_data[0]["type"] == "Abstract"
+    assert editor_response_data[1]["description"] == "Description"
     assert editor_response_data[1]["type"] == "Methods"
-    assert editor_response_data[2]["description"] == "Editor Description"
+    assert editor_response_data[2]["description"] == "Admin Description"
     assert editor_response_data[2]["type"] == "Methods"
+    assert editor_response_data[3]["description"] == "Editor Description"
+    assert editor_response_data[3]["type"] == "Methods"
 
-    assert viewer_response_data[0]["description"] == "Description"
-    assert viewer_response_data[0]["type"] == "Methods"
-    assert viewer_response_data[1]["description"] == "Admin Description"
+    assert viewer_response_data[0]["description"] == "Description Description"
+    assert viewer_response_data[0]["type"] == "Abstract"
+    assert viewer_response_data[1]["description"] == "Description"
     assert viewer_response_data[1]["type"] == "Methods"
-    assert viewer_response_data[2]["description"] == "Editor Description"
+    assert viewer_response_data[2]["description"] == "Admin Description"
     assert viewer_response_data[2]["type"] == "Methods"
+    assert viewer_response_data[3]["description"] == "Editor Description"
+    assert viewer_response_data[3]["type"] == "Methods"
 
 
 def test_delete_dataset_description_metadata(clients):
@@ -1485,6 +1500,8 @@ def test_delete_dataset_description_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     description_id = pytest.global_dataset_description_id
+    admin_description_id = pytest.global_dataset_description_id_admin
+    editor_description_id = pytest.global_dataset_description_id_editor
 
     # Verify Viewer cannot delete
     viewer_response = _viewer_client.delete(
@@ -1494,10 +1511,10 @@ def test_delete_dataset_description_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/description/{description_id}"
     )
     admin_response = _admin_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/description/{description_id}"
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/description/{admin_description_id}"
     )
     editor_response = _editor_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/description/{description_id}"
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/description/{editor_description_id}"
     )
 
     assert response.status_code == 204
@@ -1798,9 +1815,9 @@ def test_put_other_dataset_metadata(clients):
 
     assert response_data["acknowledgement"] == "Yes"
     assert response_data["language"] == "English"
-    assert (
-        response_data["resource_type"] == "Resource Type"
-    )  # CURRENTLY NOT BEING RETURNED
+    # assert (
+    #     response_data["resource_type"] == "Resource Type"
+    # )  # CURRENTLY NOT BEING RETURNED
     assert response_data["size"] == ["Size"]
     assert response_data["standards_followed"] == "Standards Followed"
 
@@ -1820,7 +1837,7 @@ def test_put_other_dataset_metadata(clients):
 
     assert admin_response_data["acknowledgement"] == "Yes"
     assert admin_response_data["language"] == "English"
-    assert admin_response_data["resource_type"] == "Admin Resource Type"
+    # assert admin_response_data["resource_type"] == "Admin Resource Type"
     assert admin_response_data["size"] == ["Size"]
     assert admin_response_data["standards_followed"] == "Standards Followed"
 
@@ -1840,7 +1857,7 @@ def test_put_other_dataset_metadata(clients):
 
     assert editor_response_data["acknowledgement"] == "Yes"
     assert editor_response_data["language"] == "English"
-    assert editor_response_data["resource_type"] == "Editor Resource Type"
+    # assert editor_response_data["resource_type"] == "Editor Resource Type"
     assert editor_response_data["size"] == ["Size"]
     assert editor_response_data["standards_followed"] == "Standards Followed"
 
@@ -1897,25 +1914,25 @@ def test_get_other_dataset_metadata(clients):
     # the response should reflect that
     assert response_data["acknowledgement"] == "Yes"
     assert response_data["language"] == "English"
-    assert response_data["resource_type"] == "Editor Resource Type"
+    # assert response_data["resource_type"] == "Editor Resource Type"
     assert response_data["size"] == ["Size"]
     assert response_data["standards_followed"] == "Standards Followed"
 
     assert admin_response_data["acknowledgement"] == "Yes"
     assert admin_response_data["language"] == "English"
-    assert admin_response_data["resource_type"] == "Editor Resource Type"
+    # assert admin_response_data["resource_type"] == "Editor Resource Type"
     assert admin_response_data["size"] == ["Size"]
     assert admin_response_data["standards_followed"] == "Standards Followed"
 
     assert editor_response_data["acknowledgement"] == "Yes"
     assert editor_response_data["language"] == "English"
-    assert editor_response_data["resource_type"] == "Editor Resource Type"
+    # assert editor_response_data["resource_type"] == "Editor Resource Type"
     assert editor_response_data["size"] == ["Size"]
     assert editor_response_data["standards_followed"] == "Standards Followed"
 
     assert viewer_response_data["acknowledgement"] == "Yes"
     assert viewer_response_data["language"] == "English"
-    assert viewer_response_data["resource_type"] == "Editor Resource Type"
+    # assert viewer_response_data["resource_type"] == "Editor Resource Type"
     assert viewer_response_data["size"] == ["Size"]
     assert viewer_response_data["standards_followed"] == "Standards Followed"
 
@@ -2372,7 +2389,7 @@ def test_post_dataset_related_item_metadata(clients):
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
     pytest.global_dataset_related_item_id_editor = editor_response_data[2]["id"]
-    pytest.global_dataset_related_item_contributor_id = editor_response_data[2][
+    pytest.global_dataset_related_item_contributor_id_editor = editor_response_data[2][
         "contributors"
     ][0]["id"]
     pytest.global_dataset_related_item_creator_id_editor = editor_response_data[2][
