@@ -51,7 +51,7 @@ def test_post_arm_metadata(clients):
         ],
     )
 
-    assert admin_response.status_code == 200
+    assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
     pytest.global_admin_arm_id_admin = admin_response_data["arms"][1]["id"]
 
@@ -69,7 +69,7 @@ def test_post_arm_metadata(clients):
         ],
     )
 
-    assert editor_response.status_code == 200
+    assert editor_response.status_code == 201
     editor_response_data = json.loads(editor_response.data)
     pytest.global_editor_arm_id_editor = editor_response_data["arms"][2]["id"]
 
@@ -190,7 +190,7 @@ def test_post_available_ipd_metadata(clients):
         ],
     )
 
-    assert admin_response.status_code == 200
+    assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
     pytest.global_available_ipd_id_admin = admin_response_data[0]["id"]
 
@@ -211,7 +211,7 @@ def test_post_available_ipd_metadata(clients):
         ],
     )
 
-    assert editor_response.status_code == 200
+    assert editor_response.status_code == 201
     editor_response_data = json.loads(editor_response.data)
     pytest.global_available_ipd_id_editor = editor_response_data[0]["id"]
 
@@ -336,7 +336,7 @@ def test_post_cc_metadata(clients):
         ],
     )
 
-    assert admin_response.status_code == 200
+    assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
     pytest.global_admin_cc_id_admin = admin_response_data[0]["id"]
 
@@ -362,7 +362,7 @@ def test_post_cc_metadata(clients):
         ],
     )
 
-    assert editor_response.status_code == 200
+    assert editor_response.status_code == 201
     editor_response_data = json.loads(editor_response.data)
     pytest.global_editor_cc_id_editor = editor_response_data[0]["id"]
 
@@ -1128,7 +1128,7 @@ def test_post_identification_metadata(clients):
         },
     )
 
-    assert admin_response.status_code == 200
+    assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
     print("ASD:LKJAS:DLKJ:ALSKJD:LKASJD:LKJTRERWERWERWKLEJRKL")
     print(admin_response_data)
@@ -1164,7 +1164,7 @@ def test_post_identification_metadata(clients):
         },
     )
 
-    assert editor_response.status_code == 200
+    assert editor_response.status_code == 201
     editor_response_data = json.loads(editor_response.data)
     pytest.global_identification_id_editor = editor_response_data["secondary"][2]["id"]
 
@@ -1306,7 +1306,7 @@ def test_post_intervention_metadata(clients):
         ],
     )
 
-    assert admin_response.status_code == 200
+    assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
     pytest.global_intervention_id = response_data[0]["id"]
 
@@ -1329,7 +1329,7 @@ def test_post_intervention_metadata(clients):
         ],
     )
 
-    assert editor_response.status_code == 200
+    assert editor_response.status_code == 201
     editor_response_data = json.loads(editor_response.data)
     pytest.global_intervention_id_editor = response_data[0]["id"]
 
@@ -1526,7 +1526,7 @@ def test_post_link_metadata(clients):
         json=[{"url": "admin-google.com", "title": "admin-google link"}],
     )
 
-    assert admin_response.status_code == 200
+    assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
     pytest.global_link_id_admin = admin_response_data[0]["id"]
 
@@ -1538,7 +1538,7 @@ def test_post_link_metadata(clients):
         json=[{"url": "editor-google.com", "title": "editor-google link"}],
     )
 
-    assert editor_response.status_code == 200
+    assert editor_response.status_code == 201
     editor_response_data = json.loads(editor_response.data)
     pytest.global_link_id_editor = editor_response_data[0]["id"]
 
@@ -1651,7 +1651,7 @@ def test_post_location_metadata(clients):
         ],
     )
 
-    assert admin_response.status_code == 200
+    assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
     pytest.global_location_id_admin = admin_response_data[0]["id"]
 
@@ -1676,7 +1676,7 @@ def test_post_location_metadata(clients):
         ],
     )
 
-    assert editor_response.status_code == 200
+    assert editor_response.status_code == 201
     editor_response_data = json.loads(editor_response.data)
     pytest.global_location_id_editor = editor_response_data[0]["id"]
 
@@ -1877,7 +1877,7 @@ def test_post_overall_official_metadata(clients):
         ],
     )
 
-    assert admin_response.status_code == 200
+    assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
     pytest.global_overall_official_id_admin = admin_response_data[0]["id"]
 
@@ -1892,7 +1892,7 @@ def test_post_overall_official_metadata(clients):
         ],
     )
 
-    assert editor_response.status_code == 200
+    assert editor_response.status_code == 201
     editor_response_data = json.loads(editor_response.data)
     pytest.global_overall_official_id_editor = editor_response_data[0]["id"]
 
@@ -2066,7 +2066,7 @@ def test_post_reference_metadata(clients):
         ],
     )
 
-    assert admin_response.status_code == 200
+    assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
     pytest.global_reference_id_admin = admin_response_data[0]["id"]
 
@@ -2085,7 +2085,7 @@ def test_post_reference_metadata(clients):
         ],
     )
 
-    assert editor_response.status_code == 200
+    assert editor_response.status_code == 201
     editor_response_data = json.loads(editor_response.data)
     pytest.global_reference_id_editor = editor_response_data[0]["id"]
 
@@ -2350,7 +2350,7 @@ def test_put_status_metadata(clients):
         json={
             "overall_status": "Withdrawn",
             "why_stopped": "editor-test",
-            "start_date": "start date",
+            "start_date": "2023-11-15 00:00:00",
             "start_date_type": "Actual",
             "completion_date": "completion date",
             "completion_date_type": "Actual",
@@ -2362,7 +2362,7 @@ def test_put_status_metadata(clients):
 
     assert editor_response_data["overall_status"] == "Withdrawn"
     assert editor_response_data["why_stopped"] == "editor-test"
-    assert editor_response_data["start_date"] == "start date"
+    assert editor_response_data["start_date"] == "2023-11-15 00:00:00"
     assert editor_response_data["start_date_type"] == "Actual"
     assert editor_response_data["completion_date"] == "completion date"
     assert editor_response_data["completion_date_type"] == "Actual"

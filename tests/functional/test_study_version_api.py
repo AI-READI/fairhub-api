@@ -5,14 +5,13 @@ import json
 import pytest
 
 # ------------------- VERSION ADD ------------------- #
-
-
-def test_get_version_study_metadata(_logged_in_client):
+def test_get_version_study_metadata(clients):
     """
     Given a Flask application configured for testing
     WHEN the /study/{study_id}/dataset/{dataset_id}/version/{version_id}/study-metadata endpoint is requested (GET)
     THEN check that the response is valid and retrieves the design metadata
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id  # type: ignore
     version_id = pytest.global_dataset_version_id  # type: ignore
@@ -142,8 +141,8 @@ def test_get_version_study_metadata(_logged_in_client):
     assert response_data["references"][0]["identifier"] == "reference identifier"
     assert response_data["references"][0]["citation"] == "reference citation"
 
-    assert response_data["description"]["brief_summary"] == "brief_summary"
-    assert response_data["design"]["design_allocation"] == "dfasdfasd"
+    assert response_data["description"]["brief_summary"] == "editor-brief_summary"
+    assert response_data["design"]["design_allocation"] == "editor-dfasdfasd"
 
     assert response_data["design"]["study_type"] == "Interventional"
     assert response_data["design"]["design_intervention_model"] == "Treatment"
@@ -174,12 +173,17 @@ def test_get_version_study_metadata(_logged_in_client):
     assert response_data["status"]["overall_status"] == "Withdrawn"
     assert response_data["status"]["start_date"] == "2023-11-15 00:00:00"
     assert (
-        response_data["sponsors"]["responsible_party_investigator_name"] == "party name"
+        response_data["sponsors"]["responsible_party_investigator_name"] == "editor sponsor name"
     )
     assert response_data["sponsors"]["responsible_party_type"] == "Sponsor"
-    assert response_data["sponsors"]["lead_sponsor_name"] == "sponsor name"
-    assert response_data["collaborators"] == ["collaborator1123"]
-    assert response_data["conditions"] == ["c"]
+    assert response_data["sponsors"]["lead_sponsor_name"] == "editor sponsor name"
+    assert response_data["collaborators"] == ["editor-collaborator1123"]
+    assert response_data["conditions"] == [
+        "true",
+        "conditions editor",
+        "keywords editor",
+        "1"
+    ]
 
     assert response_data["ipd_sharing"]["ipd_sharing"] == "Yes"
     assert response_data["ipd_sharing"]["ipd_sharing_info_type_list"] == [
@@ -190,12 +194,13 @@ def test_get_version_study_metadata(_logged_in_client):
     assert response_data["oversight"] is True
 
 
-def test_get_version_dataset_metadata(_logged_in_client):
+def test_get_version_dataset_metadata(clients):
     """
     Given a Flask application configured for testing
     WHEN the '/study/<study_id>/dataset/<dataset_id>/version/<version_id>/dataset-metadata' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the design metadata
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id  # type: ignore
     version_id = pytest.global_dataset_version_id  # type: ignore
@@ -346,17 +351,17 @@ def test_get_version_dataset_metadata(_logged_in_client):
     assert response_data["dates"][0]["type"] == "Type"
     assert response_data["creators"][0]["name"] == "Name here"
     assert response_data["creators"][0]["name_type"] == "Personal"
-    assert response_data["funders"][0]["name"] == "Name"
+    assert response_data["funders"][0]["name"] == "Admin Name"
     assert response_data["funders"][0]["identifier"] == "Identifier"
     assert response_data["rights"][0]["identifier"] == "Identifier"
     assert response_data["rights"][0]["rights"] == "Rights"
     assert response_data["subjects"][0]["subject"] == "Subject"
     assert response_data["about"]["language"] == "English"
 
-    assert response_data["about"]["resource_type"] == "Resource Type"
+    assert response_data["about"]["resource_type"] == "Editor Resource Type"
     assert response_data["about"]["size"] == ["Size"]
-    assert response_data["access"]["type"] == "type"
-    assert response_data["access"]["description"] == "description"
+    assert response_data["access"]["type"] == "editor type"
+    assert response_data["access"]["description"] == "editor description"
     assert response_data["consent"]["noncommercial"] is True
     assert response_data["consent"]["geog_restrict"] is True
     assert response_data["consent"]["research_type"] is True
@@ -365,7 +370,7 @@ def test_get_version_dataset_metadata(_logged_in_client):
     assert response_data["publisher"]["publisher"] == "Publisher"
     assert (
         response_data["publisher"]["managing_organization_name"]
-        == "Managing Organization Name"
+        == "Managing Editor Organization Name"
     )
 
     assert response_data["identifiers"][0]["identifier"] == "identifier test"
@@ -391,12 +396,13 @@ def test_get_version_dataset_metadata(_logged_in_client):
     assert response_data["related_items"][0]["type"] == "Type"
 
 
-def test_get_version_readme(_logged_in_client):
+def test_get_version_readme(clients):
     """
     Given a Flask application configured for testing
     WHEN the '/study/<study_id>/dataset/<dataset_id>/version/<version_id>/readme' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the design metadata
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id  # type: ignore
     version_id = pytest.global_dataset_version_id  # type: ignore
@@ -408,13 +414,14 @@ def test_get_version_readme(_logged_in_client):
     assert response.status_code == 200
 
 
-def test_put_version_readme(_logged_in_client):
+def test_put_version_readme(clients):
     """
     Given a Flask application configured for testing
     WHEN the '/study/<study_id>/dataset/<dataset_id>/version/<version_id>/readme' endpoint is requested (PUT)
     THEN check that the response is valid and retrieves the design metadata
     """
     # create a new dataset and delete it afterwards
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id  # type: ignore
     version_id = pytest.global_dataset_version_id  # type: ignore
@@ -429,13 +436,14 @@ def test_put_version_readme(_logged_in_client):
     assert response_data["readme"] == "readme test"
 
 
-def test_put_version_changelog(_logged_in_client):
+def test_put_version_changelog(clients):
     """
     Given a Flask application configured for testing
     WHEN the '/study/<study_id>/dataset/<dataset_id>/version/<version_id>/changelog' endpoint is requested (PUT)
     THEN check that the response is valid and retrieves the design metadata
     """
     # create a new dataset and delete it afterwards
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id  # type: ignore
     version_id = pytest.global_dataset_version_id  # type: ignore
@@ -449,12 +457,13 @@ def test_put_version_changelog(_logged_in_client):
     assert response_data == "changelog test"
 
 
-def test_get_version_changelog(_logged_in_client):
+def test_get_version_changelog(clients):
     """
     Given a Flask application configured for testing
     WHEN the '/study/<study_id>/dataset/<dataset_id>/version/<version_id>/changelog' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the design metadata
     """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id  # type: ignore
     version_id = pytest.global_dataset_version_id  # type: ignore

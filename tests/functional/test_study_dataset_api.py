@@ -36,7 +36,7 @@ def test_post_dataset(clients):
         },
     )
 
-    assert admin_response.status_code == 200
+    assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
     pytest.global_dataset_id_admin = admin_response_data["id"]
     assert admin_response_data["title"] == "Admin Dataset Title"
@@ -50,7 +50,7 @@ def test_post_dataset(clients):
         },
     )
 
-    assert editor_response.status_code == 200
+    assert editor_response.status_code == 201
     editor_response_data = json.loads(editor_response.data)
     pytest.global_dataset_id_editor = editor_response_data["id"]
 
@@ -253,9 +253,9 @@ def test_delete_dataset_from_study(clients):
         },
     )
 
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
+    assert response.status_code == 201
+    assert admin_response.status_code == 201
+    assert editor_response.status_code == 201
 
     response_data = json.loads(response.data)
     admin_response_data = json.loads(admin_response.data)
