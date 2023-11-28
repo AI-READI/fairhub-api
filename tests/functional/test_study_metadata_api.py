@@ -705,26 +705,6 @@ def test_get_collaborators_metadata(clients):
 
 
 # ------------------- CONDITIONS METADATA ------------------- #
-def test_get_conditions_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/conditions' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the conditions metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/conditions")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/conditions")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/conditions")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/conditions")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-
 def test_put_conditions_metadata(clients):
     """
     GIVEN a Flask application configured for testing and a study ID
@@ -787,6 +767,51 @@ def test_put_conditions_metadata(clients):
     assert editor_response_data[1] == "editor-conditions string"
     assert editor_response_data[2] == "editor-keywords string"
     assert editor_response_data[3] == "editor-size string"
+
+
+def test_get_conditions_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/conditions' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the conditions metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/conditions")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/conditions")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/conditions")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/conditions")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data[0] == "true"
+    assert response_data[1] == "editor-conditions string"
+    assert response_data[2] == "editor-keywords string"
+    assert response_data[3] == "editor-size string"
+
+    assert admin_response_data[0] == "true"
+    assert admin_response_data[1] == "editor-conditions string"
+    assert admin_response_data[2] == "editor-keywords string"
+    assert admin_response_data[3] == "editor-size string"
+
+    assert editor_response_data[0] == "true"
+    assert editor_response_data[1] == "editor-conditions string"
+    assert editor_response_data[2] == "editor-keywords string"
+    assert editor_response_data[3] == "editor-size string"
+
+    assert viewer_response_data[0] == "true"
+    assert viewer_response_data[1] == "editor-conditions string"
+    assert viewer_response_data[2] == "editor-keywords string"
+    assert viewer_response_data[3] == "editor-size string"
 
 
 # ------------------- DESCRIPTION METADATA ------------------- #
