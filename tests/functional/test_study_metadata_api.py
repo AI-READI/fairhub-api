@@ -2776,6 +2776,7 @@ def test_put_oversight_metadata(clients):
 
     assert viewer_response.status_code == 403
 
+
 def test_get_oversight_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
@@ -2807,26 +2808,6 @@ def test_get_oversight_metadata(clients):
 
 
 # ------------------- REFERENCE METADATA ------------------- #
-def test_get_reference_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/reference' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the reference metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/reference")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/reference")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/reference")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/reference")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-
 def test_post_reference_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
@@ -2905,6 +2886,71 @@ def test_post_reference_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
+
+
+def test_get_reference_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/reference' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the reference metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/reference")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/reference")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/reference")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/reference")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data[0]["identifier"] == "reference identifier"
+    assert response_data[0]["type"] == "Yes"
+    assert response_data[0]["citation"] == "reference citation"
+    assert response_data[1]["identifier"] == "admin-reference identifier"
+    assert response_data[1]["type"] == "Yes"
+    assert response_data[1]["citation"] == "admin-reference citation"
+    assert response_data[2]["identifier"] == "editor-reference identifier"
+    assert response_data[2]["type"] == "Yes"
+    assert response_data[2]["citation"] == "editor-reference citation"
+
+    assert admin_response_data[0]["identifier"] == "reference identifier"
+    assert admin_response_data[0]["type"] == "Yes"
+    assert admin_response_data[0]["citation"] == "reference citation"
+    assert admin_response_data[1]["identifier"] == "admin-reference identifier"
+    assert admin_response_data[1]["type"] == "Yes"
+    assert admin_response_data[1]["citation"] == "admin-reference citation"
+    assert admin_response_data[2]["identifier"] == "editor-reference identifier"
+    assert admin_response_data[2]["type"] == "Yes"
+    assert admin_response_data[2]["citation"] == "editor-reference citation"
+
+    assert editor_response_data[0]["identifier"] == "reference identifier"
+    assert editor_response_data[0]["type"] == "Yes"
+    assert editor_response_data[0]["citation"] == "reference citation"
+    assert editor_response_data[1]["identifier"] == "admin-reference identifier"
+    assert editor_response_data[1]["type"] == "Yes"
+    assert editor_response_data[1]["citation"] == "admin-reference citation"
+    assert editor_response_data[2]["identifier"] == "editor-reference identifier"
+    assert editor_response_data[2]["type"] == "Yes"
+    assert editor_response_data[2]["citation"] == "editor-reference citation"
+
+    assert viewer_response_data[0]["identifier"] == "reference identifier"
+    assert viewer_response_data[0]["type"] == "Yes"
+    assert viewer_response_data[0]["citation"] == "reference citation"
+    assert viewer_response_data[1]["identifier"] == "admin-reference identifier"
+    assert viewer_response_data[1]["type"] == "Yes"
+    assert viewer_response_data[1]["citation"] == "admin-reference citation"
+    assert viewer_response_data[2]["identifier"] == "editor-reference identifier"
+    assert viewer_response_data[2]["type"] == "Yes"
+    assert viewer_response_data[2]["citation"] == "editor-reference citation"
 
 
 def test_delete_reference_metadata(clients):
