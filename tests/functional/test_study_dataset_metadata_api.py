@@ -3415,6 +3415,37 @@ def test_post_dataset_title_metadata(clients):
     assert response_data[0]["title"] == "Title"
     assert response_data[0]["type"] == "Subtitle"
 
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/title",
+        json=[{"title": "Admin Title", "type": "Subtitle"}]
+    )
+
+    assert admin_response.status_code == 201
+    admin_response_data = json.loads(admin_response.data)
+    pytest.global_dataset_title_id_admin = admin_response_data[0]["id"]
+
+    assert admin_response_data[0]["title"] == "Admin Title"
+    assert admin_response_data[0]["type"] == "Subtitle"
+
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/title",
+        json=[{"title": "Editor Title", "type": "Subtitle"}]
+    )
+
+    assert editor_response.status_code == 201
+    editor_response_data = json.loads(editor_response.data)
+    pytest.global_dataset_title_id_editor = editor_response_data[0]["id"]
+
+    assert editor_response_data[0]["title"] == "Editor Title"
+    assert editor_response_data[0]["type"] == "Subtitle"
+
+    viewer_response = _viewer_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/title",
+        json=[{"title": "Viewer Title", "type": "Subtitle"}]
+    )
+
+    assert viewer_response.status_code == 403
+
 
 def test_get_dataset_title_metadata(clients):
     """
