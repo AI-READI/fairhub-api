@@ -815,26 +815,6 @@ def test_get_conditions_metadata(clients):
 
 
 # ------------------- DESCRIPTION METADATA ------------------- #
-def test_get_description_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/description' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the description metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/description")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/description")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/description")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/description")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-
 def test_put_description_metadata(clients):
     """
     GIVEN a Flask application configured for testing and a study ID
@@ -895,6 +875,43 @@ def test_put_description_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
+
+
+def test_get_description_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/description' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the description metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/description")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/description")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/description")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/description")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data["brief_summary"] == "editor-brief_summary"
+    assert response_data["detailed_description"] == "editor-detailed_description"
+
+    assert admin_response_data["brief_summary"] == "editor-brief_summary"
+    assert admin_response_data["detailed_description"] == "editor-detailed_description"
+
+    assert editor_response_data["brief_summary"] == "editor-brief_summary"
+    assert editor_response_data["detailed_description"] == "editor-detailed_description"
+
+    assert viewer_response_data["brief_summary"] == "editor-brief_summary"
+    assert viewer_response_data["detailed_description"] == "editor-detailed_description"
 
 
 # ------------------- DESIGN METADATA ------------------- #
