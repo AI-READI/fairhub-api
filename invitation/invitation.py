@@ -3,7 +3,7 @@ from flask import render_template
 import app
 
 
-def send_invitation_study(to, token, study_name):
+def send_invitation_study(to, token, study_name, role):
     accept_url = f"http://localhost:3000/auth/signup?code=${token}&email=${to}"
     msg = Message(
         subject=f"You have been invited to {study_name} invitation",
@@ -15,11 +15,12 @@ def send_invitation_study(to, token, study_name):
         token=token,
         accept_url=accept_url,
         study_name=study_name,
+        role=role
     )
     app.mail.send(msg)
 
 
-def send_access_contributors(to, study, first_name, last_name):
+def send_access_contributors(to, study, first_name, last_name, role):
     accept_url = f"http://localhost:3000/study/{study.id}/overview"
     msg = Message(
         subject=f"You have been invited to {study.title} invitation",
@@ -33,6 +34,7 @@ def send_access_contributors(to, study, first_name, last_name):
         last_name=last_name,
         study_name=study.title,
         study_id=study.id,
+        role=role
     )
     app.mail.send(msg)
 

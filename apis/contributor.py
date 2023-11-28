@@ -63,9 +63,9 @@ class AddContributor(Resource):
             return ex.args[0], 409
         model.db.session.commit()
         if user:
-            send_access_contributors(email_address, study_obj, first_name, last_name)
+            send_access_contributors(email_address, study_obj, first_name, last_name, contributor_.permission)
         else:
-            send_invitation_study(email_address, contributor_.token, study_name)
+            send_invitation_study(email_address, contributor_.token, study_name, contributor_.permission)
 
         return contributor_.to_dict(), 201
 

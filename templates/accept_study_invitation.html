@@ -39,7 +39,7 @@
     <div class="divider"></div>
     <h1>Hello!</h1>
     <div>
-        <p>We are pleased to grant you access to {{ study_name }}!</p>
+        <p>We are pleased to grant you {{ 'a' if role == "viewer" else "an"}} {{ role }} access to {{ study_name }}!</p>
         <p>Your authorization enables you to delve into this specialized
             study area and explore its curated resources.</p>
         <p class="accept-top">Please click the button to accept the invitation.</p>
