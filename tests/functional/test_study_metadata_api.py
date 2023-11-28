@@ -3159,26 +3159,6 @@ def test_get_sponsors_metadata(clients):
 
 
 # ------------------- STATUS METADATA ------------------- #
-def test_get_status_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/status' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the status metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/status")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/status")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/status")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/status")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-
 def test_put_status_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
@@ -3253,3 +3233,56 @@ def test_put_status_metadata(clients):
     assert editor_response_data["start_date_type"] == "Actual"
     assert editor_response_data["completion_date"] == "completion date"
     assert editor_response_data["completion_date_type"] == "Actual"
+
+
+def test_get_status_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/status' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the status metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/status")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/status")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/status")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/status")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data["overall_status"] == "Withdrawn"
+    assert response_data["why_stopped"] == "editor-test"
+    assert response_data["start_date"] == "2023-11-15 00:00:00"
+    assert response_data["start_date_type"] == "Actual"
+    assert response_data["completion_date"] == "completion date"
+    assert response_data["completion_date_type"] == "Actual"
+
+    assert admin_response_data["overall_status"] == "Withdrawn"
+    assert admin_response_data["why_stopped"] == "editor-test"
+    assert admin_response_data["start_date"] == "2023-11-15 00:00:00"
+    assert admin_response_data["start_date_type"] == "Actual"
+    assert admin_response_data["completion_date"] == "completion date"
+    assert admin_response_data["completion_date_type"] == "Actual"
+
+    assert editor_response_data["overall_status"] == "Withdrawn"
+    assert editor_response_data["why_stopped"] == "editor-test"
+    assert editor_response_data["start_date"] == "2023-11-15 00:00:00"
+    assert editor_response_data["start_date_type"] == "Actual"
+    assert editor_response_data["completion_date"] == "completion date"
+    assert editor_response_data["completion_date_type"] == "Actual"
+
+    assert viewer_response_data["overall_status"] == "Withdrawn"
+    assert viewer_response_data["why_stopped"] == "editor-test"
+    assert viewer_response_data["start_date"] == "2023-11-15 00:00:00"
+    assert viewer_response_data["start_date_type"] == "Actual"
+    assert viewer_response_data["completion_date"] == "completion date"
+    assert viewer_response_data["completion_date_type"] == "Actual"
