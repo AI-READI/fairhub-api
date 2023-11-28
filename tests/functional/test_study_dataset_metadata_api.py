@@ -3188,8 +3188,77 @@ def test_get_dataset_rights_metadata(clients):
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights"
     )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights"
+    )
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data[0]["identifier"] == "Identifier"
+    assert response_data[0]["identifier_scheme"] == "Identifier Scheme"
+    assert response_data[0]["rights"] == "Rights"
+    assert response_data[0]["uri"] == "URI"
+    assert response_data[1]["identifier"] == "Admin Identifier"
+    assert response_data[1]["identifier_scheme"] == "Admin Identifier Scheme"
+    assert response_data[1]["rights"] == "Admin Rights"
+    assert response_data[1]["uri"] == "Admin URI"
+    assert response_data[2]["identifier"] == "Editor Identifier"
+    assert response_data[2]["identifier_scheme"] == "Editor Identifier Scheme"
+    assert response_data[2]["rights"] == "Editor Rights"
+    assert response_data[2]["uri"] == "Editor URI"
+
+    assert admin_response_data[0]["identifier"] == "Identifier"
+    assert admin_response_data[0]["identifier_scheme"] == "Identifier Scheme"
+    assert admin_response_data[0]["rights"] == "Rights"
+    assert admin_response_data[0]["uri"] == "URI"
+    assert admin_response_data[1]["identifier"] == "Admin Identifier"
+    assert admin_response_data[1]["identifier_scheme"] == "Admin Identifier Scheme"
+    assert admin_response_data[1]["rights"] == "Admin Rights"
+    assert admin_response_data[1]["uri"] == "Admin URI"
+    assert admin_response_data[2]["identifier"] == "Editor Identifier"
+    assert admin_response_data[2]["identifier_scheme"] == "Editor Identifier Scheme"
+    assert admin_response_data[2]["rights"] == "Editor Rights"
+    assert admin_response_data[2]["uri"] == "Editor URI"
+
+    assert editor_response_data[0]["identifier"] == "Identifier"
+    assert editor_response_data[0]["identifier_scheme"] == "Identifier Scheme"
+    assert editor_response_data[0]["rights"] == "Rights"
+    assert editor_response_data[0]["uri"] == "URI"
+    assert editor_response_data[1]["identifier"] == "Admin Identifier"
+    assert editor_response_data[1]["identifier_scheme"] == "Admin Identifier Scheme"
+    assert editor_response_data[1]["rights"] == "Admin Rights"
+    assert editor_response_data[1]["uri"] == "Admin URI"
+    assert editor_response_data[2]["identifier"] == "Editor Identifier"
+    assert editor_response_data[2]["identifier_scheme"] == "Editor Identifier Scheme"
+    assert editor_response_data[2]["rights"] == "Editor Rights"
+    assert editor_response_data[2]["uri"] == "Editor URI"
+
+    assert viewer_response_data[0]["identifier"] == "Identifier"
+    assert viewer_response_data[0]["identifier_scheme"] == "Identifier Scheme"
+    assert viewer_response_data[0]["rights"] == "Rights"
+    assert viewer_response_data[0]["uri"] == "URI"
+    assert viewer_response_data[1]["identifier"] == "Admin Identifier"
+    assert viewer_response_data[1]["identifier_scheme"] == "Admin Identifier Scheme"
+    assert viewer_response_data[1]["rights"] == "Admin Rights"
+    assert viewer_response_data[1]["uri"] == "Admin URI"
+    assert viewer_response_data[2]["identifier"] == "Editor Identifier"
+    assert viewer_response_data[2]["identifier_scheme"] == "Editor Identifier Scheme"
+    assert viewer_response_data[2]["rights"] == "Editor Rights"
+    assert viewer_response_data[2]["uri"] == "Editor URI"
 
 
 def test_delete_dataset_rights_metadata(clients):
