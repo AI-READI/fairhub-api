@@ -2151,10 +2151,10 @@ def test_get_link_metadata(clients):
 
     assert editor_response_data[0]["url"] == "google.com"
     assert editor_response_data[0]["title"] == "google link"
-    assert editor_response[1]["url"] == "admin-google.com"
-    assert editor_response[1]["title"] == "admin-google link"
-    assert editor_response[2]["url"] == "editor-google.com"
-    assert editor_response[2]["title"] == "editor-google link"
+    assert editor_response_data[1]["url"] == "admin-google.com"
+    assert editor_response_data[1]["title"] == "admin-google link"
+    assert editor_response_data[2]["url"] == "editor-google.com"
+    assert editor_response_data[2]["title"] == "editor-google link"
 
 
 def test_delete_link_metadata(clients):
@@ -3122,7 +3122,7 @@ def test_get_sponsors_metadata(clients):
     viewer_response_data = json.loads(viewer_response.data)
 
     assert response_data["responsible_party_type"] == "Sponsor"
-    assert response_data["responsible_party_investigator_name"] == "editor party name"
+    assert response_data["responsible_party_investigator_name"] == "editor sponsor name"
     assert response_data["responsible_party_investigator_title"] == "editor party title"
     assert (
         response_data["responsible_party_investigator_affiliation"]
@@ -3131,7 +3131,7 @@ def test_get_sponsors_metadata(clients):
     assert response_data["lead_sponsor_name"] == "editor sponsor name"
 
     assert admin_response_data["responsible_party_type"] == "Sponsor"
-    assert admin_response_data["response_party_investigator_name"] == "editor party name"
+    assert admin_response_data["response_party_investigator_name"] == "editor sponsor name"
     assert admin_response_data["responsible_party_investigator_title"] == "editor party title"
     assert (
         admin_response_data["responsible_party_investigator_affiliation"]
@@ -3140,7 +3140,7 @@ def test_get_sponsors_metadata(clients):
     assert admin_response_data["lead_sponsor_name"] == "editor sponsor name"
 
     assert editor_response_data["responsible_party_type"] == "Sponsor"
-    assert editor_response_data["responsible_party_investigator_name"] == "editor party name"
+    assert editor_response_data["responsible_party_investigator_name"] == "editor sponsor name"
     assert editor_response_data["responsible_party_investigator_title"] == "editor party title"
     assert (
         editor_response_data["responsible_party_investigator_affiliation"]
@@ -3149,7 +3149,7 @@ def test_get_sponsors_metadata(clients):
     assert editor_response_data["lead_sponsor_name"] == "editor sponsor name"
 
     assert viewer_response_data["responsible_party_type"] == "Sponsor"
-    assert viewer_response_data["responsible_party_investigator_name"] == "editor party name"
+    assert viewer_response_data["responsible_party_investigator_name"] == "editor sponsor name"
     assert viewer_response_data["responsible_party_investigator_title"] == "editor party title"
     assert (
         viewer_response_data["responsible_party_investigator_affiliation"]
