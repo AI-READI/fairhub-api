@@ -109,11 +109,106 @@ def test_get_arm_metadata(clients):
     assert editor_response.status_code == 200
     assert viewer_response.status_code == 200
     response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
 
+    assert response_data["arms"][0]["id"] == pytest.global_arm_id
     assert response_data["arms"][0]["label"] == "Label1"
     assert response_data["arms"][0]["type"] == "Experimental"
     assert response_data["arms"][0]["description"] == "Arm Description"
     assert response_data["arms"][0]["intervention_list"] == [
+        "intervention1",
+        "intervention2",
+    ]
+    assert response_data["arms"][1]["id"] == pytest.global_admin_arm_id_admin
+    assert response_data["arms"][1]["label"] == "Admin Label"
+    assert response_data["arms"][1]["type"] == "Experimental"
+    assert response_data["arms"][1]["description"] == "Arm Description"
+    assert response_data["arms"][1]["intervention_list"] == [
+        "intervention1",
+        "intervention2",
+    ]
+    assert response_data["arms"][2]["id"] == pytest.global_editor_arm_id_editor
+    assert response_data["arms"][2]["label"] == "Editor Label"
+    assert response_data["arms"][2]["type"] == "Experimental"
+    assert response_data["arms"][2]["description"] == "Arm Description"
+    assert response_data["arms"][2]["intervention_list"] == [
+        "intervention1",
+        "intervention2",
+    ]
+
+    assert admin_response_data["arms"][0]["id"] == pytest.global_arm_id
+    assert admin_response_data["arms"][0]["label"] == "Label1"
+    assert admin_response_data["arms"][0]["type"] == "Experimental"
+    assert admin_response_data["arms"][0]["description"] == "Arm Description"
+    assert admin_response_data["arms"][0]["intervention_list"] == [
+        "intervention1",
+        "intervention2",
+    ]
+    assert admin_response_data["arms"][1]["id"] == pytest.global_admin_arm_id_admin
+    assert admin_response_data["arms"][1]["label"] == "Admin Label"
+    assert admin_response_data["arms"][1]["type"] == "Experimental"
+    assert admin_response_data["arms"][1]["description"] == "Arm Description"
+    assert admin_response_data["arms"][1]["intervention_list"] == [
+        "intervention1",
+        "intervention2",
+    ]
+    assert admin_response_data["arms"][2]["id"] == pytest.global_editor_arm_id_editor
+    assert admin_response_data["arms"][2]["label"] == "Editor Label"
+    assert admin_response_data["arms"][2]["type"] == "Experimental"
+    assert admin_response_data["arms"][2]["description"] == "Arm Description"
+    assert admin_response_data["arms"][2]["intervention_list"] == [
+        "intervention1",
+        "intervention2",
+    ]
+
+    assert editor_response_data["arms"][0]["id"] == pytest.global_arm_id
+    assert editor_response_data["arms"][0]["label"] == "Label1"
+    assert editor_response_data["arms"][0]["type"] == "Experimental"
+    assert editor_response_data["arms"][0]["description"] == "Arm Description"
+    assert editor_response_data["arms"][0]["intervention_list"] == [
+        "intervention1",
+        "intervention2",
+    ]
+    assert editor_response_data["arms"][1]["id"] == pytest.global_admin_arm_id_admin
+    assert editor_response_data["arms"][1]["label"] == "Admin Label"
+    assert editor_response_data["arms"][1]["type"] == "Experimental"
+    assert editor_response_data["arms"][1]["description"] == "Arm Description"
+    assert editor_response_data["arms"][1]["intervention_list"] == [
+        "intervention1",
+        "intervention2",
+    ]
+    assert editor_response_data["arms"][2]["id"] == pytest.global_editor_arm_id_editor
+    assert editor_response_data["arms"][2]["label"] == "Editor Label"
+    assert editor_response_data["arms"][2]["type"] == "Experimental"
+    assert editor_response_data["arms"][2]["description"] == "Arm Description"
+    assert editor_response_data["arms"][2]["intervention_list"] == [
+        "intervention1",
+        "intervention2",
+    ]
+
+    assert viewer_response_data["arms"][0]["id"] == pytest.global_arm_id
+    assert viewer_response_data["arms"][0]["label"] == "Label1"
+    assert viewer_response_data["arms"][0]["type"] == "Experimental"
+    assert viewer_response_data["arms"][0]["description"] == "Arm Description"
+    assert viewer_response_data["arms"][0]["intervention_list"] == [
+        "intervention1",
+        "intervention2",
+    ]
+    assert viewer_response_data["arms"][1]["id"] == pytest.global_admin_arm_id_admin
+    assert viewer_response_data["arms"][1]["label"] == "Admin Label"
+    assert viewer_response_data["arms"][1]["type"] == "Experimental"
+    assert viewer_response_data["arms"][1]["description"] == "Arm Description"
+    assert viewer_response_data["arms"][1]["intervention_list"] == [
+        "intervention1",
+        "intervention2",
+    ]
+    assert viewer_response_data["arms"][2]["id"] == pytest.global_editor_arm_id_editor
+    assert viewer_response_data["arms"][2]["label"] == "Editor Label"
+    assert viewer_response_data["arms"][2]["type"] == "Experimental"
+    assert viewer_response_data["arms"][2]["description"] == "Arm Description"
+    assert viewer_response_data["arms"][2]["intervention_list"] == [
         "intervention1",
         "intervention2",
     ]
