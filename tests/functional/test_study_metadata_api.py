@@ -618,26 +618,6 @@ def test_delete_cc_metadata(clients):
 
 
 #  ------------------- COLLABORATORS METADATA ------------------- #
-def test_get_collaborators_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/collaborators' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the collaborators metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/collaborators")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/collaborators")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/collaborators")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/collaborators")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-
 def test_put_collaborators_metadata(clients):
     """
     GIVEN a Flask application configured for testing and a study ID
@@ -692,6 +672,36 @@ def test_put_collaborators_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
+
+
+def test_get_collaborators_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/collaborators' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the collaborators metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/collaborators")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/collaborators")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/collaborators")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/collaborators")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data[0] == "editor-collaborator1123"
+    assert admin_response_data[0] == "editor-collaborator1123"
+    assert editor_response_data[0] == "editor-collaborator1123"
+    assert viewer_response_data[0] == "editor-collaborator1123"
 
 
 # ------------------- CONDITIONS METADATA ------------------- #
