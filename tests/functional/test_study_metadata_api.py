@@ -1889,26 +1889,6 @@ def test_get_intervention_metadata(clients):
 
 
 # ------------------- IPD SHARING METADATA ------------------- #
-def test_get_ipdsharing_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/ipdsharing' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the ipdsharing metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/ipdsharing")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/ipdsharing")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/ipdsharing")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/ipdsharing")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-
 def test_put_ipdsharing_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
@@ -2006,6 +1986,71 @@ def test_put_ipdsharing_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
+
+
+def test_get_ipdsharing_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/ipdsharing' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the ipdsharing metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/ipdsharing")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/ipdsharing")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/ipdsharing")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/ipdsharing")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data["ipd_sharing"] == "Yes"
+    assert response_data["ipd_sharing_description"] == "editor-yes"
+    assert response_data["ipd_sharing_info_type_list"] == [
+        "Study Protocol",
+        "Analytical Code",
+    ]
+    assert response_data["ipd_sharing_time_frame"] == "uh"
+    assert response_data["ipd_sharing_access_criteria"] == "Study Protocol"
+    assert response_data["ipd_sharing_url"] == "1"
+
+    assert admin_response_data["ipd_sharing"] == "Yes"
+    assert admin_response_data["ipd_sharing_description"] == "editor-yes"
+    assert admin_response_data["ipd_sharing_info_type_list"] == [
+        "Study Protocol",
+        "Analytical Code",
+    ]
+    assert admin_response_data["ipd_sharing_time_frame"] == "uh"
+    assert admin_response_data["ipd_sharing_access_criteria"] == "Study Protocol"
+    assert admin_response_data["ipd_sharing_url"] == "1"
+
+    assert editor_response_data["ipd_sharing"] == "Yes"
+    assert editor_response_data["ipd_sharing_description"] == "editor-yes"
+    assert editor_response_data["ipd_sharing_info_type_list"] == [
+        "Study Protocol",
+        "Analytical Code",
+    ]
+    assert editor_response_data["ipd_sharing_time_frame"] == "uh"
+    assert editor_response_data["ipd_sharing_access_criteria"] == "Study Protocol"
+    assert editor_response_data["ipd_sharing_url"] == "1"
+
+    assert viewer_response_data["ipd_sharing"] == "Yes"
+    assert viewer_response_data["ipd_sharing_description"] == "editor-yes"
+    assert viewer_response_data["ipd_sharing_info_type_list"] == [
+        "Study Protocol",
+        "Analytical Code",
+    ]
+    assert viewer_response_data["ipd_sharing_time_frame"] == "uh"
+    assert viewer_response_data["ipd_sharing_access_criteria"] == "Study Protocol"
+    assert viewer_response_data["ipd_sharing_url"] == "1"
 
 
 # ------------------- LINK METADATA ------------------- #
