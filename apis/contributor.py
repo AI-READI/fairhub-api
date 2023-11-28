@@ -52,6 +52,7 @@ class AddContributor(Resource):
         contributor_ = None
         study_name = study_obj.title
         first_name = user.user_details.first_name if user else ""
+        last_name = user.user_details.last_name if user else ""
         try:
             if user:
                 contributor_ = study_obj.add_user_to_study(user, permission)
@@ -62,7 +63,7 @@ class AddContributor(Resource):
             return ex.args[0], 409
         model.db.session.commit()
         if user:
-            send_access_contributors(email_address, study_obj, first_name)
+            send_access_contributors(email_address, study_obj, first_name, last_name)
         else:
             send_invitation_study(email_address, contributor_.token, study_name)
 

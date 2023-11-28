@@ -24,7 +24,13 @@
             height: 7rem;
             color: rgba(0, 123, 255, 0.92);
         }
-
+        .accept-top{
+            padding-bottom: 2rem;
+        }
+        .accept-bottom{
+            padding-top: 2rem;
+            padding-bottom: 3rem;
+        }
     </style>
 </head>
 
@@ -33,14 +39,20 @@
         <div>
             <span class="iconify" data-icon="line-md:email"></span>
         </div>
-
- <h1>Hello {{ ' ' ~ first_name if first_name else '' }}!</h1>
     <div class="divider"></div>
+    <h1>Hello {{ ' ' ~ first_name if first_name else '' }}{{ ' ' ~ last_name if first_name else '' }}!</h1>
+
     <div>
-        <p>You have been invited to {{ study_name }}</p>
-        <p>Please click the button to accept the invitation.</p>
+        <p>We are pleased to grant you access to {{ study_name }}!</p>
+        <p>Your authorization enables you to delve into this specialized
+            study area and explore its curated resources.</p>
+        <p class="accept-top">Please click the button to accept the invitation.</p>
         <a href="{{ accept_url }}" class="button">Accept Invitation</a>
+        <p class="accept-bottom">Need assistance or have questions? Our dedicated support team is here to help. Reach out to us at <a
+                href="mailto:help@fairhub.io">help@fairhub.io</a> for prompt assistance.</p>
     </div>
+        <div>Sincerely,</div>
+        <div>FAIRhub team</div>
     </div>
     <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
 </body>
