@@ -3141,7 +3141,7 @@ def test_post_dataset_rights_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights",
         json=[
             {
-                "identifer": "Editor Identifier",
+                "identifier": "Editor Identifier",
                 "identifier_scheme": "Editor Identifier Scheme",
                 "rights": "Editor Rights",
                 "uri": "Editor URI",
@@ -3207,6 +3207,9 @@ def test_get_dataset_rights_metadata(clients):
     admin_response_data = json.loads(admin_response.data)
     editor_response_data = json.loads(editor_response.data)
     viewer_response_data = json.loads(viewer_response.data)
+    print("ASDKJL:KJ --------------------------------------")
+    print(response_data)
+    print("ASDKJL:KJ --------------------------------------")
 
     assert response_data[0]["identifier"] == "Identifier"
     assert response_data[0]["identifier_scheme"] == "Identifier Scheme"
@@ -3348,12 +3351,26 @@ def test_delete_dataset_subject_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     subject_id = pytest.global_dataset_subject_id
+    admin_sub_id = pytest.global_dataset_subject_id_admin
+    editor_sub_id = pytest.global_dataset_subject_id_editor
 
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/subject/{subject_id}"
+    )
     response = _logged_in_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/subject/{subject_id}"
     )
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/subject/{admin_sub_id}"
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/subject/{editor_sub_id}"
+    )
 
+    assert viewer_response.status_code == 403
     assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 # ------------------- TITLE METADATA ------------------- #

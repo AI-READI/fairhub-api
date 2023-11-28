@@ -355,8 +355,8 @@ def test_get_version_dataset_metadata(clients):
     assert response_data["creators"][0]["name_type"] == "Personal"
     assert response_data["funders"][0]["name"] == "Admin Name"
     assert response_data["funders"][0]["identifier"] == "Identifier"
-    assert response_data["rights"][0]["identifier"] == "Identifier"
-    assert response_data["rights"][0]["rights"] == "Rights"
+    assert response_data["rights"][0]["identifier"] == "Admin Identifier"
+    assert response_data["rights"][0]["rights"] == "Admin Rights"
     assert response_data["subjects"][0]["subject"] == "Subject"
     assert response_data["about"]["language"] == "English"
 
