@@ -1595,7 +1595,7 @@ def test_get_identification_metadata(clients):
     editor_response_data = json.loads(editor_response.data)
     viewer_response_data = json.loads(viewer_response.data)
 
-    assert response_data["primary"]["identifier"] == "editor first"
+    assert response_data["primary"]["identifier"] == "editor-first"
     assert response_data["primary"]["identifier_type"] == "test"
     assert response_data["primary"]["identifier_domain"] == "domain"
     assert response_data["primary"]["identifier_link"] == "link"
@@ -1612,7 +1612,7 @@ def test_get_identification_metadata(clients):
     assert response_data["secondary"][2]["identifier_domain"] == "dodfasdfmain"
     assert response_data["secondary"][2]["identifier_link"] == "link"
 
-    assert admin_response_data["primary"]["identifier"] == "editor first"
+    assert admin_response_data["primary"]["identifier"] == "editor-first"
     assert admin_response_data["primary"]["identifier_type"] == "test"
     assert admin_response_data["primary"]["identifier_domain"] == "domain"
     assert admin_response_data["primary"]["identifier_link"] == "link"
@@ -1629,7 +1629,7 @@ def test_get_identification_metadata(clients):
     assert admin_response_data["secondary"][2]["identifier_domain"] == "dodfasdfmain"
     assert admin_response_data["secondary"][2]["identifier_link"] == "link"
 
-    assert editor_response_data["primary"]["identifier"] == "editor first"
+    assert editor_response_data["primary"]["identifier"] == "editor-first"
     assert editor_response_data["primary"]["identifier_type"] == "test"
     assert editor_response_data["primary"]["identifier_domain"] == "domain"
     assert editor_response_data["primary"]["identifier_link"] == "link"
@@ -1646,7 +1646,7 @@ def test_get_identification_metadata(clients):
     assert editor_response_data["secondary"][2]["identifier_domain"] == "dodfasdfmain"
     assert editor_response_data["secondary"][2]["identifier_link"] == "link"
 
-    assert viewer_response_data["primary"]["identifier"] == "editor first"
+    assert viewer_response_data["primary"]["identifier"] == "editor-first"
     assert viewer_response_data["primary"]["identifier_type"] == "test"
     assert viewer_response_data["primary"]["identifier_domain"] == "domain"
     assert viewer_response_data["primary"]["identifier_link"] == "link"
