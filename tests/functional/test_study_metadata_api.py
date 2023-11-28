@@ -2054,30 +2054,6 @@ def test_get_ipdsharing_metadata(clients):
 
 
 # ------------------- LINK METADATA ------------------- #
-def test_get_link_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/link' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the link metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/link")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/link")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/link")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/link")
-    print("viewer response below39584203984209384")
-    viewer_response_data = json.loads(viewer_response.data)
-    print(viewer_response_data)
-    print("viewer response below39584203984209384")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-
 def test_post_link_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
@@ -2129,6 +2105,56 @@ def test_post_link_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
+
+
+def test_get_link_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/link' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the link metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/link")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/link")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/link")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/link")
+    print("viewer response below39584203984209384")
+    viewer_response_data = json.loads(viewer_response.data)
+    print(viewer_response_data)
+    print("viewer response below39584203984209384")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data[0]["url"] == "google.com"
+    assert response_data[0]["title"] == "google link"
+    assert response_data[1]["url"] == "admin-google.com"
+    assert response_data[1]["title"] == "admin-google link"
+    assert response_data[2]["url"] == "editor-google.com"
+    assert response_data[2]["title"] == "editor-google link"
+
+    assert admin_response_data[0]["url"] == "google.com"
+    assert admin_response_data[0]["title"] == "google link"
+    assert admin_response_data[1]["url"] == "admin-google.com"
+    assert admin_response_data[1]["title"] == "admin-google link"
+    assert admin_response_data[2]["url"] == "editor-google.com"
+    assert admin_response_data[2]["title"] == "editor-google link"
+
+    assert editor_response_data[0]["url"] == "google.com"
+    assert editor_response_data[0]["title"] == "google link"
+    assert editor_response[1]["url"] == "admin-google.com"
+    assert editor_response[1]["title"] == "admin-google link"
+    assert editor_response[2]["url"] == "editor-google.com"
+    assert editor_response[2]["title"] == "editor-google link"
 
 
 def test_delete_link_metadata(clients):
