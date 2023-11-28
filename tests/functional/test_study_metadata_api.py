@@ -2649,10 +2649,10 @@ def test_get_oversight_metadata(clients):
     editor_response_data = json.loads(editor_response.data)
     viewer_response_data = json.loads(viewer_response.data)
 
-    assert response_data is True
-    assert admin_response_data is True
-    assert editor_response_data is True
-    assert viewer_response_data is True
+    assert response_data["oversight"] is True
+    assert admin_response_data["oversight"] is True
+    assert editor_response_data["oversight"] is True
+    assert viewer_response_data["oversight"] is True
 
 
 # ------------------- REFERENCE METADATA ------------------- #
@@ -2971,37 +2971,37 @@ def test_get_sponsors_metadata(clients):
 
     assert response_data["responsible_party_type"] == "Sponsor"
     assert response_data["responsible_party_investigator_name"] == "editor sponsor name"
-    assert response_data["responsible_party_investigator_title"] == "editor party title"
+    assert response_data["responsible_party_investigator_title"] == "editor sponsor title"
     assert (
         response_data["responsible_party_investigator_affiliation"]
-        == "editor party affiliation"
+        == "editor sponsor affiliation"
     )
     assert response_data["lead_sponsor_name"] == "editor sponsor name"
 
     assert admin_response_data["responsible_party_type"] == "Sponsor"
-    assert admin_response_data["response_party_investigator_name"] == "editor sponsor name"
-    assert admin_response_data["responsible_party_investigator_title"] == "editor party title"
+    assert admin_response_data["responsible_party_investigator_name"] == "editor sponsor name"
+    assert admin_response_data["responsible_party_investigator_title"] == "editor sponsor title"
     assert (
         admin_response_data["responsible_party_investigator_affiliation"]
-        == "editor party affiliation"
+        == "editor sponsor affiliation"
     )
     assert admin_response_data["lead_sponsor_name"] == "editor sponsor name"
 
     assert editor_response_data["responsible_party_type"] == "Sponsor"
     assert editor_response_data["responsible_party_investigator_name"] == "editor sponsor name"
-    assert editor_response_data["responsible_party_investigator_title"] == "editor party title"
+    assert editor_response_data["responsible_party_investigator_title"] == "editor sponsor title"
     assert (
         editor_response_data["responsible_party_investigator_affiliation"]
-        == "editor party affiliation"
+        == "editor sponsor affiliation"
     )
     assert editor_response_data["lead_sponsor_name"] == "editor sponsor name"
 
     assert viewer_response_data["responsible_party_type"] == "Sponsor"
     assert viewer_response_data["responsible_party_investigator_name"] == "editor sponsor name"
-    assert viewer_response_data["responsible_party_investigator_title"] == "editor party title"
+    assert viewer_response_data["responsible_party_investigator_title"] == "editor sponsor title"
     assert (
         viewer_response_data["responsible_party_investigator_affiliation"]
-        == "editor party affiliation"
+        == "editor sponsor affiliation"
     )
     assert viewer_response_data["lead_sponsor_name"] == "editor sponsor name"
 

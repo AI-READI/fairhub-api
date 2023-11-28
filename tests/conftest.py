@@ -68,6 +68,8 @@ pytest.global_related_item_identifier_id_admin = ""
 pytest.global_related_item_identifier_id_editor = ""
 pytest.global_related_item_title_id_admin = ""
 pytest.global_related_item_title_id_editor = ""
+pytest.global_dataset_rights_id_admin = ""
+pytest.global_dataset_rights_id_editor = ""
 
 pytest.global_dataset_related_item_identifier_id_admin = ""
 pytest.global_dataset_related_item_title_id_admin = ""

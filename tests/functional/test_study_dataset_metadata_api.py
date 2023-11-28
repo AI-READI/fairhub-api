@@ -3116,6 +3116,62 @@ def test_post_dataset_rights_metadata(clients):
     assert response_data[0]["rights"] == "Rights"
     assert response_data[0]["uri"] == "URI"
 
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights",
+        json=[
+            {
+                "identifier": "Admin Identifier",
+                "identifier_scheme": "Admin Identifier Scheme",
+                "rights": "Admin Rights",
+                "uri": "Admin URI",
+            }
+        ]
+    )
+
+    assert admin_response.status_code == 201
+    admin_response_data = json.loads(admin_response.data)
+    pytest.global_dataset_rights_id_admin = admin_response_data[0]["id"]
+
+    assert admin_response_data[0]["identifier"] == "Admin Identifier"
+    assert admin_response_data[0]["identifier_scheme"] == "Admin Identifier Scheme"
+    assert admin_response_data[0]["rights"] == "Admin Rights"
+    assert admin_response_data[0]["uri"] == "Admin URI"
+
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights",
+        json=[
+            {
+                "identifer": "Editor Identifier",
+                "identifier_scheme": "Editor Identifier Scheme",
+                "rights": "Editor Rights",
+                "uri": "Editor URI",
+            }
+        ]
+    )
+
+    assert editor_response.status_code == 201
+    editor_response_data = json.loads(editor_response.data)
+    pytest.global_dataset_rights_id_editor = editor_response_data[0]["id"]
+
+    assert editor_response_data[0]["identifier"] == "Editor Identifier"
+    assert editor_response_data[0]["identifier_scheme"] == "Editor Identifier Scheme"
+    assert editor_response_data[0]["rights"] == "Editor Rights"
+    assert editor_response_data[0]["uri"] == "Editor URI"
+
+    viewer_response = _viewer_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights",
+        json=[
+            {
+                "identifier": "Viewer Identifier",
+                "identifier_scheme": "Viewer Identifier Scheme",
+                "rights": "Viewer Rights",
+                "uri": "Viewer URI",
+            }
+        ]
+    )
+
+    assert viewer_response.status_code == 403
+
 
 def test_get_dataset_rights_metadata(clients):
     """

@@ -182,9 +182,9 @@ def test_get_version_study_metadata(clients):
     assert response_data["collaborators"] == ["editor-collaborator1123"]
     assert response_data["conditions"] == [
         "true",
-        "conditions editor",
-        "keywords editor",
-        "1",
+        "editor-conditions string",
+        "editor-keywords string",
+        "editor-size string",
     ]
 
     assert response_data["ipd_sharing"]["ipd_sharing"] == "Yes"
