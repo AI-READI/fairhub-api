@@ -3319,6 +3319,23 @@ def test_post_dataset_subjects_metadata(clients):
     assert response_data[0]["subject"] == "Subject"
     assert response_data[0]["value_uri"] == "Value URI"
 
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/subject",
+        json=[
+            {
+                "classification_code": "Classification Code",
+                "scheme": "Admin Scheme",
+                "scheme_uri": "Scheme URI",
+                "subject": "Subject",
+                "value_uri": "Admin Value URI",
+            }
+        ]
+    )
+
+    assert admin_response.status_code == 201
+    admin_response_data = json.loads(admin_response.data)
+    pytest.global_dataset_subject_id_admin = admin_response_data[0]["id"]
+
 
 def test_get_dataset_subjects_metadata(clients):
     """
