@@ -2428,9 +2428,9 @@ def test_post_dataset_related_item_metadata(clients):
     pytest.global_dataset_related_item_identifier_id_editor = editor_response_data[2][
         "identifiers"
     ][0]["id"]
-    pytest.global_dataset_related_item_title_id_editor = editor_response_data[2]["titles"][0][
-        "id"
-    ]
+    pytest.global_dataset_related_item_title_id_editor = editor_response_data[2][
+        "titles"
+    ][0]["id"]
 
     assert editor_response_data[2]["contributors"][0]["name"] == "Editor Ndafsdame"
     assert (

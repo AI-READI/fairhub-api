@@ -4,6 +4,7 @@ import json
 
 import pytest
 
+
 # ------------------- VERSION ADD ------------------- #
 def test_get_version_study_metadata(clients):
     """
@@ -173,7 +174,8 @@ def test_get_version_study_metadata(clients):
     assert response_data["status"]["overall_status"] == "Withdrawn"
     assert response_data["status"]["start_date"] == "2023-11-15 00:00:00"
     assert (
-        response_data["sponsors"]["responsible_party_investigator_name"] == "editor sponsor name"
+        response_data["sponsors"]["responsible_party_investigator_name"]
+        == "editor sponsor name"
     )
     assert response_data["sponsors"]["responsible_party_type"] == "Sponsor"
     assert response_data["sponsors"]["lead_sponsor_name"] == "editor sponsor name"
@@ -182,7 +184,7 @@ def test_get_version_study_metadata(clients):
         "true",
         "conditions editor",
         "keywords editor",
-        "1"
+        "1",
     ]
 
     assert response_data["ipd_sharing"]["ipd_sharing"] == "Yes"
