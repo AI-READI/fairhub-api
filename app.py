@@ -12,15 +12,18 @@ from flask_cors import CORS
 from sqlalchemy import MetaData
 from waitress import serve
 
+from flask_mail import Mail
 import config
 import model
 from apis import api
 from apis.authentication import UnauthenticatedException, authentication, authorization
 from apis.exception import ValidationException
 
+
 # from pyfairdatatools import __version__
 
 bcrypt = Bcrypt()
+mail = Mail()
 
 
 def create_app(config_module=None):
@@ -62,7 +65,7 @@ def create_app(config_module=None):
     model.db.init_app(app)
     api.init_app(app)
     bcrypt.init_app(app)
-
+    mail.init_app(app)
     cors_origins = [
         "https://brave-ground-.*-.*.centralus.2.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
         "https://staging.fairhub.io",

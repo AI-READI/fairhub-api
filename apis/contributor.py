@@ -5,6 +5,7 @@ from flask import g, request, Response
 from flask_restx import Namespace, Resource, fields
 
 import model
+from invitation.invitation import send_invitation_study, send_access_contributors
 
 from .authentication import is_granted
 
@@ -49,7 +50,8 @@ class AddContributor(Resource):
         user = model.User.query.filter_by(email_address=email_address).first()
         permission = data["role"]
         contributor_ = None
-
+        study_name = study_obj.title
+        first_name = user.user_details.first_name if user else ""
         try:
             if user:
                 contributor_ = study_obj.add_user_to_study(user, permission)
@@ -59,6 +61,11 @@ class AddContributor(Resource):
         except model.StudyException as ex:
             return ex.args[0], 409
         model.db.session.commit()
+        if user:
+            send_access_contributors(email_address, study_obj, first_name)
+        else:
+            send_invitation_study(email_address, contributor_.token, study_name)
+
         return contributor_.to_dict(), 201
 
 
@@ -100,7 +107,6 @@ class ContributorResource(Resource):
         if not can_grant:
             return f"User cannot grant {permission}", 403
 
-        # TODO: Owners downgrading themselves
         if user != g.user:
             grantee_level = list(grants.keys()).index(grantee.permission)  # 1
             new_level: int = list(grants.keys()).index(str(permission))  # 2
