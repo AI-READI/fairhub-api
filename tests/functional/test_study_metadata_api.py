@@ -1705,26 +1705,6 @@ def test_delete_identification_metadata(clients):
 
 
 # ------------------- INTERVENTION METADATA ------------------- #
-def test_get_intervention_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/intervention' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the intervention metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/intervention")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/intervention")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/intervention")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/intervention")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-
 def test_post_intervention_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
@@ -1817,6 +1797,95 @@ def test_post_intervention_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
+
+
+def test_get_intervention_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/intervention' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the intervention metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/intervention")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/intervention")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/intervention")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/intervention")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data[0]["type"] == "Device"
+    assert response_data[0]["name"] == "name test"
+    assert response_data[0]["description"] == "desc"
+    assert response_data[0]["arm_group_label_list"] == ["test", "one"]
+    assert response_data[0]["other_name_list"] == ["uhh", "yes"]
+    assert response_data[1]["type"] == "Device"
+    assert response_data[1]["name"] == "admin-name test"
+    assert response_data[1]["description"] == "desc"
+    assert response_data[1]["arm_group_label_list"] == ["test", "one"]
+    assert response_data[1]["other_name_list"] == ["uhh", "yes"]
+    assert response_data[2]["type"] == "Device"
+    assert response_data[2]["name"] == "editor-name test"
+    assert response_data[2]["description"] == "desc"
+    assert response_data[2]["arm_group_label_list"] == ["test", "one"]
+    assert response_data[2]["other_name_list"] == ["uhh", "yes"]
+
+    assert admin_response_data[0]["type"] == "Device"
+    assert admin_response_data[0]["name"] == "name test"
+    assert admin_response_data[0]["description"] == "desc"
+    assert admin_response_data[0]["arm_group_label_list"] == ["test", "one"]
+    assert admin_response_data[0]["other_name_list"] == ["uhh", "yes"]
+    assert admin_response_data[1]["type"] == "Device"
+    assert admin_response_data[1]["name"] == "admin-name test"
+    assert admin_response_data[1]["description"] == "desc"
+    assert admin_response_data[1]["arm_group_label_list"] == ["test", "one"]
+    assert admin_response_data[1]["other_name_list"] == ["uhh", "yes"]
+    assert admin_response_data[2]["type"] == "Device"
+    assert admin_response_data[2]["name"] == "editor-name test"
+    assert admin_response_data[2]["description"] == "desc"
+    assert admin_response_data[2]["arm_group_label_list"] == ["test", "one"]
+    assert admin_response_data[2]["other_name_list"] == ["uhh", "yes"]
+
+    assert editor_response_data[0]["type"] == "Device"
+    assert editor_response_data[0]["name"] == "name test"
+    assert editor_response_data[0]["description"] == "desc"
+    assert editor_response_data[0]["arm_group_label_list"] == ["test", "one"]
+    assert editor_response_data[0]["other_name_list"] == ["uhh", "yes"]
+    assert editor_response_data[1]["type"] == "Device"
+    assert editor_response_data[1]["name"] == "admin-name test"
+    assert editor_response_data[1]["description"] == "desc"
+    assert editor_response_data[1]["arm_group_label_list"] == ["test", "one"]
+    assert editor_response_data[1]["other_name_list"] == ["uhh", "yes"]
+    assert editor_response_data[2]["type"] == "Device"
+    assert editor_response_data[2]["name"] == "editor-name test"
+    assert editor_response_data[2]["description"] == "desc"
+    assert editor_response_data[2]["arm_group_label_list"] == ["test", "one"]
+    assert editor_response_data[2]["other_name_list"] == ["uhh", "yes"]
+
+    assert viewer_response_data[0]["type"] == "Device"
+    assert viewer_response_data[0]["name"] == "name test"
+    assert viewer_response_data[0]["description"] == "desc"
+    assert viewer_response_data[0]["arm_group_label_list"] == ["test", "one"]
+    assert viewer_response_data[0]["other_name_list"] == ["uhh", "yes"]
+    assert viewer_response_data[1]["type"] == "Device"
+    assert viewer_response_data[1]["name"] == "admin-name test"
+    assert viewer_response_data[1]["description"] == "desc"
+    assert viewer_response_data[1]["arm_group_label_list"] == ["test", "one"]
+    assert viewer_response_data[1]["other_name_list"] == ["uhh", "yes"]
+    assert viewer_response_data[2]["type"] == "Device"
+    assert viewer_response_data[2]["name"] == "editor-name test"
+    assert viewer_response_data[2]["description"] == "desc"
+    assert viewer_response_data[2]["arm_group_label_list"] == ["test", "one"]
+    assert viewer_response_data[2]["other_name_list"] == ["uhh", "yes"]
 
 
 # ------------------- IPD SHARING METADATA ------------------- #
