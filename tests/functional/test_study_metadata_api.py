@@ -915,26 +915,6 @@ def test_get_description_metadata(clients):
 
 
 # ------------------- DESIGN METADATA ------------------- #
-def test_get_design_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/design' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the design metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/design")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/design")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/design")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/design")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-
 def test_put_design_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
@@ -1122,6 +1102,128 @@ def test_put_design_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
+
+
+def test_get_design_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/design' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the design metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/design")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/design")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/design")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/design")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data["design_allocation"] == "editor-dfasdfasd"
+    assert response_data["study_type"] == "Interventional"
+    assert response_data["design_intervention_model"] == "Treatment"
+    assert response_data["design_intervention_model_description"] == "dfadf"
+    assert response_data["design_primary_purpose"] == "Parallel Assignment"
+    assert response_data["design_masking"] == "Double"
+    assert response_data["design_masking_description"] == "tewsfdasf"
+    assert response_data["design_who_masked_list"] == ["Participant", "Care Provider"]
+    assert response_data["phase_list"] == ["N/A"]
+    assert response_data["enrollment_count"] == 3
+    assert response_data["enrollment_type"] == "Actual"
+    assert response_data["number_arms"] == 2
+    assert response_data["design_observational_model_list"] == [
+        "Cohort",
+        "Case-Control",
+    ]
+    assert response_data["design_time_perspective_list"] == ["Other"]
+    assert response_data["bio_spec_retention"] == "None Retained"
+    assert response_data["bio_spec_description"] == "dfasdf"
+    assert response_data["target_duration"] == "rewrwe"
+    assert response_data["number_groups_cohorts"] == 1
+
+    assert admin_response_data["design_allocation"] == "editor-dfasdfasd"
+    assert admin_response_data["study_type"] == "Interventional"
+    assert admin_response_data["design_intervention_model"] == "Treatment"
+    assert admin_response_data["design_intervention_model_description"] == "dfadf"
+    assert admin_response_data["design_primary_purpose"] == "Parallel Assignment"
+    assert admin_response_data["design_masking"] == "Double"
+    assert admin_response_data["design_masking_description"] == "tewsfdasf"
+    assert admin_response_data["design_who_masked_list"] == [
+        "Participant",
+        "Care Provider",
+    ]
+    assert admin_response_data["phase_list"] == ["N/A"]
+    assert admin_response_data["enrollment_count"] == 3
+    assert admin_response_data["enrollment_type"] == "Actual"
+    assert admin_response_data["number_arms"] == 2
+    assert admin_response_data["design_observational_model_list"] == [
+        "Cohort",
+        "Case-Control",
+    ]
+    assert admin_response_data["design_time_perspective_list"] == ["Other"]
+    assert admin_response_data["bio_spec_retention"] == "None Retained"
+    assert admin_response_data["bio_spec_description"] == "dfasdf"
+    assert admin_response_data["target_duration"] == "rewrwe"
+    assert admin_response_data["number_groups_cohorts"] == 1
+
+    assert editor_response_data["design_allocation"] == "editor-dfasdfasd"
+    assert editor_response_data["study_type"] == "Interventional"
+    assert editor_response_data["design_intervention_model"] == "Treatment"
+    assert editor_response_data["design_intervention_model_description"] == "dfadf"
+    assert editor_response_data["design_primary_purpose"] == "Parallel Assignment"
+    assert editor_response_data["design_masking"] == "Double"
+    assert editor_response_data["design_masking_description"] == "tewsfdasf"
+    assert editor_response_data["design_who_masked_list"] == [
+        "Participant",
+        "Care Provider",
+    ]
+    assert editor_response_data["phase_list"] == ["N/A"]
+    assert editor_response_data["enrollment_count"] == 3
+    assert editor_response_data["enrollment_type"] == "Actual"
+    assert editor_response_data["number_arms"] == 2
+    assert editor_response_data["design_observational_model_list"] == [
+        "Cohort",
+        "Case-Control",
+    ]
+    assert editor_response_data["design_time_perspective_list"] == ["Other"]
+    assert editor_response_data["bio_spec_retention"] == "None Retained"
+    assert editor_response_data["bio_spec_description"] == "dfasdf"
+    assert editor_response_data["target_duration"] == "rewrwe"
+    assert editor_response_data["number_groups_cohorts"] == 1
+
+    assert viewer_response_data["design_allocation"] == "editor-dfasdfasd"
+    assert viewer_response_data["study_type"] == "Interventional"
+    assert viewer_response_data["design_intervention_model"] == "Treatment"
+    assert viewer_response_data["design_intervention_model_description"] == "dfadf"
+    assert viewer_response_data["design_primary_purpose"] == "Parallel Assignment"
+    assert viewer_response_data["design_masking"] == "Double"
+    assert viewer_response_data["design_masking_description"] == "tewsfdasf"
+    assert viewer_response_data["design_who_masked_list"] == [
+        "Participant",
+        "Care Provider",
+    ]
+    assert viewer_response_data["phase_list"] == ["N/A"]
+    assert viewer_response_data["enrollment_count"] == 3
+    assert viewer_response_data["enrollment_type"] == "Actual"
+    assert viewer_response_data["number_arms"] == 2
+    assert viewer_response_data["design_observational_model_list"] == [
+        "Cohort",
+        "Case-Control",
+    ]
+    assert viewer_response_data["design_time_perspective_list"] == ["Other"]
+    assert viewer_response_data["bio_spec_retention"] == "None Retained"
+    assert viewer_response_data["bio_spec_description"] == "dfasdf"
+    assert viewer_response_data["target_duration"] == "rewrwe"
+    assert viewer_response_data["number_groups_cohorts"] == 1
 
 
 # ------------------- ELIGIBILITY METADATA ------------------- #
