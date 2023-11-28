@@ -349,6 +349,63 @@ def test_get_available_ipd_metadata(clients):
     assert editor_response.status_code == 200
     assert viewer_response.status_code == 200
 
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data[0]["identifier"] == "identifier1"
+    assert response_data[0]["type"] == "Clinical Study Report"
+    assert response_data[0]["url"] == "google.com"
+    assert response_data[0]["comment"] == "comment1"
+    assert response_data[1]["identifier"] == "identifier2"
+    assert response_data[1]["type"] == "Clinical Study Report"
+    assert response_data[1]["url"] == "google.com"
+    assert response_data[1]["comment"] == "comment2"
+    assert response_data[2]["identifier"] == "identifier3"
+    assert response_data[2]["type"] == "Clinical Study Report"
+    assert response_data[2]["url"] == "google.com"
+    assert response_data[2]["comment"] == "comment3"
+
+    assert admin_response_data[0]["identifier"] == "identifier1"
+    assert admin_response_data[0]["type"] == "Clinical Study Report"
+    assert admin_response_data[0]["url"] == "google.com"
+    assert admin_response_data[0]["comment"] == "comment1"
+    assert admin_response_data[1]["identifier"] == "identifier2"
+    assert admin_response_data[1]["type"] == "Clinical Study Report"
+    assert admin_response_data[1]["url"] == "google.com"
+    assert admin_response_data[1]["comment"] == "comment2"
+    assert admin_response_data[2]["identifier"] == "identifier3"
+    assert admin_response_data[2]["type"] == "Clinical Study Report"
+    assert admin_response_data[2]["url"] == "google.com"
+    assert admin_response_data[2]["comment"] == "comment3"
+
+    assert editor_response_data[0]["identifier"] == "identifier1"
+    assert editor_response_data[0]["type"] == "Clinical Study Report"
+    assert editor_response_data[0]["url"] == "google.com"
+    assert editor_response_data[0]["comment"] == "comment1"
+    assert editor_response_data[1]["identifier"] == "identifier2"
+    assert editor_response_data[1]["type"] == "Clinical Study Report"
+    assert editor_response_data[1]["url"] == "google.com"
+    assert editor_response_data[1]["comment"] == "comment2"
+    assert editor_response_data[2]["identifier"] == "identifier3"
+    assert editor_response_data[2]["type"] == "Clinical Study Report"
+    assert editor_response_data[2]["url"] == "google.com"
+    assert editor_response_data[2]["comment"] == "comment3"
+
+    assert viewer_response_data[0]["identifier"] == "identifier1"
+    assert viewer_response_data[0]["type"] == "Clinical Study Report"
+    assert viewer_response_data[0]["url"] == "google.com"
+    assert viewer_response_data[0]["comment"] == "comment1"
+    assert viewer_response_data[1]["identifier"] == "identifier2"
+    assert viewer_response_data[1]["type"] == "Clinical Study Report"
+    assert viewer_response_data[1]["url"] == "google.com"
+    assert viewer_response_data[1]["comment"] == "comment2"
+    assert viewer_response_data[2]["identifier"] == "identifier3"
+    assert viewer_response_data[2]["type"] == "Clinical Study Report"
+    assert viewer_response_data[2]["url"] == "google.com"
+    assert viewer_response_data[2]["comment"] == "comment3"
+
 
 def test_delete_available_ipd_metadata(clients):
     """
