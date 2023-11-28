@@ -3462,8 +3462,53 @@ def test_get_dataset_title_metadata(clients):
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/title"
     )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/title"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/title"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/title"
+    )
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data[0]["title"] == "Title"
+    assert response_data[0]["type"] == "Subtitle"
+    assert response_data[1]["title"] == "Admin Title"
+    assert response_data[1]["type"] == "Subtitle"
+    assert response_data[2]["title"] == "Editor Title"
+    assert response_data[2]["type"] == "Subtitle"
+
+    assert admin_response_data[0]["title"] == "Title"
+    assert admin_response_data[0]["type"] == "Subtitle"
+    assert admin_response_data[1]["title"] == "Admin Title"
+    assert admin_response_data[1]["type"] == "Subtitle"
+    assert admin_response_data[2]["title"] == "Editor Title"
+    assert admin_response_data[2]["type"] == "Subtitle"
+
+    assert editor_response_data[0]["title"] == "Title"
+    assert editor_response_data[0]["type"] == "Subtitle"
+    assert editor_response_data[1]["title"] == "Admin Title"
+    assert editor_response_data[1]["type"] == "Subtitle"
+    assert editor_response_data[2]["title"] == "Editor Title"
+    assert editor_response_data[2]["type"] == "Subtitle"
+
+    assert viewer_response_data[0]["title"] == "Title"
+    assert viewer_response_data[0]["type"] == "Subtitle"
+    assert viewer_response_data[1]["title"] == "Admin Title"
+    assert viewer_response_data[1]["type"] == "Subtitle"
+    assert viewer_response_data[2]["title"] == "Editor Title"
+    assert viewer_response_data[2]["type"] == "Subtitle"
 
 
 def test_delete_dataset_title_metadata(clients):
