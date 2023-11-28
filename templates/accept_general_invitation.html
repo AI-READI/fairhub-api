@@ -1,0 +1,46 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Invitation</title>
+    <style>
+        .container {
+            padding: 20px;
+        }
+        .divider {
+            width: 58%;
+            border-top: 1px solid #ccc;
+        }
+        .button {
+          padding: 10px 20px;
+          font-weight: bold;
+          background-color: #007bff;
+          color: #fff;
+          text-decoration: none;
+            border-radius: 5px;
+        }
+        .iconify {
+            width: 7rem;
+            height: 7rem;
+            color: rgba(0, 123, 255, 0.92);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <span class="iconify" data-icon="line-md:email"></span>
+        </div>
+        <h1>Hello!</h1>
+        <div class="divider">
+    </div>
+    <div>
+        <p>You have been invited to fairhub.io.</p>
+        <p>Please click the button to signup.</p>
+        <a href="{{ accept_url }}" class="button">Signup</a>
+    </div>
+    </div>
+
+    <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>
+</body>
+</html>
