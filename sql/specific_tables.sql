@@ -46,7 +46,7 @@ INSERT INTO "dataset_contributor" ("id", "first_name", "last_name", "name_type",
 	('00000000-0000-0000-0000-000000000001', 'bhavesh', 'patel', 'type_name', 'identifier', 'scheme', 'scheme uri', 'true', 'type', '00000000-0000-0000-0000-000000000001');
 
 
-INSERT INTO "invited_study_contributor" ("email_address", "permission", "invited_on", "study_id") VALUES
+INSERT INTO "invite" ("email_address", "permission", "invited_on", "study_id") VALUES
 	('aydan.gasimova@gmail.com', 'owner', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000001'),
 	('bhavesh.patel@gmail.com', 'owner', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000003'),
 	('sanjay.soundarajan@@gmail.com', 'owner', '2023-08-13 16:34:16', '00000000-0000-0000-0000-000000000004');

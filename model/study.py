@@ -55,7 +55,7 @@ class Study(db.Model):  # type: ignore
         cascade="all, delete",
     )
     invited_contributors = db.relationship(
-        "StudyInvitedContributor",
+        "Invite",
         back_populates="study",
         lazy="dynamic",
         cascade="all, delete",
@@ -263,12 +263,12 @@ class Study(db.Model):  # type: ignore
 
     def invite_user_to_study(self, email_address, permission):
         invited_contributor = self.invited_contributors.filter(
-            model.StudyInvitedContributor.email_address == email_address
+            model.Invite.email_address == email_address
         ).one_or_none()
         if invited_contributor:
             raise StudyException(
                 "This email address has already been invited to this study"
             )
-        contributor_add = model.StudyInvitedContributor(self, email_address, permission)
+        contributor_add = model.Invite(self, email_address, permission)
         db.session.add(contributor_add)
         return contributor_add

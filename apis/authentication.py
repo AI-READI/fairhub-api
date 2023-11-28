@@ -63,7 +63,7 @@ class SignUpUser(Resource):
             ]
 
             if data["email_address"] not in bypassed_emails:
-                invite = model.StudyInvitedContributor.query.filter_by(
+                invite = model.Invite.query.filter_by(
                     email_address=data["email_address"]
                 ).one_or_none()
                 if not invite:
@@ -141,7 +141,7 @@ class SignUpUser(Resource):
         ).one_or_none()
         if user:
             return "This email address is already in use", 409
-        invitations = model.StudyInvitedContributor.query.filter_by(
+        invitations = model.Invite.query.filter_by(
             email_address=data["email_address"]
         ).all()
 

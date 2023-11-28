@@ -28,7 +28,7 @@ class AddContributor(Resource):
     # @api.marshal_with(contributors_model)
     def get(self, study_id: int):
         contributors = model.StudyContributor.query.filter_by(study_id=study_id).all()
-        invited_contributors = model.StudyInvitedContributor.query.filter_by(
+        invited_contributors = model.Invite.query.filter_by(
             study_id=study_id
         ).all()
 
@@ -140,7 +140,7 @@ class ContributorResource(Resource):
         grants["owner"] = ["editor", "viewer", "admin"]
 
         if "@" in user_id:
-            invited_grantee = model.StudyInvitedContributor.query.filter_by(
+            invited_grantee = model.Invite.query.filter_by(
                 study_id=study_id, email_address=user_id
             ).first()
             # invited_grants: Union[OrderedDict
