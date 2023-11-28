@@ -1227,26 +1227,6 @@ def test_get_design_metadata(clients):
 
 
 # ------------------- ELIGIBILITY METADATA ------------------- #
-def test_get_eligibility_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/eligibility' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the eligibility metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/eligibility")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/eligibility")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/eligibility")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/eligibility")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-
 def test_put_eligibility_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
@@ -1377,6 +1357,83 @@ def test_put_eligibility_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
+
+
+def test_get_eligibility_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/eligibility' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the eligibility metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/eligibility")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/eligibility")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/eligibility")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/eligibility")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data["gender"] == "All"
+    assert response_data["gender_based"] == "Yes"
+    assert response_data["gender_description"] == "editor-none"
+    assert response_data["minimum_age_value"] == 18
+    assert response_data["maximum_age_value"] == 61
+    assert response_data["minimum_age_unit"] == "1"
+    assert response_data["maximum_age_unit"] == "2"
+    assert response_data["healthy_volunteers"] == "Yes"
+    assert response_data["inclusion_criteria"] == ["tests"]
+    assert response_data["exclusion_criteria"] == ["Probability Sample"]
+    assert response_data["study_population"] == "study_population"
+    assert response_data["sampling_method"] == "Probability Sample"
+
+    assert admin_response_data["gender"] == "All"
+    assert admin_response_data["gender_based"] == "Yes"
+    assert admin_response_data["gender_description"] == "editor-none"
+    assert admin_response_data["minimum_age_value"] == 18
+    assert admin_response_data["maximum_age_value"] == 61
+    assert admin_response_data["minimum_age_unit"] == "1"
+    assert admin_response_data["maximum_age_unit"] == "2"
+    assert admin_response_data["healthy_volunteers"] == "Yes"
+    assert admin_response_data["inclusion_criteria"] == ["tests"]
+    assert admin_response_data["exclusion_criteria"] == ["Probability Sample"]
+    assert admin_response_data["study_population"] == "study_population"
+    assert admin_response_data["sampling_method"] == "Probability Sample"
+
+    assert editor_response_data["gender"] == "All"
+    assert editor_response_data["gender_based"] == "Yes"
+    assert editor_response_data["gender_description"] == "editor-none"
+    assert editor_response_data["minimum_age_value"] == 18
+    assert editor_response_data["maximum_age_value"] == 61
+    assert editor_response_data["minimum_age_unit"] == "1"
+    assert editor_response_data["maximum_age_unit"] == "2"
+    assert editor_response_data["healthy_volunteers"] == "Yes"
+    assert editor_response_data["inclusion_criteria"] == ["tests"]
+    assert editor_response_data["exclusion_criteria"] == ["Probability Sample"]
+    assert editor_response_data["study_population"] == "study_population"
+    assert editor_response_data["sampling_method"] == "Probability Sample"
+
+    assert viewer_response_data["gender"] == "All"
+    assert viewer_response_data["gender_based"] == "Yes"
+    assert viewer_response_data["gender_description"] == "editor-none"
+    assert viewer_response_data["minimum_age_value"] == 18
+    assert viewer_response_data["maximum_age_value"] == 61
+    assert viewer_response_data["minimum_age_unit"] == "1"
+    assert viewer_response_data["maximum_age_unit"] == "2"
+    assert viewer_response_data["healthy_volunteers"] == "Yes"
+    assert viewer_response_data["inclusion_criteria"] == ["tests"]
+    assert viewer_response_data["exclusion_criteria"] == ["Probability Sample"]
+    assert viewer_response_data["study_population"] == "study_population"
+    assert viewer_response_data["sampling_method"] == "Probability Sample"
 
 
 # ------------------- IDENTIFICATION METADATA ------------------- #
