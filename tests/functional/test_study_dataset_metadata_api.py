@@ -3523,9 +3523,23 @@ def test_delete_dataset_title_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     title_id = pytest.global_dataset_title_id
+    admin_title_id = pytest.global_dataset_title_id_admin
+    editor_title_id = pytest.global_dataset_title_id_editor
 
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/title/{title_id}"
+    )
     response = _logged_in_client.delete(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/title/{title_id}"
     )
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/title/{admin_title_id}"
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/title/{editor_title_id}"
+    )
 
+    assert viewer_response.status_code == 403
     assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
