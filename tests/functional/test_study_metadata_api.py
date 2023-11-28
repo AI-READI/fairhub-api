@@ -2987,26 +2987,6 @@ def test_delete_reference_metadata(clients):
 
 
 # ------------------- SPONSORS METADATA ------------------- #
-def test_get_sponsors_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/sponsors' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the sponsors metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/sponsors")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/sponsors")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/sponsors")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/sponsors")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-
 def test_put_sponsors_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
@@ -3115,6 +3095,67 @@ def test_put_sponsors_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
+
+
+def test_get_sponsors_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/sponsors' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the sponsors metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/sponsors")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/sponsors")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/sponsors")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/sponsors")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data["responsible_party_type"] == "Sponsor"
+    assert response_data["responsible_party_investigator_name"] == "editor party name"
+    assert response_data["responsible_party_investigator_title"] == "editor party title"
+    assert (
+        response_data["responsible_party_investigator_affiliation"]
+        == "editor party affiliation"
+    )
+    assert response_data["lead_sponsor_name"] == "editor sponsor name"
+
+    assert admin_response_data["responsible_party_type"] == "Sponsor"
+    assert admin_response_data["response_party_investigator_name"] == "editor party name"
+    assert admin_response_data["responsible_party_investigator_title"] == "editor party title"
+    assert (
+        admin_response_data["responsible_party_investigator_affiliation"]
+        == "editor party affiliation"
+    )
+    assert admin_response_data["lead_sponsor_name"] == "editor sponsor name"
+
+    assert editor_response_data["responsible_party_type"] == "Sponsor"
+    assert editor_response_data["responsible_party_investigator_name"] == "editor party name"
+    assert editor_response_data["responsible_party_investigator_title"] == "editor party title"
+    assert (
+        editor_response_data["responsible_party_investigator_affiliation"]
+        == "editor party affiliation"
+    )
+    assert editor_response_data["lead_sponsor_name"] == "editor sponsor name"
+
+    assert viewer_response_data["responsible_party_type"] == "Sponsor"
+    assert viewer_response_data["responsible_party_investigator_name"] == "editor party name"
+    assert viewer_response_data["responsible_party_investigator_title"] == "editor party title"
+    assert (
+        viewer_response_data["responsible_party_investigator_affiliation"]
+        == "editor party affiliation"
+    )
+    assert viewer_response_data["lead_sponsor_name"] == "editor sponsor name"
 
 
 # ------------------- STATUS METADATA ------------------- #
