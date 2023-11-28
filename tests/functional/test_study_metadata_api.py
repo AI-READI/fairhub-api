@@ -2187,26 +2187,6 @@ def test_delete_link_metadata(clients):
 
 
 # ------------------- LOCATION METADATA ------------------- #
-def test_get_location_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/location' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the location metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/location")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/location")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/location")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/location")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-
 def test_post_location_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
@@ -2290,6 +2270,123 @@ def test_post_location_metadata(clients):
     assert editor_response_data[0]["state"] == "ca"
     assert editor_response_data[0]["zip"] == "test"
     assert editor_response_data[0]["country"] == "yes"
+
+    viewer_response = _viewer_client.post(
+        f"/study/{study_id}/metadata/location",
+        json=[
+            {
+                "facility": "viewer test",
+                "status": "Withdrawn",
+                "city": "city",
+                "state": "ca",
+                "zip": "test",
+                "country": "yes",
+            }
+        ],
+    )
+
+    assert viewer_response.status_code == 403
+
+
+def test_get_location_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/location' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the location metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/location")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/location")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/location")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/location")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data[0]["facility"] == "test"
+    assert response_data[0]["status"] == "Withdrawn"
+    assert response_data[0]["city"] == "city"
+    assert response_data[0]["state"] == "ca"
+    assert response_data[0]["zip"] == "test"
+    assert response_data[0]["country"] == "yes"
+    assert response_data[1]["facility"] == "test"
+    assert response_data[1]["status"] == "Withdrawn"
+    assert response_data[1]["city"] == "city"
+    assert response_data[1]["state"] == "ca"
+    assert response_data[1]["zip"] == "test"
+    assert response_data[1]["country"] == "yes"
+    assert response_data[2]["facility"] == "editor test"
+    assert response_data[2]["status"] == "Withdrawn"
+    assert response_data[2]["city"] == "city"
+    assert response_data[2]["state"] == "ca"
+    assert response_data[2]["zip"] == "test"
+    assert response_data[2]["country"] == "yes"
+
+    assert admin_response_data[0]["facility"] == "test"
+    assert admin_response_data[0]["status"] == "Withdrawn"
+    assert admin_response_data[0]["city"] == "city"
+    assert admin_response_data[0]["state"] == "ca"
+    assert admin_response_data[0]["zip"] == "test"
+    assert admin_response_data[0]["country"] == "yes"
+    assert admin_response_data[1]["facility"] == "test"
+    assert admin_response_data[1]["status"] == "Withdrawn"
+    assert admin_response_data[1]["city"] == "city"
+    assert admin_response_data[1]["state"] == "ca"
+    assert admin_response_data[1]["zip"] == "test"
+    assert admin_response_data[1]["country"] == "yes"
+    assert admin_response_data[2]["facility"] == "editor test"
+    assert admin_response_data[2]["status"] == "Withdrawn"
+    assert admin_response_data[2]["city"] == "city"
+    assert admin_response_data[2]["state"] == "ca"
+    assert admin_response_data[2]["zip"] == "test"
+    assert admin_response_data[2]["country"] == "yes"
+
+    assert editor_response_data[0]["facility"] == "test"
+    assert editor_response_data[0]["status"] == "Withdrawn"
+    assert editor_response_data[0]["city"] == "city"
+    assert editor_response_data[0]["state"] == "ca"
+    assert editor_response_data[0]["zip"] == "test"
+    assert editor_response_data[0]["country"] == "yes"
+    assert editor_response_data[1]["facility"] == "test"
+    assert editor_response_data[1]["status"] == "Withdrawn"
+    assert editor_response_data[1]["city"] == "city"
+    assert editor_response_data[1]["state"] == "ca"
+    assert editor_response_data[1]["zip"] == "test"
+    assert editor_response_data[1]["country"] == "yes"
+    assert editor_response_data[2]["facility"] == "editor test"
+    assert editor_response_data[2]["status"] == "Withdrawn"
+    assert editor_response_data[2]["city"] == "city"
+    assert editor_response_data[2]["state"] == "ca"
+    assert editor_response_data[2]["zip"] == "test"
+    assert editor_response_data[2]["country"] == "yes"
+
+    assert viewer_response_data[0]["facility"] == "test"
+    assert viewer_response_data[0]["status"] == "Withdrawn"
+    assert viewer_response_data[0]["city"] == "city"
+    assert viewer_response_data[0]["state"] == "ca"
+    assert viewer_response_data[0]["zip"] == "test"
+    assert viewer_response_data[0]["country"] == "yes"
+    assert viewer_response_data[1]["facility"] == "test"
+    assert viewer_response_data[1]["status"] == "Withdrawn"
+    assert viewer_response_data[1]["city"] == "city"
+    assert viewer_response_data[1]["state"] == "ca"
+    assert viewer_response_data[1]["zip"] == "test"
+    assert viewer_response_data[1]["country"] == "yes"
+    assert viewer_response_data[2]["facility"] == "editor test"
+    assert viewer_response_data[2]["status"] == "Withdrawn"
+    assert viewer_response_data[2]["city"] == "city"
+    assert viewer_response_data[2]["state"] == "ca"
+    assert viewer_response_data[2]["zip"] == "test"
+    assert viewer_response_data[2]["country"] == "yes"
 
 
 def test_delete_location_metadata(clients):
