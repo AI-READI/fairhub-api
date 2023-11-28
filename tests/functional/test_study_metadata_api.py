@@ -2507,6 +2507,7 @@ def test_put_other_metadata(clients):
 
     assert viewer_response.status_code == 403
 
+
 def test_get_other_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
@@ -2573,26 +2574,6 @@ def test_get_other_metadata(clients):
 
 
 # ------------------- OVERALL-OFFICIAL METADATA ------------------- #
-def test_get_overall_official_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/overall-official' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the overall-official metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/overall-official")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/overall-official")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/overall-official")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/overall-official")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-
 def test_post_overall_official_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
@@ -2653,6 +2634,71 @@ def test_post_overall_official_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
+
+
+def test_get_overall_official_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/overall-official' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the overall-official metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/overall-official")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/overall-official")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/overall-official")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/overall-official")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data[0]["name"] == "test"
+    assert response_data[0]["affiliation"] == "aff"
+    assert response_data[0]["role"] == "Study Chair"
+    assert response_data[1]["name"] == "admin-test"
+    assert response_data[1]["affiliation"] == "admin-aff"
+    assert response_data[1]["role"] == "Study Chair"
+    assert response_data[2]["name"] == "editor-test"
+    assert response_data[2]["affiliation"] == "editor-aff"
+    assert response_data[2]["role"] == "Study Chair"
+
+    assert admin_response_data[0]["name"] == "test"
+    assert admin_response_data[0]["affiliation"] == "aff"
+    assert admin_response_data[0]["role"] == "Study Chair"
+    assert admin_response_data[1]["name"] == "admin-test"
+    assert admin_response_data[1]["affiliation"] == "admin-aff"
+    assert admin_response_data[1]["role"] == "Study Chair"
+    assert admin_response_data[2]["name"] == "editor-test"
+    assert admin_response_data[2]["affiliation"] == "editor-aff"
+    assert admin_response_data[2]["role"] == "Study Chair"
+
+    assert editor_response_data[0]["name"] == "test"
+    assert editor_response_data[0]["affiliation"] == "aff"
+    assert editor_response_data[0]["role"] == "Study Chair"
+    assert editor_response_data[1]["name"] == "admin-test"
+    assert editor_response_data[1]["affiliation"] == "admin-aff"
+    assert editor_response_data[1]["role"] == "Study Chair"
+    assert editor_response_data[2]["name"] == "editor-test"
+    assert editor_response_data[2]["affiliation"] == "editor-aff"
+    assert editor_response_data[2]["role"] == "Study Chair"
+
+    assert viewer_response_data[0]["name"] == "test"
+    assert viewer_response_data[0]["affiliation"] == "aff"
+    assert viewer_response_data[0]["role"] == "Study Chair"
+    assert viewer_response_data[1]["name"] == "admin-test"
+    assert viewer_response_data[1]["affiliation"] == "admin-aff"
+    assert viewer_response_data[1]["role"] == "Study Chair"
+    assert viewer_response_data[2]["name"] == "editor-test"
+    assert viewer_response_data[2]["affiliation"] == "editor-aff"
+    assert viewer_response_data[2]["role"] == "Study Chair"
 
 
 def test_delete_overall_official_metadata(clients):
