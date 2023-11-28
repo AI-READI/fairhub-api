@@ -545,7 +545,11 @@ def test_get_cc_metadata(clients):
     assert admin_response.status_code == 200
     assert editor_response.status_code == 200
     assert viewer_response.status_code == 200
+
     response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
 
     assert response_data[0]["name"] == "central-contact"
     assert response_data[0]["affiliation"] == "affiliation"
@@ -554,6 +558,30 @@ def test_get_cc_metadata(clients):
     assert response_data[0]["phone_ext"] == "909"
     assert response_data[0]["email_address"] == "sample@gmail.com"
     assert response_data[0]["central_contact"] is True
+
+    assert admin_response_data[0]["name"] == "central-contact"
+    assert admin_response_data[0]["affiliation"] == "affiliation"
+    assert admin_response_data[0]["role"] is None
+    assert admin_response_data[0]["phone"] == "808"
+    assert admin_response_data[0]["phone_ext"] == "909"
+    assert admin_response_data[0]["email_address"] == "sample@gmail.com"
+    assert admin_response_data[0]["central_contact"] is True
+
+    assert editor_response_data[0]["name"] == "central-contact"
+    assert editor_response_data[0]["affiliation"] == "affiliation"
+    assert editor_response_data[0]["role"] is None
+    assert editor_response_data[0]["phone"] == "808"
+    assert editor_response_data[0]["phone_ext"] == "909"
+    assert editor_response_data[0]["email_address"] == "sample@gmail.com"
+    assert editor_response_data[0]["central_contact"] is True
+
+    assert viewer_response_data[0]["name"] == "central-contact"
+    assert viewer_response_data[0]["affiliation"] == "affiliation"
+    assert viewer_response_data[0]["role"] is None
+    assert viewer_response_data[0]["phone"] == "808"
+    assert viewer_response_data[0]["phone_ext"] == "909"
+    assert viewer_response_data[0]["email_address"] == "sample@gmail.com"
+    assert viewer_response_data[0]["central_contact"] is True
 
 
 def test_delete_cc_metadata(clients):
