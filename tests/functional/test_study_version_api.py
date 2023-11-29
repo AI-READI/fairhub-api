@@ -863,10 +863,30 @@ def test_put_version_changelog(clients):
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/changelog",
         json={"changelog": "changelog test"},
     )
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/changelog",
+        json={"changelog": "changelog test"},
+    )
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/changelog",
+        json={"changelog": "changelog test"},
+    )
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/changelog",
+        json={"changelog": "changelog test"},
+    )
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 403
     response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+
     assert response_data == "changelog test"
+    assert admin_response_data == "changelog test"
+    assert editor_response_data == "changelog test"
 
 
 def test_get_version_changelog(clients):
