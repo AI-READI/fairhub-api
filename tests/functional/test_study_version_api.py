@@ -904,5 +904,24 @@ def test_get_version_changelog(clients):
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/changelog"
     )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/changelog"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/changelog"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/changelog"
+    )
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 403
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+
+    assert response_data == "changelog test"
+    assert admin_response_data == "changelog test"
+    assert editor_response_data == "changelog test"
