@@ -1364,14 +1364,14 @@ def test_post_dataset_descriptions_metadata(clients):
 
     response = _logged_in_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/description",
-        json=[{"description": "Description", "type": "Methods"}],
+        json=[{"description": "Owner Description", "type": "Methods"}],
     )
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_description_id = response_data[0]["id"]
 
-    assert response_data[0]["description"] == "Description"
+    assert response_data[0]["description"] == "Owner Description"
     assert response_data[0]["type"] == "Methods"
 
     admin_response = _admin_client.post(
@@ -1448,41 +1448,114 @@ def test_get_dataset_descriptions_metadata(clients):
     assert len(editor_response_data) == 4
     assert len(viewer_response_data) == 4
 
-    assert response_data[0]["description"] == "Dataset Description"
-    assert response_data[0]["type"] == "Abstract"
-    assert response_data[1]["description"] == "Description"
-    assert response_data[1]["type"] == "Methods"
-    assert response_data[2]["description"] == "Admin Description"
-    assert response_data[2]["type"] == "Methods"
-    assert response_data[3]["description"] == "Editor Description"
-    assert response_data[3]["type"] == "Methods"
+    # seacrch for type abstract index
+    main_descrip = next(
+        (index for (index, d) in enumerate(response_data) if d["type"] == "Abstract"),
+        None,
+    )
+    a_main_descrip = next(
+        (index for (index, d) in enumerate(admin_response_data) if d["type"] == "Abstract"),
+        None,
+    )
+    e_main_descrip = next(
+        (index for (index, d) in enumerate(editor_response_data) if d["type"] == "Abstract"),
+        None,
+    )
+    v_main_descrip = next(
+        (index for (index, d) in enumerate(viewer_response_data) if d["type"] == "Abstract"),
+        None,
+    )
 
-    assert admin_response_data[0]["description"] == "Dataset Description"
-    assert admin_response_data[0]["type"] == "Abstract"
-    assert admin_response_data[1]["description"] == "Description"
-    assert admin_response_data[1]["type"] == "Methods"
-    assert admin_response_data[2]["description"] == "Admin Description"
-    assert admin_response_data[2]["type"] == "Methods"
-    assert admin_response_data[3]["description"] == "Editor Description"
-    assert admin_response_data[3]["type"] == "Methods"
+    # search for owner description
+    # pylint: disable=line-too-long
+    own_descrip = next(
+        (index for (index, d) in enumerate(response_data) if d["description"] == "Owner Description"),
+        None,
+    )
+    a_own_descrip = next(
+        (index for (index, d) in enumerate(admin_response_data) if d["description"] == "Owner Description"),
+        None,
+    )
+    e_own_descrip = next(
+        (index for (index, d) in enumerate(editor_response_data) if d["description"] == "Owner Description"),
+        None,
+    )
+    v_own_descrip = next(
+        (index for (index, d) in enumerate(viewer_response_data) if d["description"] == "Owner Description"),
+        None,
+    )
 
-    assert editor_response_data[0]["description"] == "Dataset Description"
-    assert editor_response_data[0]["type"] == "Abstract"
-    assert editor_response_data[1]["description"] == "Description"
-    assert editor_response_data[1]["type"] == "Methods"
-    assert editor_response_data[2]["description"] == "Admin Description"
-    assert editor_response_data[2]["type"] == "Methods"
-    assert editor_response_data[3]["description"] == "Editor Description"
-    assert editor_response_data[3]["type"] == "Methods"
+    # search for admin description
+    admin_descrip = next(
+        (index for (index, d) in enumerate(response_data) if d["description"] == "Admin Description"),
+        None,
+    )
+    a_admin_descrip = next(
+        (index for (index, d) in enumerate(admin_response_data) if d["description"] == "Admin Description"),
+        None,
+    )
+    e_admin_descrip = next(
+        (index for (index, d) in enumerate(editor_response_data) if d["description"] == "Admin Description"),
+        None,
+    )
+    v_admin_descrip = next(
+        (index for (index, d) in enumerate(viewer_response_data) if d["description"] == "Admin Description"),
+        None,
+    )
 
-    assert viewer_response_data[0]["description"] == "Dataset Description"
-    assert viewer_response_data[0]["type"] == "Abstract"
-    assert viewer_response_data[1]["description"] == "Description"
-    assert viewer_response_data[1]["type"] == "Methods"
-    assert viewer_response_data[2]["description"] == "Admin Description"
-    assert viewer_response_data[2]["type"] == "Methods"
-    assert viewer_response_data[3]["description"] == "Editor Description"
-    assert viewer_response_data[3]["type"] == "Methods"
+    # search for editor description
+    edit_descrip = next(
+        (index for (index, d) in enumerate(response_data) if d["description"] == "Editor Description"),
+        None,
+    )
+    a_edit_descrip = next(
+        (index for (index, d) in enumerate(admin_response_data) if d["description"] == "Editor Description"),
+        None,
+    )
+    e_edit_descrip = next(
+        (index for (index, d) in enumerate(editor_response_data) if d["description"] == "Editor Description"),
+        None,
+    )
+    v_edit_descrip = next(
+        (index for (index, d) in enumerate(viewer_response_data) if d["description"] == "Editor Description"),
+        None,
+    )
+
+    assert response_data[main_descrip]["description"] == "Dataset Description"
+    assert response_data[main_descrip]["type"] == "Abstract"
+    assert response_data[own_descrip]["description"] == "Owner Description"
+    assert response_data[own_descrip]["type"] == "Methods"
+    assert response_data[admin_descrip]["description"] == "Admin Description"
+    assert response_data[admin_descrip]["type"] == "Methods"
+    assert response_data[edit_descrip]["description"] == "Editor Description"
+    assert response_data[edit_descrip]["type"] == "Methods"
+
+    assert admin_response_data[a_main_descrip]["description"] == "Dataset Description"
+    assert admin_response_data[a_main_descrip]["type"] == "Abstract"
+    assert admin_response_data[a_own_descrip]["description"] == "Owner Description"
+    assert admin_response_data[a_own_descrip]["type"] == "Methods"
+    assert admin_response_data[a_admin_descrip]["description"] == "Admin Description"
+    assert admin_response_data[a_admin_descrip]["type"] == "Methods"
+    assert admin_response_data[a_edit_descrip]["description"] == "Editor Description"
+    assert admin_response_data[a_edit_descrip]["type"] == "Methods"
+
+    assert editor_response_data[e_main_descrip]["description"] == "Dataset Description"
+    assert editor_response_data[e_main_descrip]["type"] == "Abstract"
+    assert editor_response_data[e_own_descrip]["description"] == "Owner Description"
+    assert editor_response_data[e_own_descrip]["type"] == "Methods"
+    assert editor_response_data[e_admin_descrip]["description"] == "Admin Description"
+    assert editor_response_data[e_admin_descrip]["type"] == "Methods"
+    assert editor_response_data[e_edit_descrip]["description"] == "Editor Description"
+    assert editor_response_data[e_edit_descrip]["type"] == "Methods"
+
+    assert viewer_response_data[v_main_descrip]["description"] == "Dataset Description"
+    assert viewer_response_data[v_main_descrip]["type"] == "Abstract"
+    assert viewer_response_data[v_own_descrip]["description"] == "Owner Description"
+    assert viewer_response_data[v_own_descrip]["type"] == "Methods"
+    assert viewer_response_data[v_admin_descrip]["description"] == "Admin Description"
+    assert viewer_response_data[v_admin_descrip]["type"] == "Methods"
+    assert viewer_response_data[v_edit_descrip]["description"] == "Editor Description"
+    assert viewer_response_data[v_edit_descrip]["type"] == "Methods"
 
 
 def test_delete_dataset_description_metadata(clients):
@@ -2256,6 +2329,16 @@ def test_post_dataset_related_item_metadata(clients):
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
+    # seach for main title index in response_data[n]["titles"]
+    main_title_0 = next(
+        (index for (index, d) in enumerate(response_data[0]["titles"]) if d["type"] == "MainTitle"),
+        None
+    )
+    # seach for subtitle index in response_data[n]["titles"]
+    sub_title_0 = next(
+        (index for (index, d) in enumerate(response_data[0]["titles"]) if d["type"] == "Subtitle"),
+        None
+    )
     pytest.global_dataset_related_item_id = response_data[0]["id"]
     pytest.global_dataset_related_item_contributor_id = response_data[0][
         "contributors"
@@ -2266,7 +2349,9 @@ def test_post_dataset_related_item_metadata(clients):
     pytest.global_dataset_related_item_identifier_id = response_data[0]["identifiers"][
         0
     ]["id"]
-    pytest.global_dataset_related_item_title_id = response_data[0]["titles"][0]["id"]
+    # pylint: disable=line-too-long
+    pytest.global_dataset_related_item_main_title_id = response_data[0]["titles"][main_title_0]["id"]
+    pytest.global_dataset_related_item_sub_title_id = response_data[0]["titles"][sub_title_0]["id"]
 
     assert response_data[0]["contributors"][0]["name"] == "Ndafsdame"
     assert response_data[0]["contributors"][0]["contributor_type"] == "Con Type"
@@ -2287,10 +2372,10 @@ def test_post_dataset_related_item_metadata(clients):
     assert response_data[0]["publication_year"] == 2013
     assert response_data[0]["publisher"] == "Publisher"
     assert response_data[0]["relation_type"] == "Relation Type"
-    assert response_data[0]["titles"][0]["title"] == "Title"
-    assert response_data[0]["titles"][0]["type"] == "MainTitle"
-    assert response_data[0]["titles"][1]["title"] == "Title"
-    assert response_data[0]["titles"][1]["type"] == "Subtitle"
+    assert response_data[0]["titles"][main_title_0]["title"] == "Title"
+    assert response_data[0]["titles"][main_title_0]["type"] == "MainTitle"
+    assert response_data[0]["titles"][sub_title_0]["title"] == "Title"
+    assert response_data[0]["titles"][sub_title_0]["type"] == "Subtitle"
     assert response_data[0]["type"] == "Type"
     assert response_data[0]["volume"] == "Volume"
 
@@ -2543,6 +2628,42 @@ def test_get_dataset_related_item_metadata(clients):
     editor_response_data = json.loads(editor_response.data)
     viewer_response_data = json.loads(viewer_response.data)
 
+    # seach for main title index in response_data[n]["titles"]
+    # pylint: disable=line-too-long
+    main_title_0 = next(
+        (index for (index, d) in enumerate(response_data[0]["titles"]) if d["type"] == "MainTitle"),
+        None
+    )
+    # seach for subtitle index in response_data[n]["titles"]
+    sub_title_0 = next(
+        (index for (index, d) in enumerate(response_data[0]["titles"]) if d["type"] == "Subtitle"),
+        None
+    )
+    a_main_title_0 = next(
+        (index for (index, d) in enumerate(admin_response_data[0]["titles"]) if d["type"] == "MainTitle"),
+        None
+    )
+    a_sub_title_0 = next(
+        (index for (index, d) in enumerate(admin_response_data[0]["titles"]) if d["type"] == "Subtitle"),
+        None
+    )
+    e_main_title_0 = next(
+        (index for (index, d) in enumerate(editor_response_data[0]["titles"]) if d["type"] == "MainTitle"),
+        None
+    )
+    e_sub_title_0 = next(
+        (index for (index, d) in enumerate(editor_response_data[0]["titles"]) if d["type"] == "Subtitle"),
+        None
+    )
+    v_main_title_0 = next(
+        (index for (index, d) in enumerate(viewer_response_data[0]["titles"]) if d["type"] == "MainTitle"),
+        None
+    )
+    v_sub_title_0 = next(
+        (index for (index, d) in enumerate(viewer_response_data[0]["titles"]) if d["type"] == "Subtitle"),
+        None
+    )
+
     assert response_data[0]["contributors"][0]["name"] == "Ndafsdame"
     assert response_data[0]["contributors"][0]["contributor_type"] == "Con Type"
     assert response_data[0]["contributors"][0]["name_type"] == "Personal"
@@ -2562,8 +2683,10 @@ def test_get_dataset_related_item_metadata(clients):
     assert response_data[0]["publication_year"] == 2013
     assert response_data[0]["publisher"] == "Publisher"
     assert response_data[0]["relation_type"] == "Relation Type"
-    assert response_data[0]["titles"][0]["title"] == "Title"
-    assert response_data[0]["titles"][0]["type"] == "MainTitle"
+    assert response_data[0]["titles"][main_title_0]["title"] == "Title"
+    assert response_data[0]["titles"][main_title_0]["type"] == "MainTitle"
+    assert response_data[0]["titles"][sub_title_0]["title"] == "Title"
+    assert response_data[0]["titles"][sub_title_0]["type"] == "Subtitle"
     assert response_data[0]["type"] == "Type"
     assert response_data[0]["volume"] == "Volume"
     assert response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
@@ -2639,8 +2762,10 @@ def test_get_dataset_related_item_metadata(clients):
     assert admin_response_data[0]["publication_year"] == 2013
     assert admin_response_data[0]["publisher"] == "Publisher"
     assert admin_response_data[0]["relation_type"] == "Relation Type"
-    assert admin_response_data[0]["titles"][0]["title"] == "Title"
-    assert admin_response_data[0]["titles"][0]["type"] == "MainTitle"
+    assert admin_response_data[0]["titles"][a_main_title_0]["title"] == "Title"
+    assert admin_response_data[0]["titles"][a_main_title_0]["type"] == "MainTitle"
+    assert admin_response_data[0]["titles"][a_sub_title_0]["title"] == "Title"
+    assert admin_response_data[0]["titles"][a_sub_title_0]["type"] == "Subtitle"
     assert admin_response_data[0]["type"] == "Type"
     assert admin_response_data[0]["volume"] == "Volume"
     assert admin_response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
@@ -2728,8 +2853,10 @@ def test_get_dataset_related_item_metadata(clients):
     assert editor_response_data[0]["publication_year"] == 2013
     assert editor_response_data[0]["publisher"] == "Publisher"
     assert editor_response_data[0]["relation_type"] == "Relation Type"
-    assert editor_response_data[0]["titles"][0]["title"] == "Title"
-    assert editor_response_data[0]["titles"][0]["type"] == "MainTitle"
+    assert editor_response_data[0]["titles"][e_main_title_0]["title"] == "Title"
+    assert editor_response_data[0]["titles"][e_main_title_0]["type"] == "MainTitle"
+    assert editor_response_data[0]["titles"][e_sub_title_0]["title"] == "Title"
+    assert editor_response_data[0]["titles"][e_sub_title_0]["type"] == "Subtitle"
     assert editor_response_data[0]["type"] == "Type"
     assert editor_response_data[0]["volume"] == "Volume"
     assert editor_response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
@@ -2821,8 +2948,10 @@ def test_get_dataset_related_item_metadata(clients):
     assert viewer_response_data[0]["publication_year"] == 2013
     assert viewer_response_data[0]["publisher"] == "Publisher"
     assert viewer_response_data[0]["relation_type"] == "Relation Type"
-    assert viewer_response_data[0]["titles"][0]["title"] == "Title"
-    assert viewer_response_data[0]["titles"][0]["type"] == "MainTitle"
+    assert viewer_response_data[0]["titles"][v_main_title_0]["title"] == "Title"
+    assert viewer_response_data[0]["titles"][v_main_title_0]["type"] == "MainTitle"
+    assert viewer_response_data[0]["titles"][v_sub_title_0]["title"] == "Title"
+    assert viewer_response_data[0]["titles"][v_sub_title_0]["type"] == "Subtitle"
     assert viewer_response_data[0]["type"] == "Type"
     assert viewer_response_data[0]["volume"] == "Volume"
     assert viewer_response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
@@ -3022,16 +3151,20 @@ def test_delete_dataset_related_item_title_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     related_item_id = pytest.global_dataset_related_item_id
-    title_id = pytest.global_dataset_related_item_title_id
+    main_title_id = pytest.global_dataset_related_item_main_title_id
+    sub_title_id = pytest.global_dataset_related_item_sub_title_id
     admin_t_id = pytest.global_dataset_related_item_title_id_admin
     editor_t_id = pytest.global_dataset_related_item_title_id_editor
 
     # pylint: disable=line-too-long
     viewer_response = _viewer_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{title_id}"
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{main_title_id}"
     )
-    response = _logged_in_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{title_id}"
+    main_response = _logged_in_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{main_title_id}"
+    )
+    sub_response = _logged_in_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{sub_title_id}"
     )
     # pylint: disable=line-too-long
     admin_response = _admin_client.delete(
@@ -3043,7 +3176,8 @@ def test_delete_dataset_related_item_title_metadata(clients):
     )
 
     assert viewer_response.status_code == 403
-    assert response.status_code == 403  # Main title cannot be deleted
+    assert main_response.status_code == 403  # Main title cannot be deleted
+    assert sub_response.status_code == 204  # Main title cannot be deleted
     assert admin_response.status_code == 204
     assert editor_response.status_code == 204
 
@@ -3318,6 +3452,7 @@ def test_post_dataset_subjects_metadata(clients):
     assert response_data[0]["scheme_uri"] == "Scheme URI"
     assert response_data[0]["subject"] == "Subject"
     assert response_data[0]["value_uri"] == "Value URI"
+    assert response_data[0]["classification_code"] == "Classification Code"
 
     admin_response = _admin_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/subject",
@@ -3335,6 +3470,50 @@ def test_post_dataset_subjects_metadata(clients):
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
     pytest.global_dataset_subject_id_admin = admin_response_data[0]["id"]
+
+    assert admin_response_data[0]["scheme"] == "Admin Scheme"
+    assert admin_response_data[0]["scheme_uri"] == "Scheme URI"
+    assert admin_response_data[0]["subject"] == "Subject"
+    assert admin_response_data[0]["value_uri"] == "Admin Value URI"
+    assert admin_response_data[0]["classification_code"] == "Classification Code"
+
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/subject",
+        json=[
+            {
+                "classification_code": "Classification Code",
+                "scheme": "Editor Scheme",
+                "scheme_uri": "Scheme URI",
+                "subject": "Subject",
+                "value_uri": "Editor Value URI",
+            }
+        ]
+    )
+
+    assert editor_response.status_code == 201
+    editor_response_data = json.loads(editor_response.data)
+    pytest.global_dataset_subject_id_editor = editor_response_data[0]["id"]
+
+    assert editor_response_data[0]["scheme"] == "Editor Scheme"
+    assert editor_response_data[0]["scheme_uri"] == "Scheme URI"
+    assert editor_response_data[0]["subject"] == "Subject"
+    assert editor_response_data[0]["value_uri"] == "Editor Value URI"
+    assert editor_response_data[0]["classification_code"] == "Classification Code"
+
+    viewer_response = _viewer_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/subject",
+        json=[
+            {
+                "classification_code": "Classification Code",
+                "scheme": "Viewer Scheme",
+                "scheme_uri": "Scheme URI",
+                "subject": "Subject",
+                "value_uri": "Viewer Value URI",
+            }
+        ]
+    )
+
+    assert viewer_response.status_code == 403
 
 
 def test_get_dataset_subjects_metadata(clients):
@@ -3405,14 +3584,14 @@ def test_post_dataset_title_metadata(clients):
 
     response = _logged_in_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/title",
-        json=[{"title": "Title", "type": "Subtitle"}],
+        json=[{"title": "Owner Title", "type": "Subtitle"}],
     )
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_title_id = response_data[0]["id"]
 
-    assert response_data[0]["title"] == "Title"
+    assert response_data[0]["title"] == "Owner Title"
     assert response_data[0]["type"] == "Subtitle"
 
     admin_response = _admin_client.post(
@@ -3482,33 +3661,118 @@ def test_get_dataset_title_metadata(clients):
     editor_response_data = json.loads(editor_response.data)
     viewer_response_data = json.loads(viewer_response.data)
 
-    assert response_data[0]["title"] == "Title"
-    assert response_data[0]["type"] == "Subtitle"
-    assert response_data[1]["title"] == "Admin Title"
-    assert response_data[1]["type"] == "Subtitle"
-    assert response_data[2]["title"] == "Editor Title"
-    assert response_data[2]["type"] == "Subtitle"
+    assert len(response_data) == 4
+    assert len(admin_response_data) == 4
+    assert len(editor_response_data) == 4
+    assert len(viewer_response_data) == 4
 
-    assert admin_response_data[0]["title"] == "Title"
-    assert admin_response_data[0]["type"] == "Subtitle"
-    assert admin_response_data[1]["title"] == "Admin Title"
-    assert admin_response_data[1]["type"] == "Subtitle"
-    assert admin_response_data[2]["title"] == "Editor Title"
-    assert admin_response_data[2]["type"] == "Subtitle"
+    # search for maintitle index
+    # pylint: disable=line-too-long
+    main_title = next(
+        (index for (index, d) in enumerate(response_data) if d["type"] == "MainTitle"),
+        None
+    )
+    a_main_title = next(
+        (index for (index, d) in enumerate(admin_response_data) if d["type"] == "MainTitle"),
+        None
+    )
+    e_main_title = next(
+        (index for (index, d) in enumerate(editor_response_data) if d["type"] == "MainTitle"),
+        None
+    )
+    v_main_title = next(
+        (index for (index, d) in enumerate(viewer_response_data) if d["type"] == "MainTitle"),
+        None
+    )
+    # search for admin title index
+    admin_title = next(
+        (index for (index, d) in enumerate(response_data) if d["title"] == "Admin Title"),
+        None
+    )
+    a_admin_title = next(
+        (index for (index, d) in enumerate(admin_response_data) if d["title"] == "Admin Title"),
+        None
+    )
+    e_admin_title = next(
+        (index for (index, d) in enumerate(editor_response_data) if d["title"] == "Admin Title"),
+        None
+    )
+    v_admin_title = next(
+        (index for (index, d) in enumerate(viewer_response_data) if d["title"] == "Admin Title"),
+        None
+    )
 
-    assert editor_response_data[0]["title"] == "Title"
-    assert editor_response_data[0]["type"] == "Subtitle"
-    assert editor_response_data[1]["title"] == "Admin Title"
-    assert editor_response_data[1]["type"] == "Subtitle"
-    assert editor_response_data[2]["title"] == "Editor Title"
-    assert editor_response_data[2]["type"] == "Subtitle"
+    # search for editor title index
+    editor_title = next(
+        (index for (index, d) in enumerate(response_data) if d["title"] == "Editor Title"),
+        None
+    )
+    a_editor_title = next(
+        (index for (index, d) in enumerate(admin_response_data) if d["title"] == "Editor Title"),
+        None
+    )
+    e_editor_title = next(
+        (index for (index, d) in enumerate(editor_response_data) if d["title"] == "Editor Title"),
+        None
+    )
+    v_editor_title = next(
+        (index for (index, d) in enumerate(viewer_response_data) if d["title"] == "Editor Title"),
+        None
+    )
 
-    assert viewer_response_data[0]["title"] == "Title"
-    assert viewer_response_data[0]["type"] == "Subtitle"
-    assert viewer_response_data[1]["title"] == "Admin Title"
-    assert viewer_response_data[1]["type"] == "Subtitle"
-    assert viewer_response_data[2]["title"] == "Editor Title"
-    assert viewer_response_data[2]["type"] == "Subtitle"
+    # search for owner title index
+    own_title = next(
+        (index for (index, d) in enumerate(response_data) if d["title"] == "Owner Title"),
+        None
+    )
+    a_own_title = next(
+        (index for (index, d) in enumerate(admin_response_data) if d["title"] == "Owner Title"),
+        None
+    )
+    e_own_title = next(
+        (index for (index, d) in enumerate(editor_response_data) if d["title"] == "Owner Title"),
+        None
+    )
+    v_own_title = next(
+        (index for (index, d) in enumerate(viewer_response_data) if d["title"] == "Owner Title"),
+        None
+    )
+
+    assert response_data[main_title]["title"] == "Dataset Title"
+    assert response_data[main_title]["type"] == "MainTitle"
+    assert response_data[own_title]["title"] == "Owner Title"
+    assert response_data[own_title]["type"] == "Subtitle"
+    assert response_data[admin_title]["title"] == "Admin Title"
+    assert response_data[admin_title]["type"] == "Subtitle"
+    assert response_data[editor_title]["title"] == "Editor Title"
+    assert response_data[editor_title]["type"] == "Subtitle"
+
+    assert admin_response_data[a_main_title]["title"] == "Dataset Title"
+    assert admin_response_data[a_main_title]["type"] == "MainTitle"
+    assert admin_response_data[a_own_title]["title"] == "Owner Title"
+    assert admin_response_data[a_own_title]["type"] == "Subtitle"
+    assert admin_response_data[a_admin_title]["title"] == "Admin Title"
+    assert admin_response_data[a_admin_title]["type"] == "Subtitle"
+    assert admin_response_data[a_editor_title]["title"] == "Editor Title"
+    assert admin_response_data[a_editor_title]["type"] == "Subtitle"
+
+    assert editor_response_data[e_main_title]["title"] == "Dataset Title"
+    assert editor_response_data[e_main_title]["type"] == "MainTitle"
+    assert editor_response_data[e_own_title]["title"] == "Owner Title"
+    assert editor_response_data[e_own_title]["type"] == "Subtitle"
+    assert editor_response_data[e_admin_title]["title"] == "Admin Title"
+    assert editor_response_data[e_admin_title]["type"] == "Subtitle"
+    assert editor_response_data[e_editor_title]["title"] == "Editor Title"
+    assert editor_response_data[e_editor_title]["type"] == "Subtitle"
+
+    assert viewer_response_data[v_main_title]["title"] == "Dataset Title"
+    assert viewer_response_data[v_main_title]["type"] == "MainTitle"
+    assert viewer_response_data[v_own_title]["title"] == "Owner Title"
+    assert viewer_response_data[v_own_title]["type"] == "Subtitle"
+    assert viewer_response_data[v_admin_title]["title"] == "Admin Title"
+    assert viewer_response_data[v_admin_title]["type"] == "Subtitle"
+    assert viewer_response_data[v_editor_title]["title"] == "Editor Title"
+    assert viewer_response_data[v_editor_title]["type"] == "Subtitle"
 
 
 def test_delete_dataset_title_metadata(clients):

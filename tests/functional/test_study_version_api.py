@@ -9,7 +9,8 @@ import pytest
 def test_get_version_study_metadata(clients):
     """
     Given a Flask application configured for testing
-    WHEN the /study/{study_id}/dataset/{dataset_id}/version/{version_id}/study-metadata endpoint is requested (GET)
+    WHEN the /study/{study_id}/dataset/{dataset_id}/version/{version_id}/study-metadata
+    endpoint is requested (GET)
     THEN check that the response is valid and retrieves the design metadata
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
@@ -199,7 +200,8 @@ def test_get_version_study_metadata(clients):
 def test_get_version_dataset_metadata(clients):
     """
     Given a Flask application configured for testing
-    WHEN the '/study/<study_id>/dataset/<dataset_id>/version/<version_id>/dataset-metadata' endpoint is requested (GET)
+    WHEN the '/study/<study_id>/dataset/<dataset_id>/version/<version_id>/dataset-metadata'
+    endpoint is requested (GET)
     THEN check that the response is valid and retrieves the design metadata
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
@@ -207,7 +209,7 @@ def test_get_version_dataset_metadata(clients):
     dataset_id = pytest.global_dataset_id  # type: ignore
     version_id = pytest.global_dataset_version_id  # type: ignore
 
-    _logged_in_client.post(
+    contributor_response = _logged_in_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor",
         json=[
             {
@@ -228,7 +230,7 @@ def test_get_version_dataset_metadata(clients):
             }
         ],
     )
-    _logged_in_client.post(
+    creator_response = _logged_in_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/creator",
         json=[
             {
@@ -249,11 +251,11 @@ def test_get_version_dataset_metadata(clients):
         ],
     )
 
-    _logged_in_client.post(
+    date_response = _logged_in_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/date",
         json=[{"date": 20210101, "type": "Type", "information": "Info"}],
     )
-    _logged_in_client.post(
+    funder_response = _logged_in_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/funder",
         json=[
             {
@@ -267,7 +269,7 @@ def test_get_version_dataset_metadata(clients):
             }
         ],
     )
-    _logged_in_client.post(
+    rights_response = _logged_in_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights",
         json=[
             {
@@ -278,7 +280,7 @@ def test_get_version_dataset_metadata(clients):
             }
         ],
     )
-    _logged_in_client.post(
+    subject_response = _logged_in_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/subject",
         json=[
             {
@@ -290,7 +292,7 @@ def test_get_version_dataset_metadata(clients):
             }
         ],
     )
-    _logged_in_client.post(
+    alt_identifier_response = _logged_in_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier",
         json=[
             {
@@ -299,7 +301,7 @@ def test_get_version_dataset_metadata(clients):
             }
         ],
     )
-    _logged_in_client.post(
+    related_item_response = _logged_in_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item",
         json=[
             {
@@ -341,10 +343,29 @@ def test_get_version_dataset_metadata(clients):
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/dataset-metadata"
     )
-    response_data = json.loads(response.data)
-    # print(response_data)
 
+    assert contributor_response.status_code == 201
+    assert creator_response.status_code == 201
+    assert date_response.status_code == 201
+    assert funder_response.status_code == 201
+    assert rights_response.status_code == 201
+    assert subject_response.status_code == 201
+    assert alt_identifier_response.status_code == 201
+    assert related_item_response.status_code == 201
     assert response.status_code == 200
+    response_data = json.loads(response.data)
+
+    # seach for main title index in response_data[n]["titles"]
+    # pylint: disable=line-too-long
+    main_title_0 = next(
+        (index for (index, d) in enumerate(response_data["related_items"][0]["titles"]) if d["type"] == "MainTitle"),
+        None
+    )
+    # seach for subtitle index in response_data["related_items"][0]["titles"]
+    sub_title_0 = next(
+        (index for (index, d) in enumerate(response_data["related_items"][0]["titles"]) if d["type"] == "Subtitle"),
+        None
+    )
 
     assert response_data["contributors"][0]["name"] == "Name here"
     assert response_data["contributors"][0]["name_type"] == "Personal"
@@ -386,10 +407,10 @@ def test_get_version_dataset_metadata(clients):
     )
     assert response_data["related_items"][0]["creators"][0]["name"] == "Name"
     assert response_data["related_items"][0]["creators"][0]["name_type"] == "Personal"
-    assert response_data["related_items"][0]["titles"][0]["title"] == "Title"
-    assert response_data["related_items"][0]["titles"][0]["type"] == "MainTitle"
-    assert response_data["related_items"][0]["titles"][1]["title"] == "Title"
-    assert response_data["related_items"][0]["titles"][1]["type"] == "Subtitle"
+    assert response_data["related_items"][0]["titles"][main_title_0]["title"] == "Title"
+    assert response_data["related_items"][0]["titles"][main_title_0]["type"] == "MainTitle"
+    assert response_data["related_items"][0]["titles"][sub_title_0]["title"] == "Title"
+    assert response_data["related_items"][0]["titles"][sub_title_0]["type"] == "Subtitle"
     assert (
         response_data["related_items"][0]["identifiers"][0]["identifier"]
         == "Identifier"
@@ -401,7 +422,8 @@ def test_get_version_dataset_metadata(clients):
 def test_get_version_readme(clients):
     """
     Given a Flask application configured for testing
-    WHEN the '/study/<study_id>/dataset/<dataset_id>/version/<version_id>/readme' endpoint is requested (GET)
+    WHEN the '/study/<study_id>/dataset/<dataset_id>/version/<version_id>/readme'
+    endpoint is requested (GET)
     THEN check that the response is valid and retrieves the design metadata
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
@@ -419,7 +441,8 @@ def test_get_version_readme(clients):
 def test_put_version_readme(clients):
     """
     Given a Flask application configured for testing
-    WHEN the '/study/<study_id>/dataset/<dataset_id>/version/<version_id>/readme' endpoint is requested (PUT)
+    WHEN the '/study/<study_id>/dataset/<dataset_id>/version/<version_id>/readme'
+    endpoint is requested (PUT)
     THEN check that the response is valid and retrieves the design metadata
     """
     # create a new dataset and delete it afterwards
@@ -441,7 +464,8 @@ def test_put_version_readme(clients):
 def test_put_version_changelog(clients):
     """
     Given a Flask application configured for testing
-    WHEN the '/study/<study_id>/dataset/<dataset_id>/version/<version_id>/changelog' endpoint is requested (PUT)
+    WHEN the '/study/<study_id>/dataset/<dataset_id>/version/<version_id>/changelog'
+    endpoint is requested (PUT)
     THEN check that the response is valid and retrieves the design metadata
     """
     # create a new dataset and delete it afterwards
@@ -462,7 +486,8 @@ def test_put_version_changelog(clients):
 def test_get_version_changelog(clients):
     """
     Given a Flask application configured for testing
-    WHEN the '/study/<study_id>/dataset/<dataset_id>/version/<version_id>/changelog' endpoint is requested (GET)
+    WHEN the '/study/<study_id>/dataset/<dataset_id>/version/<version_id>/changelog'
+    endpoint is requested (GET)
     THEN check that the response is valid and retrieves the design metadata
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
