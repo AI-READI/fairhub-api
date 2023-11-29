@@ -18,7 +18,7 @@ def test_get_version_study_metadata(clients):
     dataset_id = pytest.global_dataset_id  # type: ignore
     version_id = pytest.global_dataset_version_id  # type: ignore
 
-    _logged_in_client.post(
+    arm_response = _logged_in_client.post(
         f"/study/{study_id}/metadata/arm",
         json=[
             {
@@ -29,7 +29,7 @@ def test_get_version_study_metadata(clients):
             }
         ],
     )
-    _logged_in_client.post(
+    avail_ipd_response = _logged_in_client.post(
         f"/study/{study_id}/metadata/available-ipd",
         json=[
             {
@@ -40,7 +40,7 @@ def test_get_version_study_metadata(clients):
             }
         ],
     )
-    _logged_in_client.post(
+    cc_response = _logged_in_client.post(
         f"/study/{study_id}/metadata/central-contact",
         json=[
             {
@@ -53,7 +53,7 @@ def test_get_version_study_metadata(clients):
             }
         ],
     )
-    _logged_in_client.post(
+    location_response = _logged_in_client.post(
         f"/study/{study_id}/metadata/location",
         json=[
             {
@@ -66,7 +66,7 @@ def test_get_version_study_metadata(clients):
             }
         ],
     )
-    _logged_in_client.post(
+    id_response = _logged_in_client.post(
         f"/study/{study_id}/metadata/identification",
         json={
             "primary": {
@@ -85,7 +85,7 @@ def test_get_version_study_metadata(clients):
             ],
         },
     )
-    _logged_in_client.post(
+    intervention_response = _logged_in_client.post(
         f"/study/{study_id}/metadata/intervention",
         json=[
             {
@@ -97,15 +97,15 @@ def test_get_version_study_metadata(clients):
             }
         ],
     )
-    _logged_in_client.post(
+    link_response = _logged_in_client.post(
         f"/study/{study_id}/metadata/link",
         json=[{"url": "google.com", "title": "google link"}],
     )
-    _logged_in_client.post(
+    of_response = _logged_in_client.post(
         f"/study/{study_id}/metadata/overall-official",
         json=[{"name": "test", "affiliation": "aff", "role": "Study Chair"}],
     )
-    _logged_in_client.post(
+    reference_response = _logged_in_client.post(
         f"/study/{study_id}/metadata/reference",
         json=[
             {
@@ -116,12 +116,20 @@ def test_get_version_study_metadata(clients):
         ],
     )
 
+    assert arm_response.status_code == 201
+    assert avail_ipd_response.status_code == 201
+    assert cc_response.status_code == 201
+    assert location_response.status_code == 201
+    assert id_response.status_code == 201
+    assert intervention_response.status_code == 201
+    
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/study-metadata"
     )
-    response_data = json.loads(response.data)
-    # print(response_data)
+
     assert response.status_code == 200
+    response_data = json.loads(response.data)
+
     assert response_data["available_ipd"][0]["identifier"] == "identifier1"
     assert response_data["available_ipd"][0]["url"] == "google.com"
     assert response_data["arms"][0]["label"] == "Label1"

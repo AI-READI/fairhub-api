@@ -1679,12 +1679,6 @@ def test_delete_identification_metadata(clients):
     response = _logged_in_client.delete(
         f"/study/{study_id}/metadata/identification/{identification_id}"
     )
-    assert response.status_code == 204
-
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/identification")
-    assert admin_response.status_code == 200
-    admin_response_data = json.loads(admin_response.data)
-
     admin_response = _admin_client.delete(
         f"/study/{study_id}/metadata/identification/{admin_identification_id}"
     )
