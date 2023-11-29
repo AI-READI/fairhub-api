@@ -1501,9 +1501,6 @@ def test_post_identification_metadata(clients):
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
-    print("ASD:LKJAS:DLKJ:ALSKJD:LKASJD:LKJTRERWERWERWKLEJRKL")
-    print(admin_response_data)
-    print("ASD:LKJAS:DLKJ:ALSKJD:LKASJD:LKJTRERWERWERWKLEJRKL")
     pytest.global_identification_id_admin = admin_response_data["secondary"][1]["id"]
 
     assert admin_response_data["primary"]["identifier"] == "admin-first"
@@ -1687,9 +1684,6 @@ def test_delete_identification_metadata(clients):
     admin_response = _admin_client.get(f"/study/{study_id}/metadata/identification")
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    print("*************************************")
-    print(admin_response_data)
-    print("*************************************")
 
     admin_response = _admin_client.delete(
         f"/study/{study_id}/metadata/identification/{admin_identification_id}"
@@ -2120,10 +2114,6 @@ def test_get_link_metadata(clients):
     admin_response = _admin_client.get(f"/study/{study_id}/metadata/link")
     editor_response = _editor_client.get(f"/study/{study_id}/metadata/link")
     viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/link")
-    print("viewer response below39584203984209384")
-    viewer_response_data = json.loads(viewer_response.data)
-    print(viewer_response_data)
-    print("viewer response below39584203984209384")
 
     assert response.status_code == 200
     assert admin_response.status_code == 200
@@ -2155,6 +2145,13 @@ def test_get_link_metadata(clients):
     assert editor_response_data[1]["title"] == "admin-google link"
     assert editor_response_data[2]["url"] == "editor-google.com"
     assert editor_response_data[2]["title"] == "editor-google link"
+
+    assert viewer_response_data[0]["url"] == "google.com"
+    assert viewer_response_data[0]["title"] == "google link"
+    assert viewer_response_data[1]["url"] == "admin-google.com"
+    assert viewer_response_data[1]["title"] == "admin-google link"
+    assert viewer_response_data[2]["url"] == "editor-google.com"
+    assert viewer_response_data[2]["title"] == "editor-google link"
 
 
 def test_delete_link_metadata(clients):

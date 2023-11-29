@@ -44,7 +44,6 @@ def test_put_dataset_access_metadata(clients):
         },
     )
 
-    print(admin_response.status_code)
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
 
@@ -63,7 +62,6 @@ def test_put_dataset_access_metadata(clients):
         },
     )
 
-    print(editor_response.status_code)
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
 
@@ -82,7 +80,6 @@ def test_put_dataset_access_metadata(clients):
         },
     )
 
-    print(viewer_response.status_code)
     assert viewer_response.status_code == 403
 
 
@@ -659,9 +656,6 @@ def test_delete_dataset_contributor_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor/{editor_contributor_id}"
     )
 
-    print("$$$$$$$$$$")
-    print(response.status_code)
-    print("$$$$$$$$$$`")
     assert viewer_response.status_code == 403
     assert response.status_code == 204
     assert admin_response.status_code == 204
@@ -1441,7 +1435,6 @@ def test_get_dataset_descriptions_metadata(clients):
     editor_response_data = json.loads(editor_response.data)
     viewer_response_data = json.loads(viewer_response.data)
 
-    print(response_data)
     # Dataset description is included in the responses
     assert len(response_data) == 4
     assert len(admin_response_data) == 4
@@ -3445,9 +3438,6 @@ def test_get_dataset_rights_metadata(clients):
     admin_response_data = json.loads(admin_response.data)
     editor_response_data = json.loads(editor_response.data)
     viewer_response_data = json.loads(viewer_response.data)
-    print("ASDKJL:KJ --------------------------------------")
-    print(response_data)
-    print("ASDKJL:KJ --------------------------------------")
 
     assert response_data[0]["identifier"] == "Identifier"
     assert response_data[0]["identifier_scheme"] == "Identifier Scheme"
