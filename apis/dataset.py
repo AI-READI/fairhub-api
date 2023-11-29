@@ -269,7 +269,7 @@ class VersionDatasetChangelog(Resource):
         version_ = model.Version.query.get(version_id)
         version_.changelog = data["changelog"]
         model.db.session.commit()
-        return version_.changelog, 200
+        return {"changelog": version_.changelog}, 200
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/readme")

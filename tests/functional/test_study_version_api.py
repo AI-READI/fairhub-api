@@ -884,9 +884,9 @@ def test_put_version_changelog(clients):
     admin_response_data = json.loads(admin_response.data)
     editor_response_data = json.loads(editor_response.data)
 
-    assert response_data == "changelog test"
-    assert admin_response_data == "changelog test"
-    assert editor_response_data == "changelog test"
+    assert response_data["changelog"] == "changelog test"
+    assert admin_response_data["changelog"] == "changelog test"
+    assert editor_response_data["changelog"] == "changelog test"
 
 
 def test_get_version_changelog(clients):
@@ -922,6 +922,6 @@ def test_get_version_changelog(clients):
     admin_response_data = json.loads(admin_response.data)
     editor_response_data = json.loads(editor_response.data)
 
-    assert response_data == "changelog test"
-    assert admin_response_data == "changelog test"
-    assert editor_response_data == "changelog test"
+    assert response_data["changelog"] == "changelog test"
+    assert admin_response_data["changelog"] == "changelog test"
+    assert editor_response_data["changelog"] == "changelog test"
