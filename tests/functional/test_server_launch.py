@@ -12,6 +12,7 @@ def test_server_launch(_test_client):
     response = _test_client.get("/echo")
 
     # Convert the response data from JSON to a Python dictionary
+    assert response.status_code == 200
     response_data = json.loads(response.data)
 
     # Check the response is correct

@@ -281,6 +281,17 @@ def test_delete_dataset_from_study(clients):
     assert admin_response.status_code == 204
     assert editor_response.status_code == 204
 
+    # delete original datasets created by admin and editor as they won't be used in other tests
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/dataset/{pytest.global_dataset_id_admin}",
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/dataset/{pytest.global_dataset_id_editor}",
+    )
+
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
+
 
 def test_post_dataset_version(clients):
     """

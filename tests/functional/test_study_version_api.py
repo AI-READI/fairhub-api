@@ -786,10 +786,6 @@ def test_get_version_readme(clients):
     viewer_response = _viewer_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/readme"
     )
-    # print("faslkdfj;laksjdf;lkasjdl;kurwoeiufjsakdjf")
-    # print(json.loads(editor_response.data))
-    # # assert editor_response.status_code == 200
-    # print("faslkdfj;laksjdf;lkasjdl;kurwoeiufjsakdjf")
 
     assert response.status_code == 200
     assert admin_response.status_code == 200
