@@ -777,8 +777,31 @@ def test_get_version_readme(clients):
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/readme"
     )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/readme"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/readme"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/readme"
+    )
+    print("faslkdfj;laksjdf;lkasjdl;kurwoeiufjsakdjf")
+    print(json.loads(editor_response.data))
+    # assert editor_response.status_code == 200
+    print("faslkdfj;laksjdf;lkasjdl;kurwoeiufjsakdjf")
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 403
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+
+    assert response_data["readme"] == ""
+    assert admin_response_data["readme"] == ""
+    assert editor_response_data["readme"] == ""
 
 
 def test_put_version_readme(clients):
