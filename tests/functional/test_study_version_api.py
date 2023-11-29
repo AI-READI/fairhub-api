@@ -786,10 +786,10 @@ def test_get_version_readme(clients):
     viewer_response = _viewer_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/readme"
     )
-    print("faslkdfj;laksjdf;lkasjdl;kurwoeiufjsakdjf")
-    print(json.loads(editor_response.data))
-    # assert editor_response.status_code == 200
-    print("faslkdfj;laksjdf;lkasjdl;kurwoeiufjsakdjf")
+    # print("faslkdfj;laksjdf;lkasjdl;kurwoeiufjsakdjf")
+    # print(json.loads(editor_response.data))
+    # # assert editor_response.status_code == 200
+    # print("faslkdfj;laksjdf;lkasjdl;kurwoeiufjsakdjf")
 
     assert response.status_code == 200
     assert admin_response.status_code == 200
@@ -821,10 +821,30 @@ def test_put_version_readme(clients):
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/readme",
         json={"readme": "readme test"},
     )
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/readme",
+        json={"readme": "readme test"},
+    )
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/readme",
+        json={"readme": "readme test"},
+    )
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/readme",
+        json={"readme": "readme test"},
+    )
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 403
     response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+
     assert response_data["readme"] == "readme test"
+    assert admin_response_data["readme"] == "readme test"
+    assert editor_response_data["readme"] == "readme test"
 
 
 def test_put_version_changelog(clients):
