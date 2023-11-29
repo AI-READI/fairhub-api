@@ -358,13 +358,21 @@ def test_get_version_dataset_metadata(clients):
     # seach for main title index in response_data[n]["titles"]
     # pylint: disable=line-too-long
     main_title_0 = next(
-        (index for (index, d) in enumerate(response_data["related_items"][0]["titles"]) if d["type"] == "MainTitle"),
-        None
+        (
+            index
+            for (index, d) in enumerate(response_data["related_items"][0]["titles"])
+            if d["type"] == "MainTitle"
+        ),
+        None,
     )
     # seach for subtitle index in response_data["related_items"][0]["titles"]
     sub_title_0 = next(
-        (index for (index, d) in enumerate(response_data["related_items"][0]["titles"]) if d["type"] == "Subtitle"),
-        None
+        (
+            index
+            for (index, d) in enumerate(response_data["related_items"][0]["titles"])
+            if d["type"] == "Subtitle"
+        ),
+        None,
     )
 
     assert response_data["contributors"][0]["name"] == "Name here"
@@ -408,9 +416,13 @@ def test_get_version_dataset_metadata(clients):
     assert response_data["related_items"][0]["creators"][0]["name"] == "Name"
     assert response_data["related_items"][0]["creators"][0]["name_type"] == "Personal"
     assert response_data["related_items"][0]["titles"][main_title_0]["title"] == "Title"
-    assert response_data["related_items"][0]["titles"][main_title_0]["type"] == "MainTitle"
+    assert (
+        response_data["related_items"][0]["titles"][main_title_0]["type"] == "MainTitle"
+    )
     assert response_data["related_items"][0]["titles"][sub_title_0]["title"] == "Title"
-    assert response_data["related_items"][0]["titles"][sub_title_0]["type"] == "Subtitle"
+    assert (
+        response_data["related_items"][0]["titles"][sub_title_0]["type"] == "Subtitle"
+    )
     assert (
         response_data["related_items"][0]["identifiers"][0]["identifier"]
         == "Identifier"

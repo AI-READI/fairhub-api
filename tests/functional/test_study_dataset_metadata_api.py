@@ -1454,70 +1454,130 @@ def test_get_dataset_descriptions_metadata(clients):
         None,
     )
     a_main_descrip = next(
-        (index for (index, d) in enumerate(admin_response_data) if d["type"] == "Abstract"),
+        (
+            index
+            for (index, d) in enumerate(admin_response_data)
+            if d["type"] == "Abstract"
+        ),
         None,
     )
     e_main_descrip = next(
-        (index for (index, d) in enumerate(editor_response_data) if d["type"] == "Abstract"),
+        (
+            index
+            for (index, d) in enumerate(editor_response_data)
+            if d["type"] == "Abstract"
+        ),
         None,
     )
     v_main_descrip = next(
-        (index for (index, d) in enumerate(viewer_response_data) if d["type"] == "Abstract"),
+        (
+            index
+            for (index, d) in enumerate(viewer_response_data)
+            if d["type"] == "Abstract"
+        ),
         None,
     )
 
     # search for owner description
     # pylint: disable=line-too-long
     own_descrip = next(
-        (index for (index, d) in enumerate(response_data) if d["description"] == "Owner Description"),
+        (
+            index
+            for (index, d) in enumerate(response_data)
+            if d["description"] == "Owner Description"
+        ),
         None,
     )
     a_own_descrip = next(
-        (index for (index, d) in enumerate(admin_response_data) if d["description"] == "Owner Description"),
+        (
+            index
+            for (index, d) in enumerate(admin_response_data)
+            if d["description"] == "Owner Description"
+        ),
         None,
     )
     e_own_descrip = next(
-        (index for (index, d) in enumerate(editor_response_data) if d["description"] == "Owner Description"),
+        (
+            index
+            for (index, d) in enumerate(editor_response_data)
+            if d["description"] == "Owner Description"
+        ),
         None,
     )
     v_own_descrip = next(
-        (index for (index, d) in enumerate(viewer_response_data) if d["description"] == "Owner Description"),
+        (
+            index
+            for (index, d) in enumerate(viewer_response_data)
+            if d["description"] == "Owner Description"
+        ),
         None,
     )
 
     # search for admin description
     admin_descrip = next(
-        (index for (index, d) in enumerate(response_data) if d["description"] == "Admin Description"),
+        (
+            index
+            for (index, d) in enumerate(response_data)
+            if d["description"] == "Admin Description"
+        ),
         None,
     )
     a_admin_descrip = next(
-        (index for (index, d) in enumerate(admin_response_data) if d["description"] == "Admin Description"),
+        (
+            index
+            for (index, d) in enumerate(admin_response_data)
+            if d["description"] == "Admin Description"
+        ),
         None,
     )
     e_admin_descrip = next(
-        (index for (index, d) in enumerate(editor_response_data) if d["description"] == "Admin Description"),
+        (
+            index
+            for (index, d) in enumerate(editor_response_data)
+            if d["description"] == "Admin Description"
+        ),
         None,
     )
     v_admin_descrip = next(
-        (index for (index, d) in enumerate(viewer_response_data) if d["description"] == "Admin Description"),
+        (
+            index
+            for (index, d) in enumerate(viewer_response_data)
+            if d["description"] == "Admin Description"
+        ),
         None,
     )
 
     # search for editor description
     edit_descrip = next(
-        (index for (index, d) in enumerate(response_data) if d["description"] == "Editor Description"),
+        (
+            index
+            for (index, d) in enumerate(response_data)
+            if d["description"] == "Editor Description"
+        ),
         None,
     )
     a_edit_descrip = next(
-        (index for (index, d) in enumerate(admin_response_data) if d["description"] == "Editor Description"),
+        (
+            index
+            for (index, d) in enumerate(admin_response_data)
+            if d["description"] == "Editor Description"
+        ),
         None,
     )
     e_edit_descrip = next(
-        (index for (index, d) in enumerate(editor_response_data) if d["description"] == "Editor Description"),
+        (
+            index
+            for (index, d) in enumerate(editor_response_data)
+            if d["description"] == "Editor Description"
+        ),
         None,
     )
     v_edit_descrip = next(
-        (index for (index, d) in enumerate(viewer_response_data) if d["description"] == "Editor Description"),
+        (
+            index
+            for (index, d) in enumerate(viewer_response_data)
+            if d["description"] == "Editor Description"
+        ),
         None,
     )
 
@@ -2331,13 +2391,21 @@ def test_post_dataset_related_item_metadata(clients):
     response_data = json.loads(response.data)
     # seach for main title index in response_data[n]["titles"]
     main_title_0 = next(
-        (index for (index, d) in enumerate(response_data[0]["titles"]) if d["type"] == "MainTitle"),
-        None
+        (
+            index
+            for (index, d) in enumerate(response_data[0]["titles"])
+            if d["type"] == "MainTitle"
+        ),
+        None,
     )
     # seach for subtitle index in response_data[n]["titles"]
     sub_title_0 = next(
-        (index for (index, d) in enumerate(response_data[0]["titles"]) if d["type"] == "Subtitle"),
-        None
+        (
+            index
+            for (index, d) in enumerate(response_data[0]["titles"])
+            if d["type"] == "Subtitle"
+        ),
+        None,
     )
     pytest.global_dataset_related_item_id = response_data[0]["id"]
     pytest.global_dataset_related_item_contributor_id = response_data[0][
@@ -2350,8 +2418,12 @@ def test_post_dataset_related_item_metadata(clients):
         0
     ]["id"]
     # pylint: disable=line-too-long
-    pytest.global_dataset_related_item_main_title_id = response_data[0]["titles"][main_title_0]["id"]
-    pytest.global_dataset_related_item_sub_title_id = response_data[0]["titles"][sub_title_0]["id"]
+    pytest.global_dataset_related_item_main_title_id = response_data[0]["titles"][
+        main_title_0
+    ]["id"]
+    pytest.global_dataset_related_item_sub_title_id = response_data[0]["titles"][
+        sub_title_0
+    ]["id"]
 
     assert response_data[0]["contributors"][0]["name"] == "Ndafsdame"
     assert response_data[0]["contributors"][0]["contributor_type"] == "Con Type"
@@ -2631,37 +2703,69 @@ def test_get_dataset_related_item_metadata(clients):
     # seach for main title index in response_data[n]["titles"]
     # pylint: disable=line-too-long
     main_title_0 = next(
-        (index for (index, d) in enumerate(response_data[0]["titles"]) if d["type"] == "MainTitle"),
-        None
+        (
+            index
+            for (index, d) in enumerate(response_data[0]["titles"])
+            if d["type"] == "MainTitle"
+        ),
+        None,
     )
     # seach for subtitle index in response_data[n]["titles"]
     sub_title_0 = next(
-        (index for (index, d) in enumerate(response_data[0]["titles"]) if d["type"] == "Subtitle"),
-        None
+        (
+            index
+            for (index, d) in enumerate(response_data[0]["titles"])
+            if d["type"] == "Subtitle"
+        ),
+        None,
     )
     a_main_title_0 = next(
-        (index for (index, d) in enumerate(admin_response_data[0]["titles"]) if d["type"] == "MainTitle"),
-        None
+        (
+            index
+            for (index, d) in enumerate(admin_response_data[0]["titles"])
+            if d["type"] == "MainTitle"
+        ),
+        None,
     )
     a_sub_title_0 = next(
-        (index for (index, d) in enumerate(admin_response_data[0]["titles"]) if d["type"] == "Subtitle"),
-        None
+        (
+            index
+            for (index, d) in enumerate(admin_response_data[0]["titles"])
+            if d["type"] == "Subtitle"
+        ),
+        None,
     )
     e_main_title_0 = next(
-        (index for (index, d) in enumerate(editor_response_data[0]["titles"]) if d["type"] == "MainTitle"),
-        None
+        (
+            index
+            for (index, d) in enumerate(editor_response_data[0]["titles"])
+            if d["type"] == "MainTitle"
+        ),
+        None,
     )
     e_sub_title_0 = next(
-        (index for (index, d) in enumerate(editor_response_data[0]["titles"]) if d["type"] == "Subtitle"),
-        None
+        (
+            index
+            for (index, d) in enumerate(editor_response_data[0]["titles"])
+            if d["type"] == "Subtitle"
+        ),
+        None,
     )
     v_main_title_0 = next(
-        (index for (index, d) in enumerate(viewer_response_data[0]["titles"]) if d["type"] == "MainTitle"),
-        None
+        (
+            index
+            for (index, d) in enumerate(viewer_response_data[0]["titles"])
+            if d["type"] == "MainTitle"
+        ),
+        None,
     )
     v_sub_title_0 = next(
-        (index for (index, d) in enumerate(viewer_response_data[0]["titles"]) if d["type"] == "Subtitle"),
-        None
+        (
+            index
+            for (index, d) in enumerate(viewer_response_data[0]["titles"])
+            if d["type"] == "Subtitle"
+        ),
+        None,
     )
 
     assert response_data[0]["contributors"][0]["name"] == "Ndafsdame"
@@ -3259,7 +3363,7 @@ def test_post_dataset_rights_metadata(clients):
                 "rights": "Admin Rights",
                 "uri": "Admin URI",
             }
-        ]
+        ],
     )
 
     assert admin_response.status_code == 201
@@ -3280,7 +3384,7 @@ def test_post_dataset_rights_metadata(clients):
                 "rights": "Editor Rights",
                 "uri": "Editor URI",
             }
-        ]
+        ],
     )
 
     assert editor_response.status_code == 201
@@ -3301,7 +3405,7 @@ def test_post_dataset_rights_metadata(clients):
                 "rights": "Viewer Rights",
                 "uri": "Viewer URI",
             }
-        ]
+        ],
     )
 
     assert viewer_response.status_code == 403
@@ -3464,7 +3568,7 @@ def test_post_dataset_subjects_metadata(clients):
                 "subject": "Subject",
                 "value_uri": "Admin Value URI",
             }
-        ]
+        ],
     )
 
     assert admin_response.status_code == 201
@@ -3487,7 +3591,7 @@ def test_post_dataset_subjects_metadata(clients):
                 "subject": "Subject",
                 "value_uri": "Editor Value URI",
             }
-        ]
+        ],
     )
 
     assert editor_response.status_code == 201
@@ -3510,7 +3614,7 @@ def test_post_dataset_subjects_metadata(clients):
                 "subject": "Subject",
                 "value_uri": "Viewer Value URI",
             }
-        ]
+        ],
     )
 
     assert viewer_response.status_code == 403
@@ -3596,7 +3700,7 @@ def test_post_dataset_title_metadata(clients):
 
     admin_response = _admin_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/title",
-        json=[{"title": "Admin Title", "type": "Subtitle"}]
+        json=[{"title": "Admin Title", "type": "Subtitle"}],
     )
 
     assert admin_response.status_code == 201
@@ -3608,7 +3712,7 @@ def test_post_dataset_title_metadata(clients):
 
     editor_response = _editor_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/title",
-        json=[{"title": "Editor Title", "type": "Subtitle"}]
+        json=[{"title": "Editor Title", "type": "Subtitle"}],
     )
 
     assert editor_response.status_code == 201
@@ -3620,7 +3724,7 @@ def test_post_dataset_title_metadata(clients):
 
     viewer_response = _viewer_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/title",
-        json=[{"title": "Viewer Title", "type": "Subtitle"}]
+        json=[{"title": "Viewer Title", "type": "Subtitle"}],
     )
 
     assert viewer_response.status_code == 403
@@ -3670,72 +3774,132 @@ def test_get_dataset_title_metadata(clients):
     # pylint: disable=line-too-long
     main_title = next(
         (index for (index, d) in enumerate(response_data) if d["type"] == "MainTitle"),
-        None
+        None,
     )
     a_main_title = next(
-        (index for (index, d) in enumerate(admin_response_data) if d["type"] == "MainTitle"),
-        None
+        (
+            index
+            for (index, d) in enumerate(admin_response_data)
+            if d["type"] == "MainTitle"
+        ),
+        None,
     )
     e_main_title = next(
-        (index for (index, d) in enumerate(editor_response_data) if d["type"] == "MainTitle"),
-        None
+        (
+            index
+            for (index, d) in enumerate(editor_response_data)
+            if d["type"] == "MainTitle"
+        ),
+        None,
     )
     v_main_title = next(
-        (index for (index, d) in enumerate(viewer_response_data) if d["type"] == "MainTitle"),
-        None
+        (
+            index
+            for (index, d) in enumerate(viewer_response_data)
+            if d["type"] == "MainTitle"
+        ),
+        None,
     )
     # search for admin title index
     admin_title = next(
-        (index for (index, d) in enumerate(response_data) if d["title"] == "Admin Title"),
-        None
+        (
+            index
+            for (index, d) in enumerate(response_data)
+            if d["title"] == "Admin Title"
+        ),
+        None,
     )
     a_admin_title = next(
-        (index for (index, d) in enumerate(admin_response_data) if d["title"] == "Admin Title"),
-        None
+        (
+            index
+            for (index, d) in enumerate(admin_response_data)
+            if d["title"] == "Admin Title"
+        ),
+        None,
     )
     e_admin_title = next(
-        (index for (index, d) in enumerate(editor_response_data) if d["title"] == "Admin Title"),
-        None
+        (
+            index
+            for (index, d) in enumerate(editor_response_data)
+            if d["title"] == "Admin Title"
+        ),
+        None,
     )
     v_admin_title = next(
-        (index for (index, d) in enumerate(viewer_response_data) if d["title"] == "Admin Title"),
-        None
+        (
+            index
+            for (index, d) in enumerate(viewer_response_data)
+            if d["title"] == "Admin Title"
+        ),
+        None,
     )
 
     # search for editor title index
     editor_title = next(
-        (index for (index, d) in enumerate(response_data) if d["title"] == "Editor Title"),
-        None
+        (
+            index
+            for (index, d) in enumerate(response_data)
+            if d["title"] == "Editor Title"
+        ),
+        None,
     )
     a_editor_title = next(
-        (index for (index, d) in enumerate(admin_response_data) if d["title"] == "Editor Title"),
-        None
+        (
+            index
+            for (index, d) in enumerate(admin_response_data)
+            if d["title"] == "Editor Title"
+        ),
+        None,
     )
     e_editor_title = next(
-        (index for (index, d) in enumerate(editor_response_data) if d["title"] == "Editor Title"),
-        None
+        (
+            index
+            for (index, d) in enumerate(editor_response_data)
+            if d["title"] == "Editor Title"
+        ),
+        None,
     )
     v_editor_title = next(
-        (index for (index, d) in enumerate(viewer_response_data) if d["title"] == "Editor Title"),
-        None
+        (
+            index
+            for (index, d) in enumerate(viewer_response_data)
+            if d["title"] == "Editor Title"
+        ),
+        None,
     )
 
     # search for owner title index
     own_title = next(
-        (index for (index, d) in enumerate(response_data) if d["title"] == "Owner Title"),
-        None
+        (
+            index
+            for (index, d) in enumerate(response_data)
+            if d["title"] == "Owner Title"
+        ),
+        None,
     )
     a_own_title = next(
-        (index for (index, d) in enumerate(admin_response_data) if d["title"] == "Owner Title"),
-        None
+        (
+            index
+            for (index, d) in enumerate(admin_response_data)
+            if d["title"] == "Owner Title"
+        ),
+        None,
     )
     e_own_title = next(
-        (index for (index, d) in enumerate(editor_response_data) if d["title"] == "Owner Title"),
-        None
+        (
+            index
+            for (index, d) in enumerate(editor_response_data)
+            if d["title"] == "Owner Title"
+        ),
+        None,
     )
     v_own_title = next(
-        (index for (index, d) in enumerate(viewer_response_data) if d["title"] == "Owner Title"),
-        None
+        (
+            index
+            for (index, d) in enumerate(viewer_response_data)
+            if d["title"] == "Owner Title"
+        ),
+        None,
     )
 
     assert response_data[main_title]["title"] == "Dataset Title"
