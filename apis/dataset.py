@@ -156,7 +156,7 @@ class VersionResource(Resource):
         self, study_id: int, dataset_id: int, version_id: int
     ):  # pylint: disable= unused-argument
         study = model.Study.query.get(study_id)
-        if not is_granted("delete_dataset", study):
+        if not is_granted("delete_version", study):
             return "Access denied, you can not delete dataset", 403
         version_obj = model.Version.query.get(version_id)
         model.db.session.delete(version_obj)
