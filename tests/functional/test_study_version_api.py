@@ -88,6 +88,54 @@ def test_get_all_dataset_versions(clients):
     assert editor_response_data[0]["changelog"] == "changelog testing here"
 
 
+def test_get_dataset_version(clients):
+    """
+    Given a Flask application configured for testing, study ID, dataset ID and version ID
+    When the '/study/{study_id}/dataset/{dataset_id}/version/{version_id}'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset version
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+    version_id = pytest.global_dataset_version_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}",
+    )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}"
+    )
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 403
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+
+    assert response_data["title"] == "Dataset Version 1.0"
+    assert response_data["published"] is False
+    assert response_data["doi"] == "doi:test"
+    assert response_data["changelog"] == "changelog testing here"
+
+    assert admin_response_data["title"] == "Dataset Version 1.0"
+    assert admin_response_data["published"] is False
+    assert admin_response_data["doi"] == "doi:test"
+    assert admin_response_data["changelog"] == "changelog testing here"
+
+    assert editor_response_data["title"] == "Dataset Version 1.0"
+    assert editor_response_data["published"] is False
+    assert editor_response_data["doi"] == "doi:test"
+    assert editor_response_data["changelog"] == "changelog testing here"
+
 
 def test_get_version_study_metadata(clients):
     """
