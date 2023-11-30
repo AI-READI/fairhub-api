@@ -147,7 +147,7 @@ class VersionResource(Resource):
         data_version_obj = model.Version.query.get(version_id)
         data_version_obj.update(request.json)
         model.db.session.commit()
-        return jsonify(data_version_obj.to_dict()), 200
+        return data_version_obj.to_dict(), 200
 
     @api.response(204, "Success")
     @api.response(400, "Validation Error")
