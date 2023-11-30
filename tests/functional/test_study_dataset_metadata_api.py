@@ -3516,7 +3516,26 @@ def test_delete_dataset_rights_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     rights_id = pytest.global_dataset_rights_id
+    a_rights_id = pytest.global_dataset_rights_id_admin
+    e_rights_id = pytest.global_dataset_rights_id_editor
 
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights/{rights_id}"
+    )
+    response = _logged_in_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights/{rights_id}"
+    )
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights/{a_rights_id}"
+    )
+    editor_response = _admin_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights/{e_rights_id}"
+    )
+
+    assert viewer_response.status_code == 403
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 # ------------------- SUBJECTS METADATA ------------------- #
