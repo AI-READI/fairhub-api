@@ -15,6 +15,8 @@ You will need the following installed on your system:
 
 If you would like to update the api, please follow the instructions below.
 
+Don't forget to start the database before running the api. See [Database](#database) for more information.
+
 1. Create a local virtual environment and activate it:
 
    ```bash
@@ -83,19 +85,18 @@ If you would like to update the api, please follow the instructions below.
 
 ## Database
 
-The api uses a postgres database. You can run a postgres database locally using docker:
+The api uses a postgres database. You can create a database locally using docker:
 
 ```bash
-docker-compose -f ./db-docker-compose.yml up
+docker-compose -f ./db-docker-compose.yaml up
+docker-compose -f ./db-docker-compose.yaml up -d # if you want the db to run in the background
 ```
 
 Close the database with:
 
 ```bash
-docker-compose -f ./db-docker-compose.yml down -v
+docker-compose -f ./db-docker-compose.yaml down -v
 ```
-
-This database will not persist data between runs.
 
 ## License
 
