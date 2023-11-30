@@ -1901,7 +1901,26 @@ def test_delete_dataset_funder_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     funder_id = pytest.global_dataset_funder_id
+    a_funder_id = pytest.global_dataset_funder_id_admin
+    e_funder_id = pytest.global_dataset_funder_id_editor
 
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/funder/{funder_id}"
+    )
+    response = _logged_in_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/funder/{funder_id}"
+    )
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/funder/{a_funder_id}"
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/funder/{e_funder_id}"
+    )
+
+    assert viewer_response.status_code == 403
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 # ------------------- OTHER METADATA ------------------- #
