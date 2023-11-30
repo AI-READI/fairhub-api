@@ -49,7 +49,6 @@ class StudyLocation(db.Model):  # type: ignore
         return {
             "id": self.id,
             "facility": self.facility,
-            "city": self.city,
             "country": self.country,
         }
 

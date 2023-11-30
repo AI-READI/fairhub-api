@@ -34,7 +34,7 @@ class DatasetConsentResource(Resource):
         """Get dataset consent"""
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_consent_ = dataset_.dataset_consent
-        return dataset_consent_.to_dict()
+        return dataset_consent_.to_dict(), 200
 
     @api.doc("update consent")
     @api.response(200, "Success")
@@ -80,4 +80,4 @@ class DatasetConsentResource(Resource):
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_.dataset_consent.update(data)
         model.db.session.commit()
-        return dataset_.dataset_consent.to_dict()
+        return dataset_.dataset_consent.to_dict(), 200

@@ -30,7 +30,7 @@ class DatasetRecordKeysResource(Resource):
         dataset_ = model.Dataset.query.get(dataset_id)
 
         dataset_record_keys_ = dataset_.dataset_record_keys
-        return dataset_record_keys_.to_dict()
+        return dataset_record_keys_.to_dict(), 200
 
     @api.doc("update record keys")
     @api.response(200, "Success")
@@ -66,4 +66,4 @@ class DatasetRecordKeysResource(Resource):
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_.dataset_record_keys.update(data)
         model.db.session.commit()
-        return dataset_.dataset_record_keys.to_dict(), 201
+        return dataset_.dataset_record_keys.to_dict(), 200

@@ -1,7 +1,7 @@
 """API endpoints for dataset alternate identifier"""
 from typing import Any, Union
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -32,7 +32,7 @@ class DatasetAlternateIdentifierResource(Resource):
         """Get dataset alternate identifier"""
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_identifier_ = dataset_.dataset_alternate_identifier
-        return [d.to_dict() for d in dataset_identifier_]
+        return [d.to_dict() for d in dataset_identifier_], 200
 
     @api.doc("update identifier")
     @api.response(200, "Success")
@@ -110,7 +110,7 @@ class DatasetAlternateIdentifierResource(Resource):
                 model.db.session.add(dataset_identifier_)
                 list_of_elements.append(dataset_identifier_.to_dict())
         model.db.session.commit()
-        return list_of_elements
+        return list_of_elements, 201
 
     @api.route(
         "/study/<study_id>/dataset/<dataset_id>/"
@@ -133,4 +133,4 @@ class DatasetAlternateIdentifierResource(Resource):
             model.db.session.delete(dataset_identifier_)
             model.db.session.commit()
 
-            return 204
+            return Response(status=204)
