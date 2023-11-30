@@ -137,6 +137,85 @@ def test_get_dataset_version(clients):
     assert editor_response_data["changelog"] == "changelog testing here"
 
 
+def test_put_dataset_version(clients):
+    """
+    Given a Flask application configured for testing, study ID, dataset ID and version ID
+    When the '/study/{study_id}/dataset/{dataset_id}/version/{version_id}'
+    is requested (PUT)
+    Then check that the response is valid and updates the dataset version
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+    version_id = pytest.global_dataset_version_id
+
+    response = _logged_in_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}",
+        json={
+            "title": "Dataset Version 2.0",
+            "changelog": "Updating the changelog",
+            "published": False,
+            "doi": "doi:test123",
+            "readme": "readme testing here",
+        }
+    )
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    print(response_data)
+
+    assert response_data["title"] == "Dataset Version 2.0"
+    assert response_data["changelog"] == "Updating the changelog"
+    assert response_data["doi"] == "doi:test123"
+    assert response_data["readme"] == ""
+
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}",
+        json={
+            "title": "Dataset Version 3.0",
+            "changelog": "Changelog modified by admin",
+            "published": False,
+            "doi": "doi:test",
+            "readme": "readme modified by editor"
+        }
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+
+    assert admin_response_data["title"] == "Dataset Version 3.0"
+    assert admin_response_data["changelog"] == "Changelog modified by admin"
+    assert admin_response_data["published"] is False
+    assert admin_response_data["doi"] == "doi:test"
+    assert admin_response_data["readme"] == ""
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}",
+        json={
+            "title": "Dataset Version 4.0",
+            "changelog": "Changelog modified by editor",
+            "published": False,
+            "doi": "doi:test",
+            "readme": "readme modified by editor"
+        }
+    )
+
+    assert editor_response.status_code == 403
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}",
+        json={
+            "title": "Dataset Version 5.0",
+            "changelog": "Changelog modified by viewer",
+            "published": False,
+            "doi": "test:doi",
+            "readme": "readme modified by viewer"
+        }
+    )
+
+    assert viewer_response.status_code == 403
+
+
 def test_get_version_study_metadata(clients):
     """
     Given a Flask application configured for testing
