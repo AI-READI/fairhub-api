@@ -6,6 +6,38 @@ import pytest
 
 
 # ------------------- VERSION ADD ------------------- #
+def test_post_dataset_version(clients):
+    """
+    Given a Flask application configured for testing, study ID and a dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/version'
+    endpoint is requested (POST)
+    Then check that the response is valid and creates a dataset version
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/version",
+        json={
+            "title": "Dataset Version 1.0",
+            "published": False,
+            "doi": "doi:test",
+            "changelog": "changelog testing here",
+        },
+    )
+
+    assert response.status_code == 201
+    response_data = json.loads(response.data)
+    pytest.global_dataset_version_id = response_data["id"]
+
+    assert response_data["title"] == "Dataset Version 1.0"
+    assert response_data["published"] is False
+    assert response_data["doi"] == "doi:test"
+    assert response_data["changelog"] == "changelog testing here"
+
+
+
 def test_get_version_study_metadata(clients):
     """
     Given a Flask application configured for testing
@@ -620,10 +652,10 @@ def test_get_version_dataset_metadata(clients):
     assert response_data["dates"][0]["type"] == "Type"
     assert response_data["creators"][0]["name"] == "Name here"
     assert response_data["creators"][0]["name_type"] == "Personal"
-    assert response_data["funders"][0]["name"] == "Admin Name"
+    assert response_data["funders"][0]["name"] == "Name"
     assert response_data["funders"][0]["identifier"] == "Identifier"
-    assert response_data["rights"][0]["identifier"] == "Admin Identifier"
-    assert response_data["rights"][0]["rights"] == "Admin Rights"
+    assert response_data["rights"][0]["identifier"] == "Identifier"
+    assert response_data["rights"][0]["rights"] == "Rights"
     assert response_data["subjects"][0]["subject"] == "Subject"
     assert response_data["about"]["language"] == "English"
 
@@ -675,10 +707,10 @@ def test_get_version_dataset_metadata(clients):
     assert admin_response_data["dates"][0]["type"] == "Type"
     assert admin_response_data["creators"][0]["name"] == "Name here"
     assert admin_response_data["creators"][0]["name_type"] == "Personal"
-    assert admin_response_data["funders"][0]["name"] == "Admin Name"
+    assert admin_response_data["funders"][0]["name"] == "Name"
     assert admin_response_data["funders"][0]["identifier"] == "Identifier"
-    assert admin_response_data["rights"][0]["identifier"] == "Admin Identifier"
-    assert admin_response_data["rights"][0]["rights"] == "Admin Rights"
+    assert admin_response_data["rights"][0]["identifier"] == "Identifier"
+    assert admin_response_data["rights"][0]["rights"] == "Rights"
     assert admin_response_data["subjects"][0]["subject"] == "Subject"
     assert admin_response_data["about"]["language"] == "English"
 
@@ -744,10 +776,10 @@ def test_get_version_dataset_metadata(clients):
     assert editor_response_data["dates"][0]["type"] == "Type"
     assert editor_response_data["creators"][0]["name"] == "Name here"
     assert editor_response_data["creators"][0]["name_type"] == "Personal"
-    assert editor_response_data["funders"][0]["name"] == "Admin Name"
+    assert editor_response_data["funders"][0]["name"] == "Name"
     assert editor_response_data["funders"][0]["identifier"] == "Identifier"
-    assert editor_response_data["rights"][0]["identifier"] == "Admin Identifier"
-    assert editor_response_data["rights"][0]["rights"] == "Admin Rights"
+    assert editor_response_data["rights"][0]["identifier"] == "Identifier"
+    assert editor_response_data["rights"][0]["rights"] == "Rights"
     assert editor_response_data["subjects"][0]["subject"] == "Subject"
     assert editor_response_data["about"]["language"] == "English"
 
@@ -966,3 +998,30 @@ def test_get_version_changelog(clients):
     assert response_data["changelog"] == "changelog test"
     assert admin_response_data["changelog"] == "changelog test"
     assert editor_response_data["changelog"] == "changelog test"
+
+
+def test_delete_dataset_version(clients):
+    """
+    Given a Flask application configured for testing, study ID, dataset ID and version ID
+    When the '/study/{study_id}/dataset/{dataset_id}/version/{version_id}'
+    is requested (DELETE)
+    Then check that the response is valid and deletes the dataset version
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]
+    dataset_id = pytest.global_dataset_id
+    version_id = pytest.global_dataset_version_id
+
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}"
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}"
+    )
+    response = _logged_in_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}"
+    )
+
+    assert viewer_response.status_code == 403
+    assert editor_response.status_code == 403
+    assert response.status_code == 204
