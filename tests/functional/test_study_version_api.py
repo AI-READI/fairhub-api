@@ -247,7 +247,9 @@ def test_get_version_study_metadata(clients):
 
     assert admin_response_data["design"]["study_type"] == "Interventional"
     assert admin_response_data["design"]["design_intervention_model"] == "Treatment"
-    assert admin_response_data["design"]["design_primary_purpose"] == "Parallel Assignment"
+    assert (
+        admin_response_data["design"]["design_primary_purpose"] == "Parallel Assignment"
+    )
     assert admin_response_data["design"]["design_masking"] == "Double"
     assert admin_response_data["design"]["design_masking_description"] == "tewsfdasf"
     assert admin_response_data["design"]["design_who_masked_list"] == [
@@ -316,12 +318,17 @@ def test_get_version_study_metadata(clients):
     assert editor_response_data["references"][0]["identifier"] == "reference identifier"
     assert editor_response_data["references"][0]["citation"] == "reference citation"
 
-    assert editor_response_data["description"]["brief_summary"] == "editor-brief_summary"
+    assert (
+        editor_response_data["description"]["brief_summary"] == "editor-brief_summary"
+    )
     assert editor_response_data["design"]["design_allocation"] == "editor-dfasdfasd"
 
     assert editor_response_data["design"]["study_type"] == "Interventional"
     assert editor_response_data["design"]["design_intervention_model"] == "Treatment"
-    assert editor_response_data["design"]["design_primary_purpose"] == "Parallel Assignment"
+    assert (
+        editor_response_data["design"]["design_primary_purpose"]
+        == "Parallel Assignment"
+    )
     assert editor_response_data["design"]["design_masking"] == "Double"
     assert editor_response_data["design"]["design_masking_description"] == "tewsfdasf"
     assert editor_response_data["design"]["design_who_masked_list"] == [
@@ -352,7 +359,9 @@ def test_get_version_study_metadata(clients):
         == "editor sponsor name"
     )
     assert editor_response_data["sponsors"]["responsible_party_type"] == "Sponsor"
-    assert editor_response_data["sponsors"]["lead_sponsor_name"] == "editor sponsor name"
+    assert (
+        editor_response_data["sponsors"]["lead_sponsor_name"] == "editor sponsor name"
+    )
     assert editor_response_data["collaborators"] == ["editor-collaborator1123"]
     assert editor_response_data["conditions"] == [
         "true",
@@ -566,7 +575,9 @@ def test_get_version_dataset_metadata(clients):
     a_main_title_0 = next(
         (
             index
-            for (index, d) in enumerate(admin_response_data["related_items"][0]["titles"])
+            for (index, d) in enumerate(
+                admin_response_data["related_items"][0]["titles"]
+            )
             if d["type"] == "MainTitle"
         ),
         None,
@@ -574,7 +585,9 @@ def test_get_version_dataset_metadata(clients):
     a_sub_title_0 = next(
         (
             index
-            for (index, d) in enumerate(admin_response_data["related_items"][0]["titles"])
+            for (index, d) in enumerate(
+                admin_response_data["related_items"][0]["titles"]
+            )
             if d["type"] == "Subtitle"
         ),
         None,
@@ -582,7 +595,9 @@ def test_get_version_dataset_metadata(clients):
     e_main_title_0 = next(
         (
             index
-            for (index, d) in enumerate(editor_response_data["related_items"][0]["titles"])
+            for (index, d) in enumerate(
+                editor_response_data["related_items"][0]["titles"]
+            )
             if d["type"] == "MainTitle"
         ),
         None,
@@ -590,7 +605,9 @@ def test_get_version_dataset_metadata(clients):
     e_sub_title_0 = next(
         (
             index
-            for (index, d) in enumerate(editor_response_data["related_items"][0]["titles"])
+            for (index, d) in enumerate(
+                editor_response_data["related_items"][0]["titles"]
+            )
             if d["type"] == "Subtitle"
         ),
         None,
@@ -684,20 +701,34 @@ def test_get_version_dataset_metadata(clients):
     assert admin_response_data["identifiers"][0]["type"] == "ARK"
     assert admin_response_data["related_items"][0]["publication_year"] == "1970"
     assert admin_response_data["related_items"][0]["publisher"] == "Publisher"
-    assert admin_response_data["related_items"][0]["contributors"][0]["name"] == "Ndafsdame"
+    assert (
+        admin_response_data["related_items"][0]["contributors"][0]["name"]
+        == "Ndafsdame"
+    )
     assert (
         admin_response_data["related_items"][0]["contributors"][0]["contributor_type"]
         == "Con Type"
     )
     assert admin_response_data["related_items"][0]["creators"][0]["name"] == "Name"
-    assert admin_response_data["related_items"][0]["creators"][0]["name_type"] == "Personal"
-    assert admin_response_data["related_items"][0]["titles"][a_main_title_0]["title"] == "Title"
     assert (
-        admin_response_data["related_items"][0]["titles"][a_main_title_0]["type"] == "MainTitle"
+        admin_response_data["related_items"][0]["creators"][0]["name_type"]
+        == "Personal"
     )
-    assert admin_response_data["related_items"][0]["titles"][a_sub_title_0]["title"] == "Title"
     assert (
-        admin_response_data["related_items"][0]["titles"][a_sub_title_0]["type"] == "Subtitle"
+        admin_response_data["related_items"][0]["titles"][a_main_title_0]["title"]
+        == "Title"
+    )
+    assert (
+        admin_response_data["related_items"][0]["titles"][a_main_title_0]["type"]
+        == "MainTitle"
+    )
+    assert (
+        admin_response_data["related_items"][0]["titles"][a_sub_title_0]["title"]
+        == "Title"
+    )
+    assert (
+        admin_response_data["related_items"][0]["titles"][a_sub_title_0]["type"]
+        == "Subtitle"
     )
     assert (
         admin_response_data["related_items"][0]["identifiers"][0]["identifier"]
@@ -739,20 +770,34 @@ def test_get_version_dataset_metadata(clients):
     assert editor_response_data["identifiers"][0]["type"] == "ARK"
     assert editor_response_data["related_items"][0]["publication_year"] == "1970"
     assert editor_response_data["related_items"][0]["publisher"] == "Publisher"
-    assert editor_response_data["related_items"][0]["contributors"][0]["name"] == "Ndafsdame"
+    assert (
+        editor_response_data["related_items"][0]["contributors"][0]["name"]
+        == "Ndafsdame"
+    )
     assert (
         editor_response_data["related_items"][0]["contributors"][0]["contributor_type"]
         == "Con Type"
     )
     assert editor_response_data["related_items"][0]["creators"][0]["name"] == "Name"
-    assert editor_response_data["related_items"][0]["creators"][0]["name_type"] == "Personal"
-    assert editor_response_data["related_items"][0]["titles"][e_main_title_0]["title"] == "Title"
     assert (
-        editor_response_data["related_items"][0]["titles"][e_main_title_0]["type"] == "MainTitle"
+        editor_response_data["related_items"][0]["creators"][0]["name_type"]
+        == "Personal"
     )
-    assert editor_response_data["related_items"][0]["titles"][e_sub_title_0]["title"] == "Title"
     assert (
-        editor_response_data["related_items"][0]["titles"][e_sub_title_0]["type"] == "Subtitle"
+        editor_response_data["related_items"][0]["titles"][e_main_title_0]["title"]
+        == "Title"
+    )
+    assert (
+        editor_response_data["related_items"][0]["titles"][e_main_title_0]["type"]
+        == "MainTitle"
+    )
+    assert (
+        editor_response_data["related_items"][0]["titles"][e_sub_title_0]["title"]
+        == "Title"
+    )
+    assert (
+        editor_response_data["related_items"][0]["titles"][e_sub_title_0]["type"]
+        == "Subtitle"
     )
     assert (
         editor_response_data["related_items"][0]["identifiers"][0]["identifier"]
