@@ -337,8 +337,42 @@ def test_get_all_dataset_versions(clients):
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/version",
     )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/version",
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/version",
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/version",
+    )
 
     assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 403
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+
+    assert len(response_data) == 1
+    assert len(admin_response_data) == 1
+    assert len(editor_response_data) == 1
+
+    assert response_data[0]["title"] == "Dataset Version 1.0"
+    assert response_data[0]["published"] is False
+    assert response_data[0]["doi"] == "doi:test"
+    assert response_data[0]["changelog"] == "changelog testing here"
+
+    assert admin_response_data[0]["title"] == "Dataset Version 1.0"
+    assert admin_response_data[0]["published"] is False
+    assert admin_response_data[0]["doi"] == "doi:test"
+    assert admin_response_data[0]["changelog"] == "changelog testing here"
+
+    assert editor_response_data[0]["title"] == "Dataset Version 1.0"
+    assert editor_response_data[0]["published"] is False
+    assert editor_response_data[0]["doi"] == "doi:test"
+    assert editor_response_data[0]["changelog"] == "changelog testing here"
 
 
 def test_get_dataset_version(clients):
