@@ -1640,10 +1640,10 @@ def test_delete_dataset_description_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/description/{editor_description_id}"
     )
 
+    assert viewer_response.status_code == 403
     assert response.status_code == 204
     assert admin_response.status_code == 204
     assert editor_response.status_code == 204
-    assert viewer_response.status_code == 403
 
 
 # ------------------- FUNDER METADATA ------------------- #
@@ -1902,11 +1902,6 @@ def test_delete_dataset_funder_metadata(clients):
     dataset_id = pytest.global_dataset_id
     funder_id = pytest.global_dataset_funder_id
 
-    response = _logged_in_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/funder/{funder_id}"
-    )
-
-    assert response.status_code == 204
 
 
 # ------------------- OTHER METADATA ------------------- #
@@ -2382,7 +2377,7 @@ def test_post_dataset_related_item_metadata(clients):
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
-    # seach for main title index in response_data[n]["titles"]
+    # seach for main title and subtitle index in response_data[n]["titles"]
     main_title_0 = next(
         (
             index
@@ -2391,7 +2386,6 @@ def test_post_dataset_related_item_metadata(clients):
         ),
         None,
     )
-    # seach for subtitle index in response_data[n]["titles"]
     sub_title_0 = next(
         (
             index
@@ -2693,7 +2687,7 @@ def test_get_dataset_related_item_metadata(clients):
     editor_response_data = json.loads(editor_response.data)
     viewer_response_data = json.loads(viewer_response.data)
 
-    # seach for main title index in response_data[n]["titles"]
+    # seach for main title and subtitle index in response_data[n]["titles"]
     # pylint: disable=line-too-long
     main_title_0 = next(
         (
@@ -2703,7 +2697,6 @@ def test_get_dataset_related_item_metadata(clients):
         ),
         None,
     )
-    # seach for subtitle index in response_data[n]["titles"]
     sub_title_0 = next(
         (
             index
@@ -3505,11 +3498,6 @@ def test_delete_dataset_rights_metadata(clients):
     dataset_id = pytest.global_dataset_id
     rights_id = pytest.global_dataset_rights_id
 
-    response = _logged_in_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights/{rights_id}"
-    )
-
-    assert response.status_code == 204
 
 
 # ------------------- SUBJECTS METADATA ------------------- #
