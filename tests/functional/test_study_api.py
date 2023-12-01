@@ -73,9 +73,7 @@ def test_get_all_studies(clients):
     viewer_response = _viewer_client.get("/study")
 
     assert admin_response.status_code == 200
-
     assert editor_response.status_code == 200
-
     assert viewer_response.status_code == 200
 
 
