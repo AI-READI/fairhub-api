@@ -157,7 +157,7 @@ def test_put_dataset_version(clients):
             "published": False,
             "doi": "doi:test123",
             "readme": "readme testing here",
-        }
+        },
     )
 
     assert response.status_code == 200
@@ -176,8 +176,8 @@ def test_put_dataset_version(clients):
             "changelog": "Changelog modified by admin",
             "published": False,
             "doi": "doi:test",
-            "readme": "readme modified by editor"
-        }
+            "readme": "readme modified by editor",
+        },
     )
 
     assert admin_response.status_code == 200
@@ -196,8 +196,8 @@ def test_put_dataset_version(clients):
             "changelog": "Changelog modified by editor",
             "published": False,
             "doi": "doi:test",
-            "readme": "readme modified by editor"
-        }
+            "readme": "readme modified by editor",
+        },
     )
 
     assert editor_response.status_code == 403
@@ -209,8 +209,8 @@ def test_put_dataset_version(clients):
             "changelog": "Changelog modified by viewer",
             "published": False,
             "doi": "test:doi",
-            "readme": "readme modified by viewer"
-        }
+            "readme": "readme modified by viewer",
+        },
     )
 
     assert viewer_response.status_code == 403
