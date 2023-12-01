@@ -1,6 +1,6 @@
 import typing
 
-from flask import jsonify, request, Response
+from flask import request, Response
 from flask_restx import Namespace, Resource, fields
 
 import model
