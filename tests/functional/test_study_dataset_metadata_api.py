@@ -2,6 +2,7 @@
 """Tests for the Dataset's Metadata API endpoints"""
 import json
 
+from time import sleep
 import pytest
 
 
@@ -159,6 +160,8 @@ def test_post_alternative_identifier(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
@@ -176,6 +179,8 @@ def test_post_alternative_identifier(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
     editor_response = _editor_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/alternative-identifier",
         json=[
@@ -498,6 +503,8 @@ def test_post_dataset_contributor_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
@@ -536,6 +543,8 @@ def test_post_dataset_contributor_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
@@ -693,6 +702,8 @@ def test_post_dataset_creator_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
@@ -729,6 +740,8 @@ def test_post_dataset_creator_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
@@ -1021,6 +1034,8 @@ def test_post_dataset_date_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/date",
         json=[{"date": 20210101, "type": "Type", "information": "Info"}],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
@@ -1034,6 +1049,8 @@ def test_post_dataset_date_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/date",
         json=[{"date": 20210102, "type": "Type", "information": "Info"}],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
@@ -1360,6 +1377,8 @@ def test_post_dataset_descriptions_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/description",
         json=[{"description": "Owner Description", "type": "Methods"}],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
@@ -1372,6 +1391,8 @@ def test_post_dataset_descriptions_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/description",
         json=[{"description": "Admin Description", "type": "Methods"}],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
@@ -1673,6 +1694,8 @@ def test_post_dataset_funder_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
@@ -1700,6 +1723,8 @@ def test_post_dataset_funder_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
@@ -2393,6 +2418,8 @@ def test_post_dataset_related_item_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
@@ -2493,6 +2520,8 @@ def test_post_dataset_related_item_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
@@ -3349,6 +3378,8 @@ def test_post_dataset_rights_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
@@ -3370,6 +3401,8 @@ def test_post_dataset_rights_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
@@ -3563,6 +3596,8 @@ def test_post_dataset_subjects_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
@@ -3586,6 +3621,8 @@ def test_post_dataset_subjects_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
@@ -3706,6 +3743,8 @@ def test_post_dataset_title_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/title",
         json=[{"title": "Owner Title", "type": "Subtitle"}],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
@@ -3718,6 +3757,8 @@ def test_post_dataset_title_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/title",
         json=[{"title": "Admin Title", "type": "Subtitle"}],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)

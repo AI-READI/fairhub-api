@@ -2,6 +2,7 @@
 """Tests for the Study Metadata API endpoints"""
 import json
 
+from time import sleep
 import pytest
 
 
@@ -26,6 +27,8 @@ def test_post_arm_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
@@ -50,6 +53,8 @@ def test_post_arm_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
@@ -263,6 +268,8 @@ def test_post_available_ipd_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
@@ -284,6 +291,8 @@ def test_post_available_ipd_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
@@ -461,6 +470,8 @@ def test_post_cc_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
@@ -487,6 +498,8 @@ def test_post_cc_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
@@ -1465,6 +1478,8 @@ def test_post_identification_metadata(clients):
             ],
         },
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
@@ -1498,6 +1513,8 @@ def test_post_identification_metadata(clients):
             ],
         },
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
@@ -1714,6 +1731,8 @@ def test_post_intervention_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
@@ -1737,6 +1756,8 @@ def test_post_intervention_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
@@ -2055,6 +2076,8 @@ def test_post_link_metadata(clients):
         f"/study/{study_id}/metadata/link",
         json=[{"url": "google.com", "title": "google link"}],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
@@ -2067,6 +2090,8 @@ def test_post_link_metadata(clients):
         f"/study/{study_id}/metadata/link",
         json=[{"url": "admin-google.com", "title": "admin-google link"}],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
@@ -2200,6 +2225,8 @@ def test_post_location_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
@@ -2225,6 +2252,8 @@ def test_post_location_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
@@ -2426,6 +2455,8 @@ def test_post_overall_official_metadata(clients):
         f"/study/{study_id}/metadata/overall-official",
         json=[{"name": "test", "affiliation": "aff", "role": "Study Chair"}],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
@@ -2441,6 +2472,8 @@ def test_post_overall_official_metadata(clients):
             {"name": "admin-test", "affiliation": "admin-aff", "role": "Study Chair"}
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
@@ -2666,6 +2699,8 @@ def test_post_reference_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
@@ -2685,6 +2720,8 @@ def test_post_reference_metadata(clients):
             }
         ],
     )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
