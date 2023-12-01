@@ -1897,6 +1897,37 @@ def test_get_intervention_metadata(clients):
     assert viewer_response_data[2]["other_name_list"] == ["uhh", "yes"]
 
 
+def test_delete_intervention_metadata(clients):
+    """
+    Given a Flask application configured for testing, study ID, dataset ID and intervention ID
+    WHEN the '/study/{study_id}/metadata/intervention' endpoint is requested (DELETE)
+    THEN check that the response is valid and deletes the intervention metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    intervention_id = pytest.global_intervention_id
+    a_intervention_id = pytest.global_intervention_id_admin
+    e_intervention_id = pytest.global_intervention_id_editor
+
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/metadata/intervention/{intervention_id}"
+    )
+    response = _logged_in_client.delete(
+        f"/study/{study_id}/metadata/intervention/{intervention_id}"
+    )
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/metadata/intervention/{a_intervention_id}"
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/metadata/intervention/{e_intervention_id}"
+    )
+
+    assert viewer_response.status_code == 403
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
+
+
 # ------------------- IPD SHARING METADATA ------------------- #
 def test_put_ipdsharing_metadata(clients):
     """
