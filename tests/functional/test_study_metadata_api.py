@@ -1761,7 +1761,7 @@ def test_post_intervention_metadata(clients):
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
-    pytest.global_intervention_id = response_data[0]["id"]
+    pytest.global_intervention_id_admin = admin_response_data[0]["id"]
 
     assert admin_response_data[0]["type"] == "Device"
     assert admin_response_data[0]["name"] == "admin-name test"
@@ -1784,7 +1784,7 @@ def test_post_intervention_metadata(clients):
 
     assert editor_response.status_code == 201
     editor_response_data = json.loads(editor_response.data)
-    pytest.global_intervention_id_editor = response_data[0]["id"]
+    pytest.global_intervention_id_editor = editor_response_data[0]["id"]
 
     assert editor_response_data[0]["type"] == "Device"
     assert editor_response_data[0]["name"] == "editor-name test"
