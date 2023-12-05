@@ -63,7 +63,6 @@ class SignUpUser(Resource):
             ]
 
             if data["email_address"] not in bypassed_emails:
-                print(model.StudyInvitedContributor.query.all())
                 invite = model.StudyInvitedContributor.query.filter_by(
                     email_address=data["email_address"]
                 ).one_or_none()

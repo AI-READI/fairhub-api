@@ -187,7 +187,7 @@ def _test_invite_study_contributor(_logged_in_client):
 
     response = _logged_in_client.post(
         f"/study/{study_id}/contributor",
-        json={"email_address": "editor@gmail.com", "role": "editor"},
+        json={"email_address": "editor@fairhub.io", "role": "editor"},
     )
 
     assert response.status_code == 201
@@ -197,7 +197,7 @@ def _test_invite_study_contributor(_logged_in_client):
 
     response = _logged_in_client.post(
         f"/study/{study_id}/contributor",
-        json={"email_address": "admin@gmail.com", "role": "admin"},
+        json={"email_address": "admin@fairhub.io", "role": "admin"},
     )
 
     assert response.status_code == 201
@@ -206,7 +206,7 @@ def _test_invite_study_contributor(_logged_in_client):
 
     response = _logged_in_client.post(
         f"/study/{study_id}/contributor",
-        json={"email_address": "viewer@gmail.com", "role": "viewer"},
+        json={"email_address": "viewer@fairhub.io", "role": "viewer"},
     )
 
     assert response.status_code == 201
@@ -222,7 +222,7 @@ def _create_admin_user(flask_app):
             response = _test_client.post(
                 "/auth/signup",
                 json={
-                    "email_address": "admin@gmail.com",
+                    "email_address": "admin@fairhub.io",
                     "password": "Testingyeshello11!",
                     "code": pytest.global_admin_token,
                 },
@@ -239,7 +239,7 @@ def _create_editor_user(flask_app):
             response = _test_client.post(
                 "/auth/signup",
                 json={
-                    "email_address": "editor@gmail.com",
+                    "email_address": "editor@fairhub.io",
                     "password": "Testingyeshello11!",
                     "code": pytest.global_editor_token,
                 },
@@ -256,7 +256,7 @@ def _create_viewer_user(flask_app):
             response = _test_client.post(
                 "/auth/signup",
                 json={
-                    "email_address": "viewer@gmail.com",
+                    "email_address": "viewer@fairhub.io",
                     "password": "Testingyeshello11!",
                     "code": pytest.global_viewer_token,
                 },
@@ -289,7 +289,7 @@ def clients(flask_app):
         response = _admin_client.post(
             "/auth/login",
             json={
-                "email_address": "admin@gmail.com",
+                "email_address": "admin@fairhub.io",
                 "password": "Testingyeshello11!",
             },
         )
@@ -298,7 +298,7 @@ def clients(flask_app):
         response = _editor_client.post(
             "/auth/login",
             json={
-                "email_address": "editor@gmail.com",
+                "email_address": "editor@fairhub.io",
                 "password": "Testingyeshello11!",
             },
         )
@@ -307,7 +307,7 @@ def clients(flask_app):
         response = _viewer_client.post(
             "/auth/login",
             json={
-                "email_address": "viewer@gmail.com",
+                "email_address": "viewer@fairhub.io",
                 "password": "Testingyeshello11!",
             },
         )
