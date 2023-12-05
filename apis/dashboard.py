@@ -266,26 +266,26 @@ class AddRedcapProjectDashboard(Resource):
             return e.message, 400
         if len(data["project_id"]) < 1:
             return (
-                f"redcap project_id is required to connect a dashboard: \
-                {data['project_id']}",
+                f"""redcap project_id is required to connect a dashboard:
+                {data['project_id']}""",
                 400,
             )
         if len(data["reports"]) < 1:
             return (
-                f"redcap reports are required to connect a dashboard: \
-                {data['reports']}",
+                f"""redcap reports are required to connect a dashboard:
+                {data['reports']}""",
                 400,
             )
         if len(data["dashboard_name"]) < 1:
             return (
-                f"dashboard dashboard_name is required to connect a dashboard: \
-                {data['dashboard_name']}",
+                f"""dashboard dashboard_name is required to connect a dashboard:
+                {data['dashboard_name']}""",
                 400,
             )
         if len(data["dashboard_modules"]) < 1:
             return (
-                f"dashboard dashboard_modules is required to connect a dashboard: \
-                {data['dashboard_name']}",
+                f"""dashboard dashboard_modules is required to connect a dashboard:
+                {data['dashboard_name']}""",
                 400,
             )
         connect_redcap_project_dashboard_data = (
@@ -453,32 +453,32 @@ class EditRedcapProjectDashboard(Resource):
             return e.message, 400
         if len(data["project_id"]) < 1:
             return (
-                f"redcap project_id is required to connect a dashboard: \
-                {data['project_id']}",
+                f"""redcap project_id is required to connect a dashboard:
+                {data['project_id']}""",
                 400,
             )
         if len(data["reports"]) < 1:
             return (
-                f"redcap reports are required to connect a dashboard: \
-                {data['reports']}",
+                f"""redcap reports are required to connect a dashboard:
+                {data['reports']}""",
                 400,
             )
         if len(data["dashboard_id"]) < 1:
             return (
-                f"dashboard dashboard_id is required to connect a dashboard: \
-                {data['dashboard_id']}",
+                f"""dashboard dashboard_id is required to connect a dashboard:
+                {data['dashboard_id']}""",
                 400,
             )
         if len(data["dashboard_name"]) < 1:
             return (
-                f"dashboard dashboard_name is required to connect a dashboard: \
-                {data['dashboard_name']}",
+                f"""dashboard dashboard_name is required to connect a dashboard:
+                {data['dashboard_name']}""",
                 400,
             )
         if len(data["dashboard_modules"]) < 1:
             return (
-                f"dashboard dashboard_modules is required to connect a dashboard: \
-                {data['dashboard_name']}",
+                f"""dashboard dashboard_modules is required to connect a dashboard:
+                {data['dashboard_name']}""",
                 400,
             )
         # Clear Redis Cache

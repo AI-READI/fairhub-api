@@ -116,32 +116,32 @@ class AddRedcapProjectAPI(Resource):
 
         if len(data["project_title"]) < 1:
             return (
-                f"redcap project_title is required for redcap access: \
-                {data['project_title']}",
+                f"""redcap project_title is required for redcap access:
+                {data['project_title']}""",
                 400,
             )
         if len(data["project_id"]) < 1:
             return (
-                f"redcap project_id is required for redcap access: \
-                {data['project_id']}",
+                f"""redcap project_id is required for redcap access:
+                {data['project_id']}""",
                 400,
             )
         if len(data["project_api_url"]) < 1:
             return (
-                f"redcap project_api_url is required for redcap access: \
-                {data['project_api_url']}",
+                f"""redcap project_api_url is required for redcap access:
+                {data['project_api_url']}""",
                 400,
             )
         if len(data["project_api_key"]) < 1:
             return (
-                f"redcap project_api_key is required for redcap access: \
-                {data['project_api_key']}",
+                f"""redcap project_api_key is required for redcap access:
+                {data['project_api_key']}""",
                 400,
             )
-        if isinstance(data["project_api_active"], bool):
+        if not isinstance(data["project_api_active"], bool):
             return (
-                f"redcap project_api_active is required for redcap access: \
-                {data['project_api_active']}",
+                f"""redcap project_api_active is required for redcap access:
+                {data['project_api_active']}""",
                 400,
             )
 
@@ -207,29 +207,28 @@ class EditRedcapProjectAPI(Resource):
 
         if len(data["project_id"]) < 1:
             return (
-                f"redcap project_id is required for redcap access: \
-                {data['project_id']}",
+                f"""redcap project_id is required for redcap access:
+                {data['project_id']}""",
                 400,
             )
         if len(data["project_title"]) < 1:
             return (
-                f"redcap project_title is required for redcap access: \
-                {data['project_title']}",
+                f"""redcap project_title is required for redcap access:
+                {data['project_title']}""",
                 400,
             )
         if len(data["project_api_url"]) < 1:
             return (
-                f"redcap project_api_url is required for redcap access: \
-                {data['project_api_url']}",
+                f"""redcap project_api_url is required for redcap access:
+                {data['project_api_url']}""",
                 400,
             )
-        if isinstance(data["project_api_active"], bool):
+        if not isinstance(data["project_api_active"], bool):
             return (
-                f"redcap project_api_active is required for redcap access: \
-                {data['project_api_active']}",
+                f"""redcap project_api_active is required for redcap access:
+                {data['project_api_active']}""",
                 400,
             )
-
         update_redcap_project_view = model.StudyRedcapProjectApi.query.get(
             data["project_id"]
         )
