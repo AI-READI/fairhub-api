@@ -36,6 +36,7 @@ class UserDetailsEndpoint(Resource):
     @api.response(400, "Validation Error")
     def get(self):
         """Returns user details"""
+        print("THIS IS THE USER ID: ", g.user.id)
         user = model.User.query.get(g.user.id)
         user_details = user.user_details
         user_information = user.to_dict()
@@ -47,8 +48,9 @@ class UserDetailsEndpoint(Resource):
     # @api.marshal_with(study_model)
     def put(self):
         """Updates user details"""
+        print(model.User.query.get(g.user.id))
 
-        def validate_is_valid_email(instance):
+        def _validate_is_valid_email(instance):
             email_address = instance
 
             try:
@@ -62,6 +64,7 @@ class UserDetailsEndpoint(Resource):
         schema = {
             "type": "object",
             "required": [
+                "id",
                 "email_address",
                 "username",
                 "first_name",
@@ -73,20 +76,21 @@ class UserDetailsEndpoint(Resource):
             ],
             "additionalProperties": False,
             "properties": {
-                "email_address": {"type": "string", "format": "valid email"},
-                "username": {"type": "string", "minLength": 1},
-                "first_name": {"type": "string", "minLength": 1},
-                "last_name": {"type": "string", "minLength": 1},
-                "institution": {"type": "string", "minLength": 1},
-                "orcid": {"type": "string", "minLength": 1},
-                "location": {"type": "string", "minLength": 1},
-                "timezone": {"type": "string", "minLength": 1},
-                "profile_image": {"type": "string", "minLength": 1},  # optional
+                "id": {"type": "string"},
+                "email_address": {"type": "string", "format": "valid_email"},
+                "username": {"type": "string", "minLength": 0},
+                "first_name": {"type": "string", "minLength": 0},
+                "last_name": {"type": "string", "minLength": 0},
+                "institution": {"type": "string", "minLength": 0},
+                "orcid": {"type": "string", "minLength": 0},
+                "location": {"type": "string", "minLength": 0},
+                "timezone": {"type": "string", "minLength": 0},
+                "profile_image": {"type": "string", "minLength": 0},  # optional
             },
         }
 
         format_checker = FormatChecker()
-        format_checker.checks("valid email")(validate_is_valid_email)
+        format_checker.checks("valid_email")(_validate_is_valid_email)
 
         try:
             validate(
