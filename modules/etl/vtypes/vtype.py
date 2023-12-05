@@ -38,6 +38,7 @@ class SimpleVType(object):
                 return False
         return True
 
+
 class ComplexVType(object):
     def __init__(
         self,
@@ -72,7 +73,9 @@ class ComplexVType(object):
     #             continue
     #     return valid
 
-    def isvalid(self, df: pd.DataFrame, accessorsList: List[Dict[str, Dict[str, str]]]) -> bool:
+    def isvalid(
+        self, df: pd.DataFrame, accessorsList: List[Dict[str, Dict[str, str]]]
+    ) -> bool:
         valid = True
         columns = df.columns
         for accessors in accessorsList:
@@ -92,7 +95,6 @@ class ComplexVType(object):
                     )
                     valid = False
         return valid
-
 
 
 if __name__ == "__main__":

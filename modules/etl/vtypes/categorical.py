@@ -14,6 +14,7 @@ class SingleCategorical(SimpleVType):
             str,
         )
 
+
 class DoubleCategorical(SimpleVType):
     def __init__(self) -> None:
         super(DoubleCategorical, self).__init__(
@@ -27,6 +28,7 @@ class DoubleCategorical(SimpleVType):
             ],
             str,
         )
+
 
 if __name__ == "__main__":
     pass

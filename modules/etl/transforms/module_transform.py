@@ -30,7 +30,7 @@ class ModuleTransform(object):
         )
 
         # Configure Logging
-        logging.basicConfig(**self.logging_config);
+        logging.basicConfig(**self.logging_config)
         self.logger = logging.getLogger("VizModTransform")
 
         #
@@ -56,7 +56,7 @@ class ModuleTransform(object):
             raise ValueError(
                 f"ModuleTransform instantiation missing transforms argument"
             )
-        elif (type(self.transforms) != list):
+        elif type(self.transforms) != list:
             self.valid = False
             raise ValueError(
                 f"ModuleTransform argument transforms must be a list or dict type"
@@ -173,9 +173,9 @@ class ModuleTransform(object):
         One transform for one VType.
         """
         self.transformed = []
-        transform: Dict[str, Any] = (
-            self.transforms.pop()
-        )  # simple transforms have only one transform object
+        transform: Dict[
+            str, Any
+        ] = self.transforms.pop()  # simple transforms have only one transform object
         name, vtype, methods, accessors = (
             transform["name"],
             getattr(vtypes, transform["vtype"])(),

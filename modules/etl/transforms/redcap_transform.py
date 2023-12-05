@@ -31,9 +31,7 @@ class RedcapTransform(object):
 
         # Report Merging
         self.post_transform_merge = (
-            config["post_transform_merge"]
-            if "post_transform_merge" in config
-            else []
+            config["post_transform_merge"] if "post_transform_merge" in config else []
         )
 
         # Post Merge Transforms
@@ -132,7 +130,7 @@ class RedcapTransform(object):
             "raw_or_label": "raw",
             "raw_or_label_headers": "raw",
             "export_checkbox_labels": False,
-            "csv_delimiter": "\t"
+            "csv_delimiter": "\t",
         }
         # Get & Structure Report
         self.logger.info(f"Retrieving REDCap reports")
@@ -285,9 +283,10 @@ class RedcapTransform(object):
         columns: List[str] = [],
         annotation: List[Dict[str, Any]] = [],
     ) -> pd.DataFrame:
-        columns = list(set(df.columns) - set(
-            self._resolve_columns_with_dataframe(df=df, columns=columns)
-        ))
+        columns = list(
+            set(df.columns)
+            - set(self._resolve_columns_with_dataframe(df=df, columns=columns))
+        )
         df = df.drop(columns=columns)
         return df
 
@@ -562,14 +561,29 @@ class RedcapTransform(object):
     #
 
     def _new_column_from_binary_columns_positive_class(
-        self, df: pd.DataFrame, column_name_map: dict, new_column_name: str = "", dtype: Callable = float, annotation: List[Dict[str, Any]] = []
+        self,
+        df: pd.DataFrame,
+        column_name_map: dict,
+        new_column_name: str = "",
+        dtype: Callable = float,
+        annotation: List[Dict[str, Any]] = [],
     ) -> pd.DataFrame:
-        new_column_name = new_column_name if len(new_column_name) > 0 else "_".join(column_name_map.keys())
-        df[new_column_name] = df[list(column_name_map.keys())].idxmax(axis=1).map(column_name_map)
+        new_column_name = (
+            new_column_name
+            if len(new_column_name) > 0
+            else "_".join(column_name_map.keys())
+        )
+        df[new_column_name] = (
+            df[list(column_name_map.keys())].idxmax(axis=1).map(column_name_map)
+        )
         return df
 
     def new_column_from_binary_columns_positive_class(
-        self, df: pd.DataFrame, column_name_map: dict, new_column_name: str = "", dtype: Callable = float
+        self,
+        df: pd.DataFrame,
+        column_name_map: dict,
+        new_column_name: str = "",
+        dtype: Callable = float,
     ) -> pd.DataFrame:
         """
         Pre-processing REDCap repeat_instrument so each instrument
@@ -578,18 +592,33 @@ class RedcapTransform(object):
         field.
         """
         return self._new_column_from_binary_columns_positive_class(
-            df=df, column_name_map=column_name_map, new_column_name = new_column_name, dtype=dtype
+            df=df,
+            column_name_map=column_name_map,
+            new_column_name=new_column_name,
+            dtype=dtype,
         )
 
     def _new_column_from_binary_columns_negative_class(
-        self, df: pd.DataFrame, column_name_map: dict, new_column_name: str = "", dtype: Callable = float
+        self,
+        df: pd.DataFrame,
+        column_name_map: dict,
+        new_column_name: str = "",
+        dtype: Callable = float,
     ) -> pd.DataFrame:
-        new_column_name = new_column_name if len(new_column_name) > 0 else "_".join(column_name_map.keys())
+        new_column_name = (
+            new_column_name
+            if len(new_column_name) > 0
+            else "_".join(column_name_map.keys())
+        )
         df[new_column_name] = df[list(column_name_map.keys())].idxmin(axis=1)
         return df
 
     def new_column_from_binary_columns_negative_class(
-        self, df: pd.DataFrame, column_name_map: dict, new_column_name: str = "", dtype: Callable = float
+        self,
+        df: pd.DataFrame,
+        column_name_map: dict,
+        new_column_name: str = "",
+        dtype: Callable = float,
     ) -> pd.DataFrame:
         """
         Pre-processing REDCap repeat_instrument so each instrument
@@ -598,7 +627,10 @@ class RedcapTransform(object):
         field.
         """
         return self._new_column_from_binary_columns_negative_class(
-            df=df, column_name_map=column_name_map, new_column_name=new_column_name, dtype=dtype
+            df=df,
+            column_name_map=column_name_map,
+            new_column_name=new_column_name,
+            dtype=dtype,
         )
 
     #
