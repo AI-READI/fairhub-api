@@ -310,7 +310,7 @@ class DatasetRelatedItemUpdate(Resource):
     """Dataset Related Item Update Resource"""
 
     @api.doc("delete related item")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self,
@@ -338,7 +338,7 @@ class RelatedItemContributorsDelete(Resource):
     """Dataset Related Item Contributors Delete Resource"""
 
     @api.doc("delete related item contributors")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self,
@@ -368,7 +368,7 @@ class RelatedItemTitlesDelete(Resource):
     """Dataset Related Item Titles Delete Resource"""
 
     @api.doc("delete related item title")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self,
@@ -400,7 +400,7 @@ class RelatedItemIdentifiersDelete(Resource):
     """Dataset Related Item Identifiers Delete Resource"""
 
     @api.doc("delete related item identifier")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self,
@@ -429,7 +429,7 @@ class RelatedItemCreatorDelete(Resource):
     """Dataset Related Item Creator Delete Resource"""
 
     @api.doc("delete related item creator")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self,

@@ -61,7 +61,7 @@ class StudyLinkResource(Resource):
 
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         data: typing.Union[dict, typing.Any] = request.json
         list_of_elements = []
         for i in data:
@@ -84,6 +84,9 @@ class StudyLinkResource(Resource):
     class StudyLinkUpdate(Resource):
         """Study Link Metadata"""
 
+        @api.doc("Delete study links")
+        @api.response(204, "Success")
+        @api.response(400, "Validation Error")
         def delete(self, study_id: int, link_id: int):
             """Delete study link metadata"""
             study_obj = model.Study.query.get(study_id)

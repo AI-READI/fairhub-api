@@ -22,62 +22,6 @@ study_other = api.model(
 )
 
 
-@api.route("/study/<study_id>/metadata/other")
-class StudyOtherResource(Resource):
-    """Study Other Metadata"""
-
-    @api.doc("other")
-    @api.response(200, "Success")
-    @api.response(400, "Validation Error")
-    # @api.param("id", "The study identifier")
-    @api.marshal_with(study_other)
-    def get(self, study_id: int):
-        """Get study other metadata"""
-        study_ = model.Study.query.get(study_id)
-
-        study_other_ = study_.study_other
-
-        return study_other_.to_dict(), 200
-
-    def put(self, study_id: int):
-        """Update study other metadata"""
-        # Schema validation
-        schema = {
-            "type": "object",
-            "additionalProperties": False,
-            "properties": {
-                "oversight_has_dmc": {"type": "boolean"},
-                "conditions": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "minItems": 1,
-                    "uniqueItems": True,
-                },
-                "keywords": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "minItems": 1,
-                    "uniqueItems": True,
-                },
-                "size": {"type": "integer"},
-            },
-            "required": ["oversight_has_dmc", "conditions", "keywords", "size"],
-        }
-
-        try:
-            validate(request.json, schema)
-        except ValidationError as e:
-            return e.message, 400
-
-        study_ = model.Study.query.get(study_id)
-
-        study_.study_other.update(request.json)
-
-        model.db.session.commit()
-
-        return study_.study_other.to_dict(), 200
-
-
 @api.route("/study/<study_id>/metadata/oversight")
 class StudyOversightResource(Resource):
     """Study Oversight Metadata"""
@@ -110,7 +54,7 @@ class StudyOversightResource(Resource):
 
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         data: typing.Union[dict, typing.Any] = request.json
         study_oversight = study_obj.study_other.oversight_has_dmc = data[
             "oversight_has_dmc"
@@ -157,7 +101,7 @@ class StudyConditionsResource(Resource):
         data: typing.Union[dict, typing.Any] = request.json
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         study_obj.study_other.conditions = data
         study_obj.touch()
         model.db.session.commit()

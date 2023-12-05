@@ -92,7 +92,7 @@ class DatasetRightsUpdate(Resource):
     """Dataset Rights Update Resource"""
 
     @api.doc("delete rights")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self,

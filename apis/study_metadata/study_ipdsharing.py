@@ -97,7 +97,7 @@ class StudyIpdsharingResource(Resource):
 
         study_ = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         study_.study_ipdsharing.update(request.json)
         model.db.session.commit()
         return study_.study_ipdsharing.to_dict(), 200

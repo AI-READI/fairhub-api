@@ -104,7 +104,7 @@ class DatasetFunderUpdate(Resource):
     """Dataset Funder Update Resource"""
 
     @api.doc("delete funder")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self,

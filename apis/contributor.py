@@ -42,7 +42,7 @@ class AddContributor(Resource):
     def post(self, study_id: int):
         study_obj = model.Study.query.get(study_id)
         if not is_granted("invite_contributor", study_obj):
-            return "Access denied, you can not modify", 403
+            return "Access denied, you can not modify study", 403
         data: Union[dict, Any] = request.json
 
         email_address = data["email_address"]
@@ -115,7 +115,7 @@ class ContributorResource(Resource):
         return grantee.to_dict(), 200
 
     @api.doc("contributor delete")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(self, study_id: int, user_id: str):
         study = model.Study.query.get(study_id)
@@ -218,4 +218,4 @@ class AssignOwner(Resource):
 
         existing_owner.permission = "admin"
         model.db.session.commit()
-        return 204
+        return Response(status=204)
