@@ -63,7 +63,7 @@ class RedcapProjectAPIs(Resource):
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_view_model, as_list=True)
     def get(self, study_id: int):
-        """Get all study REDCap project API links"""
+        """Get all REDCap project API links"""
         study = model.Study.query.get(study_id)
         if is_granted("redcap_access", study):
             return (
@@ -116,27 +116,32 @@ class AddRedcapProjectAPI(Resource):
 
         if len(data["project_title"]) < 1:
             return (
-                f"redcap project_title is required for redcap access: {data['project_title']}",
+                f"redcap project_title is required for redcap access: \
+                {data['project_title']}",
                 400,
             )
         if len(data["project_id"]) < 1:
             return (
-                f"redcap project_id is required for redcap access: {data['project_id']}",
+                f"redcap project_id is required for redcap access: \
+                {data['project_id']}",
                 400,
             )
         if len(data["project_api_url"]) < 1:
             return (
-                f"redcap project_api_url is required for redcap access: {data['project_api_url']}",
+                f"redcap project_api_url is required for redcap access: \
+                {data['project_api_url']}",
                 400,
             )
         if len(data["project_api_key"]) < 1:
             return (
-                f"redcap project_api_key is required for redcap access: {data['project_api_key']}",
+                f"redcap project_api_key is required for redcap access: \
+                {data['project_api_key']}",
                 400,
             )
-        if type(data["project_api_active"]) is not bool:
+        if isinstance(data["project_api_active"], bool):
             return (
-                f"redcap project_api_active is required for redcap access: {data['project_api_active']}",
+                f"redcap project_api_active is required for redcap access: \
+                {data['project_api_active']}",
                 400,
             )
 
@@ -154,22 +159,26 @@ class RedcapProjectAPI(Resource):
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_view_model)
     def get(self, study_id: int):
-        """Get study REDCap project API link"""
+        """Get REDCap project API link"""
         study = model.db.session.query(model.Study).get(study_id)
         if is_granted("redcap_access", study):
             return "Access denied, you can not get this redcap project", 403
         project_id = project_parser.parse_args()["project_id"]
-        redcap_project_view = model.db.session.query(model.StudyRedcapProjectApi).get(
-            project_id
-        )
+        redcap_project_view: Any = model.db.session.query(
+            model.StudyRedcapProjectApi
+        ).get(project_id)
         redcap_project_view = redcap_project_view.to_dict()
         return redcap_project_view, 201
 
+
+@api.route("/study/<study_id>/redcap/edit")
+class EditRedcapProjectAPI(Resource):
+    @api.doc(parser=project_parser)
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_view_model)
     def put(self, study_id: int):
-        """Update study REDCap project API link"""
+        """Update REDCap project API link"""
         study = model.Study.query.get(study_id)
         if is_granted("redcap_access", study):
             return "Access denied, you can not modify this redcap project", 403
@@ -198,22 +207,26 @@ class RedcapProjectAPI(Resource):
 
         if len(data["project_id"]) < 1:
             return (
-                f"redcap project_id is required for redcap access: {data['project_id']}",
+                f"redcap project_id is required for redcap access: \
+                {data['project_id']}",
                 400,
             )
         if len(data["project_title"]) < 1:
             return (
-                f"redcap project_title is required for redcap access: {data['project_title']}",
+                f"redcap project_title is required for redcap access: \
+                {data['project_title']}",
                 400,
             )
         if len(data["project_api_url"]) < 1:
             return (
-                f"redcap project_api_url is required for redcap access: {data['project_api_url']}",
+                f"redcap project_api_url is required for redcap access: \
+                {data['project_api_url']}",
                 400,
             )
-        if type(data["project_api_active"]) is not bool:
+        if isinstance(data["project_api_active"], bool):
             return (
-                f"redcap project_api_active is required for redcap access: {data['project_api_active']}",
+                f"redcap project_api_active is required for redcap access: \
+                {data['project_api_active']}",
                 400,
             )
 
@@ -228,17 +241,16 @@ class RedcapProjectAPI(Resource):
 
 @api.route("/study/<study_id>/redcap/delete")
 class DeleteRedcapProjectAPI(Resource):
+    @api.doc(parser=project_parser)
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_view_model)
-    def post(self, study_id: int):
-        """Delete study REDCap project API link"""
+    def delete(self, study_id: int):
+        """Delete REDCap project API link"""
         study = model.Study.query.get(study_id)
         if is_granted("redcap_access", study):
             return "Access denied, you can not delete this redcap project", 403
-        data: Union[Any, dict] = request.json
-        model.StudyRedcapProjectApi.query.filter_by(
-            project_id=data["project_id"]
-        ).delete()
+        project_id = project_parser.parse_args()["project_id"]
+        model.StudyRedcapProjectApi.query.filter_by(project_id=project_id).delete()
         model.db.session.commit()
         return 204

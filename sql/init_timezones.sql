@@ -1071,6 +1071,7 @@ CREATE TABLE IF NOT EXISTS "study_redcap_project_dashboard" (
 	"study_id" CHAR(36) NOT NULL,
 	"project_id" BIGINT NOT NULL,
 	"dashboard_id" CHAR(36) NOT NULL,
+	"reports" UNKNOWN NOT NULL,
 	"dashboard_name" VARCHAR NOT NULL,
 	"dashboard_modules" VARCHAR[] NOT NULL,
 	"created_at" BIGINT NOT NULL,
@@ -1082,8 +1083,8 @@ CREATE TABLE IF NOT EXISTS "study_redcap_project_dashboard" (
 
 -- Dumping data for table public.study_redcap_project_dashboard: 1 rows
 /*!40000 ALTER TABLE "study_redcap_project_dashboard" DISABLE KEYS */;
-INSERT INTO "study_redcap_project_dashboard" ("study_id", "project_id", "dashboard_id", "dashboard_name", "dashboard_modules", "created_at", "updated_on") VALUES
-	('00000000-0000-0000-0000-000000000006', '666666', '00000000-0000-0000-0000-000000000006', 'other-stuff', '{}', '2023-08-13 16:23:48', '2023-08-14 16:23:49');
+INSERT INTO "study_redcap_project_dashboard" ("study_id", "project_id", "dashboard_id", "reports", "dashboard_name", "dashboard_modules", "created_at", "updated_on") VALUES
+	('00000000-0000-0000-0000-000000000006', '666666', '00000000-0000-0000-0000-000000000006', '{}', 'other-stuff', '{}', '2023-08-13 16:23:48', '2023-08-14 16:23:49');
 /*!40000 ALTER TABLE "study_redcap_project_dashboard" ENABLE KEYS */;
 
 

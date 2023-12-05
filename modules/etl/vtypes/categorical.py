@@ -1,7 +1,7 @@
-from .vtype import VType
+from .vtype import SimpleVType
 
 
-class SingleCategorical(VType):
+class SingleCategorical(SimpleVType):
     def __init__(self) -> None:
         super(SingleCategorical, self).__init__(
             "SingleCategorical",
@@ -14,8 +14,7 @@ class SingleCategorical(VType):
             str,
         )
 
-
-class DoubleCategorical(VType):
+class DoubleCategorical(SimpleVType):
     def __init__(self) -> None:
         super(DoubleCategorical, self).__init__(
             "DoubleCategorical",
@@ -28,7 +27,6 @@ class DoubleCategorical(VType):
             ],
             str,
         )
-
 
 if __name__ == "__main__":
     pass

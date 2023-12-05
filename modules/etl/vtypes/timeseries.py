@@ -1,9 +1,9 @@
-from .vtype import VType
+from .vtype import SimpleVType
 import pandas as pd
 from datetime import datetime
 
 
-class SingleTimeseries(VType):
+class SingleTimeseries(SimpleVType):
     def __init__(self) -> None:
         super(SingleTimeseries, self).__init__(
             "SingleTimeseries",
@@ -17,7 +17,7 @@ class SingleTimeseries(VType):
         )
 
 
-class DoubleDiscreteTimeseries(VType):
+class DoubleDiscreteTimeseries(SimpleVType):
     def __init__(self) -> None:
         super(DoubleDiscreteTimeseries, self).__init__(
             "DoubleDiscreteTimeseries",
@@ -32,7 +32,7 @@ class DoubleDiscreteTimeseries(VType):
         )
 
 
-class DoubleContinuousTimeseries(VType):
+class DoubleContinuousTimeseries(SimpleVType):
     def __init__(self) -> None:
         super(DoubleContinuousTimeseries, self).__init__(
             "DoubleContinuousTimeseries",

@@ -30,9 +30,9 @@ class RedcapTransform(object):
         self.reports_configs = config["reports"] if "reports" in config else []
 
         # Report Merging
-        self.merge_transformed_reports = (
-            config["merge_transformed_reports"]
-            if "merge_transformed_reports" in config
+        self.post_transform_merge = (
+            config["post_transform_merge"]
+            if "post_transform_merge" in config
             else []
         )
 
@@ -77,23 +77,18 @@ class RedcapTransform(object):
         #
 
         # Regex Complex Field Parsers
-        self._field_rgx = {}
-        self._field_rgx["radio"] = re.compile(r"^[0-9\.]{1,17}")
-        self._field_rgx["checkbox"] = re.compile(r"^[0-9\.]{1,17}")
-        self._field_rgx["dropdown"] = re.compile(r"^[0-9\.]{1,17}")
-        self._field_rgx["yesno"] = re.compile(r"^[0-9\.]{1,17}")
-        self._field_rgx["text"] = re.compile(
-            r"^[a-zA-Z0-9\-\_\(\)\[\]\&\+\?\!\$\*]{1,128}"
-        )
-        self._field_rgx["descriptive"] = re.compile(
-            r"^[a-zA-Z0-9\-\_\(\)\[\]\&\+\?\!\$\*]{1,128}"
-        )
-        self._field_rgx["notes"] = re.compile(
-            r"^[a-zA-Z0-9\-\_\(\)\[\]\&\+\?\!\$\*]{1,128}"
-        )
-        self._field_rgx["file"] = None
-        self._field_rgx["signature"] = None
-        self._field_rgx["calc"] = None
+        self._field_rgx = {
+            "radio": re.compile(r"^[0-9\.]{1,17}"),
+            "checkbox": re.compile(r"^[0-9\.]{1,17}"),
+            "dropdown": re.compile(r"^[0-9\.]{1,17}"),
+            "yesno": re.compile(r"^[0-9\.]{1,17}"),
+            "text": re.compile(r"^[a-zA-Z0-9\-\_\(\)\[\]\&\+\?\!\$\*]{1,128}"),
+            "descriptive": re.compile(r"^[a-zA-Z0-9\-\_\(\)\[\]\&\+\?\!\$\*]{1,128}"),
+            "notes": re.compile(r"^[a-zA-Z0-9\-\_\(\)\[\]\&\+\?\!\$\*]{1,128}"),
+            "file": re.compile(r".*"),
+            "signature": re.compile(r".*"),
+            "calc": re.compile(r".*"),
+        }
 
         # General Parsing Variables
         self.none_values = [
@@ -132,39 +127,41 @@ class RedcapTransform(object):
 
         # Internal Defaults
         # - Key Assumptions for Transform Functions
-        # – Only Update if REDCap API Updates
-        self._reports_kwdargs = {}
-        self._reports_kwdargs["raw_or_label"] = "raw"
-        self._reports_kwdargs["raw_or_label_headers"] = "raw"
-        self._reports_kwdargs["export_checkbox_labels"] = False
-        self._reports_kwdargs["csv_delimiter"] = "\t"
-
+        # – Only Update if REDCap API and/or PyCap Update
+        self._reports_kwdargs = {
+            "raw_or_label": "raw",
+            "raw_or_label_headers": "raw",
+            "export_checkbox_labels": False,
+            "csv_delimiter": "\t"
+        }
         # Get & Structure Report
         self.logger.info(f"Retrieving REDCap reports")
         self.reports = {}
-        for report_name, report_kwdargs, transforms in self.reports_configs:
+        for report_config in self.reports_configs:
             # Get Report
-            report_kwdargs = report_kwdargs | self._reports_kwdargs
+            report_key = report_config["key"]
+            report_kwdargs = report_config["kwdargs"] | self._reports_kwdargs
+            report_transforms = report_config["transforms"]
             report = self.project.export_report(**report_kwdargs)
             # Structure Reports
-            self.reports[report_name] = {
+            self.reports[report_key] = {
                 "id": report_kwdargs["report_id"],
                 "report": report,
                 "df": pd.DataFrame(report),
-                "transforms": transforms,
+                "transforms": report_transforms,
                 "transformed": None,
                 "annotation": self._get_redcap_type_metadata(pd.DataFrame(report)),
             }
 
         # Generate Transformed Report
         self.logger.info(f"Applying REDCap report transforms")
-        for report_name, report_object in self.reports.items():
-            self._apply_report_transforms(report_name)
+        for report_key, report_object in self.reports.items():
+            self._apply_report_transforms(report_key)
 
         # Merge Reports
         self.logger.info(f"Merging REDCap reports")
-        receiving_report_name, merge_steps = self.merge_transformed_reports
-        self.merged = self._merge_reports(receiving_report_name, merge_steps)
+        receiving_report_key, merge_steps = self.post_transform_merge
+        self.merged = self._merge_reports(receiving_report_key, merge_steps)
 
         # Apply Post-Merge Transforms
         self.logger.info(f"Applying REDCap report post-merge transforms")
@@ -181,60 +178,60 @@ class RedcapTransform(object):
     # Getters
     #
 
-    def get_report_id(self, report_name: str) -> str:
+    def get_report_id(self, report_key: str) -> str:
         """
         Returns a str instance of the REDCap report ID.
         """
-        return self.reports[report_name]["id"]
+        return self.reports[report_key]["id"]
 
     def get_report_pycap(
-        self, report_name: str
+        self, report_key: str
     ) -> Union[List[Dict[str, Any]], str, pd.DataFrame]:
         """
         Returns a PyCap Report object containing the report.
         """
-        return self.reports[report_name]["report"]
+        return self.reports[report_key]["report"]
 
-    def get_report_df(self, report_name: str) -> pd.DataFrame:
+    def get_report_df(self, report_key: str) -> pd.DataFrame:
         """
         Returns a pd.DataFrame instance containing the report.
         """
-        return self.reports[report_name]["df"]
+        return self.reports[report_key]["df"]
 
-    def get_report_transformed_df(self, report_name: str) -> pd.DataFrame:
+    def get_report_transformed_df(self, report_key: str) -> pd.DataFrame:
         """
         Returns a pd.DataFrame instance containing the report
         with normalization transforms applied.
         """
-        return self.reports[report_name]["transformed"]
+        return self.reports[report_key]["transformed"]
 
     def get_report_transforms(
-        self, report_name: str
+        self, report_key: str
     ) -> List[Tuple[str, Dict[str, Any]]]:
         """
         Returns a list of transforms that will be applied to
         the report
         """
-        return self.reports[report_name]["transforms"]
+        return self.reports[report_key]["transforms"]
 
-    def get_report_annotations(self, report_name: str) -> List[Dict[str, Any]]:
+    def get_report_annotations(self, report_key: str) -> List[Dict[str, Any]]:
         """
         Returns a list of annotations generated from the
         REDCap metadata API call.
         """
-        return self.reports[report_name]["annotations"]
+        return self.reports[report_key]["annotations"]
 
     #
     # Transform Applicator
     #
 
     # Applies Declared Transforms to Reports
-    def _apply_report_transforms(self, report_name: str) -> None:
+    def _apply_report_transforms(self, report_key: str) -> None:
         """
         Interal method that applies the transforms to each
         report as an idempotent transform stack.
         """
-        report = self.reports[report_name]
+        report = self.reports[report_key]
         annotation = report["annotation"]
         report["transformed"] = report["df"]
         for transform in report["transforms"]:
@@ -244,7 +241,7 @@ class RedcapTransform(object):
                 report["transformed"], transform_name, transform_kwdargs
             )
 
-        return self
+        return
 
     def apply_transform(
         self,
@@ -272,7 +269,6 @@ class RedcapTransform(object):
         df = df.drop(columns=columns)
         return df
 
-    @classmethod
     def drop_columns(self, df: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
         """
         Drop columns from pd.DataFrame.
@@ -289,13 +285,12 @@ class RedcapTransform(object):
         columns: List[str] = [],
         annotation: List[Dict[str, Any]] = [],
     ) -> pd.DataFrame:
-        columns = set(df.columns) - set(
+        columns = list(set(df.columns) - set(
             self._resolve_columns_with_dataframe(df=df, columns=columns)
-        )
+        ))
         df = df.drop(columns=columns)
         return df
 
-    @classmethod
     def keep_columns(self, df: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
         """
         Keep only selected columns in pd.DataFrame.
@@ -316,11 +311,10 @@ class RedcapTransform(object):
     ) -> pd.DataFrame:
         columns = self._resolve_columns_with_dataframe(df=df, columns=columns)
         df[columns] = df[columns].rename(
-            mapper=lambda name: f"{namer}{separator}{suffix}"
+            mapper=lambda name: f"{name}{separator}{suffix}"
         )
         return df
 
-    @classmethod
     def append_column_suffix(
         self,
         df: pd.DataFrame,
@@ -336,8 +330,8 @@ class RedcapTransform(object):
         of column names by one or more characters, e.g. "_" for
         snakecase.
         """
-        return self._prepend_column_suffix(
-            df=df, columns=transform_columns, suffix=suffix, separator=separator
+        return self._append_column_suffix(
+            df=df, columns=columns, suffix=suffix, separator=separator
         )
 
     #
@@ -358,7 +352,6 @@ class RedcapTransform(object):
         )
         return df
 
-    @classmethod
     def prepend_column_prefix(
         self,
         df: pd.DataFrame,
@@ -392,6 +385,7 @@ class RedcapTransform(object):
         # Resolve Mappable Fields and Available Value Maps
         columns = self._resolve_columns_with_dataframe(df=df, columns=columns)
 
+        mappable_fields: List[Dict[str, Any]]
         if len(value_map) > 0:
             mappable_fields = [
                 {"name": column, "options": value_map} for column in columns
@@ -400,7 +394,7 @@ class RedcapTransform(object):
             mappable_fields = [
                 field
                 for field in annotation
-                if field["options"] is not None and field["name"] in columns
+                if len(field["options"]) > 0 and field["name"] in columns
             ]
 
         for mappable_field in mappable_fields:
@@ -421,7 +415,6 @@ class RedcapTransform(object):
 
         return df
 
-    @classmethod
     def remap_values_by_columns(
         self,
         df: pd.DataFrame,
@@ -478,7 +471,6 @@ class RedcapTransform(object):
 
         return df
 
-    @classmethod
     def map_missing_values_by_columns(
         self, df: pd.DataFrame, columns: List[str], missing_value: Any
     ) -> pd.DataFrame:
@@ -509,7 +501,6 @@ class RedcapTransform(object):
         df = df[~df[columns].apply(lambda column: column.apply(condition)).any(axis=1)]
         return df
 
-    @classmethod
     def drop_rows(
         self,
         df: pd.DataFrame,
@@ -525,14 +516,16 @@ class RedcapTransform(object):
     # Transforms - Aggregation
     #
 
+    # ...
+
     #
     # Transforms - Aggregate Repeat Instruments by Index
     #
 
-    def _aggregate_repeat_instrument_column_by_index(
+    def _aggregate_repeat_instrument_by_index(
         self,
         df: pd.DataFrame,
-        aggregator: Callable = "max",
+        aggregator: str = "max",
         dtype: Callable = float,
         annotation: List[Dict[str, Any]] = [],
     ) -> pd.DataFrame:
@@ -551,7 +544,6 @@ class RedcapTransform(object):
             df[column] = df[column].astype(dtype)
         return df
 
-    @classmethod
     def aggregate_repeat_instrument_by_index(
         self, df: pd.DataFrame, aggregator: str = "max", dtype: Callable = float
     ) -> pd.DataFrame:
@@ -561,8 +553,52 @@ class RedcapTransform(object):
         using an aggregation function applied to the repeat_instance
         field.
         """
-        return self._aggregate_repreat_instrument_by_index(
+        return self._aggregate_repeat_instrument_by_index(
             df=df, aggregator=aggregator, dtype=dtype
+        )
+
+    #
+    # Generate New Columns
+    #
+
+    def _new_column_from_binary_columns_positive_class(
+        self, df: pd.DataFrame, column_name_map: dict, new_column_name: str = "", dtype: Callable = float, annotation: List[Dict[str, Any]] = []
+    ) -> pd.DataFrame:
+        new_column_name = new_column_name if len(new_column_name) > 0 else "_".join(column_name_map.keys())
+        df[new_column_name] = df[list(column_name_map.keys())].idxmax(axis=1).map(column_name_map)
+        return df
+
+    def new_column_from_binary_columns_positive_class(
+        self, df: pd.DataFrame, column_name_map: dict, new_column_name: str = "", dtype: Callable = float
+    ) -> pd.DataFrame:
+        """
+        Pre-processing REDCap repeat_instrument so each instrument
+        has its own column and the value. The value is computed
+        using an aggregation function applied to the repeat_instance
+        field.
+        """
+        return self._new_column_from_binary_columns_positive_class(
+            df=df, column_name_map=column_name_map, new_column_name = new_column_name, dtype=dtype
+        )
+
+    def _new_column_from_binary_columns_negative_class(
+        self, df: pd.DataFrame, column_name_map: dict, new_column_name: str = "", dtype: Callable = float
+    ) -> pd.DataFrame:
+        new_column_name = new_column_name if len(new_column_name) > 0 else "_".join(column_name_map.keys())
+        df[new_column_name] = df[list(column_name_map.keys())].idxmin(axis=1)
+        return df
+
+    def new_column_from_binary_columns_negative_class(
+        self, df: pd.DataFrame, column_name_map: dict, new_column_name: str = "", dtype: Callable = float
+    ) -> pd.DataFrame:
+        """
+        Pre-processing REDCap repeat_instrument so each instrument
+        has its own column and the value. The value is computed
+        using an aggregation function applied to the repeat_instance
+        field.
+        """
+        return self._new_column_from_binary_columns_negative_class(
+            df=df, column_name_map=column_name_map, new_column_name=new_column_name, dtype=dtype
         )
 
     #
@@ -571,18 +607,18 @@ class RedcapTransform(object):
 
     def _merge_reports(
         self,
-        receiving_report_name: str,
+        receiving_report_key: str,
         merge_steps: List[Tuple[str, Dict[str, Any]]],
     ) -> pd.DataFrame:
         """
-        Performns N - 1 merge transforms on N reports.
+        Performs N - 1 merge transforms on N reports.
         """
 
-        df_receiving_report = self.reports[receiving_report_name]["transformed"]
+        df_receiving_report = self.reports[receiving_report_key]["transformed"]
 
         if len(merge_steps) > 0:
-            for providing_report_name, merge_kwdargs in merge_steps:
-                df_providing_report = self.reports[providing_report_name]["transformed"]
+            for providing_report_key, merge_kwdargs in merge_steps:
+                df_providing_report = self.reports[providing_report_key]["transformed"]
                 df_receiving_report = df_receiving_report.merge(
                     df_providing_report, **merge_kwdargs
                 )
@@ -638,9 +674,9 @@ class RedcapTransform(object):
 
         # REDCap Internal Variable Metadata
         metadata = [
-            {"name": "redcap_data_access_group", "type": "text", "options": None},
-            {"name": "redcap_repeat_instrument", "type": "text", "options": None},
-            {"name": "redcap_repeat_instance", "type": "number", "options": None},
+            {"name": "redcap_data_access_group", "type": "text", "options": {}},
+            {"name": "redcap_repeat_instrument", "type": "text", "options": {}},
+            {"name": "redcap_repeat_instance", "type": "number", "options": {}},
         ]
 
         field_types = set(field["field_type"] for field in self.metadata)
@@ -654,7 +690,7 @@ class RedcapTransform(object):
         for field in sorted(self.metadata, key=lambda f: f["field_name"]):
             if field["field_name"] in columns:
                 field_type = field["field_type"]
-                options = {}
+                options: dict = {}
                 if field_type in complex_types:
                     rgx = self._field_rgx[field_type]
                     for option in field["select_choices_or_calculations"].split("|"):
@@ -662,9 +698,9 @@ class RedcapTransform(object):
                             option.split(",")[0],
                             (",".join(option.split(",")[1:])).strip(),
                         )
-                        k = int(k) if re.match(rgx, k) else str(k)
-                        v = int(v) if re.match(rgx, v) else str(v)
-                        options[str(k)] = v
+                        _k = int(k) if re.match(rgx, k) else str(k)
+                        _v = int(v) if re.match(rgx, v) else str(v)
+                        options[str(_k)] = _v
                     metadata.append(
                         {
                             "name": field["field_name"],
@@ -685,7 +721,7 @@ class RedcapTransform(object):
                         {
                             "name": field["field_name"],
                             "type": field["field_type"],
-                            "options": None,
+                            "options": {},
                         }
                     )
                 elif field_type in skip_types:
@@ -693,7 +729,7 @@ class RedcapTransform(object):
                         {
                             "name": field["field_name"],
                             "type": field["field_type"],
-                            "options": None,
+                            "options": {},
                         }
                     )
                 else:
@@ -709,8 +745,8 @@ class RedcapTransform(object):
     def export_raw(
         self, path: str = "", separator: str = "\t", filetype: str = ".tsv"
     ) -> object:
-        for report_name, report_object in self.reports.items():
-            filename = f"{report_name}_raw{filetype}"
+        for report_key, report_object in self.reports.items():
+            filename = f"{report_key}_raw{filetype}"
             filepath = os.path.join(path, filename)
             transformed = report_object["df"]
             transformed.to_csv(
@@ -725,8 +761,8 @@ class RedcapTransform(object):
     def export_transformed(
         self, path: str = "", separator: str = "\t", filetype: str = ".tsv"
     ) -> object:
-        for report_name, report_object in self.reports.items():
-            filename = f"{report_name}_transformed{filetype}"
+        for report_key, report_object in self.reports.items():
+            filename = f"{report_key}_transformed{filetype}"
             filepath = os.path.join(path, filename)
             transformed = report_object["transformed"]
             transformed.to_csv(

@@ -1,4 +1,4 @@
-from .vtype import VType
+from .vtype import ComplexVType
 from .categorical import SingleCategorical, DoubleCategorical
 from .discrete import SingleDiscrete, DoubleDiscrete
 from .continuous import SingleContinuous, DoubleContinuous
@@ -10,10 +10,8 @@ from .timeseries import (
 from typing import Tuple, List, Dict, Callable, Any
 import pandas as pd
 
-
-class Compound(VType):
+class Compound(ComplexVType):
     def __init__(self) -> None:
-        raise NotImplementedError
         super(Compound, self).__init__(
             "Compound",
             [
@@ -26,26 +24,12 @@ class Compound(VType):
                 SingleTimeseries,
                 DoubleDiscreteTimeseries,
                 DoubleContinuousTimeseries,
+                Compound,
             ],
             str,
         )
 
-    def isvalid(
-        self, dfs: pd.DataFrame, accessors: List[Dict[str, Dict[str, str]]]
-    ) -> bool:
-        """
-        Extends the VType.isvalid method to operate on a list
-        of pd.DataFrames and accessors.
-        """
-        valid = True
-        accessorsList = [accessors]
-        for accessors in accessorsList:
-            if not super(Compound, self).isvalid(df, accessors):
-                self.validation_errors.append(
-                    f"VType {self.name.title()} has invalid accessors. See additional details above."
-                )
-                valid = False
-            else:
-                continue
-
-        return valid
+if __name__ == "__main__":
+    pass
+else:
+    pass

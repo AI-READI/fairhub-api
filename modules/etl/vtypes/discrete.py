@@ -1,7 +1,7 @@
-from .vtype import VType
+from .vtype import SimpleVType
 
 
-class SingleDiscrete(VType):
+class SingleDiscrete(SimpleVType):
     def __init__(self) -> None:
         super(SingleDiscrete, self).__init__(
             "SingleDiscrete",
@@ -10,7 +10,7 @@ class SingleDiscrete(VType):
         )
 
 
-class DoubleDiscrete(VType):
+class DoubleDiscrete(SimpleVType):
     def __init__(self) -> None:
         super(DoubleDiscrete, self).__init__(
             "Discrete",
@@ -23,3 +23,9 @@ class DoubleDiscrete(VType):
             ],
             int,
         )
+
+
+if __name__ == "__main__":
+    pass
+else:
+    pass

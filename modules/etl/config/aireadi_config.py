@@ -1,3 +1,4 @@
+from typing import Any, Dict, List, Tuple
 import numpy as np
 from datetime import datetime
 
@@ -10,15 +11,15 @@ from datetime import datetime
 
 # Value assigned to missing values unless other specific value defined on function call
 # (e.g. REDCapTransform.map_missing_values_by_columns(df, columns, new_missing_value))
-missing_value_generic = "Value Unavailable"
+missing_value_generic: str = "Value Unavailable"
 
 # Utility Column Groups
-index_columns = [
+index_columns: List = [
     "record_id",
 ]
 
 # Data Column Groups
-data_columns = [
+data_columns: List = [
     "studyid",
     "siteid",
     "dm",
@@ -51,8 +52,13 @@ data_columns = [
     "scrcmpdat",
 ]
 
+computed_columns: List = [
+    "phenotype",
+    "treatments",
+]
+
 # Survey Column Groups
-survey_columns = [
+survey_columns: List = [
     "screening_survey_complete",
     "study_enrollment_complete",
     "recruitment_survey_complete",
@@ -93,80 +99,86 @@ survey_columns = [
 ]
 
 # Repeat Survey Column Groups
-repeat_survey_columns = [
+repeat_survey_columns: List = [
     "current_medications_complete",
 ]
 
-repeat_survey_data_columns = ["current_medications_complete", "current_medications"]
+repeat_survey_data_columns: List = [
+    "current_medications_complete",
+    "current_medications"
+]
 
 #
 # Value Maps
 #
 
-survey_instrument_map = {
+survey_instrument_map: Dict[str, str] = {
     "2": "Complete",
     "1": "Unverified",
     "0": "Incomplete",
+}
+
+phenotype_column_map: Dict[str, str] = {
+    "mhterm_dm2": "Type II Diabetes",
+    "mhterm_predm": "Prediabetes",
+    "mh_a1c": "Elevated A1C",
+}
+
+treatments_column_map: Dict[str, str] = {
+    "cmtrt_a1c": "Oral Medication",
+    "cmtrt_glcs": "Non-Insulin Injectable",
+    "cmtrt_insln": "Insuling Injectable",
+    "cmtrt_lfst": "Lifestyle Management"
 }
 
 #
 # REDCap Transform Config
 #
 
-redcapTransformConfig = {
+# Note: The REDCap report_id is matched to the transform
+# by the value of the key property in the report dictionary.
+redcapTransformConfig: Dict[str, List[Any]|Tuple[str, List[Any]]|str|List] = {
     "reports": [
-        (
-            "participant-value",
-            {"report_id": 242544},
-            [
+        {
+            "key": "participant-value",
+            "kwdargs": {},
+            "transforms": [
                 ("remap_values_by_columns", {"columns": data_columns}),
                 ("map_missing_values_by_columns", {"columns": data_columns}),
-                ("keep_columns", {"columns": index_columns + data_columns}),
+                ("new_column_from_binary_columns_positive_class", {"column_name_map": phenotype_column_map, "new_column_name": "phenotype"}),
+                ("new_column_from_binary_columns_positive_class", {"column_name_map": treatments_column_map, "new_column_name": "treatments"}),
+                ("keep_columns", {"columns": index_columns + data_columns + computed_columns}),
             ],
-        ),
-        (
-            "instrument-status",
-            {"report_id": 251954},
-            [
-                (
-                    "remap_values_by_columns",
-                    {"columns": survey_columns, "value_map": survey_instrument_map},
-                ),
+        },
+        {
+            "key": "instrument-status",
+            "kwdargs": {},
+            "transforms": [
+                ("remap_values_by_columns", {"columns": survey_columns, "value_map": survey_instrument_map}),
                 ("map_missing_values_by_columns", {"columns": survey_columns}),
                 ("keep_columns", {"columns": index_columns + survey_columns}),
             ],
-        ),
-        (
-            "repeat_instrument",
-            {"report_id": 259920},
-            [
+        },
+        {
+            "key": "repeat-instrument",
+            "kwdargs": {},
+            "transforms": [
                 ("drop_rows", {"columns": repeat_survey_columns}),
-                (
-                    "aggregate_repeat_instrument_column_by_index",
-                    {"aggregator": np.max, "dtype": str},
-                ),
-                (
-                    "keep_columns",
-                    {"columns": index_columns + repeat_survey_data_columns},
-                ),
+                ("aggregate_repeat_instrument_by_index", {"aggregator": np.max, "dtype": str}),
+                ("keep_columns", {"columns": index_columns + repeat_survey_data_columns}),
             ],
-        ),
+        },
     ],
-    "merge_transformed_reports": (
-        "participant-value",
-        [
+    "post_transform_merge": (
+        "participant-value", [
+            # ("participant-value", {"on": index_columns, "how": "inner"}),
             ("instrument-status", {"on": index_columns, "how": "inner"}),
-            (
-                "repeat_instrument",
-                {"on": index_columns, "how": "outer"},
-            ),
+            ("repeat-instrument", {"on": index_columns, "how": "outer"}),
+            # ("repeat-instrument", {"on": index_columns, "how": "outer"}),
         ],
     ),
     "post_merge_transforms": [
-        (
-            "remap_values_by_columns",
-            {"columns": repeat_survey_columns, "value_map": survey_instrument_map},
-        ),
+        ("remap_values_by_columns",{"columns": repeat_survey_columns, "value_map": survey_instrument_map}),
         ("map_missing_values_by_columns", {"columns": repeat_survey_data_columns}),
     ],
     "index_columns": ["record_id"],
@@ -178,7 +190,7 @@ redcapTransformConfig = {
 #
 
 # Overview
-overviewTransformConfig = (
+overviewTransformConfig: Tuple[str, Dict[str, Any]] = (
     "compoundTransform",
     {
         "key": "overview",
@@ -1737,179 +1749,321 @@ overviewTransformConfig = (
     },
 )
 
-# Sex & Gender Counts by Site
-recruitmentTransformConfig = (
+# Recruitment Counts by Site
+recruitmentTransformConfig: Tuple[str, Dict[str, Any]] = (
     "simpleTransform",
     {
         "key": "recruitment",
         "strict": True,
-        "transforms": {
-            "name": "Recruitment",
-            "vtype": "DoubleDiscreteTimeseries",
-            "methods": [
-                {
-                    "groups": ["siteid", "scrcmpdat", "race"],
-                    "value": "scrcmpdat",
-                    "func": "count",
-                }
-            ],
-            "accessors": {
-                "filterby": {
-                    "name": "Site",
-                    "field": "siteid",
-                    "missing_value": missing_value_generic,
-                },
-                "datetime": {
-                    "name": "Date",
-                    "field": "scrcmpdat",
-                    "missing_value": missing_value_generic,
-                    "astype": str,
-                },
-                "subgroup": {
-                    "name": "Race",
-                    "field": "race",
-                    "missing_value": missing_value_generic,
-                    "astype": str,
-                },
-                "color": {
-                    "name": "Race",
-                    "field": "race",
-                    "missing_value": missing_value_generic,
-                    "astype": str,
-                },
-                "y": {
-                    "name": "Cumulative Count (N)",
-                    "field": "scrcmpdat",
-                    "missing_value": missing_value_generic,
-                    "remap": lambda x: int(
-                        datetime.fromisoformat(x["record"]["scrcmpdat"]).strftime(
-                            "%Y%m%d"
-                        )
-                    ),
-                    # key, accessors, name, record
-                    "astype": int,
+        "transforms": [
+            {
+                "name": "Recruitment",
+                "vtype": "DoubleDiscrete",
+                "methods": [
+                    {
+                        "groups": ["siteid", "race", "scrcmpdat"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Site",
+                        "field": "siteid",
+                        "missing_value": missing_value_generic,
+                        "astyoe": str,
+                    },
+                    "subgroup": {
+                        "name": "Race",
+                        "field": "race",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "color": {
+                        "name": "Race",
+                        "field": "race",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "x": {
+                        "name": "Week of the Year",
+                        "field": "scrcmpdat",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                        "remap": lambda x: datetime.strptime(x["record"][x["accessors"]["x"]["field"]], "%Y-%m-%d").isocalendar().week
+                    },
+                    "y": {
+                        "name": "Cumulative Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
                 },
             },
-        },
-    },
-)
-
-# Sex & Gender Counts by Site
-sexGenderTransformConfig = (
-    "simpleTransform",
-    {
-        "key": "sex-gender",
-        "strict": True,
-        "transforms": {
-            "name": "Sex & Gender",
-            "vtype": "DoubleCategorical",
-            "methods": [
-                {
-                    "groups": ["siteid", "scrsex", "genderid"],
-                    "value": "record_id",
-                    "func": "count",
-                }
-            ],
-            "accessors": {
-                "filterby": {
-                    "name": "Site",
-                    "field": "siteid",
-                    "missing_value": missing_value_generic,
-                },
-                "group": {
-                    "name": "Sex",
-                    "field": "scrsex",
-                    "missing_value": missing_value_generic,
-                    "astype": str,
-                },
-                "subgroup": {
-                    "name": "Gender",
-                    "field": "genderid",
-                    "missing_value": missing_value_generic,
-                    "astype": str,
-                },
-                "color": {
-                    "name": "Gender",
-                    "field": "genderid",
-                    "missing_value": missing_value_generic,
-                    "astype": str,
-                },
-                "value": {
-                    "name": "Count (N)",
-                    "field": "record_id",
-                    "missing_value": missing_value_generic,
-                    "astype": int,
-                },
-            },
-        },
+        ]
     },
 )
 
 # Race & Ethnicity Counts by Site
-raceEthnicityTransformConfig = (
+raceEthnicityTransformConfig: Tuple[str, Dict[str, Any]] = (
     "simpleTransform",
     {
         "key": "race-ethnicity",
         "strict": True,
-        "transforms": {
-            "name": "Race & Ethnicity",
-            "vtype": "DoubleCategorical",
-            "methods": [
-                {
-                    "groups": ["siteid", "race", "ethnic"],
-                    "value": "record_id",
-                    "func": "count",
-                }
-            ],
-            "accessors": {
-                "filterby": {
-                    "name": "Site",
-                    "field": "siteid",
-                    "missing_value": missing_value_generic,
-                    "astype": str,
-                },
-                "group": {
-                    "name": "Race",
-                    "field": "race",
-                    "missing_value": missing_value_generic,
-                    "astype": str,
-                },
-                "subgroup": {
-                    "name": "Ethnicity",
-                    "field": "ethnic",
-                    "missing_value": missing_value_generic,
-                    "astype": str,
-                },
-                "color": {
-                    "name": "Ethnicity",
-                    "field": "ethnic",
-                    "missing_value": missing_value_generic,
-                    "astype": str,
-                },
-                "value": {
-                    "name": "Count (N)",
-                    "field": "record_id",
-                    "missing_value": missing_value_generic,
-                    "astype": int,
+        "transforms": [
+            {
+                "name": "Race & Ethnicity",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["siteid", "race", "ethnic"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Site",
+                        "field": "siteid",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "name": "Race",
+                        "field": "race",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Ethnicity",
+                        "field": "ethnic",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "color": {
+                        "name": "Ethnicity",
+                        "field": "ethnic",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
                 },
             },
-        },
+        ]
     },
 )
 
+# Sex & Gender Counts by Site
+sexGenderTransformConfig: Tuple[str, Dict[str, Any]] = (
+    "simpleTransform",
+    {
+        "key": "sex-gender",
+        "strict": True,
+        "transforms": [
+            {
+                "name": "Sex & Gender",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["siteid", "scrsex", "genderid"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Site",
+                        "field": "siteid",
+                        "missing_value": missing_value_generic,
+                    },
+                    "group": {
+                        "name": "Gender",
+                        "field": "genderid",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Sex",
+                        "field": "scrsex",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "color": {
+                        "name": "Sex",
+                        "field": "scrsex",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+        ]
+    },
+)
+
+# # Phenotypes
+# phenotypesTransformConfig: Tuple[str, Dict[str, Any]] = (
+#     "compoundTransform",
+#     {
+#         "key": "phenotype",
+#         "strict": True,
+#         "transforms": [
+#             {
+#                 "name": "Prediabetes",
+#                 "vtype": "SingleCategorical",
+#                 "methods": [
+#                     {
+#                         "groups": ["siteid", "mhterm_predm"],
+#                         "value": "record_id",
+#                         "func": "count",
+#                     }
+#                 ],
+#                 "accessors": {
+#                     "filterby": {
+#                         "name": "Site",
+#                         "field": "siteid",
+#                         "missing_value": missing_value_generic,
+#                         "astype": str,
+#                     },
+#                     "group": {
+#                         "name": "Prediabetes",
+#                         "field": "mhterm_predm",
+#                         "remap": lambda x: "Prediabetes"
+#                         if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes"
+#                         else "No",
+#                         "missing_value": missing_value_generic,
+#                         "astype": str,
+#                     },
+#                     "color": {
+#                         "name": "Prediabetes",
+#                         "field": "mhterm_predm",
+#                         "remap": lambda x: "Prediabetes"
+#                         if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes"
+#                         else "No",
+#                         "missing_value": missing_value_generic,
+#                         "astype": str,
+#                     },
+#                     "value": {
+#                         "name": "Count (N)",
+#                         "field": "record_id",
+#                         "missing_value": missing_value_generic,
+#                         "astype": int,
+#                     },
+#                 },
+#             },
+#             {
+#                 "name": "Type I Diabetes",
+#                 "vtype": "SingleCategorical",
+#                 "methods": [
+#                     {
+#                         "groups": ["siteid", "mhterm_dm1"],
+#                         "value": "record_id",
+#                         "func": "count",
+#                     }
+#                 ],
+#                 "accessors": {
+#                     "filterby": {
+#                         "name": "Site",
+#                         "field": "siteid",
+#                         "missing_value": missing_value_generic,
+#                         "astype": str,
+#                     },
+#                     "group": {
+#                         "name": "Type I Diabetes",
+#                         "field": "mhterm_dm1",
+#                         "remap": lambda x: "Type I Diabetes"
+#                         if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes"
+#                         else "No",
+#                         "missing_value": missing_value_generic,
+#                         "astype": str,
+#                     },
+#                     "color": {
+#                         "name": "Type I Diabetes",
+#                         "field": "mhterm_dm1",
+#                         "remap": lambda x: "Type I Diabetes"
+#                         if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes"
+#                         else "No",
+#                         "missing_value": missing_value_generic,
+#                         "astype": str,
+#                     },
+#                     "value": {
+#                         "name": "Count (N)",
+#                         "field": "record_id",
+#                         "missing_value": missing_value_generic,
+#                         "astype": int,
+#                     },
+#                 },
+#             },
+#             {
+#                 "name": "Type II Diabetes",
+#                 "vtype": "SingleCategorical",
+#                 "methods": [
+#                     {
+#                         "groups": ["siteid", "mhterm_dm2"],
+#                         "value": "record_id",
+#                         "func": "count",
+#                     }
+#                 ],
+#                 "accessors": {
+#                     "filterby": {
+#                         "name": "Site",
+#                         "field": "siteid",
+#                         "missing_value": missing_value_generic,
+#                         "astype": str,
+#                     },
+#                     "group": {
+#                         "name": "Type II Diabetes",
+#                         "field": "mhterm_dm2",
+#                         "remap": lambda x: "Type II Diabetes"
+#                         if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes"
+#                         else "No",
+#                         "missing_value": missing_value_generic,
+#                         "astype": str,
+#                     },
+#                     "color": {
+#                         "name": "Type II Diabetes",
+#                         "field": "mhterm_dm2",
+#                         "remap": lambda x: "Type II Diabetes"
+#                         if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes"
+#                         else "No",
+#                         "missing_value": missing_value_generic,
+#                         "astype": str,
+#                     },
+#                     "value": {
+#                         "name": "Count (N)",
+#                         "field": "record_id",
+#                         "missing_value": missing_value_generic,
+#                         "astype": int,
+#                     },
+#                 },
+#             },
+#         ],
+#     },
+# )
+
 # Phenotypes
-phenotypesTransformConfig = (
+phenotypesTransformConfig: Tuple[str, Dict[str, Any]] = (
     "compoundTransform",
     {
         "key": "phenotype",
         "strict": True,
         "transforms": [
             {
-                "name": "Prediabetes",
+                "name": "Phenotype",
                 "vtype": "SingleCategorical",
                 "methods": [
                     {
-                        "groups": ["siteid", "mhterm_predm"],
+                        "groups": ["siteid", "phenotype"],
                         "value": "record_id",
                         "func": "count",
                     }
@@ -1922,20 +2076,14 @@ phenotypesTransformConfig = (
                         "astype": str,
                     },
                     "group": {
-                        "name": "Prediabetes",
+                        "name": "Phenotype",
+                        "field": "phenotype",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "color": {
+                        "name": "Phenotype",
                         "field": "mhterm_predm",
-                        "remap": lambda x: "Prediabetes"
-                        if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes"
-                        else "No",
-                        "missing_value": missing_value_generic,
-                        "astype": str,
-                    },
-                    "color": {
-                        "name": "Prediabetes",
-                        "field": "mhterm_predm",
-                        "remap": lambda x: "Prediabetes"
-                        if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes"
-                        else "No",
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
@@ -1946,146 +2094,60 @@ phenotypesTransformConfig = (
                         "astype": int,
                     },
                 },
-            },
-            {
-                "name": "Type I Diabetes",
-                "vtype": "SingleCategorical",
-                "methods": [
-                    {
-                        "groups": ["siteid", "mhterm_dm1"],
-                        "value": "record_id",
-                        "func": "count",
-                    }
-                ],
-                "accessors": {
-                    "filterby": {
-                        "name": "Site",
-                        "field": "siteid",
-                        "missing_value": missing_value_generic,
-                        "astype": str,
-                    },
-                    "group": {
-                        "name": "Type I Diabetes",
-                        "field": "mhterm_dm1",
-                        "remap": lambda x: "Type I Diabetes"
-                        if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes"
-                        else "No",
-                        "missing_value": missing_value_generic,
-                        "astype": str,
-                    },
-                    "color": {
-                        "name": "Type I Diabetes",
-                        "field": "mhterm_dm1",
-                        "remap": lambda x: "Type I Diabetes"
-                        if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes"
-                        else "No",
-                        "missing_value": missing_value_generic,
-                        "astype": str,
-                    },
-                    "value": {
-                        "name": "Count (N)",
-                        "field": "record_id",
-                        "missing_value": missing_value_generic,
-                        "astype": int,
-                    },
-                },
-            },
-            {
-                "name": "Type II Diabetes",
-                "vtype": "SingleCategorical",
-                "methods": [
-                    {
-                        "groups": ["siteid", "mhterm_dm2"],
-                        "value": "record_id",
-                        "func": "count",
-                    }
-                ],
-                "accessors": {
-                    "filterby": {
-                        "name": "Site",
-                        "field": "siteid",
-                        "missing_value": missing_value_generic,
-                        "astype": str,
-                    },
-                    "group": {
-                        "name": "Type II Diabetes",
-                        "field": "mhterm_dm2",
-                        "remap": lambda x: "Type II Diabetes"
-                        if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes"
-                        else "No",
-                        "missing_value": missing_value_generic,
-                        "astype": str,
-                    },
-                    "color": {
-                        "name": "Type II Diabetes",
-                        "field": "mhterm_dm2",
-                        "remap": lambda x: "Type II Diabetes"
-                        if str(x["record"][x["accessors"]["group"]["field"]]) == "Yes"
-                        else "No",
-                        "missing_value": missing_value_generic,
-                        "astype": str,
-                    },
-                    "value": {
-                        "name": "Count (N)",
-                        "field": "record_id",
-                        "missing_value": missing_value_generic,
-                        "astype": int,
-                    },
-                },
-            },
+            }
         ],
     },
 )
 
-currentMedicationsTransformConfig = (
+currentMedicationsTransformConfig: Tuple[str, Dict[str, Any]] = (
     "simpleTransform",
     {
         "key": "current-medications",
         "strict": True,
-        "transforms": {
-            "name": "Current Medications",
-            "vtype": "SingleCategorical",
-            "methods": [
-                {
-                    "groups": ["siteid", "current_medications_complete"],
-                    "value": "record_id",
-                    "func": "count",
-                }
-            ],
-            "accessors": {
-                "filterby": {
-                    "name": "Site",
-                    "field": "siteid",
-                    "missing_value": missing_value_generic,
-                    "astype": str,
+        "transforms": [
+            {
+                "name": "Current Medications",
+                "vtype": "SingleCategorical",
+                "methods": [
+                    {
+                        "groups": ["siteid"],
+                        "value": "current_medications",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Site",
+                        "field": "siteid",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "name": "Site",
+                        "field": "siteid",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "color": {
+                        "name": "Site",
+                        "field": "siteid",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Current Medications (N)",
+                        "field": "current_medications",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
                 },
-                "group": {
-                    "remap": lambda x: x["name"],
-                    "name": "Current Medications Status",
-                    "field": "current_medications_complete",
-                    "missing_value": missing_value_generic,
-                    "astype": str,
-                },
-                "color": {
-                    "remap": lambda x: x["name"],
-                    "name": "Current Medications Status",
-                    "field": "current_medications_complete",
-                    "missing_value": missing_value_generic,
-                    "astype": str,
-                },
-                "value": {
-                    "name": "Current Medications (N)",
-                    "field": "current_medications",
-                    "missing_value": missing_value_generic,
-                    "astype": int,
-                },
-            },
-        },
+            }
+        ]
     },
 )
 
 
-transformConfigs = {
+transformConfigs: Dict[str, Any] = {
     "redcap": redcapTransformConfig,
     "overview": overviewTransformConfig,
     "recruitment": recruitmentTransformConfig,

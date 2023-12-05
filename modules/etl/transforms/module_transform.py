@@ -11,7 +11,7 @@ import pandas as pd
 class ModuleTransform(object):
     def __init__(
         self,
-        config: Dict[str, Dict[str, Any]],
+        config: Dict[str, Any],
         logging_config: Dict[str, str] = {},
     ) -> None:
         #
@@ -19,30 +19,26 @@ class ModuleTransform(object):
         #
 
         # Logging Config Checks
-        self.logging_config = {}
-        self.logging_config["encoding"] = (
-            logging_config["encoding"] if "encoding" in logging_config else "utf-8"
-        )
-        self.logging_config["filename"] = (
-            logging_config["filename"]
-            if "filename" in logging_config
-            else "REDCapETL.log"
-        )
-        self.logging_config["level"] = (
-            getattr(logging, logging_config["level"].upper)
-            if "level" in logging_config
-            else logging.DEBUG
+        self.logging_config = (
+            config["logging_config"]
+            if "logging_config" in config
+            else {
+                "encoding": "utf-8",
+                "filename": "REDCapETL.log",
+                "level": logging.DEBUG,
+            }
         )
 
         # Configure Logging
-        logging.basicConfig(**self.logging_config)
+        logging.basicConfig(**self.logging_config);
         self.logger = logging.getLogger("VizModTransform")
 
         #
         # References
         #
 
-        self.valid = True
+        self.valid: bool = True
+        self.transformed: Any
 
         #
         # Visualization Variables
@@ -53,14 +49,14 @@ class ModuleTransform(object):
 
         self.key = config["key"] if "key" in config else None
 
-        self.transforms = config["transforms"] if "transforms" in config else None
+        self.transforms: List[Dict[str, Any]] = config["transforms"]
 
-        if self.transforms is None:
+        if len(self.transforms) < 1:
             self.valid = False
             raise ValueError(
                 f"ModuleTransform instantiation missing transforms argument"
             )
-        elif (type(self.transforms) != list) and (type(self.transforms) != dict):
+        elif (type(self.transforms) != list):
             self.valid = False
             raise ValueError(
                 f"ModuleTransform argument transforms must be a list or dict type"
@@ -70,11 +66,8 @@ class ModuleTransform(object):
             pass
 
         # Normalize Transforms to List Type, Check Validity, and Warn on Missing Attributes
-        self.transformList = (
-            self.transforms if type(self.transforms) == list else [self.transforms]
-        )
-        for transform in enumerate(self.transformList):
-            self.valid = True if self._transformIsValid(transform) else False
+        for indexed_transform in enumerate(self.transforms):
+            self.valid = True if self._transformIsValid(indexed_transform) else False
         if self.strict and not self.valid:
             raise ValueError(
                 f"{self.key}:Missing properties in transforms argument, see log at {self.logging_config['filename']} for details"
@@ -84,11 +77,11 @@ class ModuleTransform(object):
 
         return
 
-    def _transformIsValid(self, transform: Tuple[int, Dict[str, Any]]) -> bool:
+    def _transformIsValid(self, indexed_transform: Tuple[int, Dict[str, Any]]) -> bool:
         """
         Transform validator
         """
-        index, transform = transform
+        index, transform = indexed_transform
         valid = True
         if "name" not in transform:
             self.logger.error(
@@ -118,7 +111,7 @@ class ModuleTransform(object):
         name: str,
         record: Dict[str, Any],
         key: str,
-        accessors: Dict[str, Dict[str, str | Callable]],
+        accessors: Dict[str, Dict[str, Any]],
     ) -> Any:
         """
         Element-wise type setting method. If value of
@@ -126,7 +119,6 @@ class ModuleTransform(object):
         value as the type defined for property in the
         vtype.
         """
-        print(accessors, "\n")
         accessor = accessors[key]
         for pname, _ptype in vtype.props:
             if pname == key:
@@ -141,7 +133,7 @@ class ModuleTransform(object):
                             f"Accessor `{pname}` with type `{ptype}` conflicts with VType definition requiring {_ptype}"
                         )
                 # Accessor Name
-                pvalue = record[accessor["field"]]
+                pvalue: Any = record[accessor["field"]]
                 if "remap" in accessor and accessor["remap"] is not None:
                     pvalue = accessor["remap"](
                         {
@@ -181,8 +173,8 @@ class ModuleTransform(object):
         One transform for one VType.
         """
         self.transformed = []
-        transform = (
-            self.transformList.pop()
+        transform: Dict[str, Any] = (
+            self.transforms.pop()
         )  # simple transforms have only one transform object
         name, vtype, methods, accessors = (
             transform["name"],
@@ -232,7 +224,7 @@ class ModuleTransform(object):
         """
         self.transformed = []
 
-        for transform in self.transformList:
+        for transform in self.transforms:
             name, vtype, methods, accessors = (
                 transform["name"],
                 getattr(vtypes, transform["vtype"])(),
@@ -284,8 +276,7 @@ class ModuleTransform(object):
         Transforms can be heterogenous VTypes.
         """
         self.transformed = {}
-
-        for transform in self.transformList:
+        for transform in self.transforms:
             name, vtype, methods, accessors = (
                 transform["name"],
                 getattr(vtypes, transform["vtype"])(),

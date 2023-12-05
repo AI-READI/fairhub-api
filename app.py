@@ -100,14 +100,33 @@ def create_app(config_module=None):
 
     @app.cli.command("create-schema")
     def create_schema():
+        """Create the database schema."""
         engine = model.db.session.get_bind()
-        metadata = MetaData()
         metadata = MetaData()
         metadata.reflect(bind=engine)
         table_names = [table.name for table in metadata.tables.values()]
         if len(table_names) == 0:
             with engine.begin():
-                """Create the database schema."""
+                model.db.create_all()
+
+    @app.cli.command("destroy-schema")
+    def destroy_schema():
+        """Create the database schema."""
+        engine = model.db.session.get_bind()
+        with engine.begin():
+            model.db.drop_all()
+
+    @app.cli.command("cycle-schema")
+    def cycle_schema():
+        """Destroy then re-create the database schema."""
+        engine = model.db.session.get_bind()
+        with engine.begin():
+            model.db.drop_all()
+        metadata = MetaData()
+        metadata.reflect(bind=engine)
+        table_names = [table.name for table in metadata.tables.values()]
+        if len(table_names) == 0:
+            with engine.begin():
                 model.db.create_all()
 
     @app.before_request
@@ -204,13 +223,6 @@ def create_app(config_module=None):
     @app.errorhandler(ValidationException)
     def validation_exception_handler(error):
         return error.args[0], 422
-
-    @app.cli.command("destroy-schema")
-    def destroy_schema():
-        """Create the database schema."""
-        engine = model.db.session.get_bind()
-        with engine.begin():
-            model.db.drop_all()
 
     with app.app_context():
         engine = model.db.session.get_bind()

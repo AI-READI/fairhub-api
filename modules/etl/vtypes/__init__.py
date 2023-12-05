@@ -1,4 +1,4 @@
-from .vtype import VType
+from .vtype import SimpleVType, ComplexVType
 from .categorical import SingleCategorical, DoubleCategorical
 from .discrete import SingleDiscrete, DoubleDiscrete
 from .continuous import SingleContinuous, DoubleContinuous
