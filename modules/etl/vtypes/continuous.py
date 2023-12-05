@@ -1,5 +1,6 @@
 from .vtype import SimpleVType
 
+
 class SingleContinuous(SimpleVType):
     def __init__(self) -> None:
         super(SingleContinuous, self).__init__(
@@ -7,6 +8,7 @@ class SingleContinuous(SimpleVType):
             [("filterby", str), ("group", str), ("color", str), ("x", float)],
             float,
         )
+
 
 class DoubleContinuous(SimpleVType):
     def __init__(self) -> None:
@@ -21,6 +23,7 @@ class DoubleContinuous(SimpleVType):
             ],
             float,
         )
+
 
 if __name__ == "__main__":
     pass

@@ -105,7 +105,7 @@ repeat_survey_columns: List = [
 
 repeat_survey_data_columns: List = [
     "current_medications_complete",
-    "current_medications"
+    "current_medications",
 ]
 
 #
@@ -128,7 +128,7 @@ treatments_column_map: Dict[str, str] = {
     "cmtrt_a1c": "Oral Medication",
     "cmtrt_glcs": "Non-Insulin Injectable",
     "cmtrt_insln": "Insuling Injectable",
-    "cmtrt_lfst": "Lifestyle Management"
+    "cmtrt_lfst": "Lifestyle Management",
 }
 
 #
@@ -137,7 +137,7 @@ treatments_column_map: Dict[str, str] = {
 
 # Note: The REDCap report_id is matched to the transform
 # by the value of the key property in the report dictionary.
-redcapTransformConfig: Dict[str, List[Any]|Tuple[str, List[Any]]|str|List] = {
+redcapTransformConfig: Dict[str, List[Any] | Tuple[str, List[Any]] | str | List] = {
     "reports": [
         {
             "key": "participant-value",
@@ -145,16 +145,34 @@ redcapTransformConfig: Dict[str, List[Any]|Tuple[str, List[Any]]|str|List] = {
             "transforms": [
                 ("remap_values_by_columns", {"columns": data_columns}),
                 ("map_missing_values_by_columns", {"columns": data_columns}),
-                ("new_column_from_binary_columns_positive_class", {"column_name_map": phenotype_column_map, "new_column_name": "phenotype"}),
-                ("new_column_from_binary_columns_positive_class", {"column_name_map": treatments_column_map, "new_column_name": "treatments"}),
-                ("keep_columns", {"columns": index_columns + data_columns + computed_columns}),
+                (
+                    "new_column_from_binary_columns_positive_class",
+                    {
+                        "column_name_map": phenotype_column_map,
+                        "new_column_name": "phenotype",
+                    },
+                ),
+                (
+                    "new_column_from_binary_columns_positive_class",
+                    {
+                        "column_name_map": treatments_column_map,
+                        "new_column_name": "treatments",
+                    },
+                ),
+                (
+                    "keep_columns",
+                    {"columns": index_columns + data_columns + computed_columns},
+                ),
             ],
         },
         {
             "key": "instrument-status",
             "kwdargs": {},
             "transforms": [
-                ("remap_values_by_columns", {"columns": survey_columns, "value_map": survey_instrument_map}),
+                (
+                    "remap_values_by_columns",
+                    {"columns": survey_columns, "value_map": survey_instrument_map},
+                ),
                 ("map_missing_values_by_columns", {"columns": survey_columns}),
                 ("keep_columns", {"columns": index_columns + survey_columns}),
             ],
@@ -164,13 +182,20 @@ redcapTransformConfig: Dict[str, List[Any]|Tuple[str, List[Any]]|str|List] = {
             "kwdargs": {},
             "transforms": [
                 ("drop_rows", {"columns": repeat_survey_columns}),
-                ("aggregate_repeat_instrument_by_index", {"aggregator": np.max, "dtype": str}),
-                ("keep_columns", {"columns": index_columns + repeat_survey_data_columns}),
+                (
+                    "aggregate_repeat_instrument_by_index",
+                    {"aggregator": np.max, "dtype": str},
+                ),
+                (
+                    "keep_columns",
+                    {"columns": index_columns + repeat_survey_data_columns},
+                ),
             ],
         },
     ],
     "post_transform_merge": (
-        "participant-value", [
+        "participant-value",
+        [
             # ("participant-value", {"on": index_columns, "how": "inner"}),
             ("instrument-status", {"on": index_columns, "how": "inner"}),
             ("repeat-instrument", {"on": index_columns, "how": "outer"}),
@@ -178,7 +203,10 @@ redcapTransformConfig: Dict[str, List[Any]|Tuple[str, List[Any]]|str|List] = {
         ],
     ),
     "post_merge_transforms": [
-        ("remap_values_by_columns",{"columns": repeat_survey_columns, "value_map": survey_instrument_map}),
+        (
+            "remap_values_by_columns",
+            {"columns": repeat_survey_columns, "value_map": survey_instrument_map},
+        ),
         ("map_missing_values_by_columns", {"columns": repeat_survey_data_columns}),
     ],
     "index_columns": ["record_id"],
@@ -1790,7 +1818,11 @@ recruitmentTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "field": "scrcmpdat",
                         "missing_value": missing_value_generic,
                         "astype": int,
-                        "remap": lambda x: datetime.strptime(x["record"][x["accessors"]["x"]["field"]], "%Y-%m-%d").isocalendar().week
+                        "remap": lambda x: datetime.strptime(
+                            x["record"][x["accessors"]["x"]["field"]], "%Y-%m-%d"
+                        )
+                        .isocalendar()
+                        .week,
                     },
                     "y": {
                         "name": "Cumulative Count (N)",
@@ -1800,7 +1832,7 @@ recruitmentTransformConfig: Tuple[str, Dict[str, Any]] = (
                     },
                 },
             },
-        ]
+        ],
     },
 )
 
@@ -1854,7 +1886,7 @@ raceEthnicityTransformConfig: Tuple[str, Dict[str, Any]] = (
                     },
                 },
             },
-        ]
+        ],
     },
 )
 
@@ -1907,7 +1939,7 @@ sexGenderTransformConfig: Tuple[str, Dict[str, Any]] = (
                     },
                 },
             },
-        ]
+        ],
     },
 )
 
@@ -2142,7 +2174,7 @@ currentMedicationsTransformConfig: Tuple[str, Dict[str, Any]] = (
                     },
                 },
             }
-        ]
+        ],
     },
 )
 

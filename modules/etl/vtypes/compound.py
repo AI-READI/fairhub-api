@@ -10,6 +10,7 @@ from .timeseries import (
 from typing import Tuple, List, Dict, Callable, Any
 import pandas as pd
 
+
 class Compound(ComplexVType):
     def __init__(self) -> None:
         super(Compound, self).__init__(
@@ -28,6 +29,7 @@ class Compound(ComplexVType):
             ],
             str,
         )
+
 
 if __name__ == "__main__":
     pass
