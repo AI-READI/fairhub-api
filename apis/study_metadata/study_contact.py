@@ -46,7 +46,7 @@ class StudyContactResource(Resource):
 
     api.response(201, "Success")
     api.response(400, "Validation Error")
-    
+
     def post(self, study_id: int):
         """Create study contact metadata"""
 
