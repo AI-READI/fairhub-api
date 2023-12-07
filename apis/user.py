@@ -36,7 +36,6 @@ class UserDetailsEndpoint(Resource):
     @api.response(400, "Validation Error")
     def get(self):
         """Returns user details"""
-        print("THIS IS THE USER ID: ", g.user.id)
         user = model.User.query.get(g.user.id)
         user_details = user.user_details
         user_information = user.to_dict()
@@ -48,9 +47,7 @@ class UserDetailsEndpoint(Resource):
     # @api.marshal_with(study_model)
     def put(self):
         """Updates user details"""
-        print(model.User.query.get(g.user.id))
-
-        def _validate_is_valid_email(instance):
+        def validate_is_valid_email(instance):
             email_address = instance
 
             try:
@@ -90,7 +87,7 @@ class UserDetailsEndpoint(Resource):
         }
 
         format_checker = FormatChecker()
-        format_checker.checks("valid_email")(_validate_is_valid_email)
+        format_checker.checks("valid_email")(validate_is_valid_email)
 
         try:
             validate(
