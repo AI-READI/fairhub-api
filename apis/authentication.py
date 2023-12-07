@@ -47,7 +47,7 @@ class UnauthenticatedException(Exception):
 class SignUpUser(Resource):
     """SignUpUser class is used to sign up new users to the system"""
 
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(signup_model)
     @api.expect(signup_model)

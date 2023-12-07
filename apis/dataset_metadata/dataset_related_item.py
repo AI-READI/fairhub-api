@@ -34,7 +34,7 @@ class DatasetRelatedItemResource(Resource):
         return [d.to_dict() for d in dataset_related_item_], 200
 
     @api.doc("update related item")
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     def post(self, study_id: int, dataset_id: int):
         """Update dataset related item"""

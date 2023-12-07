@@ -34,7 +34,7 @@ study_arm = api.model(
 class StudyArmResource(Resource):
     """Study Arm Metadata"""
 
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(study_arm)
     def get(self, study_id):

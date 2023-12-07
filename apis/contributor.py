@@ -36,7 +36,7 @@ class AddContributor(Resource):
         ]
         return contributors_list
 
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(contributors_model)
     def post(self, study_id: int):

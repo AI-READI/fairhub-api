@@ -33,7 +33,7 @@ class AddParticipant(Resource):
         participants = model.Participant.query.all()
         return [p.to_dict() for p in participants]
 
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(participant_model)
     def post(self, study_id: int):
