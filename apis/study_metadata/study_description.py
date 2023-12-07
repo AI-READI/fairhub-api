@@ -34,6 +34,8 @@ class StudyDescriptionResource(Resource):
 
         return study_description_.to_dict(), 200
 
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def put(self, study_id: int):
         """Update study description metadata"""
         study_obj = model.Study.query.get(study_id)

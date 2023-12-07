@@ -371,7 +371,7 @@ def is_granted(permission: str, study=None):
 class Logout(Resource):
     """Logout class is used to log out users from the system"""
 
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def post(self):
         """simply logges out user from the system"""

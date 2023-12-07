@@ -82,6 +82,8 @@ class StudyConditionsResource(Resource):
 
         return study_other_conditions, 200
 
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def put(self, study_id: int):
         """Update study conditions metadata"""
         # Schema validation
