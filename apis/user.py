@@ -47,6 +47,7 @@ class UserDetailsEndpoint(Resource):
     # @api.marshal_with(study_model)
     def put(self):
         """Updates user details"""
+
         def validate_is_valid_email(instance):
             email_address = instance
 
