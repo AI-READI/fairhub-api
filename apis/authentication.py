@@ -16,6 +16,7 @@ from flask_restx import Namespace, Resource, fields
 from jsonschema import FormatChecker, ValidationError, validate
 
 import model
+from invitation.invitation import send_email_verification
 
 api = Namespace("Authentication", description="Authentication paths", path="/")
 
@@ -144,14 +145,52 @@ class SignUpUser(Resource):
         invitations = model.Invite.query.filter_by(
             email_address=data["email_address"]
         ).all()
-
         new_user = model.User.from_data(data)
-        for invite in invitations:
-            invite.study.add_user_to_study(new_user, invite.permission)
-            model.db.session.delete(invite)
+        if user:
+            for invite in invitations:
+                invite.study.add_user_to_study(new_user, invite.permission)
+                model.db.session.delete(invite)
         model.db.session.add(new_user)
         model.db.session.commit()
+        print(new_user.email_address, new_user.token)
+        send_email_verification(new_user)
         return f"Hi, {new_user.email_address}, you have successfully signed up", 201
+
+
+@api.route("/email-verification/<user_id>/<token>")
+class InviteGeneralUsers(Resource):
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    # @api.marshal_with(contributors_model)
+    def post(self, user_id, token):
+        user = model.User.query.get(user_id)
+        if not user:
+            return "user not found", 404
+        if user.email_verified:
+            return "user already verified", 422
+        if not user.verify_token(token):
+            return "Token invalid or expired", 422
+
+        user.email_verified = True
+        model.db.session.commit()
+        return "Email verified", 201
+
+
+@api.route("/email-verification/send/<user_id>")
+class GenerateVerification(Resource):
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    # @api.marshal_with(contributors_model)
+    def post(self, user_id):
+        user = model.User.query.get(user_id)
+        if not user:
+            return "user not found", 404
+        if user.email_verified:
+            return "user already verified", 422
+        user.generate_token()
+        send_email_verification(user)
+        model.db.session.commit()
+        return "Your email is verified", 201
 
 
 @api.route("/auth/login")
@@ -202,6 +241,18 @@ class Login(Resource):
             return e.message, 400
 
         user = model.User.query.filter_by(email_address=email_address).one_or_none()
+        title = "you logged in"
+        message = f"You have successfully logged in at {request.remote_addr} "
+        notification_type = "info"
+        target = "/login"
+        read = False
+        user = model.User.query.filter_by(email_address=email_address).one_or_none()
+
+        send_notification = \
+            (model.Notification.from_data(user, {"title": title, "message": message, "type": notification_type,
+                                                 "target": target, "read": read}))
+        model.db.session.add(send_notification)
+        model.db.session.commit()
         if not user:
             return "Invalid credentials", 401
 
@@ -242,6 +293,7 @@ class Login(Resource):
         resp.set_cookie(
             "token", encoded_jwt_code, secure=True, httponly=True, samesite="None"
         )
+
         resp.status_code = 200
 
         return resp
