@@ -34,9 +34,9 @@ class AddContributor(Resource):
         contributors_list = [c.to_dict() for c in contributors] + [
             c.to_dict() for c in invited_contributors
         ]
-        return contributors_list
+        return contributors_list, 200
 
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(contributors_model)
     def post(self, study_id: int):
@@ -218,4 +218,4 @@ class AssignOwner(Resource):
 
         existing_owner.permission = "admin"
         model.db.session.commit()
-        return Response(status=204)
+        return existing_contributor.to_dict(), 200

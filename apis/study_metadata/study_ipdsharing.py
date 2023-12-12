@@ -39,6 +39,8 @@ class StudyIpdsharingResource(Resource):
 
         return study_.study_ipdsharing.to_dict(), 200
 
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def put(self, study_id: int):
         """Create study ipdsharing metadata"""
         # Schema validation

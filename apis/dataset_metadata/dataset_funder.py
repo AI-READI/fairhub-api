@@ -39,7 +39,7 @@ class DatasetFunderResource(Resource):
         return [d.to_dict() for d in dataset_funder_], 200
 
     @api.doc("update funder")
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     def post(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         """Update dataset funder"""

@@ -36,6 +36,8 @@ class StudyLinkResource(Resource):
         sorted_study_link_ = sorted(study_link_, key=lambda x: x.created_at)
         return [s.to_dict() for s in sorted_study_link_], 200
 
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
     def post(self, study_id: int):
         """Create study link metadata"""
         # Schema validation

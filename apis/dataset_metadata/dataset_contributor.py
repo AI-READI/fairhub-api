@@ -33,7 +33,7 @@ class DatasetContributorResource(Resource):
         ], 200
 
     @api.doc("update contributor")
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     def post(self, study_id: int, dataset_id: int):
         """Update dataset contributor"""
@@ -177,7 +177,7 @@ class DatasetCreatorResource(Resource):
         return [d.to_dict() for d in dataset_creator_ if d.to_dict()["creator"]], 200
 
     @api.doc("update creator")
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     def post(self, study_id: int, dataset_id: int):
         """Update dataset creator"""

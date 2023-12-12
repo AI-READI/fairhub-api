@@ -41,9 +41,11 @@ class UserDetailsEndpoint(Resource):
         user_information = user.to_dict()
         # combine user and user_details to return a single object
         user_information.update(user_details.to_dict())
-        return user_information
+        return user_information, 200
 
     @api.expect(study_model)
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     # @api.marshal_with(study_model)
     def put(self):
         """Updates user details"""

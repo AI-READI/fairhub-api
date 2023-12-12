@@ -47,6 +47,8 @@ class StudySponsorsResource(Resource):
 
         return study_sponsors_collaborators_.to_dict(), 200
 
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def put(self, study_id: int):
         """Update study sponsors metadata"""
         # Schema validation

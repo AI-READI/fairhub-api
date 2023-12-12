@@ -44,6 +44,8 @@ class StudyInterventionResource(Resource):
 
         return [s.to_dict() for s in sorted_study_intervention], 200
 
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
     def post(self, study_id: int):
         """Create study intervention metadata"""
         # Schema validation

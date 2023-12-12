@@ -44,6 +44,8 @@ class StudyEligibilityResource(Resource):
 
         return study_.study_eligibility.to_dict(), 200
 
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def put(self, study_id: int):
         """Update study eligibility metadata"""
         # Schema validation

@@ -43,6 +43,8 @@ class StudyLocationResource(Resource):
 
         return [s.to_dict() for s in sorted_study_location], 200
 
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
     def post(self, study_id: int):
         """Create study location metadata"""
         # Schema validation

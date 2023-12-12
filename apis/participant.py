@@ -31,9 +31,9 @@ class AddParticipant(Resource):
     @api.marshal_with(participant_model)
     def get(self, study_id: int):  # pylint: disable= unused-argument
         participants = model.Participant.query.all()
-        return [p.to_dict() for p in participants]
+        return [p.to_dict() for p in participants], 200
 
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(participant_model)
     def post(self, study_id: int):
@@ -60,7 +60,7 @@ class UpdateParticipant(Resource):
         update_participant = model.Participant.query.get(participant_id)
         update_participant.update(request.json)
         model.db.session.commit()
-        return update_participant.to_dict()
+        return update_participant.to_dict(), 200
 
     @api.response(204, "Success")
     @api.response(400, "Validation Error")

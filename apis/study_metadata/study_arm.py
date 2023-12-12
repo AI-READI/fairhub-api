@@ -45,6 +45,8 @@ class StudyArmResource(Resource):
 
         return arm.to_dict(), 200
 
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
     def post(self, study_id):
         """Create study arm metadata"""
         # Schema validation
