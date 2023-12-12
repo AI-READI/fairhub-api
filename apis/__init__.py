@@ -7,6 +7,7 @@ from apis.study_metadata_namespace import api as study_metadata_namespace
 from .authentication import api as authentication
 from .contributor import api as contributors_api
 from .dataset import api as dataset_api
+from .invite_users import api as invite_general_users
 from .dataset_metadata.dataset_access import api as access
 from .dataset_metadata.dataset_alternate_identifier import api as alternate_identifier
 from .dataset_metadata.dataset_consent import api as consent
@@ -88,12 +89,14 @@ __all__ = [
     "identification",
     "study_description",
     "dataset_contributor",
+    "invite_general_users"
 ]
 
 
 api.add_namespace(dataset_metadata_namespace)
 api.add_namespace(study_metadata_namespace)
 api.add_namespace(authentication)
+api.add_namespace(invite_general_users)
 
 
 @api.route("/echo", endpoint="echo")

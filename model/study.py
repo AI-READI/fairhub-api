@@ -269,6 +269,8 @@ class Study(db.Model):  # type: ignore
             raise StudyException(
                 "This email address has already been invited to this study"
             )
-        contributor_add = model.Invite(self, email_address, permission)
+        user = model.User.query.filter_by(id=g.user.id).first()
+
+        contributor_add = model.Invite(self, user, email_address, permission)
         db.session.add(contributor_add)
         return contributor_add
