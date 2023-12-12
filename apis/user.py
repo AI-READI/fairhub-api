@@ -128,7 +128,7 @@ class UserPasswordEndpoint(Resource):
             return True
 
         def confirm_new_password(instance):
-            data = request.json
+            data: Union[Any, dict] = request.json
             new_password = data["new_password"]
             confirm_password = instance
 
