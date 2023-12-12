@@ -118,6 +118,7 @@ class UserPasswordEndpoint(Resource):
     @api.response(400, "Validation Error")
     def put(self):
         """Updates user password"""
+
         def validate_current_password(instance):
             received_password = instance
 
@@ -152,7 +153,7 @@ class UserPasswordEndpoint(Resource):
                     "type": "string",
                     "minLength": 1,
                     "format": "password confirmation",
-                }
+                },
             },
         }
 
@@ -161,7 +162,9 @@ class UserPasswordEndpoint(Resource):
         format_checker.checks("password confirmation")(confirm_new_password)
 
         try:
-            validate(instance=request.json, schema=schema, format_checker=format_checker)
+            validate(
+                instance=request.json, schema=schema, format_checker=format_checker
+            )
         except ValidationError as e:
             return e.message, 400
 
