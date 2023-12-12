@@ -109,3 +109,35 @@ class UserDetailsEndpoint(Resource):
         user_information = user.to_dict()
         user_information.update(user_details.to_dict())
         return user_information
+
+
+@api.route("/user/password")
+class UserPasswordEndpoint(Resource):
+    @api.doc(description="Updates User password")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    def put(self):
+        """Updates user password"""
+        # Schema validation
+        schema = {
+            "type": "object",
+            "required": ["current_password", "new_password"],
+            "additionalProperties": False,
+            "properties": {
+                "current_password": {"type": "string", "minLength": 1},
+                "new_password": {"type": "string", "minLength": 1},
+            },
+        }
+
+        try:
+            validate(instance=request.json, schema=schema)
+        except ValidationError as e:
+            return e.message, 400
+
+        data: Union[Any, dict] = request.json
+        user = model.User.query.get(g.user.id)
+        if not user.check_password(data["current_password"]):
+            return "Current password is incorrect", 400
+        user.set_password(data["new_password"])
+        model.db.session.commit()
+        return "Password updated successfully", 200
