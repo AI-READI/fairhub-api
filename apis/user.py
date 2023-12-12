@@ -118,26 +118,63 @@ class UserPasswordEndpoint(Resource):
     @api.response(400, "Validation Error")
     def put(self):
         """Updates user password"""
+        def validate_current_password(instance):
+            received_password = instance
+            # If received password is not the same as the current password
+            # then raise a validation error
+            print("uhhhh")
+            print(g.user.check_password(received_password))
+            print("uhhhh")
+            if not g.user.check_password(received_password):
+                raise ValidationError("Current password is incorrect")
+
+            return True
+
+        def confirm_new_password(instance):
+            data = request.json
+            new_password = data["new_password"]
+            confirm_password = instance
+
+            # If new password and confirm password are not the same
+            # then raise a validation error
+            if new_password != confirm_password:
+                raise ValidationError("New password and confirm password do not match")
+
+            return True
+
         # Schema validation
+        print(request.json)
         schema = {
             "type": "object",
-            "required": ["current_password", "new_password"],
+            "required": ["old_password", "new_password", "confirm_password"],
             "additionalProperties": False,
             "properties": {
-                "current_password": {"type": "string", "minLength": 1},
+                "old_password": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "current password",
+                },
                 "new_password": {"type": "string", "minLength": 1},
+                "confirm_password": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "password confirmation",
+                }
             },
         }
 
+        format_checker = FormatChecker()
+        format_checker.checks("current password")(validate_current_password)
+        format_checker.checks("password confirmation")(confirm_new_password)
+
         try:
-            validate(instance=request.json, schema=schema)
+            validate(instance=request.json, schema=schema, format_checker=format_checker)
         except ValidationError as e:
             return e.message, 400
 
         data: Union[Any, dict] = request.json
         user = model.User.query.get(g.user.id)
-        if not user.check_password(data["current_password"]):
-            return "Current password is incorrect", 400
         user.set_password(data["new_password"])
         model.db.session.commit()
+        print("WHAT")
         return "Password updated successfully", 200
