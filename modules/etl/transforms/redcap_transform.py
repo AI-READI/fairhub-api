@@ -570,7 +570,6 @@ class RedcapTransform(object):
         dtype: Callable = float,
         annotation: List[Dict[str, Any]] = [],
     ) -> pd.DataFrame:
-
         new_column_name = (
             new_column_name
             if len(new_column_name) > 0
@@ -578,13 +577,18 @@ class RedcapTransform(object):
         )
         df[new_column_name] = ""
         for column_name, column_value in column_name_map.items():
-            df.loc[df[column_name] == "Yes", new_column_name] += f"{column_value}{self.multivalue_separator}"
+            df.loc[
+                df[column_name] == "Yes", new_column_name
+            ] += f"{column_value}{self.multivalue_separator}"
         for column_name, column_value in column_name_map.items():
-            df.loc[(df[column_name] == default_value) & (df[new_column_name] == ""), new_column_name] = default_value
+            df.loc[
+                (df[column_name] == default_value) & (df[new_column_name] == ""),
+                new_column_name,
+            ] = default_value
         df.loc[df[new_column_name] == "", new_column_name] = all_negative_value
         # Remove delimiter character if column ends with it
         rgx = f"\\{self.multivalue_separator}$"
-        df[new_column_name] = df[new_column_name].str.replace(rgx, "", regex = True)
+        df[new_column_name] = df[new_column_name].str.replace(rgx, "", regex=True)
 
         return df
 
