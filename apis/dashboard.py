@@ -262,7 +262,7 @@ class AddRedcapProjectDashboard(Resource):
         try:
             validate(request.json, schema)
         except ValidationError as e:
-            print(e)
+            print("validation error")
             return e.message, 400
         if len(data["project_id"]) < 1:
             return (
@@ -368,6 +368,7 @@ class RedcapProjectDashboard(Resource):
         } | transformConfigs["redcap"]
 
         mergedTransform = RedcapTransform(redcap_etl_config).merged
+
         # Execute Dashboard Module Transforms
         for dashboard_module in redcap_project_dashboard["dashboard_modules"]:
             transform, module_etl_config = transformConfigs[dashboard_module["id"]]

@@ -565,17 +565,27 @@ class RedcapTransform(object):
         df: pd.DataFrame,
         column_name_map: dict,
         new_column_name: str = "",
+        all_negative_value: str = "",
+        default_value: str | None = "Value Unavailable",
         dtype: Callable = float,
         annotation: List[Dict[str, Any]] = [],
     ) -> pd.DataFrame:
+
         new_column_name = (
             new_column_name
             if len(new_column_name) > 0
             else "_".join(column_name_map.keys())
         )
-        df[new_column_name] = (
-            df[list(column_name_map.keys())].idxmax(axis=1).map(column_name_map)
-        )
+        df[new_column_name] = ""
+        for column_name, column_value in column_name_map.items():
+            df.loc[df[column_name] == "Yes", new_column_name] += f"{column_value}{self.multivalue_separator}"
+        for column_name, column_value in column_name_map.items():
+            df.loc[(df[column_name] == default_value) & (df[new_column_name] == ""), new_column_name] = default_value
+        df.loc[df[new_column_name] == "", new_column_name] = all_negative_value
+        # Remove delimiter character if column ends with it
+        rgx = f"\\{self.multivalue_separator}$"
+        df[new_column_name] = df[new_column_name].str.replace(rgx, "", regex = True)
+
         return df
 
     def new_column_from_binary_columns_positive_class(
@@ -583,6 +593,8 @@ class RedcapTransform(object):
         df: pd.DataFrame,
         column_name_map: dict,
         new_column_name: str = "",
+        all_negative_value: str = "",
+        default_value: str | None = "Value Unavailable",
         dtype: Callable = float,
     ) -> pd.DataFrame:
         """
@@ -595,6 +607,7 @@ class RedcapTransform(object):
             df=df,
             column_name_map=column_name_map,
             new_column_name=new_column_name,
+            default_value=default_value,
             dtype=dtype,
         )
 
