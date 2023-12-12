@@ -120,11 +120,7 @@ class UserPasswordEndpoint(Resource):
         """Updates user password"""
         def validate_current_password(instance):
             received_password = instance
-            # If received password is not the same as the current password
-            # then raise a validation error
-            print("uhhhh")
-            print(g.user.check_password(received_password))
-            print("uhhhh")
+
             if not g.user.check_password(received_password):
                 raise ValidationError("Current password is incorrect")
 
@@ -135,15 +131,12 @@ class UserPasswordEndpoint(Resource):
             new_password = data["new_password"]
             confirm_password = instance
 
-            # If new password and confirm password are not the same
-            # then raise a validation error
             if new_password != confirm_password:
                 raise ValidationError("New password and confirm password do not match")
 
             return True
 
         # Schema validation
-        print(request.json)
         schema = {
             "type": "object",
             "required": ["old_password", "new_password", "confirm_password"],
@@ -176,5 +169,4 @@ class UserPasswordEndpoint(Resource):
         user = model.User.query.get(g.user.id)
         user.set_password(data["new_password"])
         model.db.session.commit()
-        print("WHAT")
         return "Password updated successfully", 200
