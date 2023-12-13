@@ -30,7 +30,7 @@ datum_model = api.model(
         "value": fields.Integer(
             required=False, readonly=True, description="Value field"
         ),
-        "x": fields.Float(required=False, readonly=True, description="X-axis field"),
+        "x": fields.Raw(required=False, readonly=True, description="X-axis field"),
         "y": fields.Float(required=False, readonly=True, description="Y-axis field"),
         "datetime": fields.String(
             required=False, readonly=True, description="Date field"
@@ -367,10 +367,12 @@ class RedcapProjectDashboard(Resource):
             "redcap_api_key": redcap_project_view["project_api_key"],
         } | transformConfigs["redcap"]
 
-        mergedTransform = RedcapTransform(redcap_etl_config).merged
+        redcapTransform = RedcapTransform(redcap_etl_config)
+        mergedTransform = redcapTransform.merged
 
         # Execute Dashboard Module Transforms
         for dashboard_module in redcap_project_dashboard["dashboard_modules"]:
+            print(dashboard_module)
             transform, module_etl_config = transformConfigs[dashboard_module["id"]]
             transformed = getattr(ModuleTransform(module_etl_config), transform)(
                 mergedTransform
@@ -483,7 +485,7 @@ class EditRedcapProjectDashboard(Resource):
                 400,
             )
         # Clear Redis Cache
-        # TODO: We want to clear the cache by dashboard_id, not the whole cache!
+        # TODO: We want to clear the cache by dashboard_id/cache key, not the whole cache!
         cache.clear()
         update_redcap_project_dashboard_query = (
             model.StudyRedcapProjectDashboard.query.get(data["dashboard_id"])

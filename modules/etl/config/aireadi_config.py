@@ -55,6 +55,8 @@ data_columns: List = [
 computed_columns: List = [
     "phenotypes",
     "treatments",
+    "scrweek",
+    "scryear",
 ]
 
 # Survey Column Groups
@@ -145,6 +147,26 @@ redcapTransformConfig: Dict[str, List[Any] | Tuple[str, List[Any]] | str | List]
             "transforms": [
                 ("remap_values_by_columns", {"columns": data_columns}),
                 ("map_missing_values_by_columns", {"columns": data_columns}),
+                (
+                    "transform_values_by_column",
+                    {
+                        "column": "scrcmpdat",
+                        "new_column_name": "scrweek",
+                        # ISO 8601 string format token for front-end: %V
+                        "transform": lambda x: int(datetime.strptime(x, "%Y-%m-%d").isocalendar().week),
+                        "missing_value": missing_value_generic,
+                    }
+                ),
+                (
+                    "transform_values_by_column",
+                    {
+                        "column": "scrcmpdat",
+                        "new_column_name": "scryear",
+                        # ISO 8601 string format token for front-end: %Y
+                        "transform": lambda x: int(datetime.strptime(x, "%Y-%m-%d").isocalendar().year),
+                        "missing_value": missing_value_generic,
+                    }
+                ),
                 (
                     "new_column_from_binary_columns_positive_class",
                     {
@@ -1789,11 +1811,11 @@ raceRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
         "strict": True,
         "transforms": [
             {
-                "name": "Race Recruitment",
+                "name": "Race Recruitment by Site",
                 "vtype": "DoubleDiscrete",
                 "methods": [
                     {
-                        "groups": ["siteid", "race", "scrcmpdat"],
+                        "groups": ["siteid", "race", "scrweek"],
                         "value": "record_id",
                         "func": "count",
                     }
@@ -1805,7 +1827,7 @@ raceRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    "subgroup": {
+                    "group": {
                         "name": "Race",
                         "field": "race",
                         "missing_value": missing_value_generic,
@@ -1819,14 +1841,9 @@ raceRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                     },
                     "x": {
                         "name": "Week of the Year",
-                        "field": "scrcmpdat",
+                        "field": "scrweek",
                         "missing_value": missing_value_generic,
                         "astype": int,
-                        "remap": lambda x: datetime.strptime(
-                            x["record"][x["accessors"]["x"]["field"]], "%Y-%m-%d"
-                        )
-                        .isocalendar()
-                        .week,
                     },
                     "y": {
                         "name": "Cumulative Count (N)",
@@ -1848,11 +1865,11 @@ phenotypeRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
         "strict": True,
         "transforms": [
             {
-                "name": "Phenotype Recruitment",
+                "name": "Phenotype Recruitment by Site",
                 "vtype": "DoubleDiscrete",
                 "methods": [
                     {
-                        "groups": ["siteid", "phenotypes", "scrcmpdat"],
+                        "groups": ["siteid", "phenotypes", "scrweek"],
                         "value": "record_id",
                         "func": "count",
                     }
@@ -1864,7 +1881,7 @@ phenotypeRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    "subgroup": {
+                    "group": {
                         "name": "Phenotype",
                         "field": "phenotypes",
                         "missing_value": missing_value_generic,
@@ -1878,14 +1895,9 @@ phenotypeRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                     },
                     "x": {
                         "name": "Week of the Year",
-                        "field": "scrcmpdat",
+                        "field": "scrweek",
                         "missing_value": missing_value_generic,
                         "astype": int,
-                        "remap": lambda x: datetime.strptime(
-                            x["record"][x["accessors"]["x"]["field"]], "%Y-%m-%d"
-                        )
-                        .isocalendar()
-                        .week,
                     },
                     "y": {
                         "name": "Cumulative Count (N)",

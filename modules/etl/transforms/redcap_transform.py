@@ -62,7 +62,7 @@ class RedcapTransform(object):
             else {
                 "encoding": "utf-8",
                 "filename": "REDCapETL.log",
-                "level": logging.DEBUG,
+                "level": logging.INFO,
             }
         )
 
@@ -444,6 +444,34 @@ class RedcapTransform(object):
         """
         return self._remap_values_by_columns(
             df=df, columns=columns, value_map=value_map
+        )
+
+    #
+    # Transform - Values By Column
+    #
+
+    def _transform_values_by_column(
+        self,
+        df: pd.DataFrame,
+        column: str,
+        new_column_name: str,
+        transform: Callable,
+        missing_value: Any,
+        annotation: List[Dict[str, Any]] = [],
+    ) -> pd.DataFrame:
+        df[new_column_name] = df[column][df[column] != missing_value].apply(transform)
+        df[new_column_name] = df[new_column_name].fillna(missing_value)
+        return df
+
+    def transform_values_by_column(
+        self, df: pd.DataFrame, column: str, new_column_name: str, transform: Callable, missing_value: Any,
+    ) -> pd.DataFrame:
+        """
+        Replace 0-length values or values with keys in
+        self.none_map with self.missing_value_generic.
+        """
+        return self._transform_values_by_column(
+            df=df, column=column, new_column_name=new_column_name, transform=transform, missing_value=missing_value
         )
 
     #
