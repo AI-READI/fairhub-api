@@ -1,0 +1,57 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Email verification</title>
+    <style>
+        .container {
+            padding: 20px;
+        }
+
+        .divider {
+            width: 58%;
+            border-top: 1px solid #ccc;
+        }
+        .button {
+          padding: 10px 20px;
+          font-weight: bold;
+          background-color: #007bff;
+          color: #fff;
+          text-decoration: none;
+            border-radius: 5px;
+        }
+        .iconify {
+            width: 7rem;
+            height: 7rem;
+            color: rgba(0, 123, 255, 0.92);
+        }
+        .accept-top{
+            padding-bottom: 2rem;
+        }
+        .accept-bottom{
+            padding-top: 2rem;
+            padding-bottom: 3rem;
+        }
+        p{
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+    <div class="divider"></div>
+    <h1>Hello!</h1>
+    <div>
+        <p>We detected you have logged in from {{ device_ip }}</p>
+        <p>If you do not recall this operation please click to change your password</p>
+        <a href="{{ user_profile }}" class="button">Change Your Password</a>
+        <p class="accept-bottom">Need assistance or have questions? Our dedicated support team is here to help. Reach out to us at <a
+                href="mailto:help@fairhub.io">help@fairhub.io</a> for prompt assistance.</p>
+    </div>
+        <div>Sincerely,</div>
+        <div>FAIRhub team</div>
+    </div>
+</body>
+
+</html>
