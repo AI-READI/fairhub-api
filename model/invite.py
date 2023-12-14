@@ -20,6 +20,7 @@ class Invite(db.Model):  # type: ignore
         self.created_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
         self.token = random.randint(10 ** (7 - 1), (10**7) - 1)
         self.info = ""
+
     __tablename__ = "invite"
     id = db.Column(db.CHAR(36), primary_key=True)
 
@@ -34,7 +35,9 @@ class Invite(db.Model):  # type: ignore
         db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=True
     )
     study = db.relationship("Study", back_populates="invited_contributors")
-    user_id = db.Column(db.CHAR(36), db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
+    user_id = db.Column(
+        db.CHAR(36), db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False
+    )
     user = db.relationship("User", back_populates="invited_contributors")
     _table_args_ = UniqueConstraint("study_id", "email_address", name="study_per_user")
 
@@ -46,5 +49,5 @@ class Invite(db.Model):  # type: ignore
             "email_address": self.email_address,
             "token": self.token,
             "info": self.info,
-            "user_id": self.user_id
+            "user_id": self.user_id,
         }

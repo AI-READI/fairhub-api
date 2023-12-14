@@ -89,7 +89,7 @@ __all__ = [
     "identification",
     "study_description",
     "dataset_contributor",
-    "invite_general_users"
+    "invite_general_users",
 ]
 
 

@@ -28,9 +28,7 @@ class AddContributor(Resource):
     # @api.marshal_with(contributors_model)
     def get(self, study_id: int):
         contributors = model.StudyContributor.query.filter_by(study_id=study_id).all()
-        invited_contributors = model.Invite.query.filter_by(
-            study_id=study_id
-        ).all()
+        invited_contributors = model.Invite.query.filter_by(study_id=study_id).all()
 
         contributors_list = [c.to_dict() for c in contributors] + [
             c.to_dict() for c in invited_contributors
@@ -63,9 +61,13 @@ class AddContributor(Resource):
             return ex.args[0], 409
         model.db.session.commit()
         if user:
-            send_access_contributors(email_address, study_obj, first_name, last_name, contributor_.permission)
+            send_access_contributors(
+                email_address, study_obj, first_name, last_name, contributor_.permission
+            )
         else:
-            send_invitation_study(email_address, contributor_.token, study_name, contributor_.permission)
+            send_invitation_study(
+                email_address, contributor_.token, study_name, contributor_.permission
+            )
 
         return contributor_.to_dict(), 201
 

@@ -252,9 +252,16 @@ class Login(Resource):
         read = False
         user = model.User.query.filter_by(email_address=email_address).one_or_none()
 
-        send_notification = \
-            (model.Notification.from_data(user, {"title": title, "message": message, "type": notification_type,
-                                                 "target": target, "read": read}))
+        send_notification = model.Notification.from_data(
+            user,
+            {
+                "title": title,
+                "message": message,
+                "type": notification_type,
+                "target": target,
+                "read": read,
+            },
+        )
         model.db.session.add(send_notification)
         model.db.session.commit()
         if not user:

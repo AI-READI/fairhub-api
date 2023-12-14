@@ -18,7 +18,7 @@ def send_invitation_study(to, token, study_name, role):
         token=token,
         accept_url=accept_url,
         study_name=study_name,
-        role=role
+        role=role,
     )
     app.mail.send(msg)
 
@@ -37,7 +37,7 @@ def send_access_contributors(to, study, first_name, last_name, role):
         last_name=last_name,
         study_name=study.title,
         study_id=study.id,
-        role=role
+        role=role,
     )
     app.mail.send(msg)
 
@@ -56,9 +56,10 @@ def send_invitation_general(to, token):
 
 
 def send_email_verification(email_address, token):
-    verification_url =\
-        (f"http://localhost:3000/auth/verify-email?email="
-         f"{email_address}&token={token}")
+    verification_url = (
+        f"http://localhost:3000/auth/verify-email?email="
+        f"{email_address}&token={token}"
+    )
     msg = Message(
         subject=f"Verify email address",
         sender="aydan.gasimova@example.com",
@@ -68,7 +69,7 @@ def send_email_verification(email_address, token):
         "email_verification.html",
         token=token,
         verification_url=verification_url,
-        email=email_address
+        email=email_address,
     )
     app.mail.send(msg)
 
@@ -150,4 +151,3 @@ def get_config():
 #         return False
 #     users = get_device_user_list()
 #     return g.user.id in users
-
