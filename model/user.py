@@ -1,6 +1,5 @@
 import datetime
 import uuid
-import random
 
 import app
 import model
@@ -18,7 +17,6 @@ class User(db.Model):  # type: ignore
         self.set_password(password)
         self.user_details = model.UserDetails(self)
         self.email_verified = False
-        self.generate_token()
 
     db.Column(db.BigInteger, nullable=False)
     __tablename__ = "user"
@@ -28,8 +26,6 @@ class User(db.Model):  # type: ignore
     hash = db.Column(db.String, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
     email_verified = db.Column(db.BOOLEAN, nullable=True)
-    token = db.Column(db.String, nullable=False)
-    token_generated = db.Column(db.BigInteger, nullable=False)
 
     study_contributors = db.relationship(
         "StudyContributor",
@@ -61,6 +57,7 @@ class User(db.Model):  # type: ignore
     )
 
     def to_dict(self):
+        # latest_object = max(self.email_verification, key=lambda x: x.created_at) if self.email_verification else None
         return {
             "id": self.id,
             "email_address": self.email_address,
@@ -68,7 +65,6 @@ class User(db.Model):  # type: ignore
             "first_name": self.user_details.first_name if self.user_details else None,
             "last_name": self.user_details.last_name if self.user_details else None,
             "email_verified": self.email_verified,
-            "token": self.token
         }
 
     @staticmethod
@@ -100,7 +96,8 @@ class User(db.Model):  # type: ignore
         return is_valid
 
     def verify_token(self, token: str) -> bool:
-        if token != self.token:
+        latest_object = max(self.email_verification, key=lambda x: x.created_at) if self.email_verification else None
+        if token != latest_object.token:
             return False
         current_time = datetime.datetime.now()
         datetime_obj = datetime.datetime.utcfromtimestamp(self.created_at)
@@ -109,10 +106,10 @@ class User(db.Model):  # type: ignore
         return created_time - current_time > datetime.timedelta(minutes=15)
 
     def generate_token(self) -> str:
-        self.token = str(random.randint(10 ** (7 - 1), (10 ** 7) - 1))
-        self.token_generated = datetime.datetime.now(datetime.timezone.utc).timestamp()
-
-        return self.token
+        email_verification = model.EmailVerification(self)
+        db.session.add(email_verification)
+        db.session.commit()
+        return email_verification.token
 
     def change_email(self, email: str):
         if email == self.email_address:

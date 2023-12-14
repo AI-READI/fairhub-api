@@ -36,8 +36,7 @@ class Invite(db.Model):  # type: ignore
     study = db.relationship("Study", back_populates="invited_contributors")
     user_id = db.Column(db.CHAR(36), db.ForeignKey("user.id", ondelete="CASCADE"), nullable=False)
     user = db.relationship("User", back_populates="invited_contributors")
-
-    _table_args_ = (UniqueConstraint("study_id", "email_address", name="study_per_user"))
+    _table_args_ = UniqueConstraint("study_id", "email_address", name="study_per_user")
 
     def to_dict(self):
         return {

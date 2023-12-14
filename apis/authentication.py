@@ -146,49 +146,53 @@ class SignUpUser(Resource):
             email_address=data["email_address"]
         ).all()
         new_user = model.User.from_data(data)
+        verification = model.EmailVerification(new_user)
         if user:
             for invite in invitations:
                 invite.study.add_user_to_study(new_user, invite.permission)
                 model.db.session.delete(invite)
         model.db.session.add(new_user)
+        model.db.session.add(verification)
         model.db.session.commit()
-        print(new_user.email_address, new_user.token)
-        send_email_verification(new_user)
+        send_email_verification(new_user.email_address, verification.token)
         return f"Hi, {new_user.email_address}, you have successfully signed up", 201
 
 
-@api.route("/email-verification/<user_id>/<token>")
-class InviteGeneralUsers(Resource):
+@api.route("/auth/email-verification/confirm")
+class EmailVerification(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(contributors_model)
-    def post(self, user_id, token):
-        user = model.User.query.get(user_id)
+    def post(self):
+        data: Union[Any, dict] = request.json
+        # if "token" not in data or "email" not in data:
+        #     return "email or token are required", 422
+        user = model.User.query.filter_by(email_address=data["email"]).one_or_none()
         if not user:
             return "user not found", 404
         if user.email_verified:
             return "user already verified", 422
-        if not user.verify_token(token):
+        if not user.verify_token(data["token"]):
             return "Token invalid or expired", 422
-
         user.email_verified = True
         model.db.session.commit()
         return "Email verified", 201
 
 
-@api.route("/email-verification/send/<user_id>")
+@api.route("/auth/email-verification/resend")
 class GenerateVerification(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(contributors_model)
-    def post(self, user_id):
-        user = model.User.query.get(user_id)
+    def post(self):
+        data: Union[Any, dict] = request.json
+        user = model.User.query.filter_by(email_address=data["email"]).one_or_none()
         if not user:
             return "user not found", 404
         if user.email_verified:
             return "user already verified", 422
-        user.generate_token()
-        send_email_verification(user)
+        token = user.generate_token()
+        send_email_verification(user.email_address, token)
         model.db.session.commit()
         return "Your email is verified", 201
 
@@ -293,6 +297,9 @@ class Login(Resource):
         resp.set_cookie(
             "token", encoded_jwt_code, secure=True, httponly=True, samesite="None"
         )
+        # if not check_trusted_device():
+        #     signin_notification(user)
+        # add_user_to_device_list(resp, user)
 
         resp.status_code = 200
 

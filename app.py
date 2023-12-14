@@ -11,7 +11,6 @@ from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from sqlalchemy import MetaData
 from waitress import serve
-
 from flask_mail import Mail
 import config
 import model
@@ -139,6 +138,8 @@ def create_app(config_module=None):
             "/swaggerui",
             "/swagger.json",
             "/favicon.ico",
+            "/auth/email-verification/confirm"
+            "/auth/email-verification/resend"
         ]
         for route in public_routes:
             if request.path.startswith(route):
