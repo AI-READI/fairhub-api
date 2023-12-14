@@ -35,20 +35,24 @@ class User(db.Model):  # type: ignore
     email_verification = db.relationship(
         "EmailVerification",
         back_populates="user",
-        cascade="all, delete",)
+        cascade="all, delete",
+    )
     user_details = db.relationship(
         "UserDetails",
         uselist=False,
         back_populates="user",
-        cascade="all, delete",)
+        cascade="all, delete",
+    )
     token_blacklist = db.relationship(
         "TokenBlacklist",
         back_populates="user",
-        cascade="all, delete",)
+        cascade="all, delete",
+    )
     notification = db.relationship(
         "Notification",
         back_populates="user",
-        cascade="all, delete",)
+        cascade="all, delete",
+    )
     invited_contributors = db.relationship(
         "Invite",
         back_populates="user",
@@ -96,13 +100,19 @@ class User(db.Model):  # type: ignore
         return is_valid
 
     def verify_token(self, token: str) -> bool:
-        latest_object = max(self.email_verification, key=lambda x: x.created_at) if self.email_verification else None
+        latest_object = (
+            max(self.email_verification, key=lambda x: x.created_at)
+            if self.email_verification
+            else None
+        )
         if token != latest_object.token:
             return False
         current_time = datetime.datetime.now()
         datetime_obj = datetime.datetime.utcfromtimestamp(self.created_at)
-        formatted_time = datetime_obj.strftime('%Y-%m-%d %H:%M:%S.%f')
-        created_time = datetime.datetime.strptime(formatted_time, '%Y-%m-%d %H:%M:%S.%f')
+        formatted_time = datetime_obj.strftime("%Y-%m-%d %H:%M:%S.%f")
+        created_time = datetime.datetime.strptime(
+            formatted_time, "%Y-%m-%d %H:%M:%S.%f"
+        )
         return created_time - current_time > datetime.timedelta(minutes=15)
 
     def generate_token(self) -> str:
