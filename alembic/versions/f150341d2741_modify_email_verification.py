@@ -21,14 +21,14 @@ created_at = int(datetime.datetime.now(datetime.timezone.utc).timestamp())
 
 
 def upgrade() -> None:
-    connection = op.get_bind()
-    inspector = sa.inspect(connection)
-    if inspector.has_table("email_verification"):
+
         op.alter_column('email_verification', 'token', type_=sa.String)
         op.alter_column('email_verification', 'user_id', type_=sa.CHAR(36))
 
         op.drop_column('email_verification', 'created_at')
+
         op.add_column('email_verification', sa.Column('created_at', sa.BIGINT(), nullable=True))
+
         op.execute(f'UPDATE "email_verification" SET created_at =\'{created_at}\'')
 
         op.alter_column('email_verification', 'created_at', nullable=False)

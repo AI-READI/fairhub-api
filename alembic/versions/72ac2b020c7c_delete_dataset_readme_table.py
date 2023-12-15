@@ -7,8 +7,7 @@ Create Date: 2023-11-08 15:47:00.205940
 """
 from typing import Sequence, Union
 
-from alembic import op
-import sqlalchemy as sa
+import alembic
 
 
 # revision identifiers, used by Alembic.
@@ -19,9 +18,4 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    connection = op.get_bind()
-    inspector = sa.inspect(connection)
-
-    # Check if the table exists before dropping it
-    if inspector.has_table("dataset_readme"):
-        op.drop_table("dataset_readme")
+    alembic.op.drop_table("dataset_readme")

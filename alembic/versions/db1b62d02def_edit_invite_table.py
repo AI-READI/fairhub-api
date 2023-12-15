@@ -7,7 +7,6 @@ Create Date: 2023-11-28 13:56:41.821141
 """
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
 from alembic import op
 
@@ -19,13 +18,8 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    connection = op.get_bind()
-    inspector = sa.inspect(connection)
-
-    # Check if the table exists before dropping it
-    if inspector.has_table("invited_study_contributor") or inspector.has_table("invite"):
-        op.rename_table("invited_study_contributor", "invite")
-        op.add_column("invite", sa.Column("info", sa.String(), nullable=True))
-        op.create_unique_constraint(
-            "study_per_user", "invite", ["study_id", "email_address"]
-        )
+    op.rename_table("invited_study_contributor", "invite")
+    op.add_column("invite", sa.Column("info", sa.String(), nullable=True))
+    op.create_unique_constraint(
+        "study_per_user", "invite", ["study_id", "email_address"]
+    )
