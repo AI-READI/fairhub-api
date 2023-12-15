@@ -19,13 +19,12 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    with op.batch_alter_table("user") as batch_op:
-        batch_op.alter_column(
-            "email_verified",
-            type_=sa.Boolean(),
-            postgresql_using="email_verified::boolean",
-        )
-
-
-def downgrade() -> None:
-    pass
+    connection = op.get_bind()
+    inspector = sa.inspect(connection)
+    if inspector.has_table("user"):
+        with op.batch_alter_table("user") as batch_op:
+            batch_op.alter_column(
+                "email_verified",
+                type_=sa.Boolean(),
+                postgresql_using="email_verified::boolean",
+            )

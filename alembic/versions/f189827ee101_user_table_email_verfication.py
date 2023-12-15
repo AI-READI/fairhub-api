@@ -6,11 +6,10 @@ Create Date: 2023-12-11 14:54:31.303523
 
 """
 from typing import Sequence, Union
-
-from alembic import op
 import sqlalchemy as sa
 import datetime
 import random
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = "f189827ee101"
@@ -22,18 +21,21 @@ token = random.randint(10 ** (7 - 1), (10**7) - 1)
 
 
 def upgrade():
-    op.add_column("user", sa.Column("token_generated", sa.BIGINT, nullable=True))
-    op.add_column("user", sa.Column("token", sa.String, nullable=True))
+    connection = op.get_bind()
+    inspector = sa.inspect(connection)
+    if inspector.has_table("user"):
+        op.add_column("user", sa.Column("token_generated", sa.BIGINT, nullable=True))
+        op.add_column("user", sa.Column("token", sa.String, nullable=True))
 
-    op.execute(f"UPDATE \"user\" SET token_generated ='{token_generated}'")
-    op.execute(f"UPDATE \"user\" SET token ='{token}'")
-    op.execute("UPDATE invite SET info ='info'")
-    op.execute(f'UPDATE "user" SET email_verified = FALSE')
+        op.execute(f"UPDATE \"user\" SET token_generated ='{token_generated}'")
+        op.execute(f"UPDATE \"user\" SET token ='{token}'")
+        op.execute("UPDATE invite SET info ='info'")
+        op.execute(f'UPDATE "user" SET email_verified = FALSE')
 
-    with op.batch_alter_table("user") as batch_op:
-        batch_op.alter_column("token", nullable=False)
-        batch_op.alter_column("token_generated", nullable=False)
-        batch_op.alter_column("email_verified", nullable=False)
-
-    with op.batch_alter_table("invite") as batch_op:
-        batch_op.alter_column("info", nullable=False)
+        with op.batch_alter_table("user") as batch_op:
+            batch_op.alter_column("token", nullable=False)
+            batch_op.alter_column("token_generated", nullable=False)
+            batch_op.alter_column("email_verified", nullable=False)
+    if inspector.has_table("invite"):
+        with op.batch_alter_table("invite") as batch_op:
+            batch_op.alter_column("info", nullable=False)

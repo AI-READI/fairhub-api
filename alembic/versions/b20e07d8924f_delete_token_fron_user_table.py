@@ -19,8 +19,11 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    op.drop_column("user", "token")
-    op.drop_column("user", "token_generated")
+    connection = op.get_bind()
+    inspector = sa.inspect(connection)
+    if inspector.has_table("user"):
+        op.drop_column("user", "token")
+        op.drop_column("user", "token_generated")
 
 
 def downgrade() -> None:

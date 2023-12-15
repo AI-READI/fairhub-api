@@ -7,7 +7,7 @@ Create Date: 2023-11-08 15:47:00.205940
 """
 from typing import Sequence, Union
 
-import alembic
+from alembic import op
 import sqlalchemy as sa
 
 
@@ -19,4 +19,9 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    alembic.op.drop_table("dataset_readme")
+    connection = op.get_bind()
+    inspector = sa.inspect(connection)
+
+    # Check if the table exists before dropping it
+    if inspector.has_table("dataset_readme"):
+        op.drop_table("dataset_readme")

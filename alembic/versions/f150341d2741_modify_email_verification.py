@@ -7,9 +7,9 @@ Create Date: 2023-12-13 20:43:24.637259
 """
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
 import datetime
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = 'f150341d2741'
@@ -21,11 +21,14 @@ created_at = int(datetime.datetime.now(datetime.timezone.utc).timestamp())
 
 
 def upgrade() -> None:
-    op.alter_column('email_verification', 'token', type_=sa.String)
-    op.alter_column('email_verification', 'user_id', type_=sa.CHAR(36))
+    connection = op.get_bind()
+    inspector = sa.inspect(connection)
+    if inspector.has_table("email_verification"):
+        op.alter_column('email_verification', 'token', type_=sa.String)
+        op.alter_column('email_verification', 'user_id', type_=sa.CHAR(36))
 
-    op.drop_column('email_verification', 'created_at')
-    op.add_column('email_verification', sa.Column('created_at', sa.BIGINT(), nullable=True))
-    op.execute(f'UPDATE "email_verification" SET created_at =\'{created_at}\'')
+        op.drop_column('email_verification', 'created_at')
+        op.add_column('email_verification', sa.Column('created_at', sa.BIGINT(), nullable=True))
+        op.execute(f'UPDATE "email_verification" SET created_at =\'{created_at}\'')
 
-    op.alter_column('email_verification', 'created_at', nullable=False)
+        op.alter_column('email_verification', 'created_at', nullable=False)
