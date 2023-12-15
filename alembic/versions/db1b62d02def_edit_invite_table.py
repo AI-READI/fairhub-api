@@ -23,7 +23,9 @@ def upgrade() -> None:
     inspector = sa.inspect(connection)
 
     # Check if the table exists before dropping it
-    if inspector.has_table("invited_study_contributor") or inspector.has_table("invite"):
+    if inspector.has_table("invited_study_contributor") or inspector.has_table(
+        "invite"
+    ):
         op.rename_table("invited_study_contributor", "invite")
         op.add_column("invite", sa.Column("info", sa.String(), nullable=True))
         op.create_unique_constraint(
