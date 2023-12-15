@@ -1,10 +1,10 @@
 from typing import Any, Union
 
-from flask import request, g
+from flask import g, request
 from flask_restx import Namespace, Resource
 
-from invitation.invitation import send_invitation_general
 import model
+from invitation.invitation import send_invitation_general
 
 api = Namespace("invite_general_users", description="Invite users to fairhub", path="/")
 

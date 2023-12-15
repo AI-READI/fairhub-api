@@ -4,7 +4,6 @@ import uuid
 import app
 import model
 
-
 from .db import db
 
 # from datetime import datetime, timezone

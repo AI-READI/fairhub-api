@@ -7,7 +7,6 @@ from apis.study_metadata_namespace import api as study_metadata_namespace
 from .authentication import api as authentication
 from .contributor import api as contributors_api
 from .dataset import api as dataset_api
-from .invite_users import api as invite_general_users
 from .dataset_metadata.dataset_access import api as access
 from .dataset_metadata.dataset_alternate_identifier import api as alternate_identifier
 from .dataset_metadata.dataset_consent import api as consent
@@ -23,6 +22,7 @@ from .dataset_metadata.dataset_rights import api as rights
 from .dataset_metadata.dataset_subject import api as subject
 from .dataset_metadata.dataset_title import api as title
 from .file import api as file_api
+from .invite_users import api as invite_general_users
 from .participant import api as participants_api
 from .study import api as study_api
 from .study_metadata.study_arm import api as arm

@@ -9,15 +9,15 @@ import jwt
 from flask import Flask, request
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
+from flask_mail import Mail
 from sqlalchemy import MetaData
 from waitress import serve
-from flask_mail import Mail
+
 import config
 import model
 from apis import api
 from apis.authentication import UnauthenticatedException, authentication, authorization
 from apis.exception import ValidationException
-
 
 # from pyfairdatatools import __version__
 
@@ -137,8 +137,9 @@ def create_app(config_module=None):
             "/echo",
             "/swaggerui",
             "/swagger.json",
+            "/auth/email-verification/resend",
             "/favicon.ico",
-            "/auth/email-verification/confirm" "/auth/email-verification/resend",
+            "/auth/email-verification/confirm",
         ]
         for route in public_routes:
             if request.path.startswith(route):

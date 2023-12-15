@@ -1,10 +1,7 @@
 import datetime
-from datetime import timezone
-
 import random
-
 import uuid
-
+from datetime import timezone
 
 from .db import db
 

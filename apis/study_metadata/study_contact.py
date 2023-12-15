@@ -2,7 +2,7 @@
 import typing
 
 from email_validator import EmailNotValidError, validate_email
-from flask import request, Response
+from flask import Response, request
 from flask_restx import Resource, fields
 from jsonschema import FormatChecker, ValidationError, validate
 
