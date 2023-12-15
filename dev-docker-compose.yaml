@@ -16,7 +16,7 @@ services:
       FLASK_ENV: development
       FLASK_DEBUG: 1
       FAIRHUB_DATABASE_URL: "${FAIRHUB_DATABASE_URL:-postgresql://postgres:postgres@database:5432/postgres}"
-      secret: "mXrkOHXXQoMAhCOTZOV93QlncmeTwEZFPxTP1TXGiOFabE0KmuZgHWvTOLgjbv3S;"
+      secret: "aaldkljla;jsdjklajlkkljdkljakjl;d;"
     depends_on:
       database:
         condition: service_healthy

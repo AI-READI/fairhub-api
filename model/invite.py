@@ -29,7 +29,7 @@ class Invite(db.Model):  # type: ignore
     invited_on = db.Column(db.BigInteger, nullable=False)
     token = db.Column(db.String, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
-    info = db.Column(db.String, nullable=True)
+    info = db.Column(db.String, nullable=False)
 
     study_id = db.Column(
         db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=True
