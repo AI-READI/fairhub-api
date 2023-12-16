@@ -41,6 +41,8 @@ class StudyReferenceResource(Resource):
 
         return [s.to_dict() for s in sorted_study_reference], 200
 
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
     def post(self, study_id: int):
         """Create study reference metadata"""
         # Schema validation
@@ -67,7 +69,7 @@ class StudyReferenceResource(Resource):
 
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         data: typing.Union[dict, typing.Any] = request.json
         list_of_elements = []
         for i in data:
@@ -86,6 +88,9 @@ class StudyReferenceResource(Resource):
     class StudyReferenceUpdate(Resource):
         """Study Reference Metadata"""
 
+        @api.doc("delete reference")
+        @api.response(204, "Success")
+        @api.response(400, "Validation Error")
         def delete(self, study_id: int, reference_id: int):
             """Delete study reference metadata"""
             study_obj = model.Study.query.get(study_id)

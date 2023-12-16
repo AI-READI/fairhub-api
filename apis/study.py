@@ -54,7 +54,7 @@ class Studies(Resource):
         return [s.to_dict() for s in studies], 200
 
     @api.expect(study_model)
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     def post(self):
         """Create a new study"""
@@ -137,7 +137,7 @@ class StudyResource(Resource):
 
         return update_study.to_dict(), 200
 
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     @api.doc(description="Delete a study")
     def delete(self, study_id: int):

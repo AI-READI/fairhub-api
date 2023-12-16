@@ -1,9 +1,9 @@
 # """Tests for the Study model"""
 # import uuid
-#
+
 # from model.study import Study
-#
-#
+
+
 # def test_new_study():
 #     """
 #     GIVEN a Study model
@@ -17,9 +17,9 @@
 #             "last_updated": "2021-01-01",
 #         }
 #     )
-#
+
 #     assert study.title == "Study1"
 #     assert uuid.UUID(study.id)
 #     assert study.image == "https://api.dicebear.com/6.x/adventurer/svg"
-#
+
 #     # assert study.owner.affiliations == "affiliations1"

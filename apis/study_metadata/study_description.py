@@ -34,6 +34,8 @@ class StudyDescriptionResource(Resource):
 
         return study_description_.to_dict(), 200
 
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def put(self, study_id: int):
         """Update study description metadata"""
         study_obj = model.Study.query.get(study_id)
@@ -57,7 +59,7 @@ class StudyDescriptionResource(Resource):
 
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         study_ = model.Study.query.get(study_id)
 
         study_.study_description.update(request.json)

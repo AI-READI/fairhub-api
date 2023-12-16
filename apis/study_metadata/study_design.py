@@ -51,6 +51,8 @@ class StudyDesignResource(Resource):
 
         return study_design_.to_dict(), 200
 
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def put(self, study_id: int):
         """Update study design metadata"""
         # Schema validation
@@ -213,7 +215,7 @@ class StudyDesignResource(Resource):
         study_ = model.Study.query.get(study_id)
         # Check user permissions
         if not is_granted("study_metadata", study_):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
 
         study_.study_design.update(data)
 

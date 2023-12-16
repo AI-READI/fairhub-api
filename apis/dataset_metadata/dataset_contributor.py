@@ -33,7 +33,7 @@ class DatasetContributorResource(Resource):
         ], 200
 
     @api.doc("update contributor")
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     def post(self, study_id: int, dataset_id: int):
         """Update dataset contributor"""
@@ -141,7 +141,7 @@ class DatasetContributorDelete(Resource):
     """Dataset Contributor Delete Resource"""
 
     @api.doc("delete contributor")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self,
@@ -177,7 +177,7 @@ class DatasetCreatorResource(Resource):
         return [d.to_dict() for d in dataset_creator_ if d.to_dict()["creator"]], 200
 
     @api.doc("update creator")
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     def post(self, study_id: int, dataset_id: int):
         """Update dataset creator"""
@@ -278,7 +278,7 @@ class DatasetCreatorResource(Resource):
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/creator/<creator_id>")
 class DatasetCreatorDelete(Resource):
     @api.doc("delete creator")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self,

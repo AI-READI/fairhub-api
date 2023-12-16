@@ -35,7 +35,7 @@ class DatasetDateResource(Resource):
         return [d.to_dict() for d in dataset_date_], 200
 
     @api.doc("update date")
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     def post(self, study_id: int, dataset_id: int):
         """Update dataset date"""
@@ -95,7 +95,7 @@ class DatasetDateDeleteResource(Resource):
     """Dataset Date Delete Resource"""
 
     @api.doc("delete date")
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
         self, study_id: int, dataset_id: int, date_id: int

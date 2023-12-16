@@ -45,6 +45,8 @@ class StudyArmResource(Resource):
 
         return arm.to_dict(), 200
 
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
     def post(self, study_id):
         """Create study arm metadata"""
         # Schema validation
@@ -76,7 +78,7 @@ class StudyArmResource(Resource):
 
         study: model.Study = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         data: typing.Union[dict, typing.Any] = request.json
         study_obj = model.Study.query.get(study_id)
         for i in data:
@@ -95,6 +97,9 @@ class StudyArmResource(Resource):
 
     # todo delete
     @api.route("/study/<study_id>/metadata/arm/<arm_id>")
+    @api.doc("Delete Study Arms")
+    @api.response(204, "Success")
+    @api.response(400, "Validation Error")
     class StudyArmUpdate(Resource):
         """Study Arm Metadata"""
 

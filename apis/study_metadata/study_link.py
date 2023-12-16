@@ -36,6 +36,8 @@ class StudyLinkResource(Resource):
         sorted_study_link_ = sorted(study_link_, key=lambda x: x.created_at)
         return [s.to_dict() for s in sorted_study_link_], 200
 
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
     def post(self, study_id: int):
         """Create study link metadata"""
         # Schema validation
@@ -61,7 +63,7 @@ class StudyLinkResource(Resource):
 
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         data: typing.Union[dict, typing.Any] = request.json
         list_of_elements = []
         for i in data:
@@ -84,6 +86,9 @@ class StudyLinkResource(Resource):
     class StudyLinkUpdate(Resource):
         """Study Link Metadata"""
 
+        @api.doc("Delete study links")
+        @api.response(204, "Success")
+        @api.response(400, "Validation Error")
         def delete(self, study_id: int, link_id: int):
             """Delete study link metadata"""
             study_obj = model.Study.query.get(study_id)

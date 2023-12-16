@@ -45,7 +45,7 @@ class StudyAvailableResource(Resource):
     @api.doc(
         description="An array of objects are expected within the payload with the keys demonstrated below to create an available-ipd"  # noqa E501
     )
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     @api.expect(study_available)
     def post(self, study_id: int):
@@ -87,7 +87,7 @@ class StudyAvailableResource(Resource):
 
         study = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         data: typing.Union[dict, typing.Any] = request.json
         study_obj = model.Study.query.get(study_id)
 
@@ -110,6 +110,9 @@ class StudyAvailableResource(Resource):
 class StudyLocationUpdate(Resource):
     """Study Available Metadata"""
 
+    @api.doc("delete available-ipd")
+    @api.response(204, "Success")
+    @api.response(400, "Validation Error")
     def delete(self, study_id: int, available_ipd_id: int):
         """Delete study available metadata"""
         study_obj = model.Study.query.get(study_id)

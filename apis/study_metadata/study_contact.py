@@ -44,6 +44,8 @@ class StudyContactResource(Resource):
 
         return [s.to_dict() for s in sorted_study_contact if s.central_contact], 200
 
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
     def post(self, study_id: int):
         """Create study contact metadata"""
 
@@ -100,7 +102,7 @@ class StudyContactResource(Resource):
 
         study = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         data: typing.Union[dict, typing.Any] = request.json
 
         study_obj = model.Study.query.get(study_id)
@@ -125,6 +127,9 @@ class StudyContactResource(Resource):
     class StudyContactUpdate(Resource):
         """Study Contact Metadata"""
 
+        @api.doc("Delete Study contacts")
+        @api.response(204, "Success")
+        @api.response(400, "Validation Error")
         def delete(self, study_id: int, central_contact_id: int):
             """Delete study contact metadata"""
             study = model.Study.query.get(study_id)

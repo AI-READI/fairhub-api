@@ -44,7 +44,7 @@ class StudyOverallOfficialResource(Resource):
 
         return [i.to_dict() for i in sorted_study_overall], 200
 
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     def post(self, study_id: int):
         """Create study overall official metadata"""
@@ -80,7 +80,7 @@ class StudyOverallOfficialResource(Resource):
         data: typing.Union[dict, typing.Any] = request.json
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         list_of_elements = []
         for i in data:
             if "id" in i and i["id"]:
@@ -98,7 +98,7 @@ class StudyOverallOfficialResource(Resource):
 
     @api.route("/study/<study_id>/metadata/overall-official/<overall_official_id>")
     class StudyOverallOfficialUpdate(Resource):
-        @api.response(200, "Success")
+        @api.response(204, "Success")
         @api.response(400, "Validation Error")
         def delete(self, study_id: int, overall_official_id: int):
             """Delete study overall official metadata"""
