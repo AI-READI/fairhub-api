@@ -128,8 +128,8 @@ def get_device_user_list() -> list[str]:
         token = jwt.decode(cookie, config.FAIRHUB_SECRET, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
         return []
-    return token["users"]  # type: ignore
-
+    return []  # type: ignore
+    # token["users"]
 
 def add_user_to_device_list(response: Response, user) -> None:
     users = get_device_user_list()

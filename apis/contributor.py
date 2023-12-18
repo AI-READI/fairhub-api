@@ -1,3 +1,4 @@
+import os
 from collections import OrderedDict
 from typing import Any, Dict, List, Union
 
@@ -21,7 +22,7 @@ contributors_model = api.model(
 
 
 @api.route("/study/<study_id>/contributor")
-class AddContributor(Resource):
+class AllContributors(Resource):
     @api.doc("contributor list")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
@@ -60,14 +61,16 @@ class AddContributor(Resource):
         except model.StudyException as ex:
             return ex.args[0], 409
         model.db.session.commit()
-        if user:
-            send_access_contributors(
-                email_address, study_obj, first_name, last_name, contributor_.permission
-            )
-        else:
-            send_invitation_study(
-                email_address, contributor_.token, study_name, contributor_.permission
-            )
+        if os.environ.get("FLASK_ENV") != "testing":
+            print("testing")
+            if user:
+                send_access_contributors(
+                    email_address, study_obj, first_name, last_name, contributor_.permission
+                )
+            else:
+                send_invitation_study(
+                    email_address, contributor_.token, study_name, contributor_.permission
+                )
 
         return contributor_.to_dict(), 201
 

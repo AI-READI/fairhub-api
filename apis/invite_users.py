@@ -1,3 +1,4 @@
+import os
 from typing import Any, Union
 
 from flask import g, request
@@ -30,6 +31,7 @@ class InviteGeneralUsers(Resource):
         invited_user = model.Invite(None, g.user, email_address, None)
         model.db.session.add(invited_user)
         model.db.session.commit()
-        send_invitation_general(invited_user.email_address, invited_user.token)
+        if os.environ.get("FLASK_ENV") != "testing":
+            send_invitation_general(invited_user.email_address, invited_user.token)
 
         return invited_user.to_dict(), 201

@@ -158,7 +158,6 @@ class SignUpUser(Resource):
         if os.environ.get("FLASK_ENV") == "testing":
             new_user.email_verified = True
             model.db.session.commit()
-
         if os.environ.get("FLASK_ENV") != "testing":
             send_email_verification(new_user.email_address, verification.token)
         return f"Hi, {new_user.email_address}, you have successfully signed up", 201
@@ -199,6 +198,7 @@ class GenerateVerification(Resource):
             return "user already verified", 422
         token = user.generate_token()
         if os.environ.get("FLASK_ENV") != "testing":
+            print("testing")
             send_email_verification(user.email_address, token)
         model.db.session.commit()
         return "Your email is verified", 201
@@ -312,7 +312,7 @@ class Login(Resource):
             "token", encoded_jwt_code, secure=True, httponly=True, samesite="None"
         )
         if os.environ.get("FLASK_ENV") != "testing":
-            if not check_trusted_device():
+            if check_trusted_device():
                 signin_notification(user)
             add_user_to_device_list(resp, user)
         resp.status_code = 200
