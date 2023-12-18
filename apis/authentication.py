@@ -16,8 +16,12 @@ from flask_restx import Namespace, Resource, fields
 from jsonschema import FormatChecker, ValidationError, validate
 
 import model
-from invitation.invitation import send_email_verification, check_trusted_device, signin_notification, \
-    add_user_to_device_list
+from invitation.invitation import (
+    send_email_verification,
+    check_trusted_device,
+    signin_notification,
+    add_user_to_device_list,
+)
 
 api = Namespace("Authentication", description="Authentication paths", path="/")
 
