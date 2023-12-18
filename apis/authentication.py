@@ -16,7 +16,8 @@ from flask_restx import Namespace, Resource, fields
 from jsonschema import FormatChecker, ValidationError, validate
 
 import model
-from invitation.invitation import send_email_verification
+from invitation.invitation import send_email_verification, check_trusted_device, signin_notification, \
+    add_user_to_device_list
 
 api = Namespace("Authentication", description="Authentication paths", path="/")
 
@@ -310,11 +311,10 @@ class Login(Resource):
         resp.set_cookie(
             "token", encoded_jwt_code, secure=True, httponly=True, samesite="None"
         )
-        # if not check_trusted_device():
-        # if os.environ.get("FLASK_ENV") != "testing":
-        #     signin_notification(user)
-        # add_user_to_device_list(resp, user)
-
+        if os.environ.get("FLASK_ENV") != "testing":
+            if not check_trusted_device():
+                signin_notification(user)
+            add_user_to_device_list(resp, user)
         resp.status_code = 200
 
         return resp

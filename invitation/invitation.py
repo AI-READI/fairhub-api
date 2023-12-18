@@ -1,9 +1,15 @@
 from flask_mail import Message
-from flask import render_template
+from flask import render_template, Response
 import app
 import os
 import importlib
-from urllib.parse import urlparse, parse_qs
+import datetime
+
+from datetime import timezone
+
+import jwt
+
+from flask import g, request
 
 
 def send_invitation_study(to, token, study_name, role):
@@ -105,49 +111,49 @@ def get_config():
 
 
 # Get list of user ids that have previously authenticated on this device
-# def get_device_user_list() -> list[str]:
-#     # FIX THE TYPE OF THE TOKEN["USERS"], IT WAS GETTING ERROR SINCE token returns a dict instead of list
-#     # Check if cookie exists
-#     if "token_device" not in request.cookies:
-#         return []
-#
-#     # Get value from cookie
-#     cookie = request.cookies.get("token")
-#     if not cookie:
-#         return []
-#
-#     token = []
-#     config = get_config()
-#     try:
-#         token = jwt.decode(cookie, config.FAIRHUB_SECRET, algorithms=["HS256"])
-#     except jwt.ExpiredSignatureError:
-#         return []
-#     return token["users"]
-#
-#
-# def add_user_to_device_list(response: Response, user) -> None:
-#     users = get_device_user_list()
-#     if user.id not in users:
-#         users.append(user.id)
-#
-#     config = get_config()
-#     expiration = datetime.datetime.now(timezone.utc) + datetime.timedelta(days=365)
-#     cookie = jwt.encode(
-#         {
-#             "users": users,
-#             "exp": expiration,
-#         },
-#         config.FAIRHUB_SECRET,
-#         algorithm="HS256",
-#     )
-#
-#     response.set_cookie(
-#         "token_device", cookie, secure=True, httponly=True, samesite="None", expires=expiration
-#     )
+def get_device_user_list() -> list[str]:
+    # FIX THE TYPE OF THE TOKEN["USERS"], IT WAS GETTING ERROR SINCE token returns a dict instead of list
+    # Check if cookie exists
+    if "token_device" not in request.cookies:
+        return []
+
+    # Get value from cookie
+    cookie = request.cookies.get("token")
+    if not cookie:
+        return []
+
+    token = []
+    config = get_config()
+    try:
+        token = jwt.decode(cookie, config.FAIRHUB_SECRET, algorithms=["HS256"])
+    except jwt.ExpiredSignatureError:
+        return []
+    return token["users"]  # type: ignore
 
 
-# def check_trusted_device() -> bool:
-#     if not g.user:
-#         return False
-#     users = get_device_user_list()
-#     return g.user.id in users
+def add_user_to_device_list(response: Response, user) -> None:
+    users = get_device_user_list()
+    if user.id not in users:
+        users.append(user.id)
+
+    config = get_config()
+    expiration = datetime.datetime.now(timezone.utc) + datetime.timedelta(days=365)
+    cookie = jwt.encode(
+        {
+            "users": users,
+            "exp": expiration,
+        },
+        config.FAIRHUB_SECRET,
+        algorithm="HS256",
+    )
+
+    response.set_cookie(
+        "token_device", cookie, secure=True, httponly=True, samesite="None", expires=expiration
+    )
+
+
+def check_trusted_device() -> bool:
+    if not g.user:
+        return False
+    users = get_device_user_list()
+    return g.user.id in users
