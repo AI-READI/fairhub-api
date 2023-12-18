@@ -191,7 +191,7 @@ def _test_invite_study_contributor(_logged_in_client):
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
-
+    print("permission given", response_data)
     pytest.global_editor_token = response_data["token"]
 
     response = _logged_in_client.post(

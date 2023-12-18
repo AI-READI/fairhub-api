@@ -157,6 +157,9 @@ class SignUpUser(Resource):
         model.db.session.commit()
         if os.environ.get("FLASK_ENV") == "testing":
             new_user.email_verified = True
+            for invite in invitations:
+                invite.study.add_user_to_study(new_user, invite.permission)
+                model.db.session.delete(invite)
             model.db.session.commit()
         if os.environ.get("FLASK_ENV") != "testing":
             send_email_verification(new_user.email_address, verification.token)
@@ -180,6 +183,12 @@ class EmailVerification(Resource):
         if not user.verify_token(data["token"]):
             return "Token invalid or expired", 422
         user.email_verified = True
+        invitations = model.Invite.query.filter_by(
+            email_address=data["email"]
+        ).all()
+        for invite in invitations:
+            invite.study.add_user_to_study(user, invite.permission)
+            model.db.session.delete(invite)
         model.db.session.commit()
         return "Email verified", 201
 
@@ -198,7 +207,6 @@ class GenerateVerification(Resource):
             return "user already verified", 422
         token = user.generate_token()
         if os.environ.get("FLASK_ENV") != "testing":
-            print("testing")
             send_email_verification(user.email_address, token)
         model.db.session.commit()
         return "Your email is verified", 201

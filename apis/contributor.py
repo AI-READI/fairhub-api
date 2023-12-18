@@ -62,7 +62,6 @@ class AllContributors(Resource):
             return ex.args[0], 409
         model.db.session.commit()
         if os.environ.get("FLASK_ENV") != "testing":
-            print("testing")
             if user:
                 send_access_contributors(
                     email_address, study_obj, first_name, last_name, contributor_.permission
