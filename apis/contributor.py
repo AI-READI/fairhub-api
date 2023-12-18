@@ -64,11 +64,18 @@ class AllContributors(Resource):
         if os.environ.get("FLASK_ENV") != "testing":
             if user:
                 send_access_contributors(
-                    email_address, study_obj, first_name, last_name, contributor_.permission
+                    email_address,
+                    study_obj,
+                    first_name,
+                    last_name,
+                    contributor_.permission,
                 )
             else:
                 send_invitation_study(
-                    email_address, contributor_.token, study_name, contributor_.permission
+                    email_address,
+                    contributor_.token,
+                    study_name,
+                    contributor_.permission,
                 )
 
         return contributor_.to_dict(), 201

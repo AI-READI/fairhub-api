@@ -131,6 +131,7 @@ def get_device_user_list() -> list[str]:
     return []  # type: ignore
     # token["users"]
 
+
 def add_user_to_device_list(response: Response, user) -> None:
     users = get_device_user_list()
     if user.id not in users:
@@ -148,7 +149,12 @@ def add_user_to_device_list(response: Response, user) -> None:
     )
 
     response.set_cookie(
-        "token_device", cookie, secure=True, httponly=True, samesite="None", expires=expiration
+        "token_device",
+        cookie,
+        secure=True,
+        httponly=True,
+        samesite="None",
+        expires=expiration,
     )
 
 
