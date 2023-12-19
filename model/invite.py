@@ -19,7 +19,6 @@ class Invite(db.Model):  # type: ignore
         self.email_address = email_address
         self.created_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
         self.token = random.randint(10 ** (7 - 1), (10**7) - 1)
-        self.info = ""
 
     __tablename__ = "invite"
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -29,7 +28,6 @@ class Invite(db.Model):  # type: ignore
     invited_on = db.Column(db.BigInteger, nullable=False)
     token = db.Column(db.String, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
-    info = db.Column(db.String, nullable=False)
 
     study_id = db.Column(
         db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=True
@@ -48,6 +46,5 @@ class Invite(db.Model):  # type: ignore
             "role": self.permission,
             "email_address": self.email_address,
             "token": self.token,
-            "info": self.info,
             "user_id": self.user_id,
         }

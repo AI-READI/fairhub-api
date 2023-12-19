@@ -16,7 +16,7 @@ class Notification(db.Model):  # type: ignore
     title = db.Column(db.String, nullable=False)
     message = db.Column(db.String, nullable=False)
     type = db.Column(db.String, nullable=False)
-    target = db.Column(db.String, nullable=False)
+    target = db.Column(db.String, nullable=True)
     read = db.Column(db.BOOLEAN, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
 
