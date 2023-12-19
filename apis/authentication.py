@@ -187,9 +187,7 @@ class EmailVerification(Resource):
         if not user.verify_token(data["token"]):
             return "Token invalid or expired", 422
         user.email_verified = True
-        invitations = model.Invite.query.filter_by(
-            email_address=data["email"]
-        ).all()
+        invitations = model.Invite.query.filter_by(email_address=data["email"]).all()
         for invite in invitations:
             invite.study.add_user_to_study(user, invite.permission)
             model.db.session.delete(invite)
