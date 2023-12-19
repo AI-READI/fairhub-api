@@ -25,7 +25,7 @@ def send_invitation_study(to, token, study_name, role):
         accept_url=accept_url,
         study_name=study_name,
         role=role,
-        to=to
+        to=to,
     )
     app.mail.send(msg)
 
