@@ -12,7 +12,6 @@ import jwt
 from flask import g, request
 
 
-
 def send_invitation_study(to, token, study_name, role):
     accept_url = f"{config.FAIRHUB_LOCALHOST_URL}auth/signup?code={token}&email={to}"
     msg = Message(
@@ -26,6 +25,7 @@ def send_invitation_study(to, token, study_name, role):
         accept_url=accept_url,
         study_name=study_name,
         role=role,
+        to=to
     )
     app.mail.send(msg)
 
@@ -57,7 +57,7 @@ def send_invitation_general(to, token):
         recipients=[to],
     )
     msg.html = render_template(
-        "accept_general_invitation.html", token=token, accept_url=accept_url
+        "accept_general_invitation.html", token=token, accept_url=accept_url, to=to
     )
     app.mail.send(msg)
 
