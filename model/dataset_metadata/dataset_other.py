@@ -34,6 +34,7 @@ class DatasetOther(db.Model):  # type: ignore
 
     def to_dict(self):
         return {
+            "id": self.dataset_id,
             "language": self.language,
             "managing_organization_name": self.managing_organization_name,
             "managing_organization_ror_id": self.managing_organization_ror_id,
@@ -79,5 +80,6 @@ class DatasetOther(db.Model):  # type: ignore
         if "publisher" in data:
             self.publisher = data["publisher"]
         if "resource_type" in data:
+            print("resource type is available")
             self.resource_type = data["resource_type"]
         self.dataset.touch_dataset()

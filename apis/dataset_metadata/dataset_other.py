@@ -17,6 +17,7 @@ dataset_other = api.model(
         "size": fields.List(fields.String, required=True),
         "standards_followed": fields.String(required=True),
         "acknowledgement": fields.String(required=True),
+        "resource_type": fields.String(required=True),
     },
 )
 
@@ -33,6 +34,9 @@ class DatasetOtherResource(Resource):
         """Get dataset other metadata"""
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_other_ = dataset_.dataset_other
+        print("30487-01238idjfljdsf")
+        print(dataset_other_.to_dict())
+        print("30487-01238idjfljdsf")
         return dataset_other_.to_dict(), 200
 
     @api.doc("other update")
@@ -78,6 +82,7 @@ class DatasetOtherResource(Resource):
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_.dataset_other.update(data)
         model.db.session.commit()
+        print(dataset_.dataset_other.to_dict())
         return dataset_.dataset_other.to_dict(), 200
 
 
