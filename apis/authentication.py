@@ -323,8 +323,11 @@ class Login(Resource):
         resp.set_cookie(
             "token", encoded_jwt_code, secure=True, httponly=True, samesite="None"
         )
+
+        g.user = user
+
         if os.environ.get("FLASK_ENV") != "testing":
-            if check_trusted_device():
+            if not check_trusted_device():
                 signin_notification(user)
             add_user_to_device_list(resp, user)
         resp.status_code = 200

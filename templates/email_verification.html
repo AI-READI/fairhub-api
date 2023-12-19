@@ -20,14 +20,6 @@
           text-decoration: none;
             border-radius: 5px;
         }
-        .iconify {
-            width: 7rem;
-            height: 7rem;
-            color: rgba(0, 123, 255, 0.92);
-        }
-        .accept-top{
-            padding-bottom: 2rem;
-        }
         .accept-bottom{
             padding-top: 2rem;
             padding-bottom: 3rem;
@@ -41,21 +33,25 @@
 <body>
     <div class="container">
         <div>
-            <span class="iconify" data-icon="line-md:email"></span>
+            <img src="data:image/gif;base64,R0lGODlhJQAlAPZkAAAAAAEBAQICAgMDAwUFBQYGBgcHBwgICAoKCg0NDQ4ODhAQEBERERISEhUVFRcXFxkZGRoaGh4eHiAgICIiIiQkJCUlJSYmJikpKS4uLjExMTMzMzQ0NDY2Njg4ODk5OTo6Ojw8PD09PT4+PkFBQUNDQ0lJSUpKSktLS0xMTFNTU1RUVFVVVVdXV11dXWZmZmlpaW5ubm9vb3d3d3x8fH9/f4iIiIqKipCQkKGhoaSkpKqqqq+vr7KysrS0tLa2tre3t7m5ucDAwMbGxsnJycrKyszMzM3Nzc7OztDQ0NHR0dTU1NnZ2dra2tvb2+Dg4OLi4ubm5ujo6Ozs7O3t7e7u7vHx8fLy8vPz8/T09PX19fb29vf39/j4+Pn5+fr6+vv7+/z8/P39/f7+/v///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAAAAAAAIf8LSW1hZ2VNYWdpY2sOZ2FtbWE9MC40NTQ1NDUALAAAAAAlACUAAAf/gGSCg4SFhoeIiYqLjI2Oj5COW0I7lZaXmJmaOz1MgzoNAKKjpKWmp6QnVUCora6oISCvs7QHoidIubq7vL2+SDymK12Ri0inFTvFh1UxriVLy4M5DrMEMVbFQhmuEqUQOY9PK6UUpjRIIaUcQ4tdOAmkBzRW54I73qQuUog95qQpnpDpYk/QFhoESDWwQWwQkxOlMAQZRLAUjUJMUpSqAISMFYQKcRSqSOqiISAVSp2oRgpGFUMkR5mECQ+WEkQxRc08FOXFt3CJcgLYiaiIrGvZFAklmkjJS0ZLpQUtKBUm1aqEomIdeXXrQFMzvBLaMgqCqAYqVqhdy7at27eyJkQ5o0X31AErGurqHRVui40SGgILHky4sGENHFwUEcu4sePHiQIBADs=" alt="email">
         </div>
     <div class="divider"></div>
     <h1>Hello {{ email}}!</h1>
 
     <div>
-        <p>Please verify your email address by clicking the button below</p>
+        <p>Please verify your email address by clicking the button below:</p>
         <a href="{{ verification_url }}" class="button">Verify Email Address</a>
+
+        <p>Or see here:</p>
+            <a href="http://localhost:3000/auth/verify-email?email={{ email }}&token={{ token }}">
+                http://localhost:3000/auth/verify-email?email={{ email_address }}&token={{ token }}
+            </a>
         <p class="accept-bottom">Need assistance or have questions? Our dedicated support team is here to help. Reach out to us at <a
                 href="mailto:help@fairhub.io">help@fairhub.io</a> for prompt assistance.</p>
     </div>
         <div>Sincerely,</div>
         <div>FAIRhub team</div>
     </div>
-<!--    <script src="https://code.iconify.design/1/1.0.7/iconify.min.js"></script>-->
 </body>
 
 </html>

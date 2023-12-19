@@ -4,7 +4,7 @@ import app
 import os
 import importlib
 import datetime
-
+import config
 from datetime import timezone
 
 import jwt
@@ -12,8 +12,9 @@ import jwt
 from flask import g, request
 
 
+
 def send_invitation_study(to, token, study_name, role):
-    accept_url = f"http://localhost:3000/auth/signup?code={token}&email={to}"
+    accept_url = f"{config.FAIRHUB_LOCALHOST_URL}auth/signup?code={token}&email={to}"
     msg = Message(
         subject=f"You have been invited to {study_name} invitation",
         sender="aydan.gasimova2@example.com",
@@ -30,7 +31,7 @@ def send_invitation_study(to, token, study_name, role):
 
 
 def send_access_contributors(to, study, first_name, last_name, role):
-    accept_url = f"http://localhost:3000/study/{study.id}/overview"
+    accept_url = f"{config.FAIRHUB_LOCALHOST_URL}study/{study.id}/overview"
     msg = Message(
         subject=f"You have been invited to {study.title} invitation",
         sender="aydan.gasimova2@example.com",
@@ -49,7 +50,7 @@ def send_access_contributors(to, study, first_name, last_name, role):
 
 
 def send_invitation_general(to, token):
-    accept_url = f"http://localhost:3000/auth/signup?code={token}&email={to}"
+    accept_url = f"{config.FAIRHUB_LOCALHOST_URL}auth/signup?code={token}&email={to}"
     msg = Message(
         subject=f"You have been invited to signup to FAIRhub",
         sender="aydan.gasimova@example.com",
@@ -63,7 +64,7 @@ def send_invitation_general(to, token):
 
 def send_email_verification(email_address, token):
     verification_url = (
-        f"http://localhost:3000/auth/verify-email?email="
+        f"{config.FAIRHUB_LOCALHOST_URL}auth/verify-email?email="
         f"{email_address}&token={token}"
     )
     msg = Message(
@@ -81,7 +82,7 @@ def send_email_verification(email_address, token):
 
 
 def signin_notification(user):
-    user_profile = f"http://localhost:3000/studies"
+    user_profile = f"{config.FAIRHUB_LOCALHOST_URL}studies"
     msg = Message(
         subject=f"Login notification",
         sender="aydan.gasimova@example.com",
@@ -118,18 +119,21 @@ def get_device_user_list() -> list[str]:
         return []
 
     # Get value from cookie
-    cookie = request.cookies.get("token")
+    cookie = request.cookies.get("token_device")
     if not cookie:
         return []
 
-    token = []
+    token = {}
     config = get_config()
     try:
         token = jwt.decode(cookie, config.FAIRHUB_SECRET, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
         return []
-    return []  # type: ignore
-    # token["users"]
+
+    if "users" not in token:
+        return []
+
+    return token["users"]
 
 
 def add_user_to_device_list(response: Response, user) -> None:
@@ -159,7 +163,7 @@ def add_user_to_device_list(response: Response, user) -> None:
 
 
 def check_trusted_device() -> bool:
-    if not g.user:
-        return False
     users = get_device_user_list()
+    for user in users:
+        print("User known: " + user)
     return g.user.id in users

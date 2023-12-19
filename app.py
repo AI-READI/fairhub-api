@@ -137,9 +137,7 @@ def create_app(config_module=None):
             "/echo",
             "/swaggerui",
             "/swagger.json",
-            "/auth/email-verification/resend",
             "/favicon.ico",
-            "/auth/email-verification/confirm",
         ]
         for route in public_routes:
             if request.path.startswith(route):
