@@ -1,7 +1,7 @@
 """API routes for study available ipd metadata"""
 import typing
 
-from flask import request, Response
+from flask import Response, request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -45,7 +45,7 @@ class StudyAvailableResource(Resource):
     @api.doc(
         description="An array of objects are expected within the payload with the keys demonstrated below to create an available-ipd"  # noqa E501
     )
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     @api.expect(study_available)
     def post(self, study_id: int):

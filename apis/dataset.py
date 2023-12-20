@@ -1,6 +1,6 @@
 import typing
 
-from flask import request, Response
+from flask import Response, request
 from flask_restx import Namespace, Resource, fields
 
 import model
@@ -40,7 +40,7 @@ dataset = api.model(
 
 @api.route("/study/<study_id>/dataset")
 class DatasetList(Resource):
-    @api.response(201, "Success")
+    @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(dataset)
     @api.doc("view datasets")
@@ -77,17 +77,17 @@ class DatasetList(Resource):
 
 # TODO not finalized endpoint. have to set functionality
 @api.route("/study/<study_id>/dataset/<dataset_id>")
-@api.response(201, "Success")
-@api.response(400, "Validation Error")
+# @api.response(201, "Success")
+# @api.response(400, "Validation Error")
 @api.doc("view dataset")
 class DatasetResource(Resource):
-    @api.response(201, "Success")
+    @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         data_obj = model.Dataset.query.get(dataset_id)
         return data_obj.to_dict(), 200
 
-    @api.response(201, "Success")
+    @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.doc("update dataset")
     def put(self, study_id: int, dataset_id: int):
@@ -123,7 +123,7 @@ class DatasetResource(Resource):
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>")
 class VersionResource(Resource):
-    @api.response(201, "Success")
+    @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.doc("dataset version")
     def get(
@@ -135,7 +135,7 @@ class VersionResource(Resource):
         dataset_version = model.Version.query.get(version_id)
         return dataset_version.to_dict(), 200
 
-    @api.response(201, "Success")
+    @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.doc("update dataset version")
     def put(
@@ -166,7 +166,7 @@ class VersionResource(Resource):
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version")
 class VersionList(Resource):
-    @api.response(201, "Success")
+    @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.doc("view versions")
     def get(self, study_id: int, dataset_id: int):
@@ -212,7 +212,7 @@ class VersionList(Resource):
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/study-metadata")
 class VersionDatasetMetadataResource(Resource):
-    @api.response(201, "Success")
+    @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.doc("version study metadata get")
     def get(self, study_id: str, dataset_id: str, version_id: str):
@@ -229,7 +229,7 @@ class VersionDatasetMetadataResource(Resource):
     "/study/<study_id>/dataset/<dataset_id>/version/<version_id>/dataset-metadata"
 )
 class VersionStudyMetadataResource(Resource):
-    @api.response(201, "Success")
+    @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.doc("version dataset metadata get")
     def get(self, study_id: str, dataset_id: str, version_id: str):
@@ -244,7 +244,7 @@ class VersionStudyMetadataResource(Resource):
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/changelog")
 class VersionDatasetChangelog(Resource):
-    @api.response(201, "Success")
+    @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.doc("version changelog")
     def get(self, study_id: str, dataset_id: str, version_id: str):
@@ -256,7 +256,7 @@ class VersionDatasetChangelog(Resource):
         ).one_or_none()
         return {"changelog": version.changelog}, 200
 
-    @api.response(201, "Success")
+    @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.doc("version changelog update")
     def put(
@@ -274,7 +274,7 @@ class VersionDatasetChangelog(Resource):
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/readme")
 class VersionDatasetReadme(Resource):
-    @api.response(201, "Success")
+    @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.doc("version readme")
     def get(self, study_id: str, dataset_id: str, version_id: str):
@@ -286,7 +286,7 @@ class VersionDatasetReadme(Resource):
         ).one_or_none()
         return version.version_readme.to_dict(), 200
 
-    @api.response(201, "Success")
+    @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.doc("version readme update")
     def put(

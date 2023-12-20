@@ -1,7 +1,7 @@
 """API routes for study identification metadata"""
 import typing
 
-from flask import request, Response
+from flask import Response, request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -39,7 +39,7 @@ class StudyIdentificationResource(Resource):
         return identifiers.to_dict(), 200
 
     @api.doc("identification add")
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     @api.expect(study_identification)
     def post(self, study_id: int):

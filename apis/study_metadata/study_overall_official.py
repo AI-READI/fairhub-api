@@ -1,7 +1,7 @@
 """API routes for study overall official metadata"""
 import typing
 
-from flask import request, Response
+from flask import Response, request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -44,7 +44,7 @@ class StudyOverallOfficialResource(Resource):
 
         return [i.to_dict() for i in sorted_study_overall], 200
 
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     def post(self, study_id: int):
         """Create study overall official metadata"""

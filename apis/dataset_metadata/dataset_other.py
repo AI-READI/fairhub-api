@@ -33,7 +33,7 @@ class DatasetOtherResource(Resource):
         """Get dataset other metadata"""
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_other_ = dataset_.dataset_other
-        return dataset_other_.to_dict()
+        return dataset_other_.to_dict(), 200
 
     @api.doc("other update")
     @api.response(200, "Success")
@@ -78,7 +78,7 @@ class DatasetOtherResource(Resource):
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_.dataset_other.update(data)
         model.db.session.commit()
-        return dataset_.dataset_other.to_dict()
+        return dataset_.dataset_other.to_dict(), 200
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/publisher")

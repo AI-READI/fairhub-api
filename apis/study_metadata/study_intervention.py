@@ -1,7 +1,7 @@
 """API routes for study intervention metadata"""
 import typing
 
-from flask import request, Response
+from flask import Response, request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -44,6 +44,8 @@ class StudyInterventionResource(Resource):
 
         return [s.to_dict() for s in sorted_study_intervention], 200
 
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
     def post(self, study_id: int):
         """Create study intervention metadata"""
         # Schema validation

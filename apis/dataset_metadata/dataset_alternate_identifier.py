@@ -1,7 +1,7 @@
 """API endpoints for dataset alternate identifier"""
 from typing import Any, Union
 
-from flask import request, Response
+from flask import Response, request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -35,7 +35,7 @@ class DatasetAlternateIdentifierResource(Resource):
         return [d.to_dict() for d in dataset_identifier_], 200
 
     @api.doc("update identifier")
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     def post(self, study_id: int, dataset_id: int):
         """Update dataset alternate identifier"""

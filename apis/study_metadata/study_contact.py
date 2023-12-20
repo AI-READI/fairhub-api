@@ -2,7 +2,7 @@
 import typing
 
 from email_validator import EmailNotValidError, validate_email
-from flask import request, Response
+from flask import Response, request
 from flask_restx import Resource, fields
 from jsonschema import FormatChecker, ValidationError, validate
 
@@ -44,6 +44,8 @@ class StudyContactResource(Resource):
 
         return [s.to_dict() for s in sorted_study_contact if s.central_contact], 200
 
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
     def post(self, study_id: int):
         """Create study contact metadata"""
 
