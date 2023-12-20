@@ -397,7 +397,7 @@ class UserPasswordEndpoint(Resource):
     @api.doc(description="Updates User password")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def put(self):
+    def post(self):
         """Updates user password"""
 
         def validate_current_password(instance):
