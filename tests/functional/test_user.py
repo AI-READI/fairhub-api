@@ -2,7 +2,7 @@
 
 
 # ------------------- Password Change ------------------- #
-def test_put_password_change(clients):
+def test_post_password_change(clients):
     """
     Given a Flask application configured for testing
     WHEN the '/auth/password/change' endpoint is requested (PUT)
@@ -10,7 +10,7 @@ def test_put_password_change(clients):
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
 
-    response = _logged_in_client.put(
+    response = _logged_in_client.post(
         "/auth/password/change",
         json={
             "confirm_password": "Updatedpassword4testing!",
