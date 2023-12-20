@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from typing import Any, Dict, List, Union
 
-from flask import g, request, Response
+from flask import Response, g, request
 from flask_restx import Namespace, Resource, fields
 
 import model
