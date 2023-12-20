@@ -2,7 +2,7 @@
 
 from typing import Any, Union
 
-from flask import request, Response
+from flask import Response, request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 

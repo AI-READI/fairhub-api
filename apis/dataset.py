@@ -1,6 +1,6 @@
 import typing
 
-from flask import request, Response
+from flask import Response, request
 from flask_restx import Namespace, Resource, fields
 
 import model
