@@ -13,6 +13,7 @@ jobs:
       # These are simulated secrets for test workflow only.
       FAIRHUB_DATABASE_URL: postgresql://admin:root@localhost:5432/fairhub_local
       FAIRHUB_SECRET: mXrkOHXXQoMAhCOTZOV93QlncmeTwEZFPxTP1TXGiOFabE0KmuZgHWvTOLgjbv3S
+      FAIRHUB_GROWTHBOOK_CLIENT_KEY: ${{ secrets.FAIRHUB_GROWTHBOOK_CLIENT_KEY }}
 
     steps:
       - uses: actions/checkout@v2
