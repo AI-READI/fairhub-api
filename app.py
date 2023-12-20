@@ -10,6 +10,7 @@ from flask import Flask, request
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from flask_mail import Mail
+from growthbook import GrowthBook
 from sqlalchemy import MetaData
 from waitress import serve
 
@@ -125,12 +126,27 @@ def create_app(config_module=None):
 
         try:
             authentication()
+
             authorization()
+
+            # create growthbook instance
+            g.gb = GrowthBook(
+                api_host="https://cdn.growthbook.io",
+                client_key=config.FAIRHUB_GROWTHBOOK_CLIENT_KEY,
+            )
+
+            # load feature flags
+            g.gb.load_features()
+
         except UnauthenticatedException:
             return "Authentication is required", 401
 
     @app.after_request
     def on_after_request(resp):
+        # destroy growthbook instance
+        if hasattr(g, "gb"):
+            g.gb.destroy()
+
         public_routes = [
             "/auth",
             "/docs",
@@ -142,8 +158,7 @@ def create_app(config_module=None):
         for route in public_routes:
             if request.path.startswith(route):
                 return resp
-        # print("after request")
-        # print(request.cookies.get("token"))
+
         if "token" not in request.cookies:
             return resp
 

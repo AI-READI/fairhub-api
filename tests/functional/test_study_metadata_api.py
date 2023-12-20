@@ -1,8 +1,8 @@
 # pylint: disable=too-many-lines
 """Tests for the Study Metadata API endpoints"""
 import json
-
 from time import sleep
+
 import pytest
 
 
