@@ -393,6 +393,7 @@ class UserPasswordEndpoint(Resource):
     """
     Endpoint for updating user password
     """
+
     @api.doc(description="Updates User password")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")

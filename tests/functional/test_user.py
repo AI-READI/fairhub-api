@@ -16,7 +16,7 @@ def test_put_password_change(clients):
             "confirm_password": "Updatedpassword4testing!",
             "new_password": "Updatedpassword4testing!",
             "old_password": "Testingyeshello11!",
-        }
+        },
     )
     admin_response = _admin_client.put(
         "/auth/password/change",
@@ -24,7 +24,7 @@ def test_put_password_change(clients):
             "confirm_password": "Updatedpassword4testing!",
             "new_password": "Updatedpassword4testing!",
             "old_password": "Testingyeshello11!",
-        }
+        },
     )
     editor_response = _editor_client.put(
         "/auth/password/change",
@@ -32,7 +32,7 @@ def test_put_password_change(clients):
             "confirm_password": "Updatedpassword4testing!",
             "new_password": "Updatedpassword4testing!",
             "old_password": "Testingyeshello11!",
-        }
+        },
     )
     viewer_response = _viewer_client.put(
         "/auth/password/change",
@@ -40,7 +40,7 @@ def test_put_password_change(clients):
             "confirm_password": "Updatedpassword4testing!",
             "new_password": "Updatedpassword4testing!",
             "old_password": "Testingyeshello11!",
-        }
+        },
     )
 
     assert response.status_code == 200
