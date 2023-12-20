@@ -261,7 +261,6 @@ class Login(Resource):
         except ValidationError as e:
             return e.message, 400
 
-        user = model.User.query.filter_by(email_address=email_address).one_or_none()
         title = "you logged in"
         message = f"You have successfully logged in at {request.remote_addr} "
         notification_type = "info"
