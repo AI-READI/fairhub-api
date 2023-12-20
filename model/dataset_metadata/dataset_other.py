@@ -34,7 +34,6 @@ class DatasetOther(db.Model):  # type: ignore
 
     def to_dict(self):
         return {
-            "id": self.dataset_id,
             "language": self.language,
             "managing_organization_name": self.managing_organization_name,
             "managing_organization_ror_id": self.managing_organization_ror_id,
