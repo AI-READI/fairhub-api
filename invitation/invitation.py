@@ -36,12 +36,12 @@ def send_access_contributors(to, study, first_name, last_name, role):
                                'aydan.gasimova2@example.com', to)
     html_content = render_template(
         "accept_study_invitation.html",
-            accept_url=accept_url,
-            first_name=first_name,
-            last_name=last_name,
-            study_name=study.title,
-            study_id=study.id,
-            role=role,
+        accept_url=accept_url,
+        first_name=first_name,
+        last_name=last_name,
+        study_name=study.title,
+        study_id=study.id,
+        role=role,
     )
 
     msg = EmailMessage(subject, html_content, from_email, [to])
@@ -67,7 +67,7 @@ def send_invitation_general(to, token):
 
 def send_email_verification(email_address, token):
     verification_url = (
-        f"{config.FAIRHUB_LOCALHOST_URL}auth/verify-email?email="
+        f"{config.FAIRHUB_FRONTEND_URL}auth/verify-email?email="
         f"{email_address}&token={token}"
     )
     subject, from_email, to = (f"Verify email address",
@@ -83,23 +83,14 @@ def send_email_verification(email_address, token):
     msg.send()
 
 
-def signin_notification(user):
-    user_profile = f"{config.FAIRHUB_LOCALHOST_URL}studies"
-    # msg = Message(
-    #     subject=f"Login notification",
-    #     sender="aydan.gasimova@example.com",
-    #     recipients=[user.email_address],
-    # )
-    # msg.html = render_template(
-    #     "accept_general_invitation.html", user_profile=user_profile
-    # )
-    # app.mail.send(msg)
+def signin_notification(user, device_ip):
+    user_profile_url = f"{config.FAIRHUB_FRONTEND_URL}studies"
     subject, from_email, to = (f"Login notification",
                                'aydan.gasimova2@example.com', user.email_address)
     html_content = render_template(
-        "accept_general_invitation.html", user_profile=user_profile
+        "device_notification.html", user_profile_url=user_profile_url, device_ip=device_ip
     )
-    msg = EmailMessage(subject, html_content, from_email, [to])
+    msg = EmailMessage(subject, html_content, from_email, [user.email_address])
     msg.content_subtype = "html"
     msg.send()
 

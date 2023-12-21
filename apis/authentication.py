@@ -260,19 +260,6 @@ class Login(Resource):
         target = "/login"
         read = False
         user = model.User.query.filter_by(email_address=email_address).one_or_none()
-
-        send_notification = model.Notification.from_data(
-            user,
-            {
-                "title": title,
-                "message": message,
-                "type": notification_type,
-                "target": target,
-                "read": read,
-            },
-        )
-        model.db.session.add(send_notification)
-        model.db.session.commit()
         if not user:
             return "Invalid credentials", 401
 
@@ -316,10 +303,21 @@ class Login(Resource):
         g.user = user
 
         if g.gb.is_on('email-verification'):
-
             if os.environ.get("FLASK_ENV") != "testing":
                 if not check_trusted_device():
-                    signin_notification(user)
+                    send_notification = model.Notification.from_data(
+                        user,
+                        {
+                            "title": title,
+                            "message": message,
+                            "type": notification_type,
+                            "target": target,
+                            "read": read,
+                        },
+                    )
+                    model.db.session.add(send_notification)
+                    model.db.session.commit()
+                    signin_notification(user, request.remote_addr)
                 add_user_to_device_list(resp, user)
             resp.status_code = 200
 
