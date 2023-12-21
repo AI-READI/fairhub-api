@@ -217,7 +217,6 @@ def create_app(config_module=None):
 
         return resp
 
-
     @app.errorhandler(ValidationException)
     def validation_exception_handler(error):
         return error.args[0], 422
