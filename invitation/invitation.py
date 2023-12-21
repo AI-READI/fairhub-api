@@ -14,15 +14,18 @@ from flask import g, request
 
 def send_invitation_study(to, token, study_name, role):
     accept_url = f"{config.FAIRHUB_FRONTEND_URL}auth/signup?code={token}&email={to}"
-    subject, from_email, to = (f"You have been invited to {study_name} invitation",
-                               'aydan.gasimova2@example.com', to)
+    subject, from_email, to = (
+        f"You have been invited to {study_name} invitation",
+        "aydan.gasimova2@example.com",
+        to,
+    )
     html_content = render_template(
         "accept_study_invitation.html",
         token=token,
         accept_url=accept_url,
         study_name=study_name,
         role=role,
-        to=to
+        to=to,
     )
 
     msg = EmailMessage(subject, html_content, from_email, [to])
@@ -32,8 +35,11 @@ def send_invitation_study(to, token, study_name, role):
 
 def send_access_contributors(to, study, first_name, last_name, role):
     accept_url = f"{config.FAIRHUB_FRONTEND_URL}study/{study.id}/overview"
-    subject, from_email, to = (f"You have been invited to {study.title} invitation",
-                               'aydan.gasimova2@example.com', to)
+    subject, from_email, to = (
+        f"You have been invited to {study.title} invitation",
+        "aydan.gasimova2@example.com",
+        to,
+    )
     html_content = render_template(
         "accept_study_invitation.html",
         accept_url=accept_url,
@@ -51,13 +57,13 @@ def send_access_contributors(to, study, first_name, last_name, role):
 
 def send_invitation_general(to, token):
     accept_url = f"{config.FAIRHUB_FRONTEND_URL}auth/signup?code={token}&email={to}"
-    subject, from_email, to = (f"You have been invited to signup to FAIRhub",
-                               'aydan.gasimova2@example.com', to)
+    subject, from_email, to = (
+        f"You have been invited to signup to FAIRhub",
+        "aydan.gasimova2@example.com",
+        to,
+    )
     html_content = render_template(
-        "accept_general_invitation.html",
-        token=token,
-        accept_url=accept_url,
-        to=to
+        "accept_general_invitation.html", token=token, accept_url=accept_url, to=to
     )
 
     msg = EmailMessage(subject, html_content, from_email, [to])
@@ -70,8 +76,11 @@ def send_email_verification(email_address, token):
         f"{config.FAIRHUB_FRONTEND_URL}auth/verify-email?email="
         f"{email_address}&token={token}"
     )
-    subject, from_email, to = (f"Verify email address",
-                               'aydan.gasimova2@example.com', email_address)
+    subject, from_email, to = (
+        f"Verify email address",
+        "aydan.gasimova2@example.com",
+        email_address,
+    )
     html_content = render_template(
         "email_verification.html",
         token=token,
@@ -85,10 +94,15 @@ def send_email_verification(email_address, token):
 
 def signin_notification(user, device_ip):
     user_profile_url = f"{config.FAIRHUB_FRONTEND_URL}studies"
-    subject, from_email, to = (f"Login notification",
-                               'aydan.gasimova2@example.com', user.email_address)
+    subject, from_email, to = (
+        f"Login notification",
+        "aydan.gasimova2@example.com",
+        user.email_address,
+    )
     html_content = render_template(
-        "device_notification.html", user_profile_url=user_profile_url, device_ip=device_ip
+        "device_notification.html",
+        user_profile_url=user_profile_url,
+        device_ip=device_ip,
     )
     msg = EmailMessage(subject, html_content, from_email, [user.email_address])
     msg.content_subtype = "html"

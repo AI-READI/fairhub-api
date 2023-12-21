@@ -161,7 +161,7 @@ class SignUpUser(Resource):
         model.db.session.commit()
         if os.environ.get("FLASK_ENV") == "testing":
             new_user.email_verified = True
-        if g.gb.is_on('email-verification'):
+        if g.gb.is_on("email-verification"):
             if os.environ.get("FLASK_ENV") != "testing":
                 send_email_verification(new_user.email_address, verification.token)
         return f"Hi, {new_user.email_address}, you have successfully signed up", 201
@@ -201,7 +201,7 @@ class GenerateVerification(Resource):
         if user.email_verified:
             return "user already verified", 422
         token = user.generate_token()
-        if g.gb.is_on('email-verification'):
+        if g.gb.is_on("email-verification"):
             if os.environ.get("FLASK_ENV") != "testing":
                 send_email_verification(user.email_address, token)
         model.db.session.commit()
@@ -302,7 +302,7 @@ class Login(Resource):
         )
         g.user = user
 
-        if g.gb.is_on('email-verification'):
+        if g.gb.is_on("email-verification"):
             if os.environ.get("FLASK_ENV") != "testing":
                 if not check_trusted_device():
                     send_notification = model.Notification.from_data(
