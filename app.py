@@ -13,6 +13,7 @@ from flask_mailman import Mail
 from growthbook import GrowthBook
 from sqlalchemy import MetaData
 from waitress import serve
+from sqlalchemy import text
 
 import config
 import model
@@ -216,6 +217,7 @@ def create_app(config_module=None):
 
         return resp
 
+
     @app.errorhandler(ValidationException)
     def validation_exception_handler(error):
         return error.args[0], 422
@@ -230,8 +232,9 @@ def create_app(config_module=None):
 
         engine = model.db.session.get_bind()
 
-        with engine.begin():
+        with engine.begin() as conn:
             model.db.drop_all()
+            conn.execute(text("DROP TABLE IF EXISTS alembic_version"))
 
     with app.app_context():
         engine = model.db.session.get_bind()
