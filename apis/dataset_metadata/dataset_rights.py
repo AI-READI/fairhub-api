@@ -18,6 +18,7 @@ dataset_rights = api.model(
         "uri": fields.String(required=True),
         "identifier": fields.String(required=True),
         "identifier_scheme": fields.String(required=True),
+        "license_text": fields.String(required=True),
     },
 )
 
@@ -35,6 +36,7 @@ class DatasetRightsResource(Resource):
         """Get dataset rights"""
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_rights_ = dataset_.dataset_rights
+        print([d.to_dict() for d in dataset_rights_])
         return [d.to_dict() for d in dataset_rights_], 200
 
     @api.doc("update rights")
@@ -58,8 +60,9 @@ class DatasetRightsResource(Resource):
                     "identifier_scheme": {"type": "string"},
                     "rights": {"type": "string", "minLength": 1},
                     "uri": {"type": "string"},
+                    "license_text": {"type": "string"},
                 },
-                "required": ["identifier", "identifier_scheme", "rights", "uri"],
+                "required": ["identifier", "identifier_scheme", "rights", "uri", "license_text"],
             },
             "uniqueItems": True,
         }

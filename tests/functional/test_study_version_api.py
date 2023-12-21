@@ -669,6 +669,7 @@ def test_get_version_dataset_metadata(clients):
                 "identifier_scheme": "Identifier Scheme",
                 "rights": "Rights",
                 "uri": "URI",
+                "license_text": "license text",
             }
         ],
     )

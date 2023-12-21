@@ -18,6 +18,8 @@ class DatasetRights(db.Model):  # type: ignore
     uri = db.Column(db.String, nullable=False)
     identifier = db.Column(db.String, nullable=False)
     identifier_scheme = db.Column(db.String, nullable=False)
+    license_text = db.Column(db.String, nullable=False)
+
     created_at = db.Column(db.BigInteger, nullable=False)
 
     dataset_id = db.Column(db.CHAR(36), db.ForeignKey("dataset.id"), nullable=False)
@@ -31,6 +33,7 @@ class DatasetRights(db.Model):  # type: ignore
             "identifier": self.identifier,
             "identifier_scheme": self.identifier_scheme,
             "created_at": self.created_at,
+            "license_text": self.license_text
         }
 
     def to_dict_metadata(self):
@@ -51,4 +54,5 @@ class DatasetRights(db.Model):  # type: ignore
         self.uri = data["uri"]
         self.identifier = data["identifier"]
         self.identifier_scheme = data["identifier_scheme"]
+        self.license_text = data["license_text"]
         self.dataset.touch_dataset()
