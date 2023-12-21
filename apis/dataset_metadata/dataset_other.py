@@ -10,13 +10,13 @@ from apis.dataset_metadata_namespace import api
 dataset_other = api.model(
     "DatasetOther",
     {
-        "id": fields.String(required=True),
         "language": fields.String(required=True),
         "managing_organization_name": fields.String(required=True),
         "managing_organization_ror_id": fields.String(required=True),
         "size": fields.List(fields.String, required=True),
         "standards_followed": fields.String(required=True),
         "acknowledgement": fields.String(required=True),
+        "resource_type": fields.String(required=True),
     },
 )
 
