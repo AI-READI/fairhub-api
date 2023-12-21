@@ -17,7 +17,12 @@ from waitress import serve
 import config
 import model
 from apis import api
-from apis.authentication import UnauthenticatedException, authentication, authorization, is_public
+from apis.authentication import (
+    UnauthenticatedException,
+    authentication,
+    authorization,
+    is_public,
+)
 from apis.exception import ValidationException
 
 # from pyfairdatatools import __version__
