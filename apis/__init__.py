@@ -106,8 +106,6 @@ class HelloEverynyan(Resource):
     @api.response(400, "Validation Error")
     def get(self):
         """Returns a simple 'Server Active' message"""
-        # print(g.gb.is_on('email-verification'))
-
         return "Server active!"
 
 
