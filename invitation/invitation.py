@@ -13,7 +13,7 @@ from flask import g, request
 
 
 def send_invitation_study(to, token, study_name, role):
-    accept_url = f"{config.FAIRHUB_LOCALHOST_URL}auth/signup?code={token}&email={to}"
+    accept_url = f"{config.FAIRHUB_FRONTEND_URL}auth/signup?code={token}&email={to}"
     msg = Message(
         subject=f"You have been invited to {study_name} invitation",
         sender="aydan.gasimova2@example.com",
@@ -31,7 +31,7 @@ def send_invitation_study(to, token, study_name, role):
 
 
 def send_access_contributors(to, study, first_name, last_name, role):
-    accept_url = f"{config.FAIRHUB_LOCALHOST_URL}study/{study.id}/overview"
+    accept_url = f"{config.FAIRHUB_FRONTEND_URL}study/{study.id}/overview"
     msg = Message(
         subject=f"You have been invited to {study.title} invitation",
         sender="aydan.gasimova2@example.com",
@@ -50,7 +50,7 @@ def send_access_contributors(to, study, first_name, last_name, role):
 
 
 def send_invitation_general(to, token):
-    accept_url = f"{config.FAIRHUB_LOCALHOST_URL}auth/signup?code={token}&email={to}"
+    accept_url = f"{config.FAIRHUB_FRONTEND_URL}auth/signup?code={token}&email={to}"
     msg = Message(
         subject=f"You have been invited to signup to FAIRhub",
         sender="aydan.gasimova@example.com",
@@ -64,7 +64,7 @@ def send_invitation_general(to, token):
 
 def send_email_verification(email_address, token):
     verification_url = (
-        f"{config.FAIRHUB_LOCALHOST_URL}auth/verify-email?email="
+        f"{config.FAIRHUB_FRONTEND_URL}auth/verify-email?email="
         f"{email_address}&token={token}"
     )
     msg = Message(
@@ -82,7 +82,7 @@ def send_email_verification(email_address, token):
 
 
 def signin_notification(user):
-    user_profile = f"{config.FAIRHUB_LOCALHOST_URL}studies"
+    user_profile = f"{config.FAIRHUB_FRONTEND_URL}studies"
     msg = Message(
         subject=f"Login notification",
         sender="aydan.gasimova@example.com",

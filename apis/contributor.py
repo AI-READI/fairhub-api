@@ -1,4 +1,3 @@
-import os
 from collections import OrderedDict
 from typing import Any, Dict, List, Union
 
@@ -61,7 +60,7 @@ class AllContributors(Resource):
         except model.StudyException as ex:
             return ex.args[0], 409
         model.db.session.commit()
-        if os.environ.get("FLASK_ENV") != "testing":
+        if g.gb.is_on('email-verification'):
             if user:
                 send_access_contributors(
                     email_address,
