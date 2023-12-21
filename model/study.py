@@ -55,7 +55,7 @@ class Study(db.Model):  # type: ignore
         cascade="all, delete",
     )
     invited_contributors = db.relationship(
-        "StudyInvitedContributor",
+        "Invite",
         back_populates="study",
         lazy="dynamic",
         cascade="all, delete",
@@ -169,7 +169,9 @@ class Study(db.Model):  # type: ignore
             if self.study_description
             else None,
             "owner": owner.to_dict()["id"] if owner else None,
-            "role": contributor_permission.to_dict()["role"],
+            "role": contributor_permission.to_dict()["role"]
+            if contributor_permission
+            else None,
         }
 
     def to_dict_study_metadata(self):
@@ -263,12 +265,14 @@ class Study(db.Model):  # type: ignore
 
     def invite_user_to_study(self, email_address, permission):
         invited_contributor = self.invited_contributors.filter(
-            model.StudyInvitedContributor.email_address == email_address
+            model.Invite.email_address == email_address
         ).one_or_none()
         if invited_contributor:
             raise StudyException(
                 "This email address has already been invited to this study"
             )
-        contributor_add = model.StudyInvitedContributor(self, email_address, permission)
+        user = model.User.query.filter_by(id=g.user.id).first()
+
+        contributor_add = model.Invite(self, user, email_address, permission)
         db.session.add(contributor_add)
         return contributor_add

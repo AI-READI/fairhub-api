@@ -1,6 +1,5 @@
 """Initialize the api system for the backend"""
 from flask_restx import Api, Resource
-
 from apis.dataset_metadata_namespace import api as dataset_metadata_namespace
 from apis.study_metadata_namespace import api as study_metadata_namespace
 
@@ -22,6 +21,7 @@ from .dataset_metadata.dataset_rights import api as rights
 from .dataset_metadata.dataset_subject import api as subject
 from .dataset_metadata.dataset_title import api as title
 from .file import api as file_api
+from .invite_users import api as invite_general_users
 from .participant import api as participants_api
 from .study import api as study_api
 from .study_metadata.study_arm import api as arm
@@ -88,12 +88,14 @@ __all__ = [
     "identification",
     "study_description",
     "dataset_contributor",
+    "invite_general_users",
 ]
 
 
 api.add_namespace(dataset_metadata_namespace)
 api.add_namespace(study_metadata_namespace)
 api.add_namespace(authentication)
+api.add_namespace(invite_general_users)
 
 
 @api.route("/echo", endpoint="echo")
@@ -104,7 +106,6 @@ class HelloEverynyan(Resource):
     @api.response(400, "Validation Error")
     def get(self):
         """Returns a simple 'Server Active' message"""
-
         return "Server active!"
 
 

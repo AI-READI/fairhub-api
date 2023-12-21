@@ -81,14 +81,14 @@ class Studies(Resource):
         model.db.session.add(add_study)
 
         study_id = add_study.id
-        study_ = model.Study.query.get(study_id)
+        study_obj = model.Study.query.get(study_id)
 
-        study_contributor = model.StudyContributor.from_data(study_, g.user, "owner")
+        study_contributor = model.StudyContributor.from_data(study_obj, g.user, "owner")
         model.db.session.add(study_contributor)
 
         model.db.session.commit()
 
-        return study_.to_dict(), 201
+        return study_obj.to_dict(), 201
 
 
 @api.route("/study/<study_id>")
@@ -146,17 +146,6 @@ class StudyResource(Resource):
 
         if not is_granted("delete_study", study):
             return "Access denied, you can not delete study", 403
-
-        # for d in study.dataset:
-        #     for version in d.dataset_versions:
-        #         version.participants.clear()
-        # for d in study.dataset:
-        #     for version in d.dataset_versions:
-        #         model.db.session.delete(version)
-        #     model.db.session.delete(d)
-        # for p in study.participants:
-        #     model.db.session.delete(p)
-
         model.db.session.delete(study)
         model.db.session.commit()
 

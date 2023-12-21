@@ -6,22 +6,30 @@ import os
 from datetime import timezone
 
 import jwt
-from flask import Flask, g, request
+from flask import Flask, request, g
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
+from flask_mailman import Mail
 from growthbook import GrowthBook
 from sqlalchemy import MetaData
 from waitress import serve
+from sqlalchemy import text
 
 import config
 import model
 from apis import api
-from apis.authentication import UnauthenticatedException, authentication, authorization
+from apis.authentication import (
+    UnauthenticatedException,
+    authentication,
+    authorization,
+    is_public,
+)
 from apis.exception import ValidationException
 
 # from pyfairdatatools import __version__
 
 bcrypt = Bcrypt()
+mail = Mail()
 
 
 def create_app(config_module=None):
@@ -63,7 +71,7 @@ def create_app(config_module=None):
     model.db.init_app(app)
     api.init_app(app)
     bcrypt.init_app(app)
-
+    mail.init_app(app)
     cors_origins = [
         "https://brave-ground-.*-.*.centralus.2.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
         "https://staging.fairhub.io",
@@ -145,17 +153,8 @@ def create_app(config_module=None):
         if hasattr(g, "gb"):
             g.gb.destroy()
 
-        public_routes = [
-            "/auth",
-            "/docs",
-            "/echo",
-            "/swaggerui",
-            "/swagger.json",
-            "/favicon.ico",
-        ]
-        for route in public_routes:
-            if request.path.startswith(route):
-                return resp
+        if is_public(request.path):
+            return resp
 
         if "token" not in request.cookies:
             return resp
@@ -232,8 +231,9 @@ def create_app(config_module=None):
 
         engine = model.db.session.get_bind()
 
-        with engine.begin():
+        with engine.begin() as conn:
             model.db.drop_all()
+            conn.execute(text("DROP TABLE IF EXISTS alembic_version"))
 
     with app.app_context():
         engine = model.db.session.get_bind()
