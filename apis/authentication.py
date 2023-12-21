@@ -174,8 +174,8 @@ class EmailVerification(Resource):
     # @api.marshal_with(contributors_model)
     def post(self):
         data: Union[Any, dict] = request.json
-        # if "token" not in data or "email" not in data:
-        #     return "email or token are required", 422
+        if "token" not in data or "email" not in data:
+            return "email or token are required", 422
         user = model.User.query.filter_by(email_address=data["email"]).one_or_none()
         if not user:
             return "user not found", 404
@@ -253,12 +253,6 @@ class Login(Resource):
             validate(instance=data, schema=schema, format_checker=format_checker)
         except ValidationError as e:
             return e.message, 400
-
-        title = "you logged in"
-        message = f"You have successfully logged in at {request.remote_addr} "
-        notification_type = "info"
-        target = "/login"
-        read = False
         user = model.User.query.filter_by(email_address=email_address).one_or_none()
         if not user:
             return "Invalid credentials", 401
@@ -305,11 +299,16 @@ class Login(Resource):
         if g.gb.is_on("email-verification"):
             if os.environ.get("FLASK_ENV") != "testing":
                 if not check_trusted_device():
+                    title = "you logged in"
+                    device_ip = request.remote_addr
+                    notification_type = "info"
+                    target = ""
+                    read = False
                     send_notification = model.Notification.from_data(
                         user,
                         {
                             "title": title,
-                            "message": message,
+                            "message": device_ip,
                             "type": notification_type,
                             "target": target,
                             "read": read,
@@ -317,7 +316,7 @@ class Login(Resource):
                     )
                     model.db.session.add(send_notification)
                     model.db.session.commit()
-                    signin_notification(user, request.remote_addr)
+                    signin_notification(user, device_ip)
                 add_user_to_device_list(resp, user)
             resp.status_code = 200
 
