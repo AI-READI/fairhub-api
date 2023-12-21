@@ -3375,7 +3375,7 @@ def test_post_dataset_rights_metadata(clients):
                 "identifier_scheme": "Identifier Scheme",
                 "rights": "Rights",
                 "uri": "URI",
-                "license_text": "license text"
+                "license_text": "license text",
             }
         ],
     )
@@ -3400,8 +3400,7 @@ def test_post_dataset_rights_metadata(clients):
                 "identifier_scheme": "Admin Identifier Scheme",
                 "rights": "Admin Rights",
                 "uri": "Admin URI",
-                "license_text": "license text"
-
+                "license_text": "license text",
             }
         ],
     )
@@ -3426,8 +3425,7 @@ def test_post_dataset_rights_metadata(clients):
                 "identifier_scheme": "Editor Identifier Scheme",
                 "rights": "Editor Rights",
                 "uri": "Editor URI",
-                "license_text": "license text"
-
+                "license_text": "license text",
             }
         ],
     )
@@ -3450,8 +3448,7 @@ def test_post_dataset_rights_metadata(clients):
                 "identifier_scheme": "Viewer Identifier Scheme",
                 "rights": "Viewer Rights",
                 "uri": "Viewer URI",
-                "license_text": "license text"
-
+                "license_text": "license text",
             }
         ],
     )

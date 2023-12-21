@@ -33,7 +33,7 @@ class DatasetRights(db.Model):  # type: ignore
             "identifier": self.identifier,
             "identifier_scheme": self.identifier_scheme,
             "created_at": self.created_at,
-            "license_text": self.license_text
+            "license_text": self.license_text,
         }
 
     def to_dict_metadata(self):

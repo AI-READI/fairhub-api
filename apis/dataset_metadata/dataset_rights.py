@@ -62,7 +62,13 @@ class DatasetRightsResource(Resource):
                     "uri": {"type": "string"},
                     "license_text": {"type": "string"},
                 },
-                "required": ["identifier", "identifier_scheme", "rights", "uri", "license_text"],
+                "required": [
+                    "identifier",
+                    "identifier_scheme",
+                    "rights",
+                    "uri",
+                    "license_text",
+                ],
             },
             "uniqueItems": True,
         }
