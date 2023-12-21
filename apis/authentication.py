@@ -362,9 +362,7 @@ def authentication():
     g.user = user
 
 
-def authorization():
-    """it checks whether url is allowed to be reached to specific routes"""
-    # white listed routes
+def is_public(path: str) -> bool:
     public_routes = [
         "/auth",
         "/docs",
@@ -374,8 +372,18 @@ def authorization():
     ]
 
     for route in public_routes:
-        if request.path.startswith(route):
-            return
+        if path.startswith(route):
+            return True
+
+    return False
+
+
+def authorization():
+    """it checks whether url is allowed to be reached to specific routes"""
+    # white listed routes
+    if is_public(request.path):
+        return
+
     if g.user:
         return
     raise UnauthenticatedException("Access denied", 403)

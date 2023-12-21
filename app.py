@@ -17,7 +17,7 @@ from waitress import serve
 import config
 import model
 from apis import api
-from apis.authentication import UnauthenticatedException, authentication, authorization
+from apis.authentication import UnauthenticatedException, authentication, authorization, is_public
 from apis.exception import ValidationException
 
 # from pyfairdatatools import __version__
@@ -147,17 +147,8 @@ def create_app(config_module=None):
         if hasattr(g, "gb"):
             g.gb.destroy()
 
-        # public_routes = [
-        #     "/auth",
-        #     "/docs",
-        #     "/echo",
-        #     "/swaggerui",
-        #     "/swagger.json",
-        #     "/favicon.ico",
-        # ]
-        # for route in public_routes:
-        #     if request.path.startswith(route):
-        #         return resp
+        if is_public(request.path):
+            return resp
 
         if "token" not in request.cookies:
             return resp
