@@ -6,10 +6,10 @@ import os
 from datetime import timezone
 
 import jwt
-from flask import Flask, request
+from flask import Flask, request, g
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
-from flask_mail import Mail
+from flask_mailman import Mail
 from growthbook import GrowthBook
 from sqlalchemy import MetaData
 from waitress import serve
@@ -147,17 +147,17 @@ def create_app(config_module=None):
         if hasattr(g, "gb"):
             g.gb.destroy()
 
-        public_routes = [
-            "/auth",
-            "/docs",
-            "/echo",
-            "/swaggerui",
-            "/swagger.json",
-            "/favicon.ico",
-        ]
-        for route in public_routes:
-            if request.path.startswith(route):
-                return resp
+        # public_routes = [
+        #     "/auth",
+        #     "/docs",
+        #     "/echo",
+        #     "/swaggerui",
+        #     "/swagger.json",
+        #     "/favicon.ico",
+        # ]
+        # for route in public_routes:
+        #     if request.path.startswith(route):
+        #         return resp
 
         if "token" not in request.cookies:
             return resp
