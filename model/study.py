@@ -217,6 +217,7 @@ class Study(db.Model):  # type: ignore
             "status": self.study_status.to_dict_metadata(),
             "oversight": self.study_other.oversight_has_dmc,
             "conditions": self.study_other.conditions,
+            "keywords": self.study_other.keywords,
         }
 
     @staticmethod

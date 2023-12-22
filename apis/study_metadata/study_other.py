@@ -65,9 +65,8 @@ class StudyOversightResource(Resource):
         return study_oversight, 200
 
 
-# todo: rename class
 @api.route("/study/<study_id>/metadata/conditions")
-class StudyConditionsResource(Resource):
+class StudyCondition(Resource):
     """Study Conditions Metadata"""
 
     @api.doc("conditions")
@@ -109,3 +108,48 @@ class StudyConditionsResource(Resource):
         model.db.session.commit()
 
         return study_obj.study_other.conditions, 200
+
+
+@api.route("/study/<study_id>/metadata/keywords")
+class StudyKeywords(Resource):
+    """Study Keywords Metadata"""
+
+    @api.doc("keywords")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    # @api.marshal_with(study_other)
+    def get(self, study_id: int):
+        """Get study keywords metadata"""
+        study_ = model.Study.query.get(study_id)
+
+        study_other_keywords = study_.study_other.keywords
+
+        return study_other_keywords, 200
+
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    def put(self, study_id: int):
+        """Update study keywords metadata"""
+        # Schema validation
+        schema = {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1},
+            "minItems": 1,
+            "uniqueItems": True,
+            "additionalItems": False,
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+
+        data: typing.Union[dict, typing.Any] = request.json
+        study_obj = model.Study.query.get(study_id)
+        if not is_granted("study_metadata", study_obj):
+            return "Access denied, you can not modify study", 403
+        study_obj.study_other.keywords = data
+        study_obj.touch()
+        model.db.session.commit()
+
+        return study_obj.study_other.keywords, 200
