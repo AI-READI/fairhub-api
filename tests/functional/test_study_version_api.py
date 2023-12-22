@@ -30,7 +30,7 @@ def test_post_dataset_version(clients):
     assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_version_id = response_data["id"]
-
+    print("testttt", response_data)
     assert response_data["title"] == "Dataset Version 1.0"
     assert response_data["published"] is False
     assert response_data["doi"] == "doi:test"

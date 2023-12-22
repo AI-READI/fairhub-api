@@ -827,6 +827,116 @@ def test_get_conditions_metadata(clients):
     assert viewer_response_data[3] == "editor-size string"
 
 
+# ------------------- KEYWORDS METADATA ------------------- #
+def test_put_keywords_metadata(clients):
+    """
+    GIVEN a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/keywords' endpoint is requested (POST)
+    THEN check that the response is valid and creates the keywords metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.put(
+        f"/study/{study_id}/metadata/keywords",
+        json=[
+            "true",
+            "conditions string",
+            "keywords string",
+            "size string",
+        ],
+    )
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+
+    assert response_data[0] == "true"
+    assert response_data[1] == "conditions string"
+    assert response_data[2] == "keywords string"
+    assert response_data[3] == "size string"
+
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/metadata/keywords",
+        json=[
+            "true",
+            "admin-conditions string",
+            "admin-keywords string",
+            "admin-size string",
+        ],
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+
+    assert admin_response_data[0] == "true"
+    assert admin_response_data[1] == "admin-conditions string"
+    assert admin_response_data[2] == "admin-keywords string"
+    assert admin_response_data[3] == "admin-size string"
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/metadata/keywords",
+        json=[
+            "true",
+            "editor-conditions string",
+            "editor-keywords string",
+            "editor-size string",
+        ],
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+
+    assert editor_response_data[0] == "true"
+    assert editor_response_data[1] == "editor-conditions string"
+    assert editor_response_data[2] == "editor-keywords string"
+    assert editor_response_data[3] == "editor-size string"
+
+
+def test_get_keywords_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/keywords' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the keywords metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/keywords")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/keywords")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/keywords")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/keywords")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data[0] == "true"
+    assert response_data[1] == "editor-conditions string"
+    assert response_data[2] == "editor-keywords string"
+    assert response_data[3] == "editor-size string"
+
+    assert admin_response_data[0] == "true"
+    assert admin_response_data[1] == "editor-conditions string"
+    assert admin_response_data[2] == "editor-keywords string"
+    assert admin_response_data[3] == "editor-size string"
+
+    assert editor_response_data[0] == "true"
+    assert editor_response_data[1] == "editor-conditions string"
+    assert editor_response_data[2] == "editor-keywords string"
+    assert editor_response_data[3] == "editor-size string"
+
+    assert viewer_response_data[0] == "true"
+    assert viewer_response_data[1] == "editor-conditions string"
+    assert viewer_response_data[2] == "editor-keywords string"
+    assert viewer_response_data[3] == "editor-size string"
+
+
 # ------------------- DESCRIPTION METADATA ------------------- #
 def test_put_description_metadata(clients):
     """
