@@ -145,7 +145,7 @@ def test_put_dataset_version(clients):
     Then check that the response is valid and updates the dataset version
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     version_id = pytest.global_dataset_version_id
 
@@ -1187,7 +1187,7 @@ def test_delete_dataset_version(clients):
     Then check that the response is valid and deletes the dataset version
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]
+    study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
     version_id = pytest.global_dataset_version_id
 
