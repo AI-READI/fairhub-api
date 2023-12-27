@@ -292,6 +292,7 @@ def authorization():
         "/echo",
         "/swaggerui",
         "/swagger.json",
+        "/utils"
     ]
 
     for route in public_routes:
