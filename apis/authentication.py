@@ -286,13 +286,7 @@ def authentication():
 def authorization():
     """it checks whether url is allowed to be reached to specific routes"""
     # white listed routes
-    public_routes = [
-        "/auth",
-        "/docs",
-        "/echo",
-        "/swaggerui",
-        "/swagger.json",
-    ]
+    public_routes = ["/auth", "/docs", "/echo", "/swaggerui", "/swagger.json", "/utils"]
 
     for route in public_routes:
         if request.path.startswith(route):

@@ -3375,6 +3375,7 @@ def test_post_dataset_rights_metadata(clients):
                 "identifier_scheme": "Identifier Scheme",
                 "rights": "Rights",
                 "uri": "URI",
+                "license_text": "license text",
             }
         ],
     )
@@ -3389,6 +3390,7 @@ def test_post_dataset_rights_metadata(clients):
     assert response_data[0]["identifier_scheme"] == "Identifier Scheme"
     assert response_data[0]["rights"] == "Rights"
     assert response_data[0]["uri"] == "URI"
+    assert response_data[0]["license_text"] == "license text"
 
     admin_response = _admin_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights",
@@ -3398,6 +3400,7 @@ def test_post_dataset_rights_metadata(clients):
                 "identifier_scheme": "Admin Identifier Scheme",
                 "rights": "Admin Rights",
                 "uri": "Admin URI",
+                "license_text": "license text",
             }
         ],
     )
@@ -3412,6 +3415,7 @@ def test_post_dataset_rights_metadata(clients):
     assert admin_response_data[0]["identifier_scheme"] == "Admin Identifier Scheme"
     assert admin_response_data[0]["rights"] == "Admin Rights"
     assert admin_response_data[0]["uri"] == "Admin URI"
+    assert admin_response_data[0]["license_text"] == "license text"
 
     editor_response = _editor_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights",
@@ -3421,6 +3425,7 @@ def test_post_dataset_rights_metadata(clients):
                 "identifier_scheme": "Editor Identifier Scheme",
                 "rights": "Editor Rights",
                 "uri": "Editor URI",
+                "license_text": "license text",
             }
         ],
     )
@@ -3433,6 +3438,7 @@ def test_post_dataset_rights_metadata(clients):
     assert editor_response_data[0]["identifier_scheme"] == "Editor Identifier Scheme"
     assert editor_response_data[0]["rights"] == "Editor Rights"
     assert editor_response_data[0]["uri"] == "Editor URI"
+    assert editor_response_data[0]["license_text"] == "license text"
 
     viewer_response = _viewer_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights",
@@ -3442,6 +3448,7 @@ def test_post_dataset_rights_metadata(clients):
                 "identifier_scheme": "Viewer Identifier Scheme",
                 "rights": "Viewer Rights",
                 "uri": "Viewer URI",
+                "license_text": "license text",
             }
         ],
     )
@@ -3488,53 +3495,65 @@ def test_get_dataset_rights_metadata(clients):
     assert response_data[0]["identifier_scheme"] == "Identifier Scheme"
     assert response_data[0]["rights"] == "Rights"
     assert response_data[0]["uri"] == "URI"
+    assert response_data[0]["license_text"] == "license text"
     assert response_data[1]["identifier"] == "Admin Identifier"
     assert response_data[1]["identifier_scheme"] == "Admin Identifier Scheme"
     assert response_data[1]["rights"] == "Admin Rights"
     assert response_data[1]["uri"] == "Admin URI"
+    assert response_data[1]["license_text"] == "license text"
     assert response_data[2]["identifier"] == "Editor Identifier"
     assert response_data[2]["identifier_scheme"] == "Editor Identifier Scheme"
     assert response_data[2]["rights"] == "Editor Rights"
     assert response_data[2]["uri"] == "Editor URI"
+    assert response_data[2]["license_text"] == "license text"
 
     assert admin_response_data[0]["identifier"] == "Identifier"
     assert admin_response_data[0]["identifier_scheme"] == "Identifier Scheme"
     assert admin_response_data[0]["rights"] == "Rights"
     assert admin_response_data[0]["uri"] == "URI"
+    assert admin_response_data[0]["license_text"] == "license text"
     assert admin_response_data[1]["identifier"] == "Admin Identifier"
     assert admin_response_data[1]["identifier_scheme"] == "Admin Identifier Scheme"
     assert admin_response_data[1]["rights"] == "Admin Rights"
     assert admin_response_data[1]["uri"] == "Admin URI"
+    assert admin_response_data[1]["license_text"] == "license text"
     assert admin_response_data[2]["identifier"] == "Editor Identifier"
     assert admin_response_data[2]["identifier_scheme"] == "Editor Identifier Scheme"
     assert admin_response_data[2]["rights"] == "Editor Rights"
     assert admin_response_data[2]["uri"] == "Editor URI"
+    assert admin_response_data[2]["license_text"] == "license text"
 
     assert editor_response_data[0]["identifier"] == "Identifier"
     assert editor_response_data[0]["identifier_scheme"] == "Identifier Scheme"
     assert editor_response_data[0]["rights"] == "Rights"
     assert editor_response_data[0]["uri"] == "URI"
+    assert editor_response_data[0]["license_text"] == "license text"
     assert editor_response_data[1]["identifier"] == "Admin Identifier"
     assert editor_response_data[1]["identifier_scheme"] == "Admin Identifier Scheme"
     assert editor_response_data[1]["rights"] == "Admin Rights"
     assert editor_response_data[1]["uri"] == "Admin URI"
+    assert editor_response_data[1]["license_text"] == "license text"
     assert editor_response_data[2]["identifier"] == "Editor Identifier"
     assert editor_response_data[2]["identifier_scheme"] == "Editor Identifier Scheme"
     assert editor_response_data[2]["rights"] == "Editor Rights"
     assert editor_response_data[2]["uri"] == "Editor URI"
+    assert editor_response_data[2]["license_text"] == "license text"
 
     assert viewer_response_data[0]["identifier"] == "Identifier"
     assert viewer_response_data[0]["identifier_scheme"] == "Identifier Scheme"
     assert viewer_response_data[0]["rights"] == "Rights"
     assert viewer_response_data[0]["uri"] == "URI"
+    assert viewer_response_data[0]["license_text"] == "license text"
     assert viewer_response_data[1]["identifier"] == "Admin Identifier"
     assert viewer_response_data[1]["identifier_scheme"] == "Admin Identifier Scheme"
     assert viewer_response_data[1]["rights"] == "Admin Rights"
     assert viewer_response_data[1]["uri"] == "Admin URI"
+    assert viewer_response_data[1]["license_text"] == "license text"
     assert viewer_response_data[2]["identifier"] == "Editor Identifier"
     assert viewer_response_data[2]["identifier_scheme"] == "Editor Identifier Scheme"
     assert viewer_response_data[2]["rights"] == "Editor Rights"
     assert viewer_response_data[2]["uri"] == "Editor URI"
+    assert viewer_response_data[2]["license_text"] == "license text"
 
 
 def test_delete_dataset_rights_metadata(clients):

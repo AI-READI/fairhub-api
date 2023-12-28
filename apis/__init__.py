@@ -41,6 +41,7 @@ from .study_metadata.study_reference import api as reference
 from .study_metadata.study_sponsors_collaborators import api as sponsors_collaborator
 from .study_metadata.study_status import api as status
 from .user import api as user
+from .utils import api as utils
 
 api = Api(
     title="FAIRHUB",
@@ -88,6 +89,7 @@ __all__ = [
     "identification",
     "study_description",
     "dataset_contributor",
+    "utils",
 ]
 
 
@@ -114,3 +116,4 @@ api.add_namespace(dataset_api)
 api.add_namespace(participants_api)
 api.add_namespace(contributors_api)
 api.add_namespace(user)
+api.add_namespace(utils)
