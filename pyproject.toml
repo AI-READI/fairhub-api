@@ -135,8 +135,13 @@ lint = ["flake8", "typecheck", "pylint"]
 
 precommit = ["format", "flake8", "typecheck", "pylint"]
 
-test = "pytest -rx -W ignore::DeprecationWarning"
-test_with_capture = "pytest -s -W ignore::DeprecationWarning"
+pytest = "pytest -rx -W ignore::DeprecationWarning"
+pytest_with_capture = "pytest -s -W ignore::DeprecationWarning"
+
+destroy-schema = "flask destroy-schema"
+
+test = ["pytest", "destroy-schema"]
+test_with_capture = ["pytest_with_capture", "destroy-schema"]
 
 jupyter = "jupyter notebook"
 
