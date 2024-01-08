@@ -11,9 +11,8 @@ from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from flask_mailman import Mail
 from growthbook import GrowthBook
-from sqlalchemy import MetaData
+from sqlalchemy import MetaData, text
 from waitress import serve
-from sqlalchemy import text
 
 import config
 import model
@@ -217,7 +216,6 @@ def create_app(config_module=None):
 
         return resp
 
-
     @app.errorhandler(ValidationException)
     def validation_exception_handler(error):
         return error.args[0], 422
@@ -234,7 +232,7 @@ def create_app(config_module=None):
 
         with engine.begin() as conn:
             model.db.drop_all()
-            conn.execute(text("DROP TABLE IF EXISTS alembic_version"))
+            conn.execute(text("DROP TABLE IF EXISTS alembic_version"))  # type: ignore
 
     with app.app_context():
         engine = model.db.session.get_bind()
