@@ -33,11 +33,13 @@ class Version(db.Model):  # type: ignore
     created_at = db.Column(db.BigInteger, nullable=False)
     published_on = db.Column(db.BigInteger, nullable=False)
 
-    identifier = db.Column(db.Integer,
-                           Sequence('identifier_seq'),
-                           nullable=False,
-                           unique=True,
-                           server_default=Sequence('identifier_seq').next_value())
+    identifier = db.Column(
+        db.Integer,
+        Sequence("identifier_seq"),
+        nullable=False,
+        unique=True,
+        server_default=Sequence("identifier_seq").next_value(),
+    )
 
     doi = db.Column(db.String, nullable=True)
 

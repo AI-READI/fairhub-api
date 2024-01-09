@@ -75,12 +75,16 @@ def test_get_all_dataset_versions(clients):
 
     assert admin_response_data[0]["title"] == "Dataset Version 1.0"
     assert admin_response_data[0]["published"] is False
-    assert admin_response_data[0]["doi"] == f"10.fairhub/{response_data[0]['identifier']}"
+    assert (
+        admin_response_data[0]["doi"] == f"10.fairhub/{response_data[0]['identifier']}"
+    )
     assert admin_response_data[0]["changelog"] == "changelog testing here"
 
     assert editor_response_data[0]["title"] == "Dataset Version 1.0"
     assert editor_response_data[0]["published"] is False
-    assert editor_response_data[0]["doi"] == f"10.fairhub/{response_data[0]['identifier']}"
+    assert (
+        editor_response_data[0]["doi"] == f"10.fairhub/{response_data[0]['identifier']}"
+    )
     assert editor_response_data[0]["changelog"] == "changelog testing here"
 
 
@@ -190,7 +194,6 @@ def test_put_dataset_version(clients):
             "title": "Dataset Version 4.0",
             "changelog": "Changelog modified by editor",
             "published": False,
-
             "readme": "readme modified by editor",
         },
     )
