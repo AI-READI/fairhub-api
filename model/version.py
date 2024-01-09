@@ -34,10 +34,10 @@ class Version(db.Model):  # type: ignore
     published_on = db.Column(db.BigInteger, nullable=False)
 
     identifier = db.Column(db.Integer,
-                           Sequence('identifier_seq'),
+                           Sequence('version_identifier_seq'),
                            nullable=False,
                            unique=True,
-                           server_default=Sequence('identifier_seq').next_value())
+                           server_default=Sequence('version_identifier_seq').next_value())
 
     doi = db.Column(db.String, nullable=True)
 
