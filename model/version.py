@@ -1,8 +1,8 @@
 import datetime
 import uuid
 from datetime import timezone
-
-from sqlalchemy import Table
+import json
+from sqlalchemy import Table, Sequence
 
 import model
 from model.dataset import Dataset
@@ -31,9 +31,16 @@ class Version(db.Model):  # type: ignore
     published = db.Column(db.BOOLEAN, nullable=False)
     changelog = db.Column(db.String, nullable=False)
     updated_on = db.Column(db.BigInteger, nullable=False)
-    doi = db.Column(db.String, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
     published_on = db.Column(db.BigInteger, nullable=False)
+
+    identifier = db.Column(db.Integer,
+                           Sequence('identifier_seq'),
+                           nullable=False,
+                           unique=True,
+                           server_default=Sequence('identifier_seq').next_value())
+
+    doi = db.Column(db.String, nullable=True)
 
     version_readme = db.relationship(
         "VersionReadme",
@@ -57,6 +64,7 @@ class Version(db.Model):  # type: ignore
             "published_on": self.published_on,
             "updated_on": self.updated_on,
             "created_at": self.created_at,
+            "identifier": self.identifier,
             "doi": self.doi,
             "published": self.published,
             "readme": self.version_readme.content if self.version_readme else ""
@@ -76,7 +84,6 @@ class Version(db.Model):  # type: ignore
     def update(self, data: dict):
         self.title = data["title"]
         self.published = data["published"] if "published" in data else False
-        self.doi = data["doi"] if "doi" in data else ""
         self.published_on = datetime.datetime.now(timezone.utc).timestamp()
         self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
         # self.participants[:] = data["participants"]
