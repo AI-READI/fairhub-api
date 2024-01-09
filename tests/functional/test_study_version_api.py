@@ -182,7 +182,6 @@ def test_put_dataset_version(clients):
     assert admin_response_data["published"] is False
     assert admin_response_data["doi"] == f"10.fairhub/{response_data['identifier']}"
 
-
     assert admin_response_data["readme"] == ""
 
     editor_response = _editor_client.put(

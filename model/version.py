@@ -1,7 +1,6 @@
 import datetime
 import uuid
 from datetime import timezone
-import json
 from sqlalchemy import Table, Sequence
 
 import model
