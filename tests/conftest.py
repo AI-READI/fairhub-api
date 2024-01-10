@@ -8,7 +8,6 @@ from dotenv import load_dotenv
 from app import create_app
 from model.db import db
 from pytest_config import TestConfig
-from tests.functional.sorting import get_sort_key
 
 # Load environment variables from .env
 load_dotenv(".env")
