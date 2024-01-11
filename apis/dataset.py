@@ -17,10 +17,11 @@ dataset_versions_model = api.model(
         "title": fields.String(required=True),
         "changelog": fields.String(required=True),
         "created_at": fields.String(required=True),
-        "doi": fields.String(required=True),
+        "doi": fields.String(required=False),
         "published": fields.Boolean(required=True),
         "participants": fields.List(fields.String, required=True),
         "published_on": fields.String(required=True),
+        "identifier": fields.Integer(required=True),
     },
 )
 
