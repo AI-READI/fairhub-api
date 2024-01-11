@@ -39,7 +39,7 @@ class Version(db.Model):  # type: ignore
                            unique=True,
                            server_default=Sequence('version_identifier_seq').next_value())
 
-    doi = db.Column(db.String, nullable=True)
+    doi = db.Column(db.String, nullable=False, unique=True)
 
     version_readme = db.relationship(
         "VersionReadme",

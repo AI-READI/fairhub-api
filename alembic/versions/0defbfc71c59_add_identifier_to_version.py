@@ -24,4 +24,5 @@ def upgrade() -> None:
         ''')
     op.execute("UPDATE version SET identifier = 1")
     op.create_unique_constraint('unique_identifier', 'version', ['identifier'])
+    op.create_unique_constraint('unique_doi', 'version', ['doi'])
 
