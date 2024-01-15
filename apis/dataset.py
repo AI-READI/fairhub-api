@@ -17,10 +17,11 @@ dataset_versions_model = api.model(
         "title": fields.String(required=True),
         "changelog": fields.String(required=True),
         "created_at": fields.String(required=True),
-        "doi": fields.String(required=True),
+        "doi": fields.String(required=False),
         "published": fields.Boolean(required=True),
         "participants": fields.List(fields.String, required=True),
         "published_on": fields.String(required=True),
+        "identifier": fields.Integer(required=True),
     },
 )
 
@@ -191,6 +192,8 @@ class VersionList(Resource):
         data_obj = model.Dataset.query.get(dataset_id)
         dataset_versions = model.Version.from_data(data_obj, data)
         model.db.session.add(dataset_versions)
+        model.db.session.commit()
+        dataset_versions.doi = f"10.fairhub/{dataset_versions.identifier}"
         model.db.session.commit()
         return dataset_versions.to_dict(), 201
 
