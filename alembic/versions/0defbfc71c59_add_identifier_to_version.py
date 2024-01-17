@@ -19,6 +19,9 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
+    with op.batch_alter_table("version") as batch_op:
+        batch_op.alter_column("doi", nullable=True)
+
     op.execute(
         """ALTER TABLE version
                ADD COLUMN identifier SERIAL
@@ -26,4 +29,5 @@ def upgrade() -> None:
     )
     op.execute("UPDATE version SET identifier = 1")
     op.create_unique_constraint("unique_identifier", "version", ["identifier"])
+
     op.create_unique_constraint("unique_doi", "version", ["doi"])
