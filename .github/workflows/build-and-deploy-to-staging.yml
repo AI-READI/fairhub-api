@@ -1,16 +1,16 @@
 # Deployed to https://staging.api.fairhub.io
 
-name: (staging) Build and push api image to Azure Container Registry 
+name: (staging) Build and push api image to Azure Container Registry
 
 on:
-    push:
-      branches:
-        - staging
-    pull_request:
-      types: [closed]
-      branches:
-        - staging
-    workflow_dispatch:
+  push:
+    branches:
+      - staging
+  pull_request:
+    types: [closed]
+    branches:
+      - staging
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -25,7 +25,7 @@ jobs:
       AZURE_REGISTRY_LOGIN_SERVER: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}
       AZURE_REGISTRY_USERNAME: ${{ secrets.AZURE_REGISTRY_USERNAME }}
       AZURE_REGISTRY_PASSWORD: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -35,21 +35,21 @@ jobs:
         with:
           ref: staging
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          check-name: 'Run formatter'
-      
+          check-name: "Run formatter"
+
       - name: Wait for linting to pass
         uses: lewagon/wait-on-check-action@v1.3.1
         with:
           ref: staging
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          check-name: 'Run linters (3.10)'
+          check-name: "Run linters (3.10)"
 
       - name: Wait for tests to pass
         uses: lewagon/wait-on-check-action@v1.3.1
         with:
           ref: staging
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          check-name: 'Run tests (3.10)'
+          check-name: "Run tests (3.10)"
 
       - name: Login to Azure Container Registry
         uses: azure/docker-login@v1
@@ -68,4 +68,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/fairhub:staging,${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/fairhub:${{ steps.git_sha.outputs.sha }}
+          tags: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/fairhub-api:staging,${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/fairhub-api:${{ steps.git_sha.outputs.sha }}
