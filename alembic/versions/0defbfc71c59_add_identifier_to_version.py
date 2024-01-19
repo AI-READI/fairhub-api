@@ -29,5 +29,4 @@ def upgrade() -> None:
     )
     op.execute(f"UPDATE version SET doi = '10.36478/fairhub.' || identifier::TEXT")
     op.create_unique_constraint("unique_identifier", "version", ["identifier"])
-
     op.create_unique_constraint("unique_doi", "version", ["doi"])

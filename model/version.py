@@ -1,7 +1,8 @@
 import datetime
 import uuid
 from datetime import timezone
-from sqlalchemy import Table, Sequence
+
+from sqlalchemy import Sequence, Table
 
 import model
 from model.dataset import Dataset
