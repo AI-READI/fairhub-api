@@ -193,7 +193,7 @@ class VersionList(Resource):
         dataset_versions = model.Version.from_data(data_obj, data)
         model.db.session.add(dataset_versions)
         model.db.session.commit()
-        dataset_versions.doi = f"10.fairhub/{dataset_versions.identifier}"
+        dataset_versions.doi = f"10.36478/fairhub.{dataset_versions.identifier}"
         model.db.session.commit()
         return dataset_versions.to_dict(), 201
 

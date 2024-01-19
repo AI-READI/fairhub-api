@@ -30,7 +30,7 @@ def test_post_dataset_version(clients):
     pytest.global_dataset_version_id = response_data["id"]
     assert response_data["title"] == "Dataset Version 1.0"
     assert response_data["published"] is False
-    assert response_data["doi"] == f"10.fairhub/{response_data['identifier']}"
+    assert response_data["doi"] == f"10.36478/fairhub.{response_data['identifier']}"
     assert response_data["changelog"] == "changelog testing here"
 
 
@@ -71,19 +71,19 @@ def test_get_all_dataset_versions(clients):
     assert response_data[0]["title"] == "Dataset Version 1.0"
     assert response_data[0]["published"] is False
     assert response_data[0]["changelog"] == "changelog testing here"
-    assert response_data[0]["doi"] == f"10.fairhub/{response_data[0]['identifier']}"
+    assert response_data[0]["doi"] == f"10.36478/fairhub.{response_data[0]['identifier']}"
 
     assert admin_response_data[0]["title"] == "Dataset Version 1.0"
     assert admin_response_data[0]["published"] is False
     assert (
-        admin_response_data[0]["doi"] == f"10.fairhub/{response_data[0]['identifier']}"
+        admin_response_data[0]["doi"] == f"10.36478/fairhub.{response_data[0]['identifier']}"
     )
     assert admin_response_data[0]["changelog"] == "changelog testing here"
 
     assert editor_response_data[0]["title"] == "Dataset Version 1.0"
     assert editor_response_data[0]["published"] is False
     assert (
-        editor_response_data[0]["doi"] == f"10.fairhub/{response_data[0]['identifier']}"
+        editor_response_data[0]["doi"] == f"10.36478/fairhub.{response_data[0]['identifier']}"
     )
     assert editor_response_data[0]["changelog"] == "changelog testing here"
 
@@ -124,16 +124,16 @@ def test_get_dataset_version(clients):
     assert response_data["title"] == "Dataset Version 1.0"
     assert response_data["published"] is False
     assert response_data["changelog"] == "changelog testing here"
-    assert response_data["doi"] == f"10.fairhub/{response_data['identifier']}"
+    assert response_data["doi"] == f"10.36478/fairhub.{response_data['identifier']}"
 
     assert admin_response_data["title"] == "Dataset Version 1.0"
     assert admin_response_data["published"] is False
-    assert admin_response_data["doi"] == f"10.fairhub/{response_data['identifier']}"
+    assert admin_response_data["doi"] == f"10.36478/fairhub.{response_data['identifier']}"
     assert admin_response_data["changelog"] == "changelog testing here"
 
     assert editor_response_data["title"] == "Dataset Version 1.0"
     assert editor_response_data["published"] is False
-    assert editor_response_data["doi"] == f"10.fairhub/{response_data['identifier']}"
+    assert editor_response_data["doi"] == f"10.36478/fairhub.{response_data['identifier']}"
     assert editor_response_data["changelog"] == "changelog testing here"
 
 
@@ -164,7 +164,7 @@ def test_put_dataset_version(clients):
 
     assert response_data["title"] == "Dataset Version 2.0"
     assert response_data["changelog"] == "Updating the changelog"
-    assert response_data["doi"] == f"10.fairhub/{response_data['identifier']}"
+    assert response_data["doi"] == f"10.36478/fairhub.{response_data['identifier']}"
     assert response_data["readme"] == ""
     assert response_data["published"] is False
 
@@ -184,7 +184,7 @@ def test_put_dataset_version(clients):
     assert admin_response_data["title"] == "Dataset Version 3.0"
     assert admin_response_data["changelog"] == "Changelog modified by admin"
     assert admin_response_data["published"] is False
-    assert admin_response_data["doi"] == f"10.fairhub/{response_data['identifier']}"
+    assert admin_response_data["doi"] == f"10.36478/fairhub.{response_data['identifier']}"
 
     assert admin_response_data["readme"] == ""
 
