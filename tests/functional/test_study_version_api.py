@@ -22,17 +22,15 @@ def test_post_dataset_version(clients):
         json={
             "title": "Dataset Version 1.0",
             "published": False,
-            "doi": "doi:test",
             "changelog": "changelog testing here",
         },
     )
-
     assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_version_id = response_data["id"]
     assert response_data["title"] == "Dataset Version 1.0"
     assert response_data["published"] is False
-    assert response_data["doi"] == "doi:test"
+    assert response_data["doi"] == f"10.36478/fairhub.{response_data['identifier']}"
     assert response_data["changelog"] == "changelog testing here"
 
 
@@ -70,20 +68,27 @@ def test_get_all_dataset_versions(clients):
     assert len(response_data) == 1
     assert len(admin_response_data) == 1
     assert len(editor_response_data) == 1
-
     assert response_data[0]["title"] == "Dataset Version 1.0"
     assert response_data[0]["published"] is False
-    assert response_data[0]["doi"] == "doi:test"
     assert response_data[0]["changelog"] == "changelog testing here"
+    assert (
+        response_data[0]["doi"] == f"10.36478/fairhub.{response_data[0]['identifier']}"
+    )
 
     assert admin_response_data[0]["title"] == "Dataset Version 1.0"
     assert admin_response_data[0]["published"] is False
-    assert admin_response_data[0]["doi"] == "doi:test"
+    assert (
+        admin_response_data[0]["doi"]
+        == f"10.36478/fairhub.{response_data[0]['identifier']}"
+    )
     assert admin_response_data[0]["changelog"] == "changelog testing here"
 
     assert editor_response_data[0]["title"] == "Dataset Version 1.0"
     assert editor_response_data[0]["published"] is False
-    assert editor_response_data[0]["doi"] == "doi:test"
+    assert (
+        editor_response_data[0]["doi"]
+        == f"10.36478/fairhub.{response_data[0]['identifier']}"
+    )
     assert editor_response_data[0]["changelog"] == "changelog testing here"
 
 
@@ -122,17 +127,21 @@ def test_get_dataset_version(clients):
 
     assert response_data["title"] == "Dataset Version 1.0"
     assert response_data["published"] is False
-    assert response_data["doi"] == "doi:test"
     assert response_data["changelog"] == "changelog testing here"
+    assert response_data["doi"] == f"10.36478/fairhub.{response_data['identifier']}"
 
     assert admin_response_data["title"] == "Dataset Version 1.0"
     assert admin_response_data["published"] is False
-    assert admin_response_data["doi"] == "doi:test"
+    assert (
+        admin_response_data["doi"] == f"10.36478/fairhub.{response_data['identifier']}"
+    )
     assert admin_response_data["changelog"] == "changelog testing here"
 
     assert editor_response_data["title"] == "Dataset Version 1.0"
     assert editor_response_data["published"] is False
-    assert editor_response_data["doi"] == "doi:test"
+    assert (
+        editor_response_data["doi"] == f"10.36478/fairhub.{response_data['identifier']}"
+    )
     assert editor_response_data["changelog"] == "changelog testing here"
 
 
@@ -154,19 +163,18 @@ def test_put_dataset_version(clients):
             "title": "Dataset Version 2.0",
             "changelog": "Updating the changelog",
             "published": False,
-            "doi": "doi:test123",
             "readme": "readme testing here",
         },
     )
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    print(response_data)
 
     assert response_data["title"] == "Dataset Version 2.0"
     assert response_data["changelog"] == "Updating the changelog"
-    assert response_data["doi"] == "doi:test123"
+    assert response_data["doi"] == f"10.36478/fairhub.{response_data['identifier']}"
     assert response_data["readme"] == ""
+    assert response_data["published"] is False
 
     admin_response = _admin_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}",
@@ -174,7 +182,6 @@ def test_put_dataset_version(clients):
             "title": "Dataset Version 3.0",
             "changelog": "Changelog modified by admin",
             "published": False,
-            "doi": "doi:test",
             "readme": "readme modified by editor",
         },
     )
@@ -185,7 +192,10 @@ def test_put_dataset_version(clients):
     assert admin_response_data["title"] == "Dataset Version 3.0"
     assert admin_response_data["changelog"] == "Changelog modified by admin"
     assert admin_response_data["published"] is False
-    assert admin_response_data["doi"] == "doi:test"
+    assert (
+        admin_response_data["doi"] == f"10.36478/fairhub.{response_data['identifier']}"
+    )
+
     assert admin_response_data["readme"] == ""
 
     editor_response = _editor_client.put(
@@ -194,7 +204,6 @@ def test_put_dataset_version(clients):
             "title": "Dataset Version 4.0",
             "changelog": "Changelog modified by editor",
             "published": False,
-            "doi": "doi:test",
             "readme": "readme modified by editor",
         },
     )
@@ -207,7 +216,6 @@ def test_put_dataset_version(clients):
             "title": "Dataset Version 5.0",
             "changelog": "Changelog modified by viewer",
             "published": False,
-            "doi": "test:doi",
             "readme": "readme modified by viewer",
         },
     )
