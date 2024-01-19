@@ -66,6 +66,8 @@ def create_app(config_module=None):
 
     cors_origins = [
         "https://brave-ground-.*-.*.centralus.2.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
+        "https://staging.app.fairhub.io",
+        "https://app.fairhub.io",
         "https://staging.fairhub.io",
         "https://fairhub.io",
     ]

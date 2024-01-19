@@ -1,8 +1,8 @@
 [tool.poetry]
 
-name = "api-fairhub-io"
+name = "fairhub-api"
 version = "0.1.0"
-description = "API for fairhub.io"
+description = "API for fairhub"
 
 license = "MIT"
 authors = ["FAIR Data Innovations Hub <contact@fairdataihub.org>"]

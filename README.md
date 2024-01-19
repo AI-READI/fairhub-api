@@ -1,4 +1,4 @@
-﻿# api.fairhub.io
+﻿# fairhub-api
 
 ## Getting started
 
