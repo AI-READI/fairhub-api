@@ -10,7 +10,7 @@ from jsonschema import ValidationError, validate
 import model
 from caching import cache
 from modules.etl import ModuleTransform, RedcapTransform
-from modules.etl.config import redcapTransformConfig, moduleTransformConfigs
+from modules.etl.config import moduleTransformConfigs, redcapTransformConfig
 
 from .authentication import is_granted
 
@@ -27,9 +27,7 @@ datum_model = api.model(
         "subgroup": fields.String(
             required=False, readonly=True, description="Subgroup field"
         ),
-        "value": fields.Raw(
-            required=False, readonly=True, description="Value field"
-        ),
+        "value": fields.Raw(required=False, readonly=True, description="Value field"),
         "x": fields.Raw(required=False, readonly=True, description="X-axis field"),
         "y": fields.Float(required=False, readonly=True, description="Y-axis field"),
         "datetime": fields.String(
@@ -357,9 +355,9 @@ class RedcapProjectDashboard(Resource):
                     report["report_key"] == report_config["key"]
                     and len(report["report_id"]) > 0
                 ):
-                    redcapTransformConfig["reports"][i]["kwdargs"] |= {
-                        "report_id": report["report_id"],
-                    }
+                    redcapTransformConfig["reports"][i]["kwdargs"][
+                        "report_id"
+                    ] = report["report_id"]
 
         # Structure REDCap ETL Config
         redcap_etl_config = {
@@ -372,7 +370,9 @@ class RedcapProjectDashboard(Resource):
 
         # Execute Dashboard Module Transforms
         for dashboard_module in redcap_project_dashboard["dashboard_modules"]:
-            transform, module_etl_config = moduleTransformConfigs[dashboard_module["id"]]
+            transform, module_etl_config = moduleTransformConfigs[
+                dashboard_module["id"]
+            ]
             transformed = getattr(ModuleTransform(module_etl_config), transform)(
                 mergedTransform
             ).transformed
