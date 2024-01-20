@@ -151,11 +151,17 @@ redcap_report_merge_map: Dict[str, Dict[str, Any]] = {
 
 # Note: The REDCap report_id is matched to the transform
 # by the value of the key property in the report dictionary.
-redcapTransformConfig: Dict[str, List[Any] | Tuple[str, List[Any]] | str | List] = {
-    "reports": [
+redcapTransformConfig: Dict[str, Any] = {
+    "reports": [ # Dict[str, Dict[str, str | Dict[str, Any] | List[Tuple[str, Dict[str, Any]]]]]
         {
             "key": "participant-value",
-            "kwdargs": {},
+            "kwdargs": {
+                "raw_or_label": "raw",
+                "raw_or_label_headers": "raw",
+                "export_checkbox_labels": False,
+                "csv_delimiter": "\t",
+                "report_id": ""
+            },
             "transforms": [
                 ("remap_values_by_columns", {"columns": data_columns}),
                 ("map_missing_values_by_columns", {"columns": data_columns}),
@@ -219,7 +225,13 @@ redcapTransformConfig: Dict[str, List[Any] | Tuple[str, List[Any]] | str | List]
         },
         {
             "key": "instrument-status",
-            "kwdargs": {},
+            "kwdargs": {
+                "raw_or_label": "raw",
+                "raw_or_label_headers": "raw",
+                "export_checkbox_labels": False,
+                "csv_delimiter": "\t",
+                "report_id": ""
+            },
             "transforms": [
                 (
                     "remap_values_by_columns",
@@ -231,7 +243,13 @@ redcapTransformConfig: Dict[str, List[Any] | Tuple[str, List[Any]] | str | List]
         },
         {
             "key": "repeat-instrument",
-            "kwdargs": {},
+            "kwdargs": {
+                "raw_or_label": "raw",
+                "raw_or_label_headers": "raw",
+                "export_checkbox_labels": False,
+                "csv_delimiter": "\t",
+                "report_id": ""
+            },
             "transforms": [
                 ("drop_rows", {"columns": repeat_survey_columns}),
                 (
@@ -245,7 +263,7 @@ redcapTransformConfig: Dict[str, List[Any] | Tuple[str, List[Any]] | str | List]
             ],
         },
     ],
-    "post_transform_merge": (
+    "post_transform_merge": ( # Dict[str, Tuple[List[str], List[Tuple[str, Any]]]]
         index_columns,
         [
             ("participant-value", {"on": index_columns, "how": "inner"}),
@@ -253,15 +271,15 @@ redcapTransformConfig: Dict[str, List[Any] | Tuple[str, List[Any]] | str | List]
             ("repeat-instrument", {"on": index_columns, "how": "outer"}),
         ],
     ),
-    "post_merge_transforms": [
+    "post_merge_transforms": [ # Dict[str, Tuple[str, Dict[str, List[Any]]]]
         (
             "remap_values_by_columns",
             {"columns": repeat_survey_columns, "value_map": survey_instrument_map},
         ),
         ("map_missing_values_by_columns", {"columns": repeat_survey_data_columns}),
     ],
-    "index_columns": ["record_id"],
-    "missing_value_generic": missing_value_generic,
+    "index_columns": ["record_id"], # Dict[str, List[str]]
+    "missing_value_generic": missing_value_generic, # Dict[str, str]
 }
 
 #
