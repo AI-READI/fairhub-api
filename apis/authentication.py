@@ -79,7 +79,6 @@ class SignUpUser(Resource):
             email_address = instance
             try:
                 validate_email(email_address, check_deliverability=False)
-                return True
             except EmailNotValidError as e:
                 raise ValidationError("Invalid email address format") from e
 
@@ -184,7 +183,7 @@ class Login(Resource):
             email_address = instance
 
             try:
-                validate_email(email_address)
+                # validate_email(email_address)
                 return True
             except EmailNotValidError as e:
                 raise ValidationError("Invalid email address format") from e

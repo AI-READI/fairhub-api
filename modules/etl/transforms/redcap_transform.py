@@ -31,7 +31,7 @@ class RedcapTransform(object):
 
         # Report Merging
         self.post_transform_merge = (
-            config["post_transform_merge"] if "post_transform_merge" in config else []
+            config["post_transform_merge"] if "post_transform_merge" in config else ([], [])
         )
 
         # Post Merge Transforms
@@ -158,8 +158,8 @@ class RedcapTransform(object):
 
         # Merge Reports
         self.logger.info(f"Merging REDCap reports")
-        receiving_report_key, merge_steps = self.post_transform_merge
-        self.merged = self._merge_reports(receiving_report_key, merge_steps)
+        index_columns, merge_steps = self.post_transform_merge
+        self.merged = self._merge_reports(index_columns, merge_steps)
 
         # Apply Post-Merge Transforms
         self.logger.info(f"Applying REDCap report post-merge transforms")
@@ -565,7 +565,7 @@ class RedcapTransform(object):
             aggfunc=aggregator,
             fill_value=self.missing_value_generic,
         )
-        df = df.merge(pivot, how="inner", on=self.index_columns)
+        df = df.merge(pivot, how="outer", on=self.index_columns)
         df = df.drop_duplicates(self.index_columns, keep="first")
         for column in new_columns:
             df[column] = df[column].astype(dtype)
@@ -684,14 +684,15 @@ class RedcapTransform(object):
 
     def _merge_reports(
         self,
-        receiving_report_key: str,
+        index_columns: List[str],
         merge_steps: List[Tuple[str, Dict[str, Any]]],
     ) -> pd.DataFrame:
         """
         Performs N - 1 merge transforms on N reports.
         """
 
-        df_receiving_report = self.reports[receiving_report_key]["transformed"]
+        receiving_report_key, _ = merge_steps[0]
+        df_receiving_report = self.reports[receiving_report_key]["transformed"][index_columns]
 
         if len(merge_steps) > 0:
             for providing_report_key, merge_kwdargs in merge_steps:

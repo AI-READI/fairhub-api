@@ -14,6 +14,7 @@ class ModuleTransform(object):
         config: Dict[str, Any],
         logging_config: Dict[str, str] = {},
     ) -> None:
+
         #
         # Logging
         #

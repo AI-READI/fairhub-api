@@ -8,4 +8,4 @@ from .aireadi_config import (
     phenotypeSexBySiteTransformConfig,
     currentMedicationsBySiteTransformConfig,
 )
-from .aireadi_config import transformConfigs
+from .aireadi_config import moduleTransformConfigs

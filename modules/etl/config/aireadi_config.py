@@ -57,6 +57,7 @@ computed_columns: List = [
     "treatments",
     "scrweek",
     "scryear",
+    "scrweekyear",
 ]
 
 # Survey Column Groups
@@ -134,6 +135,17 @@ treatments_column_map: Dict[str, str] = {
 }
 
 #
+# REDCap Report Merge Map
+#
+
+redcap_report_merge_map: Dict[str, Dict[str, Any]] = {
+    "participants-list": {"on": index_columns, "how": "inner"},
+    "participant-value": {"on": index_columns, "how": "inner"},
+    "instrument-status": {"on": index_columns, "how": "inner"},
+    "repeat-instrument": {"on": index_columns, "how": "outer"},
+}
+
+#
 # REDCap Transform Config
 #
 
@@ -164,6 +176,16 @@ redcapTransformConfig: Dict[str, List[Any] | Tuple[str, List[Any]] | str | List]
                         "new_column_name": "scryear",
                         # ISO 8601 string format token for front-end: %Y
                         "transform": lambda x: int(datetime.strptime(x, "%Y-%m-%d").isocalendar().year),
+                        "missing_value": missing_value_generic,
+                    }
+                ),
+                (
+                    "transform_values_by_column",
+                    {
+                        "column": "scrcmpdat",
+                        "new_column_name": "scrweekyear",
+                        # ISO 8601 string format token for front-end: %Y
+                        "transform": lambda x: (int(datetime.strptime(x, "%Y-%m-%d").isocalendar().week), int(datetime.strptime(x, "%Y-%m-%d").isocalendar().year)),
                         "missing_value": missing_value_generic,
                     }
                 ),
@@ -210,7 +232,7 @@ redcapTransformConfig: Dict[str, List[Any] | Tuple[str, List[Any]] | str | List]
                 ("drop_rows", {"columns": repeat_survey_columns}),
                 (
                     "aggregate_repeat_instrument_by_index",
-                    {"aggregator": np.max, "dtype": str},
+                    {"aggregator": "max", "dtype": str},
                 ),
                 (
                     "keep_columns",
@@ -220,12 +242,11 @@ redcapTransformConfig: Dict[str, List[Any] | Tuple[str, List[Any]] | str | List]
         },
     ],
     "post_transform_merge": (
-        "participant-value",
+        index_columns,
         [
-            # ("participant-value", {"on": index_columns, "how": "inner"}),
+            ("participant-value", {"on": index_columns, "how": "inner"}),
             ("instrument-status", {"on": index_columns, "how": "inner"}),
             ("repeat-instrument", {"on": index_columns, "how": "outer"}),
-            # ("repeat-instrument", {"on": index_columns, "how": "outer"}),
         ],
     ),
     "post_merge_transforms": [
@@ -2078,11 +2099,11 @@ currentMedicationsBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
         "transforms": [
             {
                 "name": "Current Medications by Site",
-                "vtype": "SingleCategorical",
+                "vtype": "DoubleCategorical",
                 "methods": [
                     {
-                        "groups": ["siteid"],
-                        "value": "current_medications",
+                        "groups": ["siteid", "current_medications", "scrsex"],
+                        "value": "record_id",
                         "func": "count",
                     }
                 ],
@@ -2094,20 +2115,26 @@ currentMedicationsBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "astype": str,
                     },
                     "group": {
-                        "name": "Site",
-                        "field": "siteid",
+                        "name": "Current Medication Count",
+                        "field": "current_medications",
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
+                    "subgroup": {
+                        "name": "Sex",
+                        "field": "scrsex",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                        },
                     "color": {
-                        "name": "Site",
-                        "field": "siteid",
+                        "name": "Sex",
+                        "field": "scrsex",
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
                     "value": {
-                        "name": "Current Medications (N)",
-                        "field": "current_medications",
+                        "name": "Participants (N)",
+                        "field": "record_id",
                         "missing_value": missing_value_generic,
                         "astype": int,
                     },
@@ -2117,9 +2144,7 @@ currentMedicationsBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
     },
 )
 
-
-transformConfigs: Dict[str, Any] = {
-    "redcap": redcapTransformConfig,
+moduleTransformConfigs: Dict[str, Any] = {
     "instrument-completion-status-by-site": instrumentCompletionStatusBySiteTransformConfig,
     "phenotype-recruitment-by-site": phenotypeRecruitmentBySiteTransformConfig,
     "race-recruitment-by-site": raceRecruitmentBySiteTransformConfig,

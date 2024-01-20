@@ -10,7 +10,7 @@ from jsonschema import ValidationError, validate
 import model
 from caching import cache
 from modules.etl import ModuleTransform, RedcapTransform
-from modules.etl.config import transformConfigs
+from modules.etl.config import redcapTransformConfig, moduleTransformConfigs
 
 from .authentication import is_granted
 
@@ -27,7 +27,7 @@ datum_model = api.model(
         "subgroup": fields.String(
             required=False, readonly=True, description="Subgroup field"
         ),
-        "value": fields.Integer(
+        "value": fields.Raw(
             required=False, readonly=True, description="Value field"
         ),
         "x": fields.Raw(required=False, readonly=True, description="X-axis field"),
@@ -352,28 +352,27 @@ class RedcapProjectDashboard(Resource):
 
         # Set report_ids for ETL
         for report in redcap_project_dashboard["reports"]:
-            for i, report_config in enumerate(transformConfigs["redcap"]["reports"]):
+            for i, report_config in enumerate(redcapTransformConfig["reports"]):
                 if (
                     report["report_key"] == report_config["key"]
                     and len(report["report_id"]) > 0
                 ):
-                    transformConfigs["redcap"]["reports"][i]["kwdargs"] |= {
-                        "report_id": report["report_id"]
+                    redcapTransformConfig["reports"][i]["kwdargs"] |= {
+                        "report_id": report["report_id"],
                     }
 
         # Structure REDCap ETL Config
         redcap_etl_config = {
             "redcap_api_url": redcap_project_view["project_api_url"],
             "redcap_api_key": redcap_project_view["project_api_key"],
-        } | transformConfigs["redcap"]
+        } | redcapTransformConfig
 
         redcapTransform = RedcapTransform(redcap_etl_config)
         mergedTransform = redcapTransform.merged
 
         # Execute Dashboard Module Transforms
         for dashboard_module in redcap_project_dashboard["dashboard_modules"]:
-            print(dashboard_module)
-            transform, module_etl_config = transformConfigs[dashboard_module["id"]]
+            transform, module_etl_config = moduleTransformConfigs[dashboard_module["id"]]
             transformed = getattr(ModuleTransform(module_etl_config), transform)(
                 mergedTransform
             ).transformed
