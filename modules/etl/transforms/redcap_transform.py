@@ -31,7 +31,9 @@ class RedcapTransform(object):
 
         # Report Merging
         self.post_transform_merge = (
-            config["post_transform_merge"] if "post_transform_merge" in config else ([], [])
+            config["post_transform_merge"]
+            if "post_transform_merge" in config
+            else ([], [])
         )
 
         # Post Merge Transforms
@@ -701,7 +703,9 @@ class RedcapTransform(object):
         """
 
         receiving_report_key, _ = merge_steps[0]
-        df_receiving_report = self.reports[receiving_report_key]["transformed"][index_columns]
+        df_receiving_report = self.reports[receiving_report_key]["transformed"][
+            index_columns
+        ]
 
         if len(merge_steps) > 0:
             for providing_report_key, merge_kwdargs in merge_steps:

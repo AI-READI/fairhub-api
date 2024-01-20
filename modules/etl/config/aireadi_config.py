@@ -152,7 +152,7 @@ redcap_report_merge_map: Dict[str, Dict[str, Any]] = {
 # Note: The REDCap report_id is matched to the transform
 # by the value of the key property in the report dictionary.
 redcapTransformConfig: Dict[str, Any] = {
-    "reports": [ # Dict[str, Dict[str, str | Dict[str, Any] | List[Tuple[str, Dict[str, Any]]]]]
+    "reports": [  # Dict[str, Dict[str, str | Dict[str, Any] | List[Tuple[str, Dict[str, Any]]]]]
         {
             "key": "participant-value",
             "kwdargs": {
@@ -160,7 +160,7 @@ redcapTransformConfig: Dict[str, Any] = {
                 "raw_or_label_headers": "raw",
                 "export_checkbox_labels": False,
                 "csv_delimiter": "\t",
-                "report_id": ""
+                "report_id": "",
             },
             "transforms": [
                 ("remap_values_by_columns", {"columns": data_columns}),
@@ -195,9 +195,12 @@ redcapTransformConfig: Dict[str, Any] = {
                         "column": "scrcmpdat",
                         "new_column_name": "scrweekyear",
                         # ISO 8601 string format token for front-end: %Y
-                        "transform": lambda x: (int(datetime.strptime(x, "%Y-%m-%d").isocalendar().week), int(datetime.strptime(x, "%Y-%m-%d").isocalendar().year)),
+                        "transform": lambda x: (
+                            int(datetime.strptime(x, "%Y-%m-%d").isocalendar().week),
+                            int(datetime.strptime(x, "%Y-%m-%d").isocalendar().year),
+                        ),
                         "missing_value": missing_value_generic,
-                    }
+                    },
                 ),
                 (
                     "new_column_from_binary_columns_positive_class",
@@ -230,7 +233,7 @@ redcapTransformConfig: Dict[str, Any] = {
                 "raw_or_label_headers": "raw",
                 "export_checkbox_labels": False,
                 "csv_delimiter": "\t",
-                "report_id": ""
+                "report_id": "",
             },
             "transforms": [
                 (
@@ -248,7 +251,7 @@ redcapTransformConfig: Dict[str, Any] = {
                 "raw_or_label_headers": "raw",
                 "export_checkbox_labels": False,
                 "csv_delimiter": "\t",
-                "report_id": ""
+                "report_id": "",
             },
             "transforms": [
                 ("drop_rows", {"columns": repeat_survey_columns}),
@@ -263,7 +266,7 @@ redcapTransformConfig: Dict[str, Any] = {
             ],
         },
     ],
-    "post_transform_merge": ( # Dict[str, Tuple[List[str], List[Tuple[str, Any]]]]
+    "post_transform_merge": (  # Dict[str, Tuple[List[str], List[Tuple[str, Any]]]]
         index_columns,
         [
             ("participant-value", {"on": index_columns, "how": "inner"}),
@@ -271,15 +274,15 @@ redcapTransformConfig: Dict[str, Any] = {
             ("repeat-instrument", {"on": index_columns, "how": "outer"}),
         ],
     ),
-    "post_merge_transforms": [ # Dict[str, Tuple[str, Dict[str, List[Any]]]]
+    "post_merge_transforms": [  # Dict[str, Tuple[str, Dict[str, List[Any]]]]
         (
             "remap_values_by_columns",
             {"columns": repeat_survey_columns, "value_map": survey_instrument_map},
         ),
         ("map_missing_values_by_columns", {"columns": repeat_survey_data_columns}),
     ],
-    "index_columns": ["record_id"], # Dict[str, List[str]]
-    "missing_value_generic": missing_value_generic, # Dict[str, str]
+    "index_columns": ["record_id"],  # Dict[str, List[str]]
+    "missing_value_generic": missing_value_generic,  # Dict[str, str]
 }
 
 #
@@ -2147,7 +2150,7 @@ currentMedicationsBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "field": "scrsex",
                         "missing_value": missing_value_generic,
                         "astype": str,
-                        },
+                    },
                     "color": {
                         "name": "Sex",
                         "field": "scrsex",
