@@ -152,7 +152,7 @@ redcap_report_merge_map: Dict[str, Dict[str, Any]] = {
 # Note: The REDCap report_id is matched to the transform
 # by the value of the key property in the report dictionary.
 redcapTransformConfig: Dict[str, Any] = {
-    "reports": [ # Dict[str, Dict[str, str | Dict[str, Any] | List[Tuple[str, Dict[str, Any]]]]]
+    "reports": [  # Dict[str, Dict[str, str | Dict[str, Any] | List[Tuple[str, Dict[str, Any]]]]]
         {
             "key": "participant-value",
             "kwdargs": {
@@ -160,7 +160,7 @@ redcapTransformConfig: Dict[str, Any] = {
                 "raw_or_label_headers": "raw",
                 "export_checkbox_labels": False,
                 "csv_delimiter": "\t",
-                "report_id": ""
+                "report_id": "",
             },
             "transforms": [
                 ("remap_values_by_columns", {"columns": data_columns}),
