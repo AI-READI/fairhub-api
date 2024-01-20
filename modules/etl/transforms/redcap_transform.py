@@ -464,14 +464,23 @@ class RedcapTransform(object):
         return df
 
     def transform_values_by_column(
-        self, df: pd.DataFrame, column: str, new_column_name: str, transform: Callable, missing_value: Any,
+        self,
+        df: pd.DataFrame,
+        column: str,
+        new_column_name: str,
+        transform: Callable,
+        missing_value: Any,
     ) -> pd.DataFrame:
         """
         Replace 0-length values or values with keys in
         self.none_map with self.missing_value_generic.
         """
         return self._transform_values_by_column(
-            df=df, column=column, new_column_name=new_column_name, transform=transform, missing_value=missing_value
+            df=df,
+            column=column,
+            new_column_name=new_column_name,
+            transform=transform,
+            missing_value=missing_value,
         )
 
     #

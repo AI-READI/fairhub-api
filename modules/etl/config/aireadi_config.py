@@ -165,9 +165,11 @@ redcapTransformConfig: Dict[str, List[Any] | Tuple[str, List[Any]] | str | List]
                         "column": "scrcmpdat",
                         "new_column_name": "scrweek",
                         # ISO 8601 string format token for front-end: %V
-                        "transform": lambda x: int(datetime.strptime(x, "%Y-%m-%d").isocalendar().week),
+                        "transform": lambda x: int(
+                            datetime.strptime(x, "%Y-%m-%d").isocalendar().week
+                        ),
                         "missing_value": missing_value_generic,
-                    }
+                    },
                 ),
                 (
                     "transform_values_by_column",
@@ -175,9 +177,11 @@ redcapTransformConfig: Dict[str, List[Any] | Tuple[str, List[Any]] | str | List]
                         "column": "scrcmpdat",
                         "new_column_name": "scryear",
                         # ISO 8601 string format token for front-end: %Y
-                        "transform": lambda x: int(datetime.strptime(x, "%Y-%m-%d").isocalendar().year),
+                        "transform": lambda x: int(
+                            datetime.strptime(x, "%Y-%m-%d").isocalendar().year
+                        ),
                         "missing_value": missing_value_generic,
-                    }
+                    },
                 ),
                 (
                     "transform_values_by_column",
