@@ -1,7 +1,7 @@
 """APIs for study operations""" ""
 from typing import Any, Union
 
-from flask import g, request
+from flask import Response, g, request
 from flask_restx import Namespace, Resource, fields, reqparse
 from jsonschema import ValidationError, validate
 
@@ -51,10 +51,10 @@ class Studies(Resource):
 
         studies = model.Study.query.filter(model.Study.id.in_(study_ids)).all()
 
-        return [s.to_dict() for s in studies]
+        return [s.to_dict() for s in studies], 200
 
     @api.expect(study_model)
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     def post(self):
         """Create a new study"""
@@ -88,7 +88,7 @@ class Studies(Resource):
 
         model.db.session.commit()
 
-        return study_.to_dict()
+        return study_.to_dict(), 201
 
 
 @api.route("/study/<study_id>")
@@ -103,7 +103,7 @@ class StudyResource(Resource):
         """Return a study's details"""
         study1 = model.Study.query.get(study_id)
 
-        return study1.to_dict()
+        return study1.to_dict(), 200
 
     @api.expect(study_model)
     @api.response(200, "Success")
@@ -135,9 +135,9 @@ class StudyResource(Resource):
         update_study.update(request.json)
         model.db.session.commit()
 
-        return update_study.to_dict()
+        return update_study.to_dict(), 200
 
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     @api.doc(description="Delete a study")
     def delete(self, study_id: int):
@@ -160,4 +160,4 @@ class StudyResource(Resource):
         model.db.session.delete(study)
         model.db.session.commit()
 
-        return 204
+        return Response(status=204)

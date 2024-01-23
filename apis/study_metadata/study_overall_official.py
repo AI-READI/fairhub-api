@@ -1,7 +1,7 @@
 """API routes for study overall official metadata"""
 import typing
 
-from flask import request
+from flask import Response, request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -42,9 +42,9 @@ class StudyOverallOfficialResource(Resource):
             study_overall_official_, key=lambda x: x.created_at
         )
 
-        return [i.to_dict() for i in sorted_study_overall]
+        return [i.to_dict() for i in sorted_study_overall], 200
 
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     def post(self, study_id: int):
         """Create study overall official metadata"""
@@ -55,6 +55,7 @@ class StudyOverallOfficialResource(Resource):
                 "type": "object",
                 "additionalProperties": False,
                 "properties": {
+                    "id": {"type": "string"},
                     "name": {"type": "string", "minLength": 1},
                     "affiliation": {"type": "string", "minLength": 1},
                     "role": {
@@ -79,27 +80,25 @@ class StudyOverallOfficialResource(Resource):
         data: typing.Union[dict, typing.Any] = request.json
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         list_of_elements = []
         for i in data:
             if "id" in i and i["id"]:
                 study_overall_official_ = model.StudyOverallOfficial.query.get(i["id"])
                 study_overall_official_.update(i)
-                list_of_elements.append(study_overall_official_.to_dict())
-            elif "id" not in i or not i["id"]:
+            else:
                 study_overall_official_ = model.StudyOverallOfficial.from_data(
                     study_obj, i
                 )
                 model.db.session.add(study_overall_official_)
-                list_of_elements.append(study_overall_official_.to_dict())
-
+            list_of_elements.append(study_overall_official_.to_dict())
         model.db.session.commit()
 
-        return list_of_elements
+        return list_of_elements, 201
 
     @api.route("/study/<study_id>/metadata/overall-official/<overall_official_id>")
     class StudyOverallOfficialUpdate(Resource):
-        @api.response(200, "Success")
+        @api.response(204, "Success")
         @api.response(400, "Validation Error")
         def delete(self, study_id: int, overall_official_id: int):
             """Delete study overall official metadata"""
@@ -112,4 +111,4 @@ class StudyOverallOfficialResource(Resource):
             model.db.session.delete(study_overall_official_)
             model.db.session.commit()
 
-            return 204
+            return Response(status=204)

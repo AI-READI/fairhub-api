@@ -42,8 +42,10 @@ class StudyEligibilityResource(Resource):
         """Get study eligibility metadata"""
         study_ = model.Study.query.get(study_id)
 
-        return study_.study_eligibility.to_dict()
+        return study_.study_eligibility.to_dict(), 200
 
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def put(self, study_id: int):
         """Update study eligibility metadata"""
         # Schema validation
@@ -88,17 +90,9 @@ class StudyEligibilityResource(Resource):
         study_ = model.Study.query.get(study_id)
         # Check user permissions
         if not is_granted("study_metadata", study_):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         study_.study_eligibility.update(request.json)
 
         model.db.session.commit()
 
-        return study_.study_eligibility.to_dict()
-
-    # def post(self, study_id: int):
-    #     data = request.json
-    #     study_eligibility_ = Study.query.get(study_id)
-    #     study_eligibility_ = StudyEligibility.from_data(study_eligibility_, data)
-    #     db.session.add(study_eligibility_)
-    #     db.session.commit()
-    #     return study_eligibility_.to_dict()
+        return study_.study_eligibility.to_dict(), 200

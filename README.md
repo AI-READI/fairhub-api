@@ -1,4 +1,4 @@
-﻿# api.fairhub.io
+﻿# fairhub-api
 
 ## Getting started
 
@@ -6,7 +6,7 @@
 
 You will need the following installed on your system:
 
-- Python 3.10+
+- Python 3.8+
 - [Pip](https://pip.pypa.io/en/stable/)
 - [Poetry](https://python-poetry.org/)
 - [Docker](https://www.docker.com/)
@@ -14,6 +14,8 @@ You will need the following installed on your system:
 ### Setup
 
 If you would like to update the api, please follow the instructions below.
+
+Don't forget to start the database before running the api. See [Database](#database) for more information.
 
 1. Create a local virtual environment and activate it:
 
@@ -38,7 +40,15 @@ If you would like to update the api, please follow the instructions below.
 
    You can also use version 1.2.0 of Poetry, but you will need to run `poetry lock` after installing the dependencies.
 
-3. Add your modifications and run the tests:
+3. Add your environment variables. An example is provided at `.env.example`
+
+   ```bash
+   cp .env.example .env
+   ```
+
+   Make sure to update the values in `.env` to match your local setup.
+
+4. Add your modifications and run the tests:
 
    ```bash
    poetry run pytest
@@ -50,47 +60,36 @@ If you would like to update the api, please follow the instructions below.
     poetry add <package-name>
    ```
 
-4. Format the code:
+5. Format the code:
 
    ```bash
    poe format
    ```
 
-5. Check the code quality:
+6. Check the code quality:
 
    ```bash
-   poetry run flake8 pyfairdatatools tests
+   poe typecheck
+   poe lint
+   poe flake8
    ```
 
-6. Run the tests and check the code coverage:
+   You can also use `poe precommit` to run both formatting and linting.
+
+7. Run the tests and check the code coverage:
 
    ```bash
    poe test
-   poe test --cov=pyfairdatatools
+   poe test_with_capture # if you want to see console output
    ```
 
-7. Build the package:
+## Database
 
-   Update the version number in `pyproject.toml` and `pyfairdatatools/__init__.py` and then run:
-
-   ```text
-   poetry build
-   ```
-
-8. Publish the package:
-
-   ```bash
-   poetry publish
-   ```
-
-## Docker
-
-### Database
-
-The api uses a postgres database. You can run a postgres database locally using docker:
+The api uses a postgres database. You can create a database locally using docker:
 
 ```bash
 docker-compose -f ./db-docker-compose.yaml up
+docker-compose -f ./db-docker-compose.yaml up -d # if you want the db to run in the background
 ```
 
 Close the database with:
@@ -98,42 +97,6 @@ Close the database with:
 ```bash
 docker-compose -f ./db-docker-compose.yaml down -v
 ```
-
-This database will not persist data between runs.
-
-### Caching
-
-The api uses a redis cache. You can run a redis cache locally using docker, too:
-
-```bash
-docker-compose -f ./cache-docker-compose.yaml up
-```
-
-Shut down the cache with:
-
-```bash
-docker-compose -f ./cache-docker-compose.yaml down -v
-```
-
-Like the database, the cache will not persist between runs.
-
-### API
-
-If you would like to run the api locally, you can use docker.
-
-1. Build the docker image:
-
-   ```bash
-   docker build --tag fairhub-flask-api:local .
-   ```
-
-   You can set the `--tag` to whatever you want. We recommend to use `fairhub-flask-api:local`.
-
-2. Run the docker image:
-
-   ```bash
-   docker run -p 5000:5000 -e FAIRHUB_DATABASE_URL=postgres://connection-string fairhub-flask-api:local
-   ```
 
 ## License
 

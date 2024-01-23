@@ -27,9 +27,14 @@ class StudyDescription(db.Model):  # type: ignore
     def to_dict(self):
         """Converts the study to a dictionary"""
         return {
+            "id": self.study_id,
             "brief_summary": self.brief_summary,
             "detailed_description": self.detailed_description,
         }
+
+    def to_dict_metadata(self):
+        """Converts the study metadata to a dictionary"""
+        return {"brief_summary": self.brief_summary}
 
     @staticmethod
     def from_data(study: Study, data: dict):

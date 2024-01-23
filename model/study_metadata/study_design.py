@@ -19,7 +19,7 @@ class StudyDesign(db.Model):  # type: ignore
         self.design_primary_purpose = None
         self.design_masking = None
         self.design_masking_description = None
-        self.design_who_masked_list = []
+        self.design_who_masked_list = None
         self.phase_list = None
         self.enrollment_count = None
         self.enrollment_type = None

@@ -2,8 +2,9 @@ import datetime
 import uuid
 from datetime import timezone
 
-from sqlalchemy import Table
+from sqlalchemy import Sequence, Table
 
+import model
 from model.dataset import Dataset
 
 from .db import db
@@ -21,6 +22,7 @@ class Version(db.Model):  # type: ignore
         self.dataset = dataset
         self.id = str(uuid.uuid4())
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
+        self.version_readme = model.VersionReadme(self)
 
     __tablename__ = "version"
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -29,9 +31,18 @@ class Version(db.Model):  # type: ignore
     published = db.Column(db.BOOLEAN, nullable=False)
     changelog = db.Column(db.String, nullable=False)
     updated_on = db.Column(db.BigInteger, nullable=False)
-    doi = db.Column(db.String, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
     published_on = db.Column(db.BigInteger, nullable=False)
+
+    identifier = db.Column(
+        db.Integer,
+        Sequence("version_identifier_seq"),
+        nullable=False,
+        unique=True,
+        server_default=Sequence("version_identifier_seq").next_value(),
+    )
+
+    doi = db.Column(db.String, nullable=True, unique=True)
 
     version_readme = db.relationship(
         "VersionReadme",
@@ -55,6 +66,7 @@ class Version(db.Model):  # type: ignore
             "published_on": self.published_on,
             "updated_on": self.updated_on,
             "created_at": self.created_at,
+            "identifier": self.identifier,
             "doi": self.doi,
             "published": self.published,
             "readme": self.version_readme.content if self.version_readme else ""
@@ -74,7 +86,6 @@ class Version(db.Model):  # type: ignore
     def update(self, data: dict):
         self.title = data["title"]
         self.published = data["published"] if "published" in data else False
-        self.doi = data["doi"] if "doi" in data else ""
         self.published_on = datetime.datetime.now(timezone.utc).timestamp()
         self.updated_on = datetime.datetime.now(timezone.utc).timestamp()
         # self.participants[:] = data["participants"]

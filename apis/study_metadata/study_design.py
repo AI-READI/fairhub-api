@@ -13,7 +13,6 @@ from ..authentication import is_granted
 study_design = api.model(
     "StudyDesign",
     {
-        "id": fields.String(required=True),
         "design_allocation": fields.String(required=True),
         "study_type": fields.String(required=True),
         "design_intervention_model": fields.String(required=True),
@@ -50,8 +49,10 @@ class StudyDesignResource(Resource):
 
         study_design_ = study_.study_design
 
-        return study_design_.to_dict()
+        return study_design_.to_dict(), 200
 
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def put(self, study_id: int):
         """Update study design metadata"""
         # Schema validation
@@ -71,10 +72,10 @@ class StudyDesignResource(Resource):
                 "design_primary_purpose": {"type": ["string", "null"]},
                 "design_masking": {"type": ["string", "null"]},
                 "design_masking_description": {
-                    "type": "string",
+                    "type": ["string", "null"],
                 },
                 "design_who_masked_list": {
-                    "type": "array",
+                    "type": ["array", "null"],
                     "items": {
                         "type": "string",
                         "oneOf": [
@@ -91,7 +92,7 @@ class StudyDesignResource(Resource):
                     "uniqueItems": True,
                 },
                 "phase_list": {
-                    "type": "array",
+                    "type": ["array", "null"],
                     "items": {
                         "type": "string",
                         "oneOf": [
@@ -111,14 +112,14 @@ class StudyDesignResource(Resource):
                     },
                     "uniqueItems": True,
                 },
-                "enrollment_count": {"type": "integer"},
+                "enrollment_count": {"type": ["integer", "null"]},
                 "enrollment_type": {
-                    "type": "string",
+                    "type": ["string", "null"],
                     "enum": ["Actual", "Anticipated"],
                 },
                 "number_arms": {"type": ["integer", "null"]},
                 "design_observational_model_list": {
-                    "type": "array",
+                    "type": ["array", "null"],
                     "items": {
                         "type": "string",
                         "oneOf": [
@@ -128,7 +129,7 @@ class StudyDesignResource(Resource):
                                     "Case-Control",
                                     "Case-Only",
                                     "Case-Crossover",
-                                    "Ecologic or Community Study",
+                                    "Ecologic or Community",
                                     "Family-Based",
                                     "Other",
                                 ]
@@ -138,7 +139,7 @@ class StudyDesignResource(Resource):
                     "uniqueItems": True,
                 },
                 "design_time_perspective_list": {
-                    "type": "array",
+                    "type": ["array", "null"],
                     "items": {
                         "type": "string",
                         "oneOf": [
@@ -155,12 +156,8 @@ class StudyDesignResource(Resource):
                     "uniqueItems": True,
                 },
                 "bio_spec_retention": {"type": ["string", "null"]},
-                "bio_spec_description": {
-                    "type": "string",
-                },
-                "target_duration": {
-                    "type": "string",
-                },
+                "bio_spec_description": {"type": ["string", "null"]},
+                "target_duration": {"type": ["string", "null"]},
                 "number_groups_cohorts": {"type": ["integer", "null"]},
             },
         }
@@ -218,10 +215,10 @@ class StudyDesignResource(Resource):
         study_ = model.Study.query.get(study_id)
         # Check user permissions
         if not is_granted("study_metadata", study_):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
 
         study_.study_design.update(data)
 
         model.db.session.commit()
 
-        return study_.study_design.to_dict()
+        return study_.study_design.to_dict(), 200

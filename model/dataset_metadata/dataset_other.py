@@ -37,11 +37,24 @@ class DatasetOther(db.Model):  # type: ignore
             "language": self.language,
             "managing_organization_name": self.managing_organization_name,
             "managing_organization_ror_id": self.managing_organization_ror_id,
-            "standards_followed": self.managing_organization_ror_id,
+            "standards_followed": self.standards_followed,
             "acknowledgement": self.acknowledgement,
             "size": self.size,
             "publisher": self.publisher,
             "resource_type": self.resource_type,
+        }
+
+    def to_dict_metadata(self):
+        return {
+            "language": self.language,
+            "size": self.size,
+            "resource_type": self.resource_type,
+        }
+
+    def to_dict_publisher(self):
+        return {
+            "managing_organization_name": self.managing_organization_name,
+            "publisher": self.publisher,
         }
 
     @staticmethod

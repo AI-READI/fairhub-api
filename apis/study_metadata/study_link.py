@@ -1,7 +1,7 @@
 """API routes for study link metadata"""
 import typing
 
-from flask import request
+from flask import Response, request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -34,8 +34,10 @@ class StudyLinkResource(Resource):
         study_ = model.Study.query.get(study_id)
         study_link_ = study_.study_link
         sorted_study_link_ = sorted(study_link_, key=lambda x: x.created_at)
-        return [s.to_dict() for s in sorted_study_link_]
+        return [s.to_dict() for s in sorted_study_link_], 200
 
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
     def post(self, study_id: int):
         """Create study link metadata"""
         # Schema validation
@@ -45,7 +47,8 @@ class StudyLinkResource(Resource):
                 "type": "object",
                 "additionalProperties": False,
                 "properties": {
-                    "url": {"type": "string", "format": "uri"},
+                    "id": {"type": "string"},
+                    "url": {"type": "string", "format": "uri", "minLength": 1},
                     "title": {"type": "string"},
                 },
                 "required": ["url", "title"],
@@ -60,7 +63,7 @@ class StudyLinkResource(Resource):
 
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         data: typing.Union[dict, typing.Any] = request.json
         list_of_elements = []
         for i in data:
@@ -70,21 +73,22 @@ class StudyLinkResource(Resource):
                     return f"Study link {i['id']} Id is not found", 404
                 study_link_.update(i)
 
-                list_of_elements.append(study_link_.to_dict())
-            elif "id" not in i or not i["id"]:
+            else:
                 study_link_ = model.StudyLink.from_data(study_obj, i)
                 model.db.session.add(study_link_)
 
-                list_of_elements.append(study_link_.to_dict())
-
+            list_of_elements.append(study_link_.to_dict())
         model.db.session.commit()
 
-        return list_of_elements
+        return list_of_elements, 201
 
     @api.route("/study/<study_id>/metadata/link/<link_id>")
     class StudyLinkUpdate(Resource):
         """Study Link Metadata"""
 
+        @api.doc("Delete study links")
+        @api.response(204, "Success")
+        @api.response(400, "Validation Error")
         def delete(self, study_id: int, link_id: int):
             """Delete study link metadata"""
             study_obj = model.Study.query.get(study_id)
@@ -96,4 +100,4 @@ class StudyLinkResource(Resource):
 
             model.db.session.commit()
 
-            return 204
+            return Response(status=204)

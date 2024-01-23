@@ -243,19 +243,7 @@ INSERT INTO "dataset_other" ("id", "language", "managing_organization_name", "ma
 /*!40000 ALTER TABLE "dataset_other" ENABLE KEYS */;
 
 -- Dumping structure for table public.dataset_readme
-CREATE TABLE IF NOT EXISTS "dataset_readme" (
-	"id" CHAR(36) NOT NULL,
-	"content" VARCHAR NOT NULL,
-	"dataset_id" CHAR(36) NOT NULL,
-	PRIMARY KEY ("id"),
-	CONSTRAINT "dataset_readme_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "dataset" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
-);
 
--- Dumping data for table public.dataset_readme: 1 rows
-/*!40000 ALTER TABLE "dataset_readme" DISABLE KEYS */;
-INSERT INTO "dataset_readme" ("id", "content", "dataset_id") VALUES
-	('6473a133-af27-4b6c-a8a0-3fc850d3ab91', 'none', '00000000-0000-0000-0000-000000000001');
-/*!40000 ALTER TABLE "dataset_readme" ENABLE KEYS */;
 
 -- Dumping structure for table public.dataset_record_keys
 CREATE TABLE IF NOT EXISTS "dataset_record_keys" (

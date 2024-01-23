@@ -81,6 +81,8 @@ class Files(Resource):
 
             response_json = response.json()
 
+            print(response_json)
+
             paths = []
 
             for file in response_json["paths"]:

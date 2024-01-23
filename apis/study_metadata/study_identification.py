@@ -1,7 +1,7 @@
 """API routes for study identification metadata"""
 import typing
 
-from flask import request
+from flask import Response, request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -36,10 +36,10 @@ class StudyIdentificationResource(Resource):
         """Get study identification metadata"""
         study_ = model.Study.query.get(study_id)
         identifiers = model.Identifiers(study_)
-        return identifiers.to_dict()
+        return identifiers.to_dict(), 200
 
     @api.doc("identification add")
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     @api.expect(study_identification)
     def post(self, study_id: int):
@@ -79,7 +79,7 @@ class StudyIdentificationResource(Resource):
 
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
 
         data: typing.Union[dict, typing.Any] = request.json
         identifiers = [i for i in study_obj.study_identification if not i.secondary]
@@ -110,12 +110,15 @@ class StudyIdentificationResource(Resource):
 
         final_identifiers = model.Identifiers(study_obj)
 
-        return final_identifiers.to_dict()
+        return final_identifiers.to_dict(), 201
 
     @api.route("/study/<study_id>/metadata/identification/<identification_id>")
     class StudyIdentificationdUpdate(Resource):
         """Study Identification Metadata"""
 
+        @api.doc("Delete Study Identifications")
+        @api.response(204, "Success")
+        @api.response(400, "Validation Error")
         def delete(self, study_id: int, identification_id: int):
             """Delete study identification metadata"""
             study = model.Study.query.get(study_id)
@@ -126,9 +129,9 @@ class StudyIdentificationResource(Resource):
                 identification_id
             )
             if not study_identification_.secondary:
-                return 400, "primary identifier can not be deleted"
+                return "primary identifier can not be deleted", 400
 
             model.db.session.delete(study_identification_)
             model.db.session.commit()
 
-            return 204
+            return Response(status=204)

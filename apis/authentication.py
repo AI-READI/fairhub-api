@@ -40,7 +40,6 @@ login_model = api.model(
 class UnauthenticatedException(Exception):
     """Exception raised when a user is not authenticated."""
 
-    # TODO: Implement this exception
     pass
 
 
@@ -48,7 +47,7 @@ class UnauthenticatedException(Exception):
 class SignUpUser(Resource):
     """SignUpUser class is used to sign up new users to the system"""
 
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(signup_model)
     @api.expect(signup_model)
@@ -183,7 +182,7 @@ class Login(Resource):
             email_address = instance
 
             try:
-                validate_email(email_address)
+                validate_email(email_address, check_deliverability=False)
                 return True
             except EmailNotValidError as e:
                 raise ValidationError("Invalid email address format") from e
@@ -295,13 +294,7 @@ def authentication():
 def authorization():
     """it checks whether url is allowed to be reached to specific routes"""
     # white listed routes
-    public_routes = [
-        "/auth",
-        "/docs",
-        "/echo",
-        "/swaggerui",
-        "/swagger.json",
-    ]
+    public_routes = ["/auth", "/docs", "/echo", "/swaggerui", "/swagger.json", "/utils"]
 
     for route in public_routes:
         if request.path.startswith(route):
@@ -333,6 +326,7 @@ def is_granted(permission: str, study=None):
             "delete_dataset",
             "version",
             "publish_version",
+            "delete_version",
             "participant",
             "study_metadata",
             "dataset_metadata",
@@ -352,6 +346,7 @@ def is_granted(permission: str, study=None):
             "delete_dataset",
             "version",
             "publish_version",
+            "delete_version",
             "participant",
             "study_metadata",
             "dataset_metadata",
@@ -381,7 +376,7 @@ def is_granted(permission: str, study=None):
 class Logout(Resource):
     """Logout class is used to log out users from the system"""
 
-    @api.response(200, "Success")
+    @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def post(self):
         """simply logges out user from the system"""
@@ -396,6 +391,74 @@ class Logout(Resource):
         )
         resp.status_code = 204
         return resp
+
+
+@api.route("/auth/password/change")
+class UserPasswordEndpoint(Resource):
+    """
+    Endpoint for updating user password
+    """
+
+    @api.doc(description="Updates User password")
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    def post(self):
+        """Updates user password"""
+
+        def validate_current_password(instance):
+            received_password = instance
+
+            if not g.user.check_password(received_password):
+                raise ValidationError("Current password is incorrect")
+
+            return True
+
+        def confirm_new_password(instance):
+            data: Union[Any, dict] = request.json
+            new_password = data["new_password"]
+            confirm_password = instance
+
+            if new_password != confirm_password:
+                raise ValidationError("New password and confirm password do not match")
+
+            return True
+
+        # Schema validation
+        schema = {
+            "type": "object",
+            "required": ["old_password", "new_password", "confirm_password"],
+            "additionalProperties": False,
+            "properties": {
+                "old_password": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "current password",
+                },
+                "new_password": {"type": "string", "minLength": 1},
+                "confirm_password": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "password confirmation",
+                },
+            },
+        }
+
+        format_checker = FormatChecker()
+        format_checker.checks("current password")(validate_current_password)
+        format_checker.checks("password confirmation")(confirm_new_password)
+
+        try:
+            validate(
+                instance=request.json, schema=schema, format_checker=format_checker
+            )
+        except ValidationError as e:
+            return e.message, 400
+
+        data: Union[Any, dict] = request.json
+        user = model.User.query.get(g.user.id)
+        user.set_password(data["new_password"])
+        model.db.session.commit()
+        return "Password updated successfully", 200
 
 
 # @api.route("/auth/current-users")

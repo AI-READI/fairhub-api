@@ -2,7 +2,7 @@
 import typing
 
 from email_validator import EmailNotValidError, validate_email
-from flask import request
+from flask import Response, request
 from flask_restx import Resource, fields
 from jsonschema import FormatChecker, ValidationError, validate
 
@@ -42,15 +42,16 @@ class StudyContactResource(Resource):
 
         sorted_study_contact = sorted(study_contact_, key=lambda x: x.created_at)
 
-        return [s.to_dict() for s in sorted_study_contact if s.central_contact]
+        return [s.to_dict() for s in sorted_study_contact if s.central_contact], 200
 
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
     def post(self, study_id: int):
         """Create study contact metadata"""
 
         def validate_is_valid_email(instance):
-            print("within is_valid_email")
             email_address = instance
-            print(email_address)
+
             try:
                 validate_email(email_address)
                 return True
@@ -71,6 +72,7 @@ class StudyContactResource(Resource):
                     "email_address",
                 ],
                 "properties": {
+                    "id": {"type": "string"},
                     "name": {"type": "string", "minLength": 1},
                     "affiliation": {"type": "string", "minLength": 1},
                     "role": {"type": "string", "minLength": 1},
@@ -100,7 +102,7 @@ class StudyContactResource(Resource):
 
         study = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         data: typing.Union[dict, typing.Any] = request.json
 
         study_obj = model.Study.query.get(study_id)
@@ -119,12 +121,15 @@ class StudyContactResource(Resource):
 
         model.db.session.commit()
 
-        return list_of_elements
+        return list_of_elements, 201
 
     @api.route("/study/<study_id>/metadata/central-contact/<central_contact_id>")
     class StudyContactUpdate(Resource):
         """Study Contact Metadata"""
 
+        @api.doc("Delete Study contacts")
+        @api.response(204, "Success")
+        @api.response(400, "Validation Error")
         def delete(self, study_id: int, central_contact_id: int):
             """Delete study contact metadata"""
             study = model.Study.query.get(study_id)
@@ -135,4 +140,4 @@ class StudyContactResource(Resource):
             model.db.session.delete(study_contact_)
             model.db.session.commit()
 
-            return study_contact_.to_dict()
+            return Response(status=204)

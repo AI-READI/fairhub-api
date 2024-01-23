@@ -1,7 +1,7 @@
 """API routes for study reference metadata"""
 import typing
 
-from flask import request
+from flask import Response, request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -39,8 +39,10 @@ class StudyReferenceResource(Resource):
 
         sorted_study_reference = sorted(study_reference_, key=lambda x: x.created_at)
 
-        return [s.to_dict() for s in sorted_study_reference]
+        return [s.to_dict() for s in sorted_study_reference], 200
 
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
     def post(self, study_id: int):
         """Create study reference metadata"""
         # Schema validation
@@ -50,6 +52,7 @@ class StudyReferenceResource(Resource):
                 "type": "object",
                 "additionalProperties": False,
                 "properties": {
+                    "id": {"type": "string"},
                     "identifier": {"type": "string"},
                     "type": {"type": ["string", "null"]},
                     "citation": {"type": "string", "minLength": 1},
@@ -66,27 +69,28 @@ class StudyReferenceResource(Resource):
 
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         data: typing.Union[dict, typing.Any] = request.json
         list_of_elements = []
         for i in data:
             if "id" in i and i["id"]:
                 study_reference_ = model.StudyReference.query.get(i["id"])
                 study_reference_.update(i)
-                list_of_elements.append(study_reference_.to_dict())
-            elif "id" not in i or not i["id"]:
+            else:
                 study_reference_ = model.StudyReference.from_data(study_obj, i)
                 model.db.session.add(study_reference_)
-                list_of_elements.append(study_reference_.to_dict())
-
+            list_of_elements.append(study_reference_.to_dict())
         model.db.session.commit()
 
-        return list_of_elements
+        return list_of_elements, 201
 
     @api.route("/study/<study_id>/metadata/reference/<reference_id>")
     class StudyReferenceUpdate(Resource):
         """Study Reference Metadata"""
 
+        @api.doc("delete reference")
+        @api.response(204, "Success")
+        @api.response(400, "Validation Error")
         def delete(self, study_id: int, reference_id: int):
             """Delete study reference metadata"""
             study_obj = model.Study.query.get(study_id)
@@ -98,4 +102,4 @@ class StudyReferenceResource(Resource):
 
             model.db.session.commit()
 
-            return 204
+            return Response(status=204)

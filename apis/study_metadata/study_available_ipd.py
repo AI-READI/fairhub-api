@@ -1,7 +1,7 @@
 """API routes for study available ipd metadata"""
 import typing
 
-from flask import request
+from flask import Response, request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -40,15 +40,13 @@ class StudyAvailableResource(Resource):
             study_available_ipd_, key=lambda x: x.created_at
         )
 
-        return [s.to_dict() for s in sorted_study_available_ipd]
+        return [s.to_dict() for s in sorted_study_available_ipd], 200
 
     @api.doc(
         description="An array of objects are expected within the payload with the keys demonstrated below to create an available-ipd"  # noqa E501
     )
-    @api.response(200, "Success")
+    @api.response(201, "Success")
     @api.response(400, "Validation Error")
-    # @api.marshal_with(study_available)
-    # marshal with will need to be removed to have validation errors return
     @api.expect(study_available)
     def post(self, study_id: int):
         """Create study available metadata"""
@@ -59,6 +57,7 @@ class StudyAvailableResource(Resource):
                 "type": "object",
                 "additionalProperties": False,
                 "properties": {
+                    "id": {"type": "string"},
                     "identifier": {"type": "string", "minLength": 1},
                     "type": {
                         "type": "string",
@@ -88,7 +87,7 @@ class StudyAvailableResource(Resource):
 
         study = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         data: typing.Union[dict, typing.Any] = request.json
         study_obj = model.Study.query.get(study_id)
 
@@ -98,21 +97,22 @@ class StudyAvailableResource(Resource):
             if "id" in i and i["id"]:
                 study_available_ipd_ = model.StudyAvailableIpd.query.get(i["id"])
                 study_available_ipd_.update(i)
-                list_of_elements.append(study_available_ipd_.to_dict())
-            elif "id" not in i or not i["id"]:
+            else:
                 study_available_ipd_ = model.StudyAvailableIpd.from_data(study_obj, i)
                 model.db.session.add(study_available_ipd_)
-                list_of_elements.append(study_available_ipd_.to_dict())
-
+            list_of_elements.append(study_available_ipd_.to_dict())
         model.db.session.commit()
 
-        return list_of_elements
+        return list_of_elements, 201
 
 
 @api.route("/study/<study_id>/metadata/available-ipd/<available_ipd_id>")
 class StudyLocationUpdate(Resource):
     """Study Available Metadata"""
 
+    @api.doc("delete available-ipd")
+    @api.response(204, "Success")
+    @api.response(400, "Validation Error")
     def delete(self, study_id: int, available_ipd_id: int):
         """Delete study available metadata"""
         study_obj = model.Study.query.get(study_id)
@@ -123,4 +123,4 @@ class StudyLocationUpdate(Resource):
         model.db.session.delete(study_available_)
         model.db.session.commit()
 
-        return 204
+        return Response(status=204)

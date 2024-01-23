@@ -6,7 +6,6 @@ from apis.study_metadata_namespace import api as study_metadata_namespace
 
 from .authentication import api as authentication
 from .contributor import api as contributors_api
-from .dashboard import api as dashboard
 from .dataset import api as dataset_api
 from .dataset_metadata.dataset_access import api as access
 from .dataset_metadata.dataset_alternate_identifier import api as alternate_identifier
@@ -17,7 +16,6 @@ from .dataset_metadata.dataset_de_ident_level import api as de_ident_level
 from .dataset_metadata.dataset_description import api as description
 from .dataset_metadata.dataset_funder import api as funder
 from .dataset_metadata.dataset_other import api as dataset_other
-from .dataset_metadata.dataset_readme import api as readme
 from .dataset_metadata.dataset_record_keys import api as record_keys
 from .dataset_metadata.dataset_related_item import api as related_item
 from .dataset_metadata.dataset_rights import api as rights
@@ -25,7 +23,6 @@ from .dataset_metadata.dataset_subject import api as subject
 from .dataset_metadata.dataset_title import api as title
 from .file import api as file_api
 from .participant import api as participants_api
-from .redcap import api as redcap
 from .study import api as study_api
 from .study_metadata.study_arm import api as arm
 from .study_metadata.study_available_ipd import api as available_ipd
@@ -44,6 +41,7 @@ from .study_metadata.study_reference import api as reference
 from .study_metadata.study_sponsors_collaborators import api as sponsors_collaborator
 from .study_metadata.study_status import api as status
 from .user import api as user
+from .utils import api as utils
 
 api = Api(
     title="FAIRHUB",
@@ -65,7 +63,6 @@ __all__ = [
     "description",
     "funder",
     "dataset_other",
-    "readme",
     "record_keys",
     "related_item",
     "api",
@@ -92,21 +89,13 @@ __all__ = [
     "identification",
     "study_description",
     "dataset_contributor",
-    "redcap",
-    "dashboard",
+    "utils",
 ]
+
 
 api.add_namespace(dataset_metadata_namespace)
 api.add_namespace(study_metadata_namespace)
 api.add_namespace(authentication)
-api.add_namespace(study_api)
-api.add_namespace(file_api)
-api.add_namespace(dataset_api)
-api.add_namespace(participants_api)
-api.add_namespace(contributors_api)
-api.add_namespace(user)
-api.add_namespace(redcap)
-api.add_namespace(dashboard)
 
 
 @api.route("/echo", endpoint="echo")
@@ -119,3 +108,12 @@ class HelloEverynyan(Resource):
         """Returns a simple 'Server Active' message"""
 
         return "Server active!"
+
+
+api.add_namespace(study_api)
+api.add_namespace(file_api)
+api.add_namespace(dataset_api)
+api.add_namespace(participants_api)
+api.add_namespace(contributors_api)
+api.add_namespace(user)
+api.add_namespace(utils)

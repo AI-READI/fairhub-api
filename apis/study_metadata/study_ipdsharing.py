@@ -37,8 +37,10 @@ class StudyIpdsharingResource(Resource):
         """Get study ipdsharing metadata"""
         study_ = model.Study.query.get(study_id)
 
-        return study_.study_ipdsharing.to_dict()
+        return study_.study_ipdsharing.to_dict(), 200
 
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
     def put(self, study_id: int):
         """Create study ipdsharing metadata"""
         # Schema validation
@@ -47,7 +49,7 @@ class StudyIpdsharingResource(Resource):
             "additionalProperties": False,
             "properties": {
                 "ipd_sharing": {"type": "string", "enum": ["Yes", "No", "Undecided"]},
-                "ipd_sharing_description": {"type": "string", "minLength": 1},
+                "ipd_sharing_description": {"type": "string"},
                 "ipd_sharing_info_type_list": {
                     "type": "array",
                     "items": {
@@ -60,12 +62,11 @@ class StudyIpdsharingResource(Resource):
                             "Analytical Code",
                         ],
                     },
-                    "minItems": 1,
                     "uniqueItems": True,
                 },
-                "ipd_sharing_time_frame": {"type": "string", "minLength": 1},
-                "ipd_sharing_access_criteria": {"type": "string", "minLength": 1},
-                "ipd_sharing_url": {"type": "string", "format": "uri", "minLength": 1},
+                "ipd_sharing_time_frame": {"type": "string"},
+                "ipd_sharing_access_criteria": {"type": "string"},
+                "ipd_sharing_url": {"type": "string", "format": "uri"},
             },
             "required": [
                 "ipd_sharing",
@@ -98,7 +99,7 @@ class StudyIpdsharingResource(Resource):
 
         study_ = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         study_.study_ipdsharing.update(request.json)
         model.db.session.commit()
-        return study_.study_ipdsharing.to_dict()
+        return study_.study_ipdsharing.to_dict(), 200

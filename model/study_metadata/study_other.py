@@ -34,11 +34,20 @@ class StudyOther(db.Model):  # type: ignore
     def to_dict(self):
         """Converts the study to a dictionary"""
         return {
+            "id": self.study_id,
             "oversight_has_dmc": self.oversight_has_dmc,
             "conditions": self.conditions,
             "keywords": self.keywords,
             "size": self.size,
         }
+
+    # def to_dict_metadata(self):
+    #     """Converts the study metadata to a dictionary"""
+    #     return {
+    #         "oversight_has_dmc": self.oversight_has_dmc,
+    #         "conditions": self.conditions,
+    #         "keywords": self.keywords
+    #     }
 
     @staticmethod
     def from_data(study: Study, data: dict):

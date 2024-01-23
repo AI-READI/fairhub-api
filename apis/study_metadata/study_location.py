@@ -1,7 +1,7 @@
 """API routes for study location metadata"""
 import typing
 
-from flask import request
+from flask import Response, request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -41,8 +41,10 @@ class StudyLocationResource(Resource):
 
         sorted_study_location = sorted(study_location_, key=lambda x: x.created_at)
 
-        return [s.to_dict() for s in sorted_study_location]
+        return [s.to_dict() for s in sorted_study_location], 200
 
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
     def post(self, study_id: int):
         """Create study location metadata"""
         # Schema validation
@@ -52,6 +54,7 @@ class StudyLocationResource(Resource):
             "items": {
                 "type": "object",
                 "properties": {
+                    "id": {"type": "string"},
                     "facility": {"type": "string", "minLength": 1},
                     "status": {
                         "type": "string",
@@ -82,28 +85,29 @@ class StudyLocationResource(Resource):
 
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
-            return "Access denied, you can not delete study", 403
+            return "Access denied, you can not modify study", 403
         data: typing.Union[dict, typing.Any] = request.json
         list_of_elements = []
         for i in data:
             if "id" in i and i["id"]:
                 study_location_ = model.StudyLocation.query.get(i["id"])
                 study_location_.update(i)
-                list_of_elements.append(study_location_.to_dict())
-            elif "id" not in i or not i["id"]:
+            else:
                 study_location_ = model.StudyLocation.from_data(study_obj, i)
                 model.db.session.add(study_location_)
-                list_of_elements.append(study_location_.to_dict())
-
+            list_of_elements.append(study_location_.to_dict())
         model.db.session.commit()
 
-        return list_of_elements
+        return list_of_elements, 201
 
 
 @api.route("/study/<study_id>/metadata/location/<location_id>")
 class StudyLocationUpdate(Resource):
     """Study Location Metadata"""
 
+    @api.doc("delete study locations")
+    @api.response(204, "Success")
+    @api.response(400, "Validation Error")
     def delete(self, study_id: int, location_id: int):
         """Delete study location metadata"""
         study_obj = model.Study.query.get(study_id)
@@ -115,4 +119,4 @@ class StudyLocationUpdate(Resource):
 
         model.db.session.commit()
 
-        return 204
+        return Response(status=204)

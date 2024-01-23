@@ -40,6 +40,15 @@ class DatasetContributor(db.Model):  # type: ignore
             "created_at": self.created_at,
         }
 
+    def to_dict_metadata(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "name_type": self.name_type,
+            "contributor_type": self.contributor_type,
+            "creator": self.creator,
+        }
+
     @staticmethod
     def from_data(dataset, data: dict):
         dataset_contributor = DatasetContributor(dataset)
