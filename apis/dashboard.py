@@ -199,7 +199,6 @@ class RedcapProjectDashboards(Resource):
 
 @api.route("/study/<study_id>/dashboard/add")
 class AddRedcapProjectDashboard(Resource):
-
     @api.doc(parser=dashboard_parser)
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
@@ -300,7 +299,6 @@ class AddRedcapProjectDashboard(Resource):
 
 @api.route("/study/<study_id>/dashboard-connector")
 class RedcapProjectDashboardConnector(Resource):
-
     @api.doc(parser=dashboard_parser)
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
@@ -323,7 +321,6 @@ class RedcapProjectDashboardConnector(Resource):
 
 @api.route("/study/<study_id>/dashboard")
 class RedcapProjectDashboard(Resource):
-
     @api.doc(parser=dashboard_parser)
     @api.response(200, "Success")
     @api.response(400, "Validation Error")

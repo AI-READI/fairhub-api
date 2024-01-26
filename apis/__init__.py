@@ -123,4 +123,3 @@ api.add_namespace(user)
 api.add_namespace(utils)
 api.add_namespace(redcap)
 api.add_namespace(dashboard)
-
