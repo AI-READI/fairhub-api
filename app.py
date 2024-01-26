@@ -12,6 +12,7 @@ from flask_cors import CORS
 from growthbook import GrowthBook
 from sqlalchemy import MetaData
 from waitress import serve
+from caching import cache
 
 import config
 import model
@@ -63,6 +64,7 @@ def create_app(config_module=None):
     model.db.init_app(app)
     api.init_app(app)
     bcrypt.init_app(app)
+    cache.init_app(app)
 
     cors_origins = [
         "https://brave-ground-.*-.*.centralus.2.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
@@ -71,10 +73,10 @@ def create_app(config_module=None):
         "https://staging.fairhub.io",
         "https://fairhub.io",
     ]
-
+    print(app.debug)
     if app.debug:
-        cors_origins.extend(["http://localhost:3000", "http://localhost:5000"])
-
+        cors_origins.extend(["http://localhost:3000"])
+    print(cors_origins)
     # Only allow CORS origin for localhost:3000
     # and any subdomain of azurestaticapps.net/
     CORS(
@@ -95,13 +97,11 @@ def create_app(config_module=None):
 
     # app.config[
     #     "CORS_ALLOW_HEADERS"
-    # ] = "Content-Type, Authorization, Access-Control-Allow-Origin,
-    # Access-Control-Allow-Credentials"
-    # app.config["CORS_SUPPORTS_CREDENTIALS"] = True
+    # ] = "Content-Type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
     # app.config[
     #     "CORS_EXPOSE_HEADERS"
-    # ] = "Content-Type, Authorization, Access-Control-Allow-Origin,
-    # Access-Control-Allow-Credentials"
+    # ] = "Content-Type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
+    # app.config["CORS_SUPPORTS_CREDENTIALS"] = True
 
     # CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": "True"}})
 
@@ -215,7 +215,6 @@ def create_app(config_module=None):
         #     "Access-Control-Expose-Headers"
         # ] = "Content-Type, Authorization, Access-Control-Allow-Origin,
         # Access-Control-Allow-Credentials"
-
         app.logger.info(resp.headers)
 
         return resp
@@ -255,12 +254,11 @@ if __name__ == "__main__":
 
     parser = ArgumentParser()
     parser.add_argument(
-        "-p", "--port", default=5000, type=int, help="port to listen on"
+        "-p", "--port", default=5000, type=int, help="Port to listen on"
     )
     args = parser.parse_args()
     port = args.port
 
     flask_app = create_app()
 
-    # flask_app.run(host="0.0.0.0", port=port)
     serve(flask_app, port=port)

@@ -183,7 +183,7 @@ class RedcapProjectDashboards(Resource):
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_dashboard_model, as_list=True)
     def get(self, study_id: int):
-        """Get all REDCap project dashboard"""
+        """Get all REDCap project dashboards"""
         study = model.db.session.query(model.Study).get(study_id)
         if is_granted("redcap_access", study):
             return "Access denied, you can not modify", 403
@@ -199,6 +199,7 @@ class RedcapProjectDashboards(Resource):
 
 @api.route("/study/<study_id>/dashboard/add")
 class AddRedcapProjectDashboard(Resource):
+
     @api.doc(parser=dashboard_parser)
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
@@ -299,14 +300,13 @@ class AddRedcapProjectDashboard(Resource):
 
 @api.route("/study/<study_id>/dashboard-connector")
 class RedcapProjectDashboardConnector(Resource):
-    """Get REDCap project dashboard connector"""
 
     @api.doc(parser=dashboard_parser)
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_dashboard_connector_model)
     def get(self, study_id: int):
-        """Get Study Redcap Project Dashboard"""
+        """Get REDCap project dashboard connector"""
         study = model.db.session.query(model.Study).get(study_id)
         if is_granted("redcap_access", study):
             return "Access denied, you can not get this dashboard", 403
@@ -323,7 +323,6 @@ class RedcapProjectDashboardConnector(Resource):
 
 @api.route("/study/<study_id>/dashboard")
 class RedcapProjectDashboard(Resource):
-    """Get REDCap project dashboard"""
 
     @api.doc(parser=dashboard_parser)
     @api.response(200, "Success")
@@ -331,7 +330,7 @@ class RedcapProjectDashboard(Resource):
     @api.marshal_with(redcap_project_dashboard_model)
     @cache.cached(query_string=True)
     def get(self, study_id: int):
-        """Get Study Redcap Project Dashboard"""
+        """Get REDCap project dashboard"""
         study = model.db.session.query(model.Study).get(study_id)
         if is_granted("redcap_access", study):
             return "Access denied, you can not get this dashboard", 403
@@ -386,8 +385,6 @@ class RedcapProjectDashboard(Resource):
 
 @api.route("/study/<study_id>/dashboard/edit")
 class EditRedcapProjectDashboard(Resource):
-    """Edit REDCap project dashboard"""
-
     @api.doc(parser=dashboard_parser)
     @api.response(200, "Success")
     @api.response(400, "Validation Error")

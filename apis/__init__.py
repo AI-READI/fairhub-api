@@ -6,6 +6,7 @@ from apis.study_metadata_namespace import api as study_metadata_namespace
 
 from .authentication import api as authentication
 from .contributor import api as contributors_api
+from .dashboard import api as dashboard
 from .dataset import api as dataset_api
 from .dataset_metadata.dataset_access import api as access
 from .dataset_metadata.dataset_alternate_identifier import api as alternate_identifier
@@ -23,6 +24,7 @@ from .dataset_metadata.dataset_subject import api as subject
 from .dataset_metadata.dataset_title import api as title
 from .file import api as file_api
 from .participant import api as participants_api
+from .redcap import api as redcap
 from .study import api as study_api
 from .study_metadata.study_arm import api as arm
 from .study_metadata.study_available_ipd import api as available_ipd
@@ -89,6 +91,8 @@ __all__ = [
     "identification",
     "study_description",
     "dataset_contributor",
+    "redcap",
+    "dashboard",
     "utils",
 ]
 
@@ -117,3 +121,6 @@ api.add_namespace(participants_api)
 api.add_namespace(contributors_api)
 api.add_namespace(user)
 api.add_namespace(utils)
+api.add_namespace(redcap)
+api.add_namespace(dashboard)
+

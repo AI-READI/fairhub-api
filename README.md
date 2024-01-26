@@ -98,6 +98,20 @@ Close the database with:
 docker-compose -f ./db-docker-compose.yaml down -v
 ```
 
+## Running
+
+For developer mode:
+
+```bash
+flask run --debug
+```
+
+For production mode:
+
+```bash
+python3 app.py --host $HOST --port $PORT
+```
+
 ## License
 
 This work is licensed under
