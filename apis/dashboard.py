@@ -23,7 +23,7 @@ datum_model = api.model(
             required=True, readonly=True, description="Filterby field"
         ),
         "group": fields.String(required=True, readonly=True, description="Group field"),
-        "color": fields.String(required=True, readonly=True, description="Color field"),
+        # "color": fields.String(required=True, readonly=True, description="Color field"),
         "subgroup": fields.String(
             required=False, readonly=True, description="Subgroup field"
         ),
@@ -345,6 +345,7 @@ class RedcapProjectDashboard(Resource):
         redcap_project_view = redcap_project_view.to_dict()
 
         # Set report_ids for ETL
+        print("reports-pre", redcap_project_dashboard["reports"])
         for report in redcap_project_dashboard["reports"]:
             for i, report_config in enumerate(redcapTransformConfig["reports"]):
                 if (
@@ -354,7 +355,7 @@ class RedcapProjectDashboard(Resource):
                     redcapTransformConfig["reports"][i]["kwdargs"][
                         "report_id"
                     ] = report["report_id"]
-
+        print("reports-post", redcap_project_dashboard["reports"])
         # Structure REDCap ETL Config
         redcap_etl_config = {
             "redcap_api_url": redcap_project_view["project_api_url"],
@@ -369,6 +370,7 @@ class RedcapProjectDashboard(Resource):
             transform, module_etl_config = moduleTransformConfigs[
                 dashboard_module["id"]
             ]
+            print(transform)
             transformed = getattr(ModuleTransform(module_etl_config), transform)(
                 mergedTransform
             ).transformed
@@ -479,11 +481,14 @@ class EditRedcapProjectDashboard(Resource):
             )
         # Clear Redis Cache
         # TODO: We want to clear the cache by dashboard_id/cache key, not the whole cache!
-        cache.clear()
+        cache.clear();
         update_redcap_project_dashboard_query = (
             model.StudyRedcapProjectDashboard.query.get(data["dashboard_id"])
         )
+        print("data-update", data)
+        print("pre-update", update_redcap_project_dashboard_query.to_dict())
         update_redcap_project_dashboard_query.update(data)
+        print("post-update", update_redcap_project_dashboard_query.to_dict())
         model.db.session.commit()
         update_redcap_project_dashboard: Dict[
             str, Any
