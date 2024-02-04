@@ -69,7 +69,7 @@ class Version(db.Model):  # type: ignore
             "identifier": self.identifier,
             "doi": self.doi,
             "published": self.published,
-            "readme": self.version_readme.content if self.version_readme else ""
+            "readme": self.version_readme.content if self.version_readme else "",
             # "participants": [p.id for p in self.participants]
             # if isinstance(self.participants, (list, set))
             # else [],

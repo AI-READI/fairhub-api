@@ -1,4 +1,5 @@
 """Configuration for testing the application."""
+
 from os import environ
 from dotenv import dotenv_values
 

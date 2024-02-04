@@ -1,6 +1,7 @@
 """This module is used to authenticate users to the system and
 handle few authentication errors. Also, it sets token for logged user
 along with expiration date"""
+
 import datetime
 import importlib
 import os

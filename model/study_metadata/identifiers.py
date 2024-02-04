@@ -13,20 +13,22 @@ class Identifiers:
             key=lambda i: i.created_at,
         )
         return {
-            "primary": [
-                identifier
-                for identifier in sorted_study_identifications
-                if not identifier.secondary
-            ][0].to_dict()
-            if len(
+            "primary": (
                 [
                     identifier
                     for identifier in sorted_study_identifications
                     if not identifier.secondary
-                ]
-            )
-            != 0  # noqa: W503
-            else None,
+                ][0].to_dict()
+                if len(
+                    [
+                        identifier
+                        for identifier in sorted_study_identifications
+                        if not identifier.secondary
+                    ]
+                )
+                != 0  # noqa: W503
+                else None
+            ),
             "secondary": [
                 identifier.to_dict()
                 for identifier in sorted_study_identifications

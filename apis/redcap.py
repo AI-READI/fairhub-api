@@ -1,4 +1,5 @@
 """API routes for study redcap"""
+
 from typing import Any, Union
 
 from flask import request

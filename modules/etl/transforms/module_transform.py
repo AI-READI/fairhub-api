@@ -173,9 +173,9 @@ class ModuleTransform(object):
         One transform for one VType.
         """
         self.transformed = []
-        transform: Dict[
-            str, Any
-        ] = self.transforms.pop()  # simple transforms have only one transform object
+        transform: Dict[str, Any] = (
+            self.transforms.pop()
+        )  # simple transforms have only one transform object
         name, vtype, methods, accessors = (
             transform["name"],
             getattr(vtypes, transform["vtype"])(),

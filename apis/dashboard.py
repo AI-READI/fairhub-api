@@ -1,4 +1,5 @@
 """API routes for study redcap"""
+
 from typing import Any, Dict, List, Union
 
 from flask import request
@@ -291,9 +292,9 @@ class AddRedcapProjectDashboard(Resource):
         )
         model.db.session.add(connect_redcap_project_dashboard_data)
         model.db.session.commit()
-        connect_redcap_project_dashboard: Dict[
-            str, Any
-        ] = connect_redcap_project_dashboard_data.to_dict()
+        connect_redcap_project_dashboard: Dict[str, Any] = (
+            connect_redcap_project_dashboard_data.to_dict()
+        )
         return connect_redcap_project_dashboard, 201
 
 
@@ -352,9 +353,9 @@ class RedcapProjectDashboard(Resource):
                     report["report_key"] == report_config["key"]
                     and len(report["report_id"]) > 0
                 ):
-                    redcapTransformConfig["reports"][i]["kwdargs"][
-                        "report_id"
-                    ] = report["report_id"]
+                    redcapTransformConfig["reports"][i]["kwdargs"]["report_id"] = (
+                        report["report_id"]
+                    )
         print("reports-post", redcap_project_dashboard["reports"])
         # Structure REDCap ETL Config
         redcap_etl_config = {
@@ -481,7 +482,7 @@ class EditRedcapProjectDashboard(Resource):
             )
         # Clear Redis Cache
         # TODO: We want to clear the cache by dashboard_id/cache key, not the whole cache!
-        cache.clear();
+        cache.clear()
         update_redcap_project_dashboard_query = (
             model.StudyRedcapProjectDashboard.query.get(data["dashboard_id"])
         )
@@ -490,9 +491,9 @@ class EditRedcapProjectDashboard(Resource):
         update_redcap_project_dashboard_query.update(data)
         print("post-update", update_redcap_project_dashboard_query.to_dict())
         model.db.session.commit()
-        update_redcap_project_dashboard: Dict[
-            str, Any
-        ] = update_redcap_project_dashboard_query.to_dict()
+        update_redcap_project_dashboard: Dict[str, Any] = (
+            update_redcap_project_dashboard_query.to_dict()
+        )
         return update_redcap_project_dashboard, 201
 
 

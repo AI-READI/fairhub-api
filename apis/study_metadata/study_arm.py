@@ -1,4 +1,5 @@
 """API routes for study arm metadata"""
+
 import typing
 
 from flask import Response, request
