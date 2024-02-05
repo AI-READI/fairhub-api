@@ -346,7 +346,6 @@ class RedcapProjectDashboard(Resource):
         redcap_project_view = redcap_project_view.to_dict()
 
         # Set report_ids for ETL
-        print("reports-pre", redcap_project_dashboard["reports"])
         for report in redcap_project_dashboard["reports"]:
             for i, report_config in enumerate(redcapTransformConfig["reports"]):
                 if (
@@ -356,7 +355,7 @@ class RedcapProjectDashboard(Resource):
                     redcapTransformConfig["reports"][i]["kwdargs"]["report_id"] = (
                         report["report_id"]
                     )
-        print("reports-post", redcap_project_dashboard["reports"])
+
         # Structure REDCap ETL Config
         redcap_etl_config = {
             "redcap_api_url": redcap_project_view["project_api_url"],
@@ -371,7 +370,7 @@ class RedcapProjectDashboard(Resource):
             transform, module_etl_config = moduleTransformConfigs[
                 dashboard_module["id"]
             ]
-            print(transform)
+            print(transform, module_etl_config)
             transformed = getattr(ModuleTransform(module_etl_config), transform)(
                 mergedTransform
             ).transformed

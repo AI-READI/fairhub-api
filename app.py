@@ -75,7 +75,7 @@ def create_app(config_module=None):
         "https://fairhub.io",
     ]
     if app.debug:
-        cors_origins.extend(["http://localhost:3000"])
+        cors_origins.extend(["http://localhost:3000", "http://127.0.0.1:3000"])
 
     # Only allow CORS origin for localhost:3000
     # and any subdomain of azurestaticapps.net/
@@ -254,11 +254,15 @@ if __name__ == "__main__":
 
     parser = ArgumentParser()
     parser.add_argument(
-        "-p", "--port", default=5000, type=int, help="Port to listen on"
+        "-P", "--port", default=5000, type=int, help="Port to listen on"
+    )
+    parser.add_argument(
+        "-H", "--host", default="0.0.0.0", type=str, help="Host"
     )
     args = parser.parse_args()
     port = args.port
+    host = args.host
 
     flask_app = create_app()
 
-    serve(flask_app, port=port)
+    serve(flask_app, port=port, host=host)
