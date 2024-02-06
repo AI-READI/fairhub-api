@@ -8,7 +8,6 @@ class SingleCategorical(SimpleVType):
             [
                 ("filterby", str),
                 ("group", str),
-                ("color", str),
                 ("value", int),
             ],
             str,
@@ -23,7 +22,6 @@ class DoubleCategorical(SimpleVType):
                 ("filterby", str),
                 ("group", str),
                 ("subgroup", str),
-                ("color", str),
                 ("value", int),
             ],
             str,

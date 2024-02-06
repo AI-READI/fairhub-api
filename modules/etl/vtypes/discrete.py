@@ -5,7 +5,7 @@ class SingleDiscrete(SimpleVType):
     def __init__(self) -> None:
         super(SingleDiscrete, self).__init__(
             "SingleDiscrete",
-            [("filterby", str), ("group", str), ("color", str), ("x", int)],
+            [("filterby", str), ("group", str), ("x", int)],
             int,
         )
 
@@ -17,7 +17,6 @@ class DoubleDiscrete(SimpleVType):
             [
                 ("filterby", str),
                 ("group", str),
-                ("color", str),
                 ("x", int),
                 ("y", int),
             ],

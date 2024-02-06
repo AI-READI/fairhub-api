@@ -1,7 +1,7 @@
 # Library Modules
 from typing import Any, Callable, Union, List, Dict, Tuple
 from datetime import datetime
-import logging, re
+import logging, re, copy
 import modules.etl.vtypes as vtypes
 
 # Third-Party Modules
@@ -49,17 +49,17 @@ class ModuleTransform(object):
 
         self.key = config["key"] if "key" in config else None
 
-        self.transforms: List[Dict[str, Any]] = config["transforms"]
+        self.transforms: List[Dict[str, Any]] = copy.deepcopy(config["transforms"])
 
-        if len(self.transforms) < 1:
+        if type(self.transforms) != list:
             self.valid = False
             raise ValueError(
-                f"ModuleTransform instantiation missing transforms argument"
+                f"ModuleTransform argument transforms in config must be a list or dict type"
             )
-        elif type(self.transforms) != list:
+        elif len(self.transforms) < 1:
             self.valid = False
             raise ValueError(
-                f"ModuleTransform argument transforms must be a list or dict type"
+                f"ModuleTransform instantiation missing transforms in config argument"
             )
         else:
             # Transform attribute is there and has one of the correct types (list, dict)

@@ -13,20 +13,20 @@ from flask_cors import CORS
 from growthbook import GrowthBook
 from sqlalchemy import MetaData
 from waitress import serve
-from caching import cache
 
 import config
 import model
 from apis import api
 from apis.authentication import UnauthenticatedException, authentication, authorization
 from apis.exception import ValidationException
+from caching import cache
 
 # from pyfairdatatools import __version__
 
 bcrypt = Bcrypt()
 
 
-def create_app(config_module=None):
+def create_app(config_module=None, loglevel="INFO"):
     """Initialize the core application."""
     # create and configure the app
     app = Flask(__name__)
@@ -35,7 +35,7 @@ def create_app(config_module=None):
     app.config["RESTX_MASK_SWAGGER"] = False
 
     # set up logging
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=getattr(logging, loglevel))
 
     # Initialize config
     app.config.from_object(config_module or "config")
@@ -75,7 +75,7 @@ def create_app(config_module=None):
         "https://fairhub.io",
     ]
     if app.debug:
-        cors_origins.extend(["http://localhost:3000", "http://127.0.0.1:3000"])
+        cors_origins.extend(["http://localhost:3000", "https://localhost:3000"])
 
     # Only allow CORS origin for localhost:3000
     # and any subdomain of azurestaticapps.net/
@@ -103,21 +103,38 @@ def create_app(config_module=None):
     # ] = "Content-Type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
     # app.config["CORS_SUPPORTS_CREDENTIALS"] = True
 
-    # CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": "True"}})
+    # CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": True}})
 
-    #
-    # @app.cli.command("create-schema")
-    # def create_schema():
-    #     engine = model.db.session.get_bind()
-    #     metadata = MetaData()
-    #     metadata = MetaData()
-    #     metadata.reflect(bind=engine)
-    #     table_names = [table.name for table in metadata.tables.values()]
-    #     print(table_names)
-    #     if len(table_names) == 0:
-    #         with engine.begin() as conn:
-    #             """Create the database schema."""
-    #             model.db.create_all()
+    @app.cli.command("create-schema")
+    def create_schema():
+        """Create the database schema."""
+        engine = model.db.session.get_bind()
+        metadata = MetaData()
+        metadata.reflect(bind=engine)
+        table_names = [table.name for table in metadata.tables.values()]
+        if len(table_names) == 0:
+            with engine.begin():
+                model.db.create_all()
+
+    @app.cli.command("destroy-schema")
+    def destroy_schema():
+        """Create the database schema."""
+        engine = model.db.session.get_bind()
+        with engine.begin():
+            model.db.drop_all()
+
+    @app.cli.command("cycle-schema")
+    def cycle_schema():
+        """Destroy then re-create the database schema."""
+        engine = model.db.session.get_bind()
+        with engine.begin():
+            model.db.drop_all()
+        metadata = MetaData()
+        metadata.reflect(bind=engine)
+        table_names = [table.name for table in metadata.tables.values()]
+        if len(table_names) == 0:
+            with engine.begin():
+                model.db.create_all()
 
     @app.before_request
     def on_before_request():  # pylint: disable = inconsistent-return-statements
@@ -223,29 +240,6 @@ def create_app(config_module=None):
     def validation_exception_handler(error):
         return error.args[0], 422
 
-    @app.cli.command("destroy-schema")
-    def destroy_schema():
-        """destroy the database schema."""
-
-        # if db is azure, then skip
-        if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
-            return
-
-        engine = model.db.session.get_bind()
-
-        with engine.begin():
-            model.db.drop_all()
-
-    with app.app_context():
-        engine = model.db.session.get_bind()
-        metadata = MetaData()
-        metadata.reflect(bind=engine)
-        table_names = [table.name for table in metadata.tables.values()]
-
-        # The alembic table is created by default, so we need to check for more than 1 table
-        if len(table_names) <= 1:
-            with engine.begin():
-                model.db.create_all()
     return app
 
 
@@ -256,13 +250,15 @@ if __name__ == "__main__":
     parser.add_argument(
         "-P", "--port", default=5000, type=int, help="Port to listen on"
     )
+    parser.add_argument("-H", "--host", default="0.0.0.0", type=str, help="Host")
     parser.add_argument(
-        "-H", "--host", default="0.0.0.0", type=str, help="Host"
+        "-L", "--loglevel", default="INFO", type=str, help="Logging level"
     )
     args = parser.parse_args()
     port = args.port
     host = args.host
+    loglevel = args.loglevel
 
-    flask_app = create_app()
+    flask_app = create_app(loglevel=loglevel)
 
     serve(flask_app, port=port, host=host)

@@ -292,9 +292,9 @@ class AddRedcapProjectDashboard(Resource):
         )
         model.db.session.add(connect_redcap_project_dashboard_data)
         model.db.session.commit()
-        connect_redcap_project_dashboard: Dict[str, Any] = (
-            connect_redcap_project_dashboard_data.to_dict()
-        )
+        connect_redcap_project_dashboard: Dict[
+            str, Any
+        ] = connect_redcap_project_dashboard_data.to_dict()
         return connect_redcap_project_dashboard, 201
 
 
@@ -329,6 +329,7 @@ class RedcapProjectDashboard(Resource):
     @cache.cached(query_string=True)
     def get(self, study_id: int):
         """Get REDCap project dashboard"""
+        model.db.session.flush()
         study = model.db.session.query(model.Study).get(study_id)
         if is_granted("redcap_access", study):
             return "Access denied, you can not get this dashboard", 403
@@ -352,9 +353,9 @@ class RedcapProjectDashboard(Resource):
                     report["report_key"] == report_config["key"]
                     and len(report["report_id"]) > 0
                 ):
-                    redcapTransformConfig["reports"][i]["kwdargs"]["report_id"] = (
-                        report["report_id"]
-                    )
+                    redcapTransformConfig["reports"][i]["kwdargs"][
+                        "report_id"
+                    ] = report["report_id"]
 
         # Structure REDCap ETL Config
         redcap_etl_config = {
@@ -363,21 +364,31 @@ class RedcapProjectDashboard(Resource):
         } | redcapTransformConfig
 
         redcapTransform = RedcapTransform(redcap_etl_config)
-        mergedTransform = redcapTransform.merged
 
         # Execute Dashboard Module Transforms
         for dashboard_module in redcap_project_dashboard["dashboard_modules"]:
-            transform, module_etl_config = moduleTransformConfigs[
-                dashboard_module["id"]
-            ]
-            print(transform, module_etl_config)
-            transformed = getattr(ModuleTransform(module_etl_config), transform)(
-                mergedTransform
-            ).transformed
-            dashboard_module["visualizations"] = {
-                "id": dashboard_module["id"],
-                "data": transformed,
-            }
+            if dashboard_module["selected"]:
+                mergedTransform = redcapTransform.merged
+                print("selected", dashboard_module["id"])
+                transform, module_etl_config = moduleTransformConfigs[
+                    dashboard_module["id"]
+                ]
+                print("transform", transform)
+                print("module etl config", module_etl_config)
+                moduleTransform = ModuleTransform(module_etl_config)
+                transformed = getattr(moduleTransform, transform)(
+                    mergedTransform
+                ).transformed
+                dashboard_module["visualizations"] = {
+                    "id": dashboard_module["id"],
+                    "data": transformed,
+                }
+            else:
+                print("not selected", dashboard_module["id"])
+                dashboard_module["visualizations"] = {
+                    "id": dashboard_module["id"],
+                    "data": [],
+                }
 
         return redcap_project_dashboard, 201
 
@@ -485,14 +496,11 @@ class EditRedcapProjectDashboard(Resource):
         update_redcap_project_dashboard_query = (
             model.StudyRedcapProjectDashboard.query.get(data["dashboard_id"])
         )
-        print("data-update", data)
-        print("pre-update", update_redcap_project_dashboard_query.to_dict())
         update_redcap_project_dashboard_query.update(data)
-        print("post-update", update_redcap_project_dashboard_query.to_dict())
         model.db.session.commit()
-        update_redcap_project_dashboard: Dict[str, Any] = (
-            update_redcap_project_dashboard_query.to_dict()
-        )
+        update_redcap_project_dashboard: Dict[
+            str, Any
+        ] = update_redcap_project_dashboard_query.to_dict()
         return update_redcap_project_dashboard, 201
 
 

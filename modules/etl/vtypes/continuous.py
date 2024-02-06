@@ -5,7 +5,7 @@ class SingleContinuous(SimpleVType):
     def __init__(self) -> None:
         super(SingleContinuous, self).__init__(
             "SingleContinuous",
-            [("filterby", str), ("group", str), ("color", str), ("x", float)],
+            [("filterby", str), ("group", str), ("x", float)],
             float,
         )
 
@@ -17,7 +17,6 @@ class DoubleContinuous(SimpleVType):
             [
                 ("filterby", str),
                 ("group", str),
-                ("color", str),
                 ("x", float),
                 ("y", float),
             ],

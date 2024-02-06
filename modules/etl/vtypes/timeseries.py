@@ -10,7 +10,6 @@ class SingleTimeseries(SimpleVType):
             [
                 ("filterby", str),
                 ("subgroup", str),
-                ("color", str),
                 ("datetime", datetime),
             ],
             pd._libs.tslibs.nattype.NaTType,
@@ -24,7 +23,6 @@ class DoubleDiscreteTimeseries(SimpleVType):
             [
                 ("filterby", str),
                 ("subgroup", str),
-                ("color", str),
                 ("datetime", str),
                 ("y", int),
             ],
@@ -39,7 +37,6 @@ class DoubleContinuousTimeseries(SimpleVType):
             [
                 ("filterby", str),
                 ("subgroup", str),
-                ("color", str),
                 ("datetime", str),
                 ("y", float),
             ],

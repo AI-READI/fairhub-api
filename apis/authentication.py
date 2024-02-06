@@ -138,6 +138,7 @@ class SignUpUser(Resource):
                 "email_address": data["email_address"],
                 "password": data["password"],
             }
+            print(data_no_code)
             validate(
                 instance=data_no_code, schema=schema, format_checker=format_checker
             )

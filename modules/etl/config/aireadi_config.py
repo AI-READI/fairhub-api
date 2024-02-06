@@ -326,12 +326,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Recruitment Survey",
-                    #     "field": "recruitment_survey_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -370,12 +364,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "FAQ Survey",
-                    #     "field": "faq_survey_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -414,12 +402,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Screening Survey",
-                    #     "field": "screening_survey_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -458,12 +440,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Preconsent Survey",
-                    #     "field": "preconsent_survey_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -502,12 +478,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Consent Survey",
-                    #     "field": "consent_survey_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -549,12 +519,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Staff Consent Attestation Survey",
-                    #     "field": "staff_consent_attestation_survey_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -593,12 +557,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Demographics Survey",
-                    #     "field": "demographics_survey_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -637,12 +595,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Health Survey",
-                    #     "field": "health_survey_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -681,12 +633,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Substance Use Survey",
-                    #     "field": "substance_use_survey_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -725,12 +671,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "CES-D-10 Survey",
-                    #     "field": "cesd10_survey_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -769,12 +709,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "PAID-5 DM Survey",
-                    #     "field": "paid5_dm_survey_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -813,12 +747,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Diabetes Survey",
-                    #     "field": "diabetes_survey_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -857,12 +785,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Dietary Survey",
-                    #     "field": "dietary_survey_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -901,12 +823,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Opthalmic Survey",
-                    #     "field": "ophthalmic_survey_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -945,12 +861,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "PhenX SDOH Combined Survey",
-                    #     "field": "px_sdoh_combined_survey_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -989,12 +899,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "PhenX Food Insecurity Survey",
-                    #     "field": "px_food_insecurity_survey_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -1036,12 +940,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "PhenX Neighborhood Environment Survey",
-                    #     "field": "px_neighborhood_environment_survey_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -1083,12 +981,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "PhenX Racial and Ethnic Discrimination Survey",
-                    #     "field": "px_racial_ethnic_discrimination_survey_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -1127,12 +1019,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Decline Participation Survey",
-                    #     "field": "decline_participation_survey_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -1171,12 +1057,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Study Enrollment Survey",
-                    #     "field": "study_enrollment_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -1215,12 +1095,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Driving Record",
-                    #     "field": "driving_record_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -1259,12 +1133,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Device Distribution",
-                    #     "field": "device_distribution_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -1303,12 +1171,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Medications Assessment",
-                    #     "field": "meds_assessment_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -1347,12 +1209,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Physical Assessment",
-                    #     "field": "physical_assessment_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -1391,12 +1247,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "BCVA",
-                    #     "field": "bcva_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -1435,12 +1285,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Photopic MARS",
-                    #     "field": "photopic_mars_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -1479,12 +1323,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Mesopic MARS",
-                    #     "field": "mesopic_mars_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -1523,12 +1361,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Monofilament",
-                    #     "field": "monofilament_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -1567,12 +1399,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "MOCA",
-                    #     "field": "moca_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -1611,12 +1437,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "ECG Survey",
-                    #     "field": "ecg_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -1655,12 +1475,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Lab Results Survey",
-                    #     "field": "lab_results_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -1699,12 +1513,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Specimen Management",
-                    #     "field": "specimen_management_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -1743,12 +1551,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Device Return",
-                    #     "field": "device_return_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -1787,12 +1589,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Disposition Survey",
-                    #     "field": "disposition_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -1831,12 +1627,6 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Data Management Survey",
-                    #     "field": "data_management_complete",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -1879,12 +1669,6 @@ raceRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Race",
-                    #     "field": "race",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "x": {
                         "name": "Week of the Year",
                         "field": "scrweek",
@@ -1933,12 +1717,6 @@ phenotypeRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Phenotype",
-                    #     "field": "phenotypes",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "x": {
                         "name": "Week of the Year",
                         "field": "scrweek",
@@ -1992,12 +1770,6 @@ raceSexBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    # "color": {
-                    #     "name": "Race",
-                    #     "field": "race",
-                    #     "missing_value": missing_value_generic,
-                    #     "astype": str,
-                    # },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -2040,12 +1812,6 @@ phenotypeSexBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "astype": str,
                     },
                     "subgroup": {
-                        "name": "Phenotype",
-                        "field": "phenotypes",
-                        "missing_value": missing_value_generic,
-                        "astype": str,
-                    },
-                    "color": {
                         "name": "Phenotype",
                         "field": "phenotypes",
                         "missing_value": missing_value_generic,
@@ -2098,12 +1864,6 @@ phenotypeRaceBySexTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    "color": {
-                        "name": "Race",
-                        "field": "race",
-                        "missing_value": missing_value_generic,
-                        "astype": str,
-                    },
                     "value": {
                         "name": "Count (N)",
                         "field": "record_id",
@@ -2151,12 +1911,6 @@ currentMedicationsBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
-                    "color": {
-                        "name": "Sex",
-                        "field": "scrsex",
-                        "missing_value": missing_value_generic,
-                        "astype": str,
-                    },
                     "value": {
                         "name": "Participants (N)",
                         "field": "record_id",
@@ -2171,10 +1925,10 @@ currentMedicationsBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
 
 moduleTransformConfigs: Dict[str, Any] = {
     "instrument-completion-status-by-site": instrumentCompletionStatusBySiteTransformConfig,
+    "phenotype-sex-by-site": phenotypeSexBySiteTransformConfig,
+    "phenotype-race-by-sex": phenotypeRaceBySexTransformConfig,
     "phenotype-recruitment-by-site": phenotypeRecruitmentBySiteTransformConfig,
     "race-recruitment-by-site": raceRecruitmentBySiteTransformConfig,
     "race-sex-by-site": raceSexBySiteTransformConfig,
-    "phenotype-sex-by-site": phenotypeSexBySiteTransformConfig,
-    "phenotype-race-by-sex": phenotypeRaceBySexTransformConfig,
     "current-medications-by-site": currentMedicationsBySiteTransformConfig,
 }
