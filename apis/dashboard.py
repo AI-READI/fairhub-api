@@ -7,7 +7,6 @@ from flask import request
 # from flask_caching import Cache
 from flask_restx import Namespace, Resource, fields, reqparse
 from jsonschema import ValidationError, validate
-from redcap import RedcapError
 
 import model
 from caching import cache
@@ -341,72 +340,74 @@ class RedcapProjectDashboard(Resource):
         dashboard_id = dashboard_parser.parse_args()["dashboard_id"]
 
         # Retrieve Dashboard Redis Cache
-        cached_redcap_project_dashboard = cache.get(f"$study_id#{study_id}$dashboard_id#{dashboard_id}")
+        cached_redcap_project_dashboard = cache.get(
+            f"$study_id#{study_id}$dashboard_id#{dashboard_id}"
+        )
 
         if cached_redcap_project_dashboard is not None:
-
             return cached_redcap_project_dashboard, 201
 
-        else:
+        redcap_project_dashboard_query: Any = model.db.session.query(
+            model.StudyRedcapProjectDashboard
+        ).get(dashboard_id)
+        redcap_project_dashboard: Dict[
+            str, Any
+        ] = redcap_project_dashboard_query.to_dict()
 
-            redcap_project_dashboard_query: Any = model.db.session.query(
-                model.StudyRedcapProjectDashboard
-            ).get(dashboard_id)
-            redcap_project_dashboard: Dict[
-                str, Any
-            ] = redcap_project_dashboard_query.to_dict()
+        # Get REDCap Project
+        project_id = redcap_project_dashboard["project_id"]
+        redcap_project_view_query: Any = model.db.session.query(
+            model.StudyRedcapProjectApi
+        ).get(project_id)
+        redcap_project_view: Dict[str, Any] = redcap_project_view_query.to_dict()
 
-            # Get REDCap Project
-            project_id = redcap_project_dashboard["project_id"]
-            redcap_project_view_query: Any = model.db.session.query(
-                model.StudyRedcapProjectApi
-            ).get(project_id)
-            redcap_project_view: Dict[str, Any] = redcap_project_view_query.to_dict()
+        # Set report_ids for ETL
+        for report in redcap_project_dashboard["reports"]:
+            for i, report_config in enumerate(redcapTransformConfig["reports"]):
+                if (
+                    report["report_key"] == report_config["key"]
+                    and len(report["report_id"]) > 0
+                ):
+                    redcapTransformConfig["reports"][i]["kwdargs"][
+                        "report_id"
+                    ] = report["report_id"]
 
-            # Set report_ids for ETL
-            for report in redcap_project_dashboard["reports"]:
-                for i, report_config in enumerate(redcapTransformConfig["reports"]):
-                    if (
-                        report["report_key"] == report_config["key"]
-                        and len(report["report_id"]) > 0
-                    ):
-                        redcapTransformConfig["reports"][i]["kwdargs"][
-                            "report_id"
-                        ] = report["report_id"]
+        # Structure REDCap ETL Config
+        redcap_etl_config = {
+            "redcap_api_url": redcap_project_view["project_api_url"],
+            "redcap_api_key": redcap_project_view["project_api_key"],
+        } | redcapTransformConfig
 
-            # Structure REDCap ETL Config
-            redcap_etl_config = {
-                "redcap_api_url": redcap_project_view["project_api_url"],
-                "redcap_api_key": redcap_project_view["project_api_key"],
-            } | redcapTransformConfig
+        redcapTransform = RedcapTransform(redcap_etl_config)
 
-            redcapTransform = RedcapTransform(redcap_etl_config)
+        # Execute Dashboard Module Transforms
+        for dashboard_module in redcap_project_dashboard["dashboard_modules"]:
+            if dashboard_module["selected"]:
+                mergedTransform = redcapTransform.merged
+                transform, module_etl_config = moduleTransformConfigs[
+                    dashboard_module["id"]
+                ]
+                moduleTransform = ModuleTransform(module_etl_config)
+                transformed = getattr(moduleTransform, transform)(
+                    mergedTransform
+                ).transformed
+                dashboard_module["visualizations"] = {
+                    "id": dashboard_module["id"],
+                    "data": transformed,
+                }
+            else:
+                dashboard_module["visualizations"] = {
+                    "id": dashboard_module["id"],
+                    "data": [],
+                }
 
-            # Execute Dashboard Module Transforms
-            for dashboard_module in redcap_project_dashboard["dashboard_modules"]:
-                if dashboard_module["selected"]:
-                    mergedTransform = redcapTransform.merged
-                    transform, module_etl_config = moduleTransformConfigs[
-                        dashboard_module["id"]
-                    ]
-                    moduleTransform = ModuleTransform(module_etl_config)
-                    transformed = getattr(moduleTransform, transform)(
-                        mergedTransform
-                    ).transformed
-                    dashboard_module["visualizations"] = {
-                        "id": dashboard_module["id"],
-                        "data": transformed,
-                    }
-                else:
-                    dashboard_module["visualizations"] = {
-                        "id": dashboard_module["id"],
-                        "data": [],
-                    }
+        # Create Dashboard Redis Cache
+        cache.set(
+            f"$study_id#{study_id}$dashboard_id#{dashboard_id}",
+            redcap_project_dashboard,
+        )
 
-            # Create Dashboard Redis Cache
-            cache.set(f"$study_id#{study_id}$dashboard_id#{dashboard_id}", redcap_project_dashboard)
-
-            return redcap_project_dashboard, 201
+        return redcap_project_dashboard, 201
 
 
 @api.route("/study/<study_id>/dashboard/edit")
