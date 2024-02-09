@@ -7,6 +7,7 @@ from flask import request
 # from flask_caching import Cache
 from flask_restx import Namespace, Resource, fields, reqparse
 from jsonschema import ValidationError, validate
+from redcap import RedcapError
 
 import model
 from caching import cache
@@ -309,14 +310,17 @@ class RedcapProjectDashboardConnector(Resource):
         study = model.db.session.query(model.Study).get(study_id)
         if is_granted("redcap_access", study):
             return "Access denied, you can not get this dashboard", 403
+
+        # Get Dashboard Connector
         dashboard_id = dashboard_parser.parse_args()["dashboard_id"]
-        # Get Dashboard
-        redcap_project_dashboard_connector: Any = model.db.session.query(
+        redcap_project_dashboard_connector_query: Any = model.db.session.query(
             model.StudyRedcapProjectDashboard
         ).get(dashboard_id)
-        redcap_project_dashboard_connector = (
-            redcap_project_dashboard_connector.to_dict()
-        )
+
+        redcap_project_dashboard_connector: Dict[
+            str, Any
+        ] = redcap_project_dashboard_connector_query.to_dict()
+
         return redcap_project_dashboard_connector, 201
 
 
@@ -326,71 +330,83 @@ class RedcapProjectDashboard(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_dashboard_model)
-    @cache.cached(query_string=True)
     def get(self, study_id: int):
         """Get REDCap project dashboard"""
         model.db.session.flush()
         study = model.db.session.query(model.Study).get(study_id)
         if is_granted("redcap_access", study):
             return "Access denied, you can not get this dashboard", 403
-        dashboard_id = dashboard_parser.parse_args()["dashboard_id"]
+
         # Get Dashboard
-        redcap_project_dashboard: Any = model.db.session.query(
-            model.StudyRedcapProjectDashboard
-        ).get(dashboard_id)
-        redcap_project_dashboard = redcap_project_dashboard.to_dict()
-        # Get REDCap Project
-        project_id = redcap_project_dashboard["project_id"]
-        redcap_project_view: Any = model.db.session.query(
-            model.StudyRedcapProjectApi
-        ).get(project_id)
-        redcap_project_view = redcap_project_view.to_dict()
+        dashboard_id = dashboard_parser.parse_args()["dashboard_id"]
 
-        # Set report_ids for ETL
-        for report in redcap_project_dashboard["reports"]:
-            for i, report_config in enumerate(redcapTransformConfig["reports"]):
-                if (
-                    report["report_key"] == report_config["key"]
-                    and len(report["report_id"]) > 0
-                ):
-                    redcapTransformConfig["reports"][i]["kwdargs"][
-                        "report_id"
-                    ] = report["report_id"]
+        # Retrieve Dashboard Redis Cache
+        cached_redcap_project_dashboard = cache.get(f"$study_id#{study_id}$dashboard_id#{dashboard_id}")
 
-        # Structure REDCap ETL Config
-        redcap_etl_config = {
-            "redcap_api_url": redcap_project_view["project_api_url"],
-            "redcap_api_key": redcap_project_view["project_api_key"],
-        } | redcapTransformConfig
+        if cached_redcap_project_dashboard is not None:
 
-        redcapTransform = RedcapTransform(redcap_etl_config)
+            return cached_redcap_project_dashboard, 201
 
-        # Execute Dashboard Module Transforms
-        for dashboard_module in redcap_project_dashboard["dashboard_modules"]:
-            if dashboard_module["selected"]:
-                mergedTransform = redcapTransform.merged
-                print("selected", dashboard_module["id"])
-                transform, module_etl_config = moduleTransformConfigs[
-                    dashboard_module["id"]
-                ]
-                print("transform", transform)
-                print("module etl config", module_etl_config)
-                moduleTransform = ModuleTransform(module_etl_config)
-                transformed = getattr(moduleTransform, transform)(
-                    mergedTransform
-                ).transformed
-                dashboard_module["visualizations"] = {
-                    "id": dashboard_module["id"],
-                    "data": transformed,
-                }
-            else:
-                print("not selected", dashboard_module["id"])
-                dashboard_module["visualizations"] = {
-                    "id": dashboard_module["id"],
-                    "data": [],
-                }
+        else:
 
-        return redcap_project_dashboard, 201
+            redcap_project_dashboard_query: Any = model.db.session.query(
+                model.StudyRedcapProjectDashboard
+            ).get(dashboard_id)
+            redcap_project_dashboard: Dict[
+                str, Any
+            ] = redcap_project_dashboard_query.to_dict()
+
+            # Get REDCap Project
+            project_id = redcap_project_dashboard["project_id"]
+            redcap_project_view_query: Any = model.db.session.query(
+                model.StudyRedcapProjectApi
+            ).get(project_id)
+            redcap_project_view: Dict[str, Any] = redcap_project_view_query.to_dict()
+
+            # Set report_ids for ETL
+            for report in redcap_project_dashboard["reports"]:
+                for i, report_config in enumerate(redcapTransformConfig["reports"]):
+                    if (
+                        report["report_key"] == report_config["key"]
+                        and len(report["report_id"]) > 0
+                    ):
+                        redcapTransformConfig["reports"][i]["kwdargs"][
+                            "report_id"
+                        ] = report["report_id"]
+
+            # Structure REDCap ETL Config
+            redcap_etl_config = {
+                "redcap_api_url": redcap_project_view["project_api_url"],
+                "redcap_api_key": redcap_project_view["project_api_key"],
+            } | redcapTransformConfig
+
+            redcapTransform = RedcapTransform(redcap_etl_config)
+
+            # Execute Dashboard Module Transforms
+            for dashboard_module in redcap_project_dashboard["dashboard_modules"]:
+                if dashboard_module["selected"]:
+                    mergedTransform = redcapTransform.merged
+                    transform, module_etl_config = moduleTransformConfigs[
+                        dashboard_module["id"]
+                    ]
+                    moduleTransform = ModuleTransform(module_etl_config)
+                    transformed = getattr(moduleTransform, transform)(
+                        mergedTransform
+                    ).transformed
+                    dashboard_module["visualizations"] = {
+                        "id": dashboard_module["id"],
+                        "data": transformed,
+                    }
+                else:
+                    dashboard_module["visualizations"] = {
+                        "id": dashboard_module["id"],
+                        "data": [],
+                    }
+
+            # Create Dashboard Redis Cache
+            cache.set(f"$study_id#{study_id}$dashboard_id#{dashboard_id}", redcap_project_dashboard)
+
+            return redcap_project_dashboard, 201
 
 
 @api.route("/study/<study_id>/dashboard/edit")
@@ -490,17 +506,24 @@ class EditRedcapProjectDashboard(Resource):
                 {data['dashboard_name']}""",
                 400,
             )
-        # Clear Redis Cache
-        # TODO: We want to clear the cache by dashboard_id/cache key, not the whole cache!
-        cache.clear()
-        update_redcap_project_dashboard_query = (
-            model.StudyRedcapProjectDashboard.query.get(data["dashboard_id"])
+
+        dashboard_id = data["dashboard_id"]
+
+        redcap_project_dashboard_query = model.StudyRedcapProjectDashboard.query.get(
+            dashboard_id
         )
-        update_redcap_project_dashboard_query.update(data)
+        if redcap_project_dashboard_query is None:
+            return "An error occurred while updating the dashboard", 500
+
+        redcap_project_dashboard_query.update(data)
         model.db.session.commit()
         update_redcap_project_dashboard: Dict[
             str, Any
-        ] = update_redcap_project_dashboard_query.to_dict()
+        ] = redcap_project_dashboard_query.to_dict()
+
+        # Clear Dashboard from Redis Cache
+        cache.delete(f"$study_id#{study_id}$dashboard_id#{dashboard_id}")
+
         return update_redcap_project_dashboard, 201
 
 
@@ -515,9 +538,11 @@ class DeleteRedcapProjectDashboard(Resource):
         study = model.Study.query.get(study_id)
         if is_granted("redcap_access", study):
             return "Access denied, you can not delete this redcap project", 403
+
         dashboard_id = dashboard_parser.parse_args()["dashboard_id"]
         model.StudyRedcapProjectDashboard.query.filter_by(
             dashboard_id=dashboard_id
         ).delete()
         model.db.session.commit()
+
         return 204
