@@ -75,7 +75,7 @@ def create_app(config_module=None, loglevel="INFO"):
         "https://fairhub.io",
     ]
     if app.debug:
-        cors_origins.extend(["http://localhost:3000", "https://localhost:3000"])
+        cors_origins.extend(["http://localhost:3000"])
 
     # Only allow CORS origin for localhost:3000
     # and any subdomain of azurestaticapps.net/
