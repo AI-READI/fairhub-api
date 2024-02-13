@@ -45,8 +45,12 @@ requests = "^2.31.0"
 
 # Database
 flask-sqlalchemy = "^3.0.5"
+sqlalchemy-json = "^0.7.0"
 alembic = "^1.12.1"
 psycopg2 = "^2.9.6"
+
+# Caching
+flask-caching = "^2.1.0"
 
 # Auth
 flask-bcrypt = "^1.0.1"
