@@ -66,7 +66,7 @@ class RedcapProjectAPIs(Resource):
     def get(self, study_id: int):
         """Get all REDCap project API links"""
         study = model.Study.query.get(study_id)
-        if is_granted("redcap_access", study):
+        if is_granted("viewer", study):
             return (
                 "Access denied, you can not view the redcap projects for this study",
                 403,
@@ -87,7 +87,7 @@ class AddRedcapProjectAPI(Resource):
     def post(self, study_id: int):
         """Create REDCap project API link"""
         study = model.Study.query.get(study_id)
-        if is_granted("redcap_access", study):
+        if is_granted("add_redcap", study):
             return "Access denied, you can not create a redcap project", 403
         # Schema validation
         data: Union[Any, dict] = request.json
@@ -162,7 +162,7 @@ class RedcapProjectAPI(Resource):
     def get(self, study_id: int):
         """Get REDCap project API link"""
         study = model.db.session.query(model.Study).get(study_id)
-        if is_granted("redcap_access", study):
+        if is_granted("viewer", study):
             return "Access denied, you can not get this redcap project", 403
         project_id = project_parser.parse_args()["project_id"]
         redcap_project_view: Any = model.db.session.query(
@@ -181,7 +181,7 @@ class EditRedcapProjectAPI(Resource):
     def put(self, study_id: int):
         """Update REDCap project API link"""
         study = model.Study.query.get(study_id)
-        if is_granted("redcap_access", study):
+        if is_granted("update_redcap", study):
             return "Access denied, you can not modify this redcap project", 403
         # Schema validation
         data: Union[Any, dict] = request.json
@@ -248,7 +248,7 @@ class DeleteRedcapProjectAPI(Resource):
     def delete(self, study_id: int):
         """Delete REDCap project API link"""
         study = model.Study.query.get(study_id)
-        if is_granted("redcap_access", study):
+        if is_granted("delete_redcap", study):
             return "Access denied, you can not delete this redcap project", 403
         project_id = project_parser.parse_args()["project_id"]
         model.StudyRedcapProjectApi.query.filter_by(project_id=project_id).delete()

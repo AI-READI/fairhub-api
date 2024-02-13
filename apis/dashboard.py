@@ -24,7 +24,6 @@ datum_model = api.model(
             required=True, readonly=True, description="Filterby field"
         ),
         "group": fields.String(required=True, readonly=True, description="Group field"),
-        # "color": fields.String(required=True, readonly=True, description="Color field"),
         "subgroup": fields.String(
             required=False, readonly=True, description="Subgroup field"
         ),
@@ -186,7 +185,7 @@ class RedcapProjectDashboards(Resource):
     def get(self, study_id: int):
         """Get all REDCap project dashboards"""
         study = model.db.session.query(model.Study).get(study_id)
-        if is_granted("redcap_access", study):
+        if is_granted("viewer", study):
             return "Access denied, you can not modify", 403
         redcap_project_dashboards_query = (
             model.StudyRedcapProjectDashboard.query.filter_by(study=study)
@@ -207,7 +206,7 @@ class AddRedcapProjectDashboard(Resource):
     def post(self, study_id: int):
         """Create REDCap project dashboard"""
         study = model.Study.query.get(study_id)
-        if is_granted("redcap_access", study):
+        if is_granted("add_dashboard", study):
             return "Access denied, you can not modify", 403
         # Schema validation
         schema = {
@@ -307,7 +306,7 @@ class RedcapProjectDashboardConnector(Resource):
     def get(self, study_id: int):
         """Get REDCap project dashboard connector"""
         study = model.db.session.query(model.Study).get(study_id)
-        if is_granted("redcap_access", study):
+        if is_granted("viewer", study):
             return "Access denied, you can not get this dashboard", 403
 
         # Get Dashboard Connector
@@ -333,7 +332,7 @@ class RedcapProjectDashboard(Resource):
         """Get REDCap project dashboard"""
         model.db.session.flush()
         study = model.db.session.query(model.Study).get(study_id)
-        if is_granted("redcap_access", study):
+        if is_granted("viewer", study):
             return "Access denied, you can not get this dashboard", 403
 
         # Get Dashboard
@@ -419,7 +418,7 @@ class EditRedcapProjectDashboard(Resource):
     def put(self, study_id: int):
         """Update REDCap project dashboard"""
         study = model.db.session.query(model.Study).get(study_id)
-        if is_granted("redcap_access", study):
+        if is_granted("update_dashboard", study):
             return "Access denied, you can not modify this dashboard", 403
         # Schema validation
         schema = {
@@ -537,7 +536,7 @@ class DeleteRedcapProjectDashboard(Resource):
     def delete(self, study_id: int):
         """Delete REDCap project dashboard"""
         study = model.Study.query.get(study_id)
-        if is_granted("redcap_access", study):
+        if is_granted("delete_dashboard", study):
             return "Access denied, you can not delete this redcap project", 403
 
         dashboard_id = dashboard_parser.parse_args()["dashboard_id"]

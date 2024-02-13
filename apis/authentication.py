@@ -1,7 +1,6 @@
 """This module is used to authenticate users to the system and
 handle few authentication errors. Also, it sets token for logged user
 along with expiration date"""
-
 import datetime
 import importlib
 import os
@@ -79,6 +78,7 @@ class SignUpUser(Resource):
             email_address = instance
             try:
                 validate_email(email_address, check_deliverability=False)
+                return True
             except EmailNotValidError as e:
                 raise ValidationError("Invalid email address format") from e
 
@@ -115,8 +115,7 @@ class SignUpUser(Resource):
         # Schema validation
         schema = {
             "type": "object",
-            # "required": ["email_address", "password", "code"],
-            "required": ["email_address", "password"],
+            "required": ["email_address", "password", "code"],
             "additionalProperties": False,
             "properties": {
                 "email_address": {"type": "string", "format": "valid_email"},
@@ -124,7 +123,7 @@ class SignUpUser(Resource):
                     "type": "string",
                     "format": "password",
                 },
-                # "code": {"type": "string"},
+                "code": {"type": "string"},
             },
         }
 
@@ -133,18 +132,8 @@ class SignUpUser(Resource):
         format_checker.checks("password")(validate_password)
 
         try:
-            # Remove the code property for dev purposes
-            data_no_code = {
-                "email_address": data["email_address"],
-                "password": data["password"],
-            }
-            print(data_no_code)
-            validate(
-                instance=data_no_code, schema=schema, format_checker=format_checker
-            )
-            # validate(instance=data, schema=schema, format_checker=format_checker)
+            validate(instance=data, schema=schema, format_checker=format_checker)
         except ValidationError as e:
-            print(e)
             return e.message, 400
 
         user = model.User.query.filter_by(
@@ -206,6 +195,7 @@ class Login(Resource):
 
         format_checker = FormatChecker()
         format_checker.checks("valid email")(validate_is_valid_email)
+
         try:
             validate(instance=data, schema=schema, format_checker=format_checker)
         except ValidationError as e:
@@ -332,8 +322,13 @@ def is_granted(permission: str, study=None):
             "participant",
             "study_metadata",
             "dataset_metadata",
+            "add_redcap",
+            "update_redcap",
+            "delete_redcap",
+            "add_dashboard",
+            "update_dashboard",
+            "delete_dashboard",
             "make_owner",
-            # "redcap_access",
         ],
         "admin": [
             "admin",
@@ -352,7 +347,12 @@ def is_granted(permission: str, study=None):
             "participant",
             "study_metadata",
             "dataset_metadata",
-            # "redcap_access",
+            "add_redcap",
+            "update_redcap",
+            "delete_redcap",
+            "add_dashboard",
+            "update_dashboard",
+            "delete_delete",
         ],
         "editor": [
             "editor",
@@ -366,7 +366,6 @@ def is_granted(permission: str, study=None):
             "study_metadata",
             "version",
             "dataset_metadata",
-            # "redcap_access",
         ],
         "viewer": ["viewer", "view"],
     }
