@@ -85,22 +85,28 @@ Don't forget to start the database before running the api. See [Database](#datab
 
 ## Database
 
-The api uses a postgres database. You can create a database locally using docker:
+The api uses a postgres and redis database. You can create both of these locally via docker:
 
 ```bash
-docker-compose -f ./db-docker-compose.yaml up
-docker-compose -f ./db-docker-compose.yaml up -d # if you want the db to run in the background
+docker-compose -f ./dev-docker-compose.yaml up
+docker-compose -f ./dev-docker-compose.yaml up -d # if you want the db to run in the background
 ```
 
 Close the database with:
 
 ```bash
-docker-compose -f ./db-docker-compose.yaml down -v
+docker-compose -f ./dev-docker-compose.yaml down -v
 ```
 
 ## Running
 
 For developer mode:
+
+```bash
+poe dev
+```
+
+or
 
 ```bash
 flask run --debug
@@ -118,5 +124,5 @@ This work is licensed under
 [MIT](https://opensource.org/licenses/mit). See [LICENSE](https://github.com/AI-READI/pyfairdatatools/blob/main/LICENSE) for more information.
 
 <a href="https://aireadi.org" >
-  <img src="https://www.channelfutures.com/files/2017/04/3_0.png" height="30" />
+  <img src="https://github.com/AI-READI/AI-READI-logo/blob/main/logo/png/option2.png" height="30" alt='AI-READI logo' />
 </a>
