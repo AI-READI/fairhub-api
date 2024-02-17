@@ -49,7 +49,7 @@ services:
       CACHE_PORT: 6379
       CACHE_TYPE: RedisCache
       CACHE_URL: redis://127.0.0.1:6379
-      CACHE_PREFIX: fairhub-io#
+      CACHE_PREFIX: $fairhub-io
       CACHE_TIMEOUT: 86400
       CACHE_PASSWORD: development
     ports:

@@ -29,6 +29,7 @@ from .notification import Notification
 from .participant import Participant
 from .study import Study, StudyException
 from .study_contributor import StudyContributor
+from .study_dashboard import StudyDashboard
 from .study_metadata.arm import Arm
 from .study_metadata.identifiers import Identifiers
 from .study_metadata.study_arm import StudyArm
@@ -47,8 +48,7 @@ from .study_metadata.study_overall_official import StudyOverallOfficial
 from .study_metadata.study_reference import StudyReference
 from .study_metadata.study_sponsors_collaborators import StudySponsorsCollaborators
 from .study_metadata.study_status import StudyStatus
-from .study_redcap_project_api import StudyRedcapProjectApi
-from .study_redcap_project_dashboard import StudyRedcapProjectDashboard
+from .study_redcap import StudyRedcap
 from .token_blacklist import TokenBlacklist
 from .user import User
 from .user_details import UserDetails
@@ -94,8 +94,8 @@ __all__ = [
     "StudyLocation",
     "StudyOther",
     "StudyOverallOfficial",
-    "StudyRedcapProjectApi",
-    "StudyRedcapProjectDashboard",
+    "StudyRedcap",
+    "StudyDashboard",
     "StudyReference",
     "StudySponsorsCollaborators",
     "StudyStatus",

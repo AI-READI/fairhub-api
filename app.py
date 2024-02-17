@@ -11,7 +11,7 @@ from flask import Flask, g, request
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from growthbook import GrowthBook
-from sqlalchemy import MetaData
+from sqlalchemy import MetaData, inspect
 from waitress import serve
 
 import config
@@ -105,16 +105,16 @@ def create_app(config_module=None, loglevel="INFO"):
 
     # CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": True}})
 
-    # @app.cli.command("create-schema")
-    # def create_schema():
-    #     """Create the database schema."""
-    #     engine = model.db.session.get_bind()
-    #     metadata = MetaData()
-    #     metadata.reflect(bind=engine)
-    #     table_names = [table.name for table in metadata.tables.values()]
-    #     if len(table_names) == 0:
-    #         with engine.begin():
-    #             model.db.create_all()
+    @app.cli.command("create-schema")
+    def create_schema():
+        """Create the database schema."""
+        engine = model.db.session.get_bind()
+        metadata = MetaData()
+        metadata.reflect(bind=engine)
+        table_names = [table.name for table in metadata.tables.values()]
+        if len(table_names) == 0:
+            with engine.begin():
+                model.db.create_all()
 
     @app.cli.command("destroy-schema")
     def destroy_schema():
@@ -135,12 +135,23 @@ def create_app(config_module=None, loglevel="INFO"):
         engine = model.db.session.get_bind()
         with engine.begin():
             model.db.drop_all()
-        metadata = MetaData()
-        metadata.reflect(bind=engine)
-        table_names = [table.name for table in metadata.tables.values()]
-        if len(table_names) == 0:
-            with engine.begin():
-                model.db.create_all()
+            model.db.create_all()
+
+    @app.cli.command("inspect-schemas")
+    def inspect_schemas():
+        """Print database schemas, tables, and columns to CLI."""
+        engine = model.db.session.get_bind()
+        inspector = inspect(engine)
+        schemas = inspector.get_schema_names()
+        for schema in schemas:
+            print("-" * 32)
+            print(f"Schema: {schema}")
+            for table_name in inspector.get_table_names(schema=schema):
+                print(f"\n  Table: {table_name}")
+                for column in inspector.get_columns(table_name, schema=schema):
+                    print(f"    Column: {column['name']}")
+                    for k, v in column.items():
+                        print(f"      {k:<16}{str(v):>16}")
 
     @app.before_request
     def on_before_request():  # pylint: disable = inconsistent-return-statements

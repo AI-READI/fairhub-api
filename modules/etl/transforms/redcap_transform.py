@@ -406,7 +406,7 @@ class RedcapTransform(object):
                     for subvalue in str(value).split(",")
                     if len(subvalue) > 0
                 ]
-                df[column][i] = self.multivalue_separator.join(
+                df.loc[i, column] = self.multivalue_separator.join(
                     [
                         value_map[subvalue]
                         for subvalue in subvalues
@@ -461,7 +461,7 @@ class RedcapTransform(object):
         missing_value: Any,
         annotation: List[Dict[str, Any]] = [],
     ) -> pd.DataFrame:
-        df[new_column_name] = df[column][df[column] != missing_value].apply(transform)
+        df[new_column_name] = df.loc[df[column] != missing_value, column].apply(transform)
         df[new_column_name] = df[new_column_name].fillna(missing_value)
         return df
 
@@ -503,7 +503,7 @@ class RedcapTransform(object):
         for column in columns:
             for i, value in enumerate(df[column]):
                 if (len(str(value)) == 0) or (value in self.none_map.keys()):
-                    df[column][i] = missing_value
+                    df.loc[i, column] = missing_value
                 else:
                     continue
 

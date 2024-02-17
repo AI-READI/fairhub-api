@@ -98,12 +98,12 @@ class Study(db.Model):  # type: ignore
         cascade="all, delete",
     )
     # NOTE: Has not been tested
-    study_redcap_project_apis = db.relationship(
-        "StudyRedcapProjectApi", back_populates="study", cascade="all, delete"
+    study_redcap = db.relationship(
+        "StudyRedcap", back_populates="study", cascade="all, delete"
     )
     # NOTE: Has not been tested
-    study_redcap_project_dashboards = db.relationship(
-        "StudyRedcapProjectDashboard", back_populates="study", cascade="all, delete"
+    study_dashboard = db.relationship(
+        "StudyDashboard", back_populates="study", cascade="all, delete"
     )
     study_intervention = db.relationship(
         "StudyIntervention",

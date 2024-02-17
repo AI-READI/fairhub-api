@@ -185,10 +185,10 @@ class RedcapProjectDashboards(Resource):
     def get(self, study_id: int):
         """Get all REDCap project dashboards"""
         study = model.db.session.query(model.Study).get(study_id)
-        if is_granted("viewer", study):
+        if not is_granted("view", study):
             return "Access denied, you can not modify", 403
-        redcap_project_dashboards_query = (
-            model.StudyRedcapProjectDashboard.query.filter_by(study=study)
+        redcap_project_dashboards_query = model.StudyDashboard.query.filter_by(
+            study=study
         )
         redcap_project_dashboards: List[Dict[str, Any]] = [
             redcap_project_dashboard.to_dict()
@@ -206,7 +206,7 @@ class AddRedcapProjectDashboard(Resource):
     def post(self, study_id: int):
         """Create REDCap project dashboard"""
         study = model.Study.query.get(study_id)
-        if is_granted("add_dashboard", study):
+        if not is_granted("add_dashboard", study):
             return "Access denied, you can not modify", 403
         # Schema validation
         schema = {
@@ -286,14 +286,14 @@ class AddRedcapProjectDashboard(Resource):
                 {data['dashboard_name']}""",
                 400,
             )
-        connect_redcap_project_dashboard_data = (
-            model.StudyRedcapProjectDashboard.from_data(study, data)
+        connect_redcap_project_dashboard_data = model.StudyDashboard.from_data(
+            study, data
         )
         model.db.session.add(connect_redcap_project_dashboard_data)
         model.db.session.commit()
-        connect_redcap_project_dashboard: Dict[str, Any] = (
-            connect_redcap_project_dashboard_data.to_dict()
-        )
+        connect_redcap_project_dashboard: Dict[
+            str, Any
+        ] = connect_redcap_project_dashboard_data.to_dict()
         return connect_redcap_project_dashboard, 201
 
 
@@ -306,18 +306,18 @@ class RedcapProjectDashboardConnector(Resource):
     def get(self, study_id: int):
         """Get REDCap project dashboard connector"""
         study = model.db.session.query(model.Study).get(study_id)
-        if is_granted("viewer", study):
+        if not is_granted("view", study):
             return "Access denied, you can not get this dashboard", 403
 
         # Get Dashboard Connector
         dashboard_id = dashboard_parser.parse_args()["dashboard_id"]
         redcap_project_dashboard_connector_query: Any = model.db.session.query(
-            model.StudyRedcapProjectDashboard
+            model.StudyDashboard
         ).get(dashboard_id)
 
-        redcap_project_dashboard_connector: Dict[str, Any] = (
-            redcap_project_dashboard_connector_query.to_dict()
-        )
+        redcap_project_dashboard_connector: Dict[
+            str, Any
+        ] = redcap_project_dashboard_connector_query.to_dict()
 
         return redcap_project_dashboard_connector, 201
 
@@ -332,7 +332,7 @@ class RedcapProjectDashboard(Resource):
         """Get REDCap project dashboard"""
         model.db.session.flush()
         study = model.db.session.query(model.Study).get(study_id)
-        if is_granted("viewer", study):
+        if not is_granted("view", study):
             return "Access denied, you can not get this dashboard", 403
 
         # Get Dashboard
@@ -347,17 +347,17 @@ class RedcapProjectDashboard(Resource):
             return cached_redcap_project_dashboard, 201
 
         redcap_project_dashboard_query: Any = model.db.session.query(
-            model.StudyRedcapProjectDashboard
+            model.StudyDashboard
         ).get(dashboard_id)
-        redcap_project_dashboard: Dict[str, Any] = (
-            redcap_project_dashboard_query.to_dict()
-        )
+        redcap_project_dashboard: Dict[
+            str, Any
+        ] = redcap_project_dashboard_query.to_dict()
 
         # Get REDCap Project
         project_id = redcap_project_dashboard["project_id"]
-        redcap_project_view_query: Any = model.db.session.query(
-            model.StudyRedcapProjectApi
-        ).get(project_id)
+        redcap_project_view_query: Any = model.db.session.query(model.StudyRedcap).get(
+            project_id
+        )
         redcap_project_view: Dict[str, Any] = redcap_project_view_query.to_dict()
 
         # Set report_ids for ETL
@@ -367,9 +367,9 @@ class RedcapProjectDashboard(Resource):
                     report["report_key"] == report_config["key"]
                     and len(report["report_id"]) > 0
                 ):
-                    redcapTransformConfig["reports"][i]["kwdargs"]["report_id"] = (
-                        report["report_id"]
-                    )
+                    redcapTransformConfig["reports"][i]["kwdargs"][
+                        "report_id"
+                    ] = report["report_id"]
 
         # Structure REDCap ETL Config
         redcap_etl_config = {
@@ -418,7 +418,7 @@ class EditRedcapProjectDashboard(Resource):
     def put(self, study_id: int):
         """Update REDCap project dashboard"""
         study = model.db.session.query(model.Study).get(study_id)
-        if is_granted("update_dashboard", study):
+        if not is_granted("update_dashboard", study):
             return "Access denied, you can not modify this dashboard", 403
         # Schema validation
         schema = {
@@ -509,17 +509,15 @@ class EditRedcapProjectDashboard(Resource):
 
         dashboard_id = data["dashboard_id"]
 
-        redcap_project_dashboard_query = model.StudyRedcapProjectDashboard.query.get(
-            dashboard_id
-        )
+        redcap_project_dashboard_query = model.StudyDashboard.query.get(dashboard_id)
         if redcap_project_dashboard_query is None:
             return "An error occurred while updating the dashboard", 500
 
         redcap_project_dashboard_query.update(data)
         model.db.session.commit()
-        update_redcap_project_dashboard: Dict[str, Any] = (
-            redcap_project_dashboard_query.to_dict()
-        )
+        update_redcap_project_dashboard: Dict[
+            str, Any
+        ] = redcap_project_dashboard_query.to_dict()
 
         # Clear Dashboard from Redis Cache
         cache.delete(f"$study_id#{study_id}$dashboard_id#{dashboard_id}")
@@ -536,13 +534,11 @@ class DeleteRedcapProjectDashboard(Resource):
     def delete(self, study_id: int):
         """Delete REDCap project dashboard"""
         study = model.Study.query.get(study_id)
-        if is_granted("delete_dashboard", study):
+        if not is_granted("delete_dashboard", study):
             return "Access denied, you can not delete this redcap project", 403
 
         dashboard_id = dashboard_parser.parse_args()["dashboard_id"]
-        model.StudyRedcapProjectDashboard.query.filter_by(
-            dashboard_id=dashboard_id
-        ).delete()
+        model.StudyDashboard.query.filter_by(dashboard_id=dashboard_id).delete()
         model.db.session.commit()
 
         return 204
