@@ -461,7 +461,9 @@ class RedcapTransform(object):
         missing_value: Any,
         annotation: List[Dict[str, Any]] = [],
     ) -> pd.DataFrame:
-        df[new_column_name] = df.loc[df[column] != missing_value, column].apply(transform)
+        df[new_column_name] = df.loc[df[column] != missing_value, column].apply(
+            transform
+        )
         df[new_column_name] = df[new_column_name].fillna(missing_value)
         return df
 
