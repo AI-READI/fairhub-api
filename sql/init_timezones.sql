@@ -951,20 +951,19 @@ CREATE TABLE IF NOT EXISTS "study_dashboard" (
 	"modules" UNKNOWN NOT NULL,
 	"reports" UNKNOWN NOT NULL,
 	"study_id" CHAR(36) NOT NULL,
-	"redcap_id" BIGINT NOT NULL,
+	"redcap_id" CHAR(36) NOT NULL,
+	"redcap_pid" BIGINT NOT NULL
 	"created_at" BIGINT NOT NULL,
 	"updated_on" BIGINT NOT NULL,
 	PRIMARY KEY ("id"),
 	CONSTRAINT "study_dashboard_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
 	CONSTRAINT "study_dashboard_redcap_id_fkey" FOREIGN KEY ("redcap_id") REFERENCES "study_redcap" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
 );
-
 -- Dumping data for table public.study_dashboard: 1 rows
 /*!40000 ALTER TABLE "study_dashboard" DISABLE KEYS */;
-INSERT INTO "study_dashboard" ("study_id", "redcap_id", "id", "name", "modules", "reports", "created_at", "updated_on") VALUES
-	('00000000-0000-0000-0000-000000000006', '00000000-0000-0000-0000-000000000007', '00000000-0000-0000-0000-000000000008', 'dashboard-name', '{}', '{}', '2023-08-13 16:23:48', '2023-08-14 16:23:49');
+INSERT INTO "study_dashboard" ("study_id", "redcap_id", "id", "name", "modules", "redcap_pid", "reports", "created_at", "updated_on") VALUES
+	('00000000-0000-0000-0000-000000000006', '00000000-0000-0000-0000-000000000007', '00000000-0000-0000-0000-000000000008', 'dashboard-name', '{}', 12345, '{}', '2023-08-13 16:23:48', '2023-08-14 16:23:49');
 /*!40000 ALTER TABLE "study_dashboard" ENABLE KEYS */;
-
 
 -- Dumping structure for table public.study_reference
 CREATE TABLE IF NOT EXISTS "study_reference" (

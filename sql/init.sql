@@ -826,7 +826,8 @@ CREATE TABLE IF NOT EXISTS "study_dashboard" (
 	"modules" UNKNOWN NOT NULL,
 	"reports" UNKNOWN NOT NULL,
 	"study_id" CHAR(36) NOT NULL,
-	"redcap_id" BIGINT NOT NULL,
+	"redcap_id" CHAR(36) NOT NULL,
+	"redcap_pid" BIGINT NOT NULL
 	"created_at" BIGINT NOT NULL,
 	"updated_on" BIGINT NOT NULL,
 	PRIMARY KEY ("id"),
@@ -835,8 +836,8 @@ CREATE TABLE IF NOT EXISTS "study_dashboard" (
 );
 -- Dumping data for table public.study_dashboard: 1 rows
 /*!40000 ALTER TABLE "study_dashboard" DISABLE KEYS */;
-INSERT INTO "study_dashboard" ("study_id", "redcap_id", "id", "name", "modules", "reports", "created_at", "updated_on") VALUES
-	('00000000-0000-0000-0000-000000000006', '00000000-0000-0000-0000-000000000007', '00000000-0000-0000-0000-000000000008', 'dashboard-name', '{}', '{}', '2023-08-13 16:23:48', '2023-08-14 16:23:49');
+INSERT INTO "study_dashboard" ("study_id", "redcap_id", "id", "name", "modules", "redcap_pid", "reports", "created_at", "updated_on") VALUES
+	('00000000-0000-0000-0000-000000000006', '00000000-0000-0000-0000-000000000007', '00000000-0000-0000-0000-000000000008', 'dashboard-name', '{}', 12345, '{}', '2023-08-13 16:23:48', '2023-08-14 16:23:49');
 /*!40000 ALTER TABLE "study_dashboard" ENABLE KEYS */;
 
 -- Dumping structure for table public.study_reference

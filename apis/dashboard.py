@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Union
 from flask import request
 
 # from flask_caching import Cache
-from flask_restx import Namespace, Resource, fields, reqparse
+from flask_restx import Namespace, Resource, fields
 from jsonschema import ValidationError, validate
 
 import model
@@ -73,7 +73,7 @@ redcap_project_dashboard_module_model = api.model(
             required=True, readonly=True, description="Dashboard module name"
         ),
         "id": fields.String(
-            required=True, readonly=True, description="Dashboard module id"
+            required=True, readonly=True, description="Dashboard module ID"
         ),
         "report_key": fields.String(
             required=True,
@@ -94,8 +94,17 @@ redcap_project_dashboard_module_model = api.model(
 redcap_project_dashboard_model = api.model(
     "RedcapProjectDashboard",
     {
-        "project_id": fields.String(
-            required=True, readonly=True, description="REDCap project ID (pid)"
+        "redcap_id": fields.String(
+            required=True, readonly=True, description="REDCap ID"
+        ),
+        "id": fields.String(
+            required=True, readonly=True, description="REDCap dashboard ID"
+        ),
+        "name": fields.String(
+            required=True, readonly=True, description="REDCap dashboard name"
+        ),
+        "redcap_pid": fields.String(
+            required=True, readonly=True, description="REDCap project ID (PID)"
         ),
         "reports": fields.List(
             fields.Nested(
@@ -105,13 +114,7 @@ redcap_project_dashboard_model = api.model(
                 description="Associated REDCap reports",
             )
         ),
-        "dashboard_id": fields.String(
-            required=True, readonly=True, description="REDCap dashboard ID"
-        ),
-        "dashboard_name": fields.String(
-            required=True, readonly=True, description="REDCap dashboard name"
-        ),
-        "dashboard_modules": fields.List(
+        "modules": fields.List(
             fields.Nested(
                 redcap_project_dashboard_module_model,
                 required=True,
@@ -128,7 +131,10 @@ redcap_project_dashboard_module_connector_model = api.model(
             required=True, readonly=True, description="Dashboard module name"
         ),
         "id": fields.String(
-            required=True, readonly=True, description="Dashboard module id"
+            required=True, readonly=True, description="Dashboard module ID"
+        ),
+        "redcap_pid": fields.String(
+            required=True, readonly=True, description="REDCap project ID (PID)"
         ),
         "report_key": fields.String(
             required=True,
@@ -143,8 +149,11 @@ redcap_project_dashboard_module_connector_model = api.model(
 redcap_project_dashboard_connector_model = api.model(
     "RedcapProjectDashboardConnector",
     {
-        "project_id": fields.String(
-            required=True, readonly=True, description="REDCap project ID (pid)"
+        "redcap_id": fields.String(
+            required=True, readonly=True, description="REDCap ID"
+        ),
+        "redcap_pid": fields.String(
+            required=True, readonly=True, description="REDCap project ID (PID)"
         ),
         "reports": fields.List(
             fields.Nested(
@@ -154,13 +163,13 @@ redcap_project_dashboard_connector_model = api.model(
                 description="Associated REDCap reports",
             )
         ),
-        "dashboard_id": fields.String(
+        "id": fields.String(
             required=True, readonly=True, description="REDCap dashboard ID"
         ),
-        "dashboard_name": fields.String(
+        "name": fields.String(
             required=True, readonly=True, description="REDCap dashboard name"
         ),
-        "dashboard_modules": fields.List(
+        "modules": fields.List(
             fields.Nested(
                 redcap_project_dashboard_module_connector_model,
                 required=True,
@@ -171,18 +180,14 @@ redcap_project_dashboard_connector_model = api.model(
     },
 )
 
-# Parser
-dashboard_parser = reqparse.RequestParser()
-dashboard_parser.add_argument("dashboard_id", type=str, help="Dashboard ID")
 
-
-@api.route("/study/<study_id>/dashboard/all")
+@api.route("/study/<study_id>/dashboard")
 class RedcapProjectDashboards(Resource):
-    @api.doc("redcap_project_dashboards")
+    @api.doc("Get all study dashboards")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_dashboard_model, as_list=True)
-    def get(self, study_id: int):
+    def get(self, study_id: str):
         """Get all REDCap project dashboards"""
         study = model.db.session.query(model.Study).get(study_id)
         if not is_granted("view", study):
@@ -194,16 +199,14 @@ class RedcapProjectDashboards(Resource):
             redcap_project_dashboard.to_dict()
             for redcap_project_dashboard in redcap_project_dashboards_query
         ]
+        print(redcap_project_dashboards)
         return redcap_project_dashboards, 201
 
-
-@api.route("/study/<study_id>/dashboard/add")
-class AddRedcapProjectDashboard(Resource):
-    @api.doc(parser=dashboard_parser)
+    @api.doc("Create a new study dashboard")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_dashboard_model)
-    def post(self, study_id: int):
+    def post(self, study_id: str):
         """Create REDCap project dashboard"""
         study = model.Study.query.get(study_id)
         if not is_granted("add_dashboard", study):
@@ -213,13 +216,15 @@ class AddRedcapProjectDashboard(Resource):
             "type": "object",
             "additionalProperties": False,
             "required": [
-                "project_id",
+                "redcap_id",
+                "redcap_pid",
                 "reports",
-                "dashboard_name",
-                "dashboard_modules",
+                "name",
+                "modules",
             ],
             "properties": {
-                "project_id": {"type": "string", "minLength": 1},
+                "redcap_id": {"type": "string", "minLength": 1},
+                "redcap_pid": {"type": "string", "minLength": 1},
                 "reports": {
                     "type": "array",
                     "items": {
@@ -236,8 +241,8 @@ class AddRedcapProjectDashboard(Resource):
                     },
                     "minItems": 1,
                 },
-                "dashboard_name": {"type": "string", "minLength": 1},
-                "dashboard_modules": {
+                "name": {"type": "string", "minLength": 1},
+                "modules": {
                     "type": "array",
                     "items": {
                         "anyOf": [
@@ -257,15 +262,22 @@ class AddRedcapProjectDashboard(Resource):
             },
         }
         data: Union[Any, Dict[str, Any]] = request.json
+        print(data)
         try:
             validate(request.json, schema)
         except ValidationError as e:
             print("validation error")
             return e.message, 400
-        if len(data["project_id"]) < 1:
+        if len(data["redcap_id"]) < 1:
             return (
-                f"""redcap project_id is required to connect a dashboard:
-                {data['project_id']}""",
+                f"""redcap redcap_id is required to connect a dashboard:
+                {data['redcap_id']}""",
+                400,
+            )
+        if len(data["redcap_pid"]) < 1:
+            return (
+                f"""redcap redcap_pid is required to connect a dashboard:
+                {data['redcap_pid']}""",
                 400,
             )
         if len(data["reports"]) < 1:
@@ -274,69 +286,166 @@ class AddRedcapProjectDashboard(Resource):
                 {data['reports']}""",
                 400,
             )
-        if len(data["dashboard_name"]) < 1:
+        if len(data["name"]) < 1:
             return (
-                f"""dashboard dashboard_name is required to connect a dashboard:
-                {data['dashboard_name']}""",
+                f"""dashboard name is required to connect a dashboard:
+                {data['name']}""",
                 400,
             )
-        if len(data["dashboard_modules"]) < 1:
+        if len(data["modules"]) < 1:
             return (
-                f"""dashboard dashboard_modules is required to connect a dashboard:
-                {data['dashboard_name']}""",
+                f"""dashboard modules is required to connect a dashboard:
+                {data['modules']}""",
                 400,
             )
+
         connect_redcap_project_dashboard_data = model.StudyDashboard.from_data(
             study, data
         )
         model.db.session.add(connect_redcap_project_dashboard_data)
         model.db.session.commit()
-        connect_redcap_project_dashboard: Dict[str, Any] = (
-            connect_redcap_project_dashboard_data.to_dict()
-        )
+        connect_redcap_project_dashboard: Dict[
+            str, Any
+        ] = connect_redcap_project_dashboard_data.to_dict()
         return connect_redcap_project_dashboard, 201
 
 
-@api.route("/study/<study_id>/dashboard-connector")
+# @api.route("/study/<study_id>/dashboard/add")
+# class AddRedcapProjectDashboard(Resource):
+#     @api.doc(parser=dashboard_parser)
+#     @api.response(200, "Success")
+#     @api.response(400, "Validation Error")
+#     @api.marshal_with(redcap_project_dashboard_model)
+#     def post(self, study_id: str):
+#         """Create REDCap project dashboard"""
+#         study = model.Study.query.get(study_id)
+#         if not is_granted("add_dashboard", study):
+#             return "Access denied, you can not modify", 403
+#         # Schema validation
+#         schema = {
+#             "type": "object",
+#             "additionalProperties": False,
+#             "required": [
+#                 "redcap_id",
+#                 "reports",
+#                 "name",
+#                 "modules",
+#             ],
+#             "properties": {
+#                 "redcap_id": {"type": "string", "minLength": 1},
+#                 "reports": {
+#                     "type": "array",
+#                     "items": {
+#                         "anyOf": [
+#                             {
+#                                 "type": "object",
+#                                 "properties": {
+#                                     "report_id": {"type": "string", "minLength": 0},
+#                                     "report_key": {"type": "string", "minLength": 1},
+#                                     "report_name": {"type": "string", "minLength": 1},
+#                                 },
+#                             }
+#                         ]
+#                     },
+#                     "minItems": 1,
+#                 },
+#                 "name": {"type": "string", "minLength": 1},
+#                 "modules": {
+#                     "type": "array",
+#                     "items": {
+#                         "anyOf": [
+#                             {
+#                                 "type": "object",
+#                                 "properties": {
+#                                     "id": {"type": "string", "minLength": 1},
+#                                     "name": {"type": "string", "minLength": 1},
+#                                     "selected": {"type": "boolean"},
+#                                     "report_key": {"type": "string", "minLength": 1},
+#                                 },
+#                             }
+#                         ]
+#                     },
+#                     "minItems": 1,
+#                 },
+#             },
+#         }
+#         data: Union[Any, Dict[str, Any]] = request.json
+#         try:
+#             validate(request.json, schema)
+#         except ValidationError as e:
+#             print("validation error")
+#             return e.message, 400
+#         if len(data["redcap_id"]) < 1:
+#             return (
+#                 f"""redcap redcap_id is required to connect a dashboard:
+#                 {data['redcap_id']}""",
+#                 400,
+#             )
+#         if len(data["reports"]) < 1:
+#             return (
+#                 f"""redcap reports are required to connect a dashboard:
+#                 {data['reports']}""",
+#                 400,
+#             )
+#         if len(data["name"]) < 1:
+#             return (
+#                 f"""dashboard name is required to connect a dashboard:
+#                 {data['name']}""",
+#                 400,
+#             )
+#         if len(data["modules"]) < 1:
+#             return (
+#                 f"""dashboard modules is required to connect a dashboard:
+#                 {data['name']}""",
+#                 400,
+#             )
+#         connect_redcap_project_dashboard_data = model.StudyDashboard.from_data(
+#             study, data
+#         )
+#         model.db.session.add(connect_redcap_project_dashboard_data)
+#         model.db.session.commit()
+#         connect_redcap_project_dashboard: Dict[str, Any] = (
+#             connect_redcap_project_dashboard_data.to_dict()
+#         )
+#         return connect_redcap_project_dashboard, 201
+
+
+@api.route("/study/<study_id>/dashboard/<dashboard_id>/connector")
 class RedcapProjectDashboardConnector(Resource):
-    @api.doc(parser=dashboard_parser)
+    @api.doc("Get a study dashboard connector")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_dashboard_connector_model)
-    def get(self, study_id: int):
+    def get(self, study_id: str, dashboard_id: str):
         """Get REDCap project dashboard connector"""
         study = model.db.session.query(model.Study).get(study_id)
         if not is_granted("view", study):
             return "Access denied, you can not get this dashboard", 403
 
         # Get Dashboard Connector
-        dashboard_id = dashboard_parser.parse_args()["dashboard_id"]
         redcap_project_dashboard_connector_query: Any = model.db.session.query(
             model.StudyDashboard
         ).get(dashboard_id)
 
-        redcap_project_dashboard_connector: Dict[str, Any] = (
-            redcap_project_dashboard_connector_query.to_dict()
-        )
+        redcap_project_dashboard_connector: Dict[
+            str, Any
+        ] = redcap_project_dashboard_connector_query.to_dict()
 
         return redcap_project_dashboard_connector, 201
 
 
-@api.route("/study/<study_id>/dashboard")
+@api.route("/study/<study_id>/dashboard/<dashboard_id>")
 class RedcapProjectDashboard(Resource):
-    @api.doc(parser=dashboard_parser)
+    @api.doc("Get a study dashboard")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_dashboard_model)
-    def get(self, study_id: int):
+    def get(self, study_id: str, dashboard_id: str):
         """Get REDCap project dashboard"""
         model.db.session.flush()
         study = model.db.session.query(model.Study).get(study_id)
         if not is_granted("view", study):
             return "Access denied, you can not get this dashboard", 403
-
-        # Get Dashboard
-        dashboard_id = dashboard_parser.parse_args()["dashboard_id"]
 
         # Retrieve Dashboard Redis Cache
         cached_redcap_project_dashboard = cache.get(
@@ -349,14 +458,14 @@ class RedcapProjectDashboard(Resource):
         redcap_project_dashboard_query: Any = model.db.session.query(
             model.StudyDashboard
         ).get(dashboard_id)
-        redcap_project_dashboard: Dict[str, Any] = (
-            redcap_project_dashboard_query.to_dict()
-        )
+        redcap_project_dashboard: Dict[
+            str, Any
+        ] = redcap_project_dashboard_query.to_dict()
 
         # Get REDCap Project
-        project_id = redcap_project_dashboard["project_id"]
+        redcap_id = redcap_project_dashboard["redcap_id"]
         redcap_project_view_query: Any = model.db.session.query(model.StudyRedcap).get(
-            project_id
+            redcap_id
         )
         redcap_project_view: Dict[str, Any] = redcap_project_view_query.to_dict()
 
@@ -367,20 +476,20 @@ class RedcapProjectDashboard(Resource):
                     report["report_key"] == report_config["key"]
                     and len(report["report_id"]) > 0
                 ):
-                    redcapTransformConfig["reports"][i]["kwdargs"]["report_id"] = (
-                        report["report_id"]
-                    )
+                    redcapTransformConfig["reports"][i]["kwdargs"][
+                        "report_id"
+                    ] = report["report_id"]
 
         # Structure REDCap ETL Config
         redcap_etl_config = {
-            "redcap_api_url": redcap_project_view["project_api_url"],
-            "redcap_api_key": redcap_project_view["project_api_key"],
+            "redcap_api_url": redcap_project_view["api_url"],
+            "redcap_api_key": redcap_project_view["api_key"],
         } | redcapTransformConfig
 
         redcapTransform = RedcapTransform(redcap_etl_config)
 
         # Execute Dashboard Module Transforms
-        for dashboard_module in redcap_project_dashboard["dashboard_modules"]:
+        for dashboard_module in redcap_project_dashboard["modules"]:
             if dashboard_module["selected"]:
                 mergedTransform = redcapTransform.merged
                 transform, module_etl_config = moduleTransformConfigs[
@@ -408,14 +517,11 @@ class RedcapProjectDashboard(Resource):
 
         return redcap_project_dashboard, 201
 
-
-@api.route("/study/<study_id>/dashboard/edit")
-class EditRedcapProjectDashboard(Resource):
-    @api.doc(parser=dashboard_parser)
+    @api.doc("Update a study dashboard")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_dashboard_model)
-    def put(self, study_id: int):
+    def put(self, study_id: str, dashboard_id: str):
         """Update REDCap project dashboard"""
         study = model.db.session.query(model.Study).get(study_id)
         if not is_granted("update_dashboard", study):
@@ -425,14 +531,16 @@ class EditRedcapProjectDashboard(Resource):
             "type": "object",
             "additionalProperties": False,
             "required": [
-                "project_id",
+                "redcap_id",
+                "redcap_pid",
                 "reports",
                 "dashboard_id",
-                "dashboard_name",
-                "dashboard_modules",
+                "name",
+                "modules",
             ],
             "properties": {
-                "project_id": {"type": "string", "minLength": 1},
+                "redcap_id": {"type": "string", "minLength": 1},
+                "redcap_pid": {"type": "string", "minLength": 1},
                 "reports": {
                     "type": "array",
                     "items": {
@@ -450,8 +558,8 @@ class EditRedcapProjectDashboard(Resource):
                     "minItems": 1,
                 },
                 "dashboard_id": {"type": "string", "minLength": 1},
-                "dashboard_name": {"type": "string", "minLength": 1},
-                "dashboard_modules": {
+                "name": {"type": "string", "minLength": 1},
+                "modules": {
                     "type": "array",
                     "items": {
                         "anyOf": [
@@ -476,10 +584,16 @@ class EditRedcapProjectDashboard(Resource):
         except ValidationError as e:
             print("validation error")
             return e.message, 400
-        if len(data["project_id"]) < 1:
+        if len(data["redcap_id"]) < 1:
             return (
-                f"""redcap project_id is required to connect a dashboard:
-                {data['project_id']}""",
+                f"""redcap redcap_id is required to connect a dashboard:
+                {data['redcap_id']}""",
+                400,
+            )
+        if len(data["redcap_pid"]) < 1:
+            return (
+                f"""redcap redcap_pid is required to connect a dashboard:
+                {data['redcap_pid']}""",
                 400,
             )
         if len(data["reports"]) < 1:
@@ -494,20 +608,18 @@ class EditRedcapProjectDashboard(Resource):
                 {data['dashboard_id']}""",
                 400,
             )
-        if len(data["dashboard_name"]) < 1:
+        if len(data["name"]) < 1:
             return (
-                f"""dashboard dashboard_name is required to connect a dashboard:
-                {data['dashboard_name']}""",
+                f"""dashboard name is required to connect a dashboard:
+                {data['name']}""",
                 400,
             )
-        if len(data["dashboard_modules"]) < 1:
+        if len(data["modules"]) < 1:
             return (
-                f"""dashboard dashboard_modules is required to connect a dashboard:
-                {data['dashboard_name']}""",
+                f"""dashboard modules is required to connect a dashboard:
+                {data['name']}""",
                 400,
             )
-
-        dashboard_id = data["dashboard_id"]
 
         redcap_project_dashboard_query = model.StudyDashboard.query.get(dashboard_id)
         if redcap_project_dashboard_query is None:
@@ -515,30 +627,161 @@ class EditRedcapProjectDashboard(Resource):
 
         redcap_project_dashboard_query.update(data)
         model.db.session.commit()
-        update_redcap_project_dashboard: Dict[str, Any] = (
-            redcap_project_dashboard_query.to_dict()
-        )
+        update_redcap_project_dashboard: Dict[
+            str, Any
+        ] = redcap_project_dashboard_query.to_dict()
 
         # Clear Dashboard from Redis Cache
         cache.delete(f"$study_id#{study_id}$dashboard_id#{dashboard_id}")
 
         return update_redcap_project_dashboard, 201
 
-
-@api.route("/study/<study_id>/dashboard/delete")
-class DeleteRedcapProjectDashboard(Resource):
-    @api.doc(parser=dashboard_parser)
+    @api.doc("Delete a study dashboard")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_dashboard_model)
-    def delete(self, study_id: int):
+    def delete(self, study_id: str, dashboard_id: str):
         """Delete REDCap project dashboard"""
         study = model.Study.query.get(study_id)
         if not is_granted("delete_dashboard", study):
             return "Access denied, you can not delete this redcap project", 403
 
-        dashboard_id = dashboard_parser.parse_args()["dashboard_id"]
-        model.StudyDashboard.query.filter_by(dashboard_id=dashboard_id).delete()
+        model.StudyDashboard.query.filter_by(id=dashboard_id).delete()
         model.db.session.commit()
 
         return 204
+
+
+# @api.route("/study/<study_id>/dashboard/edit")
+# class EditRedcapProjectDashboard(Resource):
+#     @api.doc(parser=dashboard_parser)
+#     @api.response(200, "Success")
+#     @api.response(400, "Validation Error")
+#     @api.marshal_with(redcap_project_dashboard_model)
+#     def put(self, study_id: str):
+#         """Update REDCap project dashboard"""
+#         study = model.db.session.query(model.Study).get(study_id)
+#         if not is_granted("update_dashboard", study):
+#             return "Access denied, you can not modify this dashboard", 403
+#         # Schema validation
+#         schema = {
+#             "type": "object",
+#             "additionalProperties": False,
+#             "required": [
+#                 "redcap_id",
+#                 "reports",
+#                 "dashboard_id",
+#                 "name",
+#                 "modules",
+#             ],
+#             "properties": {
+#                 "redcap_id": {"type": "string", "minLength": 1},
+#                 "reports": {
+#                     "type": "array",
+#                     "items": {
+#                         "anyOf": [
+#                             {
+#                                 "type": "object",
+#                                 "properties": {
+#                                     "report_id": {"type": "string", "minLength": 0},
+#                                     "report_key": {"type": "string", "minLength": 1},
+#                                     "report_name": {"type": "string", "minLength": 1},
+#                                 },
+#                             }
+#                         ]
+#                     },
+#                     "minItems": 1,
+#                 },
+#                 "dashboard_id": {"type": "string", "minLength": 1},
+#                 "name": {"type": "string", "minLength": 1},
+#                 "modules": {
+#                     "type": "array",
+#                     "items": {
+#                         "anyOf": [
+#                             {
+#                                 "type": "object",
+#                                 "properties": {
+#                                     "id": {"type": "string", "minLength": 1},
+#                                     "name": {"type": "string", "minLength": 1},
+#                                     "selected": {"type": "boolean"},
+#                                     "report_key": {"type": "string", "minLength": 1},
+#                                 },
+#                             }
+#                         ]
+#                     },
+#                     "minItems": 1,
+#                 },
+#             },
+#         }
+#         data: Union[Any, Dict[str, Any]] = request.json
+#         try:
+#             validate(request.json, schema)
+#         except ValidationError as e:
+#             print("validation error")
+#             return e.message, 400
+#         if len(data["redcap_id"]) < 1:
+#             return (
+#                 f"""redcap redcap_id is required to connect a dashboard:
+#                 {data['redcap_id']}""",
+#                 400,
+#             )
+#         if len(data["reports"]) < 1:
+#             return (
+#                 f"""redcap reports are required to connect a dashboard:
+#                 {data['reports']}""",
+#                 400,
+#             )
+#         if len(data["dashboard_id"]) < 1:
+#             return (
+#                 f"""dashboard dashboard_id is required to connect a dashboard:
+#                 {data['dashboard_id']}""",
+#                 400,
+#             )
+#         if len(data["name"]) < 1:
+#             return (
+#                 f"""dashboard name is required to connect a dashboard:
+#                 {data['name']}""",
+#                 400,
+#             )
+#         if len(data["modules"]) < 1:
+#             return (
+#                 f"""dashboard modules is required to connect a dashboard:
+#                 {data['name']}""",
+#                 400,
+#             )
+
+#         dashboard_id = data["dashboard_id"]
+
+#         redcap_project_dashboard_query = model.StudyDashboard.query.get(dashboard_id)
+#         if redcap_project_dashboard_query is None:
+#             return "An error occurred while updating the dashboard", 500
+
+#         redcap_project_dashboard_query.update(data)
+#         model.db.session.commit()
+#         update_redcap_project_dashboard: Dict[str, Any] = (
+#             redcap_project_dashboard_query.to_dict()
+#         )
+
+#         # Clear Dashboard from Redis Cache
+#         cache.delete(f"$study_id#{study_id}$dashboard_id#{dashboard_id}")
+
+#         return update_redcap_project_dashboard, 201
+
+
+# @api.route("/study/<study_id>/dashboard/delete")
+# class DeleteRedcapProjectDashboard(Resource):
+#     @api.doc(parser=dashboard_parser)
+#     @api.response(200, "Success")
+#     @api.response(400, "Validation Error")
+#     @api.marshal_with(redcap_project_dashboard_model)
+#     def delete(self, study_id: str):
+#         """Delete REDCap project dashboard"""
+#         study = model.Study.query.get(study_id)
+#         if not is_granted("delete_dashboard", study):
+#             return "Access denied, you can not delete this redcap project", 403
+
+#         dashboard_id = dashboard_parser.parse_args()["dashboard_id"]
+#         model.StudyDashboard.query.filter_by(dashboard_id=dashboard_id).delete()
+#         model.db.session.commit()
+
+#         return 204

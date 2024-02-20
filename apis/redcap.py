@@ -41,9 +41,6 @@ redcap_api_model = api.model(
     },
 )
 
-# project_parser = reqparse.RequestParser()
-# project_parser.add_argument("api_pid", type=str, help="REDCap project ID (pid)")
-
 
 @api.route("/study/<study_id>/redcap")
 class RedcapProjectAPILink(Resource):

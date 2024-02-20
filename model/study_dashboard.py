@@ -24,6 +24,7 @@ class StudyDashboard(db.Model):  # type: ignore
     modules: list[dict[str, (str | bool | int)]] = db.Column(
         NestedMutableJson, nullable=True
     )
+    redcap_pid: int = db.Column(db.BigInteger, nullable=True)
     reports: list[dict[str, str]] = db.Column(NestedMutableJson, nullable=True)
     created_at: float = db.Column(db.BigInteger, nullable=False)
     updated_on: float = db.Column(db.BigInteger, nullable=False)
@@ -38,11 +39,6 @@ class StudyDashboard(db.Model):  # type: ignore
         db.ForeignKey("study_redcap.id", ondelete="CASCADE"),
         nullable=False,
     )
-    # project_id: int = db.Column(
-    #     db.BigInteger,
-    #     db.ForeignKey("study_redcap.api_pid", ondelete="CASCADE"),
-    #     nullable=True
-    # )
     # Relations
     study = db.relationship(
         "Study", back_populates="study_dashboard", cascade="all, delete"
@@ -65,6 +61,7 @@ class StudyDashboard(db.Model):  # type: ignore
             "name": self.name,
             "modules": self.modules,
             "redcap_id": self.redcap_id,
+            "redcap_pid": self.redcap_pid,
             "reports": self.reports,
             "created_at": self.created_at,
             "updated_on": self.updated_on,
@@ -83,6 +80,7 @@ class StudyDashboard(db.Model):  # type: ignore
             "name",
             "modules",
             "redcap_id",
+            "redcap_pid",
             "reports",
         ]
         for key, val in data.items():

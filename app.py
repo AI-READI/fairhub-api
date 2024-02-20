@@ -133,9 +133,13 @@ def create_app(config_module=None, loglevel="INFO"):
         if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
             return
         engine = model.db.session.get_bind()
-        with engine.begin():
-            model.db.drop_all()
-            model.db.create_all()
+        metadata = MetaData()
+        metadata.reflect(bind=engine)
+        table_names = [table.name for table in metadata.tables.values()]
+        if len(table_names) == 0:
+            with engine.begin():
+                model.db.drop_all()
+                model.db.create_all()
 
     @app.cli.command("inspect-schemas")
     def inspect_schemas():
