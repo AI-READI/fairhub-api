@@ -33,6 +33,7 @@ coverage
 
 # Environment variables
 .env
+.venv
 
 # Virutal Environments
 .venv

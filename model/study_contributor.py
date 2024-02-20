@@ -30,9 +30,9 @@ class StudyContributor(db.Model):  # type: ignore
     def to_dict(self):
         return {
             "id": self.user_id,
-            "name": self.user.user_details.first_name
-            if self.user.user_details
-            else None,
+            "name": (
+                self.user.user_details.first_name if self.user.user_details else None
+            ),
             "email_address": self.user.email_address,
             "orcid": self.user.user_details.orcid if self.user.user_details else None,
             "role": self.permission,

@@ -1,6 +1,7 @@
 """This module is used to authenticate users to the system and
 handle few authentication errors. Also, it sets token for logged user
 along with expiration date"""
+
 import datetime
 import importlib
 import os
@@ -322,6 +323,12 @@ def is_granted(permission: str, study=None):
             "participant",
             "study_metadata",
             "dataset_metadata",
+            "add_redcap",
+            "update_redcap",
+            "delete_redcap",
+            "add_dashboard",
+            "update_dashboard",
+            "delete_dashboard",
             "make_owner",
         ],
         "admin": [
@@ -341,6 +348,12 @@ def is_granted(permission: str, study=None):
             "participant",
             "study_metadata",
             "dataset_metadata",
+            "add_redcap",
+            "update_redcap",
+            "delete_redcap",
+            "add_dashboard",
+            "update_dashboard",
+            "delete_delete",
         ],
         "editor": [
             "editor",

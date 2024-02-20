@@ -1,4 +1,5 @@
 """API routes for study contact metadata"""
+
 import typing
 
 from email_validator import EmailNotValidError, validate_email
