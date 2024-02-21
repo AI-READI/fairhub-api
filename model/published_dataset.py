@@ -44,7 +44,6 @@ class PublishedDataset(db.Model):  # type: ignore
             "files": self.files,
             "data": self.data,
             "created_at": self.created_at,
-
         }
 
     @staticmethod
