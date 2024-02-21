@@ -1,8 +1,8 @@
 import uuid
-from .db import db
 import datetime
-
 from datetime import timezone
+
+from .db import db
 
 
 class PublishedDataset(db.Model):  # type: ignore
