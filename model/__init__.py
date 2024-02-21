@@ -27,6 +27,7 @@ from .email_verification import EmailVerification
 from .invited_study_contributor import StudyInvitedContributor
 from .notification import Notification
 from .participant import Participant
+from .published_dataset import PublishedDataset
 from .study import Study, StudyException
 from .study_contributor import StudyContributor
 from .study_dashboard import StudyDashboard
@@ -59,6 +60,7 @@ __all__ = [
     "Study",
     "Dataset",
     "Participant",
+    "PublishedDataset",
     "Version",
     "db",
     "User",
