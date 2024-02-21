@@ -612,7 +612,8 @@ def test_get_version_dataset_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor",
         json=[
             {
-                "name": "Name here",
+                "given_name": "Given Name here",
+                "family_name": "Family Name here",
                 "name_type": "Personal",
                 "name_identifier": "Name identifier",
                 "name_identifier_scheme": "Name Scheme ID",
@@ -633,7 +634,8 @@ def test_get_version_dataset_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/creator",
         json=[
             {
-                "name": "Name here",
+                "given_name": "Given Name here",
+                "family_name": "Family Name here",
                 "name_type": "Personal",
                 "name_identifier": "Name identifier",
                 "name_identifier_scheme": "Name Scheme ID",
@@ -649,7 +651,6 @@ def test_get_version_dataset_metadata(clients):
             }
         ],
     )
-
     date_response = _logged_in_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/date",
         json=[{"date": 20210101, "type": "Type", "information": "Info"}],
@@ -831,12 +832,14 @@ def test_get_version_dataset_metadata(clients):
         None,
     )
 
-    assert response_data["contributors"][0]["name"] == "Name here"
+    assert response_data["contributors"][0]["given_name"] == "Given Name here"
+    assert response_data["contributors"][0]["family_name"] == "Family Name here"
     assert response_data["contributors"][0]["name_type"] == "Personal"
     assert response_data["contributors"][0]["contributor_type"] == "Con Type"
     assert response_data["dates"][0]["date"] == "01-01-1970"
     assert response_data["dates"][0]["type"] == "Type"
-    assert response_data["creators"][0]["name"] == "Name here"
+    assert response_data["creators"][0]["given_name"] == "Given Name here"
+    assert response_data["creators"][0]["family_name"] == "Family Name here"
     assert response_data["creators"][0]["name_type"] == "Personal"
     assert response_data["funders"][0]["name"] == "Name"
     assert response_data["funders"][0]["identifier"] == "Identifier"
@@ -886,12 +889,14 @@ def test_get_version_dataset_metadata(clients):
     assert response_data["related_items"][0]["identifiers"][0]["type"] == "ARK"
     assert response_data["related_items"][0]["type"] == "Type"
 
-    assert admin_response_data["contributors"][0]["name"] == "Name here"
+    assert admin_response_data["contributors"][0]["given_name"] == "Given Name here"
+    assert admin_response_data["contributors"][0]["family_name"] == "Family Name here"
     assert admin_response_data["contributors"][0]["name_type"] == "Personal"
     assert admin_response_data["contributors"][0]["contributor_type"] == "Con Type"
     assert admin_response_data["dates"][0]["date"] == "01-01-1970"
     assert admin_response_data["dates"][0]["type"] == "Type"
-    assert admin_response_data["creators"][0]["name"] == "Name here"
+    assert admin_response_data["creators"][0]["given_name"] == "Given Name here"
+    assert admin_response_data["creators"][0]["family_name"] == "Family Name here"
     assert admin_response_data["creators"][0]["name_type"] == "Personal"
     assert admin_response_data["funders"][0]["name"] == "Name"
     assert admin_response_data["funders"][0]["identifier"] == "Identifier"
@@ -955,12 +960,14 @@ def test_get_version_dataset_metadata(clients):
     assert admin_response_data["related_items"][0]["identifiers"][0]["type"] == "ARK"
     assert admin_response_data["related_items"][0]["type"] == "Type"
 
-    assert editor_response_data["contributors"][0]["name"] == "Name here"
+    assert editor_response_data["contributors"][0]["family_name"] == "Family Name here"
+    assert editor_response_data["contributors"][0]["given_name"] == "Given Name here"
     assert editor_response_data["contributors"][0]["name_type"] == "Personal"
     assert editor_response_data["contributors"][0]["contributor_type"] == "Con Type"
     assert editor_response_data["dates"][0]["date"] == "01-01-1970"
     assert editor_response_data["dates"][0]["type"] == "Type"
-    assert editor_response_data["creators"][0]["name"] == "Name here"
+    assert editor_response_data["creators"][0]["given_name"] == "Given Name here"
+    assert editor_response_data["creators"][0]["family_name"] == "Family Name here"
     assert editor_response_data["creators"][0]["name_type"] == "Personal"
     assert editor_response_data["funders"][0]["name"] == "Name"
     assert editor_response_data["funders"][0]["identifier"] == "Identifier"
