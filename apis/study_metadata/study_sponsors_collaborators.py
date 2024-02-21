@@ -1,4 +1,5 @@
 """API routes for study sponsors and collaborators metadata"""
+
 import typing
 
 from flask import request

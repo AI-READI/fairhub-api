@@ -1,6 +1,7 @@
 """This module is used to authenticate users to the system and
 handle few authentication errors. Also, it sets token for logged user
 along with expiration date"""
+
 import datetime
 import importlib
 import os
@@ -54,6 +55,11 @@ class SignUpUser(Resource):
     def post(self):
         """signs up the new users and saves data in DB"""
         data: Union[Any, dict] = request.json
+
+        # Check if the signup feature is enabled
+        if g.gb.is_on("signup") is False or g.gb.is_on("signup") is None:
+            return "Signup is disabled", 403
+
         if os.environ.get("FLASK_ENV") != "testing":
             bypassed_emails = [
                 "test@fairhub.io",
@@ -322,6 +328,12 @@ def is_granted(permission: str, study=None):
             "participant",
             "study_metadata",
             "dataset_metadata",
+            "add_redcap",
+            "update_redcap",
+            "delete_redcap",
+            "add_dashboard",
+            "update_dashboard",
+            "delete_dashboard",
             "make_owner",
         ],
         "admin": [
@@ -341,6 +353,12 @@ def is_granted(permission: str, study=None):
             "participant",
             "study_metadata",
             "dataset_metadata",
+            "add_redcap",
+            "update_redcap",
+            "delete_redcap",
+            "add_dashboard",
+            "update_dashboard",
+            "delete_delete",
         ],
         "editor": [
             "editor",

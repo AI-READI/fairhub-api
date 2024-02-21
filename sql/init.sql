@@ -792,6 +792,54 @@ INSERT INTO "study_overall_official" ("id", "name", "affiliation", "role", "stud
 	('00000000-0000-0000-0000-000000000002', 'Ashlynn', 'Kuhic - Towne', 'Study Chair', '00000000-0000-0000-0000-000000000001', 1693805471);
 /*!40000 ALTER TABLE "study_overall_official" ENABLE KEYS */;
 
+-- Dumping data for table public.version_participants: 1 rows
+/*!40000 ALTER TABLE "version_participants" DISABLE KEYS */;
+INSERT INTO "version_participants" ("dataset_version_id", "participant_id") VALUES
+	('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000001');
+/*!40000 ALTER TABLE "version_participants" ENABLE KEYS */;
+
+-- Dumping structure for table public.study_redcap
+CREATE TABLE IF NOT EXISTS "study_redcap" (
+	"id" CHAR(36) NOT NULL,
+	"title" VARCHAR NOT NULL,
+	"api_pid": BIGINT NOT NULL,
+	"api_url" VARCHAR NOT NULL,
+	"api_key" CHAR(32) NOT NULL,
+	"api_active" BOOLEAN NOT NULL,
+	"study_id" CHAR(36) NOT NULL,
+	"created_at" BIGINT NOT NULL,
+	"updated_on" BIGINT NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "study_redcap_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+
+-- Dumping data for table public.study_redcap: 1 rows
+/*!40000 ALTER TABLE "study_redcap" DISABLE KEYS */;
+INSERT INTO "study_redcap" ("study_id", "id", "title", "api_pid", "api_url", "api_key", "api_active", "created_at", "updated_on") VALUES
+	('00000000-0000-0000-0000-000000000006', '00000000-0000-0000-0000-000000000007', 'redcap-name', '666666', 'https://redcap.university.org/api', '0000000000000000AAAAAAAAAAAAAAA6', 0, '2023-08-13 16:23:48', '2023-08-14 16:23:49');
+/*!40000 ALTER TABLE "study_redcap" ENABLE KEYS */;
+
+-- Dumping structure for table public.study_dashboard
+CREATE TABLE IF NOT EXISTS "study_dashboard" (
+	"id" CHAR(36) NOT NULL,
+	"name" VARCHAR NOT NULL,
+	"modules" UNKNOWN NOT NULL,
+	"reports" UNKNOWN NOT NULL,
+	"study_id" CHAR(36) NOT NULL,
+	"redcap_id" CHAR(36) NOT NULL,
+	"redcap_pid" BIGINT NOT NULL
+	"created_at" BIGINT NOT NULL,
+	"updated_on" BIGINT NOT NULL,
+	PRIMARY KEY ("id"),
+	CONSTRAINT "study_dashboard_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
+	CONSTRAINT "study_dashboard_redcap_id_fkey" FOREIGN KEY ("redcap_id") REFERENCES "study_redcap" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+);
+-- Dumping data for table public.study_dashboard: 1 rows
+/*!40000 ALTER TABLE "study_dashboard" DISABLE KEYS */;
+INSERT INTO "study_dashboard" ("study_id", "redcap_id", "id", "name", "modules", "redcap_pid", "reports", "created_at", "updated_on") VALUES
+	('00000000-0000-0000-0000-000000000006', '00000000-0000-0000-0000-000000000007', '00000000-0000-0000-0000-000000000008', 'dashboard-name', '{}', 12345, '{}', '2023-08-13 16:23:48', '2023-08-14 16:23:49');
+/*!40000 ALTER TABLE "study_dashboard" ENABLE KEYS */;
+
 -- Dumping structure for table public.study_reference
 CREATE TABLE IF NOT EXISTS "study_reference" (
 	"id" CHAR(36) NOT NULL,
@@ -912,12 +960,6 @@ CREATE TABLE IF NOT EXISTS "version_participants" (
 	CONSTRAINT "version_participants_dataset_version_id_fkey" FOREIGN KEY ("dataset_version_id") REFERENCES "version" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION,
 	CONSTRAINT "version_participants_participant_id_fkey" FOREIGN KEY ("participant_id") REFERENCES "participant" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
 );
-
--- Dumping data for table public.version_participants: 1 rows
-/*!40000 ALTER TABLE "version_participants" DISABLE KEYS */;
-INSERT INTO "version_participants" ("dataset_version_id", "participant_id") VALUES
-	('00000000-0000-0000-0000-000000000001', '00000000-0000-0000-0000-000000000001');
-/*!40000 ALTER TABLE "version_participants" ENABLE KEYS */;
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

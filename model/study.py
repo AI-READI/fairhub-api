@@ -27,7 +27,6 @@ class Study(db.Model):  # type: ignore
         self.study_ipdsharing = model.StudyIpdsharing(self)
         self.study_description = model.StudyDescription(self)
         self.study_identification.append(model.StudyIdentification(self, False))
-
         self.study_other = model.StudyOther(self)
         # self.study_contributors = model.StudyContributor(self)
 
@@ -60,7 +59,6 @@ class Study(db.Model):  # type: ignore
         lazy="dynamic",
         cascade="all, delete",
     )
-
     study_arm = db.relationship(
         "StudyArm",
         back_populates="study",
@@ -98,6 +96,14 @@ class Study(db.Model):  # type: ignore
         "StudyIdentification",
         back_populates="study",
         cascade="all, delete",
+    )
+    # NOTE: Has not been tested
+    study_redcap = db.relationship(
+        "StudyRedcap", back_populates="study", cascade="all, delete"
+    )
+    # NOTE: Has not been tested
+    study_dashboard = db.relationship(
+        "StudyDashboard", back_populates="study", cascade="all, delete"
     )
     study_intervention = db.relationship(
         "StudyIntervention",
@@ -165,9 +171,9 @@ class Study(db.Model):  # type: ignore
             "created_at": self.created_at,
             "updated_on": self.updated_on,
             "size": self.study_other.size if self.study_other else None,
-            "description": self.study_description.brief_summary
-            if self.study_description
-            else None,
+            "description": (
+                self.study_description.brief_summary if self.study_description else None
+            ),
             "owner": owner.to_dict()["id"] if owner else None,
             "role": contributor_permission.to_dict()["role"],
         }

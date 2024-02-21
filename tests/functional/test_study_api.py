@@ -1,4 +1,5 @@
 """Tests for API endpoints related to studies"""
+
 import json
 
 import pytest

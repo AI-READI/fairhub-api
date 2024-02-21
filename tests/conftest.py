@@ -1,4 +1,5 @@
 """Defines fixtures available to all tests."""
+
 import json
 import os
 import unittest.mock
