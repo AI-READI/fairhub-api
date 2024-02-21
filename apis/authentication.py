@@ -55,6 +55,11 @@ class SignUpUser(Resource):
     def post(self):
         """signs up the new users and saves data in DB"""
         data: Union[Any, dict] = request.json
+
+        # Check if the signup feature is enabled
+        if g.gb.is_on("signup") is False or g.gb.is_on("signup") is None:
+            return "Signup is disabled", 403
+
         if os.environ.get("FLASK_ENV") != "testing":
             bypassed_emails = [
                 "test@fairhub.io",
