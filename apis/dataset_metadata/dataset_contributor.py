@@ -58,10 +58,7 @@ class DatasetContributorResource(Resource):
                         "type": "string",
                         "minLength": 1,
                     },
-                    "family_name": {
-                        "type":
-                            ["string", "null"]
-                    },
+                    "family_name": {"type": ["string", "null"]},
                     "name_identifier": {
                         "type": "string",
                         "minLength": 1,
@@ -202,10 +199,7 @@ class DatasetCreatorResource(Resource):
                         "type": "string",
                         "minLength": 1,
                     },
-                    "family_name": {
-                        "type":
-                            ["string", "null"]
-                    },
+                    "family_name": {"type": ["string", "null"]},
                     "name_identifier": {
                         "type": "string",
                         "minLength": 1,
