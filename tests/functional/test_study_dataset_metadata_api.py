@@ -486,7 +486,8 @@ def test_post_dataset_contributor_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor",
         json=[
             {
-                "name": "Name here",
+                "given_name": "Given Name here",
+                "family_name": "Family Name here",
                 "name_type": "Personal",
                 "name_identifier": "Name identifier",
                 "name_identifier_scheme": "Name Scheme ID",
@@ -503,14 +504,17 @@ def test_post_dataset_contributor_metadata(clients):
             }
         ],
     )
+
     # Add a one second delay to prevent duplicate timestamps
     sleep(1)
+    response_data = json.loads(response.data)
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
     pytest.global_dataset_contributor_id = response_data[0]["id"]
 
-    assert response_data[0]["name"] == "Name here"
+    assert response_data[0]["given_name"] == "Given Name here"
+    assert response_data[0]["family_name"] == "Family Name here"
     assert response_data[0]["name_type"] == "Personal"
     assert response_data[0]["name_identifier"] == "Name identifier"
     assert response_data[0]["name_identifier_scheme"] == "Name Scheme ID"
@@ -526,7 +530,8 @@ def test_post_dataset_contributor_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor",
         json=[
             {
-                "name": "Admin Name here",
+                "given_name": "Admin Given Name here",
+                "family_name": "Family Name here",
                 "name_type": "Personal",
                 "name_identifier": "Name identifier",
                 "name_identifier_scheme": "Name Scheme ID",
@@ -550,13 +555,14 @@ def test_post_dataset_contributor_metadata(clients):
     admin_response_data = json.loads(admin_response.data)
     pytest.global_dataset_contributor_id_admin = admin_response_data[0]["id"]
 
-    assert admin_response_data[0]["name"] == "Admin Name here"
+    assert admin_response_data[0]["given_name"] == "Admin Given Name here"
 
     editor_response = _editor_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor",
         json=[
             {
-                "name": "Editor Name here",
+                "given_name": "Editor Given Name here",
+                "family_name": "Editor Family Name here",
                 "name_type": "Personal",
                 "name_identifier": "Name identifier",
                 "name_identifier_scheme": "Name Scheme ID",
@@ -578,13 +584,14 @@ def test_post_dataset_contributor_metadata(clients):
     editor_response_data = json.loads(editor_response.data)
     pytest.global_dataset_contributor_id_editor = editor_response_data[0]["id"]
 
-    assert editor_response_data[0]["name"] == "Editor Name here"
+    assert editor_response_data[0]["given_name"] == "Editor Given Name here"
 
     viewer_response = _viewer_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/contributor",
         json=[
             {
-                "name": "Viewer Name here",
+                "given_name": "Viewer Given Name here",
+                "family_name": "Viewer Family Name here",
                 "name_type": "Personal",
                 "name_identifier": "Name identifier",
                 "name_identifier_scheme": "Name Scheme ID",
@@ -601,7 +608,6 @@ def test_post_dataset_contributor_metadata(clients):
             }
         ],
     )
-
     assert viewer_response.status_code == 403
 
 
@@ -686,7 +692,8 @@ def test_post_dataset_creator_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/creator",
         json=[
             {
-                "name": "Name here",
+                "given_name": "Given Name here",
+                "family_name": "Family Name here",
                 "name_type": "Personal",
                 "name_identifier": "Name identifier",
                 "name_identifier_scheme": "Name Scheme ID",
@@ -709,7 +716,8 @@ def test_post_dataset_creator_metadata(clients):
     response_data = json.loads(response.data)
     pytest.global_dataset_creator_id = response_data[0]["id"]
 
-    assert response_data[0]["name"] == "Name here"
+    assert response_data[0]["given_name"] == "Given Name here"
+    assert response_data[0]["family_name"] == "Family Name here"
     assert response_data[0]["name_type"] == "Personal"
     assert response_data[0]["name_identifier"] == "Name identifier"
     assert response_data[0]["name_identifier_scheme"] == "Name Scheme ID"
@@ -724,7 +732,8 @@ def test_post_dataset_creator_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/creator",
         json=[
             {
-                "name": "admin Name here",
+                "given_name": "Admin Given Name here",
+                "family_name": "Family Name here",
                 "name_type": "Personal",
                 "name_identifier": "Name identifier",
                 "name_identifier_scheme": "Name Scheme ID",
@@ -747,7 +756,8 @@ def test_post_dataset_creator_metadata(clients):
     admin_response_data = json.loads(admin_response.data)
     pytest.global_dataset_creator_id_admin = admin_response_data[0]["id"]
 
-    assert admin_response_data[0]["name"] == "admin Name here"
+    assert admin_response_data[0]["given_name"] == "Admin Given Name here"
+    assert admin_response_data[0]["family_name"] == "Family Name here"
     assert admin_response_data[0]["name_type"] == "Personal"
     assert admin_response_data[0]["name_identifier"] == "Name identifier"
     assert admin_response_data[0]["name_identifier_scheme"] == "Name Scheme ID"
@@ -762,7 +772,8 @@ def test_post_dataset_creator_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/creator",
         json=[
             {
-                "name": "Editor Name here",
+                "given_name": "Editor Given Name here",
+                "family_name": "Family Name here",
                 "name_type": "Personal",
                 "name_identifier": "Name identifier",
                 "name_identifier_scheme": "Name Scheme ID",
@@ -783,7 +794,8 @@ def test_post_dataset_creator_metadata(clients):
     editor_response_data = json.loads(editor_response.data)
     pytest.global_dataset_creator_id_editor = editor_response_data[0]["id"]
 
-    assert editor_response_data[0]["name"] == "Editor Name here"
+    assert editor_response_data[0]["given_name"] == "Editor Given Name here"
+    assert editor_response_data[0]["family_name"] == "Family Name here"
     assert editor_response_data[0]["name_type"] == "Personal"
     assert editor_response_data[0]["name_identifier"] == "Name identifier"
     assert editor_response_data[0]["name_identifier_scheme"] == "Name Scheme ID"
@@ -798,7 +810,8 @@ def test_post_dataset_creator_metadata(clients):
         f"/study/{study_id}/dataset/{dataset_id}/metadata/creator",
         json=[
             {
-                "name": "Viewer Name here",
+                "given_name": "Viewer Given Name here",
+                "family_name": "Family Name here",
                 "name_type": "Personal",
                 "name_identifier": "Name identifier",
                 "name_identifier_scheme": "Name Scheme ID",
@@ -857,7 +870,8 @@ def test_get_dataset_creator_metadata(clients):
     assert len(viewer_response_data) == 3
 
     assert response_data[0]["id"] == pytest.global_dataset_creator_id
-    assert response_data[0]["name"] == "Name here"
+    assert response_data[0]["given_name"] == "Given Name here"
+    assert response_data[0]["family_name"] == "Family Name here"
     assert response_data[0]["name_type"] == "Personal"
     assert response_data[0]["name_identifier"] == "Name identifier"
     assert response_data[0]["name_identifier_scheme"] == "Name Scheme ID"
@@ -868,7 +882,8 @@ def test_get_dataset_creator_metadata(clients):
     assert response_data[0]["affiliations"][0]["scheme"] == "uh"
     assert response_data[0]["affiliations"][0]["scheme_uri"] == "scheme uri"
     assert response_data[1]["id"] == pytest.global_dataset_creator_id_admin
-    assert response_data[1]["name"] == "admin Name here"
+    assert response_data[1]["given_name"] == "Admin Given Name here"
+    assert response_data[1]["family_name"] == "Family Name here"
     assert response_data[1]["name_type"] == "Personal"
     assert response_data[1]["name_identifier"] == "Name identifier"
     assert response_data[1]["name_identifier_scheme"] == "Name Scheme ID"
@@ -879,7 +894,8 @@ def test_get_dataset_creator_metadata(clients):
     assert response_data[1]["affiliations"][0]["scheme"] == "uh"
     assert response_data[1]["affiliations"][0]["scheme_uri"] == "scheme uri"
     assert response_data[2]["id"] == pytest.global_dataset_creator_id_editor
-    assert response_data[2]["name"] == "Editor Name here"
+    assert response_data[2]["given_name"] == "Editor Given Name here"
+    assert response_data[2]["family_name"] == "Family Name here"
     assert response_data[2]["name_type"] == "Personal"
     assert response_data[2]["name_identifier"] == "Name identifier"
     assert response_data[2]["name_identifier_scheme"] == "Name Scheme ID"
@@ -890,7 +906,8 @@ def test_get_dataset_creator_metadata(clients):
     assert response_data[2]["affiliations"][0]["scheme"] == "uh"
     assert response_data[2]["affiliations"][0]["scheme_uri"] == "scheme uri"
 
-    assert admin_response_data[0]["name"] == "Name here"
+    assert admin_response_data[0]["given_name"] == "Given Name here"
+    assert admin_response_data[0]["family_name"] == "Family Name here"
     assert admin_response_data[0]["name_type"] == "Personal"
     assert admin_response_data[0]["name_identifier"] == "Name identifier"
     assert admin_response_data[0]["name_identifier_scheme"] == "Name Scheme ID"
@@ -900,7 +917,8 @@ def test_get_dataset_creator_metadata(clients):
     assert admin_response_data[0]["affiliations"][0]["identifier"] == "yes"
     assert admin_response_data[0]["affiliations"][0]["scheme"] == "uh"
     assert admin_response_data[0]["affiliations"][0]["scheme_uri"] == "scheme uri"
-    assert admin_response_data[1]["name"] == "admin Name here"
+    assert admin_response_data[1]["given_name"] == "Admin Given Name here"
+    assert admin_response_data[1]["family_name"] == "Family Name here"
     assert admin_response_data[1]["name_type"] == "Personal"
     assert admin_response_data[1]["name_identifier"] == "Name identifier"
     assert admin_response_data[1]["name_identifier_scheme"] == "Name Scheme ID"
@@ -910,7 +928,8 @@ def test_get_dataset_creator_metadata(clients):
     assert admin_response_data[1]["affiliations"][0]["identifier"] == "yes"
     assert admin_response_data[1]["affiliations"][0]["scheme"] == "uh"
     assert admin_response_data[1]["affiliations"][0]["scheme_uri"] == "scheme uri"
-    assert admin_response_data[2]["name"] == "Editor Name here"
+    assert admin_response_data[2]["given_name"] == "Editor Given Name here"
+    assert admin_response_data[2]["family_name"] == "Family Name here"
     assert admin_response_data[2]["name_type"] == "Personal"
     assert admin_response_data[2]["name_identifier"] == "Name identifier"
     assert admin_response_data[2]["name_identifier_scheme"] == "Name Scheme ID"
@@ -921,7 +940,8 @@ def test_get_dataset_creator_metadata(clients):
     assert admin_response_data[2]["affiliations"][0]["scheme"] == "uh"
     assert admin_response_data[2]["affiliations"][0]["scheme_uri"] == "scheme uri"
 
-    assert editor_response_data[0]["name"] == "Name here"
+    assert editor_response_data[0]["given_name"] == "Given Name here"
+    assert editor_response_data[0]["family_name"] == "Family Name here"
     assert editor_response_data[0]["name_type"] == "Personal"
     assert editor_response_data[0]["name_identifier"] == "Name identifier"
     assert editor_response_data[0]["name_identifier_scheme"] == "Name Scheme ID"
@@ -931,7 +951,8 @@ def test_get_dataset_creator_metadata(clients):
     assert editor_response_data[0]["affiliations"][0]["identifier"] == "yes"
     assert editor_response_data[0]["affiliations"][0]["scheme"] == "uh"
     assert editor_response_data[0]["affiliations"][0]["scheme_uri"] == "scheme uri"
-    assert editor_response_data[1]["name"] == "admin Name here"
+    assert editor_response_data[1]["given_name"] == "Admin Given Name here"
+    assert editor_response_data[1]["family_name"] == "Family Name here"
     assert editor_response_data[1]["name_type"] == "Personal"
     assert editor_response_data[1]["name_identifier"] == "Name identifier"
     assert editor_response_data[1]["name_identifier_scheme"] == "Name Scheme ID"
@@ -941,7 +962,8 @@ def test_get_dataset_creator_metadata(clients):
     assert editor_response_data[1]["affiliations"][0]["identifier"] == "yes"
     assert editor_response_data[1]["affiliations"][0]["scheme"] == "uh"
     assert editor_response_data[1]["affiliations"][0]["scheme_uri"] == "scheme uri"
-    assert editor_response_data[2]["name"] == "Editor Name here"
+    assert editor_response_data[2]["given_name"] == "Editor Given Name here"
+    assert editor_response_data[2]["family_name"] == "Family Name here"
     assert editor_response_data[2]["name_type"] == "Personal"
     assert editor_response_data[2]["name_identifier"] == "Name identifier"
     assert editor_response_data[2]["name_identifier_scheme"] == "Name Scheme ID"
@@ -952,7 +974,8 @@ def test_get_dataset_creator_metadata(clients):
     assert editor_response_data[2]["affiliations"][0]["scheme"] == "uh"
     assert editor_response_data[2]["affiliations"][0]["scheme_uri"] == "scheme uri"
 
-    assert viewer_response_data[0]["name"] == "Name here"
+    assert viewer_response_data[0]["given_name"] == "Given Name here"
+    assert viewer_response_data[0]["family_name"] == "Family Name here"
     assert viewer_response_data[0]["name_type"] == "Personal"
     assert viewer_response_data[0]["name_identifier"] == "Name identifier"
     assert viewer_response_data[0]["name_identifier_scheme"] == "Name Scheme ID"
@@ -962,7 +985,8 @@ def test_get_dataset_creator_metadata(clients):
     assert viewer_response_data[0]["affiliations"][0]["identifier"] == "yes"
     assert viewer_response_data[0]["affiliations"][0]["scheme"] == "uh"
     assert viewer_response_data[0]["affiliations"][0]["scheme_uri"] == "scheme uri"
-    assert viewer_response_data[1]["name"] == "admin Name here"
+    assert viewer_response_data[1]["given_name"] == "Admin Given Name here"
+    assert viewer_response_data[1]["family_name"] == "Family Name here"
     assert viewer_response_data[1]["name_type"] == "Personal"
     assert viewer_response_data[1]["name_identifier"] == "Name identifier"
     assert viewer_response_data[1]["name_identifier_scheme"] == "Name Scheme ID"
@@ -972,7 +996,8 @@ def test_get_dataset_creator_metadata(clients):
     assert viewer_response_data[1]["affiliations"][0]["identifier"] == "yes"
     assert viewer_response_data[1]["affiliations"][0]["scheme"] == "uh"
     assert viewer_response_data[1]["affiliations"][0]["scheme_uri"] == "scheme uri"
-    assert viewer_response_data[2]["name"] == "Editor Name here"
+    assert viewer_response_data[2]["given_name"] == "Editor Given Name here"
+    assert viewer_response_data[2]["family_name"] == "Family Name here"
     assert viewer_response_data[2]["name_type"] == "Personal"
     assert viewer_response_data[2]["name_identifier"] == "Name identifier"
     assert viewer_response_data[2]["name_identifier_scheme"] == "Name Scheme ID"
