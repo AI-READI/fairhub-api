@@ -1,4 +1,5 @@
 """Entry point for the application."""
+
 import datetime
 import importlib
 import logging

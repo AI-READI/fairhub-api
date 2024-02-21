@@ -165,9 +165,9 @@ class Study(db.Model):  # type: ignore
             "created_at": self.created_at,
             "updated_on": self.updated_on,
             "size": self.study_other.size if self.study_other else None,
-            "description": self.study_description.brief_summary
-            if self.study_description
-            else None,
+            "description": (
+                self.study_description.brief_summary if self.study_description else None
+            ),
             "owner": owner.to_dict()["id"] if owner else None,
             "role": contributor_permission.to_dict()["role"],
         }

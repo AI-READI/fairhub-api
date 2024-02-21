@@ -63,33 +63,51 @@ class DatasetRelatedItem(db.Model):  # type: ignore
             ],
             "creators": [c.to_dict() for c in creators],
             "contributors": [c.to_dict() for c in contributors],
-            "publication_year": self.dataset_related_item_other.publication_year
-            if self.dataset_related_item_other
-            else None,
-            "volume": self.dataset_related_item_other.volume
-            if self.dataset_related_item_other
-            else None,
-            "issue": self.dataset_related_item_other.issue
-            if self.dataset_related_item_other
-            else None,
-            "number_value": self.dataset_related_item_other.number_value
-            if self.dataset_related_item_other
-            else None,
-            "number_type": self.dataset_related_item_other.number_type
-            if self.dataset_related_item_other
-            else None,
-            "first_page": self.dataset_related_item_other.first_page
-            if self.dataset_related_item_other
-            else None,
-            "last_page": self.dataset_related_item_other.last_page
-            if self.dataset_related_item_other
-            else None,
-            "publisher": self.dataset_related_item_other.publisher
-            if self.dataset_related_item_other
-            else None,
-            "edition": self.dataset_related_item_other.edition
-            if self.dataset_related_item_other
-            else None,
+            "publication_year": (
+                self.dataset_related_item_other.publication_year
+                if self.dataset_related_item_other
+                else None
+            ),
+            "volume": (
+                self.dataset_related_item_other.volume
+                if self.dataset_related_item_other
+                else None
+            ),
+            "issue": (
+                self.dataset_related_item_other.issue
+                if self.dataset_related_item_other
+                else None
+            ),
+            "number_value": (
+                self.dataset_related_item_other.number_value
+                if self.dataset_related_item_other
+                else None
+            ),
+            "number_type": (
+                self.dataset_related_item_other.number_type
+                if self.dataset_related_item_other
+                else None
+            ),
+            "first_page": (
+                self.dataset_related_item_other.first_page
+                if self.dataset_related_item_other
+                else None
+            ),
+            "last_page": (
+                self.dataset_related_item_other.last_page
+                if self.dataset_related_item_other
+                else None
+            ),
+            "publisher": (
+                self.dataset_related_item_other.publisher
+                if self.dataset_related_item_other
+                else None
+            ),
+            "edition": (
+                self.dataset_related_item_other.edition
+                if self.dataset_related_item_other
+                else None
+            ),
             "identifiers": [
                 i.to_dict()
                 for i in self.dataset_related_item_identifier  # type: ignore

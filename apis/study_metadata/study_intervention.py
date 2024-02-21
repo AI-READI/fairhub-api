@@ -1,4 +1,5 @@
 """API routes for study intervention metadata"""
+
 import typing
 
 from flask import Response, request

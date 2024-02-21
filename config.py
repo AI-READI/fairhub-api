@@ -1,4 +1,5 @@
 """Configuration for the application."""
+
 from os import environ
 from pathlib import Path
 from dotenv import dotenv_values
