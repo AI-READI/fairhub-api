@@ -45,30 +45,3 @@ class PublishedDataset(db.Model):  # type: ignore
             "data": self.data,
             "created_at": self.created_at,
         }
-
-    @staticmethod
-    def from_data(data: dict):
-        """Creates a published dataset from a dictionary"""
-        published_dataset = PublishedDataset()
-        published_dataset.update(data)
-
-        return published_dataset
-
-    def update(self, data: dict):
-        """Updates the published dataset from a dictionary"""
-        # self.study_id = data["study_id"]
-        # self.dataset_id = data["dataset_id"]
-        # self.version_id = data["version_id"]
-        # self.doi = data["doi"]
-        # self.title = data["title"]
-        self.description = data["description"]
-        self.version_title = data["version_title"]
-        self.study_title = data["study_title"]
-        self.published_metadata = data["published_metadata"]
-        self.files = data["files"]
-        self.data = data["data"]
-
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        return violations
