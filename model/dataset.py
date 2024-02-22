@@ -58,6 +58,12 @@ class Dataset(db.Model):  # type: ignore
         cascade="all, delete",
         uselist=False,
     )
+    dataset_healthsheet = db.relationship(
+        "DatasetHealthsheet",
+        back_populates="dataset",
+        cascade="all, delete",
+        uselist=False,
+    )
     dataset_date = db.relationship(
         "DatasetDate",
         back_populates="dataset",
