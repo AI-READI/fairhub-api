@@ -12,6 +12,7 @@ from .dataset import api as dataset_api
 from .dataset_metadata.dataset_access import api as access
 from .dataset_metadata.dataset_alternate_identifier import api as alternate_identifier
 from .dataset_metadata.dataset_consent import api as consent
+from .dataset_metadata.dataset_healthsheet import api as healthsheet
 from .dataset_metadata.dataset_contributor import api as dataset_contributor
 from .dataset_metadata.dataset_date import api as date
 from .dataset_metadata.dataset_de_ident_level import api as de_ident_level
@@ -61,6 +62,7 @@ __all__ = [
     "access",
     "alternate_identifier",
     "consent",
+    "healthsheet",
     "date",
     "de_ident_level",
     "description",

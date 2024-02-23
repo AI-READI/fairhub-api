@@ -4,6 +4,13 @@ from ..db import db
 class DatasetHealthsheet(db.Model):  # type: ignore
     def __init__(self, dataset):
         self.dataset = dataset
+        self.motivation = "[]"
+        self.composition = "[]"
+        self.collection = "[]"
+        self.preprocessing = "[]"
+        self.uses = "[]"
+        self.distribution = "[]"
+        self.maintenance = "[]"
 
     __tablename__ = "dataset_healthsheet"
 
@@ -39,12 +46,17 @@ class DatasetHealthsheet(db.Model):  # type: ignore
         return dataset_healthsheet
 
     def update(self, data: dict):
-        self.motivation = data["motivation"]
-        self.composition = data["composition"]
-        # self.collection = data["collection"]
-        # self.preprocessing = data["preprocessing"]
-        # self.uses = data["uses"]
-        # self.distribution = data["distribution"]
-        # self.maintenance = data["maintenance"]
-        # self.dataset_id = data["dataset_id"]
-        self.dataset_id.touch_dataset()
+        if "motivation" in data:
+            self.motivation = data["motivation"]
+        if "composition" in data:
+            self.composition = data["composition"]
+        if "collection" in data:
+            self.collection = data["collection"]
+        if "preprocessing" in data:
+            self.preprocessing = data["preprocessing"]
+        if "uses" in data:
+            self.uses = data["uses"]
+        if "distribution" in data:
+            self.distribution = data["distribution"]
+        if "maintenance" in data:
+            self.maintenance = data["maintenance"]
