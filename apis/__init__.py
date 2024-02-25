@@ -12,12 +12,12 @@ from .dataset import api as dataset_api
 from .dataset_metadata.dataset_access import api as access
 from .dataset_metadata.dataset_alternate_identifier import api as alternate_identifier
 from .dataset_metadata.dataset_consent import api as consent
-from .dataset_metadata.dataset_healthsheet import api as healthsheet
 from .dataset_metadata.dataset_contributor import api as dataset_contributor
 from .dataset_metadata.dataset_date import api as date
 from .dataset_metadata.dataset_de_ident_level import api as de_ident_level
 from .dataset_metadata.dataset_description import api as description
 from .dataset_metadata.dataset_funder import api as funder
+from .dataset_metadata.dataset_healthsheet import api as healthsheet
 from .dataset_metadata.dataset_other import api as dataset_other
 from .dataset_metadata.dataset_record_keys import api as record_keys
 from .dataset_metadata.dataset_related_item import api as related_item

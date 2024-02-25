@@ -1707,31 +1707,37 @@ def test_put_healthsheet_motivation_dataset_metadata(clients):
 
     response = _logged_in_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation",
-        json={"motivation": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"motivation": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    assert response_data["motivation"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert response_data["motivation"] == '[{"id":1,"question":"For","response":"new"}]'
 
     admin_response = _admin_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation",
-        json={"motivation": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"motivation": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    assert admin_response_data["motivation"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        admin_response_data["motivation"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     editor_response = _editor_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation",
-        json={"motivation": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"motivation": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    assert editor_response_data["motivation"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        editor_response_data["motivation"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     viewer_response = _viewer_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation",
-        json={"motivation": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"motivation": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert viewer_response.status_code == 403
 
@@ -1749,28 +1755,41 @@ def test_get_dataset_healthsheet_motivation_metadata(clients):
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation"
+    )
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    assert response_data["motivation"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert response_data["motivation"] == '[{"id":1,"question":"For","response":"new"}]'
 
     admin_response = _admin_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation"
+    )
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    assert admin_response_data["motivation"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        admin_response_data["motivation"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     editor_response = _editor_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation"
+    )
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    assert editor_response_data["motivation"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        editor_response_data["motivation"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     viewer_response = _viewer_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation"
+    )
     assert viewer_response.status_code == 200
     viewer_response_data = json.loads(viewer_response.data)
-    assert viewer_response_data["motivation"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        viewer_response_data["motivation"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     # Editor was the last successful PUT request, so the response data should match
 
@@ -1790,31 +1809,39 @@ def test_put_healthsheet_composition_dataset_metadata(clients):
 
     response = _logged_in_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/composition",
-        json={"composition": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"composition": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    assert response_data["composition"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        response_data["composition"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     admin_response = _admin_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/composition",
-        json={"composition": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"composition": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    assert admin_response_data["composition"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        admin_response_data["composition"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     editor_response = _editor_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/composition",
-        json={"composition": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"composition": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    assert editor_response_data["composition"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        editor_response_data["composition"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     viewer_response = _viewer_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/composition",
-        json={"composition": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"composition": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert viewer_response.status_code == 403
 
@@ -1832,28 +1859,43 @@ def test_get_dataset_healthsheet_composition_metadata(clients):
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/composition")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/composition"
+    )
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    assert response_data["composition"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        response_data["composition"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     admin_response = _admin_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/composition")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/composition"
+    )
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    assert admin_response_data["composition"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        admin_response_data["composition"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     editor_response = _editor_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/composition")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/composition"
+    )
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    assert editor_response_data["composition"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        editor_response_data["composition"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     viewer_response = _viewer_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/composition")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/composition"
+    )
     assert viewer_response.status_code == 200
     viewer_response_data = json.loads(viewer_response.data)
-    assert viewer_response_data["composition"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        viewer_response_data["composition"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     # Editor was the last successful PUT request, so the response data should match
 
@@ -1873,31 +1915,37 @@ def test_put_healthsheet_collection_dataset_metadata(clients):
 
     response = _logged_in_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/collection",
-        json={"collection": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"collection": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    assert response_data["collection"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert response_data["collection"] == '[{"id":1,"question":"For","response":"new"}]'
 
     admin_response = _admin_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/collection",
-        json={"collection": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"collection": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    assert admin_response_data["collection"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        admin_response_data["collection"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     editor_response = _editor_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/collection",
-        json={"collection": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"collection": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    assert editor_response_data["collection"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        editor_response_data["collection"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     viewer_response = _viewer_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/collection",
-        json={"collection": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"collection": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert viewer_response.status_code == 403
 
@@ -1915,28 +1963,41 @@ def test_get_dataset_healthsheet_collection_metadata(clients):
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/collection")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/collection"
+    )
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    assert response_data["collection"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert response_data["collection"] == '[{"id":1,"question":"For","response":"new"}]'
 
     admin_response = _admin_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/collection")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/collection"
+    )
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    assert admin_response_data["collection"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        admin_response_data["collection"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     editor_response = _editor_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/collection")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/collection"
+    )
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    assert editor_response_data["collection"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        editor_response_data["collection"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     viewer_response = _viewer_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/collection")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/collection"
+    )
     assert viewer_response.status_code == 200
     viewer_response_data = json.loads(viewer_response.data)
-    assert viewer_response_data["collection"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        viewer_response_data["collection"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     # Editor was the last successful PUT request, so the response data should match
 
@@ -1956,31 +2017,39 @@ def test_put_healthsheet_preprocessing_dataset_metadata(clients):
 
     response = _logged_in_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing",
-        json={"preprocessing": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"preprocessing": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    assert response_data["preprocessing"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        response_data["preprocessing"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     admin_response = _admin_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing",
-        json={"preprocessing": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"preprocessing": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    assert admin_response_data["preprocessing"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        admin_response_data["preprocessing"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     editor_response = _editor_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing",
-        json={"preprocessing": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"preprocessing": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    assert editor_response_data["preprocessing"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        editor_response_data["preprocessing"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     viewer_response = _viewer_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing",
-        json={"preprocessing": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"preprocessing": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert viewer_response.status_code == 403
 
@@ -1998,28 +2067,43 @@ def test_get_dataset_healthsheet_preprocessing_metadata(clients):
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing"
+    )
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    assert response_data["preprocessing"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        response_data["preprocessing"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     admin_response = _admin_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing"
+    )
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    assert admin_response_data["preprocessing"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        admin_response_data["preprocessing"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     editor_response = _editor_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing"
+    )
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    assert editor_response_data["preprocessing"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        editor_response_data["preprocessing"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     viewer_response = _viewer_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing"
+    )
     assert viewer_response.status_code == 200
     viewer_response_data = json.loads(viewer_response.data)
-    assert viewer_response_data["preprocessing"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        viewer_response_data["preprocessing"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     # Editor was the last successful PUT request, so the response data should match
 
@@ -2039,31 +2123,33 @@ def test_put_healthsheet_uses_dataset_metadata(clients):
 
     response = _logged_in_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/uses",
-        json={"uses": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"uses": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    assert response_data["uses"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert response_data["uses"] == '[{"id":1,"question":"For","response":"new"}]'
 
     admin_response = _admin_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/uses",
-        json={"uses": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"uses": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    assert admin_response_data["uses"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert admin_response_data["uses"] == '[{"id":1,"question":"For","response":"new"}]'
 
     editor_response = _editor_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/uses",
-        json={"uses": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"uses": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    assert editor_response_data["uses"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        editor_response_data["uses"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     viewer_response = _viewer_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/uses",
-        json={"uses": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"uses": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert viewer_response.status_code == 403
 
@@ -2081,28 +2167,36 @@ def test_get_dataset_healthsheet_uses_metadata(clients):
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/uses")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/uses"
+    )
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    assert response_data["uses"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert response_data["uses"] == '[{"id":1,"question":"For","response":"new"}]'
 
     admin_response = _admin_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/uses")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/uses"
+    )
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    assert admin_response_data["uses"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert admin_response_data["uses"] == '[{"id":1,"question":"For","response":"new"}]'
 
     editor_response = _editor_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/uses")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/uses"
+    )
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    assert editor_response_data["uses"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        editor_response_data["uses"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     viewer_response = _viewer_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/uses")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/uses"
+    )
     assert viewer_response.status_code == 200
     viewer_response_data = json.loads(viewer_response.data)
-    assert viewer_response_data["uses"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        viewer_response_data["uses"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     # Editor was the last successful PUT request, so the response data should match
 
@@ -2122,31 +2216,39 @@ def test_put_healthsheet_distribution_dataset_metadata(clients):
 
     response = _logged_in_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution",
-        json={"distribution": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"distribution": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    assert response_data["distribution"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        response_data["distribution"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     admin_response = _admin_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution",
-        json={"distribution": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"distribution": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    assert admin_response_data["distribution"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        admin_response_data["distribution"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     editor_response = _editor_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution",
-        json={"distribution": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"distribution": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    assert editor_response_data["distribution"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        editor_response_data["distribution"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     viewer_response = _viewer_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution",
-        json={"distribution": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"distribution": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert viewer_response.status_code == 403
 
@@ -2164,28 +2266,43 @@ def test_get_dataset_healthsheet_distribution_metadata(clients):
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution"
+    )
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    assert response_data["distribution"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        response_data["distribution"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     admin_response = _admin_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution"
+    )
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    assert admin_response_data["distribution"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        admin_response_data["distribution"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     editor_response = _editor_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution"
+    )
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    assert editor_response_data["distribution"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        editor_response_data["distribution"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     viewer_response = _viewer_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution"
+    )
     assert viewer_response.status_code == 200
     viewer_response_data = json.loads(viewer_response.data)
-    assert viewer_response_data["distribution"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        viewer_response_data["distribution"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     # Editor was the last successful PUT request, so the response data should match
 
@@ -2205,31 +2322,39 @@ def test_put_healthsheet_maintenance_dataset_metadata(clients):
 
     response = _logged_in_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance",
-        json={"maintenance": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"maintenance": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    assert response_data["maintenance"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        response_data["maintenance"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     admin_response = _admin_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance",
-        json={"maintenance": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"maintenance": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    assert admin_response_data["maintenance"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        admin_response_data["maintenance"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     editor_response = _editor_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance",
-        json={"maintenance": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"maintenance": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    assert editor_response_data["maintenance"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        editor_response_data["maintenance"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     viewer_response = _viewer_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance",
-        json={"maintenance": "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"}
+        json={"maintenance": '[{"id":1,"question":"For","response":"new"}]'},
     )
     assert viewer_response.status_code == 403
 
@@ -2247,28 +2372,43 @@ def test_get_dataset_healthsheet_maintenance_metadata(clients):
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance"
+    )
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    assert response_data["maintenance"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        response_data["maintenance"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     admin_response = _admin_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance"
+    )
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
-    assert admin_response_data["maintenance"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        admin_response_data["maintenance"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     editor_response = _editor_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance"
+    )
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
-    assert editor_response_data["maintenance"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        editor_response_data["maintenance"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     viewer_response = _viewer_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance")
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance"
+    )
     assert viewer_response.status_code == 200
     viewer_response_data = json.loads(viewer_response.data)
-    assert viewer_response_data["maintenance"] == "[{\"id\":1,\"question\":\"For\",\"response\":\"new\"}]"
+    assert (
+        viewer_response_data["maintenance"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
 
     # Editor was the last successful PUT request, so the response data should match
 
@@ -2369,7 +2509,7 @@ def test_post_dataset_funder_metadata(clients):
     assert editor_response_data[0]["award_uri"] == "Award URI"
     assert editor_response_data[0]["identifier"] == "Identifier"
     assert (
-            editor_response_data[0]["identifier_scheme_uri"] == "Identifier Scheme URI"
+        editor_response_data[0]["identifier_scheme_uri"] == "Identifier Scheme URI"
     )  # pylint: disable=line-too-long
     assert editor_response_data[0]["identifier_type"] == "Identifier Type"
 
@@ -2733,7 +2873,7 @@ def test_put_dataset_publisher_metadata(clients):
     assert response_data["publisher"] == "Publisher"
     assert response_data["managing_organization_name"] == "Managing Organization Name"
     assert (
-            response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
+        response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
     )
 
     admin_response = _admin_client.put(
@@ -2750,12 +2890,12 @@ def test_put_dataset_publisher_metadata(clients):
 
     assert admin_response_data["publisher"] == "Publisher"
     assert (
-            admin_response_data["managing_organization_name"]
-            == "Managing Admin Organization Name"
+        admin_response_data["managing_organization_name"]
+        == "Managing Admin Organization Name"
     )
     assert (
-            admin_response_data["managing_organization_ror_id"]
-            == "Managing Organization ROR ID"
+        admin_response_data["managing_organization_ror_id"]
+        == "Managing Organization ROR ID"
     )
 
     editor_response = _editor_client.put(
@@ -2772,12 +2912,12 @@ def test_put_dataset_publisher_metadata(clients):
 
     assert editor_response_data["publisher"] == "Publisher"
     assert (
-            editor_response_data["managing_organization_name"]
-            == "Managing Editor Organization Name"
+        editor_response_data["managing_organization_name"]
+        == "Managing Editor Organization Name"
     )
     assert (
-            editor_response_data["managing_organization_ror_id"]
-            == "Managing Organization ROR ID"
+        editor_response_data["managing_organization_ror_id"]
+        == "Managing Organization ROR ID"
     )
 
     viewer_response = _viewer_client.put(
@@ -2831,41 +2971,41 @@ def test_get_dataset_publisher_metadata(clients):
     # the response should reflect that
     assert response_data["publisher"] == "Publisher"
     assert (
-            response_data["managing_organization_name"]
-            == "Managing Editor Organization Name"
+        response_data["managing_organization_name"]
+        == "Managing Editor Organization Name"
     )
     assert (
-            response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
+        response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
     )
 
     assert admin_response_data["publisher"] == "Publisher"
     assert (
-            admin_response_data["managing_organization_name"]
-            == "Managing Editor Organization Name"
+        admin_response_data["managing_organization_name"]
+        == "Managing Editor Organization Name"
     )
     assert (
-            admin_response_data["managing_organization_ror_id"]
-            == "Managing Organization ROR ID"
+        admin_response_data["managing_organization_ror_id"]
+        == "Managing Organization ROR ID"
     )
 
     assert editor_response_data["publisher"] == "Publisher"
     assert (
-            editor_response_data["managing_organization_name"]
-            == "Managing Editor Organization Name"
+        editor_response_data["managing_organization_name"]
+        == "Managing Editor Organization Name"
     )
     assert (
-            editor_response_data["managing_organization_ror_id"]
-            == "Managing Organization ROR ID"
+        editor_response_data["managing_organization_ror_id"]
+        == "Managing Organization ROR ID"
     )
 
     assert viewer_response_data["publisher"] == "Publisher"
     assert (
-            viewer_response_data["managing_organization_name"]
-            == "Managing Editor Organization Name"
+        viewer_response_data["managing_organization_name"]
+        == "Managing Editor Organization Name"
     )
     assert (
-            viewer_response_data["managing_organization_ror_id"]
-            == "Managing Organization ROR ID"
+        viewer_response_data["managing_organization_ror_id"]
+        == "Managing Organization ROR ID"
     )
 
 
@@ -3147,8 +3287,8 @@ def test_post_dataset_related_item_metadata(clients):
 
     assert admin_response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
     assert (
-            admin_response_data[1]["contributors"][0]["contributor_type"]
-            == "Admin Con Type"
+        admin_response_data[1]["contributors"][0]["contributor_type"]
+        == "Admin Con Type"
     )
     assert admin_response_data[1]["contributors"][0]["name_type"] == "Personal"
     assert admin_response_data[1]["creators"][0]["name"] == "Admin Name"
@@ -3157,11 +3297,11 @@ def test_post_dataset_related_item_metadata(clients):
     assert admin_response_data[1]["first_page"] == "Admin First Page"
     assert admin_response_data[1]["identifiers"][0]["identifier"] == "Admin Identifier"
     assert (
-            admin_response_data[1]["identifiers"][0]["metadata_scheme"]
-            == "Admin Metadata Scheme"
+        admin_response_data[1]["identifiers"][0]["metadata_scheme"]
+        == "Admin Metadata Scheme"
     )
     assert (
-            admin_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
+        admin_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
     )
     assert admin_response_data[1]["identifiers"][0]["scheme_uri"] == "Admin Scheme URI"
     assert admin_response_data[1]["identifiers"][0]["type"] == "ARK"
@@ -3232,8 +3372,8 @@ def test_post_dataset_related_item_metadata(clients):
 
     assert editor_response_data[2]["contributors"][0]["name"] == "Editor Ndafsdame"
     assert (
-            editor_response_data[2]["contributors"][0]["contributor_type"]
-            == "Editor Con Type"
+        editor_response_data[2]["contributors"][0]["contributor_type"]
+        == "Editor Con Type"
     )
     assert editor_response_data[2]["contributors"][0]["name_type"] == "Personal"
     assert editor_response_data[2]["creators"][0]["name"] == "Editor Name"
@@ -3241,17 +3381,17 @@ def test_post_dataset_related_item_metadata(clients):
     assert editor_response_data[2]["edition"] == "Editor Edition"
     assert editor_response_data[2]["first_page"] == "Editor First Page"
     assert (
-            editor_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
+        editor_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
     )
     assert (
-            editor_response_data[2]["identifiers"][0]["metadata_scheme"]
-            == "Editor Metadata Scheme"
+        editor_response_data[2]["identifiers"][0]["metadata_scheme"]
+        == "Editor Metadata Scheme"
     )
     assert (
-            editor_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
+        editor_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
     )
     assert (
-            editor_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
+        editor_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
     )
     assert editor_response_data[2]["identifiers"][0]["type"] == "ARK"
     assert editor_response_data[2]["issue"] == "Editor Issue"
@@ -3442,7 +3582,7 @@ def test_get_dataset_related_item_metadata(clients):
     assert response_data[1]["first_page"] == "Admin First Page"
     assert response_data[1]["identifiers"][0]["identifier"] == "Admin Identifier"
     assert (
-            response_data[1]["identifiers"][0]["metadata_scheme"] == "Admin Metadata Scheme"
+        response_data[1]["identifiers"][0]["metadata_scheme"] == "Admin Metadata Scheme"
     )
     assert response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
     assert response_data[1]["identifiers"][0]["scheme_uri"] == "Admin Scheme URI"
@@ -3467,8 +3607,8 @@ def test_get_dataset_related_item_metadata(clients):
     assert response_data[2]["first_page"] == "Editor First Page"
     assert response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
     assert (
-            response_data[2]["identifiers"][0]["metadata_scheme"]
-            == "Editor Metadata Scheme"
+        response_data[2]["identifiers"][0]["metadata_scheme"]
+        == "Editor Metadata Scheme"
     )
     assert response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
     assert response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
@@ -3494,7 +3634,7 @@ def test_get_dataset_related_item_metadata(clients):
     assert admin_response_data[0]["first_page"] == "First Page"
     assert admin_response_data[0]["identifiers"][0]["identifier"] == "Identifier"
     assert (
-            admin_response_data[0]["identifiers"][0]["metadata_scheme"] == "Metadata Scheme"
+        admin_response_data[0]["identifiers"][0]["metadata_scheme"] == "Metadata Scheme"
     )
     assert admin_response_data[0]["identifiers"][0]["scheme_type"] == "Scheme Type"
     assert admin_response_data[0]["identifiers"][0]["scheme_uri"] == "Scheme URI"
@@ -3514,8 +3654,8 @@ def test_get_dataset_related_item_metadata(clients):
     assert admin_response_data[0]["volume"] == "Volume"
     assert admin_response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
     assert (
-            admin_response_data[1]["contributors"][0]["contributor_type"]
-            == "Admin Con Type"
+        admin_response_data[1]["contributors"][0]["contributor_type"]
+        == "Admin Con Type"
     )
     assert admin_response_data[1]["contributors"][0]["name_type"] == "Personal"
     assert admin_response_data[1]["creators"][0]["name"] == "Admin Name"
@@ -3524,11 +3664,11 @@ def test_get_dataset_related_item_metadata(clients):
     assert admin_response_data[1]["first_page"] == "Admin First Page"
     assert admin_response_data[1]["identifiers"][0]["identifier"] == "Admin Identifier"
     assert (
-            admin_response_data[1]["identifiers"][0]["metadata_scheme"]
-            == "Admin Metadata Scheme"
+        admin_response_data[1]["identifiers"][0]["metadata_scheme"]
+        == "Admin Metadata Scheme"
     )
     assert (
-            admin_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
+        admin_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
     )
     assert admin_response_data[1]["identifiers"][0]["scheme_uri"] == "Admin Scheme URI"
     assert admin_response_data[1]["identifiers"][0]["type"] == "ARK"
@@ -3545,8 +3685,8 @@ def test_get_dataset_related_item_metadata(clients):
     assert admin_response_data[1]["volume"] == "Admin Volume"
     assert admin_response_data[2]["contributors"][0]["name"] == "Editor Ndafsdame"
     assert (
-            admin_response_data[2]["contributors"][0]["contributor_type"]
-            == "Editor Con Type"
+        admin_response_data[2]["contributors"][0]["contributor_type"]
+        == "Editor Con Type"
     )
     assert admin_response_data[2]["contributors"][0]["name_type"] == "Personal"
     assert admin_response_data[2]["creators"][0]["name"] == "Editor Name"
@@ -3555,11 +3695,11 @@ def test_get_dataset_related_item_metadata(clients):
     assert admin_response_data[2]["first_page"] == "Editor First Page"
     assert admin_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
     assert (
-            admin_response_data[2]["identifiers"][0]["metadata_scheme"]
-            == "Editor Metadata Scheme"
+        admin_response_data[2]["identifiers"][0]["metadata_scheme"]
+        == "Editor Metadata Scheme"
     )
     assert (
-            admin_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
+        admin_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
     )
     assert admin_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
     assert admin_response_data[2]["identifiers"][0]["type"] == "ARK"
@@ -3584,8 +3724,8 @@ def test_get_dataset_related_item_metadata(clients):
     assert editor_response_data[0]["first_page"] == "First Page"
     assert editor_response_data[0]["identifiers"][0]["identifier"] == "Identifier"
     assert (
-            editor_response_data[0]["identifiers"][0]["metadata_scheme"]
-            == "Metadata Scheme"
+        editor_response_data[0]["identifiers"][0]["metadata_scheme"]
+        == "Metadata Scheme"
     )
     assert editor_response_data[0]["identifiers"][0]["scheme_type"] == "Scheme Type"
     assert editor_response_data[0]["identifiers"][0]["scheme_uri"] == "Scheme URI"
@@ -3605,8 +3745,8 @@ def test_get_dataset_related_item_metadata(clients):
     assert editor_response_data[0]["volume"] == "Volume"
     assert editor_response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
     assert (
-            editor_response_data[1]["contributors"][0]["contributor_type"]
-            == "Admin Con Type"
+        editor_response_data[1]["contributors"][0]["contributor_type"]
+        == "Admin Con Type"
     )
     assert editor_response_data[1]["contributors"][0]["name_type"] == "Personal"
     assert editor_response_data[1]["creators"][0]["name"] == "Admin Name"
@@ -3615,11 +3755,11 @@ def test_get_dataset_related_item_metadata(clients):
     assert editor_response_data[1]["first_page"] == "Admin First Page"
     assert editor_response_data[1]["identifiers"][0]["identifier"] == "Admin Identifier"
     assert (
-            editor_response_data[1]["identifiers"][0]["metadata_scheme"]
-            == "Admin Metadata Scheme"
+        editor_response_data[1]["identifiers"][0]["metadata_scheme"]
+        == "Admin Metadata Scheme"
     )
     assert (
-            editor_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
+        editor_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
     )
     assert editor_response_data[1]["identifiers"][0]["scheme_uri"] == "Admin Scheme URI"
     assert editor_response_data[1]["identifiers"][0]["type"] == "ARK"
@@ -3636,8 +3776,8 @@ def test_get_dataset_related_item_metadata(clients):
     assert editor_response_data[1]["volume"] == "Admin Volume"
     assert editor_response_data[2]["contributors"][0]["name"] == "Editor Ndafsdame"
     assert (
-            editor_response_data[2]["contributors"][0]["contributor_type"]
-            == "Editor Con Type"
+        editor_response_data[2]["contributors"][0]["contributor_type"]
+        == "Editor Con Type"
     )
     assert editor_response_data[2]["contributors"][0]["name_type"] == "Personal"
     assert editor_response_data[2]["creators"][0]["name"] == "Editor Name"
@@ -3645,17 +3785,17 @@ def test_get_dataset_related_item_metadata(clients):
     assert editor_response_data[2]["edition"] == "Editor Edition"
     assert editor_response_data[2]["first_page"] == "Editor First Page"
     assert (
-            editor_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
+        editor_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
     )
     assert (
-            editor_response_data[2]["identifiers"][0]["metadata_scheme"]
-            == "Editor Metadata Scheme"
+        editor_response_data[2]["identifiers"][0]["metadata_scheme"]
+        == "Editor Metadata Scheme"
     )
     assert (
-            editor_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
+        editor_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
     )
     assert (
-            editor_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
+        editor_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
     )
     assert editor_response_data[2]["identifiers"][0]["type"] == "ARK"
     assert editor_response_data[2]["issue"] == "Editor Issue"
@@ -3679,8 +3819,8 @@ def test_get_dataset_related_item_metadata(clients):
     assert viewer_response_data[0]["first_page"] == "First Page"
     assert viewer_response_data[0]["identifiers"][0]["identifier"] == "Identifier"
     assert (
-            viewer_response_data[0]["identifiers"][0]["metadata_scheme"]
-            == "Metadata Scheme"
+        viewer_response_data[0]["identifiers"][0]["metadata_scheme"]
+        == "Metadata Scheme"
     )
     assert viewer_response_data[0]["identifiers"][0]["scheme_type"] == "Scheme Type"
     assert viewer_response_data[0]["identifiers"][0]["scheme_uri"] == "Scheme URI"
@@ -3700,8 +3840,8 @@ def test_get_dataset_related_item_metadata(clients):
     assert viewer_response_data[0]["volume"] == "Volume"
     assert viewer_response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
     assert (
-            viewer_response_data[1]["contributors"][0]["contributor_type"]
-            == "Admin Con Type"
+        viewer_response_data[1]["contributors"][0]["contributor_type"]
+        == "Admin Con Type"
     )
     assert viewer_response_data[1]["contributors"][0]["name_type"] == "Personal"
     assert viewer_response_data[1]["creators"][0]["name"] == "Admin Name"
@@ -3710,11 +3850,11 @@ def test_get_dataset_related_item_metadata(clients):
     assert viewer_response_data[1]["first_page"] == "Admin First Page"
     assert viewer_response_data[1]["identifiers"][0]["identifier"] == "Admin Identifier"
     assert (
-            viewer_response_data[1]["identifiers"][0]["metadata_scheme"]
-            == "Admin Metadata Scheme"
+        viewer_response_data[1]["identifiers"][0]["metadata_scheme"]
+        == "Admin Metadata Scheme"
     )
     assert (
-            viewer_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
+        viewer_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
     )
     assert viewer_response_data[1]["identifiers"][0]["scheme_uri"] == "Admin Scheme URI"
     assert viewer_response_data[1]["identifiers"][0]["type"] == "ARK"
@@ -3731,8 +3871,8 @@ def test_get_dataset_related_item_metadata(clients):
     assert viewer_response_data[1]["volume"] == "Admin Volume"
     assert viewer_response_data[2]["contributors"][0]["name"] == "Editor Ndafsdame"
     assert (
-            viewer_response_data[2]["contributors"][0]["contributor_type"]
-            == "Editor Con Type"
+        viewer_response_data[2]["contributors"][0]["contributor_type"]
+        == "Editor Con Type"
     )
     assert viewer_response_data[2]["contributors"][0]["name_type"] == "Personal"
     assert viewer_response_data[2]["creators"][0]["name"] == "Editor Name"
@@ -3740,17 +3880,17 @@ def test_get_dataset_related_item_metadata(clients):
     assert viewer_response_data[2]["edition"] == "Editor Edition"
     assert viewer_response_data[2]["first_page"] == "Editor First Page"
     assert (
-            viewer_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
+        viewer_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
     )
     assert (
-            viewer_response_data[2]["identifiers"][0]["metadata_scheme"]
-            == "Editor Metadata Scheme"
+        viewer_response_data[2]["identifiers"][0]["metadata_scheme"]
+        == "Editor Metadata Scheme"
     )
     assert (
-            viewer_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
+        viewer_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
     )
     assert (
-            viewer_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
+        viewer_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
     )
     assert viewer_response_data[2]["identifiers"][0]["type"] == "ARK"
     assert viewer_response_data[2]["issue"] == "Editor Issue"
