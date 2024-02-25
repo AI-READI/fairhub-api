@@ -7,6 +7,7 @@ from jsonschema import ValidationError, validate
 import model
 from apis.authentication import is_granted
 from apis.dataset_metadata_namespace import api
+
 #
 dataset_health_sheet_motivation = api.model(
     "DatasetHealthSheetMotivation",
@@ -284,7 +285,7 @@ class DatasetHealthSheetPreprocessing(Resource):
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_.dataset_healthsheet.update(data)
         model.db.session.commit()
-        return {"collection": dataset_.dataset_healthsheet.collection}, 200
+        return {"preprocessing": dataset_.dataset_healthsheet.preprocessing}, 200
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/healthsheet/uses")
