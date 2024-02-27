@@ -1692,7 +1692,728 @@ def test_delete_dataset_description_metadata(clients):
     assert editor_response.status_code == 204
 
 
-# ------------------- FUNDER METADATA ------------------- #
+# ------------------- DATASET HEALTHSHEET MOTIVATION METADATA ------------------- #
+def test_put_healthsheet_motivation_dataset_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}'
+    endpoint is requested (PUT)
+    Then check that the response is valid and updates the dataset
+    healthsheet metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation",
+        json={"motivation": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    assert response_data["motivation"] == '[{"id":1,"question":"For","response":"new"}]'
+
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation",
+        json={"motivation": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    assert (
+        admin_response_data["motivation"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation",
+        json={"motivation": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    assert (
+        editor_response_data["motivation"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation",
+        json={"motivation": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert viewer_response.status_code == 403
+
+
+def test_get_dataset_healthsheet_motivation_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    description metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation"
+    )
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    assert response_data["motivation"] == '[{"id":1,"question":"For","response":"new"}]'
+
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation"
+    )
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    assert (
+        admin_response_data["motivation"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation"
+    )
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    assert (
+        editor_response_data["motivation"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/motivation"
+    )
+    assert viewer_response.status_code == 200
+    viewer_response_data = json.loads(viewer_response.data)
+    assert (
+        viewer_response_data["motivation"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    # Editor was the last successful PUT request, so the response data should match
+
+
+# # ------------------- DATASET HEALTHSHEET COMPOSITION METADATA ------------------- #
+def test_put_healthsheet_composition_dataset_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/healthsheet/composition'
+    endpoint is requested (PUT)
+    Then check that the response is valid and updates the dataset
+    healthsheet composition metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/composition",
+        json={"composition": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    assert (
+        response_data["composition"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/composition",
+        json={"composition": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    assert (
+        admin_response_data["composition"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/composition",
+        json={"composition": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    assert (
+        editor_response_data["composition"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/composition",
+        json={"composition": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert viewer_response.status_code == 403
+
+
+def test_get_dataset_healthsheet_composition_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/healthsheet/composition'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    description metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/composition"
+    )
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    assert (
+        response_data["composition"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/composition"
+    )
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    assert (
+        admin_response_data["composition"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/composition"
+    )
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    assert (
+        editor_response_data["composition"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/composition"
+    )
+    assert viewer_response.status_code == 200
+    viewer_response_data = json.loads(viewer_response.data)
+    assert (
+        viewer_response_data["composition"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    # Editor was the last successful PUT request, so the response data should match
+
+
+# ------------------- DATASET HEALTHSHEET COLLECTION METADATA ------------------- #
+def test_put_healthsheet_collection_dataset_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/healthsheet/collection'
+    endpoint is requested (PUT)
+    Then check that the response is valid and updates the dataset
+    healthsheet collection metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/collection",
+        json={"collection": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    assert response_data["collection"] == '[{"id":1,"question":"For","response":"new"}]'
+
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/collection",
+        json={"collection": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    assert (
+        admin_response_data["collection"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/collection",
+        json={"collection": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    assert (
+        editor_response_data["collection"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/collection",
+        json={"collection": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert viewer_response.status_code == 403
+
+
+def test_get_dataset_healthsheet_collection_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/healthsheet/collection'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    description metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/collection"
+    )
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    assert response_data["collection"] == '[{"id":1,"question":"For","response":"new"}]'
+
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/collection"
+    )
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    assert (
+        admin_response_data["collection"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/collection"
+    )
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    assert (
+        editor_response_data["collection"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/collection"
+    )
+    assert viewer_response.status_code == 200
+    viewer_response_data = json.loads(viewer_response.data)
+    assert (
+        viewer_response_data["collection"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    # Editor was the last successful PUT request, so the response data should match
+
+
+# ------------------- DATASET HEALTHSHEET PREPROCESSING METADATA ------------------- #
+def test_put_healthsheet_preprocessing_dataset_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing'
+    endpoint is requested (PUT)
+    Then check that the response is valid and updates the dataset
+    healthsheet preprocessing metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing",
+        json={"preprocessing": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    assert (
+        response_data["preprocessing"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing",
+        json={"preprocessing": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    assert (
+        admin_response_data["preprocessing"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing",
+        json={"preprocessing": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    assert (
+        editor_response_data["preprocessing"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing",
+        json={"preprocessing": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert viewer_response.status_code == 403
+
+
+def test_get_dataset_healthsheet_preprocessing_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    description metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing"
+    )
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    assert (
+        response_data["preprocessing"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing"
+    )
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    assert (
+        admin_response_data["preprocessing"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing"
+    )
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    assert (
+        editor_response_data["preprocessing"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/preprocessing"
+    )
+    assert viewer_response.status_code == 200
+    viewer_response_data = json.loads(viewer_response.data)
+    assert (
+        viewer_response_data["preprocessing"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    # Editor was the last successful PUT request, so the response data should match
+
+
+# # ------------------- DATASET HEALTHSHEET USES METADATA ------------------- #
+def test_put_healthsheet_uses_dataset_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/healthsheet/uses'
+    endpoint is requested (PUT)
+    Then check that the response is valid and updates the dataset
+    healthsheet uses metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/uses",
+        json={"uses": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    assert response_data["uses"] == '[{"id":1,"question":"For","response":"new"}]'
+
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/uses",
+        json={"uses": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    assert admin_response_data["uses"] == '[{"id":1,"question":"For","response":"new"}]'
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/uses",
+        json={"uses": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    assert (
+        editor_response_data["uses"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/uses",
+        json={"uses": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert viewer_response.status_code == 403
+
+
+def test_get_dataset_healthsheet_uses_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/healthsheet/uses'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    description metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/uses"
+    )
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    assert response_data["uses"] == '[{"id":1,"question":"For","response":"new"}]'
+
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/uses"
+    )
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    assert admin_response_data["uses"] == '[{"id":1,"question":"For","response":"new"}]'
+
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/uses"
+    )
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    assert (
+        editor_response_data["uses"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/uses"
+    )
+    assert viewer_response.status_code == 200
+    viewer_response_data = json.loads(viewer_response.data)
+    assert (
+        viewer_response_data["uses"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    # Editor was the last successful PUT request, so the response data should match
+
+
+# ------------------- DATASET HEALTHSHEET DISTRIBUTION METADATA ------------------- #
+def test_put_healthsheet_distribution_dataset_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/healthsheet/distribution'
+    endpoint is requested (PUT)
+    Then check that the response is valid and updates the dataset
+    healthsheet distribution metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution",
+        json={"distribution": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    assert (
+        response_data["distribution"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution",
+        json={"distribution": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    assert (
+        admin_response_data["distribution"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution",
+        json={"distribution": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    assert (
+        editor_response_data["distribution"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution",
+        json={"distribution": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert viewer_response.status_code == 403
+
+
+def test_get_dataset_healthsheet_distribution_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    distribution metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution"
+    )
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    assert (
+        response_data["distribution"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution"
+    )
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    assert (
+        admin_response_data["distribution"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution"
+    )
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    assert (
+        editor_response_data["distribution"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/distribution"
+    )
+    assert viewer_response.status_code == 200
+    viewer_response_data = json.loads(viewer_response.data)
+    assert (
+        viewer_response_data["distribution"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    # Editor was the last successful PUT request, so the response data should match
+
+
+# ------------------- DATASET HEALTHSHEET MAINTENANCE METADATA ------------------- #
+def test_put_healthsheet_maintenance_dataset_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/healthsheet/maintenance'
+    endpoint is requested (PUT)
+    Then check that the response is valid and updates the dataset
+    healthsheet maintenance metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance",
+        json={"maintenance": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    assert (
+        response_data["maintenance"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance",
+        json={"maintenance": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    assert (
+        admin_response_data["maintenance"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance",
+        json={"maintenance": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    assert (
+        editor_response_data["maintenance"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance",
+        json={"maintenance": '[{"id":1,"question":"For","response":"new"}]'},
+    )
+    assert viewer_response.status_code == 403
+
+
+def test_get_dataset_healthsheet_maintenance_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    maintenance metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance"
+    )
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    assert (
+        response_data["maintenance"] == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance"
+    )
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+    assert (
+        admin_response_data["maintenance"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance"
+    )
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+    assert (
+        editor_response_data["maintenance"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/healthsheet/maintenance"
+    )
+    assert viewer_response.status_code == 200
+    viewer_response_data = json.loads(viewer_response.data)
+    assert (
+        viewer_response_data["maintenance"]
+        == '[{"id":1,"question":"For","response":"new"}]'
+    )
+
+    # Editor was the last successful PUT request, so the response data should match
+
+
+# ------------------- DATASET FUNDER METADATA ------------------- #
 def test_post_dataset_funder_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID

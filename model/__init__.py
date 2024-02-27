@@ -17,6 +17,7 @@ from .dataset_metadata.dataset_date import DatasetDate
 from .dataset_metadata.dataset_de_ident_level import DatasetDeIdentLevel
 from .dataset_metadata.dataset_description import DatasetDescription
 from .dataset_metadata.dataset_funder import DatasetFunder
+from .dataset_metadata.dataset_healthsheet import DatasetHealthsheet
 from .dataset_metadata.dataset_other import DatasetOther
 from .dataset_metadata.dataset_record_keys import DatasetRecordKeys
 from .dataset_metadata.dataset_rights import DatasetRights
@@ -27,6 +28,7 @@ from .email_verification import EmailVerification
 from .invited_study_contributor import StudyInvitedContributor
 from .notification import Notification
 from .participant import Participant
+from .published_dataset import PublishedDataset
 from .study import Study, StudyException
 from .study_contributor import StudyContributor
 from .study_dashboard import StudyDashboard
@@ -59,6 +61,7 @@ __all__ = [
     "Study",
     "Dataset",
     "Participant",
+    "PublishedDataset",
     "Version",
     "db",
     "User",
@@ -67,6 +70,7 @@ __all__ = [
     "DatasetOther",
     "DatasetAccess",
     "DatasetConsent",
+    "DatasetHealthsheet",
     "DatasetDate",
     "DatasetDeIdentLevel",
     "DatasetFunder",
