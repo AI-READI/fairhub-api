@@ -19,7 +19,6 @@ from .dataset_metadata.dataset_description import DatasetDescription
 from .dataset_metadata.dataset_funder import DatasetFunder
 from .dataset_metadata.dataset_healthsheet import DatasetHealthsheet
 from .dataset_metadata.dataset_other import DatasetOther
-from .dataset_metadata.dataset_record_keys import DatasetRecordKeys
 from .dataset_metadata.dataset_rights import DatasetRights
 from .dataset_metadata.dataset_subject import DatasetSubject
 from .dataset_metadata.dataset_title import DatasetTitle

@@ -17,7 +17,6 @@ class Dataset(db.Model):  # type: ignore
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
 
         self.dataset_access = model.DatasetAccess(self)
-        self.dataset_record_keys = model.DatasetRecordKeys(self)
         self.dataset_de_ident_level = model.DatasetDeIdentLevel(self)
         self.dataset_consent = model.DatasetConsent(self)
         self.dataset_healthsheet = model.DatasetHealthsheet(self)
@@ -95,12 +94,6 @@ class Dataset(db.Model):  # type: ignore
     dataset_other = db.relationship(
         "DatasetOther", back_populates="dataset", uselist=False, cascade="all, delete"
     )
-    dataset_record_keys = db.relationship(
-        "DatasetRecordKeys",
-        back_populates="dataset",
-        uselist=False,
-        cascade="all, delete",
-    )
     dataset_related_item = db.relationship(
         "DatasetRelatedItem", back_populates="dataset", cascade="all, delete"
     )
@@ -158,7 +151,6 @@ class Dataset(db.Model):  # type: ignore
                 for i in self.dataset_contributors  # type: ignore
                 if i.creator
             ],
-            "record_keys": self.dataset_record_keys.to_dict_metadata(),
             "related_items": [
                 i.to_dict_metadata() for i in self.dataset_related_item  # type: ignore
             ],

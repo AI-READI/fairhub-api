@@ -244,26 +244,6 @@ INSERT INTO "dataset_other" ("id", "language", "managing_organization_name", "ma
 
 -- Dumping structure for table public.dataset_readme
 
-
--- Dumping structure for table public.dataset_record_keys
-CREATE TABLE IF NOT EXISTS "dataset_record_keys" (
-	"id" CHAR(36) NOT NULL,
-	"key_type" VARCHAR NOT NULL,
-	"key_details" VARCHAR NOT NULL,
-	"dataset_id" CHAR(36) NOT NULL,
-	PRIMARY KEY ("id"),
-	CONSTRAINT "dataset_record_keys_dataset_id_fkey" FOREIGN KEY ("dataset_id") REFERENCES "dataset" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
-);
-
--- Dumping data for table public.dataset_record_keys: 4 rows
-/*!40000 ALTER TABLE "dataset_record_keys" DISABLE KEYS */;
-INSERT INTO "dataset_record_keys" ("id", "key_type", "key_details", "dataset_id") VALUES
-	('46867b5a-9eb1-4f0e-98ba-5b453c2c9ff2', 'test', 'test', '00000000-0000-0000-0000-000000000001'),
-	('bb834d3c-b59a-4968-b31c-51bd22c11c4f', 'test', 'test', '00000000-0000-0000-0000-000000000001'),
-	('82fbb094-74c5-4dd1-9248-9e219c0b70f5', 'test1', 'test1', '00000000-0000-0000-0000-000000000001'),
-	('59c1b98d-876f-49f6-aeb0-f32d4fde6c3f', 'test1', 'test1', '00000000-0000-0000-0000-000000000001');
-/*!40000 ALTER TABLE "dataset_record_keys" ENABLE KEYS */;
-
 -- Dumping structure for table public.dataset_related_item
 CREATE TABLE IF NOT EXISTS "dataset_related_item" (
 	"id" CHAR(36) NOT NULL,
