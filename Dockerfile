@@ -19,6 +19,7 @@ RUN poetry install
 COPY apis ./apis
 COPY model ./model
 COPY core ./core
+COPY modules ./modules
 COPY app.py .
 COPY config.py .
 COPY caching.py .
