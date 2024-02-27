@@ -302,9 +302,9 @@ class RedcapProjectDashboards(Resource):
         )
         model.db.session.add(connect_redcap_project_dashboard_data)
         model.db.session.commit()
-        connect_redcap_project_dashboard: Dict[str, Any] = (
-            connect_redcap_project_dashboard_data.to_dict()
-        )
+        connect_redcap_project_dashboard: Dict[
+            str, Any
+        ] = connect_redcap_project_dashboard_data.to_dict()
         return connect_redcap_project_dashboard, 201
 
 
@@ -425,9 +425,9 @@ class RedcapProjectDashboardConnector(Resource):
             model.StudyDashboard
         ).get(dashboard_id)
 
-        redcap_project_dashboard_connector: Dict[str, Any] = (
-            redcap_project_dashboard_connector_query.to_dict()
-        )
+        redcap_project_dashboard_connector: Dict[
+            str, Any
+        ] = redcap_project_dashboard_connector_query.to_dict()
 
         return redcap_project_dashboard_connector, 201
 
@@ -456,9 +456,9 @@ class RedcapProjectDashboard(Resource):
         redcap_project_dashboard_query: Any = model.db.session.query(
             model.StudyDashboard
         ).get(dashboard_id)
-        redcap_project_dashboard: Dict[str, Any] = (
-            redcap_project_dashboard_query.to_dict()
-        )
+        redcap_project_dashboard: Dict[
+            str, Any
+        ] = redcap_project_dashboard_query.to_dict()
 
         # Get REDCap Project
         redcap_id = redcap_project_dashboard["redcap_id"]
@@ -474,9 +474,9 @@ class RedcapProjectDashboard(Resource):
                     report["report_key"] == report_config["key"]
                     and len(report["report_id"]) > 0
                 ):
-                    redcapTransformConfig["reports"][i]["kwdargs"]["report_id"] = (
-                        report["report_id"]
-                    )
+                    redcapTransformConfig["reports"][i]["kwdargs"][
+                        "report_id"
+                    ] = report["report_id"]
 
         # Structure REDCap ETL Config
         redcap_etl_config = {
@@ -625,9 +625,9 @@ class RedcapProjectDashboard(Resource):
 
         redcap_project_dashboard_query.update(data)
         model.db.session.commit()
-        update_redcap_project_dashboard: Dict[str, Any] = (
-            redcap_project_dashboard_query.to_dict()
-        )
+        update_redcap_project_dashboard: Dict[
+            str, Any
+        ] = redcap_project_dashboard_query.to_dict()
 
         # Clear Dashboard from Redis Cache
         caching.cache.delete(f"$study_id#{study_id}$dashboard_id#{dashboard_id}")
