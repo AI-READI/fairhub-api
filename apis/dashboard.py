@@ -3,13 +3,11 @@
 from typing import Any, Dict, List, Union
 
 from flask import request
-
-# from flask_caching import Cache
 from flask_restx import Namespace, Resource, fields
 from jsonschema import ValidationError, validate
 
+import caching
 import model
-from caching import cache
 from modules.etl import ModuleTransform, RedcapTransform
 from modules.etl.config import moduleTransformConfigs, redcapTransformConfig
 
@@ -304,9 +302,9 @@ class RedcapProjectDashboards(Resource):
         )
         model.db.session.add(connect_redcap_project_dashboard_data)
         model.db.session.commit()
-        connect_redcap_project_dashboard: Dict[str, Any] = (
-            connect_redcap_project_dashboard_data.to_dict()
-        )
+        connect_redcap_project_dashboard: Dict[
+            str, Any
+        ] = connect_redcap_project_dashboard_data.to_dict()
         return connect_redcap_project_dashboard, 201
 
 
@@ -427,9 +425,9 @@ class RedcapProjectDashboardConnector(Resource):
             model.StudyDashboard
         ).get(dashboard_id)
 
-        redcap_project_dashboard_connector: Dict[str, Any] = (
-            redcap_project_dashboard_connector_query.to_dict()
-        )
+        redcap_project_dashboard_connector: Dict[
+            str, Any
+        ] = redcap_project_dashboard_connector_query.to_dict()
 
         return redcap_project_dashboard_connector, 201
 
@@ -448,7 +446,7 @@ class RedcapProjectDashboard(Resource):
             return "Access denied, you can not get this dashboard", 403
 
         # Retrieve Dashboard Redis Cache
-        cached_redcap_project_dashboard = cache.get(
+        cached_redcap_project_dashboard = caching.cache.get(
             f"$study_id#{study_id}$dashboard_id#{dashboard_id}"
         )
 
@@ -458,9 +456,9 @@ class RedcapProjectDashboard(Resource):
         redcap_project_dashboard_query: Any = model.db.session.query(
             model.StudyDashboard
         ).get(dashboard_id)
-        redcap_project_dashboard: Dict[str, Any] = (
-            redcap_project_dashboard_query.to_dict()
-        )
+        redcap_project_dashboard: Dict[
+            str, Any
+        ] = redcap_project_dashboard_query.to_dict()
 
         # Get REDCap Project
         redcap_id = redcap_project_dashboard["redcap_id"]
@@ -476,9 +474,9 @@ class RedcapProjectDashboard(Resource):
                     report["report_key"] == report_config["key"]
                     and len(report["report_id"]) > 0
                 ):
-                    redcapTransformConfig["reports"][i]["kwdargs"]["report_id"] = (
-                        report["report_id"]
-                    )
+                    redcapTransformConfig["reports"][i]["kwdargs"][
+                        "report_id"
+                    ] = report["report_id"]
 
         # Structure REDCap ETL Config
         redcap_etl_config = {
@@ -510,7 +508,7 @@ class RedcapProjectDashboard(Resource):
                 }
 
         # Create Dashboard Redis Cache
-        cache.set(
+        caching.cache.set(
             f"$study_id#{study_id}$dashboard_id#{dashboard_id}",
             redcap_project_dashboard,
         )
@@ -627,12 +625,12 @@ class RedcapProjectDashboard(Resource):
 
         redcap_project_dashboard_query.update(data)
         model.db.session.commit()
-        update_redcap_project_dashboard: Dict[str, Any] = (
-            redcap_project_dashboard_query.to_dict()
-        )
+        update_redcap_project_dashboard: Dict[
+            str, Any
+        ] = redcap_project_dashboard_query.to_dict()
 
         # Clear Dashboard from Redis Cache
-        cache.delete(f"$study_id#{study_id}$dashboard_id#{dashboard_id}")
+        caching.cache.delete(f"$study_id#{study_id}$dashboard_id#{dashboard_id}")
 
         return update_redcap_project_dashboard, 201
 
@@ -763,7 +761,7 @@ class RedcapProjectDashboard(Resource):
 #         )
 
 #         # Clear Dashboard from Redis Cache
-#         cache.delete(f"$study_id#{study_id}$dashboard_id#{dashboard_id}")
+#         caching.cache.delete(f"$study_id#{study_id}$dashboard_id#{dashboard_id}")
 
 #         return update_redcap_project_dashboard, 201
 

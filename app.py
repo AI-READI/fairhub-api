@@ -14,12 +14,12 @@ from growthbook import GrowthBook
 from sqlalchemy import MetaData, inspect
 from waitress import serve
 
+import caching
 import config
 import model
 from apis import api
 from apis.authentication import UnauthenticatedException, authentication, authorization
 from apis.exception import ValidationException
-from caching import cache
 
 # from pyfairdatatools import __version__
 
@@ -65,7 +65,7 @@ def create_app(config_module=None, loglevel="INFO"):
     model.db.init_app(app)
     api.init_app(app)
     bcrypt.init_app(app)
-    cache.init_app(app)
+    caching.cache.init_app(app)
 
     cors_origins = [
         "https://brave-ground-.*-.*.centralus.2.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
