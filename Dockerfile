@@ -21,6 +21,7 @@ COPY model ./model
 COPY core ./core
 COPY app.py .
 COPY config.py .
+COPY caching.py .
 
 COPY alembic ./alembic
 COPY alembic.ini .
