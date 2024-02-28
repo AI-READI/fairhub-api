@@ -101,8 +101,8 @@ class Dataset(db.Model):  # type: ignore
     dataset_other = db.relationship(
         "DatasetOther", back_populates="dataset", uselist=False, cascade="all, delete"
     )
-    dataset_related_item = db.relationship(
-        "DatasetRelatedItem", back_populates="dataset", cascade="all, delete"
+    dataset_related_identifier = db.relationship(
+        "DatasetRelatedIdentifier", back_populates="dataset", cascade="all, delete"
     )
     dataset_rights = db.relationship(
         "DatasetRights", back_populates="dataset", cascade="all, delete"
@@ -158,8 +158,8 @@ class Dataset(db.Model):  # type: ignore
                 for i in self.dataset_contributors  # type: ignore
                 if i.creator
             ],
-            "related_items": [
-                i.to_dict_metadata() for i in self.dataset_related_item  # type: ignore
+            "related_identifier": [
+                i.to_dict_metadata() for i in self.dataset_related_identifier  # type: ignore
             ],
             "rights": [
                 i.to_dict_metadata() for i in self.dataset_rights  # type: ignore
