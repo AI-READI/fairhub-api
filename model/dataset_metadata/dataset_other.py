@@ -12,6 +12,7 @@ class DatasetOther(db.Model):  # type: ignore
         self.managing_organization_name = ""
         self.managing_organization_ror_id = ""
         self.size = ""
+        self.format = ""
         self.standards_followed = ""
         self.acknowledgement = ""
         self.publisher = ""
@@ -23,6 +24,7 @@ class DatasetOther(db.Model):  # type: ignore
     managing_organization_name = db.Column(db.String, nullable=False)
     managing_organization_ror_id = db.Column(db.String, nullable=False)
     size = db.Column(ARRAY(String), nullable=False)
+    format = db.Column(ARRAY(String), nullable=False)
     standards_followed = db.Column(db.String, nullable=False)
     acknowledgement = db.Column(db.String, nullable=False)
     publisher = db.Column(db.String, nullable=False)
@@ -40,6 +42,7 @@ class DatasetOther(db.Model):  # type: ignore
             "standards_followed": self.standards_followed,
             "acknowledgement": self.acknowledgement,
             "size": self.size,
+            "format": self.format,
             "publisher": self.publisher,
             "resource_type": self.resource_type,
         }
@@ -72,6 +75,8 @@ class DatasetOther(db.Model):  # type: ignore
             self.managing_organization_ror_id = data["managing_organization_ror_id"]
         if "size" in data:
             self.size = data["size"]
+        if "format" in data:
+            self.format = data["format"]
         if "acknowledgement" in data:
             self.acknowledgement = data["acknowledgement"]
         if "standards_followed" in data:

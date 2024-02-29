@@ -59,6 +59,11 @@ class DatasetOtherResource(Resource):
                     "items": {"type": "string"},
                     "uniqueItems": True,
                 },
+                "format": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "uniqueItems": True,
+                },
                 "standards_followed": {"type": "string"},
             },
             "required": [

@@ -11,7 +11,6 @@ from .dataset_metadata.dataset_description import DatasetDescription
 from .dataset_metadata.dataset_funder import DatasetFunder
 from .dataset_metadata.dataset_healthsheet import DatasetHealthsheet
 from .dataset_metadata.dataset_other import DatasetOther
-from .dataset_metadata.dataset_publisher import DatasetPublisher
 from .dataset_metadata.dataset_rights import DatasetRights
 from .dataset_metadata.dataset_subject import DatasetSubject
 from .dataset_metadata.dataset_title import DatasetTitle
@@ -68,7 +67,6 @@ __all__ = [
     "DatasetFunder",
     "DatasetAlternateIdentifier",
     "DatasetRights",
-    "DatasetPublisher",
     "DatasetTitle",
     "DatasetSubject",
     "DatasetRelatedIdentifier",

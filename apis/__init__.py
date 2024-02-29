@@ -19,7 +19,7 @@ from .dataset_metadata.dataset_description import api as description
 from .dataset_metadata.dataset_funder import api as funder
 from .dataset_metadata.dataset_healthsheet import api as healthsheet
 from .dataset_metadata.dataset_other import api as dataset_other
-from .dataset_metadata.dataset_publisher import api as publisher
+from .dataset_metadata.dataset_managing_organization import api as managing_organization
 from .dataset_metadata.dataset_related_identifier import api as related_identifier
 from .dataset_metadata.dataset_rights import api as rights
 from .dataset_metadata.dataset_subject import api as subject
@@ -54,7 +54,7 @@ api = Api(
 )
 
 __all__ = [
-    "publisher",
+    "managing_organization",
     "dataset_metadata_namespace",
     "study_metadata_namespace",
     "authentication",
