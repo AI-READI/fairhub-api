@@ -46,8 +46,8 @@ class DatasetPublisher(db.Model):  # type: ignore
         return dataset_subject
 
     def update(self, data: dict):
-        self.publisher = data["publisher"]
-        self.identifier = data["identifier"]
-        self.identifier_scheme = data["identifier_scheme"]
-        self.scheme_uri = data["scheme_uri"]
+        self.publisher = data["publisher_name"]
+        self.identifier = data["publisher_identifier"]
+        self.identifier_scheme = data["publisher_identifier_scheme"]
+        self.scheme_uri = data["publisher_identifier_scheme_uri"]
         self.dataset.touch_dataset()

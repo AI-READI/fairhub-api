@@ -25,7 +25,7 @@ dataset_related_identifier = api.model(
 )
 
 
-@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/related-item")
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/related-identifier")
 class DatasetRelatedIdentifierResource(Resource):
     """Dataset related identifier Resource"""
 
@@ -102,7 +102,7 @@ class DatasetRelatedIdentifierResource(Resource):
 
 
 @api.route(
-    "/study/<study_id>/dataset/<dataset_id>/metadata/related-item/<related_item_id>"
+    "/study/<study_id>/dataset/<dataset_id>/metadata/related-identifier/<related_identifier_id>"
 )
 class DatasetRelatedIdentifierUpdate(Resource):
     """Dataset related identifier Update Resource"""
@@ -114,13 +114,13 @@ class DatasetRelatedIdentifierUpdate(Resource):
         self,
         study_id: int,
         dataset_id: int,  # pylint: disable= unused-argument
-        related_item_id: int,
+        related_identifier_id: int,
     ):
         """Delete dataset related identifier"""
         study_obj = model.Study.query.get(study_id)
         if not is_granted("dataset_metadata", study_obj):
             return "Access denied, you can not make any change in dataset metadata", 403
-        dataset_related_identifier_ = model.DatasetRelatedIdentifier.query.get(related_item_id)
+        dataset_related_identifier_ = model.DatasetRelatedIdentifier.query.get(related_identifier_id)
 
         model.db.session.delete(dataset_related_identifier_)
         model.db.session.commit()
