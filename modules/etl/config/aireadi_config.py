@@ -182,7 +182,9 @@ redcapTransformConfig: Dict[str, Any] = {
                         "column": "scrcmpdat",
                         "new_column_name": "scrweek",
                         # ISO 8601 string format token for front-end: %V
-                        "transform": lambda x: datetime.strptime(x, "%Y-%m-%d").isocalendar().week,
+                        "transform": lambda x: datetime.strptime(x, "%Y-%m-%d")
+                        .isocalendar()
+                        .week,
                         "missing_value": missing_value_generic,
                     },
                 ),
@@ -192,7 +194,9 @@ redcapTransformConfig: Dict[str, Any] = {
                         "column": "scrcmpdat",
                         "new_column_name": "scryear",
                         # ISO 8601 string format token for front-end: %Y
-                        "transform": lambda x: datetime.strptime(x, "%Y-%m-%d").isocalendar().year,
+                        "transform": lambda x: datetime.strptime(x, "%Y-%m-%d")
+                        .isocalendar()
+                        .year,
                         "missing_value": missing_value_generic,
                     },
                 ),
