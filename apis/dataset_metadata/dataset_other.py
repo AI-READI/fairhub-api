@@ -12,9 +12,8 @@ dataset_other = api.model(
     "DatasetOther",
     {
         "language": fields.String(required=True),
-        "managing_organization_name": fields.String(required=True),
-        "managing_organization_ror_id": fields.String(required=True),
         "size": fields.List(fields.String, required=True),
+        "format": fields.List(fields.String, required=True),
         "standards_followed": fields.String(required=True),
         "acknowledgement": fields.String(required=True),
         "resource_type": fields.String(required=True),

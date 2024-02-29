@@ -9,14 +9,23 @@ from apis.authentication import is_granted
 from apis.dataset_metadata_namespace import api
 
 
+dataset_managing_organization = api.model(
+    "DatasetManagingOrganization",
+    {
+        "managing_organization_name": fields.String(required=True),
+        "managing_organization_ror_id": fields.String(required=True),
+    },
+)
+
+
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/managing-organization")
-class DatasetPublisherResource(Resource):
+class DatasetManagingOrganization(Resource):
     """Dataset Publisher Resource"""
 
     @api.doc("publisher")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.marshal_with(managing_organization)
+    @api.marshal_with(dataset_managing_organization)
     def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         """Get dataset publisher metadata"""
         dataset_ = model.Dataset.query.get(dataset_id)
@@ -26,6 +35,7 @@ class DatasetPublisherResource(Resource):
     @api.doc("update organization")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
+    @api.marshal_with(dataset_managing_organization)
     def put(self, study_id: int, dataset_id: int):
         """Update dataset managing organization metadata"""
         study_obj = model.Study.query.get(study_id)
