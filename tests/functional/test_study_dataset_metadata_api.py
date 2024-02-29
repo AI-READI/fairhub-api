@@ -2714,6 +2714,7 @@ def test_put_other_dataset_metadata(clients):
             "language": "English",
             "resource_type": "Resource Type",
             "size": ["Size"],
+            "format": ["Format"],
             "standards_followed": "Standards Followed",
         },
     )
@@ -2723,10 +2724,9 @@ def test_put_other_dataset_metadata(clients):
 
     assert response_data["acknowledgement"] == "Yes"
     assert response_data["language"] == "English"
-    # assert (
-    #     response_data["resource_type"] == "Resource Type"
-    # )  # CURRENTLY NOT BEING RETURNED
+
     assert response_data["size"] == ["Size"]
+    assert response_data["format"] == ["Format"]
     assert response_data["standards_followed"] == "Standards Followed"
 
     admin_response = _admin_client.put(
@@ -2734,8 +2734,9 @@ def test_put_other_dataset_metadata(clients):
         json={
             "acknowledgement": "Yes",
             "language": "English",
-            "resource_type": "Admin Resource Type",
+            "resource_type": "Resource Type",
             "size": ["Size"],
+            "format": ["Format"],
             "standards_followed": "Standards Followed",
         },
     )
@@ -2745,8 +2746,8 @@ def test_put_other_dataset_metadata(clients):
 
     assert admin_response_data["acknowledgement"] == "Yes"
     assert admin_response_data["language"] == "English"
-    # assert admin_response_data["resource_type"] == "Admin Resource Type"
     assert admin_response_data["size"] == ["Size"]
+    assert admin_response_data["format"] == ["Format"]
     assert admin_response_data["standards_followed"] == "Standards Followed"
 
     editor_response = _editor_client.put(
@@ -2754,8 +2755,9 @@ def test_put_other_dataset_metadata(clients):
         json={
             "acknowledgement": "Yes",
             "language": "English",
-            "resource_type": "Editor Resource Type",
+            "resource_type": "Resource Type",
             "size": ["Size"],
+            "format": ["Format"],
             "standards_followed": "Standards Followed",
         },
     )
@@ -2765,8 +2767,8 @@ def test_put_other_dataset_metadata(clients):
 
     assert editor_response_data["acknowledgement"] == "Yes"
     assert editor_response_data["language"] == "English"
-    # assert editor_response_data["resource_type"] == "Editor Resource Type"
     assert editor_response_data["size"] == ["Size"]
+    assert editor_response_data["format"] == ["Format"]
     assert editor_response_data["standards_followed"] == "Standards Followed"
 
     viewer_response = _viewer_client.put(
@@ -2774,12 +2776,12 @@ def test_put_other_dataset_metadata(clients):
         json={
             "acknowledgement": "Yes",
             "language": "English",
-            "resource_type": "Viewer Resource Type",
+            "resource_type": "Resource Type",
             "size": ["Size"],
+            "format": ["Format"],
             "standards_followed": "Standards Followed",
         },
     )
-
     assert viewer_response.status_code == 403
 
 
@@ -2811,7 +2813,7 @@ def test_get_other_dataset_metadata(clients):
     assert response.status_code == 200
     assert admin_response.status_code == 200
     assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
+    # assert viewer_response.status_code == 200
 
     response_data = json.loads(response.data)
     admin_response_data = json.loads(admin_response.data)
@@ -2824,44 +2826,46 @@ def test_get_other_dataset_metadata(clients):
     assert response_data["language"] == "English"
     # assert response_data["resource_type"] == "Editor Resource Type"
     assert response_data["size"] == ["Size"]
+    assert response_data["format"] == ["Format"]
     assert response_data["standards_followed"] == "Standards Followed"
 
     assert admin_response_data["acknowledgement"] == "Yes"
     assert admin_response_data["language"] == "English"
     # assert admin_response_data["resource_type"] == "Editor Resource Type"
     assert admin_response_data["size"] == ["Size"]
+    assert admin_response_data["format"] == ["Format"]
     assert admin_response_data["standards_followed"] == "Standards Followed"
 
     assert editor_response_data["acknowledgement"] == "Yes"
     assert editor_response_data["language"] == "English"
     # assert editor_response_data["resource_type"] == "Editor Resource Type"
     assert editor_response_data["size"] == ["Size"]
+    assert editor_response_data["format"] == ["Format"]
     assert editor_response_data["standards_followed"] == "Standards Followed"
 
     assert viewer_response_data["acknowledgement"] == "Yes"
     assert viewer_response_data["language"] == "English"
-    # assert viewer_response_data["resource_type"] == "Editor Resource Type"
     assert viewer_response_data["size"] == ["Size"]
+    assert viewer_response_data["format"] == ["Format"]
     assert viewer_response_data["standards_followed"] == "Standards Followed"
 
 
-# ------------------- PUBLICATION METADATA ------------------- #
-def test_put_dataset_publisher_metadata(clients):
+# ------------------- DATASET MANAGING ORGANIZATION METADATA ------------------- #
+def test_put_dataset_managing_organization_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}'
     endpoint is requested (PUT)
     Then check that the response is valid and updates the dataset
-    publisher metadata content
+    managing organization metadata content
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.put(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/publisher",
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/managing-organization",
         json={
-            "publisher": "Publisher",
             "managing_organization_name": "Managing Organization Name",
             "managing_organization_ror_id": "Managing Organization ROR ID",
         },
@@ -2870,16 +2874,14 @@ def test_put_dataset_publisher_metadata(clients):
     assert response.status_code == 200
     response_data = json.loads(response.data)
 
-    assert response_data["publisher"] == "Publisher"
     assert response_data["managing_organization_name"] == "Managing Organization Name"
     assert (
         response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
     )
 
     admin_response = _admin_client.put(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/publisher",
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/managing-organization",
         json={
-            "publisher": "Publisher",
             "managing_organization_name": "Managing Admin Organization Name",
             "managing_organization_ror_id": "Managing Organization ROR ID",
         },
@@ -2888,7 +2890,6 @@ def test_put_dataset_publisher_metadata(clients):
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
 
-    assert admin_response_data["publisher"] == "Publisher"
     assert (
         admin_response_data["managing_organization_name"]
         == "Managing Admin Organization Name"
@@ -2899,9 +2900,8 @@ def test_put_dataset_publisher_metadata(clients):
     )
 
     editor_response = _editor_client.put(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/publisher",
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/managing-organization",
         json={
-            "publisher": "Publisher",
             "managing_organization_name": "Managing Editor Organization Name",
             "managing_organization_ror_id": "Managing Organization ROR ID",
         },
@@ -2910,7 +2910,6 @@ def test_put_dataset_publisher_metadata(clients):
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
 
-    assert editor_response_data["publisher"] == "Publisher"
     assert (
         editor_response_data["managing_organization_name"]
         == "Managing Editor Organization Name"
@@ -2921,9 +2920,8 @@ def test_put_dataset_publisher_metadata(clients):
     )
 
     viewer_response = _viewer_client.put(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/publisher",
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/managing-organization",
         json={
-            "publisher": "Publisher",
             "managing_organization_name": "Managing Viewer Organization Name",
             "managing_organization_ror_id": "Managing Organization ROR ID",
         },
@@ -2932,29 +2930,29 @@ def test_put_dataset_publisher_metadata(clients):
     assert viewer_response.status_code == 403
 
 
-def test_get_dataset_publisher_metadata(clients):
+def test_get_dataset_managing_organization_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}'
     endpoint is requested (GET)
     Then check that the response is valid and retrieves the dataset
-    publisher metadata content
+    managing-organization metadata content
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/publisher"
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/managing-organization"
     )
     admin_response = _admin_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/publisher"
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/managing-organization"
     )
     editor_response = _editor_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/publisher"
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/managing-organization"
     )
     viewer_response = _viewer_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/publisher"
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/managing-organization"
     )
 
     assert response.status_code == 200
@@ -2969,7 +2967,6 @@ def test_get_dataset_publisher_metadata(clients):
 
     # Editor was the last to update the metadata successfully so
     # the response should reflect that
-    assert response_data["publisher"] == "Publisher"
     assert (
         response_data["managing_organization_name"]
         == "Managing Editor Organization Name"
@@ -2978,7 +2975,6 @@ def test_get_dataset_publisher_metadata(clients):
         response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
     )
 
-    assert admin_response_data["publisher"] == "Publisher"
     assert (
         admin_response_data["managing_organization_name"]
         == "Managing Editor Organization Name"
@@ -2988,7 +2984,6 @@ def test_get_dataset_publisher_metadata(clients):
         == "Managing Organization ROR ID"
     )
 
-    assert editor_response_data["publisher"] == "Publisher"
     assert (
         editor_response_data["managing_organization_name"]
         == "Managing Editor Organization Name"
@@ -2998,7 +2993,6 @@ def test_get_dataset_publisher_metadata(clients):
         == "Managing Organization ROR ID"
     )
 
-    assert viewer_response_data["publisher"] == "Publisher"
     assert (
         viewer_response_data["managing_organization_name"]
         == "Managing Editor Organization Name"

@@ -8,17 +8,17 @@ import model
 from apis.authentication import is_granted
 from apis.dataset_metadata_namespace import api
 
-dataset_other = api.model(
-    "DatasetOther",
-    {
-        "language": fields.String(required=True),
-        "size": fields.List(fields.String, required=True),
-        "format": fields.List(fields.String, required=True),
-        "standards_followed": fields.String(required=True),
-        "acknowledgement": fields.String(required=True),
-        "resource_type": fields.String(required=True),
-    },
-)
+# dataset_other = api.model(
+#     "DatasetOther",
+#     {
+#         "language": fields.String(required=True),
+#         "size": fields.List(fields.String, required=True),
+#         "format": fields.List(fields.String, required=True),
+#         "standards_followed": fields.String(required=True),
+#         "acknowledgement": fields.String(required=True),
+#         "resource_type": fields.String(required=True),
+#     },
+# )
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/other")
@@ -28,7 +28,7 @@ class DatasetOtherResource(Resource):
     @api.doc("other")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(dataset_other)
+    # @api.marshal_with(dataset_other)
     def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         """Get dataset other metadata"""
         dataset_ = model.Dataset.query.get(dataset_id)
@@ -38,7 +38,7 @@ class DatasetOtherResource(Resource):
     @api.doc("other update")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(dataset_other)
+    # @api.marshal_with(dataset_other)
     def put(self, study_id: int, dataset_id: int):
         """Update dataset other metadata"""
         study_obj = model.Study.query.get(study_id)
