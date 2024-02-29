@@ -3009,55 +3009,30 @@ def test_get_dataset_publisher_metadata(clients):
     )
 
 
-# ------------------- RELATED ITEM METADATA ------------------- #
-def test_post_dataset_related_item_metadata(clients):
+# ------------------- RELATED IDENTIFIER METADATA ------------------- #
+def test_post_dataset_related_identifier_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
-    When the '/study/{study_id}/dataset/{dataset_id}/metadata/related-item'
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/related-identifier'
     endpoint is requested (POST)
     Then check that the response is valid and creates the dataset
-    related item metadata content
+    related identifier metadata content
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.post(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item",
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-identifier",
         json=[
             {
-                "contributors": [
-                    {
-                        "name": "Ndafsdame",
-                        "contributor_type": "Con Type",
-                        "name_type": "Personal",
-                    }
-                ],
-                "creators": [{"name": "Name", "name_type": "Personal"}],
-                "edition": "Edition",
-                "first_page": "First Page",
-                "identifiers": [
-                    {
-                        "identifier": "Identifier",
-                        "metadata_scheme": "Metadata Scheme",
-                        "scheme_type": "Scheme Type",
-                        "scheme_uri": "Scheme URI",
-                        "type": "ARK",
-                    }
-                ],
-                "issue": "Issue",
-                "last_page": "Last Page",
-                "number_type": "Number Type",
-                "number_value": "Number Value",
-                "publication_year": 2013,
-                "publisher": "Publisher",
-                "relation_type": "Relation Type",
-                "titles": [
-                    {"title": "Title", "type": "MainTitle"},
-                    {"title": "Title", "type": "Subtitle"},
-                ],
-                "type": "Type",
-                "volume": "Volume",
+                "identifier": "test identifier",
+                "identifier_type": "test identifier type",
+                "relation_type": "test relation type",
+                "related_metadata_scheme": "test",
+                "scheme_uri": "test",
+                "scheme_type": "test",
+                "resource_type": "test"
             }
         ],
     )
@@ -3066,100 +3041,28 @@ def test_post_dataset_related_item_metadata(clients):
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
-    # seach for main title and subtitle index in response_data[n]["titles"]
-    main_title_0 = next(
-        (
-            index
-            for (index, d) in enumerate(response_data[0]["titles"])
-            if d["type"] == "MainTitle"
-        ),
-        None,
-    )
-    sub_title_0 = next(
-        (
-            index
-            for (index, d) in enumerate(response_data[0]["titles"])
-            if d["type"] == "Subtitle"
-        ),
-        None,
-    )
-    pytest.global_dataset_related_item_id = response_data[0]["id"]
-    pytest.global_dataset_related_item_contributor_id = response_data[0][
-        "contributors"
-    ][0]["id"]
-    pytest.global_dataset_related_item_creator_id = response_data[0]["creators"][0][
-        "id"
-    ]
-    pytest.global_dataset_related_item_identifier_id = response_data[0]["identifiers"][
-        0
-    ]["id"]
-    # pylint: disable=line-too-long
-    pytest.global_dataset_related_item_main_title_id = response_data[0]["titles"][
-        main_title_0
-    ]["id"]
-    pytest.global_dataset_related_item_sub_title_id = response_data[0]["titles"][
-        sub_title_0
-    ]["id"]
 
-    assert response_data[0]["contributors"][0]["name"] == "Ndafsdame"
-    assert response_data[0]["contributors"][0]["contributor_type"] == "Con Type"
-    assert response_data[0]["contributors"][0]["name_type"] == "Personal"
-    assert response_data[0]["creators"][0]["name"] == "Name"
-    assert response_data[0]["creators"][0]["name_type"] == "Personal"
-    assert response_data[0]["edition"] == "Edition"
-    assert response_data[0]["first_page"] == "First Page"
-    assert response_data[0]["identifiers"][0]["identifier"] == "Identifier"
-    assert response_data[0]["identifiers"][0]["metadata_scheme"] == "Metadata Scheme"
-    assert response_data[0]["identifiers"][0]["scheme_type"] == "Scheme Type"
-    assert response_data[0]["identifiers"][0]["scheme_uri"] == "Scheme URI"
-    assert response_data[0]["identifiers"][0]["type"] == "ARK"
-    assert response_data[0]["issue"] == "Issue"
-    assert response_data[0]["last_page"] == "Last Page"
-    assert response_data[0]["number_type"] == "Number Type"
-    assert response_data[0]["number_value"] == "Number Value"
-    assert response_data[0]["publication_year"] == 2013
-    assert response_data[0]["publisher"] == "Publisher"
-    assert response_data[0]["relation_type"] == "Relation Type"
-    assert response_data[0]["titles"][main_title_0]["title"] == "Title"
-    assert response_data[0]["titles"][main_title_0]["type"] == "MainTitle"
-    assert response_data[0]["titles"][sub_title_0]["title"] == "Title"
-    assert response_data[0]["titles"][sub_title_0]["type"] == "Subtitle"
-    assert response_data[0]["type"] == "Type"
-    assert response_data[0]["volume"] == "Volume"
+    pytest.global_dataset_related_identifier_id = response_data[0]["id"]
+
+    assert response_data[0]["identifier"] == "test identifier"
+    assert response_data[0]["identifier_type"] == "test identifier type"
+    assert response_data[0]["relation_type"] == "test relation type"
+    assert response_data[0]["related_metadata_scheme"] == "test"
+    assert response_data[0]["scheme_uri"] == "test"
+    assert response_data[0]["scheme_type"] == "test"
+    assert response_data[0]["resource_type"] == "test"
 
     admin_response = _admin_client.post(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item",
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-identifier",
         json=[
             {
-                "contributors": [
-                    {
-                        "name": "Admin Ndafsdame",
-                        "contributor_type": "Admin Con Type",
-                        "name_type": "Personal",
-                    }
-                ],
-                "creators": [{"name": "Admin Name", "name_type": "Personal"}],
-                "edition": "Admin Edition",
-                "first_page": "Admin First Page",
-                "identifiers": [
-                    {
-                        "identifier": "Admin Identifier",
-                        "metadata_scheme": "Admin Metadata Scheme",
-                        "scheme_type": "Admin Scheme Type",
-                        "scheme_uri": "Admin Scheme URI",
-                        "type": "ARK",
-                    }
-                ],
-                "issue": "Admin Issue",
-                "last_page": "Admin Last Page",
-                "number_type": "Admin Number Type",
-                "number_value": "Admin Number Value",
-                "publication_year": 2013,
-                "publisher": "Admin Publisher",
-                "relation_type": "Admin Relation Type",
-                "titles": [{"title": "Admin Title", "type": "AlternativeTitle"}],
-                "type": "Admin Type",
-                "volume": "Admin Volume",
+                "identifier": "admin test identifier",
+                "identifier_type": "test identifier type",
+                "relation_type": "test relation type",
+                "related_metadata_scheme": "test",
+                "scheme_uri": "test",
+                "scheme_type": "test",
+                "resource_type": "test"
             }
         ],
     )
@@ -3168,174 +3071,52 @@ def test_post_dataset_related_item_metadata(clients):
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
-    pytest.global_dataset_related_item_id_admin = admin_response_data[1]["id"]
-    pytest.global_dataset_related_item_contributor_id_admin = admin_response_data[1][
-        "contributors"
-    ][0]["id"]
-    pytest.global_dataset_related_item_creator_id_admin = admin_response_data[1][
-        "creators"
-    ][0]["id"]
-    pytest.global_dataset_related_item_identifier_id_admin = admin_response_data[1][
-        "identifiers"
-    ][0]["id"]
-    pytest.global_dataset_related_item_title_id_admin = admin_response_data[1][
-        "titles"
-    ][0]["id"]
+    pytest.global_dataset_related_identifier_id_admin = admin_response_data[0]["id"]
 
-    assert admin_response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
-    assert (
-        admin_response_data[1]["contributors"][0]["contributor_type"]
-        == "Admin Con Type"
-    )
-    assert admin_response_data[1]["contributors"][0]["name_type"] == "Personal"
-    assert admin_response_data[1]["creators"][0]["name"] == "Admin Name"
-    assert admin_response_data[1]["creators"][0]["name_type"] == "Personal"
-    assert admin_response_data[1]["edition"] == "Admin Edition"
-    assert admin_response_data[1]["first_page"] == "Admin First Page"
-    assert admin_response_data[1]["identifiers"][0]["identifier"] == "Admin Identifier"
-    assert (
-        admin_response_data[1]["identifiers"][0]["metadata_scheme"]
-        == "Admin Metadata Scheme"
-    )
-    assert (
-        admin_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
-    )
-    assert admin_response_data[1]["identifiers"][0]["scheme_uri"] == "Admin Scheme URI"
-    assert admin_response_data[1]["identifiers"][0]["type"] == "ARK"
-    assert admin_response_data[1]["issue"] == "Admin Issue"
-    assert admin_response_data[1]["last_page"] == "Admin Last Page"
-    assert admin_response_data[1]["number_type"] == "Admin Number Type"
-    assert admin_response_data[1]["number_value"] == "Admin Number Value"
-    assert admin_response_data[1]["publication_year"] == 2013
-    assert admin_response_data[1]["publisher"] == "Admin Publisher"
-    assert admin_response_data[1]["relation_type"] == "Admin Relation Type"
-    assert admin_response_data[1]["titles"][0]["title"] == "Admin Title"
-    assert admin_response_data[1]["titles"][0]["type"] == "AlternativeTitle"
-    assert admin_response_data[1]["type"] == "Admin Type"
-    assert admin_response_data[1]["volume"] == "Admin Volume"
-
+    assert admin_response_data[0]["identifier"] == "admin test identifier"
+    assert admin_response_data[0]["identifier_type"] == "test identifier type"
+    assert admin_response_data[0]["relation_type"] == "test relation type"
+    assert admin_response_data[0]["related_metadata_scheme"] == "test"
+    assert admin_response_data[0]["scheme_uri"] == "test"
+    assert admin_response_data[0]["scheme_type"] == "test"
+    assert admin_response_data[0]["resource_type"] == "test"
     editor_response = _editor_client.post(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item",
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-identifier",
         json=[
             {
-                "contributors": [
-                    {
-                        "name": "Editor Ndafsdame",
-                        "contributor_type": "Editor Con Type",
-                        "name_type": "Personal",
-                    }
-                ],
-                "creators": [{"name": "Editor Name", "name_type": "Personal"}],
-                "edition": "Editor Edition",
-                "first_page": "Editor First Page",
-                "identifiers": [
-                    {
-                        "identifier": "Editor Identifier",
-                        "metadata_scheme": "Editor Metadata Scheme",
-                        "scheme_type": "Editor Scheme Type",
-                        "scheme_uri": "Editor Scheme URI",
-                        "type": "ARK",
-                    }
-                ],
-                "issue": "Editor Issue",
-                "last_page": "Editor Last Page",
-                "number_type": "Editor Number Type",
-                "number_value": "Editor Number Value",
-                "publication_year": 2013,
-                "publisher": "Editor Publisher",
-                "relation_type": "Editor Relation Type",
-                "titles": [{"title": "Editor Title", "type": "Subtitle"}],
-                "type": "Editor Type",
-                "volume": "Editor Volume",
+                "identifier": "editor test identifier",
+                "identifier_type": "test identifier type",
+                "relation_type": "test relation type",
+                "related_metadata_scheme": "test",
+                "scheme_uri": "test",
+                "scheme_type": "test",
+                "resource_type": "test"
             }
         ],
     )
 
     assert editor_response.status_code == 201
     editor_response_data = json.loads(editor_response.data)
-    pytest.global_dataset_related_item_id_editor = editor_response_data[2]["id"]
-    pytest.global_dataset_related_item_contributor_id_editor = editor_response_data[2][
-        "contributors"
-    ][0]["id"]
-    pytest.global_dataset_related_item_creator_id_editor = editor_response_data[2][
-        "creators"
-    ][0]["id"]
-    pytest.global_dataset_related_item_identifier_id_editor = editor_response_data[2][
-        "identifiers"
-    ][0]["id"]
-    pytest.global_dataset_related_item_title_id_editor = editor_response_data[2][
-        "titles"
-    ][0]["id"]
+    pytest.global_dataset_related_identifier_id_editor = editor_response_data[0]["id"]
 
-    assert editor_response_data[2]["contributors"][0]["name"] == "Editor Ndafsdame"
-    assert (
-        editor_response_data[2]["contributors"][0]["contributor_type"]
-        == "Editor Con Type"
-    )
-    assert editor_response_data[2]["contributors"][0]["name_type"] == "Personal"
-    assert editor_response_data[2]["creators"][0]["name"] == "Editor Name"
-    assert editor_response_data[2]["creators"][0]["name_type"] == "Personal"
-    assert editor_response_data[2]["edition"] == "Editor Edition"
-    assert editor_response_data[2]["first_page"] == "Editor First Page"
-    assert (
-        editor_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
-    )
-    assert (
-        editor_response_data[2]["identifiers"][0]["metadata_scheme"]
-        == "Editor Metadata Scheme"
-    )
-    assert (
-        editor_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
-    )
-    assert (
-        editor_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
-    )
-    assert editor_response_data[2]["identifiers"][0]["type"] == "ARK"
-    assert editor_response_data[2]["issue"] == "Editor Issue"
-    assert editor_response_data[2]["last_page"] == "Editor Last Page"
-    assert editor_response_data[2]["number_type"] == "Editor Number Type"
-    assert editor_response_data[2]["number_value"] == "Editor Number Value"
-    assert editor_response_data[2]["publication_year"] == 2013
-    assert editor_response_data[2]["publisher"] == "Editor Publisher"
-    assert editor_response_data[2]["relation_type"] == "Editor Relation Type"
-    assert editor_response_data[2]["titles"][0]["title"] == "Editor Title"
-    assert editor_response_data[2]["titles"][0]["type"] == "Subtitle"
-    assert editor_response_data[2]["type"] == "Editor Type"
-    assert editor_response_data[2]["volume"] == "Editor Volume"
-
+    assert editor_response_data[0]["identifier"] == "editor test identifier"
+    assert editor_response_data[0]["identifier_type"] == "test identifier type"
+    assert editor_response_data[0]["relation_type"] == "test relation type"
+    assert editor_response_data[0]["related_metadata_scheme"] == "test"
+    assert editor_response_data[0]["scheme_uri"] == "test"
+    assert editor_response_data[0]["scheme_type"] == "test"
+    assert editor_response_data[0]["resource_type"] == "test"
     viewer_client = _viewer_client.post(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item",
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-identifier",
         json=[
             {
-                "contributors": [
-                    {
-                        "name": "Viewer Ndafsdame",
-                        "contributor_type": "Viewer Con Type",
-                        "name_type": "Personal",
-                    }
-                ],
-                "creators": [{"name": "Viewer Name", "name_type": "Personal"}],
-                "edition": "Viewer Edition",
-                "first_page": "Viewer First Page",
-                "identifiers": [
-                    {
-                        "identifier": "Viewer Identifier",
-                        "metadata_scheme": "Viewer Metadata Scheme",
-                        "scheme_type": "Viewer Scheme Type",
-                        "scheme_uri": "Viewer Scheme URI",
-                        "type": "ARK",
-                    }
-                ],
-                "issue": "Viewer Issue",
-                "last_page": "Viewer Last Page",
-                "number_type": "Viewer Number Type",
-                "number_value": "Viewer Number Value",
-                "publication_year": 2013,
-                "publisher": "Viewer Publisher",
-                "relation_type": "Viewer Relation Type",
-                "titles": [{"title": "Viewer Title", "type": "Subtitle"}],
-                "type": "Viewer Type",
-                "volume": "Viewer Volume",
+                "identifier": "viewer test identifier",
+                "identifier_type": "test identifier type",
+                "relation_type": "test relation type",
+                "related_metadata_scheme": "test",
+                "scheme_uri": "test",
+                "scheme_type": "test",
+                "resource_type": "test"
             }
         ],
     )
@@ -3343,29 +3124,29 @@ def test_post_dataset_related_item_metadata(clients):
     assert viewer_client.status_code == 403
 
 
-def test_get_dataset_related_item_metadata(clients):
+def test_get_dataset_related_identifier_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
     When the '/study/{study_id}/dataset/{dataset_id}'
     endpoint is requested (GET)
     Then check that the response is valid and retrieves the dataset
-    related item metadata content
+    related identifier metadata content
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
 
     response = _logged_in_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item"
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-identifier"
     )
     admin_response = _admin_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item"
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-identifier"
     )
     editor_response = _editor_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item"
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-identifier"
     )
     viewer_response = _viewer_client.get(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item"
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-identifier"
     )
 
     assert response.status_code == 200
@@ -3380,615 +3161,128 @@ def test_get_dataset_related_item_metadata(clients):
 
     # seach for main title and subtitle index in response_data[n]["titles"]
     # pylint: disable=line-too-long
-    main_title_0 = next(
-        (
-            index
-            for (index, d) in enumerate(response_data[0]["titles"])
-            if d["type"] == "MainTitle"
-        ),
-        None,
-    )
-    sub_title_0 = next(
-        (
-            index
-            for (index, d) in enumerate(response_data[0]["titles"])
-            if d["type"] == "Subtitle"
-        ),
-        None,
-    )
-    a_main_title_0 = next(
-        (
-            index
-            for (index, d) in enumerate(admin_response_data[0]["titles"])
-            if d["type"] == "MainTitle"
-        ),
-        None,
-    )
-    a_sub_title_0 = next(
-        (
-            index
-            for (index, d) in enumerate(admin_response_data[0]["titles"])
-            if d["type"] == "Subtitle"
-        ),
-        None,
-    )
-    e_main_title_0 = next(
-        (
-            index
-            for (index, d) in enumerate(editor_response_data[0]["titles"])
-            if d["type"] == "MainTitle"
-        ),
-        None,
-    )
-    e_sub_title_0 = next(
-        (
-            index
-            for (index, d) in enumerate(editor_response_data[0]["titles"])
-            if d["type"] == "Subtitle"
-        ),
-        None,
-    )
-    v_main_title_0 = next(
-        (
-            index
-            for (index, d) in enumerate(viewer_response_data[0]["titles"])
-            if d["type"] == "MainTitle"
-        ),
-        None,
-    )
-    v_sub_title_0 = next(
-        (
-            index
-            for (index, d) in enumerate(viewer_response_data[0]["titles"])
-            if d["type"] == "Subtitle"
-        ),
-        None,
-    )
 
-    assert response_data[0]["contributors"][0]["name"] == "Ndafsdame"
-    assert response_data[0]["contributors"][0]["contributor_type"] == "Con Type"
-    assert response_data[0]["contributors"][0]["name_type"] == "Personal"
-    assert response_data[0]["creators"][0]["name"] == "Name"
-    assert response_data[0]["creators"][0]["name_type"] == "Personal"
-    assert response_data[0]["edition"] == "Edition"
-    assert response_data[0]["first_page"] == "First Page"
-    assert response_data[0]["identifiers"][0]["identifier"] == "Identifier"
-    assert response_data[0]["identifiers"][0]["metadata_scheme"] == "Metadata Scheme"
-    assert response_data[0]["identifiers"][0]["scheme_type"] == "Scheme Type"
-    assert response_data[0]["identifiers"][0]["scheme_uri"] == "Scheme URI"
-    assert response_data[0]["identifiers"][0]["type"] == "ARK"
-    assert response_data[0]["issue"] == "Issue"
-    assert response_data[0]["last_page"] == "Last Page"
-    assert response_data[0]["number_type"] == "Number Type"
-    assert response_data[0]["number_value"] == "Number Value"
-    assert response_data[0]["publication_year"] == 2013
-    assert response_data[0]["publisher"] == "Publisher"
-    assert response_data[0]["relation_type"] == "Relation Type"
-    assert response_data[0]["titles"][main_title_0]["title"] == "Title"
-    assert response_data[0]["titles"][main_title_0]["type"] == "MainTitle"
-    assert response_data[0]["titles"][sub_title_0]["title"] == "Title"
-    assert response_data[0]["titles"][sub_title_0]["type"] == "Subtitle"
-    assert response_data[0]["type"] == "Type"
-    assert response_data[0]["volume"] == "Volume"
-    assert response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
-    assert response_data[1]["contributors"][0]["contributor_type"] == "Admin Con Type"
-    assert response_data[1]["contributors"][0]["name_type"] == "Personal"
-    assert response_data[1]["creators"][0]["name"] == "Admin Name"
-    assert response_data[1]["creators"][0]["name_type"] == "Personal"
-    assert response_data[1]["edition"] == "Admin Edition"
-    assert response_data[1]["first_page"] == "Admin First Page"
-    assert response_data[1]["identifiers"][0]["identifier"] == "Admin Identifier"
-    assert (
-        response_data[1]["identifiers"][0]["metadata_scheme"] == "Admin Metadata Scheme"
-    )
-    assert response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
-    assert response_data[1]["identifiers"][0]["scheme_uri"] == "Admin Scheme URI"
-    assert response_data[1]["identifiers"][0]["type"] == "ARK"
-    assert response_data[1]["issue"] == "Admin Issue"
-    assert response_data[1]["last_page"] == "Admin Last Page"
-    assert response_data[1]["number_type"] == "Admin Number Type"
-    assert response_data[1]["number_value"] == "Admin Number Value"
-    assert response_data[1]["publication_year"] == 2013
-    assert response_data[1]["publisher"] == "Admin Publisher"
-    assert response_data[1]["relation_type"] == "Admin Relation Type"
-    assert response_data[1]["titles"][0]["title"] == "Admin Title"
-    assert response_data[1]["titles"][0]["type"] == "AlternativeTitle"
-    assert response_data[1]["type"] == "Admin Type"
-    assert response_data[1]["volume"] == "Admin Volume"
-    assert response_data[2]["contributors"][0]["name"] == "Editor Ndafsdame"
-    assert response_data[2]["contributors"][0]["contributor_type"] == "Editor Con Type"
-    assert response_data[2]["contributors"][0]["name_type"] == "Personal"
-    assert response_data[2]["creators"][0]["name"] == "Editor Name"
-    assert response_data[2]["creators"][0]["name_type"] == "Personal"
-    assert response_data[2]["edition"] == "Editor Edition"
-    assert response_data[2]["first_page"] == "Editor First Page"
-    assert response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
-    assert (
-        response_data[2]["identifiers"][0]["metadata_scheme"]
-        == "Editor Metadata Scheme"
-    )
-    assert response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
-    assert response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
-    assert response_data[2]["identifiers"][0]["type"] == "ARK"
-    assert response_data[2]["issue"] == "Editor Issue"
-    assert response_data[2]["last_page"] == "Editor Last Page"
-    assert response_data[2]["number_type"] == "Editor Number Type"
-    assert response_data[2]["number_value"] == "Editor Number Value"
-    assert response_data[2]["publication_year"] == 2013
-    assert response_data[2]["publisher"] == "Editor Publisher"
-    assert response_data[2]["relation_type"] == "Editor Relation Type"
-    assert response_data[2]["titles"][0]["title"] == "Editor Title"
-    assert response_data[2]["titles"][0]["type"] == "Subtitle"
-    assert response_data[2]["type"] == "Editor Type"
-    assert response_data[2]["volume"] == "Editor Volume"
+    # assert len(response_data) == 3
+    # assert len(admin_response_data) == 3
+    # assert len(editor_response_data) == 3
+    # assert len(viewer_response_data) == 3
+    print(len(response_data), "lennnnnnnnnn")
+    assert response_data[0]["identifier"] == "test identifier"
+    assert response_data[0]["identifier_type"] == "test identifier type"
+    assert response_data[0]["relation_type"] == "test relation type"
+    assert response_data[0]["related_metadata_scheme"] == "test"
+    assert response_data[0]["scheme_uri"] == "test"
+    assert response_data[0]["scheme_type"] == "test"
+    assert response_data[0]["resource_type"] == "test"
+    assert response_data[1]["identifier"] == "admin test identifier"
+    assert response_data[1]["identifier_type"] == "test identifier type"
+    assert response_data[1]["relation_type"] == "test relation type"
+    assert response_data[1]["related_metadata_scheme"] == "test"
+    assert response_data[1]["scheme_uri"] == "test"
+    assert response_data[1]["scheme_type"] == "test"
+    assert response_data[1]["resource_type"] == "test"
+    assert response_data[2]["identifier"] == "editor test identifier"
+    assert response_data[2]["identifier_type"] == "test identifier type"
+    assert response_data[2]["relation_type"] == "test relation type"
+    assert response_data[2]["related_metadata_scheme"] == "test"
+    assert response_data[2]["scheme_uri"] == "test"
+    assert response_data[2]["scheme_type"] == "test"
+    assert response_data[2]["resource_type"] == "test"
 
-    assert admin_response_data[0]["contributors"][0]["name"] == "Ndafsdame"
-    assert admin_response_data[0]["contributors"][0]["contributor_type"] == "Con Type"
-    assert admin_response_data[0]["contributors"][0]["name_type"] == "Personal"
-    assert admin_response_data[0]["creators"][0]["name"] == "Name"
-    assert admin_response_data[0]["creators"][0]["name_type"] == "Personal"
-    assert admin_response_data[0]["edition"] == "Edition"
-    assert admin_response_data[0]["first_page"] == "First Page"
-    assert admin_response_data[0]["identifiers"][0]["identifier"] == "Identifier"
-    assert (
-        admin_response_data[0]["identifiers"][0]["metadata_scheme"] == "Metadata Scheme"
-    )
-    assert admin_response_data[0]["identifiers"][0]["scheme_type"] == "Scheme Type"
-    assert admin_response_data[0]["identifiers"][0]["scheme_uri"] == "Scheme URI"
-    assert admin_response_data[0]["identifiers"][0]["type"] == "ARK"
-    assert admin_response_data[0]["issue"] == "Issue"
-    assert admin_response_data[0]["last_page"] == "Last Page"
-    assert admin_response_data[0]["number_type"] == "Number Type"
-    assert admin_response_data[0]["number_value"] == "Number Value"
-    assert admin_response_data[0]["publication_year"] == 2013
-    assert admin_response_data[0]["publisher"] == "Publisher"
-    assert admin_response_data[0]["relation_type"] == "Relation Type"
-    assert admin_response_data[0]["titles"][a_main_title_0]["title"] == "Title"
-    assert admin_response_data[0]["titles"][a_main_title_0]["type"] == "MainTitle"
-    assert admin_response_data[0]["titles"][a_sub_title_0]["title"] == "Title"
-    assert admin_response_data[0]["titles"][a_sub_title_0]["type"] == "Subtitle"
-    assert admin_response_data[0]["type"] == "Type"
-    assert admin_response_data[0]["volume"] == "Volume"
-    assert admin_response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
-    assert (
-        admin_response_data[1]["contributors"][0]["contributor_type"]
-        == "Admin Con Type"
-    )
-    assert admin_response_data[1]["contributors"][0]["name_type"] == "Personal"
-    assert admin_response_data[1]["creators"][0]["name"] == "Admin Name"
-    assert admin_response_data[1]["creators"][0]["name_type"] == "Personal"
-    assert admin_response_data[1]["edition"] == "Admin Edition"
-    assert admin_response_data[1]["first_page"] == "Admin First Page"
-    assert admin_response_data[1]["identifiers"][0]["identifier"] == "Admin Identifier"
-    assert (
-        admin_response_data[1]["identifiers"][0]["metadata_scheme"]
-        == "Admin Metadata Scheme"
-    )
-    assert (
-        admin_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
-    )
-    assert admin_response_data[1]["identifiers"][0]["scheme_uri"] == "Admin Scheme URI"
-    assert admin_response_data[1]["identifiers"][0]["type"] == "ARK"
-    assert admin_response_data[1]["issue"] == "Admin Issue"
-    assert admin_response_data[1]["last_page"] == "Admin Last Page"
-    assert admin_response_data[1]["number_type"] == "Admin Number Type"
-    assert admin_response_data[1]["number_value"] == "Admin Number Value"
-    assert admin_response_data[1]["publication_year"] == 2013
-    assert admin_response_data[1]["publisher"] == "Admin Publisher"
-    assert admin_response_data[1]["relation_type"] == "Admin Relation Type"
-    assert admin_response_data[1]["titles"][0]["title"] == "Admin Title"
-    assert admin_response_data[1]["titles"][0]["type"] == "AlternativeTitle"
-    assert admin_response_data[1]["type"] == "Admin Type"
-    assert admin_response_data[1]["volume"] == "Admin Volume"
-    assert admin_response_data[2]["contributors"][0]["name"] == "Editor Ndafsdame"
-    assert (
-        admin_response_data[2]["contributors"][0]["contributor_type"]
-        == "Editor Con Type"
-    )
-    assert admin_response_data[2]["contributors"][0]["name_type"] == "Personal"
-    assert admin_response_data[2]["creators"][0]["name"] == "Editor Name"
-    assert admin_response_data[2]["creators"][0]["name_type"] == "Personal"
-    assert admin_response_data[2]["edition"] == "Editor Edition"
-    assert admin_response_data[2]["first_page"] == "Editor First Page"
-    assert admin_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
-    assert (
-        admin_response_data[2]["identifiers"][0]["metadata_scheme"]
-        == "Editor Metadata Scheme"
-    )
-    assert (
-        admin_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
-    )
-    assert admin_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
-    assert admin_response_data[2]["identifiers"][0]["type"] == "ARK"
-    assert admin_response_data[2]["issue"] == "Editor Issue"
-    assert admin_response_data[2]["last_page"] == "Editor Last Page"
-    assert admin_response_data[2]["number_type"] == "Editor Number Type"
-    assert admin_response_data[2]["number_value"] == "Editor Number Value"
-    assert admin_response_data[2]["publication_year"] == 2013
-    assert admin_response_data[2]["publisher"] == "Editor Publisher"
-    assert admin_response_data[2]["relation_type"] == "Editor Relation Type"
-    assert admin_response_data[2]["titles"][0]["title"] == "Editor Title"
-    assert admin_response_data[2]["titles"][0]["type"] == "Subtitle"
-    assert admin_response_data[2]["type"] == "Editor Type"
-    assert admin_response_data[2]["volume"] == "Editor Volume"
+    assert admin_response_data[0]["identifier"] == "test identifier"
+    assert admin_response_data[0]["identifier_type"] == "test identifier type"
+    assert admin_response_data[0]["relation_type"] == "test relation type"
+    assert admin_response_data[0]["related_metadata_scheme"] == "test"
+    assert admin_response_data[0]["scheme_uri"] == "test"
+    assert admin_response_data[0]["scheme_type"] == "test"
+    assert admin_response_data[0]["resource_type"] == "test"
+    assert admin_response_data[1]["identifier"] == "admin test identifier"
+    assert admin_response_data[1]["identifier_type"] == "test identifier type"
+    assert admin_response_data[1]["relation_type"] == "test relation type"
+    assert admin_response_data[1]["related_metadata_scheme"] == "test"
+    assert admin_response_data[1]["scheme_uri"] == "test"
+    assert admin_response_data[1]["scheme_type"] == "test"
+    assert admin_response_data[1]["resource_type"] == "test"
+    assert admin_response_data[2]["identifier"] == "editor test identifier"
+    assert admin_response_data[2]["identifier_type"] == "test identifier type"
+    assert admin_response_data[2]["relation_type"] == "test relation type"
+    assert admin_response_data[2]["related_metadata_scheme"] == "test"
+    assert admin_response_data[2]["scheme_uri"] == "test"
+    assert admin_response_data[2]["scheme_type"] == "test"
+    assert admin_response_data[2]["resource_type"] == "test"
 
-    assert editor_response_data[0]["contributors"][0]["name"] == "Ndafsdame"
-    assert editor_response_data[0]["contributors"][0]["contributor_type"] == "Con Type"
-    assert editor_response_data[0]["contributors"][0]["name_type"] == "Personal"
-    assert editor_response_data[0]["creators"][0]["name"] == "Name"
-    assert editor_response_data[0]["creators"][0]["name_type"] == "Personal"
-    assert editor_response_data[0]["edition"] == "Edition"
-    assert editor_response_data[0]["first_page"] == "First Page"
-    assert editor_response_data[0]["identifiers"][0]["identifier"] == "Identifier"
-    assert (
-        editor_response_data[0]["identifiers"][0]["metadata_scheme"]
-        == "Metadata Scheme"
-    )
-    assert editor_response_data[0]["identifiers"][0]["scheme_type"] == "Scheme Type"
-    assert editor_response_data[0]["identifiers"][0]["scheme_uri"] == "Scheme URI"
-    assert editor_response_data[0]["identifiers"][0]["type"] == "ARK"
-    assert editor_response_data[0]["issue"] == "Issue"
-    assert editor_response_data[0]["last_page"] == "Last Page"
-    assert editor_response_data[0]["number_type"] == "Number Type"
-    assert editor_response_data[0]["number_value"] == "Number Value"
-    assert editor_response_data[0]["publication_year"] == 2013
-    assert editor_response_data[0]["publisher"] == "Publisher"
-    assert editor_response_data[0]["relation_type"] == "Relation Type"
-    assert editor_response_data[0]["titles"][e_main_title_0]["title"] == "Title"
-    assert editor_response_data[0]["titles"][e_main_title_0]["type"] == "MainTitle"
-    assert editor_response_data[0]["titles"][e_sub_title_0]["title"] == "Title"
-    assert editor_response_data[0]["titles"][e_sub_title_0]["type"] == "Subtitle"
-    assert editor_response_data[0]["type"] == "Type"
-    assert editor_response_data[0]["volume"] == "Volume"
-    assert editor_response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
-    assert (
-        editor_response_data[1]["contributors"][0]["contributor_type"]
-        == "Admin Con Type"
-    )
-    assert editor_response_data[1]["contributors"][0]["name_type"] == "Personal"
-    assert editor_response_data[1]["creators"][0]["name"] == "Admin Name"
-    assert editor_response_data[1]["creators"][0]["name_type"] == "Personal"
-    assert editor_response_data[1]["edition"] == "Admin Edition"
-    assert editor_response_data[1]["first_page"] == "Admin First Page"
-    assert editor_response_data[1]["identifiers"][0]["identifier"] == "Admin Identifier"
-    assert (
-        editor_response_data[1]["identifiers"][0]["metadata_scheme"]
-        == "Admin Metadata Scheme"
-    )
-    assert (
-        editor_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
-    )
-    assert editor_response_data[1]["identifiers"][0]["scheme_uri"] == "Admin Scheme URI"
-    assert editor_response_data[1]["identifiers"][0]["type"] == "ARK"
-    assert editor_response_data[1]["issue"] == "Admin Issue"
-    assert editor_response_data[1]["last_page"] == "Admin Last Page"
-    assert editor_response_data[1]["number_type"] == "Admin Number Type"
-    assert editor_response_data[1]["number_value"] == "Admin Number Value"
-    assert editor_response_data[1]["publication_year"] == 2013
-    assert editor_response_data[1]["publisher"] == "Admin Publisher"
-    assert editor_response_data[1]["relation_type"] == "Admin Relation Type"
-    assert editor_response_data[1]["titles"][0]["title"] == "Admin Title"
-    assert editor_response_data[1]["titles"][0]["type"] == "AlternativeTitle"
-    assert editor_response_data[1]["type"] == "Admin Type"
-    assert editor_response_data[1]["volume"] == "Admin Volume"
-    assert editor_response_data[2]["contributors"][0]["name"] == "Editor Ndafsdame"
-    assert (
-        editor_response_data[2]["contributors"][0]["contributor_type"]
-        == "Editor Con Type"
-    )
-    assert editor_response_data[2]["contributors"][0]["name_type"] == "Personal"
-    assert editor_response_data[2]["creators"][0]["name"] == "Editor Name"
-    assert editor_response_data[2]["creators"][0]["name_type"] == "Personal"
-    assert editor_response_data[2]["edition"] == "Editor Edition"
-    assert editor_response_data[2]["first_page"] == "Editor First Page"
-    assert (
-        editor_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
-    )
-    assert (
-        editor_response_data[2]["identifiers"][0]["metadata_scheme"]
-        == "Editor Metadata Scheme"
-    )
-    assert (
-        editor_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
-    )
-    assert (
-        editor_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
-    )
-    assert editor_response_data[2]["identifiers"][0]["type"] == "ARK"
-    assert editor_response_data[2]["issue"] == "Editor Issue"
-    assert editor_response_data[2]["last_page"] == "Editor Last Page"
-    assert editor_response_data[2]["number_type"] == "Editor Number Type"
-    assert editor_response_data[2]["number_value"] == "Editor Number Value"
-    assert editor_response_data[2]["publication_year"] == 2013
-    assert editor_response_data[2]["publisher"] == "Editor Publisher"
-    assert editor_response_data[2]["relation_type"] == "Editor Relation Type"
-    assert editor_response_data[2]["titles"][0]["title"] == "Editor Title"
-    assert editor_response_data[2]["titles"][0]["type"] == "Subtitle"
-    assert editor_response_data[2]["type"] == "Editor Type"
-    assert editor_response_data[2]["volume"] == "Editor Volume"
+    assert editor_response_data[0]["identifier"] == "test identifier"
+    assert editor_response_data[0]["identifier_type"] == "test identifier type"
+    assert editor_response_data[0]["relation_type"] == "test relation type"
+    assert editor_response_data[0]["related_metadata_scheme"] == "test"
+    assert editor_response_data[0]["scheme_uri"] == "test"
+    assert editor_response_data[0]["scheme_type"] == "test"
+    assert editor_response_data[0]["resource_type"] == "test"
+    assert editor_response_data[1]["identifier"] == "admin test identifier"
+    assert editor_response_data[1]["identifier_type"] == "test identifier type"
+    assert editor_response_data[1]["relation_type"] == "test relation type"
+    assert editor_response_data[1]["related_metadata_scheme"] == "test"
+    assert editor_response_data[1]["scheme_uri"] == "test"
+    assert editor_response_data[1]["scheme_type"] == "test"
+    assert editor_response_data[1]["resource_type"] == "test"
+    assert editor_response_data[2]["identifier"] == "editor test identifier"
+    assert editor_response_data[2]["identifier_type"] == "test identifier type"
+    assert editor_response_data[2]["relation_type"] == "test relation type"
+    assert editor_response_data[2]["related_metadata_scheme"] == "test"
+    assert editor_response_data[2]["scheme_uri"] == "test"
+    assert editor_response_data[2]["scheme_type"] == "test"
+    assert editor_response_data[2]["resource_type"] == "test"
 
-    assert viewer_response_data[0]["contributors"][0]["name"] == "Ndafsdame"
-    assert viewer_response_data[0]["contributors"][0]["contributor_type"] == "Con Type"
-    assert viewer_response_data[0]["contributors"][0]["name_type"] == "Personal"
-    assert viewer_response_data[0]["creators"][0]["name"] == "Name"
-    assert viewer_response_data[0]["creators"][0]["name_type"] == "Personal"
-    assert viewer_response_data[0]["edition"] == "Edition"
-    assert viewer_response_data[0]["first_page"] == "First Page"
-    assert viewer_response_data[0]["identifiers"][0]["identifier"] == "Identifier"
-    assert (
-        viewer_response_data[0]["identifiers"][0]["metadata_scheme"]
-        == "Metadata Scheme"
-    )
-    assert viewer_response_data[0]["identifiers"][0]["scheme_type"] == "Scheme Type"
-    assert viewer_response_data[0]["identifiers"][0]["scheme_uri"] == "Scheme URI"
-    assert viewer_response_data[0]["identifiers"][0]["type"] == "ARK"
-    assert viewer_response_data[0]["issue"] == "Issue"
-    assert viewer_response_data[0]["last_page"] == "Last Page"
-    assert viewer_response_data[0]["number_type"] == "Number Type"
-    assert viewer_response_data[0]["number_value"] == "Number Value"
-    assert viewer_response_data[0]["publication_year"] == 2013
-    assert viewer_response_data[0]["publisher"] == "Publisher"
-    assert viewer_response_data[0]["relation_type"] == "Relation Type"
-    assert viewer_response_data[0]["titles"][v_main_title_0]["title"] == "Title"
-    assert viewer_response_data[0]["titles"][v_main_title_0]["type"] == "MainTitle"
-    assert viewer_response_data[0]["titles"][v_sub_title_0]["title"] == "Title"
-    assert viewer_response_data[0]["titles"][v_sub_title_0]["type"] == "Subtitle"
-    assert viewer_response_data[0]["type"] == "Type"
-    assert viewer_response_data[0]["volume"] == "Volume"
-    assert viewer_response_data[1]["contributors"][0]["name"] == "Admin Ndafsdame"
-    assert (
-        viewer_response_data[1]["contributors"][0]["contributor_type"]
-        == "Admin Con Type"
-    )
-    assert viewer_response_data[1]["contributors"][0]["name_type"] == "Personal"
-    assert viewer_response_data[1]["creators"][0]["name"] == "Admin Name"
-    assert viewer_response_data[1]["creators"][0]["name_type"] == "Personal"
-    assert viewer_response_data[1]["edition"] == "Admin Edition"
-    assert viewer_response_data[1]["first_page"] == "Admin First Page"
-    assert viewer_response_data[1]["identifiers"][0]["identifier"] == "Admin Identifier"
-    assert (
-        viewer_response_data[1]["identifiers"][0]["metadata_scheme"]
-        == "Admin Metadata Scheme"
-    )
-    assert (
-        viewer_response_data[1]["identifiers"][0]["scheme_type"] == "Admin Scheme Type"
-    )
-    assert viewer_response_data[1]["identifiers"][0]["scheme_uri"] == "Admin Scheme URI"
-    assert viewer_response_data[1]["identifiers"][0]["type"] == "ARK"
-    assert viewer_response_data[1]["issue"] == "Admin Issue"
-    assert viewer_response_data[1]["last_page"] == "Admin Last Page"
-    assert viewer_response_data[1]["number_type"] == "Admin Number Type"
-    assert viewer_response_data[1]["number_value"] == "Admin Number Value"
-    assert viewer_response_data[1]["publication_year"] == 2013
-    assert viewer_response_data[1]["publisher"] == "Admin Publisher"
-    assert viewer_response_data[1]["relation_type"] == "Admin Relation Type"
-    assert viewer_response_data[1]["titles"][0]["title"] == "Admin Title"
-    assert viewer_response_data[1]["titles"][0]["type"] == "AlternativeTitle"
-    assert viewer_response_data[1]["type"] == "Admin Type"
-    assert viewer_response_data[1]["volume"] == "Admin Volume"
-    assert viewer_response_data[2]["contributors"][0]["name"] == "Editor Ndafsdame"
-    assert (
-        viewer_response_data[2]["contributors"][0]["contributor_type"]
-        == "Editor Con Type"
-    )
-    assert viewer_response_data[2]["contributors"][0]["name_type"] == "Personal"
-    assert viewer_response_data[2]["creators"][0]["name"] == "Editor Name"
-    assert viewer_response_data[2]["creators"][0]["name_type"] == "Personal"
-    assert viewer_response_data[2]["edition"] == "Editor Edition"
-    assert viewer_response_data[2]["first_page"] == "Editor First Page"
-    assert (
-        viewer_response_data[2]["identifiers"][0]["identifier"] == "Editor Identifier"
-    )
-    assert (
-        viewer_response_data[2]["identifiers"][0]["metadata_scheme"]
-        == "Editor Metadata Scheme"
-    )
-    assert (
-        viewer_response_data[2]["identifiers"][0]["scheme_type"] == "Editor Scheme Type"
-    )
-    assert (
-        viewer_response_data[2]["identifiers"][0]["scheme_uri"] == "Editor Scheme URI"
-    )
-    assert viewer_response_data[2]["identifiers"][0]["type"] == "ARK"
-    assert viewer_response_data[2]["issue"] == "Editor Issue"
-    assert viewer_response_data[2]["last_page"] == "Editor Last Page"
-    assert viewer_response_data[2]["number_type"] == "Editor Number Type"
-    assert viewer_response_data[2]["number_value"] == "Editor Number Value"
-    assert viewer_response_data[2]["publication_year"] == 2013
-    assert viewer_response_data[2]["publisher"] == "Editor Publisher"
-    assert viewer_response_data[2]["relation_type"] == "Editor Relation Type"
-    assert viewer_response_data[2]["titles"][0]["title"] == "Editor Title"
-    assert viewer_response_data[2]["titles"][0]["type"] == "Subtitle"
-    assert viewer_response_data[2]["type"] == "Editor Type"
-    assert viewer_response_data[2]["volume"] == "Editor Volume"
+    assert viewer_response_data[0]["identifier"] == "test identifier"
+    assert viewer_response_data[0]["identifier_type"] == "test identifier type"
+    assert viewer_response_data[0]["relation_type"] == "test relation type"
+    assert viewer_response_data[0]["related_metadata_scheme"] == "test"
+    assert viewer_response_data[0]["scheme_uri"] == "test"
+    assert viewer_response_data[0]["scheme_type"] == "test"
+    assert viewer_response_data[0]["resource_type"] == "test"
+    assert viewer_response_data[1]["identifier"] == "admin test identifier"
+    assert viewer_response_data[1]["identifier_type"] == "test identifier type"
+    assert viewer_response_data[1]["relation_type"] == "test relation type"
+    assert viewer_response_data[1]["related_metadata_scheme"] == "test"
+    assert viewer_response_data[1]["scheme_uri"] == "test"
+    assert viewer_response_data[1]["scheme_type"] == "test"
+    assert viewer_response_data[1]["resource_type"] == "test"
+    assert viewer_response_data[2]["identifier"] == "editor test identifier"
+    assert viewer_response_data[2]["identifier_type"] == "test identifier type"
+    assert viewer_response_data[2]["relation_type"] == "test relation type"
+    assert viewer_response_data[2]["related_metadata_scheme"] == "test"
+    assert viewer_response_data[2]["scheme_uri"] == "test"
+    assert viewer_response_data[2]["scheme_type"] == "test"
+    assert viewer_response_data[2]["resource_type"] == "test"
 
 
-def test_delete_dataset_related_item_contributor_metadata(clients):
+def test_delete_dataset_related_identifier_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID and dataset ID
-    When the '/study/{study_id}'
+    When the '/study/{study_id}/dataset/{dataset_id}'
     endpoint is requested (DELETE)
-    Then check that the response is valid and deletes the dataset
-    related item metadata content
+    Then check that the response is valid and retrieves the dataset
+    related identifier metadata content
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id
-    related_item_id = pytest.global_dataset_related_item_id
-    contributor_id = pytest.global_dataset_related_item_contributor_id
-    admin_con_id = pytest.global_dataset_related_item_contributor_id_admin
-    editor_con_id = pytest.global_dataset_related_item_contributor_id_editor
 
-    # pylint: disable=line-too-long
-    viewer_response = _viewer_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/contributor/{contributor_id}"
-    )
-    # pylint: disable=line-too-long
-    response = _logged_in_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/contributor/{contributor_id}"
-    )
-    # pylint: disable=line-too-long
-    admin_response = _admin_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/contributor/{admin_con_id}"
-    )
-    # pylint: disable=line-too-long
-    editor_response = _editor_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/contributor/{editor_con_id}"
-    )
-
-    assert viewer_response.status_code == 403
-    assert response.status_code == 204
-    assert admin_response.status_code == 204
-    assert editor_response.status_code == 204
-
-
-def test_delete_dataset_related_item_creator_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID and dataset ID
-    When the '/study/{study_id}'
-    endpoint is requested (DELETE)
-    Then check that the response is valid and deletes the dataset
-    related item metadata content
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    dataset_id = pytest.global_dataset_id
-    related_item_id = pytest.global_dataset_related_item_id
-    creator_id = pytest.global_dataset_related_item_creator_id
-    admin_creator_id = pytest.global_dataset_related_item_creator_id_admin
-    editor_creator_id = pytest.global_dataset_related_item_creator_id_editor
-
-    # pylint: disable=line-too-long
-    viewer_response = _viewer_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/creator/{creator_id}"
-    )
-    # pylint: disable=line-too-long
-    response = _logged_in_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/creator/{creator_id}"
-    )
-    # pylint: disable=line-too-long
-    admin_response = _admin_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/creator/{admin_creator_id}"
-    )
-    # pylint: disable=line-too-long
-    editor_response = _editor_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/creator/{editor_creator_id}"
-    )
-
-    assert viewer_response.status_code == 403
-    assert response.status_code == 204
-    assert admin_response.status_code == 204
-    assert editor_response.status_code == 204
-
-
-def test_delete_dataset_related_item_identifier_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID and dataset ID
-    When the '/study/{study_id}'
-    endpoint is requested (DELETE)
-    Then check that the response is valid and deletes the dataset
-    related item metadata content
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    dataset_id = pytest.global_dataset_id
-    related_item_id = pytest.global_dataset_related_item_id
-    identifier_id = pytest.global_dataset_related_item_identifier_id
-    admin_id_id = pytest.global_dataset_related_item_identifier_id_admin
-    editor_id_id = pytest.global_dataset_related_item_identifier_id_editor
-
-    # pylint: disable=line-too-long
-    viewer_response = _viewer_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/identifier/{identifier_id}"
-    )
-    # pylint: disable=line-too-long
-    response = _logged_in_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/identifier/{identifier_id}"
-    )
-    # pylint: disable=line-too-long
-    admin_response = _admin_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/identifier/{admin_id_id}"
-    )
-    # pylint: disable=line-too-long
-    editor_response = _editor_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/identifier/{editor_id_id}"
-    )
-
-    assert viewer_response.status_code == 403
-    assert response.status_code == 204
-    assert admin_response.status_code == 204
-    assert editor_response.status_code == 204
-
-
-def test_delete_dataset_related_item_title_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID and dataset ID
-    When the '/study/{study_id}'
-    endpoint is requested (DELETE)
-    Then check that the response is valid and deletes the dataset
-    related item metadata content
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    dataset_id = pytest.global_dataset_id
-    related_item_id = pytest.global_dataset_related_item_id
-    main_title_id = pytest.global_dataset_related_item_main_title_id
-    sub_title_id = pytest.global_dataset_related_item_sub_title_id
-    admin_t_id = pytest.global_dataset_related_item_title_id_admin
-    editor_t_id = pytest.global_dataset_related_item_title_id_editor
-
-    # pylint: disable=line-too-long
-    viewer_response = _viewer_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{main_title_id}"
-    )
-    main_response = _logged_in_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{main_title_id}"
-    )
-    sub_response = _logged_in_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{sub_title_id}"
-    )
-    # pylint: disable=line-too-long
-    admin_response = _admin_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{admin_t_id}"
-    )
-    # pylint: disable=line-too-long
-    editor_response = _editor_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}/title/{editor_t_id}"
-    )
-
-    assert viewer_response.status_code == 403
-    assert main_response.status_code == 403  # Main title cannot be deleted
-    assert sub_response.status_code == 204  # Main title cannot be deleted
-    assert admin_response.status_code == 204
-    assert editor_response.status_code == 204
-
-
-def test_delete_dataset_related_item_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID and dataset ID
-    When the '/study/{study_id}'
-    endpoint is requested (DELETE)
-    Then check that the response is valid and deletes the dataset
-    related item metadata content
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    dataset_id = pytest.global_dataset_id
-    related_item_id = pytest.global_dataset_related_item_id
-    admin_ri_id = pytest.global_dataset_related_item_id_admin
-    editor_ri_id = pytest.global_dataset_related_item_id_editor
+    identifier_id = pytest.global_dataset_related_identifier_id
+    a_identifier_id = pytest.global_dataset_related_identifier_id_admin
+    e_identifier_id = pytest.global_dataset_related_identifier_id_editor
 
     viewer_response = _viewer_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}"
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-identifier/{identifier_id}"
     )
     response = _logged_in_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{related_item_id}"
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-identifier/{identifier_id}"
     )
     admin_response = _admin_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{admin_ri_id}"
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-identifier/{a_identifier_id}"
     )
     editor_response = _editor_client.delete(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item/{editor_ri_id}"
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-identifier/{e_identifier_id}"
     )
 
     assert viewer_response.status_code == 403
