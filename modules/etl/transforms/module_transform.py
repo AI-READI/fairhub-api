@@ -170,7 +170,9 @@ class ModuleTransform(object):
         groups. An aggregate function is then applied
         to the non-grouped column (e.g. count, sum).
 
-        One transform for one VType.
+        One transform for one VType. A single
+        visualization is then rendered to a single
+        visualization module.
         """
         self.transformed = []
         transform: Dict[str, Any] = (
@@ -220,7 +222,9 @@ class ModuleTransform(object):
 
         All transforms are combined into a single flat
         transform. Transforms must be identical VType,
-        e.g. [transformA, transformB, ...]
+        (e.g. [transformA, transformB, ...]). A single
+        (aggregated) visualization is then rendered to
+        a single visualization module.
         """
         self.transformed = []
 
@@ -271,9 +275,11 @@ class ModuleTransform(object):
         groups. An aggregate function is then applied to the
         non-grouped column (e.g. count, sum).
 
-        Transforms are kept distinct inserted into a dictionary,
-        e.g. {nameA: transformA, nameB: transformB, ...}.
-        Transforms can be heterogenous VTypes.
+        Transforms are kept distinct and inserted into a
+        dictionary, e.g. {nameA: transformA, nameB: transformB,
+        ...}. Transforms can be heterogenous VTypes.
+        Multiple visualizations are then rendered in the same
+        visualization module.
         """
         self.transformed = {}
         for transform in self.transforms:

@@ -57,7 +57,7 @@ computed_columns: List = [
     "treatments",
     "scrweek",
     "scryear",
-    "scrweekyear",
+    "scrdate",
 ]
 
 # Survey Column Groups
@@ -139,8 +139,8 @@ treatments_column_map: Dict[str, str] = {
 #
 
 redcap_report_merge_map: Dict[str, Dict[str, Any]] = {
-    "participants-list": {"on": index_columns, "how": "inner"},
-    "participant-value": {"on": index_columns, "how": "inner"},
+    "participant-list": {"on": index_columns, "how": "inner"},
+    "participant-values": {"on": index_columns, "how": "inner"},
     "instrument-status": {"on": index_columns, "how": "inner"},
     "repeat-instrument": {"on": index_columns, "how": "outer"},
 }
@@ -154,7 +154,18 @@ redcap_report_merge_map: Dict[str, Dict[str, Any]] = {
 redcapTransformConfig: Dict[str, Any] = {
     "reports": [  # Dict[str, Dict[str, str | Dict[str, Any] | List[Tuple[str, Dict[str, Any]]]]]
         {
-            "key": "participant-value",
+            "key": "participant-list",
+            "kwdargs": {
+                "raw_or_label": "raw",
+                "raw_or_label_headers": "raw",
+                "export_checkbox_labels": False,
+                "csv_delimiter": "\t",
+                "report_id": "",
+            },
+            "transforms": [],
+        },
+        {
+            "key": "participant-values",
             "kwdargs": {
                 "raw_or_label": "raw",
                 "raw_or_label_headers": "raw",
@@ -171,9 +182,7 @@ redcapTransformConfig: Dict[str, Any] = {
                         "column": "scrcmpdat",
                         "new_column_name": "scrweek",
                         # ISO 8601 string format token for front-end: %V
-                        "transform": lambda x: int(
-                            datetime.strptime(x, "%Y-%m-%d").isocalendar().week
-                        ),
+                        "transform": lambda x: datetime.strptime(x, "%Y-%m-%d").isocalendar().week,
                         "missing_value": missing_value_generic,
                     },
                 ),
@@ -183,9 +192,7 @@ redcapTransformConfig: Dict[str, Any] = {
                         "column": "scrcmpdat",
                         "new_column_name": "scryear",
                         # ISO 8601 string format token for front-end: %Y
-                        "transform": lambda x: int(
-                            datetime.strptime(x, "%Y-%m-%d").isocalendar().year
-                        ),
+                        "transform": lambda x: datetime.strptime(x, "%Y-%m-%d").isocalendar().year,
                         "missing_value": missing_value_generic,
                     },
                 ),
@@ -193,12 +200,9 @@ redcapTransformConfig: Dict[str, Any] = {
                     "transform_values_by_column",
                     {
                         "column": "scrcmpdat",
-                        "new_column_name": "scrweekyear",
+                        "new_column_name": "scrdate",
                         # ISO 8601 string format token for front-end: %Y
-                        "transform": lambda x: (
-                            int(datetime.strptime(x, "%Y-%m-%d").isocalendar().week),
-                            int(datetime.strptime(x, "%Y-%m-%d").isocalendar().year),
-                        ),
+                        "transform": lambda x: datetime.strptime(x, "%Y-%m-%d"),
                         "missing_value": missing_value_generic,
                     },
                 ),
@@ -269,7 +273,8 @@ redcapTransformConfig: Dict[str, Any] = {
     "post_transform_merge": (
         index_columns,
         [
-            ("participant-value", {"on": index_columns, "how": "inner"}),
+            ("participant-list", {"on": index_columns, "how": "inner"}),
+            ("participant-values", {"on": index_columns, "how": "inner"}),
             ("instrument-status", {"on": index_columns, "how": "inner"}),
             ("repeat-instrument", {"on": index_columns, "how": "outer"}),
         ],
@@ -1648,10 +1653,10 @@ raceRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
         "transforms": [
             {
                 "name": "Race Recruitment by Site",
-                "vtype": "DoubleDiscrete",
+                "vtype": "DoubleDiscreteTimeseries",
                 "methods": [
                     {
-                        "groups": ["siteid", "race", "scrweek"],
+                        "groups": ["siteid", "race", "scrdate"],
                         "value": "record_id",
                         "func": "count",
                     }
@@ -1671,9 +1676,9 @@ raceRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                     },
                     "x": {
                         "name": "Week of the Year",
-                        "field": "scrweek",
+                        "field": "scrdate",
                         "missing_value": missing_value_generic,
-                        "astype": int,
+                        "astype": str,
                     },
                     "y": {
                         "name": "Cumulative Count (N)",
@@ -1696,10 +1701,10 @@ phenotypeRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
         "transforms": [
             {
                 "name": "Phenotype Recruitment by Site",
-                "vtype": "DoubleDiscrete",
+                "vtype": "DoubleDiscreteTimeseries",
                 "methods": [
                     {
-                        "groups": ["siteid", "phenotypes", "scrweek"],
+                        "groups": ["siteid", "phenotypes", "scrdate"],
                         "value": "record_id",
                         "func": "count",
                     }
@@ -1719,9 +1724,9 @@ phenotypeRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                     },
                     "x": {
                         "name": "Week of the Year",
-                        "field": "scrweek",
+                        "field": "scrdate",
                         "missing_value": missing_value_generic,
-                        "astype": int,
+                        "astype": str,
                     },
                     "y": {
                         "name": "Cumulative Count (N)",
@@ -1808,6 +1813,53 @@ phenotypeSexBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                     "group": {
                         "name": "Sex",
                         "field": "scrsex",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Phenotype",
+                        "field": "phenotypes",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+        ],
+    },
+)
+
+# Phenotype & Site Counts by Sex
+phenotypeSiteBySexTransformConfig: Tuple[str, Dict[str, Any]] = (
+    "simpleTransform",
+    {
+        "key": "phenotype-site-by-sex",
+        "strict": True,
+        "transforms": [
+            {
+                "name": "Phenotype & Site by Sex",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["scrsex", "phenotypes", "siteid"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Sex",
+                        "field": "scrsex",
+                        "missing_value": missing_value_generic,
+                    },
+                    "group": {
+                        "name": "Site",
+                        "field": "siteid",
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
@@ -1926,6 +1978,7 @@ currentMedicationsBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
 moduleTransformConfigs: Dict[str, Any] = {
     "instrument-completion-status-by-site": instrumentCompletionStatusBySiteTransformConfig,
     "phenotype-sex-by-site": phenotypeSexBySiteTransformConfig,
+    "phenotype-site-by-sex": phenotypeSiteBySexTransformConfig,
     "phenotype-race-by-sex": phenotypeRaceBySexTransformConfig,
     "phenotype-recruitment-by-site": phenotypeRecruitmentBySiteTransformConfig,
     "race-recruitment-by-site": raceRecruitmentBySiteTransformConfig,
