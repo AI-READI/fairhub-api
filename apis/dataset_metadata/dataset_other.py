@@ -1,7 +1,7 @@
 """API endpoints for other dataset metadata"""
 
 from flask import request
-from flask_restx import Resource, fields
+from flask_restx import Resource
 from jsonschema import ValidationError, validate
 
 import model

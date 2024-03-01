@@ -126,4 +126,3 @@ class DatasetRelatedIdentifierUpdate(Resource):
         model.db.session.commit()
 
         return Response(status=204)
-
