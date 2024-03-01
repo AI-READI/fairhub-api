@@ -1,13 +1,5 @@
 from model.dataset_metadata.dataset_contributor import DatasetContributor
-from model.dataset_metadata.dataset_related_item import DatasetRelatedItem
-from model.dataset_metadata.dataset_related_item_contributor import (
-    DatasetRelatedItemContributor,
-)
-from model.dataset_metadata.dataset_related_item_identifier import (
-    DatasetRelatedItemIdentifier,
-)
-from model.dataset_metadata.dataset_related_item_other import DatasetRelatedItemOther
-from model.dataset_metadata.dataset_related_item_title import DatasetRelatedItemTitle
+from model.dataset_metadata.dataset_related_identifier import DatasetRelatedIdentifier
 
 from .dataset import Dataset
 from .dataset_metadata.dataset_access import DatasetAccess
@@ -19,7 +11,6 @@ from .dataset_metadata.dataset_description import DatasetDescription
 from .dataset_metadata.dataset_funder import DatasetFunder
 from .dataset_metadata.dataset_healthsheet import DatasetHealthsheet
 from .dataset_metadata.dataset_other import DatasetOther
-from .dataset_metadata.dataset_record_keys import DatasetRecordKeys
 from .dataset_metadata.dataset_rights import DatasetRights
 from .dataset_metadata.dataset_subject import DatasetSubject
 from .dataset_metadata.dataset_title import DatasetTitle
@@ -76,14 +67,9 @@ __all__ = [
     "DatasetFunder",
     "DatasetAlternateIdentifier",
     "DatasetRights",
-    "DatasetRecordKeys",
     "DatasetTitle",
     "DatasetSubject",
-    "DatasetRelatedItemContributor",
-    "DatasetRelatedItemIdentifier",
-    "DatasetRelatedItemOther",
-    "DatasetRelatedItemTitle",
-    "DatasetRelatedItem",
+    "DatasetRelatedIdentifier",
     "DatasetDescription",
     "StudyArm",
     "StudyAvailableIpd",

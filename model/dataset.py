@@ -17,7 +17,6 @@ class Dataset(db.Model):  # type: ignore
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
 
         self.dataset_access = model.DatasetAccess(self)
-        self.dataset_record_keys = model.DatasetRecordKeys(self)
         self.dataset_de_ident_level = model.DatasetDeIdentLevel(self)
         self.dataset_consent = model.DatasetConsent(self)
         self.dataset_healthsheet = model.DatasetHealthsheet(self)
@@ -95,14 +94,8 @@ class Dataset(db.Model):  # type: ignore
     dataset_other = db.relationship(
         "DatasetOther", back_populates="dataset", uselist=False, cascade="all, delete"
     )
-    dataset_record_keys = db.relationship(
-        "DatasetRecordKeys",
-        back_populates="dataset",
-        uselist=False,
-        cascade="all, delete",
-    )
-    dataset_related_item = db.relationship(
-        "DatasetRelatedItem", back_populates="dataset", cascade="all, delete"
+    dataset_related_identifier = db.relationship(
+        "DatasetRelatedIdentifier", back_populates="dataset", cascade="all, delete"
     )
     dataset_rights = db.relationship(
         "DatasetRights", back_populates="dataset", cascade="all, delete"
@@ -138,7 +131,7 @@ class Dataset(db.Model):  # type: ignore
                 if not i.creator
             ],
             "about": self.dataset_other.to_dict_metadata(),
-            "publisher": self.dataset_other.to_dict_publisher(),  # type: ignore
+            "managing_organization": self.dataset_other.to_dict_managing_organization(),  # type: ignore
             "access": self.dataset_access.to_dict_metadata(),
             "consent": self.dataset_consent.to_dict_metadata(),
             "dates": [i.to_dict_metadata() for i in self.dataset_date],  # type: ignore
@@ -158,9 +151,9 @@ class Dataset(db.Model):  # type: ignore
                 for i in self.dataset_contributors  # type: ignore
                 if i.creator
             ],
-            "record_keys": self.dataset_record_keys.to_dict_metadata(),
-            "related_items": [
-                i.to_dict_metadata() for i in self.dataset_related_item  # type: ignore
+            "related_identifier": [
+                i.to_dict_metadata()
+                for i in self.dataset_related_identifier  # type: ignore
             ],
             "rights": [
                 i.to_dict_metadata() for i in self.dataset_rights  # type: ignore

@@ -12,9 +12,9 @@ class DatasetOther(db.Model):  # type: ignore
         self.managing_organization_name = ""
         self.managing_organization_ror_id = ""
         self.size = ""
+        self.format = ""
         self.standards_followed = ""
         self.acknowledgement = ""
-        self.publisher = ""
 
     __tablename__ = "dataset_other"
 
@@ -23,9 +23,9 @@ class DatasetOther(db.Model):  # type: ignore
     managing_organization_name = db.Column(db.String, nullable=False)
     managing_organization_ror_id = db.Column(db.String, nullable=False)
     size = db.Column(ARRAY(String), nullable=False)
+    format = db.Column(ARRAY(String), nullable=False)
     standards_followed = db.Column(db.String, nullable=False)
     acknowledgement = db.Column(db.String, nullable=False)
-    publisher = db.Column(db.String, nullable=False)
 
     dataset_id = db.Column(
         db.CHAR(36), db.ForeignKey("dataset.id"), primary_key=True, nullable=False
@@ -40,7 +40,7 @@ class DatasetOther(db.Model):  # type: ignore
             "standards_followed": self.standards_followed,
             "acknowledgement": self.acknowledgement,
             "size": self.size,
-            "publisher": self.publisher,
+            "format": self.format,
             "resource_type": self.resource_type,
         }
 
@@ -51,10 +51,9 @@ class DatasetOther(db.Model):  # type: ignore
             "resource_type": self.resource_type,
         }
 
-    def to_dict_publisher(self):
+    def to_dict_managing_organization(self):
         return {
             "managing_organization_name": self.managing_organization_name,
-            "publisher": self.publisher,
         }
 
     @staticmethod
@@ -72,12 +71,12 @@ class DatasetOther(db.Model):  # type: ignore
             self.managing_organization_ror_id = data["managing_organization_ror_id"]
         if "size" in data:
             self.size = data["size"]
+        if "format" in data:
+            self.format = data["format"]
         if "acknowledgement" in data:
             self.acknowledgement = data["acknowledgement"]
         if "standards_followed" in data:
             self.standards_followed = data["standards_followed"]
-        if "publisher" in data:
-            self.publisher = data["publisher"]
         if "resource_type" in data:
             self.resource_type = data["resource_type"]
         self.dataset.touch_dataset()
