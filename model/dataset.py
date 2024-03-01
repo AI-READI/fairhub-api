@@ -152,7 +152,8 @@ class Dataset(db.Model):  # type: ignore
                 if i.creator
             ],
             "related_identifier": [
-                i.to_dict_metadata() for i in self.dataset_related_identifier  # type: ignore
+                i.to_dict_metadata()
+                for i in self.dataset_related_identifier  # type: ignore
             ],
             "rights": [
                 i.to_dict_metadata() for i in self.dataset_rights  # type: ignore

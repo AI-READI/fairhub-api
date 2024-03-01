@@ -59,18 +59,18 @@ class DatasetRelatedIdentifierResource(Resource):
                 "additionalProperties": False,
                 "properties": {
                     "id": {"type": "string"},
-                    "identifier": {"type": "string"},
-                    "identifier_type": {"type": "string"},
-                    "relation_type": {"type": "string"},
+                    "identifier": {"type": "string", "minLength": 1},
+                    "identifier_type": {"type": ["string", "null"], "minLength": 1},
+                    "relation_type": {"type": ["string", "null"], "minLength": 1},
                     "related_metadata_scheme": {"type": "string"},
-
                     "scheme_uri": {"type": "string"},
                     "scheme_type": {"type": "string"},
-                    "resource_type": {"type": "string", "minLength": 1},
-                    "volume": {"type": "string"},
+                    "resource_type": {"type": ["string", "null"]},
                 },
                 "required": [
                     "identifier",
+                    "identifier_type",
+                    "relation_type",
                     "related_metadata_scheme",
                     "scheme_uri",
                     "scheme_type",
@@ -90,7 +90,7 @@ class DatasetRelatedIdentifierResource(Resource):
             if "id" in i and i["id"]:
                 dataset_related_identifier_ = model.DatasetRelatedIdentifier.query.get(i["id"])
                 if not dataset_related_identifier_:
-                    return f"Study link {i['id']} Id is not found", 404
+                    return f"{i['id']} Id is not found", 404
                 dataset_related_identifier_.update(i)
                 list_of_elements.append(dataset_related_identifier_.to_dict())
             elif "id" not in i or not i["id"]:
@@ -111,10 +111,10 @@ class DatasetRelatedIdentifierUpdate(Resource):
     @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
-        self,
-        study_id: int,
-        dataset_id: int,  # pylint: disable= unused-argument
-        related_identifier_id: int,
+            self,
+            study_id: int,
+            dataset_id: int,  # pylint: disable= unused-argument
+            related_identifier_id: int,
     ):
         """Delete dataset related identifier"""
         study_obj = model.Study.query.get(study_id)

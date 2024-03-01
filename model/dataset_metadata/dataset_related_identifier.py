@@ -43,8 +43,10 @@ class DatasetRelatedIdentifier(db.Model):  # type: ignore
 
     def to_dict_metadata(self):
         return {
-            "identifier_type": self.identifier_type,
-            "scheme_uri": self.scheme_uri,
+            "id": self.id,
+            "identifier": self.identifier,
+            "relation_type": self.relation_type,
+            "resource_type": self.resource_type,
         }
 
     @staticmethod
@@ -61,4 +63,5 @@ class DatasetRelatedIdentifier(db.Model):  # type: ignore
         self.scheme_uri = data["scheme_uri"]
         self.scheme_type = data["scheme_type"]
         self.resource_type = data["resource_type"]
+
         self.dataset.touch_dataset()
