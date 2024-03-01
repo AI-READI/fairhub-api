@@ -131,7 +131,7 @@ class Dataset(db.Model):  # type: ignore
                 if not i.creator
             ],
             "about": self.dataset_other.to_dict_metadata(),
-            # "publisher": self.dataset_other.to_dict_publisher(),  # type: ignore
+            "managing_organization": self.dataset_other.to_dict_managing_organization(),  # type: ignore
             "access": self.dataset_access.to_dict_metadata(),
             "consent": self.dataset_consent.to_dict_metadata(),
             "dates": [i.to_dict_metadata() for i in self.dataset_date],  # type: ignore

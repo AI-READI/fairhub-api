@@ -15,7 +15,6 @@ class DatasetOther(db.Model):  # type: ignore
         self.format = ""
         self.standards_followed = ""
         self.acknowledgement = ""
-        self.publisher = ""
 
     __tablename__ = "dataset_other"
 
@@ -27,7 +26,6 @@ class DatasetOther(db.Model):  # type: ignore
     format = db.Column(ARRAY(String), nullable=False)
     standards_followed = db.Column(db.String, nullable=False)
     acknowledgement = db.Column(db.String, nullable=False)
-    publisher = db.Column(db.String, nullable=False)
 
     dataset_id = db.Column(
         db.CHAR(36), db.ForeignKey("dataset.id"), primary_key=True, nullable=False
@@ -43,7 +41,6 @@ class DatasetOther(db.Model):  # type: ignore
             "acknowledgement": self.acknowledgement,
             "size": self.size,
             "format": self.format,
-            "publisher": self.publisher,
             "resource_type": self.resource_type,
         }
 
@@ -54,10 +51,9 @@ class DatasetOther(db.Model):  # type: ignore
             "resource_type": self.resource_type,
         }
 
-    def to_dict_publisher(self):
+    def to_dict_managing_organization(self):
         return {
             "managing_organization_name": self.managing_organization_name,
-            "publisher": self.publisher,
         }
 
     @staticmethod
@@ -81,8 +77,6 @@ class DatasetOther(db.Model):  # type: ignore
             self.acknowledgement = data["acknowledgement"]
         if "standards_followed" in data:
             self.standards_followed = data["standards_followed"]
-        if "publisher" in data:
-            self.publisher = data["publisher"]
         if "resource_type" in data:
             self.resource_type = data["resource_type"]
         self.dataset.touch_dataset()
