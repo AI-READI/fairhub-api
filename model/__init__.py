@@ -38,6 +38,10 @@ from .study_metadata.study_link import StudyLink
 from .study_metadata.study_location import StudyLocation
 from .study_metadata.study_location_contact_list import StudyLocationContactList
 from .study_metadata.study_other import StudyOther
+from .study_metadata.study_keywords import StudyKeywords
+from .study_metadata.study_conditions import StudyConditions
+from .study_metadata.study_collaborators import StudyCollaborators
+from .study_metadata.study_oversight import StudyOversight
 from .study_metadata.study_overall_official import StudyOverallOfficial
 from .study_metadata.study_reference import StudyReference
 from .study_metadata.study_sponsors_collaborators import StudySponsorsCollaborators
@@ -85,6 +89,10 @@ __all__ = [
     "StudyLocation",
     "StudyLocationContactList",
     "StudyOther",
+    "StudyKeywords",
+    "StudyConditions",
+    "StudyCollaborators",
+    "StudyOversight",
     "StudyOverallOfficial",
     "StudyRedcap",
     "StudyDashboard",

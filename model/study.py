@@ -28,7 +28,7 @@ class Study(db.Model):  # type: ignore
         self.study_description = model.StudyDescription(self)
         self.study_identification.append(model.StudyIdentification(self, False))
         self.study_other = model.StudyOther(self)
-        # self.study_contributors = model.StudyContributor(self)
+        self.study_oversight = model.StudyOversight(self)
 
     __tablename__ = "study"
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -128,6 +128,27 @@ class Study(db.Model):  # type: ignore
     )
     study_other = db.relationship(
         "StudyOther",
+        uselist=False,
+        back_populates="study",
+        cascade="all, delete",
+    )
+    study_keywords = db.relationship(
+        "StudyKeywords",
+        back_populates="study",
+        cascade="all, delete",
+    )
+    study_conditions = db.relationship(
+        "StudyConditions",
+        back_populates="study",
+        cascade="all, delete",
+    )
+    study_collaborators = db.relationship(
+        "StudyCollaborators",
+        back_populates="study",
+        cascade="all, delete",
+    )
+    study_oversight = db.relationship(
+        "StudyOversight",
         uselist=False,
         back_populates="study",
         cascade="all, delete",
