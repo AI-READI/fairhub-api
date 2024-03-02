@@ -36,6 +36,7 @@ from .study_metadata.study_intervention import StudyIntervention
 from .study_metadata.study_ipdsharing import StudyIpdsharing
 from .study_metadata.study_link import StudyLink
 from .study_metadata.study_location import StudyLocation
+from .study_metadata.study_location_contact_list import StudyLocationContactList
 from .study_metadata.study_other import StudyOther
 from .study_metadata.study_overall_official import StudyOverallOfficial
 from .study_metadata.study_reference import StudyReference
@@ -82,6 +83,7 @@ __all__ = [
     "StudyIpdsharing",
     "StudyLink",
     "StudyLocation",
+    "StudyLocationContactList",
     "StudyOther",
     "StudyOverallOfficial",
     "StudyRedcap",
