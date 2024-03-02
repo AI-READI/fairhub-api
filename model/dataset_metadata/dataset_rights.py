@@ -18,6 +18,7 @@ class DatasetRights(db.Model):  # type: ignore
     uri = db.Column(db.String, nullable=False)
     identifier = db.Column(db.String, nullable=False)
     identifier_scheme = db.Column(db.String, nullable=False)
+    identifier_scheme_uri = db.Column(db.String, nullable=False)
     license_text = db.Column(db.String, nullable=False)
 
     created_at = db.Column(db.BigInteger, nullable=False)
@@ -32,6 +33,7 @@ class DatasetRights(db.Model):  # type: ignore
             "uri": self.uri,
             "identifier": self.identifier,
             "identifier_scheme": self.identifier_scheme,
+            "identifier_scheme_uri": self.identifier_scheme_uri,
             "created_at": self.created_at,
             "license_text": self.license_text,
         }
@@ -54,5 +56,6 @@ class DatasetRights(db.Model):  # type: ignore
         self.uri = data["uri"]
         self.identifier = data["identifier"]
         self.identifier_scheme = data["identifier_scheme"]
+        self.identifier_scheme_uri = data["identifier_scheme_uri"]
         self.license_text = data["license_text"]
         self.dataset.touch_dataset()
