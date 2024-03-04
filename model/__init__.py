@@ -26,7 +26,6 @@ from .study_dashboard import StudyDashboard
 from .study_metadata.arm import Arm
 from .study_metadata.identifiers import Identifiers
 from .study_metadata.study_arm import StudyArm
-from .study_metadata.study_sponsors import StudySponsors
 from .study_metadata.study_collaborators import StudyCollaborators
 from .study_metadata.study_conditions import StudyConditions
 from .study_metadata.study_contact import StudyContact
@@ -41,6 +40,7 @@ from .study_metadata.study_location_contact_list import StudyLocationContactList
 from .study_metadata.study_other import StudyOther
 from .study_metadata.study_overall_official import StudyOverallOfficial
 from .study_metadata.study_oversight import StudyOversight
+from .study_metadata.study_sponsors import StudySponsors
 from .study_metadata.study_sponsors_collaborators import StudySponsorsCollaborators
 from .study_metadata.study_status import StudyStatus
 from .study_redcap import StudyRedcap

@@ -76,11 +76,11 @@ class StudySponsors(db.Model):  # type: ignore
             "responsible_party_investigator_title": self.responsible_party_investigator_title,
             "responsible_party_investigator_identifier_value": self.responsible_party_investigator_identifier_value,
             "responsible_party_investigator_identifier_scheme": self.responsible_party_investigator_identifier_scheme,
-            "responsible_party_investigator_identifier_scheme_uri": self.responsible_party_investigator_identifier_scheme_uri,
+            "responsible_party_investigator_identifier_scheme_uri": self.responsible_party_investigator_identifier_scheme_uri,  # noqa: E501
             "responsible_party_investigator_affiliation_name": self.responsible_party_investigator_affiliation_name,
-            "responsible_party_investigator_affiliation_identifier_scheme": self.responsible_party_investigator_affiliation_identifier_scheme,
-            "responsible_party_investigator_affiliation_identifier_value": self.responsible_party_investigator_affiliation_identifier_value,
-            "responsible_party_investigator_affiliation_identifier_scheme_uri": self.responsible_party_investigator_affiliation_identifier_scheme_uri,
+            "responsible_party_investigator_affiliation_identifier_scheme": self.responsible_party_investigator_affiliation_identifier_scheme,  # noqa: E501
+            "responsible_party_investigator_affiliation_identifier_value": self.responsible_party_investigator_affiliation_identifier_value,  # noqa: E501
+            "responsible_party_investigator_affiliation_identifier_scheme_uri": self.responsible_party_investigator_affiliation_identifier_scheme_uri,  # noqa: E501
             "lead_sponsor_name": self.lead_sponsor_name,
             "lead_sponsor_identifier": self.lead_sponsor_identifier,
             "lead_sponsor_scheme": self.lead_sponsor_scheme,

@@ -24,7 +24,6 @@ class Study(db.Model):  # type: ignore
         self.study_sponsors_collaborators = model.StudySponsorsCollaborators(self)
         self.study_design = model.StudyDesign(self)
         self.study_eligibility = model.StudyEligibility(self)
-        self.study_ipdsharing = model.StudyIpdsharing(self)
         self.study_description = model.StudyDescription(self)
         self.study_identification.append(model.StudyIdentification(self, False))
         self.study_other = model.StudyOther(self)
@@ -114,17 +113,7 @@ class Study(db.Model):  # type: ignore
         back_populates="study",
         cascade="all, delete",
     )
-    study_ipdsharing = db.relationship(
-        "StudyIpdsharing",
-        uselist=False,
-        back_populates="study",
-        cascade="all, delete",
-    )
-    study_link = db.relationship(
-        "StudyLink",
-        back_populates="study",
-        cascade="all, delete",
-    )
+
     study_location = db.relationship(
         "StudyLocation",
         back_populates="study",
@@ -159,11 +148,6 @@ class Study(db.Model):  # type: ignore
     )
     study_overall_official = db.relationship(
         "StudyOverallOfficial",
-        back_populates="study",
-        cascade="all, delete",
-    )
-    study_reference = db.relationship(
-        "StudyReference",
         back_populates="study",
         cascade="all, delete",
     )
