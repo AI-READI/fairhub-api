@@ -14,18 +14,19 @@ class StudyOverallOfficial(db.Model):  # type: ignore
         self.id = str(uuid.uuid4())
         self.study = study
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
-        self.degree = ""
-        self.identifier = ""
-        self.identifier_scheme = ""
-        self.identifier_scheme_uri = ""
-        self.affiliation_identifier = ""
-        self.affiliation_identifier_scheme = ""
-        self.affiliation_identifier_scheme_uri = ""
+        # self.degree = ""
+        # self.identifier = ""
+        # self.identifier_scheme = ""
+        # self.identifier_scheme_uri = ""
+        # self.affiliation_identifier = ""
+        # self.affiliation_identifier_scheme = ""
+        # self.affiliation_identifier_scheme_uri = ""
 
     __tablename__ = "study_overall_official"
 
     id = db.Column(db.CHAR(36), primary_key=True)
-    name = db.Column(db.String, nullable=False)
+    first_name = db.Column(db.String, nullable=False)
+    last_name = db.Column(db.String, nullable=False)
     degree = db.Column(db.String, nullable=False)
     identifier = db.Column(db.String, nullable=False)
     identifier_scheme = db.Column(db.String, nullable=False)
@@ -47,7 +48,8 @@ class StudyOverallOfficial(db.Model):  # type: ignore
         """Converts the study to a dictionary"""
         return {
             "id": self.id,
-            "name": self.name,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
             "affiliation": self.affiliation,
             "role": self.role,
             "degree": self.degree,
@@ -63,7 +65,8 @@ class StudyOverallOfficial(db.Model):  # type: ignore
     def to_dict_metadata(self):
         """Converts the study metadata to a dictionary"""
         return {
-            "name": self.name,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
             "affiliation": self.affiliation,
             "role": self.role,
         }
@@ -78,7 +81,8 @@ class StudyOverallOfficial(db.Model):  # type: ignore
 
     def update(self, data: dict):
         """Updates the study from a dictionary"""
-        self.name = data["name"]
+        self.first_name = data["first_name"]
+        self.last_name = data["last_name"]
         self.affiliation = data["affiliation"]
         self.degree = data["degree"]
         self.identifier = data["identifier"]

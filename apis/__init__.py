@@ -29,19 +29,15 @@ from .participant import api as participants_api
 from .redcap import api as redcap
 from .study import api as study_api
 from .study_metadata.study_arm import api as arm
-from .study_metadata.study_available_ipd import api as available_ipd
 from .study_metadata.study_contact import api as contact
 from .study_metadata.study_description import api as study_description
 from .study_metadata.study_design import api as design
 from .study_metadata.study_eligibility import api as eligibility
 from .study_metadata.study_identification import api as identification
 from .study_metadata.study_intervention import api as intervention
-from .study_metadata.study_ipdsharing import api as ipdsharing
-from .study_metadata.study_link import api as link
 from .study_metadata.study_location import api as location
 from .study_metadata.study_other import api as other
 from .study_metadata.study_overall_official import api as overall_official
-from .study_metadata.study_reference import api as reference
 from .study_metadata.study_sponsors_collaborators import api as sponsors_collaborator
 from .study_metadata.study_status import api as status
 from .user import api as user
@@ -77,17 +73,13 @@ __all__ = [
     "participants_api",
     "study_api",
     "arm",
-    "available_ipd",
     "contact",
     "design",
     "eligibility",
     "intervention",
-    "ipdsharing",
-    "link",
     "location",
     "other",
     "overall_official",
-    "reference",
     "sponsors_collaborator",
     "status",
     "user",
