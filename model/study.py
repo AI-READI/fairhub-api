@@ -32,8 +32,11 @@ class Study(db.Model):  # type: ignore
 
     __tablename__ = "study"
     id = db.Column(db.CHAR(36), primary_key=True)
-    title = db.Column(db.String, nullable=False)
+
+    title = db.Column(db.String(300), nullable=False)
     image = db.Column(db.String, nullable=False)
+    acronym = db.Column(db.String(14), nullable=False)
+
     created_at = db.Column(db.BigInteger, nullable=False)
     updated_on = db.Column(db.BigInteger, nullable=False)
 
@@ -189,6 +192,7 @@ class Study(db.Model):  # type: ignore
         return {
             "id": self.id,
             "title": self.title,
+            "acronym": self.acronym,
             "image": self.image,
             "created_at": self.created_at,
             "updated_on": self.updated_on,
@@ -257,6 +261,7 @@ class Study(db.Model):  # type: ignore
 
         self.title = data["title"]
         self.image = data["image"]
+        self.acronym = data["acronym"]
         self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
 
     def validate(self):
