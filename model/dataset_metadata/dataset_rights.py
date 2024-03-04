@@ -10,7 +10,7 @@ class DatasetRights(db.Model):  # type: ignore
         self.id = str(uuid.uuid4())
         self.dataset = dataset
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
-        self.identifier_scheme = ""
+        self.identifier_scheme_uri = ""
 
     __tablename__ = "dataset_rights"
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -57,6 +57,6 @@ class DatasetRights(db.Model):  # type: ignore
         self.uri = data["uri"]
         self.identifier = data["identifier"]
         self.identifier_scheme = data["identifier_scheme"]
-        self.identifier_scheme_uri = data["identifier_scheme_uri"]
+        self.identifier_scheme_uri = data["identifier_scheme_uri"] if "identifier_scheme_uri" in data else ""
         self.license_text = data["license_text"]
         self.dataset.touch_dataset()
