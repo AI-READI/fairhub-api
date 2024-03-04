@@ -10,6 +10,7 @@ class DatasetRights(db.Model):  # type: ignore
         self.id = str(uuid.uuid4())
         self.dataset = dataset
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
+        self.identifier_scheme = ""
 
     __tablename__ = "dataset_rights"
     id = db.Column(db.CHAR(36), primary_key=True)

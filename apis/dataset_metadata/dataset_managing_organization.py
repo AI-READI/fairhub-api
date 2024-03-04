@@ -8,7 +8,6 @@ import model
 from apis.authentication import is_granted
 from apis.dataset_metadata_namespace import api
 
-
 dataset_managing_organization = api.model(
     "DatasetManagingOrganization",
     {
@@ -51,12 +50,8 @@ class DatasetManagingOrganization(Resource):
                 "managing_organization_ror_id": {
                     "type": "string",
                 },
-
             },
-            "required": [
-                "managing_organization_name",
-                "managing_organization_ror_id"
-            ],
+            "required": ["managing_organization_name", "managing_organization_ror_id"],
         }
         try:
             validate(instance=request.json, schema=schema)

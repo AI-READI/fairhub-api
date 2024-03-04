@@ -1,6 +1,5 @@
-import uuid
 import datetime
-
+import uuid
 from datetime import timezone
 
 from model import Study
@@ -28,7 +27,8 @@ class StudyConditions(db.Model):  # type: ignore
 
     study_id = db.Column(
         db.CHAR(36),
-        db.ForeignKey("study.id", ondelete="CASCADE"), nullable=False,
+        db.ForeignKey("study.id", ondelete="CASCADE"),
+        nullable=False,
     )
     study = db.relationship("Study", back_populates="study_conditions")
 
@@ -42,7 +42,6 @@ class StudyConditions(db.Model):  # type: ignore
             "scheme_uri": self.scheme_uri,
             "condition_uri": self.condition_uri,
             "created_at": self.created_at,
-
         }
 
     # def to_dict_metadata(self):

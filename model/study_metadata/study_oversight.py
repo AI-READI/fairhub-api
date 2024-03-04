@@ -12,6 +12,7 @@ class StudyOversight(db.Model):  # type: ignore
         self.fda_regulated_device = ""
         self.human_subject_review_status = ""
         self.has_dmc = ""
+
     __tablename__ = "study_oversight"
 
     fda_regulated_drug = db.Column(db.String, nullable=False)
@@ -21,7 +22,9 @@ class StudyOversight(db.Model):  # type: ignore
 
     study_id = db.Column(
         db.CHAR(36),
-        db.ForeignKey("study.id", ondelete="CASCADE"), primary_key=True, nullable=False,
+        db.ForeignKey("study.id", ondelete="CASCADE"),
+        primary_key=True,
+        nullable=False,
     )
     study = db.relationship("Study", back_populates="study_oversight")
 

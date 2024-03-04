@@ -30,9 +30,13 @@ class StudyLocationContactList(db.Model):  # type: ignore
     created_at = db.Column(db.BigInteger, nullable=False)
 
     study_location_id = db.Column(
-        db.CHAR(36), db.ForeignKey("study_location.id", ondelete="CASCADE"), nullable=False
+        db.CHAR(36),
+        db.ForeignKey("study_location.id", ondelete="CASCADE"),
+        nullable=False,
     )
-    study_location = db.relationship("StudyLocation", back_populates="study_location_contact_list")
+    study_location = db.relationship(
+        "StudyLocation", back_populates="study_location_contact_list"
+    )
 
     def to_dict(self):
         """Converts the study to a dictionary"""
