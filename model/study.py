@@ -64,8 +64,9 @@ class Study(db.Model):  # type: ignore
         back_populates="study",
         cascade="all, delete",
     )
-    study_available_ipd = db.relationship(
-        "StudyAvailableIpd",
+    study_sponsors = db.relationship(
+        "StudySponsors",
+        uselist=False,
         back_populates="study",
         cascade="all, delete",
     )
@@ -210,7 +211,7 @@ class Study(db.Model):  # type: ignore
         return {
             "arms": [i.to_dict_metadata() for i in self.study_arm],  # type: ignore
             "available_ipd": [
-                i.to_dict_metadata() for i in self.study_available_ipd  # type: ignore
+                i.to_dict_metadata() for i in self.study_sponsors  # type: ignore
             ],
             "contacts": [
                 i.to_dict_metadata() for i in self.study_contact  # type: ignore
