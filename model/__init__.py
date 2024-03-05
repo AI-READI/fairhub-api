@@ -26,9 +26,9 @@ from .study_dashboard import StudyDashboard
 from .study_metadata.arm import Arm
 from .study_metadata.identifiers import Identifiers
 from .study_metadata.study_arm import StudyArm
+from .study_metadata.study_central_contact import StudyCentralContact
 from .study_metadata.study_collaborators import StudyCollaborators
 from .study_metadata.study_conditions import StudyConditions
-from .study_metadata.study_central_contact import StudyCentralContact
 from .study_metadata.study_description import StudyDescription
 from .study_metadata.study_design import StudyDesign
 from .study_metadata.study_eligibility import StudyEligibility

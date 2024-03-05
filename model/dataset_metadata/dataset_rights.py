@@ -57,6 +57,8 @@ class DatasetRights(db.Model):  # type: ignore
         self.uri = data["uri"]
         self.identifier = data["identifier"]
         self.identifier_scheme = data["identifier_scheme"]
-        self.identifier_scheme_uri = data["identifier_scheme_uri"] if "identifier_scheme_uri" in data else ""
+        self.identifier_scheme_uri = (
+            data["identifier_scheme_uri"] if "identifier_scheme_uri" in data else ""
+        )
         self.license_text = data["license_text"]
         self.dataset.touch_dataset()

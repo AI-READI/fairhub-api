@@ -1,6 +1,3 @@
-from sqlalchemy import String
-from sqlalchemy.dialects.postgresql import ARRAY
-
 from model import Study
 
 from ..db import db
@@ -140,7 +137,9 @@ class StudySponsors(db.Model):  # type: ignore
         self.lead_sponsor_name = data["lead_sponsor_name"]
         self.lead_sponsor_identifier = data["lead_sponsor_identifier"]
         self.lead_sponsor_identifier_scheme = data["lead_sponsor_identifier_scheme"]
-        self.lead_sponsor_identifier_scheme_uri = data["lead_sponsor_identifier_scheme_uri"]
+        self.lead_sponsor_identifier_scheme_uri = data[
+            "lead_sponsor_identifier_scheme_uri"
+        ]
 
     def validate(self):
         """Validates the lead_sponsor_last_name study"""

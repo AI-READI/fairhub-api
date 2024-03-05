@@ -130,7 +130,9 @@ class StudyCentralContactResource(Resource):
                 study_central_contact_.update(i)
                 list_of_elements.append(study_central_contact_.to_dict())
             elif "id" not in i or not i["id"]:
-                study_central_contact_ = model.StudyCentralContact.from_data(study_obj, i)
+                study_central_contact_ = model.StudyCentralContact.from_data(
+                    study_obj, i
+                )
                 model.db.session.add(study_central_contact_)
                 list_of_elements.append(study_central_contact_.to_dict())
 

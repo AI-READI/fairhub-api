@@ -19,12 +19,22 @@ study_sponsors = api.model(
         "responsible_party_investigator_last_name": fields.String(required=True),
         "responsible_party_investigator_title": fields.String(required=True),
         "responsible_party_investigator_identifier_value": fields.String(required=True),
-        "responsible_party_investigator_identifier_scheme": fields.String(required=True),
-        "responsible_party_investigator_identifier_scheme_uri": fields.String(required=True),
+        "responsible_party_investigator_identifier_scheme": fields.String(
+            required=True
+        ),
+        "responsible_party_investigator_identifier_scheme_uri": fields.String(
+            required=True
+        ),
         "responsible_party_investigator_affiliation_name": fields.String(required=True),
-        "responsible_party_investigator_affiliation_identifier_scheme": fields.String(required=True),
-        "responsible_party_investigator_affiliation_identifier_value": fields.String(required=True),
-        "responsible_party_investigator_affiliation_identifier_scheme_uri": fields.String(required=True),
+        "responsible_party_investigator_affiliation_identifier_scheme": fields.String(
+            required=True
+        ),
+        "responsible_party_investigator_affiliation_identifier_value": fields.String(
+            required=True
+        ),
+        "responsible_party_investigator_affiliation_identifier_scheme_uri": fields.String(
+            required=True
+        ),
         "lead_sponsor_name": fields.String(required=True),
         "lead_sponsor_identifier": fields.String(required=True),
         "lead_sponsor_scheme": fields.String(required=True),
@@ -84,17 +94,41 @@ class StudySponsorsResource(Resource):
                 "responsible_party_investigator_title": {
                     "type": "string",
                 },
-                "responsible_party_investigator_identifier_value": {"type": "string", "minLength": 1},
-                "responsible_party_investigator_identifier_scheme": {"type": "string", "minLength": 1},
-                "responsible_party_investigator_identifier_scheme_uri": {"type": "string", "minLength": 1},
-                "responsible_party_investigator_affiliation_name": {"type": "string", "minLength": 1},
-                "responsible_party_investigator_affiliation_identifier_scheme": {"type": "string", "minLength": 1},
-                "responsible_party_investigator_affiliation_identifier_value": {"type": "string", "minLength": 1},
-                "responsible_party_investigator_affiliation_identifier_scheme_uri": {"type": "string", "minLength": 1},
+                "responsible_party_investigator_identifier_value": {
+                    "type": "string",
+                    "minLength": 1,
+                },
+                "responsible_party_investigator_identifier_scheme": {
+                    "type": "string",
+                    "minLength": 1,
+                },
+                "responsible_party_investigator_identifier_scheme_uri": {
+                    "type": "string",
+                    "minLength": 1,
+                },
+                "responsible_party_investigator_affiliation_name": {
+                    "type": "string",
+                    "minLength": 1,
+                },
+                "responsible_party_investigator_affiliation_identifier_scheme": {
+                    "type": "string",
+                    "minLength": 1,
+                },
+                "responsible_party_investigator_affiliation_identifier_value": {
+                    "type": "string",
+                    "minLength": 1,
+                },
+                "responsible_party_investigator_affiliation_identifier_scheme_uri": {
+                    "type": "string",
+                    "minLength": 1,
+                },
                 "lead_sponsor_name": {"type": "string", "minLength": 1},
                 "lead_sponsor_identifier": {"type": "string", "minLength": 1},
                 "lead_sponsor_identifier_scheme": {"type": "string", "minLength": 1},
-                "lead_sponsor_identifier_scheme_uri": {"type": "string", "minLength": 1},
+                "lead_sponsor_identifier_scheme_uri": {
+                    "type": "string",
+                    "minLength": 1,
+                },
             },
         }
 

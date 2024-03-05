@@ -2,7 +2,7 @@
 
 import typing
 
-from flask import request, Response
+from flask import Response, request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -10,7 +10,6 @@ import model
 from apis.study_metadata_namespace import api
 
 from ..authentication import is_granted
-
 
 study_collaborators = api.model(
     "StudyCollaborators",

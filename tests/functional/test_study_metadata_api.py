@@ -3010,6 +3010,7 @@ def test_get_oversight_metadata(clients):
 #     assert editor_response.status_code == 204
 #
 
+
 # ------------------- SPONSORS METADATA ------------------- #
 def test_put_sponsors_metadata(clients):
     """

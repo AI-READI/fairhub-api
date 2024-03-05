@@ -15,7 +15,7 @@ class StudyCentralContact(db.Model):  # type: ignore
         self.study = study
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
 
-    __tablename__ = "study_contact"
+    __tablename__ = "study_central_contact"
 
     id = db.Column(db.CHAR(36), primary_key=True)
     first_name = db.Column(db.String, nullable=False)
@@ -37,7 +37,7 @@ class StudyCentralContact(db.Model):  # type: ignore
     study_id = db.Column(
         db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=False
     )
-    study = db.relationship("Study", back_populates="study_contact")
+    study = db.relationship("Study", back_populates="study_central_contact")
 
     def to_dict(self):
         """Converts the study to a dictionary"""
@@ -89,7 +89,9 @@ class StudyCentralContact(db.Model):  # type: ignore
         self.affiliation = data["affiliation"]
         self.affiliation_identifier = data["affiliation_identifier"]
         self.affiliation_identifier_scheme = data["affiliation_identifier_scheme"]
-        self.affiliation_identifier_scheme_uri = data["affiliation_identifier_scheme_uri"]
+        self.affiliation_identifier_scheme_uri = data[
+            "affiliation_identifier_scheme_uri"
+        ]
         self.phone = data["phone"]
         self.phone_ext = data["phone_ext"]
         self.email_address = data["email_address"]
