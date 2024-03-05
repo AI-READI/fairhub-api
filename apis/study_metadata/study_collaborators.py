@@ -2,7 +2,7 @@
 
 import typing
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -20,7 +20,6 @@ study_collaborators = api.model(
 )
 
 
-
 @api.route("/study/<study_id>/metadata/collaborators")
 class StudyCollaboratorsResource(Resource):
     """Study Collaborators Metadata"""
@@ -32,20 +31,30 @@ class StudyCollaboratorsResource(Resource):
     def get(self, study_id: int):
         """Get study collaborators metadata"""
         study_ = model.Study.query.get(study_id)
-        study_collaborators_ = study_.study_sponsors_collaborators
+        study_collaborators_ = study_.study_collaborators
 
         return [collab.to_dict() for collab in study_collaborators_], 200
 
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def put(self, study_id: int):
+    def post(self, study_id: int):
         """updating study collaborators"""
         # Schema validation
         schema = {
             "type": "array",
-            "items": {"type": "string", "minLength": 1},
+            "additionalProperties": False,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {"type": "string"},
+                    "name": {"type": "string"},
+                    "identifier": {"type": "string"},
+                    "scheme": {"type": "string"},
+                    "scheme_uri": {"type": "string"},
+                },
+                "required": ["name", "identifier", "scheme", "scheme_uri"],
+            },
         }
-
         try:
             validate(request.json, schema)
         except ValidationError as e:
@@ -57,7 +66,36 @@ class StudyCollaboratorsResource(Resource):
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not modify study", 403
 
-        study_obj.study_collaborators.update(data)
+        list_of_elements = []
+        for i in data:
+            if "id" in i and i["id"]:
+                study_collaborators_ = model.StudyCollaborators.query.get(i["id"])
+                study_collaborators_.update(i)
+            else:
+                study_collaborators_ = model.StudyCollaborators.from_data(study_obj, i)
+                model.db.session.add(study_collaborators_)
+            list_of_elements.append(study_collaborators_.to_dict())
+        model.db.session.commit()
+
+        return list_of_elements, 201
+
+
+@api.route("/study/<study_id>/metadata/collaborators/<collaborator_id>")
+class StudyLocationUpdate(Resource):
+    """Study Location Metadata"""
+
+    @api.doc("delete study locations")
+    @api.response(204, "Success")
+    @api.response(400, "Validation Error")
+    def delete(self, study_id: int, collaborator_id: int):
+        """Delete study location metadata"""
+        study_obj = model.Study.query.get(study_id)
+        if not is_granted("study_metadata", study_obj):
+            return "Access denied, you can not delete study", 403
+        study_collaborators_ = model.StudyCollaborators.query.get(collaborator_id)
+
+        model.db.session.delete(study_collaborators_)
 
         model.db.session.commit()
-        return study_obj.study_sponsors_collaborators.collaborator_name, 200
+
+        return Response(status=204)
