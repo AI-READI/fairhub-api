@@ -12,13 +12,14 @@ from apis.study_metadata_namespace import api
 from ..authentication import is_granted
 
 study_other = api.model(
-    "StudyOther",
+    "StudyConditions",
     {
         "id": fields.String(required=True),
-        "oversight_has_dmc": fields.Boolean(required=True),
-        "conditions": fields.String(required=True),
-        "keywords": fields.String(required=True),
-        "size": fields.String(required=True),
+        "name": fields.Boolean(required=True),
+        "classification_code": fields.String(required=True),
+        "scheme": fields.String(required=True),
+        "scheme_uri": fields.String(required=True),
+        "condition_uri": fields.String(required=True),
     },
 )
 
@@ -44,40 +45,26 @@ class StudyCondition(Resource):
     def post(self, study_id: int):
         """Create study condition metadata"""
         # Schema validation
-        # schema = {
-        #     "type": "array",
-        #     "additionalProperties": False,
-        #     "items": {
-        #         "type": "object",
-        #         "properties": {
-        #             "id": {"type": "string"},
-        #             "facility": {"type": "string", "minLength": 1},
-        #             "status": {
-        #                 "type": "string",
-        #                 "enum": [
-        #                     "Withdrawn",
-        #                     "Recruiting",
-        #                     "Active, not recruiting",
-        #                     "Not yet recruiting",
-        #                     "Suspended",
-        #                     "Enrolling by invitation",
-        #                     "Completed",
-        #                     "Terminated",
-        #                 ],
-        #             },
-        #             "city": {"type": "string", "minLength": 1},
-        #             "state": {"type": "string"},
-        #             "zip": {"type": "string"},
-        #             "country": {"type": "string", "minLength": 1},
-        #         },
-        #         "required": ["facility", "status", "city", "country"],
-        #     },
-        # }
-        #
-        # try:
-        #     validate(request.json, schema)
-        # except ValidationError as e:
-        #     return e.message, 400
+        schema = {
+            "type": "array",
+            "additionalProperties": False,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {"type": "string"},
+                    "name": {"type": "string", "minLength": 1},
+                    "classification_code": {"type": "string", "minLength": 1},
+                    "scheme": {"type": "string"},
+                    "scheme_uri": {"type": "string"},
+                    "condition_uri": {"type": "string"},
+                },
+                "required": ["name", "classification_code", "condition_uri"],
+            },
+        }
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not modify study", 403

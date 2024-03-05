@@ -42,42 +42,28 @@ class StudyKeywords(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def post(self, study_id: int):
-        """Create study condition metadata"""
+        """Create study keywords metadata"""
         # Schema validation
-        # schema = {
-        #     "type": "array",
-        #     "additionalProperties": False,
-        #     "items": {
-        #         "type": "object",
-        #         "properties": {
-        #             "id": {"type": "string"},
-        #             "facility": {"type": "string", "minLength": 1},
-        #             "status": {
-        #                 "type": "string",
-        #                 "enum": [
-        #                     "Withdrawn",
-        #                     "Recruiting",
-        #                     "Active, not recruiting",
-        #                     "Not yet recruiting",
-        #                     "Suspended",
-        #                     "Enrolling by invitation",
-        #                     "Completed",
-        #                     "Terminated",
-        #                 ],
-        #             },
-        #             "city": {"type": "string", "minLength": 1},
-        #             "state": {"type": "string"},
-        #             "zip": {"type": "string"},
-        #             "country": {"type": "string", "minLength": 1},
-        #         },
-        #         "required": ["facility", "status", "city", "country"],
-        #     },
-        # }
-        #
-        # try:
-        #     validate(request.json, schema)
-        # except ValidationError as e:
-        #     return e.message, 400
+        schema = {
+            "type": "array",
+            "additionalProperties": False,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {"type": "string"},
+                    "name": {"type": "string", "minLength": 1},
+                    "classification_code": {"type": "string", "minLength": 1},
+                    "scheme": {"type": "string"},
+                    "scheme_uri": {"type": "string"},
+                    "keyword_uri": {"type": "string"},
+                },
+                "required": ["name", "classification_code", "keyword_uri"],
+            },
+        }
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not modify study", 403
