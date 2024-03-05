@@ -7,7 +7,7 @@ from model import Study
 from ..db import db
 
 
-class StudyContact(db.Model):  # type: ignore
+class StudyCentralContact(db.Model):  # type: ignore
     """A study is a collection of datasets and participants"""
 
     def __init__(self, study: Study, role, central_contact):
@@ -61,7 +61,7 @@ class StudyContact(db.Model):  # type: ignore
     @staticmethod
     def from_data(study: Study, data: dict, role, central_contact):
         """Creates a new study from a dictionary"""
-        study_contact = StudyContact(study, role, central_contact)
+        study_contact = StudyCentralContact(study, role, central_contact)
         study_contact.update(data)
 
         return study_contact

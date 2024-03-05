@@ -247,204 +247,204 @@ def test_delete_arm_metadata(clients):
     assert editor_response.status_code == 204
 
 
-# ------------------- IPD METADATA ------------------- #
-def test_post_available_ipd_metadata(clients):
-    """
-    GIVEN a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/available-id' endpoint is requested (POST)
-    THEN check that the response is vaild and new IPD was created
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.post(
-        f"/study/{study_id}/metadata/available-ipd",
-        json=[
-            {
-                "identifier": "identifier1",
-                "type": "Clinical Study Report",
-                "url": "google.com",
-                "comment": "comment1",
-            }
-        ],
-    )
-    # Add a one second delay to prevent duplicate timestamps
-    sleep(1)
-
-    assert response.status_code == 201
-    response_data = json.loads(response.data)
-    pytest.global_available_ipd_id = response_data[0]["id"]
-
-    assert response_data[0]["identifier"] == "identifier1"
-    assert response_data[0]["type"] == "Clinical Study Report"
-    assert response_data[0]["url"] == "google.com"
-    assert response_data[0]["comment"] == "comment1"
-
-    admin_response = _admin_client.post(
-        f"/study/{study_id}/metadata/available-ipd",
-        json=[
-            {
-                "identifier": "identifier2",
-                "type": "Clinical Study Report",
-                "url": "google.com",
-                "comment": "comment2",
-            }
-        ],
-    )
-    # Add a one second delay to prevent duplicate timestamps
-    sleep(1)
-
-    assert admin_response.status_code == 201
-    admin_response_data = json.loads(admin_response.data)
-    pytest.global_available_ipd_id_admin = admin_response_data[0]["id"]
-
-    assert admin_response_data[0]["identifier"] == "identifier2"
-    assert admin_response_data[0]["type"] == "Clinical Study Report"
-    assert admin_response_data[0]["url"] == "google.com"
-    assert admin_response_data[0]["comment"] == "comment2"
-
-    editor_response = _editor_client.post(
-        f"/study/{study_id}/metadata/available-ipd",
-        json=[
-            {
-                "identifier": "identifier3",
-                "type": "Clinical Study Report",
-                "url": "google.com",
-                "comment": "comment3",
-            }
-        ],
-    )
-
-    assert editor_response.status_code == 201
-    editor_response_data = json.loads(editor_response.data)
-    pytest.global_available_ipd_id_editor = editor_response_data[0]["id"]
-
-    assert editor_response_data[0]["identifier"] == "identifier3"
-    assert editor_response_data[0]["type"] == "Clinical Study Report"
-    assert editor_response_data[0]["url"] == "google.com"
-    assert editor_response_data[0]["comment"] == "comment3"
-
-    viewer_response = _viewer_client.post(
-        f"/study/{study_id}/metadata/available-ipd",
-        json=[
-            {
-                "identifier": "identifier4",
-                "type": "Clinical Study Report",
-                "url": "google.com",
-                "comment": "comment4",
-            }
-        ],
-    )
-
-    assert viewer_response.status_code == 403
-
-
-def test_get_available_ipd_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/available-id' endpoint is requested (GET)
-    THEN check that the response is vaild and retrieves the available IPD(s)
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/available-ipd")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/available-ipd")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/available-ipd")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/available-ipd")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-    response_data = json.loads(response.data)
-    admin_response_data = json.loads(admin_response.data)
-    editor_response_data = json.loads(editor_response.data)
-    viewer_response_data = json.loads(viewer_response.data)
-
-    assert response_data[0]["identifier"] == "identifier1"
-    assert response_data[0]["type"] == "Clinical Study Report"
-    assert response_data[0]["url"] == "google.com"
-    assert response_data[0]["comment"] == "comment1"
-    assert response_data[1]["identifier"] == "identifier2"
-    assert response_data[1]["type"] == "Clinical Study Report"
-    assert response_data[1]["url"] == "google.com"
-    assert response_data[1]["comment"] == "comment2"
-    assert response_data[2]["identifier"] == "identifier3"
-    assert response_data[2]["type"] == "Clinical Study Report"
-    assert response_data[2]["url"] == "google.com"
-    assert response_data[2]["comment"] == "comment3"
-
-    assert admin_response_data[0]["identifier"] == "identifier1"
-    assert admin_response_data[0]["type"] == "Clinical Study Report"
-    assert admin_response_data[0]["url"] == "google.com"
-    assert admin_response_data[0]["comment"] == "comment1"
-    assert admin_response_data[1]["identifier"] == "identifier2"
-    assert admin_response_data[1]["type"] == "Clinical Study Report"
-    assert admin_response_data[1]["url"] == "google.com"
-    assert admin_response_data[1]["comment"] == "comment2"
-    assert admin_response_data[2]["identifier"] == "identifier3"
-    assert admin_response_data[2]["type"] == "Clinical Study Report"
-    assert admin_response_data[2]["url"] == "google.com"
-    assert admin_response_data[2]["comment"] == "comment3"
-
-    assert editor_response_data[0]["identifier"] == "identifier1"
-    assert editor_response_data[0]["type"] == "Clinical Study Report"
-    assert editor_response_data[0]["url"] == "google.com"
-    assert editor_response_data[0]["comment"] == "comment1"
-    assert editor_response_data[1]["identifier"] == "identifier2"
-    assert editor_response_data[1]["type"] == "Clinical Study Report"
-    assert editor_response_data[1]["url"] == "google.com"
-    assert editor_response_data[1]["comment"] == "comment2"
-    assert editor_response_data[2]["identifier"] == "identifier3"
-    assert editor_response_data[2]["type"] == "Clinical Study Report"
-    assert editor_response_data[2]["url"] == "google.com"
-    assert editor_response_data[2]["comment"] == "comment3"
-
-    assert viewer_response_data[0]["identifier"] == "identifier1"
-    assert viewer_response_data[0]["type"] == "Clinical Study Report"
-    assert viewer_response_data[0]["url"] == "google.com"
-    assert viewer_response_data[0]["comment"] == "comment1"
-    assert viewer_response_data[1]["identifier"] == "identifier2"
-    assert viewer_response_data[1]["type"] == "Clinical Study Report"
-    assert viewer_response_data[1]["url"] == "google.com"
-    assert viewer_response_data[1]["comment"] == "comment2"
-    assert viewer_response_data[2]["identifier"] == "identifier3"
-    assert viewer_response_data[2]["type"] == "Clinical Study Report"
-    assert viewer_response_data[2]["url"] == "google.com"
-    assert viewer_response_data[2]["comment"] == "comment3"
-
-
-def test_delete_available_ipd_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID and available IPD ID
-    WHEN the '/study/{study_id}/metadata/available-id' endpoint is requested (DELETE)
-    THEN check that the response is vaild and deletes the available IPD
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    available_ipd_id = pytest.global_available_ipd_id
-    admin_avail_ipd = pytest.global_available_ipd_id_admin
-    editor_avail_ipd = pytest.global_available_ipd_id_editor
-
-    viewer_response = _viewer_client.delete(
-        f"/study/{study_id}/metadata/available-ipd/{available_ipd_id}"
-    )
-    response = _logged_in_client.delete(
-        f"/study/{study_id}/metadata/available-ipd/{available_ipd_id}"
-    )
-    admin_response = _admin_client.delete(
-        f"/study/{study_id}/metadata/available-ipd/{admin_avail_ipd}"
-    )
-    editor_response = _editor_client.delete(
-        f"/study/{study_id}/metadata/available-ipd/{editor_avail_ipd}"
-    )
-
-    assert viewer_response.status_code == 403
-    assert response.status_code == 204
-    assert admin_response.status_code == 204
-    assert editor_response.status_code == 204
+# # ------------------- IPD METADATA ------------------- #
+# def test_post_available_ipd_metadata(clients):
+#     """
+#     GIVEN a Flask application configured for testing and a study ID
+#     WHEN the '/study/{study_id}/metadata/available-id' endpoint is requested (POST)
+#     THEN check that the response is vaild and new IPD was created
+#     """
+#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+#     study_id = pytest.global_study_id["id"]  # type: ignore
+#
+#     response = _logged_in_client.post(
+#         f"/study/{study_id}/metadata/available-ipd",
+#         json=[
+#             {
+#                 "identifier": "identifier1",
+#                 "type": "Clinical Study Report",
+#                 "url": "google.com",
+#                 "comment": "comment1",
+#             }
+#         ],
+#     )
+#     # Add a one second delay to prevent duplicate timestamps
+#     sleep(1)
+#
+#     assert response.status_code == 201
+#     response_data = json.loads(response.data)
+#     pytest.global_available_ipd_id = response_data[0]["id"]
+#
+#     assert response_data[0]["identifier"] == "identifier1"
+#     assert response_data[0]["type"] == "Clinical Study Report"
+#     assert response_data[0]["url"] == "google.com"
+#     assert response_data[0]["comment"] == "comment1"
+#
+#     admin_response = _admin_client.post(
+#         f"/study/{study_id}/metadata/available-ipd",
+#         json=[
+#             {
+#                 "identifier": "identifier2",
+#                 "type": "Clinical Study Report",
+#                 "url": "google.com",
+#                 "comment": "comment2",
+#             }
+#         ],
+#     )
+#     # Add a one second delay to prevent duplicate timestamps
+#     sleep(1)
+#
+#     assert admin_response.status_code == 201
+#     admin_response_data = json.loads(admin_response.data)
+#     pytest.global_available_ipd_id_admin = admin_response_data[0]["id"]
+#
+#     assert admin_response_data[0]["identifier"] == "identifier2"
+#     assert admin_response_data[0]["type"] == "Clinical Study Report"
+#     assert admin_response_data[0]["url"] == "google.com"
+#     assert admin_response_data[0]["comment"] == "comment2"
+#
+#     editor_response = _editor_client.post(
+#         f"/study/{study_id}/metadata/available-ipd",
+#         json=[
+#             {
+#                 "identifier": "identifier3",
+#                 "type": "Clinical Study Report",
+#                 "url": "google.com",
+#                 "comment": "comment3",
+#             }
+#         ],
+#     )
+#
+#     assert editor_response.status_code == 201
+#     editor_response_data = json.loads(editor_response.data)
+#     pytest.global_available_ipd_id_editor = editor_response_data[0]["id"]
+#
+#     assert editor_response_data[0]["identifier"] == "identifier3"
+#     assert editor_response_data[0]["type"] == "Clinical Study Report"
+#     assert editor_response_data[0]["url"] == "google.com"
+#     assert editor_response_data[0]["comment"] == "comment3"
+#
+#     viewer_response = _viewer_client.post(
+#         f"/study/{study_id}/metadata/available-ipd",
+#         json=[
+#             {
+#                 "identifier": "identifier4",
+#                 "type": "Clinical Study Report",
+#                 "url": "google.com",
+#                 "comment": "comment4",
+#             }
+#         ],
+#     )
+#
+#     assert viewer_response.status_code == 403
+#
+#
+# def test_get_available_ipd_metadata(clients):
+#     """
+#     Given a Flask application configured for testing and a study ID
+#     WHEN the '/study/{study_id}/metadata/available-id' endpoint is requested (GET)
+#     THEN check that the response is vaild and retrieves the available IPD(s)
+#     """
+#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+#     study_id = pytest.global_study_id["id"]  # type: ignore
+#
+#     response = _logged_in_client.get(f"/study/{study_id}/metadata/available-ipd")
+#     admin_response = _admin_client.get(f"/study/{study_id}/metadata/available-ipd")
+#     editor_response = _editor_client.get(f"/study/{study_id}/metadata/available-ipd")
+#     viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/available-ipd")
+#
+#     assert response.status_code == 200
+#     assert admin_response.status_code == 200
+#     assert editor_response.status_code == 200
+#     assert viewer_response.status_code == 200
+#
+#     response_data = json.loads(response.data)
+#     admin_response_data = json.loads(admin_response.data)
+#     editor_response_data = json.loads(editor_response.data)
+#     viewer_response_data = json.loads(viewer_response.data)
+#
+#     assert response_data[0]["identifier"] == "identifier1"
+#     assert response_data[0]["type"] == "Clinical Study Report"
+#     assert response_data[0]["url"] == "google.com"
+#     assert response_data[0]["comment"] == "comment1"
+#     assert response_data[1]["identifier"] == "identifier2"
+#     assert response_data[1]["type"] == "Clinical Study Report"
+#     assert response_data[1]["url"] == "google.com"
+#     assert response_data[1]["comment"] == "comment2"
+#     assert response_data[2]["identifier"] == "identifier3"
+#     assert response_data[2]["type"] == "Clinical Study Report"
+#     assert response_data[2]["url"] == "google.com"
+#     assert response_data[2]["comment"] == "comment3"
+#
+#     assert admin_response_data[0]["identifier"] == "identifier1"
+#     assert admin_response_data[0]["type"] == "Clinical Study Report"
+#     assert admin_response_data[0]["url"] == "google.com"
+#     assert admin_response_data[0]["comment"] == "comment1"
+#     assert admin_response_data[1]["identifier"] == "identifier2"
+#     assert admin_response_data[1]["type"] == "Clinical Study Report"
+#     assert admin_response_data[1]["url"] == "google.com"
+#     assert admin_response_data[1]["comment"] == "comment2"
+#     assert admin_response_data[2]["identifier"] == "identifier3"
+#     assert admin_response_data[2]["type"] == "Clinical Study Report"
+#     assert admin_response_data[2]["url"] == "google.com"
+#     assert admin_response_data[2]["comment"] == "comment3"
+#
+#     assert editor_response_data[0]["identifier"] == "identifier1"
+#     assert editor_response_data[0]["type"] == "Clinical Study Report"
+#     assert editor_response_data[0]["url"] == "google.com"
+#     assert editor_response_data[0]["comment"] == "comment1"
+#     assert editor_response_data[1]["identifier"] == "identifier2"
+#     assert editor_response_data[1]["type"] == "Clinical Study Report"
+#     assert editor_response_data[1]["url"] == "google.com"
+#     assert editor_response_data[1]["comment"] == "comment2"
+#     assert editor_response_data[2]["identifier"] == "identifier3"
+#     assert editor_response_data[2]["type"] == "Clinical Study Report"
+#     assert editor_response_data[2]["url"] == "google.com"
+#     assert editor_response_data[2]["comment"] == "comment3"
+#
+#     assert viewer_response_data[0]["identifier"] == "identifier1"
+#     assert viewer_response_data[0]["type"] == "Clinical Study Report"
+#     assert viewer_response_data[0]["url"] == "google.com"
+#     assert viewer_response_data[0]["comment"] == "comment1"
+#     assert viewer_response_data[1]["identifier"] == "identifier2"
+#     assert viewer_response_data[1]["type"] == "Clinical Study Report"
+#     assert viewer_response_data[1]["url"] == "google.com"
+#     assert viewer_response_data[1]["comment"] == "comment2"
+#     assert viewer_response_data[2]["identifier"] == "identifier3"
+#     assert viewer_response_data[2]["type"] == "Clinical Study Report"
+#     assert viewer_response_data[2]["url"] == "google.com"
+#     assert viewer_response_data[2]["comment"] == "comment3"
+#
+#
+# def test_delete_available_ipd_metadata(clients):
+#     """
+#     Given a Flask application configured for testing and a study ID and available IPD ID
+#     WHEN the '/study/{study_id}/metadata/available-id' endpoint is requested (DELETE)
+#     THEN check that the response is vaild and deletes the available IPD
+#     """
+#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+#     study_id = pytest.global_study_id["id"]  # type: ignore
+#     available_ipd_id = pytest.global_available_ipd_id
+#     admin_avail_ipd = pytest.global_available_ipd_id_admin
+#     editor_avail_ipd = pytest.global_available_ipd_id_editor
+#
+#     viewer_response = _viewer_client.delete(
+#         f"/study/{study_id}/metadata/available-ipd/{available_ipd_id}"
+#     )
+#     response = _logged_in_client.delete(
+#         f"/study/{study_id}/metadata/available-ipd/{available_ipd_id}"
+#     )
+#     admin_response = _admin_client.delete(
+#         f"/study/{study_id}/metadata/available-ipd/{admin_avail_ipd}"
+#     )
+#     editor_response = _editor_client.delete(
+#         f"/study/{study_id}/metadata/available-ipd/{editor_avail_ipd}"
+#     )
+#
+#     assert viewer_response.status_code == 403
+#     assert response.status_code == 204
+#     assert admin_response.status_code == 204
+#     assert editor_response.status_code == 204
 
 
 # ------------------- CENTRAL CONTACT METADATA ------------------- #
@@ -2038,309 +2038,309 @@ def test_delete_intervention_metadata(clients):
     assert editor_response.status_code == 204
 
 
-# ------------------- IPD SHARING METADATA ------------------- #
-def test_put_ipdsharing_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/ipdsharing' endpoint is requested (PUT)
-    THEN check that the response is valid and updates the ipdsharing metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
+# # ------------------- IPD SHARING METADATA ------------------- #
+# def test_put_ipdsharing_metadata(clients):
+#     """
+#     Given a Flask application configured for testing and a study ID
+#     WHEN the '/study/{study_id}/metadata/ipdsharing' endpoint is requested (PUT)
+#     THEN check that the response is valid and updates the ipdsharing metadata
+#     """
+#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+#     study_id = pytest.global_study_id["id"]  # type: ignore
+#
+#     response = _logged_in_client.put(
+#         f"/study/{study_id}/metadata/ipdsharing",
+#         json={
+#             "ipd_sharing": "Yes",
+#             "ipd_sharing_description": "yes",
+#             "ipd_sharing_info_type_list": ["Study Protocol", "Analytical Code"],
+#             "ipd_sharing_time_frame": "uh",
+#             "ipd_sharing_access_criteria": "Study Protocol",
+#             "ipd_sharing_url": "1",
+#         },
+#     )
+#
+#     assert response.status_code == 200
+#     response_data = json.loads(response.data)
+#
+#     assert response_data["ipd_sharing"] == "Yes"
+#     assert response_data["ipd_sharing_description"] == "yes"
+#     assert response_data["ipd_sharing_info_type_list"] == [
+#         "Study Protocol",
+#         "Analytical Code",
+#     ]
+#     assert response_data["ipd_sharing_time_frame"] == "uh"
+#     assert response_data["ipd_sharing_access_criteria"] == "Study Protocol"
+#     assert response_data["ipd_sharing_url"] == "1"
+#
+#     admin_response = _admin_client.put(
+#         f"/study/{study_id}/metadata/ipdsharing",
+#         json={
+#             "ipd_sharing": "Yes",
+#             "ipd_sharing_description": "admin-yes",
+#             "ipd_sharing_info_type_list": ["Study Protocol", "Analytical Code"],
+#             "ipd_sharing_time_frame": "uh",
+#             "ipd_sharing_access_criteria": "Study Protocol",
+#             "ipd_sharing_url": "1",
+#         },
+#     )
+#
+#     assert admin_response.status_code == 200
+#     admin_response_data = json.loads(admin_response.data)
+#
+#     assert admin_response_data["ipd_sharing"] == "Yes"
+#     assert admin_response_data["ipd_sharing_description"] == "admin-yes"
+#     assert admin_response_data["ipd_sharing_info_type_list"] == [
+#         "Study Protocol",
+#         "Analytical Code",
+#     ]
+#     assert admin_response_data["ipd_sharing_time_frame"] == "uh"
+#     assert admin_response_data["ipd_sharing_access_criteria"] == "Study Protocol"
+#     assert admin_response_data["ipd_sharing_url"] == "1"
+#
+#     editor_response = _editor_client.put(
+#         f"/study/{study_id}/metadata/ipdsharing",
+#         json={
+#             "ipd_sharing": "Yes",
+#             "ipd_sharing_description": "editor-yes",
+#             "ipd_sharing_info_type_list": ["Study Protocol", "Analytical Code"],
+#             "ipd_sharing_time_frame": "uh",
+#             "ipd_sharing_access_criteria": "Study Protocol",
+#             "ipd_sharing_url": "1",
+#         },
+#     )
+#
+#     assert editor_response.status_code == 200
+#     editor_response_data = json.loads(editor_response.data)
+#
+#     assert editor_response_data["ipd_sharing"] == "Yes"
+#     assert editor_response_data["ipd_sharing_description"] == "editor-yes"
+#     assert editor_response_data["ipd_sharing_info_type_list"] == [
+#         "Study Protocol",
+#         "Analytical Code",
+#     ]
+#     assert editor_response_data["ipd_sharing_time_frame"] == "uh"
+#     assert editor_response_data["ipd_sharing_access_criteria"] == "Study Protocol"
+#     assert editor_response_data["ipd_sharing_url"] == "1"
+#
+#     viewer_response = _viewer_client.put(
+#         f"/study/{study_id}/metadata/ipdsharing",
+#         json={
+#             "ipd_sharing": "Yes",
+#             "ipd_sharing_description": "viewer-yes",
+#             "ipd_sharing_info_type_list": ["Study Protocol", "Analytical Code"],
+#             "ipd_sharing_time_frame": "uh",
+#             "ipd_sharing_access_criteria": "Study Protocol",
+#             "ipd_sharing_url": "1",
+#         },
+#     )
+#
+#     assert viewer_response.status_code == 403
+#
+#
+# def test_get_ipdsharing_metadata(clients):
+#     """
+#     Given a Flask application configured for testing and a study ID
+#     WHEN the '/study/{study_id}/metadata/ipdsharing' endpoint is requested (GET)
+#     THEN check that the response is valid and retrieves the ipdsharing metadata
+#     """
+#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+#     study_id = pytest.global_study_id["id"]  # type: ignore
+#
+#     response = _logged_in_client.get(f"/study/{study_id}/metadata/ipdsharing")
+#     admin_response = _admin_client.get(f"/study/{study_id}/metadata/ipdsharing")
+#     editor_response = _editor_client.get(f"/study/{study_id}/metadata/ipdsharing")
+#     viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/ipdsharing")
+#
+#     assert response.status_code == 200
+#     assert admin_response.status_code == 200
+#     assert editor_response.status_code == 200
+#     assert viewer_response.status_code == 200
+#
+#     response_data = json.loads(response.data)
+#     admin_response_data = json.loads(admin_response.data)
+#     editor_response_data = json.loads(editor_response.data)
+#     viewer_response_data = json.loads(viewer_response.data)
+#
+#     assert response_data["ipd_sharing"] == "Yes"
+#     assert response_data["ipd_sharing_description"] == "editor-yes"
+#     assert response_data["ipd_sharing_info_type_list"] == [
+#         "Study Protocol",
+#         "Analytical Code",
+#     ]
+#     assert response_data["ipd_sharing_time_frame"] == "uh"
+#     assert response_data["ipd_sharing_access_criteria"] == "Study Protocol"
+#     assert response_data["ipd_sharing_url"] == "1"
+#
+#     assert admin_response_data["ipd_sharing"] == "Yes"
+#     assert admin_response_data["ipd_sharing_description"] == "editor-yes"
+#     assert admin_response_data["ipd_sharing_info_type_list"] == [
+#         "Study Protocol",
+#         "Analytical Code",
+#     ]
+#     assert admin_response_data["ipd_sharing_time_frame"] == "uh"
+#     assert admin_response_data["ipd_sharing_access_criteria"] == "Study Protocol"
+#     assert admin_response_data["ipd_sharing_url"] == "1"
+#
+#     assert editor_response_data["ipd_sharing"] == "Yes"
+#     assert editor_response_data["ipd_sharing_description"] == "editor-yes"
+#     assert editor_response_data["ipd_sharing_info_type_list"] == [
+#         "Study Protocol",
+#         "Analytical Code",
+#     ]
+#     assert editor_response_data["ipd_sharing_time_frame"] == "uh"
+#     assert editor_response_data["ipd_sharing_access_criteria"] == "Study Protocol"
+#     assert editor_response_data["ipd_sharing_url"] == "1"
+#
+#     assert viewer_response_data["ipd_sharing"] == "Yes"
+#     assert viewer_response_data["ipd_sharing_description"] == "editor-yes"
+#     assert viewer_response_data["ipd_sharing_info_type_list"] == [
+#         "Study Protocol",
+#         "Analytical Code",
+#     ]
+#     assert viewer_response_data["ipd_sharing_time_frame"] == "uh"
+#     assert viewer_response_data["ipd_sharing_access_criteria"] == "Study Protocol"
+#     assert viewer_response_data["ipd_sharing_url"] == "1"
+#
 
-    response = _logged_in_client.put(
-        f"/study/{study_id}/metadata/ipdsharing",
-        json={
-            "ipd_sharing": "Yes",
-            "ipd_sharing_description": "yes",
-            "ipd_sharing_info_type_list": ["Study Protocol", "Analytical Code"],
-            "ipd_sharing_time_frame": "uh",
-            "ipd_sharing_access_criteria": "Study Protocol",
-            "ipd_sharing_url": "1",
-        },
-    )
-
-    assert response.status_code == 200
-    response_data = json.loads(response.data)
-
-    assert response_data["ipd_sharing"] == "Yes"
-    assert response_data["ipd_sharing_description"] == "yes"
-    assert response_data["ipd_sharing_info_type_list"] == [
-        "Study Protocol",
-        "Analytical Code",
-    ]
-    assert response_data["ipd_sharing_time_frame"] == "uh"
-    assert response_data["ipd_sharing_access_criteria"] == "Study Protocol"
-    assert response_data["ipd_sharing_url"] == "1"
-
-    admin_response = _admin_client.put(
-        f"/study/{study_id}/metadata/ipdsharing",
-        json={
-            "ipd_sharing": "Yes",
-            "ipd_sharing_description": "admin-yes",
-            "ipd_sharing_info_type_list": ["Study Protocol", "Analytical Code"],
-            "ipd_sharing_time_frame": "uh",
-            "ipd_sharing_access_criteria": "Study Protocol",
-            "ipd_sharing_url": "1",
-        },
-    )
-
-    assert admin_response.status_code == 200
-    admin_response_data = json.loads(admin_response.data)
-
-    assert admin_response_data["ipd_sharing"] == "Yes"
-    assert admin_response_data["ipd_sharing_description"] == "admin-yes"
-    assert admin_response_data["ipd_sharing_info_type_list"] == [
-        "Study Protocol",
-        "Analytical Code",
-    ]
-    assert admin_response_data["ipd_sharing_time_frame"] == "uh"
-    assert admin_response_data["ipd_sharing_access_criteria"] == "Study Protocol"
-    assert admin_response_data["ipd_sharing_url"] == "1"
-
-    editor_response = _editor_client.put(
-        f"/study/{study_id}/metadata/ipdsharing",
-        json={
-            "ipd_sharing": "Yes",
-            "ipd_sharing_description": "editor-yes",
-            "ipd_sharing_info_type_list": ["Study Protocol", "Analytical Code"],
-            "ipd_sharing_time_frame": "uh",
-            "ipd_sharing_access_criteria": "Study Protocol",
-            "ipd_sharing_url": "1",
-        },
-    )
-
-    assert editor_response.status_code == 200
-    editor_response_data = json.loads(editor_response.data)
-
-    assert editor_response_data["ipd_sharing"] == "Yes"
-    assert editor_response_data["ipd_sharing_description"] == "editor-yes"
-    assert editor_response_data["ipd_sharing_info_type_list"] == [
-        "Study Protocol",
-        "Analytical Code",
-    ]
-    assert editor_response_data["ipd_sharing_time_frame"] == "uh"
-    assert editor_response_data["ipd_sharing_access_criteria"] == "Study Protocol"
-    assert editor_response_data["ipd_sharing_url"] == "1"
-
-    viewer_response = _viewer_client.put(
-        f"/study/{study_id}/metadata/ipdsharing",
-        json={
-            "ipd_sharing": "Yes",
-            "ipd_sharing_description": "viewer-yes",
-            "ipd_sharing_info_type_list": ["Study Protocol", "Analytical Code"],
-            "ipd_sharing_time_frame": "uh",
-            "ipd_sharing_access_criteria": "Study Protocol",
-            "ipd_sharing_url": "1",
-        },
-    )
-
-    assert viewer_response.status_code == 403
-
-
-def test_get_ipdsharing_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/ipdsharing' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the ipdsharing metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/ipdsharing")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/ipdsharing")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/ipdsharing")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/ipdsharing")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-    response_data = json.loads(response.data)
-    admin_response_data = json.loads(admin_response.data)
-    editor_response_data = json.loads(editor_response.data)
-    viewer_response_data = json.loads(viewer_response.data)
-
-    assert response_data["ipd_sharing"] == "Yes"
-    assert response_data["ipd_sharing_description"] == "editor-yes"
-    assert response_data["ipd_sharing_info_type_list"] == [
-        "Study Protocol",
-        "Analytical Code",
-    ]
-    assert response_data["ipd_sharing_time_frame"] == "uh"
-    assert response_data["ipd_sharing_access_criteria"] == "Study Protocol"
-    assert response_data["ipd_sharing_url"] == "1"
-
-    assert admin_response_data["ipd_sharing"] == "Yes"
-    assert admin_response_data["ipd_sharing_description"] == "editor-yes"
-    assert admin_response_data["ipd_sharing_info_type_list"] == [
-        "Study Protocol",
-        "Analytical Code",
-    ]
-    assert admin_response_data["ipd_sharing_time_frame"] == "uh"
-    assert admin_response_data["ipd_sharing_access_criteria"] == "Study Protocol"
-    assert admin_response_data["ipd_sharing_url"] == "1"
-
-    assert editor_response_data["ipd_sharing"] == "Yes"
-    assert editor_response_data["ipd_sharing_description"] == "editor-yes"
-    assert editor_response_data["ipd_sharing_info_type_list"] == [
-        "Study Protocol",
-        "Analytical Code",
-    ]
-    assert editor_response_data["ipd_sharing_time_frame"] == "uh"
-    assert editor_response_data["ipd_sharing_access_criteria"] == "Study Protocol"
-    assert editor_response_data["ipd_sharing_url"] == "1"
-
-    assert viewer_response_data["ipd_sharing"] == "Yes"
-    assert viewer_response_data["ipd_sharing_description"] == "editor-yes"
-    assert viewer_response_data["ipd_sharing_info_type_list"] == [
-        "Study Protocol",
-        "Analytical Code",
-    ]
-    assert viewer_response_data["ipd_sharing_time_frame"] == "uh"
-    assert viewer_response_data["ipd_sharing_access_criteria"] == "Study Protocol"
-    assert viewer_response_data["ipd_sharing_url"] == "1"
-
-
-# ------------------- LINK METADATA ------------------- #
-def test_post_link_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/link' endpoint is requested (POST)
-    THEN check that the response is valid and creates the link metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.post(
-        f"/study/{study_id}/metadata/link",
-        json=[{"url": "google.com", "title": "google link"}],
-    )
-    # Add a one second delay to prevent duplicate timestamps
-    sleep(1)
-
-    assert response.status_code == 201
-    response_data = json.loads(response.data)
-    pytest.global_link_id = response_data[0]["id"]
-
-    assert response_data[0]["url"] == "google.com"
-    assert response_data[0]["title"] == "google link"
-
-    admin_response = _admin_client.post(
-        f"/study/{study_id}/metadata/link",
-        json=[{"url": "admin-google.com", "title": "admin-google link"}],
-    )
-    # Add a one second delay to prevent duplicate timestamps
-    sleep(1)
-
-    assert admin_response.status_code == 201
-    admin_response_data = json.loads(admin_response.data)
-    pytest.global_link_id_admin = admin_response_data[0]["id"]
-
-    assert admin_response_data[0]["url"] == "admin-google.com"
-    assert admin_response_data[0]["title"] == "admin-google link"
-
-    editor_response = _editor_client.post(
-        f"/study/{study_id}/metadata/link",
-        json=[{"url": "editor-google.com", "title": "editor-google link"}],
-    )
-
-    assert editor_response.status_code == 201
-    editor_response_data = json.loads(editor_response.data)
-    pytest.global_link_id_editor = editor_response_data[0]["id"]
-
-    assert editor_response_data[0]["url"] == "editor-google.com"
-    assert editor_response_data[0]["title"] == "editor-google link"
-
-    viewer_response = _viewer_client.post(
-        f"/study/{study_id}/metadata/link",
-        json=[{"url": "viewer-google.com", "title": "viewer-google link"}],
-    )
-
-    assert viewer_response.status_code == 403
-
-
-def test_get_link_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/link' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the link metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/link")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/link")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/link")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/link")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-    response_data = json.loads(response.data)
-    admin_response_data = json.loads(admin_response.data)
-    editor_response_data = json.loads(editor_response.data)
-    viewer_response_data = json.loads(viewer_response.data)
-
-    assert response_data[0]["url"] == "google.com"
-    assert response_data[0]["title"] == "google link"
-    assert response_data[1]["url"] == "admin-google.com"
-    assert response_data[1]["title"] == "admin-google link"
-    assert response_data[2]["url"] == "editor-google.com"
-    assert response_data[2]["title"] == "editor-google link"
-
-    assert admin_response_data[0]["url"] == "google.com"
-    assert admin_response_data[0]["title"] == "google link"
-    assert admin_response_data[1]["url"] == "admin-google.com"
-    assert admin_response_data[1]["title"] == "admin-google link"
-    assert admin_response_data[2]["url"] == "editor-google.com"
-    assert admin_response_data[2]["title"] == "editor-google link"
-
-    assert editor_response_data[0]["url"] == "google.com"
-    assert editor_response_data[0]["title"] == "google link"
-    assert editor_response_data[1]["url"] == "admin-google.com"
-    assert editor_response_data[1]["title"] == "admin-google link"
-    assert editor_response_data[2]["url"] == "editor-google.com"
-    assert editor_response_data[2]["title"] == "editor-google link"
-
-    assert viewer_response_data[0]["url"] == "google.com"
-    assert viewer_response_data[0]["title"] == "google link"
-    assert viewer_response_data[1]["url"] == "admin-google.com"
-    assert viewer_response_data[1]["title"] == "admin-google link"
-    assert viewer_response_data[2]["url"] == "editor-google.com"
-    assert viewer_response_data[2]["title"] == "editor-google link"
-
-
-def test_delete_link_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID and link ID
-    WHEN the '/study/{study_id}/metadata/link/{link_id}' endpoint is requested (DELETE)
-    THEN check that the response is valid and deletes the link metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    link_id = pytest.global_link_id
-    admin_link_id = pytest.global_link_id_admin
-    editor_link_id = pytest.global_link_id_editor
-
-    viewer_response = _viewer_client.delete(
-        f"/study/{study_id}/metadata/link/{link_id}"
-    )
-    response = _logged_in_client.delete(f"/study/{study_id}/metadata/link/{link_id}")
-    admin_response = _admin_client.delete(
-        f"/study/{study_id}/metadata/link/{admin_link_id}"
-    )
-    editor_response = _editor_client.delete(
-        f"/study/{study_id}/metadata/link/{editor_link_id}"
-    )
-
-    assert viewer_response.status_code == 403
-    assert response.status_code == 204
-    assert admin_response.status_code == 204
-    assert editor_response.status_code == 204
+# # ------------------- LINK METADATA ------------------- #
+# def test_post_link_metadata(clients):
+#     """
+#     Given a Flask application configured for testing and a study ID
+#     WHEN the '/study/{study_id}/metadata/link' endpoint is requested (POST)
+#     THEN check that the response is valid and creates the link metadata
+#     """
+#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+#     study_id = pytest.global_study_id["id"]  # type: ignore
+#
+#     response = _logged_in_client.post(
+#         f"/study/{study_id}/metadata/link",
+#         json=[{"url": "google.com", "title": "google link"}],
+#     )
+#     # Add a one second delay to prevent duplicate timestamps
+#     sleep(1)
+#
+#     assert response.status_code == 201
+#     response_data = json.loads(response.data)
+#     pytest.global_link_id = response_data[0]["id"]
+#
+#     assert response_data[0]["url"] == "google.com"
+#     assert response_data[0]["title"] == "google link"
+#
+#     admin_response = _admin_client.post(
+#         f"/study/{study_id}/metadata/link",
+#         json=[{"url": "admin-google.com", "title": "admin-google link"}],
+#     )
+#     # Add a one second delay to prevent duplicate timestamps
+#     sleep(1)
+#
+#     assert admin_response.status_code == 201
+#     admin_response_data = json.loads(admin_response.data)
+#     pytest.global_link_id_admin = admin_response_data[0]["id"]
+#
+#     assert admin_response_data[0]["url"] == "admin-google.com"
+#     assert admin_response_data[0]["title"] == "admin-google link"
+#
+#     editor_response = _editor_client.post(
+#         f"/study/{study_id}/metadata/link",
+#         json=[{"url": "editor-google.com", "title": "editor-google link"}],
+#     )
+#
+#     assert editor_response.status_code == 201
+#     editor_response_data = json.loads(editor_response.data)
+#     pytest.global_link_id_editor = editor_response_data[0]["id"]
+#
+#     assert editor_response_data[0]["url"] == "editor-google.com"
+#     assert editor_response_data[0]["title"] == "editor-google link"
+#
+#     viewer_response = _viewer_client.post(
+#         f"/study/{study_id}/metadata/link",
+#         json=[{"url": "viewer-google.com", "title": "viewer-google link"}],
+#     )
+#
+#     assert viewer_response.status_code == 403
+#
+#
+# def test_get_link_metadata(clients):
+#     """
+#     Given a Flask application configured for testing and a study ID
+#     WHEN the '/study/{study_id}/metadata/link' endpoint is requested (GET)
+#     THEN check that the response is valid and retrieves the link metadata
+#     """
+#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+#     study_id = pytest.global_study_id["id"]  # type: ignore
+#
+#     response = _logged_in_client.get(f"/study/{study_id}/metadata/link")
+#     admin_response = _admin_client.get(f"/study/{study_id}/metadata/link")
+#     editor_response = _editor_client.get(f"/study/{study_id}/metadata/link")
+#     viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/link")
+#
+#     assert response.status_code == 200
+#     assert admin_response.status_code == 200
+#     assert editor_response.status_code == 200
+#     assert viewer_response.status_code == 200
+#
+#     response_data = json.loads(response.data)
+#     admin_response_data = json.loads(admin_response.data)
+#     editor_response_data = json.loads(editor_response.data)
+#     viewer_response_data = json.loads(viewer_response.data)
+#
+#     assert response_data[0]["url"] == "google.com"
+#     assert response_data[0]["title"] == "google link"
+#     assert response_data[1]["url"] == "admin-google.com"
+#     assert response_data[1]["title"] == "admin-google link"
+#     assert response_data[2]["url"] == "editor-google.com"
+#     assert response_data[2]["title"] == "editor-google link"
+#
+#     assert admin_response_data[0]["url"] == "google.com"
+#     assert admin_response_data[0]["title"] == "google link"
+#     assert admin_response_data[1]["url"] == "admin-google.com"
+#     assert admin_response_data[1]["title"] == "admin-google link"
+#     assert admin_response_data[2]["url"] == "editor-google.com"
+#     assert admin_response_data[2]["title"] == "editor-google link"
+#
+#     assert editor_response_data[0]["url"] == "google.com"
+#     assert editor_response_data[0]["title"] == "google link"
+#     assert editor_response_data[1]["url"] == "admin-google.com"
+#     assert editor_response_data[1]["title"] == "admin-google link"
+#     assert editor_response_data[2]["url"] == "editor-google.com"
+#     assert editor_response_data[2]["title"] == "editor-google link"
+#
+#     assert viewer_response_data[0]["url"] == "google.com"
+#     assert viewer_response_data[0]["title"] == "google link"
+#     assert viewer_response_data[1]["url"] == "admin-google.com"
+#     assert viewer_response_data[1]["title"] == "admin-google link"
+#     assert viewer_response_data[2]["url"] == "editor-google.com"
+#     assert viewer_response_data[2]["title"] == "editor-google link"
+#
+#
+# def test_delete_link_metadata(clients):
+#     """
+#     Given a Flask application configured for testing and a study ID and link ID
+#     WHEN the '/study/{study_id}/metadata/link/{link_id}' endpoint is requested (DELETE)
+#     THEN check that the response is valid and deletes the link metadata
+#     """
+#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+#     study_id = pytest.global_study_id["id"]  # type: ignore
+#     link_id = pytest.global_link_id
+#     admin_link_id = pytest.global_link_id_admin
+#     editor_link_id = pytest.global_link_id_editor
+#
+#     viewer_response = _viewer_client.delete(
+#         f"/study/{study_id}/metadata/link/{link_id}"
+#     )
+#     response = _logged_in_client.delete(f"/study/{study_id}/metadata/link/{link_id}")
+#     admin_response = _admin_client.delete(
+#         f"/study/{study_id}/metadata/link/{admin_link_id}"
+#     )
+#     editor_response = _editor_client.delete(
+#         f"/study/{study_id}/metadata/link/{editor_link_id}"
+#     )
+#
+#     assert viewer_response.status_code == 403
+#     assert response.status_code == 204
+#     assert admin_response.status_code == 204
+#     assert editor_response.status_code == 204
 
 
 # ------------------- LOCATION METADATA ------------------- #
@@ -2582,169 +2582,176 @@ def test_delete_location_metadata(clients):
     assert editor_response.status_code == 204
 
 
-# ------------------- OVERALL-OFFICIAL METADATA ------------------- #
-def test_post_overall_official_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/overall-official' endpoint is requested (POST)
-    THEN check that the response is valid and creates the overall-official metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.post(
-        f"/study/{study_id}/metadata/overall-official",
-        json=[{"name": "test", "affiliation": "aff", "role": "Study Chair"}],
-    )
-    # Add a one second delay to prevent duplicate timestamps
-    sleep(1)
-
-    assert response.status_code == 201
-    response_data = json.loads(response.data)
-    pytest.global_overall_official_id = response_data[0]["id"]
-
-    assert response_data[0]["name"] == "test"
-    assert response_data[0]["affiliation"] == "aff"
-    assert response_data[0]["role"] == "Study Chair"
-
-    admin_response = _admin_client.post(
-        f"/study/{study_id}/metadata/overall-official",
-        json=[
-            {"name": "admin-test", "affiliation": "admin-aff", "role": "Study Chair"}
-        ],
-    )
-    # Add a one second delay to prevent duplicate timestamps
-    sleep(1)
-
-    assert admin_response.status_code == 201
-    admin_response_data = json.loads(admin_response.data)
-    pytest.global_overall_official_id_admin = admin_response_data[0]["id"]
-
-    assert admin_response_data[0]["name"] == "admin-test"
-    assert admin_response_data[0]["affiliation"] == "admin-aff"
-    assert admin_response_data[0]["role"] == "Study Chair"
-
-    editor_response = _editor_client.post(
-        f"/study/{study_id}/metadata/overall-official",
-        json=[
-            {"name": "editor-test", "affiliation": "editor-aff", "role": "Study Chair"}
-        ],
-    )
-
-    assert editor_response.status_code == 201
-    editor_response_data = json.loads(editor_response.data)
-    pytest.global_overall_official_id_editor = editor_response_data[0]["id"]
-
-    assert editor_response_data[0]["name"] == "editor-test"
-    assert editor_response_data[0]["affiliation"] == "editor-aff"
-    assert editor_response_data[0]["role"] == "Study Chair"
-
-    viewer_response = _viewer_client.post(
-        f"/study/{study_id}/metadata/overall-official",
-        json=[
-            {"name": "viewer-test", "affiliation": "viewer-aff", "role": "Study Chair"}
-        ],
-    )
-
-    assert viewer_response.status_code == 403
-
-
-def test_get_overall_official_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/overall-official' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the overall-official metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/overall-official")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/overall-official")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/overall-official")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/overall-official")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-    response_data = json.loads(response.data)
-    admin_response_data = json.loads(admin_response.data)
-    editor_response_data = json.loads(editor_response.data)
-    viewer_response_data = json.loads(viewer_response.data)
-
-    assert response_data[0]["name"] == "test"
-    assert response_data[0]["affiliation"] == "aff"
-    assert response_data[0]["role"] == "Study Chair"
-    assert response_data[1]["name"] == "admin-test"
-    assert response_data[1]["affiliation"] == "admin-aff"
-    assert response_data[1]["role"] == "Study Chair"
-    assert response_data[2]["name"] == "editor-test"
-    assert response_data[2]["affiliation"] == "editor-aff"
-    assert response_data[2]["role"] == "Study Chair"
-
-    assert admin_response_data[0]["name"] == "test"
-    assert admin_response_data[0]["affiliation"] == "aff"
-    assert admin_response_data[0]["role"] == "Study Chair"
-    assert admin_response_data[1]["name"] == "admin-test"
-    assert admin_response_data[1]["affiliation"] == "admin-aff"
-    assert admin_response_data[1]["role"] == "Study Chair"
-    assert admin_response_data[2]["name"] == "editor-test"
-    assert admin_response_data[2]["affiliation"] == "editor-aff"
-    assert admin_response_data[2]["role"] == "Study Chair"
-
-    assert editor_response_data[0]["name"] == "test"
-    assert editor_response_data[0]["affiliation"] == "aff"
-    assert editor_response_data[0]["role"] == "Study Chair"
-    assert editor_response_data[1]["name"] == "admin-test"
-    assert editor_response_data[1]["affiliation"] == "admin-aff"
-    assert editor_response_data[1]["role"] == "Study Chair"
-    assert editor_response_data[2]["name"] == "editor-test"
-    assert editor_response_data[2]["affiliation"] == "editor-aff"
-    assert editor_response_data[2]["role"] == "Study Chair"
-
-    assert viewer_response_data[0]["name"] == "test"
-    assert viewer_response_data[0]["affiliation"] == "aff"
-    assert viewer_response_data[0]["role"] == "Study Chair"
-    assert viewer_response_data[1]["name"] == "admin-test"
-    assert viewer_response_data[1]["affiliation"] == "admin-aff"
-    assert viewer_response_data[1]["role"] == "Study Chair"
-    assert viewer_response_data[2]["name"] == "editor-test"
-    assert viewer_response_data[2]["affiliation"] == "editor-aff"
-    assert viewer_response_data[2]["role"] == "Study Chair"
-
-
-def test_delete_overall_official_metadata(clients):
-    """
-    Given a Flask application configured for testing and a
-        study ID and overall official ID
-    WHEN the '/study/{study_id}/metadata/overall-official/{overall_official_id}'
-        endpoint is requested (DELETE)
-    THEN check that the response is valid and deletes the overall-official metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    overall_official_id = pytest.global_overall_official_id
-    oo_admin_id = pytest.global_overall_official_id_admin
-    oo_editor_id = pytest.global_overall_official_id_editor
-
-    viewer_response = _viewer_client.delete(
-        f"/study/{study_id}/metadata/overall-official/{overall_official_id}"
-    )
-    response = _logged_in_client.delete(
-        f"/study/{study_id}/metadata/overall-official/{overall_official_id}"
-    )
-    admin_response = _admin_client.delete(
-        f"/study/{study_id}/metadata/overall-official/{oo_admin_id}"
-    )
-    editor_response = _editor_client.delete(
-        f"/study/{study_id}/metadata/overall-official/{oo_editor_id}"
-    )
-
-    assert viewer_response.status_code == 403
-    assert response.status_code == 204
-    assert admin_response.status_code == 204
-    assert editor_response.status_code == 204
+# # ------------------- OVERALL-OFFICIAL METADATA ------------------- #
+# def test_post_overall_official_metadata(clients):
+#     """
+#     Given a Flask application configured for testing and a study ID
+#     WHEN the '/study/{study_id}/metadata/overall-official' endpoint is requested (POST)
+#     THEN check that the response is valid and creates the overall-official metadata
+#     """
+#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+#     study_id = pytest.global_study_id["id"]  # type: ignore
+#
+#     response = _logged_in_client.post(
+#         f"/study/{study_id}/metadata/overall-official",
+#         json=[{"name": "test", "affiliation": "aff", "role": "Study Chair"}],
+#     )
+#     # Add a one second delay to prevent duplicate timestamps
+#     sleep(1)
+#
+#     assert response.status_code == 201
+#     response_data = json.loads(response.data)
+#     pytest.global_overall_official_id = response_data[0]["id"]
+#
+#     assert response_data[0]["first_name"] == "test"
+#     assert response_data[0]["last_name"] == "test"
+#     assert response_data[0]["affiliation"] == "aff"
+#     assert response_data[0]["role"] == "Study Chair"
+#
+#     admin_response = _admin_client.post(
+#         f"/study/{study_id}/metadata/overall-official",
+#         json=[
+#             {"name": "admin-test", "affiliation": "admin-aff", "role": "Study Chair"}
+#         ],
+#     )
+#     # Add a one second delay to prevent duplicate timestamps
+#     sleep(1)
+#
+#     assert admin_response.status_code == 201
+#     admin_response_data = json.loads(admin_response.data)
+#     pytest.global_overall_official_id_admin = admin_response_data[0]["id"]
+#
+#     assert admin_response_data[0]["first_name"] == "admin-test"
+#     assert admin_response_data[0]["last_name"]== "admin-test"
+#     assert admin_response_data[0]["affiliation"] == "admin-aff"
+#     assert admin_response_data[0]["role"] == "Study Chair"
+#
+#     editor_response = _editor_client.post(
+#         f"/study/{study_id}/metadata/overall-official",
+#         json=[
+#             {"name": "editor-test", "affiliation": "editor-aff", "role": "Study Chair"}
+#         ],
+#     )
+#
+#     assert editor_response.status_code == 201
+#     editor_response_data = json.loads(editor_response.data)
+#     pytest.global_overall_official_id_editor = editor_response_data[0]["id"]
+#
+#     assert editor_response_data[0]["first_name"]== "editor-test"
+#     assert editor_response_data[0]["last_name"] == "editor-test"
+#     assert editor_response_data[0]["affiliation"] == "editor-aff"
+#     assert editor_response_data[0]["role"] == "Study Chair"
+#
+#     viewer_response = _viewer_client.post(
+#         f"/study/{study_id}/metadata/overall-official",
+#         json=[
+#             {"name": "viewer-test", "affiliation": "viewer-aff", "role": "Study Chair"}
+#         ],
+#     )
+#
+#     assert viewer_response.status_code == 403
+#
+#
+# def test_get_overall_official_metadata(clients):
+#     """
+#     Given a Flask application configured for testing and a study ID
+#     WHEN the '/study/{study_id}/metadata/overall-official' endpoint is requested (GET)
+#     THEN check that the response is valid and retrieves the overall-official metadata
+#     """
+#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+#     study_id = pytest.global_study_id["id"]  # type: ignore
+#
+#     response = _logged_in_client.get(f"/study/{study_id}/metadata/overall-official")
+#     admin_response = _admin_client.get(f"/study/{study_id}/metadata/overall-official")
+#     editor_response = _editor_client.get(f"/study/{study_id}/metadata/overall-official")
+#     viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/overall-official")
+#
+#     assert response.status_code == 200
+#     assert admin_response.status_code == 200
+#     assert editor_response.status_code == 200
+#     assert viewer_response.status_code == 200
+#
+#     response_data = json.loads(response.data)
+#     admin_response_data = json.loads(admin_response.data)
+#     editor_response_data = json.loads(editor_response.data)
+#     viewer_response_data = json.loads(viewer_response.data)
+#
+#     assert response_data[0]["first_name"] == "test"
+#     assert response_data[0]["last_name"] == "test"
+#     assert response_data[0]["affiliation"] == "aff"
+#     assert response_data[0]["role"] == "Study Chair"
+#     assert response_data[1]["name"] == "admin-test"
+#     assert response_data[1]["affiliation"] == "admin-aff"
+#     assert response_data[1]["role"] == "Study Chair"
+#     assert response_data[2]["name"] == "editor-test"
+#     assert response_data[2]["affiliation"] == "editor-aff"
+#     assert response_data[2]["role"] == "Study Chair"
+#
+#     assert admin_response_data[0]["first_name"] == "test"
+#     assert admin_response_data[0]["last_name"] == "test"
+#     assert admin_response_data[0]["affiliation"] == "aff"
+#     assert admin_response_data[0]["role"] == "Study Chair"
+#     assert admin_response_data[1]["name"] == "admin-test"
+#     assert admin_response_data[1]["affiliation"] == "admin-aff"
+#     assert admin_response_data[1]["role"] == "Study Chair"
+#     assert admin_response_data[2]["name"] == "editor-test"
+#     assert admin_response_data[2]["affiliation"] == "editor-aff"
+#     assert admin_response_data[2]["role"] == "Study Chair"
+#
+#     assert editor_response_data[0]["first_name"] == "test"
+#     assert editor_response_data[0]["last_name"] == "test"
+#     assert editor_response_data[0]["affiliation"] == "aff"
+#     assert editor_response_data[0]["role"] == "Study Chair"
+#     assert editor_response_data[1]["name"] == "admin-test"
+#     assert editor_response_data[1]["affiliation"] == "admin-aff"
+#     assert editor_response_data[1]["role"] == "Study Chair"
+#     assert editor_response_data[2]["name"] == "editor-test"
+#     assert editor_response_data[2]["affiliation"] == "editor-aff"
+#     assert editor_response_data[2]["role"] == "Study Chair"
+#
+#     assert viewer_response_data[0]["first_name"] == "test"
+#     assert viewer_response_data[0]["last_name"] == "test"
+#     assert viewer_response_data[0]["affiliation"] == "aff"
+#     assert viewer_response_data[0]["role"] == "Study Chair"
+#     assert viewer_response_data[1]["name"] == "admin-test"
+#     assert viewer_response_data[1]["affiliation"] == "admin-aff"
+#     assert viewer_response_data[1]["role"] == "Study Chair"
+#     assert viewer_response_data[2]["name"] == "editor-test"
+#     assert viewer_response_data[2]["affiliation"] == "editor-aff"
+#     assert viewer_response_data[2]["role"] == "Study Chair"
+#
+#
+# def test_delete_overall_official_metadata(clients):
+#     """
+#     Given a Flask application configured for testing and a
+#         study ID and overall official ID
+#     WHEN the '/study/{study_id}/metadata/overall-official/{overall_official_id}'
+#         endpoint is requested (DELETE)
+#     THEN check that the response is valid and deletes the overall-official metadata
+#     """
+#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+#     study_id = pytest.global_study_id["id"]  # type: ignore
+#     overall_official_id = pytest.global_overall_official_id
+#     oo_admin_id = pytest.global_overall_official_id_admin
+#     oo_editor_id = pytest.global_overall_official_id_editor
+#
+#     viewer_response = _viewer_client.delete(
+#         f"/study/{study_id}/metadata/overall-official/{overall_official_id}"
+#     )
+#     response = _logged_in_client.delete(
+#         f"/study/{study_id}/metadata/overall-official/{overall_official_id}"
+#     )
+#     admin_response = _admin_client.delete(
+#         f"/study/{study_id}/metadata/overall-official/{oo_admin_id}"
+#     )
+#     editor_response = _editor_client.delete(
+#         f"/study/{study_id}/metadata/overall-official/{oo_editor_id}"
+#     )
+#
+#     assert viewer_response.status_code == 403
+#     assert response.status_code == 204
+#     assert admin_response.status_code == 204
+#     assert editor_response.status_code == 204
 
 
 # ------------------- OVERSIGHT METADATA ------------------- #
@@ -2820,188 +2827,188 @@ def test_get_oversight_metadata(clients):
     assert viewer_response_data["oversight"] is True
 
 
-# ------------------- REFERENCE METADATA ------------------- #
-def test_post_reference_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/reference' endpoint is requested (POST)
-    THEN check that the response is valid and creates the reference metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.post(
-        f"/study/{study_id}/metadata/reference",
-        json=[
-            {
-                "identifier": "reference identifier",
-                "type": "Yes",
-                "citation": "reference citation",
-            }
-        ],
-    )
-    # Add a one second delay to prevent duplicate timestamps
-    sleep(1)
-
-    assert response.status_code == 201
-    response_data = json.loads(response.data)
-    pytest.global_reference_id = response_data[0]["id"]
-
-    assert response_data[0]["identifier"] == "reference identifier"
-    assert response_data[0]["type"] == "Yes"
-    assert response_data[0]["citation"] == "reference citation"
-
-    admin_response = _admin_client.post(
-        f"/study/{study_id}/metadata/reference",
-        json=[
-            {
-                "identifier": "admin-reference identifier",
-                "type": "Yes",
-                "citation": "admin-reference citation",
-            }
-        ],
-    )
-    # Add a one second delay to prevent duplicate timestamps
-    sleep(1)
-
-    assert admin_response.status_code == 201
-    admin_response_data = json.loads(admin_response.data)
-    pytest.global_reference_id_admin = admin_response_data[0]["id"]
-
-    assert admin_response_data[0]["identifier"] == "admin-reference identifier"
-    assert admin_response_data[0]["type"] == "Yes"
-    assert admin_response_data[0]["citation"] == "admin-reference citation"
-
-    editor_response = _editor_client.post(
-        f"/study/{study_id}/metadata/reference",
-        json=[
-            {
-                "identifier": "editor-reference identifier",
-                "type": "Yes",
-                "citation": "editor-reference citation",
-            }
-        ],
-    )
-
-    assert editor_response.status_code == 201
-    editor_response_data = json.loads(editor_response.data)
-    pytest.global_reference_id_editor = editor_response_data[0]["id"]
-
-    assert editor_response_data[0]["identifier"] == "editor-reference identifier"
-    assert editor_response_data[0]["type"] == "Yes"
-    assert editor_response_data[0]["citation"] == "editor-reference citation"
-
-    viewer_response = _viewer_client.post(
-        f"/study/{study_id}/metadata/reference",
-        json=[
-            {
-                "identifier": "viewer-reference identifier",
-                "type": "Yes",
-                "citation": "editor-reference citation",
-            }
-        ],
-    )
-
-    assert viewer_response.status_code == 403
-
-
-def test_get_reference_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/reference' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the reference metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/reference")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/reference")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/reference")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/reference")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-    response_data = json.loads(response.data)
-    admin_response_data = json.loads(admin_response.data)
-    editor_response_data = json.loads(editor_response.data)
-    viewer_response_data = json.loads(viewer_response.data)
-
-    assert response_data[0]["identifier"] == "reference identifier"
-    assert response_data[0]["type"] == "Yes"
-    assert response_data[0]["citation"] == "reference citation"
-    assert response_data[1]["identifier"] == "admin-reference identifier"
-    assert response_data[1]["type"] == "Yes"
-    assert response_data[1]["citation"] == "admin-reference citation"
-    assert response_data[2]["identifier"] == "editor-reference identifier"
-    assert response_data[2]["type"] == "Yes"
-    assert response_data[2]["citation"] == "editor-reference citation"
-
-    assert admin_response_data[0]["identifier"] == "reference identifier"
-    assert admin_response_data[0]["type"] == "Yes"
-    assert admin_response_data[0]["citation"] == "reference citation"
-    assert admin_response_data[1]["identifier"] == "admin-reference identifier"
-    assert admin_response_data[1]["type"] == "Yes"
-    assert admin_response_data[1]["citation"] == "admin-reference citation"
-    assert admin_response_data[2]["identifier"] == "editor-reference identifier"
-    assert admin_response_data[2]["type"] == "Yes"
-    assert admin_response_data[2]["citation"] == "editor-reference citation"
-
-    assert editor_response_data[0]["identifier"] == "reference identifier"
-    assert editor_response_data[0]["type"] == "Yes"
-    assert editor_response_data[0]["citation"] == "reference citation"
-    assert editor_response_data[1]["identifier"] == "admin-reference identifier"
-    assert editor_response_data[1]["type"] == "Yes"
-    assert editor_response_data[1]["citation"] == "admin-reference citation"
-    assert editor_response_data[2]["identifier"] == "editor-reference identifier"
-    assert editor_response_data[2]["type"] == "Yes"
-    assert editor_response_data[2]["citation"] == "editor-reference citation"
-
-    assert viewer_response_data[0]["identifier"] == "reference identifier"
-    assert viewer_response_data[0]["type"] == "Yes"
-    assert viewer_response_data[0]["citation"] == "reference citation"
-    assert viewer_response_data[1]["identifier"] == "admin-reference identifier"
-    assert viewer_response_data[1]["type"] == "Yes"
-    assert viewer_response_data[1]["citation"] == "admin-reference citation"
-    assert viewer_response_data[2]["identifier"] == "editor-reference identifier"
-    assert viewer_response_data[2]["type"] == "Yes"
-    assert viewer_response_data[2]["citation"] == "editor-reference citation"
-
-
-def test_delete_reference_metadata(clients):
-    """
-    Given a Flask application configured for testing and
-        a study ID and reference ID
-    WHEN the '/study/{study_id}/metadata/reference/{reference_id}'
-        endpoint is requested (DELETE)
-    THEN check that the response is valid and deletes the reference metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    reference_id = pytest.global_reference_id
-    admin_reference_id = pytest.global_reference_id_admin
-    editor_reference_id = pytest.global_reference_id_editor
-
-    viewer_response = _viewer_client.delete(
-        f"/study/{study_id}/metadata/reference/{reference_id}"
-    )
-    response = _logged_in_client.delete(
-        f"/study/{study_id}/metadata/reference/{reference_id}"
-    )
-    admin_response = _admin_client.delete(
-        f"/study/{study_id}/metadata/reference/{admin_reference_id}"
-    )
-    editor_response = _editor_client.delete(
-        f"/study/{study_id}/metadata/reference/{editor_reference_id}"
-    )
-
-    assert viewer_response.status_code == 403
-    assert response.status_code == 204
-    assert admin_response.status_code == 204
-    assert editor_response.status_code == 204
-
+# # ------------------- REFERENCE METADATA ------------------- #
+# def test_post_reference_metadata(clients):
+#     """
+#     Given a Flask application configured for testing and a study ID
+#     WHEN the '/study/{study_id}/metadata/reference' endpoint is requested (POST)
+#     THEN check that the response is valid and creates the reference metadata
+#     """
+#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+#     study_id = pytest.global_study_id["id"]  # type: ignore
+#
+#     response = _logged_in_client.post(
+#         f"/study/{study_id}/metadata/reference",
+#         json=[
+#             {
+#                 "identifier": "reference identifier",
+#                 "type": "Yes",
+#                 "citation": "reference citation",
+#             }
+#         ],
+#     )
+#     # Add a one second delay to prevent duplicate timestamps
+#     sleep(1)
+#
+#     assert response.status_code == 201
+#     response_data = json.loads(response.data)
+#     pytest.global_reference_id = response_data[0]["id"]
+#
+#     assert response_data[0]["identifier"] == "reference identifier"
+#     assert response_data[0]["type"] == "Yes"
+#     assert response_data[0]["citation"] == "reference citation"
+#
+#     admin_response = _admin_client.post(
+#         f"/study/{study_id}/metadata/reference",
+#         json=[
+#             {
+#                 "identifier": "admin-reference identifier",
+#                 "type": "Yes",
+#                 "citation": "admin-reference citation",
+#             }
+#         ],
+#     )
+#     # Add a one second delay to prevent duplicate timestamps
+#     sleep(1)
+#
+#     assert admin_response.status_code == 201
+#     admin_response_data = json.loads(admin_response.data)
+#     pytest.global_reference_id_admin = admin_response_data[0]["id"]
+#
+#     assert admin_response_data[0]["identifier"] == "admin-reference identifier"
+#     assert admin_response_data[0]["type"] == "Yes"
+#     assert admin_response_data[0]["citation"] == "admin-reference citation"
+#
+#     editor_response = _editor_client.post(
+#         f"/study/{study_id}/metadata/reference",
+#         json=[
+#             {
+#                 "identifier": "editor-reference identifier",
+#                 "type": "Yes",
+#                 "citation": "editor-reference citation",
+#             }
+#         ],
+#     )
+#
+#     assert editor_response.status_code == 201
+#     editor_response_data = json.loads(editor_response.data)
+#     pytest.global_reference_id_editor = editor_response_data[0]["id"]
+#
+#     assert editor_response_data[0]["identifier"] == "editor-reference identifier"
+#     assert editor_response_data[0]["type"] == "Yes"
+#     assert editor_response_data[0]["citation"] == "editor-reference citation"
+#
+#     viewer_response = _viewer_client.post(
+#         f"/study/{study_id}/metadata/reference",
+#         json=[
+#             {
+#                 "identifier": "viewer-reference identifier",
+#                 "type": "Yes",
+#                 "citation": "editor-reference citation",
+#             }
+#         ],
+#     )
+#
+#     assert viewer_response.status_code == 403
+#
+#
+# def test_get_reference_metadata(clients):
+#     """
+#     Given a Flask application configured for testing and a study ID
+#     WHEN the '/study/{study_id}/metadata/reference' endpoint is requested (GET)
+#     THEN check that the response is valid and retrieves the reference metadata
+#     """
+#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+#     study_id = pytest.global_study_id["id"]  # type: ignore
+#
+#     response = _logged_in_client.get(f"/study/{study_id}/metadata/reference")
+#     admin_response = _admin_client.get(f"/study/{study_id}/metadata/reference")
+#     editor_response = _editor_client.get(f"/study/{study_id}/metadata/reference")
+#     viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/reference")
+#
+#     assert response.status_code == 200
+#     assert admin_response.status_code == 200
+#     assert editor_response.status_code == 200
+#     assert viewer_response.status_code == 200
+#
+#     response_data = json.loads(response.data)
+#     admin_response_data = json.loads(admin_response.data)
+#     editor_response_data = json.loads(editor_response.data)
+#     viewer_response_data = json.loads(viewer_response.data)
+#
+#     assert response_data[0]["identifier"] == "reference identifier"
+#     assert response_data[0]["type"] == "Yes"
+#     assert response_data[0]["citation"] == "reference citation"
+#     assert response_data[1]["identifier"] == "admin-reference identifier"
+#     assert response_data[1]["type"] == "Yes"
+#     assert response_data[1]["citation"] == "admin-reference citation"
+#     assert response_data[2]["identifier"] == "editor-reference identifier"
+#     assert response_data[2]["type"] == "Yes"
+#     assert response_data[2]["citation"] == "editor-reference citation"
+#
+#     assert admin_response_data[0]["identifier"] == "reference identifier"
+#     assert admin_response_data[0]["type"] == "Yes"
+#     assert admin_response_data[0]["citation"] == "reference citation"
+#     assert admin_response_data[1]["identifier"] == "admin-reference identifier"
+#     assert admin_response_data[1]["type"] == "Yes"
+#     assert admin_response_data[1]["citation"] == "admin-reference citation"
+#     assert admin_response_data[2]["identifier"] == "editor-reference identifier"
+#     assert admin_response_data[2]["type"] == "Yes"
+#     assert admin_response_data[2]["citation"] == "editor-reference citation"
+#
+#     assert editor_response_data[0]["identifier"] == "reference identifier"
+#     assert editor_response_data[0]["type"] == "Yes"
+#     assert editor_response_data[0]["citation"] == "reference citation"
+#     assert editor_response_data[1]["identifier"] == "admin-reference identifier"
+#     assert editor_response_data[1]["type"] == "Yes"
+#     assert editor_response_data[1]["citation"] == "admin-reference citation"
+#     assert editor_response_data[2]["identifier"] == "editor-reference identifier"
+#     assert editor_response_data[2]["type"] == "Yes"
+#     assert editor_response_data[2]["citation"] == "editor-reference citation"
+#
+#     assert viewer_response_data[0]["identifier"] == "reference identifier"
+#     assert viewer_response_data[0]["type"] == "Yes"
+#     assert viewer_response_data[0]["citation"] == "reference citation"
+#     assert viewer_response_data[1]["identifier"] == "admin-reference identifier"
+#     assert viewer_response_data[1]["type"] == "Yes"
+#     assert viewer_response_data[1]["citation"] == "admin-reference citation"
+#     assert viewer_response_data[2]["identifier"] == "editor-reference identifier"
+#     assert viewer_response_data[2]["type"] == "Yes"
+#     assert viewer_response_data[2]["citation"] == "editor-reference citation"
+#
+#
+# def test_delete_reference_metadata(clients):
+#     """
+#     Given a Flask application configured for testing and
+#         a study ID and reference ID
+#     WHEN the '/study/{study_id}/metadata/reference/{reference_id}'
+#         endpoint is requested (DELETE)
+#     THEN check that the response is valid and deletes the reference metadata
+#     """
+#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+#     study_id = pytest.global_study_id["id"]  # type: ignore
+#     reference_id = pytest.global_reference_id
+#     admin_reference_id = pytest.global_reference_id_admin
+#     editor_reference_id = pytest.global_reference_id_editor
+#
+#     viewer_response = _viewer_client.delete(
+#         f"/study/{study_id}/metadata/reference/{reference_id}"
+#     )
+#     response = _logged_in_client.delete(
+#         f"/study/{study_id}/metadata/reference/{reference_id}"
+#     )
+#     admin_response = _admin_client.delete(
+#         f"/study/{study_id}/metadata/reference/{admin_reference_id}"
+#     )
+#     editor_response = _editor_client.delete(
+#         f"/study/{study_id}/metadata/reference/{editor_reference_id}"
+#     )
+#
+#     assert viewer_response.status_code == 403
+#     assert response.status_code == 204
+#     assert admin_response.status_code == 204
+#     assert editor_response.status_code == 204
+#
 
 # ------------------- SPONSORS METADATA ------------------- #
 def test_put_sponsors_metadata(clients):

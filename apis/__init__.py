@@ -29,16 +29,20 @@ from .participant import api as participants_api
 from .redcap import api as redcap
 from .study import api as study_api
 from .study_metadata.study_arm import api as arm
-from .study_metadata.study_contact import api as contact
+from .study_metadata.study_central_contact import api as central_contact
 from .study_metadata.study_description import api as study_description
 from .study_metadata.study_design import api as design
 from .study_metadata.study_eligibility import api as eligibility
 from .study_metadata.study_identification import api as identification
 from .study_metadata.study_intervention import api as intervention
 from .study_metadata.study_location import api as location
-from .study_metadata.study_other import api as other
+# from .study_metadata.study_other import api as other
+from .study_metadata.study_keywords import api as keywords
+from .study_metadata.study_conditions import api as conditions
+from .study_metadata.study_oversight import api as oversight
 from .study_metadata.study_overall_official import api as overall_official
-from .study_metadata.study_sponsors_collaborators import api as sponsors_collaborator
+from .study_metadata.study_collaborators import api as collaborators
+from .study_metadata.study_sponsors import api as sponsors
 from .study_metadata.study_status import api as status
 from .user import api as user
 from .utils import api as utils
@@ -73,14 +77,18 @@ __all__ = [
     "participants_api",
     "study_api",
     "arm",
-    "contact",
+    "central_contact",
     "design",
     "eligibility",
     "intervention",
     "location",
-    "other",
+    # "other",
+    "keywords",
+    "conditions",
+    "oversight",
     "overall_official",
-    "sponsors_collaborator",
+    "sponsors",
+    "collaborators",
     "status",
     "user",
     "identification",

@@ -74,7 +74,7 @@ class Study(db.Model):  # type: ignore
         cascade="all, delete",
     )
     study_contact = db.relationship(
-        "StudyContact",
+        "StudyCentralContact",
         back_populates="study",
         cascade="all, delete",
     )

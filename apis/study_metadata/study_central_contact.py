@@ -13,7 +13,7 @@ from apis.study_metadata_namespace import api
 from ..authentication import is_granted
 
 study_contact = api.model(
-    "StudyContact",
+    "StudyCentralContact",
     {
         "id": fields.String(required=True),
         "name": fields.String(required=True),
@@ -28,7 +28,7 @@ study_contact = api.model(
 
 
 @api.route("/study/<study_id>/metadata/central-contact")
-class StudyContactResource(Resource):
+class StudyCentralContactResource(Resource):
     """Study Contact Metadata"""
 
     @api.doc("contact")
@@ -112,11 +112,11 @@ class StudyContactResource(Resource):
 
         for i in data:
             if "id" in i and i["id"]:
-                study_contact_ = model.StudyContact.query.get(i["id"])
+                study_contact_ = model.StudyCentralContact.query.get(i["id"])
                 study_contact_.update(i)
                 list_of_elements.append(study_contact_.to_dict())
             elif "id" not in i or not i["id"]:
-                study_contact_ = model.StudyContact.from_data(study_obj, i, None, True)
+                study_contact_ = model.StudyCentralContact.from_data(study_obj, i, None, True)
                 model.db.session.add(study_contact_)
                 list_of_elements.append(study_contact_.to_dict())
 
@@ -125,7 +125,7 @@ class StudyContactResource(Resource):
         return list_of_elements, 201
 
     @api.route("/study/<study_id>/metadata/central-contact/<central_contact_id>")
-    class StudyContactUpdate(Resource):
+    class StudyCentralContactDelete(Resource):
         """Study Contact Metadata"""
 
         @api.doc("Delete Study contacts")
@@ -136,7 +136,7 @@ class StudyContactResource(Resource):
             study = model.Study.query.get(study_id)
             if not is_granted("study_metadata", study):
                 return "Access denied, you can not delete study", 403
-            study_contact_ = model.StudyContact.query.get(central_contact_id)
+            study_contact_ = model.StudyCentralContact.query.get(central_contact_id)
 
             model.db.session.delete(study_contact_)
             model.db.session.commit()
