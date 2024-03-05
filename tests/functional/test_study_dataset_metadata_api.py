@@ -3286,258 +3286,258 @@ def test_delete_dataset_related_identifier_metadata(clients):
 
 
 # # ------------------- RIGHTS METADATA ------------------- #
-# def test_post_dataset_rights_metadata(clients):
-#     """
-#     Given a Flask application configured for testing and a study ID and dataset ID
-#     When the '/study'
-#     endpoint is requested (POST)
-#     Then check that the response is valid and creates the dataset
-#     rights metadata content
-#     """
-#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-#     study_id = pytest.global_study_id["id"]  # type: ignore
-#     dataset_id = pytest.global_dataset_id
-#
-#     response = _logged_in_client.post(
-#         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights",
-#         json=[
-#             {
-#                 "identifier": "Identifier",
-#                 "identifier_scheme": "Identifier Scheme",
-#                 "identifier_scheme_uri": "Identifier Scheme",
-#                 "rights": "Rights",
-#                 "uri": "URI",
-#                 "license_text": "license text",
-#             }
-#         ],
-#     )
-#     # Add a one second delay to prevent duplicate timestamps
-#     sleep(1)
-#
-#     assert response.status_code == 201
-#     response_data = json.loads(response.data)
-#     pytest.global_dataset_rights_id = response_data[0]["id"]
-#
-#     assert response_data[0]["identifier"] == "Identifier"
-#     assert response_data[0]["identifier_scheme"] == "Identifier Scheme"
-#     assert response_data[0]["identifier_scheme_uri"] == "Identifier Scheme"
-#     assert response_data[0]["rights"] == "Rights"
-#     assert response_data[0]["uri"] == "URI"
-#     assert response_data[0]["license_text"] == "license text"
-#
-#     admin_response = _admin_client.post(
-#         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights",
-#         json=[
-#             {
-#                 "identifier": "Admin Identifier",
-#                 "identifier_scheme": "Admin Identifier Scheme",
-#                 "identifier_scheme_uri": "Admin Identifier Scheme",
-#                 "rights": "Admin Rights",
-#                 "uri": "Admin URI",
-#                 "license_text": "license text",
-#             }
-#         ],
-#     )
-#     # Add a one second delay to prevent duplicate timestamps
-#     sleep(1)
-#
-#     assert admin_response.status_code == 201
-#     admin_response_data = json.loads(admin_response.data)
-#     pytest.global_dataset_rights_id_admin = admin_response_data[0]["id"]
-#
-#     assert admin_response_data[0]["identifier"] == "Admin Identifier"
-#     assert admin_response_data[0]["identifier_scheme"] == "Admin Identifier Scheme"
-#     assert admin_response_data[0]["identifier_scheme_uri"] == "Admin Identifier Scheme"
-#     assert admin_response_data[0]["rights"] == "Admin Rights"
-#     assert admin_response_data[0]["uri"] == "Admin URI"
-#     assert admin_response_data[0]["license_text"] == "license text"
-#
-#     editor_response = _editor_client.post(
-#         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights",
-#         json=[
-#             {
-#                 "identifier": "Editor Identifier",
-#                 "identifier_scheme": "Editor Identifier Scheme",
-#                 "identifier_scheme_uri": "Editor Identifier Scheme",
-#                 "rights": "Editor Rights",
-#                 "uri": "Editor URI",
-#                 "license_text": "license text",
-#             }
-#         ],
-#     )
-#
-#     assert editor_response.status_code == 201
-#     editor_response_data = json.loads(editor_response.data)
-#     pytest.global_dataset_rights_id_editor = editor_response_data[0]["id"]
-#
-#     assert editor_response_data[0]["identifier"] == "Editor Identifier"
-#     assert editor_response_data[0]["identifier_scheme"] == "Editor Identifier Scheme"
-#     assert editor_response_data[0]["identifier_scheme_uri"] == "Editor Identifier Scheme"
-#     assert editor_response_data[0]["rights"] == "Editor Rights"
-#     assert editor_response_data[0]["uri"] == "Editor URI"
-#     assert editor_response_data[0]["license_text"] == "license text"
-#
-#     viewer_response = _viewer_client.post(
-#         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights",
-#         json=[
-#             {
-#                 "identifier": "Viewer Identifier",
-#                 "identifier_scheme": "Viewer Identifier Scheme",
-#                 "identifier_scheme_uri": "Viewer Identifier Scheme",
-#                 "rights": "Viewer Rights",
-#                 "uri": "Viewer URI",
-#                 "license_text": "license text",
-#             }
-#         ],
-#     )
-#
-#     assert viewer_response.status_code == 403
-#
-#
-# def test_get_dataset_rights_metadata(clients):
-#     """
-#     Given a Flask application configured for testing and a study ID and dataset ID
-#     When the '/study'
-#     endpoint is requested (GET)
-#     Then check that the response is valid and retrieves the dataset
-#     rights metadata content
-#     """
-#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-#     study_id = pytest.global_study_id["id"]  # type: ignore
-#     dataset_id = pytest.global_dataset_id
-#
-#     response = _logged_in_client.get(
-#         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights"
-#     )
-#     admin_response = _admin_client.get(
-#         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights"
-#     )
-#     editor_response = _editor_client.get(
-#         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights"
-#     )
-#     viewer_response = _viewer_client.get(
-#         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights"
-#     )
-#
-#     assert response.status_code == 200
-#     assert admin_response.status_code == 200
-#     assert editor_response.status_code == 200
-#     assert viewer_response.status_code == 200
-#
-#     response_data = json.loads(response.data)
-#     admin_response_data = json.loads(admin_response.data)
-#     editor_response_data = json.loads(editor_response.data)
-#     viewer_response_data = json.loads(viewer_response.data)
-#
-#     assert response_data[0]["identifier"] == "Identifier"
-#     assert response_data[0]["identifier_scheme"] == "Identifier Scheme"
-#     assert response_data[0]["identifier_scheme_uri"] == "Identifier Scheme"
-#     assert response_data[0]["rights"] == "Rights"
-#     assert response_data[0]["uri"] == "URI"
-#     assert response_data[0]["license_text"] == "license text"
-#     assert response_data[1]["identifier"] == "Admin Identifier"
-#     assert response_data[1]["identifier_scheme"] == "Admin Identifier Scheme"
-#     assert response_data[1]["identifier_scheme_uri"] == "Admin Identifier Scheme"
-#     assert response_data[1]["rights"] == "Admin Rights"
-#     assert response_data[1]["uri"] == "Admin URI"
-#     assert response_data[1]["license_text"] == "license text"
-#     assert response_data[2]["identifier"] == "Editor Identifier"
-#     assert response_data[2]["identifier_scheme"] == "Editor Identifier Scheme"
-#     assert response_data[2]["identifier_scheme_uri"] == "Editor Identifier Scheme"
-#     assert response_data[2]["rights"] == "Editor Rights"
-#     assert response_data[2]["uri"] == "Editor URI"
-#     assert response_data[2]["license_text"] == "license text"
-#
-#     assert admin_response_data[0]["identifier"] == "Identifier"
-#     assert admin_response_data[0]["identifier_scheme"] == "Identifier Scheme"
-#     assert admin_response_data[0]["identifier_scheme_uri"] == "Identifier Scheme"
-#     assert admin_response_data[0]["rights"] == "Rights"
-#     assert admin_response_data[0]["uri"] == "URI"
-#     assert admin_response_data[0]["license_text"] == "license text"
-#     assert admin_response_data[1]["identifier"] == "Admin Identifier"
-#     assert admin_response_data[1]["identifier_scheme"] == "Admin Identifier Scheme"
-#     assert admin_response_data[1]["identifier_scheme_uri"] == "Admin Identifier Scheme"
-#     assert admin_response_data[1]["rights"] == "Admin Rights"
-#     assert admin_response_data[1]["uri"] == "Admin URI"
-#     assert admin_response_data[1]["license_text"] == "license text"
-#     assert admin_response_data[2]["identifier"] == "Editor Identifier"
-#     assert admin_response_data[2]["identifier_scheme"] == "Editor Identifier Scheme"
-#     assert admin_response_data[2]["identifier_scheme_uri"] == "Editor Identifier Scheme"
-#     assert admin_response_data[2]["rights"] == "Editor Rights"
-#     assert admin_response_data[2]["uri"] == "Editor URI"
-#     assert admin_response_data[2]["license_text"] == "license text"
-#
-#     assert editor_response_data[0]["identifier"] == "Identifier"
-#     assert editor_response_data[0]["identifier_scheme"] == "Identifier Scheme"
-#     assert editor_response_data[0]["identifier_scheme_uri"] == "Identifier Scheme"
-#     assert editor_response_data[0]["rights"] == "Rights"
-#     assert editor_response_data[0]["uri"] == "URI"
-#     assert editor_response_data[0]["license_text"] == "license text"
-#     assert editor_response_data[1]["identifier"] == "Admin Identifier"
-#     assert editor_response_data[1]["identifier_scheme"] == "Admin Identifier Scheme"
-#     assert editor_response_data[1]["identifier_scheme_uri"] == "Admin Identifier Scheme"
-#     assert editor_response_data[1]["rights"] == "Admin Rights"
-#     assert editor_response_data[1]["uri"] == "Admin URI"
-#     assert editor_response_data[1]["license_text"] == "license text"
-#     assert editor_response_data[2]["identifier"] == "Editor Identifier"
-#     assert editor_response_data[2]["identifier_scheme"] == "Editor Identifier Scheme"
-#     assert editor_response_data[2]["identifier_scheme_uri"] == "Editor Identifier Scheme"
-#     assert editor_response_data[2]["rights"] == "Editor Rights"
-#     assert editor_response_data[2]["uri"] == "Editor URI"
-#     assert editor_response_data[2]["license_text"] == "license text"
-#
-#     assert viewer_response_data[0]["identifier"] == "Identifier"
-#     assert viewer_response_data[0]["identifier_scheme"] == "Identifier Scheme"
-#     assert viewer_response_data[0]["identifier_scheme_uri"] == "Identifier Scheme"
-#     assert viewer_response_data[0]["rights"] == "Rights"
-#     assert viewer_response_data[0]["uri"] == "URI"
-#     assert viewer_response_data[0]["license_text"] == "license text"
-#     assert viewer_response_data[1]["identifier"] == "Admin Identifier"
-#     assert viewer_response_data[1]["identifier_scheme"] == "Admin Identifier Scheme"
-#     assert viewer_response_data[1]["identifier_scheme_uri"] == "Admin Identifier Scheme"
-#     assert viewer_response_data[1]["rights"] == "Admin Rights"
-#     assert viewer_response_data[1]["uri"] == "Admin URI"
-#     assert viewer_response_data[1]["license_text"] == "license text"
-#     assert viewer_response_data[2]["identifier"] == "Editor Identifier"
-#     assert viewer_response_data[2]["identifier_scheme"] == "Editor Identifier Scheme"
-#     assert viewer_response_data[2]["identifier_scheme_uri"] == "Editor Identifier Scheme"
-#     assert viewer_response_data[2]["rights"] == "Editor Rights"
-#     assert viewer_response_data[2]["uri"] == "Editor URI"
-#     assert viewer_response_data[2]["license_text"] == "license text"
-#
-#
-# def test_delete_dataset_rights_metadata(clients):
-#     """
-#     Given a Flask application configured for testing and a study ID and dataset ID
-#     When the '/study/{study_id}/dataset/{dataset_id}/metadata/rights'
-#     endpoint is requested (DELETE)
-#     Then check that the response is valid and deletes the dataset
-#     rights metadata content
-#     """
-#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-#     study_id = pytest.global_study_id["id"]  # type: ignore
-#     dataset_id = pytest.global_dataset_id
-#     rights_id = pytest.global_dataset_rights_id
-#     a_rights_id = pytest.global_dataset_rights_id_admin
-#     e_rights_id = pytest.global_dataset_rights_id_editor
-#
-#     viewer_response = _viewer_client.delete(
-#         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights/{rights_id}"
-#     )
-#     response = _logged_in_client.delete(
-#         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights/{rights_id}"
-#     )
-#     admin_response = _admin_client.delete(
-#         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights/{a_rights_id}"
-#     )
-#     editor_response = _admin_client.delete(
-#         f"/study/{study_id}/dataset/{dataset_id}/metadata/rights/{e_rights_id}"
-#     )
-#
-#     assert viewer_response.status_code == 403
-#     assert response.status_code == 204
-#     assert admin_response.status_code == 204
-#     assert editor_response.status_code == 204
+def test_post_dataset_rights_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study'
+    endpoint is requested (POST)
+    Then check that the response is valid and creates the dataset
+    rights metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights",
+        json=[
+            {
+                "identifier": "Identifier",
+                "identifier_scheme": "Identifier Scheme",
+                "identifier_scheme_uri": "Identifier Scheme",
+                "rights": "Rights",
+                "uri": "URI",
+                "license_text": "license text",
+            }
+        ],
+    )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
+
+    assert response.status_code == 201
+    response_data = json.loads(response.data)
+    pytest.global_dataset_rights_id = response_data[0]["id"]
+
+    assert response_data[0]["identifier"] == "Identifier"
+    assert response_data[0]["identifier_scheme"] == "Identifier Scheme"
+    assert response_data[0]["identifier_scheme_uri"] == "Identifier Scheme"
+    assert response_data[0]["rights"] == "Rights"
+    assert response_data[0]["uri"] == "URI"
+    assert response_data[0]["license_text"] == "license text"
+
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights",
+        json=[
+            {
+                "identifier": "Admin Identifier",
+                "identifier_scheme": "Admin Identifier Scheme",
+                "identifier_scheme_uri": "Admin Identifier Scheme",
+                "rights": "Admin Rights",
+                "uri": "Admin URI",
+                "license_text": "license text",
+            }
+        ],
+    )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
+
+    assert admin_response.status_code == 201
+    admin_response_data = json.loads(admin_response.data)
+    pytest.global_dataset_rights_id_admin = admin_response_data[0]["id"]
+
+    assert admin_response_data[0]["identifier"] == "Admin Identifier"
+    assert admin_response_data[0]["identifier_scheme"] == "Admin Identifier Scheme"
+    assert admin_response_data[0]["identifier_scheme_uri"] == "Admin Identifier Scheme"
+    assert admin_response_data[0]["rights"] == "Admin Rights"
+    assert admin_response_data[0]["uri"] == "Admin URI"
+    assert admin_response_data[0]["license_text"] == "license text"
+
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights",
+        json=[
+            {
+                "identifier": "Editor Identifier",
+                "identifier_scheme": "Editor Identifier Scheme",
+                "identifier_scheme_uri": "Editor Identifier Scheme",
+                "rights": "Editor Rights",
+                "uri": "Editor URI",
+                "license_text": "license text",
+            }
+        ],
+    )
+
+    assert editor_response.status_code == 201
+    editor_response_data = json.loads(editor_response.data)
+    pytest.global_dataset_rights_id_editor = editor_response_data[0]["id"]
+
+    assert editor_response_data[0]["identifier"] == "Editor Identifier"
+    assert editor_response_data[0]["identifier_scheme"] == "Editor Identifier Scheme"
+    assert editor_response_data[0]["identifier_scheme_uri"] == "Editor Identifier Scheme"
+    assert editor_response_data[0]["rights"] == "Editor Rights"
+    assert editor_response_data[0]["uri"] == "Editor URI"
+    assert editor_response_data[0]["license_text"] == "license text"
+
+    viewer_response = _viewer_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights",
+        json=[
+            {
+                "identifier": "Viewer Identifier",
+                "identifier_scheme": "Viewer Identifier Scheme",
+                "identifier_scheme_uri": "Viewer Identifier Scheme",
+                "rights": "Viewer Rights",
+                "uri": "Viewer URI",
+                "license_text": "license text",
+            }
+        ],
+    )
+
+    assert viewer_response.status_code == 403
+
+
+def test_get_dataset_rights_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study'
+    endpoint is requested (GET)
+    Then check that the response is valid and retrieves the dataset
+    rights metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights"
+    )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights"
+    )
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data[0]["identifier"] == "Identifier"
+    assert response_data[0]["identifier_scheme"] == "Identifier Scheme"
+    assert response_data[0]["identifier_scheme_uri"] == "Identifier Scheme"
+    assert response_data[0]["rights"] == "Rights"
+    assert response_data[0]["uri"] == "URI"
+    assert response_data[0]["license_text"] == "license text"
+    assert response_data[1]["identifier"] == "Admin Identifier"
+    assert response_data[1]["identifier_scheme"] == "Admin Identifier Scheme"
+    assert response_data[1]["identifier_scheme_uri"] == "Admin Identifier Scheme"
+    assert response_data[1]["rights"] == "Admin Rights"
+    assert response_data[1]["uri"] == "Admin URI"
+    assert response_data[1]["license_text"] == "license text"
+    assert response_data[2]["identifier"] == "Editor Identifier"
+    assert response_data[2]["identifier_scheme"] == "Editor Identifier Scheme"
+    assert response_data[2]["identifier_scheme_uri"] == "Editor Identifier Scheme"
+    assert response_data[2]["rights"] == "Editor Rights"
+    assert response_data[2]["uri"] == "Editor URI"
+    assert response_data[2]["license_text"] == "license text"
+
+    assert admin_response_data[0]["identifier"] == "Identifier"
+    assert admin_response_data[0]["identifier_scheme"] == "Identifier Scheme"
+    assert admin_response_data[0]["identifier_scheme_uri"] == "Identifier Scheme"
+    assert admin_response_data[0]["rights"] == "Rights"
+    assert admin_response_data[0]["uri"] == "URI"
+    assert admin_response_data[0]["license_text"] == "license text"
+    assert admin_response_data[1]["identifier"] == "Admin Identifier"
+    assert admin_response_data[1]["identifier_scheme"] == "Admin Identifier Scheme"
+    assert admin_response_data[1]["identifier_scheme_uri"] == "Admin Identifier Scheme"
+    assert admin_response_data[1]["rights"] == "Admin Rights"
+    assert admin_response_data[1]["uri"] == "Admin URI"
+    assert admin_response_data[1]["license_text"] == "license text"
+    assert admin_response_data[2]["identifier"] == "Editor Identifier"
+    assert admin_response_data[2]["identifier_scheme"] == "Editor Identifier Scheme"
+    assert admin_response_data[2]["identifier_scheme_uri"] == "Editor Identifier Scheme"
+    assert admin_response_data[2]["rights"] == "Editor Rights"
+    assert admin_response_data[2]["uri"] == "Editor URI"
+    assert admin_response_data[2]["license_text"] == "license text"
+
+    assert editor_response_data[0]["identifier"] == "Identifier"
+    assert editor_response_data[0]["identifier_scheme"] == "Identifier Scheme"
+    assert editor_response_data[0]["identifier_scheme_uri"] == "Identifier Scheme"
+    assert editor_response_data[0]["rights"] == "Rights"
+    assert editor_response_data[0]["uri"] == "URI"
+    assert editor_response_data[0]["license_text"] == "license text"
+    assert editor_response_data[1]["identifier"] == "Admin Identifier"
+    assert editor_response_data[1]["identifier_scheme"] == "Admin Identifier Scheme"
+    assert editor_response_data[1]["identifier_scheme_uri"] == "Admin Identifier Scheme"
+    assert editor_response_data[1]["rights"] == "Admin Rights"
+    assert editor_response_data[1]["uri"] == "Admin URI"
+    assert editor_response_data[1]["license_text"] == "license text"
+    assert editor_response_data[2]["identifier"] == "Editor Identifier"
+    assert editor_response_data[2]["identifier_scheme"] == "Editor Identifier Scheme"
+    assert editor_response_data[2]["identifier_scheme_uri"] == "Editor Identifier Scheme"
+    assert editor_response_data[2]["rights"] == "Editor Rights"
+    assert editor_response_data[2]["uri"] == "Editor URI"
+    assert editor_response_data[2]["license_text"] == "license text"
+
+    assert viewer_response_data[0]["identifier"] == "Identifier"
+    assert viewer_response_data[0]["identifier_scheme"] == "Identifier Scheme"
+    assert viewer_response_data[0]["identifier_scheme_uri"] == "Identifier Scheme"
+    assert viewer_response_data[0]["rights"] == "Rights"
+    assert viewer_response_data[0]["uri"] == "URI"
+    assert viewer_response_data[0]["license_text"] == "license text"
+    assert viewer_response_data[1]["identifier"] == "Admin Identifier"
+    assert viewer_response_data[1]["identifier_scheme"] == "Admin Identifier Scheme"
+    assert viewer_response_data[1]["identifier_scheme_uri"] == "Admin Identifier Scheme"
+    assert viewer_response_data[1]["rights"] == "Admin Rights"
+    assert viewer_response_data[1]["uri"] == "Admin URI"
+    assert viewer_response_data[1]["license_text"] == "license text"
+    assert viewer_response_data[2]["identifier"] == "Editor Identifier"
+    assert viewer_response_data[2]["identifier_scheme"] == "Editor Identifier Scheme"
+    assert viewer_response_data[2]["identifier_scheme_uri"] == "Editor Identifier Scheme"
+    assert viewer_response_data[2]["rights"] == "Editor Rights"
+    assert viewer_response_data[2]["uri"] == "Editor URI"
+    assert viewer_response_data[2]["license_text"] == "license text"
+
+
+def test_delete_dataset_rights_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID and dataset ID
+    When the '/study/{study_id}/dataset/{dataset_id}/metadata/rights'
+    endpoint is requested (DELETE)
+    Then check that the response is valid and deletes the dataset
+    rights metadata content
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id
+    rights_id = pytest.global_dataset_rights_id
+    a_rights_id = pytest.global_dataset_rights_id_admin
+    e_rights_id = pytest.global_dataset_rights_id_editor
+
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights/{rights_id}"
+    )
+    response = _logged_in_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights/{rights_id}"
+    )
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights/{a_rights_id}"
+    )
+    editor_response = _admin_client.delete(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/rights/{e_rights_id}"
+    )
+
+    assert viewer_response.status_code == 403
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 # ------------------- SUBJECTS METADATA ------------------- #
