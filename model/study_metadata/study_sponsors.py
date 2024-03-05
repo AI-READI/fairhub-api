@@ -57,7 +57,7 @@ class StudySponsors(db.Model):  # type: ignore
     lead_sponsor_name = db.Column(db.String, nullable=False)
     lead_sponsor_identifier = db.Column(db.String, nullable=False)
     lead_sponsor_scheme = db.Column(db.String, nullable=False)
-    lead_sponsor_scheme_uri = db.Column(ARRAY(String), nullable=False)
+    lead_sponsor_scheme_uri = db.Column(db.String, nullable=False)
 
     study_id = db.Column(
         db.CHAR(36),

@@ -14,12 +14,21 @@ from ..authentication import is_granted
 study_sponsors = api.model(
     "StudySponsors",
     {
-        "id": fields.String(required=True),
         "responsible_party_type": fields.String(required=True),
-        "responsible_party_investigator_name": fields.String(required=True),
+        "responsible_party_investigator_first_name": fields.String(required=False),
+        "responsible_party_investigator_last_name": fields.String(required=True),
         "responsible_party_investigator_title": fields.String(required=True),
-        "responsible_party_investigator_affiliation": fields.String(required=True),
+        "responsible_party_investigator_identifier_value": fields.String(required=True),
+        "responsible_party_investigator_identifier_scheme": fields.String(required=True),
+        "responsible_party_investigator_identifier_scheme_uri": fields.String(required=True),
+        "responsible_party_investigator_affiliation_name": fields.String(required=True),
+        "responsible_party_investigator_affiliation_identifier_scheme": fields.String(required=True),
+        "responsible_party_investigator_affiliation_identifier_value": fields.String(required=True),
+        "responsible_party_investigator_affiliation_identifier_scheme_uri": fields.String(required=True),
         "lead_sponsor_name": fields.String(required=True),
+        "lead_sponsor_identifier": fields.String(required=True),
+        "lead_sponsor_scheme": fields.String(required=True),
+        "lead_sponsor_scheme_uri": fields.String(required=True),
     },
 )
 
@@ -36,9 +45,9 @@ class StudySponsorsResource(Resource):
         """Get study sponsors metadata"""
         study_ = model.Study.query.get(study_id)
 
-        study_sponsors_collaborators_ = study_.study_sponsors_collaborators
+        study_sponsors_ = study_.study_sponsors
 
-        return study_sponsors_collaborators_.to_dict(), 200
+        return study_sponsors_.to_dict(), 200
 
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
@@ -51,13 +60,14 @@ class StudySponsorsResource(Resource):
             "required": [
                 "responsible_party_type",
                 "lead_sponsor_name",
-                "responsible_party_investigator_name",
+                "responsible_party_investigator_last_name",
+                "responsible_party_investigator_first_name",
                 "responsible_party_investigator_title",
-                "responsible_party_investigator_affiliation",
             ],
             "properties": {
+                "id": {"type": "string"},
                 "responsible_party_type": {
-                    "type": "string",
+                    "type": ["string", "null"],
                     "minLength": 1,
                     "enum": [
                         "Sponsor",
@@ -65,16 +75,26 @@ class StudySponsorsResource(Resource):
                         "Sponsor-Investigator",
                     ],
                 },
-                "responsible_party_investigator_name": {
+                "responsible_party_investigator_first_name": {
+                    "type": "string",
+                },
+                "responsible_party_investigator_last_name": {
                     "type": "string",
                 },
                 "responsible_party_investigator_title": {
                     "type": "string",
                 },
-                "responsible_party_investigator_affiliation": {
-                    "type": "string",
-                },
+                "responsible_party_investigator_identifier_value": {"type": "string", "minLength": 1},
+                "responsible_party_investigator_identifier_scheme": {"type": "string", "minLength": 1},
+                "responsible_party_investigator_identifier_scheme_uri": {"type": "string", "minLength": 1},
+                "responsible_party_investigator_affiliation_name": {"type": "string", "minLength": 1},
+                "responsible_party_investigator_affiliation_identifier_scheme": {"type": "string", "minLength": 1},
+                "responsible_party_investigator_affiliation_identifier_value": {"type": "string", "minLength": 1},
+                "responsible_party_investigator_affiliation_identifier_scheme_uri": {"type": "string", "minLength": 1},
                 "lead_sponsor_name": {"type": "string", "minLength": 1},
+                "lead_sponsor_identifier": {"type": "string", "minLength": 1},
+                "lead_sponsor_scheme": {"type": "string", "minLength": 1},
+                "lead_sponsor_scheme_uri": {"type": "string", "minLength": 1},
             },
         }
 
@@ -88,27 +108,24 @@ class StudySponsorsResource(Resource):
             "Principal Investigator",
             "Sponsor-Investigator",
         ]:
-            if not data["responsible_party_investigator_name"]:
+            if not data["responsible_party_investigator_last_name"]:
+                return "Principal Investigator name is required", 400
+            if not data["responsible_party_investigator_first_name"]:
                 return "Principal Investigator name is required", 400
 
             if not data["responsible_party_investigator_title"]:
                 return "Principal Investigator title is required", 400
 
-            if not data["responsible_party_investigator_affiliation"]:
-                return "Principal Investigator affiliation is required", 400
-
-            investigator_name = data["responsible_party_investigator_name"]
+            investigator_first_name = data["responsible_party_investigator_first_name"]
+            investigator_last_name = data["responsible_party_investigator_last_name"]
             investigator_title = data["responsible_party_investigator_title"]
-            investigator_affiliation = data[
-                "responsible_party_investigator_affiliation"
-            ]
 
-            if investigator_name == "":
-                return "Principal Investigator name cannot be empty", 400
+            if investigator_first_name == "":
+                return "Principal Investigator first name cannot be empty", 400
+            if investigator_last_name == "":
+                return "Principal Investigator last name cannot be empty", 400
             if investigator_title == "":
                 return "Principal Investigator title cannot be empty", 400
-            if investigator_affiliation == "":
-                return "Principal Investigator affiliation cannot be empty", 400
 
         study_ = model.Study.query.get(study_id)
 
@@ -116,8 +133,8 @@ class StudySponsorsResource(Resource):
         if not is_granted("study_metadata", study_):
             return "Access denied, you can not modify study", 403
 
-        study_.study_sponsors_collaborators.update(request.json)
+        study_.study_sponsors.update(data)
 
         model.db.session.commit()
 
-        return study_.study_sponsors_collaborators.to_dict(), 200
+        return study_.study_sponsors.to_dict(), 200

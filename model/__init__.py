@@ -41,7 +41,6 @@ from .study_metadata.study_other import StudyOther
 from .study_metadata.study_overall_official import StudyOverallOfficial
 from .study_metadata.study_oversight import StudyOversight
 from .study_metadata.study_sponsors import StudySponsors
-from .study_metadata.study_sponsors_collaborators import StudySponsorsCollaborators
 from .study_metadata.study_status import StudyStatus
 from .study_redcap import StudyRedcap
 from .token_blacklist import TokenBlacklist
@@ -91,7 +90,6 @@ __all__ = [
     "StudyOverallOfficial",
     "StudyRedcap",
     "StudyDashboard",
-    "StudySponsorsCollaborators",
     "StudyStatus",
     "Identifiers",
     "Arm",

@@ -21,7 +21,7 @@ class Study(db.Model):  # type: ignore
         self.created_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
         #
         self.study_status = model.StudyStatus(self)
-        self.study_sponsors_collaborators = model.StudySponsorsCollaborators(self)
+        self.study_sponsors = model.StudySponsors(self)
         self.study_design = model.StudyDesign(self)
         self.study_eligibility = model.StudyEligibility(self)
         self.study_description = model.StudyDescription(self)
@@ -149,12 +149,6 @@ class Study(db.Model):  # type: ignore
     )
     study_overall_official = db.relationship(
         "StudyOverallOfficial",
-        back_populates="study",
-        cascade="all, delete",
-    )
-    study_sponsors_collaborators = db.relationship(
-        "StudySponsorsCollaborators",
-        uselist=False,
         back_populates="study",
         cascade="all, delete",
     )
