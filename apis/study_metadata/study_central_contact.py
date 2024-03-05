@@ -16,7 +16,8 @@ study_contact = api.model(
     "StudyCentralContact",
     {
         "id": fields.String(required=True),
-        "name": fields.String(required=True),
+        "first_name": fields.String(required=True),
+        "last_name": fields.String(required=True),
         "affiliation": fields.String(required=True),
         "role": fields.String(required=True),
         "phone": fields.String(required=True),
@@ -74,7 +75,8 @@ class StudyCentralContactResource(Resource):
                 ],
                 "properties": {
                     "id": {"type": "string"},
-                    "name": {"type": "string", "minLength": 1},
+                    "first_name": {"type": "string", "minLength": 1},
+                    "last_name": {"type": "string", "minLength": 1},
                     "affiliation": {"type": "string", "minLength": 1},
                     "role": {"type": "string", "minLength": 1},
                     "phone": {

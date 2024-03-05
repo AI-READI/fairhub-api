@@ -24,14 +24,6 @@ study_sponsors = api.model(
 )
 
 
-study_collaborators = api.model(
-    "StudyCollaborators",
-    {
-        "collaborator_name": fields.List(fields.String, required=True),
-    },
-)
-
-
 @api.route("/study/<study_id>/metadata/sponsors")
 class StudySponsorsResource(Resource):
     """Study Sponsors Metadata"""
@@ -97,13 +89,13 @@ class StudySponsorsResource(Resource):
             "Sponsor-Investigator",
         ]:
             if not data["responsible_party_investigator_name"]:
-                return ("Principal Investigator name is required", 400)
+                return "Principal Investigator name is required", 400
 
             if not data["responsible_party_investigator_title"]:
-                return ("Principal Investigator title is required", 400)
+                return "Principal Investigator title is required", 400
 
             if not data["responsible_party_investigator_affiliation"]:
-                return ("Principal Investigator affiliation is required", 400)
+                return "Principal Investigator affiliation is required", 400
 
             investigator_name = data["responsible_party_investigator_name"]
             investigator_title = data["responsible_party_investigator_title"]
@@ -112,11 +104,11 @@ class StudySponsorsResource(Resource):
             ]
 
             if investigator_name == "":
-                return ("Principal Investigator name cannot be empty", 400)
+                return "Principal Investigator name cannot be empty", 400
             if investigator_title == "":
-                return ("Principal Investigator title cannot be empty", 400)
+                return "Principal Investigator title cannot be empty", 400
             if investigator_affiliation == "":
-                return ("Principal Investigator affiliation cannot be empty", 400)
+                return "Principal Investigator affiliation cannot be empty", 400
 
         study_ = model.Study.query.get(study_id)
 
