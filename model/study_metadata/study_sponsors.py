@@ -24,8 +24,8 @@ class StudySponsors(db.Model):  # type: ignore
         self.responsible_party_investigator_affiliation_identifier_scheme_uri = ""
         self.lead_sponsor_name = ""
         self.lead_sponsor_identifier = ""
-        self.lead_sponsor_scheme = ""
-        self.lead_sponsor_scheme_uri = ""
+        self.lead_sponsor_identifier_scheme = ""
+        self.lead_sponsor_identifier_scheme_uri = ""
 
     __tablename__ = "study_sponsors"
 
@@ -56,8 +56,8 @@ class StudySponsors(db.Model):  # type: ignore
     )
     lead_sponsor_name = db.Column(db.String, nullable=False)
     lead_sponsor_identifier = db.Column(db.String, nullable=False)
-    lead_sponsor_scheme = db.Column(db.String, nullable=False)
-    lead_sponsor_scheme_uri = db.Column(db.String, nullable=False)
+    lead_sponsor_identifier_scheme = db.Column(db.String, nullable=False)
+    lead_sponsor_identifier_scheme_uri = db.Column(db.String, nullable=False)
 
     study_id = db.Column(
         db.CHAR(36),
@@ -83,8 +83,8 @@ class StudySponsors(db.Model):  # type: ignore
             "responsible_party_investigator_affiliation_identifier_scheme_uri": self.responsible_party_investigator_affiliation_identifier_scheme_uri,  # noqa: E501
             "lead_sponsor_name": self.lead_sponsor_name,
             "lead_sponsor_identifier": self.lead_sponsor_identifier,
-            "lead_sponsor_scheme": self.lead_sponsor_scheme,
-            "lead_sponsor_scheme_uri": self.lead_sponsor_scheme_uri,
+            "lead_sponsor_identifier_scheme": self.lead_sponsor_identifier_scheme,
+            "lead_sponsor_identifier_scheme_uri": self.lead_sponsor_identifier_scheme_uri,
         }
 
     def to_dict_metadata(self):
@@ -139,8 +139,8 @@ class StudySponsors(db.Model):  # type: ignore
         ]
         self.lead_sponsor_name = data["lead_sponsor_name"]
         self.lead_sponsor_identifier = data["lead_sponsor_identifier"]
-        self.lead_sponsor_scheme = data["lead_sponsor_scheme"]
-        self.lead_sponsor_scheme_uri = data["lead_sponsor_scheme_uri"]
+        self.lead_sponsor_identifier_scheme = data["lead_sponsor_identifier_scheme"]
+        self.lead_sponsor_identifier_scheme_uri = data["lead_sponsor_identifier_scheme_uri"]
 
     def validate(self):
         """Validates the lead_sponsor_last_name study"""

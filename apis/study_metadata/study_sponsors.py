@@ -93,8 +93,8 @@ class StudySponsorsResource(Resource):
                 "responsible_party_investigator_affiliation_identifier_scheme_uri": {"type": "string", "minLength": 1},
                 "lead_sponsor_name": {"type": "string", "minLength": 1},
                 "lead_sponsor_identifier": {"type": "string", "minLength": 1},
-                "lead_sponsor_scheme": {"type": "string", "minLength": 1},
-                "lead_sponsor_scheme_uri": {"type": "string", "minLength": 1},
+                "lead_sponsor_identifier_scheme": {"type": "string", "minLength": 1},
+                "lead_sponsor_identifier_scheme_uri": {"type": "string", "minLength": 1},
             },
         }
 

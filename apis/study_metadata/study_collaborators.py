@@ -15,7 +15,11 @@ from ..authentication import is_granted
 study_collaborators = api.model(
     "StudyCollaborators",
     {
-        "collaborator_name": fields.List(fields.String, required=True),
+        "id": fields.String(required=True),
+        "name": fields.String(required=True),
+        "identifier": fields.String(required=True),
+        "scheme": fields.String(required=True),
+        "scheme_uri": fields.String(required=True),
     },
 )
 
@@ -82,13 +86,13 @@ class StudyCollaboratorsResource(Resource):
 
 @api.route("/study/<study_id>/metadata/collaborators/<collaborator_id>")
 class StudyLocationUpdate(Resource):
-    """Study Location Metadata"""
+    """delete Study Collaborators Metadata"""
 
-    @api.doc("delete study locations")
+    @api.doc("delete study collaborators")
     @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(self, study_id: int, collaborator_id: int):
-        """Delete study location metadata"""
+        """Delete study collaborators metadata"""
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not delete study", 403
