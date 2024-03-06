@@ -702,46 +702,20 @@ def test_get_version_dataset_metadata(clients):
             }
         ],
     )
-    related_item_response = _logged_in_client.post(
-        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-item",
+    related_identifier_response = _logged_in_client.post(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata/related-identifier",
         json=[
             {
-                "contributors": [
-                    {
-                        "name": "Ndafsdame",
-                        "contributor_type": "Con Type",
-                        "name_type": "Personal",
-                    }
-                ],
-                "creators": [{"name": "Name", "name_type": "Personal"}],
-                "edition": "Edition",
-                "first_page": "First Page",
-                "identifiers": [
-                    {
-                        "identifier": "Identifier",
-                        "metadata_scheme": "Metadata Scheme",
-                        "scheme_type": "Scheme Type",
-                        "scheme_uri": "Scheme URI",
-                        "type": "ARK",
-                    }
-                ],
-                "issue": "Issue",
-                "last_page": "Last Page",
-                "number_type": "Number Type",
-                "number_value": "Number Value",
-                "publication_year": 2013,
-                "publisher": "Publisher",
-                "relation_type": "Relation Type",
-                "titles": [
-                    {"title": "Title", "type": "MainTitle"},
-                    {"title": "Title", "type": "Subtitle"},
-                ],
-                "type": "Type",
-                "volume": "Volume",
+                "identifier": "editor test identifier",
+                "identifier_type": "test identifier type",
+                "relation_type": "test relation type",
+                "related_metadata_scheme": "test",
+                "scheme_uri": "test",
+                "scheme_type": "test",
+                "resource_type": "test"
             }
         ],
     )
-
     assert contributor_response.status_code == 201
     assert creator_response.status_code == 201
     assert date_response.status_code == 201
@@ -749,7 +723,7 @@ def test_get_version_dataset_metadata(clients):
     assert rights_response.status_code == 201
     assert subject_response.status_code == 201
     assert alt_identifier_response.status_code == 201
-    assert related_item_response.status_code == 201
+    assert related_identifier_response.status_code == 201
 
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/dataset-metadata"
@@ -774,120 +748,52 @@ def test_get_version_dataset_metadata(clients):
 
     # seach for main title index in response_data[n]["titles"]
     # pylint: disable=line-too-long
-    main_title_0 = next(
-        (
-            index
-            for (index, d) in enumerate(response_data["related_items"][0]["titles"])
-            if d["type"] == "MainTitle"
-        ),
-        None,
-    )
-    # seach for subtitle index in response_data["related_items"][0]["titles"]
-    sub_title_0 = next(
-        (
-            index
-            for (index, d) in enumerate(response_data["related_items"][0]["titles"])
-            if d["type"] == "Subtitle"
-        ),
-        None,
-    )
-    a_main_title_0 = next(
-        (
-            index
-            for (index, d) in enumerate(
-                admin_response_data["related_items"][0]["titles"]
-            )
-            if d["type"] == "MainTitle"
-        ),
-        None,
-    )
-    a_sub_title_0 = next(
-        (
-            index
-            for (index, d) in enumerate(
-                admin_response_data["related_items"][0]["titles"]
-            )
-            if d["type"] == "Subtitle"
-        ),
-        None,
-    )
-    e_main_title_0 = next(
-        (
-            index
-            for (index, d) in enumerate(
-                editor_response_data["related_items"][0]["titles"]
-            )
-            if d["type"] == "MainTitle"
-        ),
-        None,
-    )
-    e_sub_title_0 = next(
-        (
-            index
-            for (index, d) in enumerate(
-                editor_response_data["related_items"][0]["titles"]
-            )
-            if d["type"] == "Subtitle"
-        ),
-        None,
-    )
 
     assert response_data["contributors"][0]["given_name"] == "Given Name here"
     assert response_data["contributors"][0]["family_name"] == "Family Name here"
     assert response_data["contributors"][0]["name_type"] == "Personal"
     assert response_data["contributors"][0]["contributor_type"] == "Con Type"
+
     assert response_data["dates"][0]["date"] == "01-01-1970"
     assert response_data["dates"][0]["type"] == "Type"
+
     assert response_data["creators"][0]["given_name"] == "Given Name here"
     assert response_data["creators"][0]["family_name"] == "Family Name here"
     assert response_data["creators"][0]["name_type"] == "Personal"
+
     assert response_data["funders"][0]["name"] == "Name"
     assert response_data["funders"][0]["identifier"] == "Identifier"
+
     assert response_data["rights"][0]["identifier"] == "Identifier"
     assert response_data["rights"][0]["rights"] == "Rights"
+
     assert response_data["subjects"][0]["subject"] == "Subject"
+
     assert response_data["about"]["language"] == "English"
 
-    assert response_data["about"]["resource_type"] == "Editor Resource Type"
+    assert response_data["about"]["resource_type"] == "Resource Type"
     assert response_data["about"]["size"] == ["Size"]
+
     assert response_data["access"]["type"] == "editor type"
     assert response_data["access"]["description"] == "editor description"
+
     assert response_data["consent"]["noncommercial"] is True
     assert response_data["consent"]["geog_restrict"] is True
     assert response_data["consent"]["research_type"] is True
+
     assert response_data["de_identification"]["direct"] is True
     assert response_data["de_identification"]["type"] == "Level"
-    assert response_data["publisher"]["publisher"] == "Publisher"
+
     assert (
-        response_data["publisher"]["managing_organization_name"]
+        response_data["managing_organization"]["managing_organization_name"]
         == "Managing Editor Organization Name"
     )
-
     assert response_data["identifiers"][0]["identifier"] == "identifier test"
     assert response_data["identifiers"][0]["type"] == "ARK"
-    assert response_data["related_items"][0]["publication_year"] == "1970"
-    assert response_data["related_items"][0]["publisher"] == "Publisher"
-    assert response_data["related_items"][0]["contributors"][0]["name"] == "Ndafsdame"
-    assert (
-        response_data["related_items"][0]["contributors"][0]["contributor_type"]
-        == "Con Type"
-    )
-    assert response_data["related_items"][0]["creators"][0]["name"] == "Name"
-    assert response_data["related_items"][0]["creators"][0]["name_type"] == "Personal"
-    assert response_data["related_items"][0]["titles"][main_title_0]["title"] == "Title"
-    assert (
-        response_data["related_items"][0]["titles"][main_title_0]["type"] == "MainTitle"
-    )
-    assert response_data["related_items"][0]["titles"][sub_title_0]["title"] == "Title"
-    assert (
-        response_data["related_items"][0]["titles"][sub_title_0]["type"] == "Subtitle"
-    )
-    assert (
-        response_data["related_items"][0]["identifiers"][0]["identifier"]
-        == "Identifier"
-    )
-    assert response_data["related_items"][0]["identifiers"][0]["type"] == "ARK"
-    assert response_data["related_items"][0]["type"] == "Type"
+
+    assert response_data["related_identifier"][0]["identifier"] == "editor test identifier"
+    assert response_data["related_identifier"][0]["relation_type"] == "test relation type"
+    assert response_data["related_identifier"][0]["resource_type"] == "test"
 
     assert admin_response_data["contributors"][0]["given_name"] == "Given Name here"
     assert admin_response_data["contributors"][0]["family_name"] == "Family Name here"
@@ -905,7 +811,7 @@ def test_get_version_dataset_metadata(clients):
     assert admin_response_data["subjects"][0]["subject"] == "Subject"
     assert admin_response_data["about"]["language"] == "English"
 
-    assert admin_response_data["about"]["resource_type"] == "Editor Resource Type"
+    assert admin_response_data["about"]["resource_type"] == "Resource Type"
     assert admin_response_data["about"]["size"] == ["Size"]
     assert admin_response_data["access"]["type"] == "editor type"
     assert admin_response_data["access"]["description"] == "editor description"
@@ -914,51 +820,17 @@ def test_get_version_dataset_metadata(clients):
     assert admin_response_data["consent"]["research_type"] is True
     assert admin_response_data["de_identification"]["direct"] is True
     assert admin_response_data["de_identification"]["type"] == "Level"
-    assert admin_response_data["publisher"]["publisher"] == "Publisher"
     assert (
-        admin_response_data["publisher"]["managing_organization_name"]
+        admin_response_data["managing_organization"]["managing_organization_name"]
         == "Managing Editor Organization Name"
     )
 
     assert admin_response_data["identifiers"][0]["identifier"] == "identifier test"
     assert admin_response_data["identifiers"][0]["type"] == "ARK"
-    assert admin_response_data["related_items"][0]["publication_year"] == "1970"
-    assert admin_response_data["related_items"][0]["publisher"] == "Publisher"
-    assert (
-        admin_response_data["related_items"][0]["contributors"][0]["name"]
-        == "Ndafsdame"
-    )
-    assert (
-        admin_response_data["related_items"][0]["contributors"][0]["contributor_type"]
-        == "Con Type"
-    )
-    assert admin_response_data["related_items"][0]["creators"][0]["name"] == "Name"
-    assert (
-        admin_response_data["related_items"][0]["creators"][0]["name_type"]
-        == "Personal"
-    )
-    assert (
-        admin_response_data["related_items"][0]["titles"][a_main_title_0]["title"]
-        == "Title"
-    )
-    assert (
-        admin_response_data["related_items"][0]["titles"][a_main_title_0]["type"]
-        == "MainTitle"
-    )
-    assert (
-        admin_response_data["related_items"][0]["titles"][a_sub_title_0]["title"]
-        == "Title"
-    )
-    assert (
-        admin_response_data["related_items"][0]["titles"][a_sub_title_0]["type"]
-        == "Subtitle"
-    )
-    assert (
-        admin_response_data["related_items"][0]["identifiers"][0]["identifier"]
-        == "Identifier"
-    )
-    assert admin_response_data["related_items"][0]["identifiers"][0]["type"] == "ARK"
-    assert admin_response_data["related_items"][0]["type"] == "Type"
+
+    assert admin_response_data["related_identifier"][0]["identifier"] == "editor test identifier"
+    assert admin_response_data["related_identifier"][0]["relation_type"] == "test relation type"
+    assert admin_response_data["related_identifier"][0]["resource_type"] == "test"
 
     assert editor_response_data["contributors"][0]["family_name"] == "Family Name here"
     assert editor_response_data["contributors"][0]["given_name"] == "Given Name here"
@@ -976,7 +848,7 @@ def test_get_version_dataset_metadata(clients):
     assert editor_response_data["subjects"][0]["subject"] == "Subject"
     assert editor_response_data["about"]["language"] == "English"
 
-    assert editor_response_data["about"]["resource_type"] == "Editor Resource Type"
+    assert editor_response_data["about"]["resource_type"] == "Resource Type"
     assert editor_response_data["about"]["size"] == ["Size"]
     assert editor_response_data["access"]["type"] == "editor type"
     assert editor_response_data["access"]["description"] == "editor description"
@@ -985,51 +857,17 @@ def test_get_version_dataset_metadata(clients):
     assert editor_response_data["consent"]["research_type"] is True
     assert editor_response_data["de_identification"]["direct"] is True
     assert editor_response_data["de_identification"]["type"] == "Level"
-    assert editor_response_data["publisher"]["publisher"] == "Publisher"
     assert (
-        editor_response_data["publisher"]["managing_organization_name"]
+        editor_response_data["managing_organization"]["managing_organization_name"]
         == "Managing Editor Organization Name"
     )
 
     assert editor_response_data["identifiers"][0]["identifier"] == "identifier test"
     assert editor_response_data["identifiers"][0]["type"] == "ARK"
-    assert editor_response_data["related_items"][0]["publication_year"] == "1970"
-    assert editor_response_data["related_items"][0]["publisher"] == "Publisher"
-    assert (
-        editor_response_data["related_items"][0]["contributors"][0]["name"]
-        == "Ndafsdame"
-    )
-    assert (
-        editor_response_data["related_items"][0]["contributors"][0]["contributor_type"]
-        == "Con Type"
-    )
-    assert editor_response_data["related_items"][0]["creators"][0]["name"] == "Name"
-    assert (
-        editor_response_data["related_items"][0]["creators"][0]["name_type"]
-        == "Personal"
-    )
-    assert (
-        editor_response_data["related_items"][0]["titles"][e_main_title_0]["title"]
-        == "Title"
-    )
-    assert (
-        editor_response_data["related_items"][0]["titles"][e_main_title_0]["type"]
-        == "MainTitle"
-    )
-    assert (
-        editor_response_data["related_items"][0]["titles"][e_sub_title_0]["title"]
-        == "Title"
-    )
-    assert (
-        editor_response_data["related_items"][0]["titles"][e_sub_title_0]["type"]
-        == "Subtitle"
-    )
-    assert (
-        editor_response_data["related_items"][0]["identifiers"][0]["identifier"]
-        == "Identifier"
-    )
-    assert editor_response_data["related_items"][0]["identifiers"][0]["type"] == "ARK"
-    assert editor_response_data["related_items"][0]["type"] == "Type"
+
+    assert editor_response_data["related_identifier"][0]["identifier"] == "editor test identifier"
+    assert editor_response_data["related_identifier"][0]["relation_type"] == "test relation type"
+    assert editor_response_data["related_identifier"][0]["resource_type"] == "test"
 
 
 def test_get_version_readme(clients):
