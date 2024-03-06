@@ -43,9 +43,18 @@ class StudyOversightResource(Resource):
         # Schema validation
         schema = {
             "type": "object",
-            "additionalProperties": False,
-            "properties": {"oversight_has_dmc": {"type": "boolean"}},
-            "required": ["has_dmc"],
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": {
+                    "id": {"type": "string"},
+                    "fda_regulated_drug": {"type": "string", "minLength": 1},
+                    "has_dmc": {"type": "string"},
+                    "human_subject_review_status": {"type": "string"},
+                },
+                "required": ["fda_regulated_drug", "has_dmc", "human_subject_review_status"],
+            },
+            "uniqueItems": True,
         }
 
         try:

@@ -29,7 +29,6 @@ class StudyDesign(db.Model):  # type: ignore
         self.bio_spec_retention = None
         self.bio_spec_description = None
         self.target_duration = None
-        self.number_groups_cohorts = None
         self.is_patient_registry = None
 
     __tablename__ = "study_design"
@@ -51,8 +50,7 @@ class StudyDesign(db.Model):  # type: ignore
     bio_spec_retention = db.Column(db.String, nullable=True)
     bio_spec_description = db.Column(db.String, nullable=True)
     target_duration = db.Column(db.String, nullable=True)
-    number_groups_cohorts = db.Column(db.Integer, nullable=True)
-    is_patient_registry = db.Column(db.Integer, nullable=True)
+    is_patient_registry = db.Column(db.String, nullable=True)
 
     study_id = db.Column(
         db.CHAR(36),
@@ -82,7 +80,6 @@ class StudyDesign(db.Model):  # type: ignore
             "bio_spec_retention": self.bio_spec_retention,
             "bio_spec_description": self.bio_spec_description,
             "target_duration": self.target_duration,
-            "number_groups_cohorts": self.number_groups_cohorts,
             "is_patient_registry": self.is_patient_registry,
         }
 
@@ -115,7 +112,6 @@ class StudyDesign(db.Model):  # type: ignore
         self.bio_spec_retention = data["bio_spec_retention"]
         self.bio_spec_description = data["bio_spec_description"]
         self.target_duration = data["target_duration"]
-        self.number_groups_cohorts = data["number_groups_cohorts"]
         self.is_patient_registry = data["is_patient_registry"]
         self.study.touch()
 

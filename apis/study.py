@@ -65,8 +65,9 @@ class Studies(Resource):
             "required": ["title", "image"],
             "additionalProperties": False,
             "properties": {
-                "title": {"type": "string", "minLength": 1},
-                "image": {"type": "string", "minLength": 1},
+                "title": {"type": "string", "minLength": 1, "maxLength": 300},
+                "acronym": {"type": "string", "maxLength": 14},
+                "image": {"type": "string"},
             },
         }
 

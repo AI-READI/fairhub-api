@@ -60,8 +60,8 @@ class StudyCollaborators(db.Model):  # type: ignore
         """Updates the study from a dictionary"""
         self.name = data["name"]
         self.identifier = data["identifier"]
-        self.scheme = data["scheme"]
-        self.scheme_uri = data["scheme_uri"]
+        self.scheme = data["identifier_scheme"]
+        self.scheme_uri = data["identifier_scheme_uri"]
         self.study.touch()
 
     def validate(self):

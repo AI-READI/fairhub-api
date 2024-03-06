@@ -52,10 +52,10 @@ class StudyCollaboratorsResource(Resource):
                     "id": {"type": "string"},
                     "name": {"type": "string"},
                     "identifier": {"type": "string"},
-                    "scheme": {"type": "string"},
-                    "scheme_uri": {"type": "string"},
+                    "identifier_scheme": {"type": "string"},
+                    "identifier_scheme_uri": {"type": "string"},
                 },
-                "required": ["name", "identifier", "scheme", "scheme_uri"],
+                "required": ["name", "identifier", "identifier_scheme", "identifier_scheme_uri"],
             },
         }
         try:
