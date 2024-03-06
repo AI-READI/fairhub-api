@@ -620,12 +620,12 @@ def test_post_collaborators_metadata(clients):
     response = _logged_in_client.post(
         f"/study/{study_id}/metadata/collaborators",
         json=[
-                {
-                    "name": "collaborator1123",
-                    "identifier": "collaborator1123",
-                    "identifier_scheme": "collaborator1123",
-                    "identifier_scheme_uri": "collaborator1123",
-                }
+            {
+                "name": "collaborator1123",
+                "identifier": "collaborator1123",
+                "identifier_scheme": "collaborator1123",
+                "identifier_scheme_uri": "collaborator1123",
+            }
         ],
     )
     # Add a one second delay to prevent duplicate timestamps
@@ -828,18 +828,19 @@ def test_post_conditions_metadata(clients):
     response = _logged_in_client.post(
         f"/study/{study_id}/metadata/conditions",
         json=[
-                {
-                    "name": "condition",
-                    "classification_code": "classification code",
-                    "scheme": "scheme",
-                    "scheme_uri": "scheme uri",
-                    "condition_uri": "condition"
-                }
+            {
+                "name": "condition",
+                "classification_code": "classification code",
+                "scheme": "scheme",
+                "scheme_uri": "scheme uri",
+                "condition_uri": "condition"
+            }
         ]
     )
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
+    pytest.global_conditions_id = response_data[0]["id"]
 
     assert response_data[0]["name"] == "condition"
     assert response_data[0]["classification_code"] == "classification code"
@@ -862,6 +863,7 @@ def test_post_conditions_metadata(clients):
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
+    pytest.global_admin_conditions_id_admin = admin_response_data[0]["id"]
 
     assert admin_response_data[0]["name"] == "admin condition"
     assert admin_response_data[0]["classification_code"] == "classification code"
@@ -884,6 +886,7 @@ def test_post_conditions_metadata(clients):
 
     assert editor_response.status_code == 201
     editor_response_data = json.loads(editor_response.data)
+    pytest.global_editor_conditions_id_editor = editor_response_data[0]["id"]
 
     assert editor_response_data[0]["name"] == "editor condition"
     assert editor_response_data[0]["classification_code"] == "classification code"
@@ -906,162 +909,357 @@ def test_post_conditions_metadata(clients):
 
     assert viewer_response.status_code == 403
 
-# def test_get_conditions_metadata(clients):
-#     """
-#     Given a Flask application configured for testing and a study ID
-#     WHEN the '/study/{study_id}/metadata/conditions' endpoint is requested (GET)
-#     THEN check that the response is valid and retrieves the conditions metadata
-#     """
-#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-#     study_id = pytest.global_study_id["id"]  # type: ignore
-#
-#     response = _logged_in_client.get(f"/study/{study_id}/metadata/conditions")
-#     admin_response = _admin_client.get(f"/study/{study_id}/metadata/conditions")
-#     editor_response = _editor_client.get(f"/study/{study_id}/metadata/conditions")
-#     viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/conditions")
-#
-#     assert response.status_code == 200
-#     assert admin_response.status_code == 200
-#     assert editor_response.status_code == 200
-#     assert viewer_response.status_code == 200
-#
-#     response_data = json.loads(response.data)
-#     admin_response_data = json.loads(admin_response.data)
-#     editor_response_data = json.loads(editor_response.data)
-#     viewer_response_data = json.loads(viewer_response.data)
-#
-#     assert response_data[0] == "true"
-#     assert response_data[1] == "editor-conditions string"
-#     assert response_data[2] == "editor-keywords string"
-#     assert response_data[3] == "editor-size string"
-#
-#     assert admin_response_data[0] == "true"
-#     assert admin_response_data[1] == "editor-conditions string"
-#     assert admin_response_data[2] == "editor-keywords string"
-#     assert admin_response_data[3] == "editor-size string"
-#
-#     assert editor_response_data[0] == "true"
-#     assert editor_response_data[1] == "editor-conditions string"
-#     assert editor_response_data[2] == "editor-keywords string"
-#     assert editor_response_data[3] == "editor-size string"
-#
-#     assert viewer_response_data[0] == "true"
-#     assert viewer_response_data[1] == "editor-conditions string"
-#     assert viewer_response_data[2] == "editor-keywords string"
-#     assert viewer_response_data[3] == "editor-size string"
-#
-#
-# # # ------------------- KEYWORDS METADATA ------------------- #
-# # def test_put_keywords_metadata(clients):
-# #     """
-# #     GIVEN a Flask application configured for testing and a study ID
-# #     WHEN the '/study/{study_id}/metadata/keywords' endpoint is requested (POST)
-# #     THEN check that the response is valid and creates the keywords metadata
-# #     """
-# #     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-# #     study_id = pytest.global_study_id["id"]  # type: ignore
-# #
-# #     response = _logged_in_client.put(
-# #         f"/study/{study_id}/metadata/keywords",
-# #         json=[
-# #             "true",
-# #             "conditions string",
-# #             "keywords string",
-# #             "size string",
-# #         ],
-# #     )
-# #
-# #     assert response.status_code == 200
-# #     response_data = json.loads(response.data)
-# #
-# #     assert response_data[0] == "true"
-# #     assert response_data[1] == "conditions string"
-# #     assert response_data[2] == "keywords string"
-# #     assert response_data[3] == "size string"
-# #
-# #     admin_response = _admin_client.put(
-# #         f"/study/{study_id}/metadata/keywords",
-# #         json=[
-# #             "true",
-# #             "admin-conditions string",
-# #             "admin-keywords string",
-# #             "admin-size string",
-# #         ],
-# #     )
-# #
-# #     assert admin_response.status_code == 200
-# #     admin_response_data = json.loads(admin_response.data)
-# #
-# #     assert admin_response_data[0] == "true"
-# #     assert admin_response_data[1] == "admin-conditions string"
-# #     assert admin_response_data[2] == "admin-keywords string"
-# #     assert admin_response_data[3] == "admin-size string"
-# #
-# #     editor_response = _editor_client.put(
-# #         f"/study/{study_id}/metadata/keywords",
-# #         json=[
-# #             "true",
-# #             "editor-conditions string",
-# #             "editor-keywords string",
-# #             "editor-size string",
-# #         ],
-# #     )
-# #
-# #     assert editor_response.status_code == 200
-# #     editor_response_data = json.loads(editor_response.data)
-# #
-# #     assert editor_response_data[0] == "true"
-# #     assert editor_response_data[1] == "editor-conditions string"
-# #     assert editor_response_data[2] == "editor-keywords string"
-# #     assert editor_response_data[3] == "editor-size string"
-# #
-# #
-# # def test_get_keywords_metadata(clients):
-# #     """
-# #     Given a Flask application configured for testing and a study ID
-# #     WHEN the '/study/{study_id}/metadata/keywords' endpoint is requested (GET)
-# #     THEN check that the response is valid and retrieves the keywords metadata
-# #     """
-# #     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-# #     study_id = pytest.global_study_id["id"]  # type: ignore
-# #
-# #     response = _logged_in_client.get(f"/study/{study_id}/metadata/keywords")
-# #     admin_response = _admin_client.get(f"/study/{study_id}/metadata/keywords")
-# #     editor_response = _editor_client.get(f"/study/{study_id}/metadata/keywords")
-# #     viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/keywords")
-# #
-# #     assert response.status_code == 200
-# #     assert admin_response.status_code == 200
-# #     assert editor_response.status_code == 200
-# #     assert viewer_response.status_code == 200
-# #
-# #     response_data = json.loads(response.data)
-# #     admin_response_data = json.loads(admin_response.data)
-# #     editor_response_data = json.loads(editor_response.data)
-# #     viewer_response_data = json.loads(viewer_response.data)
-# #
-# #     assert response_data[0] == "true"
-# #     assert response_data[1] == "editor-conditions string"
-# #     assert response_data[2] == "editor-keywords string"
-# #     assert response_data[3] == "editor-size string"
-# #
-# #     assert admin_response_data[0] == "true"
-# #     assert admin_response_data[1] == "editor-conditions string"
-# #     assert admin_response_data[2] == "editor-keywords string"
-# #     assert admin_response_data[3] == "editor-size string"
-# #
-# #     assert editor_response_data[0] == "true"
-# #     assert editor_response_data[1] == "editor-conditions string"
-# #     assert editor_response_data[2] == "editor-keywords string"
-# #     assert editor_response_data[3] == "editor-size string"
-# #
-# #     assert viewer_response_data[0] == "true"
-# #     assert viewer_response_data[1] == "editor-conditions string"
-# #     assert viewer_response_data[2] == "editor-keywords string"
-# #     assert viewer_response_data[3] == "editor-size string"
-# #
-#
-# # ------------------- DESCRIPTION METADATA ------------------- #
+
+def test_get_conditions_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/conditions' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the conditions metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/conditions")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/conditions")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/conditions")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/conditions")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data[0]["name"] == "condition"
+    assert response_data[0]["classification_code"] == "classification code"
+    assert response_data[0]["scheme"] == "scheme"
+    assert response_data[0]["scheme_uri"] == "scheme uri"
+    assert response_data[0]["condition_uri"] == "condition"
+
+    assert admin_response_data[0]["name"] == "condition"
+    assert admin_response_data[0]["classification_code"] == "classification code"
+    assert admin_response_data[0]["scheme"] == "scheme"
+    assert admin_response_data[0]["scheme_uri"] == "scheme uri"
+    assert admin_response_data[0]["condition_uri"] == "condition"
+
+    assert editor_response_data[0]["name"] == "condition"
+    assert editor_response_data[0]["classification_code"] == "classification code"
+    assert editor_response_data[0]["scheme"] == "scheme"
+    assert editor_response_data[0]["scheme_uri"] == "scheme uri"
+    assert editor_response_data[0]["condition_uri"] == "condition"
+
+    assert viewer_response_data[0]["name"] == "condition"
+    assert viewer_response_data[0]["classification_code"] == "classification code"
+    assert viewer_response_data[0]["scheme"] == "scheme"
+    assert viewer_response_data[0]["scheme_uri"] == "scheme uri"
+    assert viewer_response_data[0]["condition_uri"] == "condition"
+
+    assert response_data[1]["name"] == "admin condition"
+    assert response_data[1]["classification_code"] == "classification code"
+    assert response_data[1]["scheme"] == "scheme"
+    assert response_data[1]["scheme_uri"] == "scheme uri"
+    assert response_data[1]["condition_uri"] == "condition"
+
+    assert admin_response_data[1]["name"] == "admin condition"
+    assert admin_response_data[1]["classification_code"] == "classification code"
+    assert admin_response_data[1]["scheme"] == "scheme"
+    assert admin_response_data[1]["scheme_uri"] == "scheme uri"
+    assert admin_response_data[1]["condition_uri"] == "condition"
+
+    assert editor_response_data[1]["name"] == "admin condition"
+    assert editor_response_data[1]["classification_code"] == "classification code"
+    assert editor_response_data[1]["scheme"] == "scheme"
+    assert editor_response_data[1]["scheme_uri"] == "scheme uri"
+    assert editor_response_data[1]["condition_uri"] == "condition"
+
+    assert viewer_response_data[1]["name"] == "admin condition"
+    assert viewer_response_data[1]["classification_code"] == "classification code"
+    assert viewer_response_data[1]["scheme"] == "scheme"
+    assert viewer_response_data[1]["scheme_uri"] == "scheme uri"
+    assert viewer_response_data[1]["condition_uri"] == "condition"
+
+    assert response_data[2]["name"] == "editor condition"
+    assert response_data[2]["classification_code"] == "classification code"
+    assert response_data[2]["scheme"] == "scheme"
+    assert response_data[2]["scheme_uri"] == "scheme uri"
+    assert response_data[2]["condition_uri"] == "condition"
+
+    assert admin_response_data[2]["name"] == "editor condition"
+    assert admin_response_data[2]["classification_code"] == "classification code"
+    assert admin_response_data[2]["scheme"] == "scheme"
+    assert admin_response_data[2]["scheme_uri"] == "scheme uri"
+    assert admin_response_data[2]["condition_uri"] == "condition"
+
+    assert editor_response_data[2]["name"] == "editor condition"
+    assert editor_response_data[2]["classification_code"] == "classification code"
+    assert editor_response_data[2]["scheme"] == "scheme"
+    assert editor_response_data[2]["scheme_uri"] == "scheme uri"
+    assert editor_response_data[2]["condition_uri"] == "condition"
+
+    assert viewer_response_data[2]["name"] == "editor condition"
+    assert viewer_response_data[2]["classification_code"] == "classification code"
+    assert viewer_response_data[2]["scheme"] == "scheme"
+    assert viewer_response_data[2]["scheme_uri"] == "scheme uri"
+    assert viewer_response_data[2]["condition_uri"] == "condition"
+
+
+def test_delete_conditions_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/conditions' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the identification metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    conditions_id = pytest.global_conditions_id
+    admin_conditions_id = pytest.global_admin_conditions_id_admin
+    editor_conditions_id = pytest.global_editor_conditions_id_editor
+
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/metadata/conditions/{conditions_id}"
+    )
+    response = _logged_in_client.delete(
+        f"/study/{study_id}/metadata/conditions/{conditions_id}"
+    )
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/metadata/conditions/{admin_conditions_id}"
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/metadata/conditions/{editor_conditions_id}"
+    )
+
+    assert viewer_response.status_code == 403
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
+
+
+# ------------------- KEYWORDS METADATA ------------------- #
+def test_post_keywords_metadata(clients):
+    """
+    GIVEN a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/keywords' endpoint is requested (POST)
+    THEN check that the response is valid and creates the keywords metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.post(
+        f"/study/{study_id}/metadata/keywords",
+        json=[
+            {
+                "name": "keywords",
+                "classification_code": "classification code",
+                "scheme": "scheme",
+                "scheme_uri": "scheme uri",
+                "keyword_uri": "keywords"
+            }
+        ],
+    )
+    assert response.status_code == 201
+    response_data = json.loads(response.data)
+    pytest.global_keywords_id = response_data[0]["id"]
+
+    assert response_data[0]["name"] == "keywords"
+    assert response_data[0]["classification_code"] == "classification code"
+    assert response_data[0]["scheme"] == "scheme"
+    assert response_data[0]["scheme_uri"] == "scheme uri"
+    assert response_data[0]["keyword_uri"] == "keywords"
+
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/metadata/keywords",
+        json=[
+            {
+                "name": "admin keywords",
+                "classification_code": "classification code",
+                "scheme": "scheme",
+                "scheme_uri": "scheme uri",
+                "keyword_uri": "keywords"
+            }
+        ],
+    )
+
+    assert admin_response.status_code == 201
+    admin_response_data = json.loads(admin_response.data)
+    pytest.global_admin_keywords_id_admin = admin_response_data[0]["id"]
+    assert admin_response_data[0]["name"] == "admin keywords"
+    assert admin_response_data[0]["classification_code"] == "classification code"
+    assert admin_response_data[0]["scheme"] == "scheme"
+    assert admin_response_data[0]["scheme_uri"] == "scheme uri"
+    assert admin_response_data[0]["keyword_uri"] == "keywords"
+
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/metadata/keywords",
+        json=[
+            {
+                "name": "editor keywords",
+                "classification_code": "classification code",
+                "scheme": "scheme",
+                "scheme_uri": "scheme uri",
+                "keyword_uri": "keywords"
+            }
+        ],
+    )
+
+    assert editor_response.status_code == 201
+    editor_response_data = json.loads(editor_response.data)
+    pytest.global_editor_keywords_id_editor = editor_response_data[0]["id"]
+
+    assert editor_response_data[0]["name"] == "editor keywords"
+    assert editor_response_data[0]["classification_code"] == "classification code"
+    assert editor_response_data[0]["scheme"] == "scheme"
+    assert editor_response_data[0]["scheme_uri"] == "scheme uri"
+    assert editor_response_data[0]["keyword_uri"] == "keywords"
+
+    viewer_response = _viewer_client.post(
+        f"/study/{study_id}/metadata/keywords",
+        json=[
+            {
+                "name": "editor keywords",
+                "classification_code": "classification code",
+                "scheme": "scheme",
+                "scheme_uri": "scheme uri",
+                "keyword_uri": "keywords"
+            }
+        ],
+    )
+
+    assert viewer_response.status_code == 403
+
+
+def test_get_keywords_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/keywords' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the keywords metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/keywords")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/keywords")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/keywords")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/keywords")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data[0]["name"] == "keywords"
+    assert response_data[0]["classification_code"] == "classification code"
+    assert response_data[0]["scheme"] == "scheme"
+    assert response_data[0]["scheme_uri"] == "scheme uri"
+    assert response_data[0]["keyword_uri"] == "keywords"
+
+    assert admin_response_data[0]["name"] == "keywords"
+    assert admin_response_data[0]["classification_code"] == "classification code"
+    assert admin_response_data[0]["scheme"] == "scheme"
+    assert admin_response_data[0]["scheme_uri"] == "scheme uri"
+    assert admin_response_data[0]["keyword_uri"] == "keywords"
+
+    assert editor_response_data[0]["name"] == "keywords"
+    assert editor_response_data[0]["classification_code"] == "classification code"
+    assert editor_response_data[0]["scheme"] == "scheme"
+    assert editor_response_data[0]["scheme_uri"] == "scheme uri"
+    assert editor_response_data[0]["keyword_uri"] == "keywords"
+
+    assert viewer_response_data[0]["name"] == "keywords"
+    assert viewer_response_data[0]["classification_code"] == "classification code"
+    assert viewer_response_data[0]["scheme"] == "scheme"
+    assert viewer_response_data[0]["scheme_uri"] == "scheme uri"
+    assert viewer_response_data[0]["keyword_uri"] == "keywords"
+
+    assert response_data[1]["name"] == "admin keywords"
+    assert response_data[1]["classification_code"] == "classification code"
+    assert response_data[1]["scheme"] == "scheme"
+    assert response_data[1]["scheme_uri"] == "scheme uri"
+    assert response_data[1]["keyword_uri"] == "keywords"
+
+    assert admin_response_data[1]["name"] == "admin keywords"
+    assert admin_response_data[1]["classification_code"] == "classification code"
+    assert admin_response_data[1]["scheme"] == "scheme"
+    assert admin_response_data[1]["scheme_uri"] == "scheme uri"
+    assert admin_response_data[1]["keyword_uri"] == "keywords"
+
+    assert editor_response_data[1]["name"] == "admin keywords"
+    assert editor_response_data[1]["classification_code"] == "classification code"
+    assert editor_response_data[1]["scheme"] == "scheme"
+    assert editor_response_data[1]["scheme_uri"] == "scheme uri"
+    assert editor_response_data[1]["keyword_uri"] == "keywords"
+
+    assert viewer_response_data[1]["name"] == "admin keywords"
+    assert viewer_response_data[1]["classification_code"] == "classification code"
+    assert viewer_response_data[1]["scheme"] == "scheme"
+    assert viewer_response_data[1]["scheme_uri"] == "scheme uri"
+    assert viewer_response_data[1]["keyword_uri"] == "keywords"
+
+    assert response_data[2]["name"] == "editor keywords"
+    assert response_data[2]["classification_code"] == "classification code"
+    assert response_data[2]["scheme"] == "scheme"
+    assert response_data[2]["scheme_uri"] == "scheme uri"
+    assert response_data[2]["keyword_uri"] == "keywords"
+
+    assert admin_response_data[2]["name"] == "editor keywords"
+    assert admin_response_data[2]["classification_code"] == "classification code"
+    assert admin_response_data[2]["scheme"] == "scheme"
+    assert admin_response_data[2]["scheme_uri"] == "scheme uri"
+    assert admin_response_data[2]["keyword_uri"] == "keywords"
+
+    assert editor_response_data[2]["name"] == "editor keywords"
+    assert editor_response_data[2]["classification_code"] == "classification code"
+    assert editor_response_data[2]["scheme"] == "scheme"
+    assert editor_response_data[2]["scheme_uri"] == "scheme uri"
+    assert editor_response_data[2]["keyword_uri"] == "keywords"
+
+    assert viewer_response_data[2]["name"] == "editor keywords"
+    assert viewer_response_data[2]["classification_code"] == "classification code"
+    assert viewer_response_data[2]["scheme"] == "scheme"
+    assert viewer_response_data[2]["scheme_uri"] == "scheme uri"
+    assert viewer_response_data[2]["keyword_uri"] == "keywords"
+
+
+def test_delete_keywords_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/conditions' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the identification metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    keywords_id = pytest.global_keywords_id
+    admin_keywords_id = pytest.global_admin_keywords_id_admin
+    editor_keywords_id = pytest.global_editor_keywords_id_editor
+
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/metadata/keywords/{keywords_id}"
+    )
+    response = _logged_in_client.delete(
+        f"/study/{study_id}/metadata/keywords/{keywords_id}"
+    )
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/metadata/keywords/{admin_keywords_id}"
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/metadata/keywords/{editor_keywords_id}"
+    )
+
+    assert viewer_response.status_code == 403
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
+
+
+# ------------------- DESCRIPTION METADATA ------------------- #
 def test_put_description_metadata(clients):
     """
     GIVEN a Flask application configured for testing and a study ID
@@ -2880,260 +3078,124 @@ def test_delete_location_metadata(clients):
 
 
 # ------------------- OVERSIGHT METADATA ------------------- #
-# def test_put_oversight_metadata(clients):
-#     """
-#     Given a Flask application configured for testing and a study ID
-#     WHEN the '/study/{study_id}/metadata/oversight' endpoint is requested (PUT)
-#     THEN check that the response is valid and updates the oversight metadata
-#     """
-#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-#     study_id = pytest.global_study_id["id"]  # type: ignore
-#
-#     response = _logged_in_client.put(
-#         f"/study/{study_id}/metadata/oversight", json={"oversight_has_dmc": True}
-#     )
-#
-#     assert response.status_code == 200
-#     response_data = json.loads(response.data)
-#
-#     assert response_data is True
-#
-#     admin_response = _admin_client.put(
-#         f"/study/{study_id}/metadata/oversight", json={"oversight_has_dmc": False}
-#     )
-#
-#     assert admin_response.status_code == 200
-#     admin_response_data = json.loads(admin_response.data)
-#
-#     assert admin_response_data is False
-#
-#     editor_response = _editor_client.put(
-#         f"/study/{study_id}/metadata/oversight", json={"oversight_has_dmc": True}
-#     )
-#
-#     editor_response_data = json.loads(editor_response.data)
-#
-#     assert editor_response_data is True
-#
-#     viewer_response = _viewer_client.put(
-#         f"/study/{study_id}/metadata/oversight", json={"oversight_has_dmc": False}
-#     )
-#
-#     assert viewer_response.status_code == 403
-#
-#
-# def test_get_oversight_metadata(clients):
-#     """
-#     Given a Flask application configured for testing and a study ID
-#     WHEN the '/study/{study_id}/metadata/oversight' endpoint is requested (GET)
-#     THEN check that the response is valid and retrieves the oversight metadata
-#     """
-#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-#     study_id = pytest.global_study_id["id"]  # type: ignore
-#
-#     response = _logged_in_client.get(f"/study/{study_id}/metadata/oversight")
-#     admin_response = _admin_client.get(f"/study/{study_id}/metadata/oversight")
-#     editor_response = _editor_client.get(f"/study/{study_id}/metadata/oversight")
-#     viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/oversight")
-#
-#     assert response.status_code == 200
-#     assert admin_response.status_code == 200
-#     assert editor_response.status_code == 200
-#     assert viewer_response.status_code == 200
-#
-#     response_data = json.loads(response.data)
-#     admin_response_data = json.loads(admin_response.data)
-#     editor_response_data = json.loads(editor_response.data)
-#     viewer_response_data = json.loads(viewer_response.data)
-#
-#     assert response_data["oversight"] is True
-#     assert admin_response_data["oversight"] is True
-#     assert editor_response_data["oversight"] is True
-#     assert viewer_response_data["oversight"] is True
-#
+def test_put_oversight_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/oversight' endpoint is requested (PUT)
+    THEN check that the response is valid and updates the oversight metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
 
-# # ------------------- REFERENCE METADATA ------------------- #
-# def test_post_reference_metadata(clients):
-#     """
-#     Given a Flask application configured for testing and a study ID
-#     WHEN the '/study/{study_id}/metadata/reference' endpoint is requested (POST)
-#     THEN check that the response is valid and creates the reference metadata
-#     """
-#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-#     study_id = pytest.global_study_id["id"]  # type: ignore
-#
-#     response = _logged_in_client.post(
-#         f"/study/{study_id}/metadata/reference",
-#         json=[
-#             {
-#                 "identifier": "reference identifier",
-#                 "type": "Yes",
-#                 "citation": "reference citation",
-#             }
-#         ],
-#     )
-#     # Add a one second delay to prevent duplicate timestamps
-#     sleep(1)
-#
-#     assert response.status_code == 201
-#     response_data = json.loads(response.data)
-#     pytest.global_reference_id = response_data[0]["id"]
-#
-#     assert response_data[0]["identifier"] == "reference identifier"
-#     assert response_data[0]["type"] == "Yes"
-#     assert response_data[0]["citation"] == "reference citation"
-#
-#     admin_response = _admin_client.post(
-#         f"/study/{study_id}/metadata/reference",
-#         json=[
-#             {
-#                 "identifier": "admin-reference identifier",
-#                 "type": "Yes",
-#                 "citation": "admin-reference citation",
-#             }
-#         ],
-#     )
-#     # Add a one second delay to prevent duplicate timestamps
-#     sleep(1)
-#
-#     assert admin_response.status_code == 201
-#     admin_response_data = json.loads(admin_response.data)
-#     pytest.global_reference_id_admin = admin_response_data[0]["id"]
-#
-#     assert admin_response_data[0]["identifier"] == "admin-reference identifier"
-#     assert admin_response_data[0]["type"] == "Yes"
-#     assert admin_response_data[0]["citation"] == "admin-reference citation"
-#
-#     editor_response = _editor_client.post(
-#         f"/study/{study_id}/metadata/reference",
-#         json=[
-#             {
-#                 "identifier": "editor-reference identifier",
-#                 "type": "Yes",
-#                 "citation": "editor-reference citation",
-#             }
-#         ],
-#     )
-#
-#     assert editor_response.status_code == 201
-#     editor_response_data = json.loads(editor_response.data)
-#     pytest.global_reference_id_editor = editor_response_data[0]["id"]
-#
-#     assert editor_response_data[0]["identifier"] == "editor-reference identifier"
-#     assert editor_response_data[0]["type"] == "Yes"
-#     assert editor_response_data[0]["citation"] == "editor-reference citation"
-#
-#     viewer_response = _viewer_client.post(
-#         f"/study/{study_id}/metadata/reference",
-#         json=[
-#             {
-#                 "identifier": "viewer-reference identifier",
-#                 "type": "Yes",
-#                 "citation": "editor-reference citation",
-#             }
-#         ],
-#     )
-#
-#     assert viewer_response.status_code == 403
-#
-#
-# def test_get_reference_metadata(clients):
-#     """
-#     Given a Flask application configured for testing and a study ID
-#     WHEN the '/study/{study_id}/metadata/reference' endpoint is requested (GET)
-#     THEN check that the response is valid and retrieves the reference metadata
-#     """
-#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-#     study_id = pytest.global_study_id["id"]  # type: ignore
-#
-#     response = _logged_in_client.get(f"/study/{study_id}/metadata/reference")
-#     admin_response = _admin_client.get(f"/study/{study_id}/metadata/reference")
-#     editor_response = _editor_client.get(f"/study/{study_id}/metadata/reference")
-#     viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/reference")
-#
-#     assert response.status_code == 200
-#     assert admin_response.status_code == 200
-#     assert editor_response.status_code == 200
-#     assert viewer_response.status_code == 200
-#
-#     response_data = json.loads(response.data)
-#     admin_response_data = json.loads(admin_response.data)
-#     editor_response_data = json.loads(editor_response.data)
-#     viewer_response_data = json.loads(viewer_response.data)
-#
-#     assert response_data[0]["identifier"] == "reference identifier"
-#     assert response_data[0]["type"] == "Yes"
-#     assert response_data[0]["citation"] == "reference citation"
-#     assert response_data[1]["identifier"] == "admin-reference identifier"
-#     assert response_data[1]["type"] == "Yes"
-#     assert response_data[1]["citation"] == "admin-reference citation"
-#     assert response_data[2]["identifier"] == "editor-reference identifier"
-#     assert response_data[2]["type"] == "Yes"
-#     assert response_data[2]["citation"] == "editor-reference citation"
-#
-#     assert admin_response_data[0]["identifier"] == "reference identifier"
-#     assert admin_response_data[0]["type"] == "Yes"
-#     assert admin_response_data[0]["citation"] == "reference citation"
-#     assert admin_response_data[1]["identifier"] == "admin-reference identifier"
-#     assert admin_response_data[1]["type"] == "Yes"
-#     assert admin_response_data[1]["citation"] == "admin-reference citation"
-#     assert admin_response_data[2]["identifier"] == "editor-reference identifier"
-#     assert admin_response_data[2]["type"] == "Yes"
-#     assert admin_response_data[2]["citation"] == "editor-reference citation"
-#
-#     assert editor_response_data[0]["identifier"] == "reference identifier"
-#     assert editor_response_data[0]["type"] == "Yes"
-#     assert editor_response_data[0]["citation"] == "reference citation"
-#     assert editor_response_data[1]["identifier"] == "admin-reference identifier"
-#     assert editor_response_data[1]["type"] == "Yes"
-#     assert editor_response_data[1]["citation"] == "admin-reference citation"
-#     assert editor_response_data[2]["identifier"] == "editor-reference identifier"
-#     assert editor_response_data[2]["type"] == "Yes"
-#     assert editor_response_data[2]["citation"] == "editor-reference citation"
-#
-#     assert viewer_response_data[0]["identifier"] == "reference identifier"
-#     assert viewer_response_data[0]["type"] == "Yes"
-#     assert viewer_response_data[0]["citation"] == "reference citation"
-#     assert viewer_response_data[1]["identifier"] == "admin-reference identifier"
-#     assert viewer_response_data[1]["type"] == "Yes"
-#     assert viewer_response_data[1]["citation"] == "admin-reference citation"
-#     assert viewer_response_data[2]["identifier"] == "editor-reference identifier"
-#     assert viewer_response_data[2]["type"] == "Yes"
-#     assert viewer_response_data[2]["citation"] == "editor-reference citation"
-#
-#
-# def test_delete_reference_metadata(clients):
-#     """
-#     Given a Flask application configured for testing and
-#         a study ID and reference ID
-#     WHEN the '/study/{study_id}/metadata/reference/{reference_id}'
-#         endpoint is requested (DELETE)
-#     THEN check that the response is valid and deletes the reference metadata
-#     """
-#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-#     study_id = pytest.global_study_id["id"]  # type: ignore
-#     reference_id = pytest.global_reference_id
-#     admin_reference_id = pytest.global_reference_id_admin
-#     editor_reference_id = pytest.global_reference_id_editor
-#
-#     viewer_response = _viewer_client.delete(
-#         f"/study/{study_id}/metadata/reference/{reference_id}"
-#     )
-#     response = _logged_in_client.delete(
-#         f"/study/{study_id}/metadata/reference/{reference_id}"
-#     )
-#     admin_response = _admin_client.delete(
-#         f"/study/{study_id}/metadata/reference/{admin_reference_id}"
-#     )
-#     editor_response = _editor_client.delete(
-#         f"/study/{study_id}/metadata/reference/{editor_reference_id}"
-#     )
-#
-#     assert viewer_response.status_code == 403
-#     assert response.status_code == 204
-#     assert admin_response.status_code == 204
-#     assert editor_response.status_code == 204
-#
+    response = _logged_in_client.put(
+        f"/study/{study_id}/metadata/oversight",
+        json={
+            "fda_regulated_drug": "drug",
+            "fda_regulated_device": "device",
+            "has_dmc": "yes",
+            "human_subject_review_status": "yes"
+        }
+    )
+
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+    print(json.loads(response.data),"ffffff")
+    assert response_data["fda_regulated_drug"] == "drug"
+    assert response_data["fda_regulated_device"] == "device"
+    assert response_data["has_dmc"] == "yes"
+    assert response_data["human_subject_review_status"] == "yes"
+
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/metadata/oversight",
+        json={
+            "fda_regulated_drug": "drug",
+            "fda_regulated_device": "device",
+            "has_dmc": "yes",
+            "human_subject_review_status": "yes"
+        }
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+
+    assert admin_response_data["fda_regulated_drug"] == "drug"
+    assert admin_response_data["fda_regulated_device"] == "device"
+    assert admin_response_data["has_dmc"] == "yes"
+    assert admin_response_data["human_subject_review_status"] == "yes"
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/metadata/oversight",
+        json={
+            "fda_regulated_drug": "drug",
+            "fda_regulated_device": "device",
+            "has_dmc": "yes",
+            "human_subject_review_status": "yes"
+        }
+    )
+
+    editor_response_data = json.loads(editor_response.data)
+
+    assert editor_response_data["fda_regulated_drug"] == "drug"
+    assert editor_response_data["fda_regulated_device"] == "device"
+    assert editor_response_data["has_dmc"] == "yes"
+    assert editor_response_data["human_subject_review_status"] == "yes"
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/metadata/oversight",
+        json={
+            "fda_regulated_drug": "drug",
+            "fda_regulated_device": "device",
+            "has_dmc": "yes",
+            "human_subject_review_status": "yes"
+        }
+    )
+
+    assert viewer_response.status_code == 403
+
+
+def test_get_oversight_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/oversight' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the oversight metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/oversight")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/oversight")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/oversight")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/oversight")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data["fda_regulated_drug"] == "drug"
+    assert response_data["fda_regulated_device"] == "device"
+    assert response_data["has_dmc"] == "yes"
+    assert response_data["human_subject_review_status"] == "yes"
+
+    assert admin_response_data["fda_regulated_drug"] == "drug"
+    assert admin_response_data["fda_regulated_device"] == "device"
+    assert admin_response_data["has_dmc"] == "yes"
+    assert admin_response_data["human_subject_review_status"] == "yes"
+
+    assert editor_response_data["fda_regulated_drug"] == "drug"
+    assert editor_response_data["fda_regulated_device"] == "device"
+    assert editor_response_data["has_dmc"] == "yes"
+    assert editor_response_data["human_subject_review_status"] == "yes"
+
+    assert viewer_response_data["fda_regulated_drug"] == "drug"
+    assert viewer_response_data["fda_regulated_device"] == "device"
+    assert viewer_response_data["has_dmc"] == "yes"
+    assert viewer_response_data["human_subject_review_status"] == "yes"
 
 
 # ------------------- SPONSORS METADATA ------------------- #

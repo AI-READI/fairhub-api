@@ -64,6 +64,7 @@ class StudyKeywords(Resource):
             validate(request.json, schema)
         except ValidationError as e:
             return e.message, 400
+
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not modify study", 403
