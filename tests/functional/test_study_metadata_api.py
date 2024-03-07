@@ -402,7 +402,6 @@ def test_get_cc_metadata(clients):
     admin_response_data = json.loads(admin_response.data)
     editor_response_data = json.loads(editor_response.data)
     viewer_response_data = json.loads(viewer_response.data)
-    print(admin_response_data)
 
     assert response_data[0]["affiliation"] == "affiliation"
     assert response_data[0]["phone"] == "808"
@@ -2361,311 +2360,6 @@ def test_delete_intervention_metadata(clients):
     assert editor_response.status_code == 204
 
 
-# # ------------------- IPD SHARING METADATA ------------------- #
-# def test_put_ipdsharing_metadata(clients):
-#     """
-#     Given a Flask application configured for testing and a study ID
-#     WHEN the '/study/{study_id}/metadata/ipdsharing' endpoint is requested (PUT)
-#     THEN check that the response is valid and updates the ipdsharing metadata
-#     """
-#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-#     study_id = pytest.global_study_id["id"]  # type: ignore
-#
-#     response = _logged_in_client.put(
-#         f"/study/{study_id}/metadata/ipdsharing",
-#         json={
-#             "ipd_sharing": "Yes",
-#             "ipd_sharing_description": "yes",
-#             "ipd_sharing_info_type_list": ["Study Protocol", "Analytical Code"],
-#             "ipd_sharing_time_frame": "uh",
-#             "ipd_sharing_access_criteria": "Study Protocol",
-#             "ipd_sharing_url": "1",
-#         },
-#     )
-#
-#     assert response.status_code == 200
-#     response_data = json.loads(response.data)
-#
-#     assert response_data["ipd_sharing"] == "Yes"
-#     assert response_data["ipd_sharing_description"] == "yes"
-#     assert response_data["ipd_sharing_info_type_list"] == [
-#         "Study Protocol",
-#         "Analytical Code",
-#     ]
-#     assert response_data["ipd_sharing_time_frame"] == "uh"
-#     assert response_data["ipd_sharing_access_criteria"] == "Study Protocol"
-#     assert response_data["ipd_sharing_url"] == "1"
-#
-#     admin_response = _admin_client.put(
-#         f"/study/{study_id}/metadata/ipdsharing",
-#         json={
-#             "ipd_sharing": "Yes",
-#             "ipd_sharing_description": "admin-yes",
-#             "ipd_sharing_info_type_list": ["Study Protocol", "Analytical Code"],
-#             "ipd_sharing_time_frame": "uh",
-#             "ipd_sharing_access_criteria": "Study Protocol",
-#             "ipd_sharing_url": "1",
-#         },
-#     )
-#
-#     assert admin_response.status_code == 200
-#     admin_response_data = json.loads(admin_response.data)
-#
-#     assert admin_response_data["ipd_sharing"] == "Yes"
-#     assert admin_response_data["ipd_sharing_description"] == "admin-yes"
-#     assert admin_response_data["ipd_sharing_info_type_list"] == [
-#         "Study Protocol",
-#         "Analytical Code",
-#     ]
-#     assert admin_response_data["ipd_sharing_time_frame"] == "uh"
-#     assert admin_response_data["ipd_sharing_access_criteria"] == "Study Protocol"
-#     assert admin_response_data["ipd_sharing_url"] == "1"
-#
-#     editor_response = _editor_client.put(
-#         f"/study/{study_id}/metadata/ipdsharing",
-#         json={
-#             "ipd_sharing": "Yes",
-#             "ipd_sharing_description": "editor-yes",
-#             "ipd_sharing_info_type_list": ["Study Protocol", "Analytical Code"],
-#             "ipd_sharing_time_frame": "uh",
-#             "ipd_sharing_access_criteria": "Study Protocol",
-#             "ipd_sharing_url": "1",
-#         },
-#     )
-#
-#     assert editor_response.status_code == 200
-#     editor_response_data = json.loads(editor_response.data)
-#
-#     assert editor_response_data["ipd_sharing"] == "Yes"
-#     assert editor_response_data["ipd_sharing_description"] == "editor-yes"
-#     assert editor_response_data["ipd_sharing_info_type_list"] == [
-#         "Study Protocol",
-#         "Analytical Code",
-#     ]
-#     assert editor_response_data["ipd_sharing_time_frame"] == "uh"
-#     assert editor_response_data["ipd_sharing_access_criteria"] == "Study Protocol"
-#     assert editor_response_data["ipd_sharing_url"] == "1"
-#
-#     viewer_response = _viewer_client.put(
-#         f"/study/{study_id}/metadata/ipdsharing",
-#         json={
-#             "ipd_sharing": "Yes",
-#             "ipd_sharing_description": "viewer-yes",
-#             "ipd_sharing_info_type_list": ["Study Protocol", "Analytical Code"],
-#             "ipd_sharing_time_frame": "uh",
-#             "ipd_sharing_access_criteria": "Study Protocol",
-#             "ipd_sharing_url": "1",
-#         },
-#     )
-#
-#     assert viewer_response.status_code == 403
-#
-#
-# def test_get_ipdsharing_metadata(clients):
-#     """
-#     Given a Flask application configured for testing and a study ID
-#     WHEN the '/study/{study_id}/metadata/ipdsharing' endpoint is requested (GET)
-#     THEN check that the response is valid and retrieves the ipdsharing metadata
-#     """
-#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-#     study_id = pytest.global_study_id["id"]  # type: ignore
-#
-#     response = _logged_in_client.get(f"/study/{study_id}/metadata/ipdsharing")
-#     admin_response = _admin_client.get(f"/study/{study_id}/metadata/ipdsharing")
-#     editor_response = _editor_client.get(f"/study/{study_id}/metadata/ipdsharing")
-#     viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/ipdsharing")
-#
-#     assert response.status_code == 200
-#     assert admin_response.status_code == 200
-#     assert editor_response.status_code == 200
-#     assert viewer_response.status_code == 200
-#
-#     response_data = json.loads(response.data)
-#     admin_response_data = json.loads(admin_response.data)
-#     editor_response_data = json.loads(editor_response.data)
-#     viewer_response_data = json.loads(viewer_response.data)
-#
-#     assert response_data["ipd_sharing"] == "Yes"
-#     assert response_data["ipd_sharing_description"] == "editor-yes"
-#     assert response_data["ipd_sharing_info_type_list"] == [
-#         "Study Protocol",
-#         "Analytical Code",
-#     ]
-#     assert response_data["ipd_sharing_time_frame"] == "uh"
-#     assert response_data["ipd_sharing_access_criteria"] == "Study Protocol"
-#     assert response_data["ipd_sharing_url"] == "1"
-#
-#     assert admin_response_data["ipd_sharing"] == "Yes"
-#     assert admin_response_data["ipd_sharing_description"] == "editor-yes"
-#     assert admin_response_data["ipd_sharing_info_type_list"] == [
-#         "Study Protocol",
-#         "Analytical Code",
-#     ]
-#     assert admin_response_data["ipd_sharing_time_frame"] == "uh"
-#     assert admin_response_data["ipd_sharing_access_criteria"] == "Study Protocol"
-#     assert admin_response_data["ipd_sharing_url"] == "1"
-#
-#     assert editor_response_data["ipd_sharing"] == "Yes"
-#     assert editor_response_data["ipd_sharing_description"] == "editor-yes"
-#     assert editor_response_data["ipd_sharing_info_type_list"] == [
-#         "Study Protocol",
-#         "Analytical Code",
-#     ]
-#     assert editor_response_data["ipd_sharing_time_frame"] == "uh"
-#     assert editor_response_data["ipd_sharing_access_criteria"] == "Study Protocol"
-#     assert editor_response_data["ipd_sharing_url"] == "1"
-#
-#     assert viewer_response_data["ipd_sharing"] == "Yes"
-#     assert viewer_response_data["ipd_sharing_description"] == "editor-yes"
-#     assert viewer_response_data["ipd_sharing_info_type_list"] == [
-#         "Study Protocol",
-#         "Analytical Code",
-#     ]
-#     assert viewer_response_data["ipd_sharing_time_frame"] == "uh"
-#     assert viewer_response_data["ipd_sharing_access_criteria"] == "Study Protocol"
-#     assert viewer_response_data["ipd_sharing_url"] == "1"
-#
-
-# # ------------------- LINK METADATA ------------------- #
-# def test_post_link_metadata(clients):
-#     """
-#     Given a Flask application configured for testing and a study ID
-#     WHEN the '/study/{study_id}/metadata/link' endpoint is requested (POST)
-#     THEN check that the response is valid and creates the link metadata
-#     """
-#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-#     study_id = pytest.global_study_id["id"]  # type: ignore
-#
-#     response = _logged_in_client.post(
-#         f"/study/{study_id}/metadata/link",
-#         json=[{"url": "google.com", "title": "google link"}],
-#     )
-#     # Add a one second delay to prevent duplicate timestamps
-#     sleep(1)
-#
-#     assert response.status_code == 201
-#     response_data = json.loads(response.data)
-#     pytest.global_link_id = response_data[0]["id"]
-#
-#     assert response_data[0]["url"] == "google.com"
-#     assert response_data[0]["title"] == "google link"
-#
-#     admin_response = _admin_client.post(
-#         f"/study/{study_id}/metadata/link",
-#         json=[{"url": "admin-google.com", "title": "admin-google link"}],
-#     )
-#     # Add a one second delay to prevent duplicate timestamps
-#     sleep(1)
-#
-#     assert admin_response.status_code == 201
-#     admin_response_data = json.loads(admin_response.data)
-#     pytest.global_link_id_admin = admin_response_data[0]["id"]
-#
-#     assert admin_response_data[0]["url"] == "admin-google.com"
-#     assert admin_response_data[0]["title"] == "admin-google link"
-#
-#     editor_response = _editor_client.post(
-#         f"/study/{study_id}/metadata/link",
-#         json=[{"url": "editor-google.com", "title": "editor-google link"}],
-#     )
-#
-#     assert editor_response.status_code == 201
-#     editor_response_data = json.loads(editor_response.data)
-#     pytest.global_link_id_editor = editor_response_data[0]["id"]
-#
-#     assert editor_response_data[0]["url"] == "editor-google.com"
-#     assert editor_response_data[0]["title"] == "editor-google link"
-#
-#     viewer_response = _viewer_client.post(
-#         f"/study/{study_id}/metadata/link",
-#         json=[{"url": "viewer-google.com", "title": "viewer-google link"}],
-#     )
-#
-#     assert viewer_response.status_code == 403
-#
-#
-# def test_get_link_metadata(clients):
-#     """
-#     Given a Flask application configured for testing and a study ID
-#     WHEN the '/study/{study_id}/metadata/link' endpoint is requested (GET)
-#     THEN check that the response is valid and retrieves the link metadata
-#     """
-#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-#     study_id = pytest.global_study_id["id"]  # type: ignore
-#
-#     response = _logged_in_client.get(f"/study/{study_id}/metadata/link")
-#     admin_response = _admin_client.get(f"/study/{study_id}/metadata/link")
-#     editor_response = _editor_client.get(f"/study/{study_id}/metadata/link")
-#     viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/link")
-#
-#     assert response.status_code == 200
-#     assert admin_response.status_code == 200
-#     assert editor_response.status_code == 200
-#     assert viewer_response.status_code == 200
-#
-#     response_data = json.loads(response.data)
-#     admin_response_data = json.loads(admin_response.data)
-#     editor_response_data = json.loads(editor_response.data)
-#     viewer_response_data = json.loads(viewer_response.data)
-#
-#     assert response_data[0]["url"] == "google.com"
-#     assert response_data[0]["title"] == "google link"
-#     assert response_data[1]["url"] == "admin-google.com"
-#     assert response_data[1]["title"] == "admin-google link"
-#     assert response_data[2]["url"] == "editor-google.com"
-#     assert response_data[2]["title"] == "editor-google link"
-#
-#     assert admin_response_data[0]["url"] == "google.com"
-#     assert admin_response_data[0]["title"] == "google link"
-#     assert admin_response_data[1]["url"] == "admin-google.com"
-#     assert admin_response_data[1]["title"] == "admin-google link"
-#     assert admin_response_data[2]["url"] == "editor-google.com"
-#     assert admin_response_data[2]["title"] == "editor-google link"
-#
-#     assert editor_response_data[0]["url"] == "google.com"
-#     assert editor_response_data[0]["title"] == "google link"
-#     assert editor_response_data[1]["url"] == "admin-google.com"
-#     assert editor_response_data[1]["title"] == "admin-google link"
-#     assert editor_response_data[2]["url"] == "editor-google.com"
-#     assert editor_response_data[2]["title"] == "editor-google link"
-#
-#     assert viewer_response_data[0]["url"] == "google.com"
-#     assert viewer_response_data[0]["title"] == "google link"
-#     assert viewer_response_data[1]["url"] == "admin-google.com"
-#     assert viewer_response_data[1]["title"] == "admin-google link"
-#     assert viewer_response_data[2]["url"] == "editor-google.com"
-#     assert viewer_response_data[2]["title"] == "editor-google link"
-#
-#
-# def test_delete_link_metadata(clients):
-#     """
-#     Given a Flask application configured for testing and a study ID and link ID
-#     WHEN the '/study/{study_id}/metadata/link/{link_id}' endpoint is requested (DELETE)
-#     THEN check that the response is valid and deletes the link metadata
-#     """
-#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-#     study_id = pytest.global_study_id["id"]  # type: ignore
-#     link_id = pytest.global_link_id
-#     admin_link_id = pytest.global_link_id_admin
-#     editor_link_id = pytest.global_link_id_editor
-#
-#     viewer_response = _viewer_client.delete(
-#         f"/study/{study_id}/metadata/link/{link_id}"
-#     )
-#     response = _logged_in_client.delete(f"/study/{study_id}/metadata/link/{link_id}")
-#     admin_response = _admin_client.delete(
-#         f"/study/{study_id}/metadata/link/{admin_link_id}"
-#     )
-#     editor_response = _editor_client.delete(
-#         f"/study/{study_id}/metadata/link/{editor_link_id}"
-#     )
-#
-#     assert viewer_response.status_code == 403
-#     assert response.status_code == 204
-#     assert admin_response.status_code == 204
-#     assert editor_response.status_code == 204
-
-
 # ------------------- LOCATION METADATA ------------------- #
 def test_post_location_metadata(clients):
     """
@@ -2905,176 +2599,314 @@ def test_delete_location_metadata(clients):
     assert editor_response.status_code == 204
 
 
-# # ------------------- OVERALL-OFFICIAL METADATA ------------------- #
-# def test_post_overall_official_metadata(clients):
-#     """
-#     Given a Flask application configured for testing and a study ID
-#     WHEN the '/study/{study_id}/metadata/overall-official' endpoint is requested (POST)
-#     THEN check that the response is valid and creates the overall-official metadata
-#     """
-#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-#     study_id = pytest.global_study_id["id"]  # type: ignore
-#
-#     response = _logged_in_client.post(
-#         f"/study/{study_id}/metadata/overall-official",
-#         json=[{"name": "test", "affiliation": "aff", "role": "Study Chair"}],
-#     )
-#     # Add a one second delay to prevent duplicate timestamps
-#     sleep(1)
-#
-#     assert response.status_code == 201
-#     response_data = json.loads(response.data)
-#     pytest.global_overall_official_id = response_data[0]["id"]
-#
-#     assert response_data[0]["first_name"] == "test"
-#     assert response_data[0]["last_name"] == "test"
-#     assert response_data[0]["affiliation"] == "aff"
-#     assert response_data[0]["role"] == "Study Chair"
-#
-#     admin_response = _admin_client.post(
-#         f"/study/{study_id}/metadata/overall-official",
-#         json=[
-#             {"name": "admin-test", "affiliation": "admin-aff", "role": "Study Chair"}
-#         ],
-#     )
-#     # Add a one second delay to prevent duplicate timestamps
-#     sleep(1)
-#
-#     assert admin_response.status_code == 201
-#     admin_response_data = json.loads(admin_response.data)
-#     pytest.global_overall_official_id_admin = admin_response_data[0]["id"]
-#
-#     assert admin_response_data[0]["first_name"] == "admin-test"
-#     assert admin_response_data[0]["last_name"]== "admin-test"
-#     assert admin_response_data[0]["affiliation"] == "admin-aff"
-#     assert admin_response_data[0]["role"] == "Study Chair"
-#
-#     editor_response = _editor_client.post(
-#         f"/study/{study_id}/metadata/overall-official",
-#         json=[
-#             {"name": "editor-test", "affiliation": "editor-aff", "role": "Study Chair"}
-#         ],
-#     )
-#
-#     assert editor_response.status_code == 201
-#     editor_response_data = json.loads(editor_response.data)
-#     pytest.global_overall_official_id_editor = editor_response_data[0]["id"]
-#
-#     assert editor_response_data[0]["first_name"]== "editor-test"
-#     assert editor_response_data[0]["last_name"] == "editor-test"
-#     assert editor_response_data[0]["affiliation"] == "editor-aff"
-#     assert editor_response_data[0]["role"] == "Study Chair"
-#
-#     viewer_response = _viewer_client.post(
-#         f"/study/{study_id}/metadata/overall-official",
-#         json=[
-#             {"name": "viewer-test", "affiliation": "viewer-aff", "role": "Study Chair"}
-#         ],
-#     )
-#
-#     assert viewer_response.status_code == 403
-#
-#
-# def test_get_overall_official_metadata(clients):
-#     """
-#     Given a Flask application configured for testing and a study ID
-#     WHEN the '/study/{study_id}/metadata/overall-official' endpoint is requested (GET)
-#     THEN check that the response is valid and retrieves the overall-official metadata
-#     """
-#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-#     study_id = pytest.global_study_id["id"]  # type: ignore
-#
-#     response = _logged_in_client.get(f"/study/{study_id}/metadata/overall-official")
-#     admin_response = _admin_client.get(f"/study/{study_id}/metadata/overall-official")
-#     editor_response = _editor_client.get(f"/study/{study_id}/metadata/overall-official")
-#     viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/overall-official")
-#
-#     assert response.status_code == 200
-#     assert admin_response.status_code == 200
-#     assert editor_response.status_code == 200
-#     assert viewer_response.status_code == 200
-#
-#     response_data = json.loads(response.data)
-#     admin_response_data = json.loads(admin_response.data)
-#     editor_response_data = json.loads(editor_response.data)
-#     viewer_response_data = json.loads(viewer_response.data)
-#
-#     assert response_data[0]["first_name"] == "test"
-#     assert response_data[0]["last_name"] == "test"
-#     assert response_data[0]["affiliation"] == "aff"
-#     assert response_data[0]["role"] == "Study Chair"
-#     assert response_data[1]["name"] == "admin-test"
-#     assert response_data[1]["affiliation"] == "admin-aff"
-#     assert response_data[1]["role"] == "Study Chair"
-#     assert response_data[2]["name"] == "editor-test"
-#     assert response_data[2]["affiliation"] == "editor-aff"
-#     assert response_data[2]["role"] == "Study Chair"
-#
-#     assert admin_response_data[0]["first_name"] == "test"
-#     assert admin_response_data[0]["last_name"] == "test"
-#     assert admin_response_data[0]["affiliation"] == "aff"
-#     assert admin_response_data[0]["role"] == "Study Chair"
-#     assert admin_response_data[1]["name"] == "admin-test"
-#     assert admin_response_data[1]["affiliation"] == "admin-aff"
-#     assert admin_response_data[1]["role"] == "Study Chair"
-#     assert admin_response_data[2]["name"] == "editor-test"
-#     assert admin_response_data[2]["affiliation"] == "editor-aff"
-#     assert admin_response_data[2]["role"] == "Study Chair"
-#
-#     assert editor_response_data[0]["first_name"] == "test"
-#     assert editor_response_data[0]["last_name"] == "test"
-#     assert editor_response_data[0]["affiliation"] == "aff"
-#     assert editor_response_data[0]["role"] == "Study Chair"
-#     assert editor_response_data[1]["name"] == "admin-test"
-#     assert editor_response_data[1]["affiliation"] == "admin-aff"
-#     assert editor_response_data[1]["role"] == "Study Chair"
-#     assert editor_response_data[2]["name"] == "editor-test"
-#     assert editor_response_data[2]["affiliation"] == "editor-aff"
-#     assert editor_response_data[2]["role"] == "Study Chair"
-#
-#     assert viewer_response_data[0]["first_name"] == "test"
-#     assert viewer_response_data[0]["last_name"] == "test"
-#     assert viewer_response_data[0]["affiliation"] == "aff"
-#     assert viewer_response_data[0]["role"] == "Study Chair"
-#     assert viewer_response_data[1]["name"] == "admin-test"
-#     assert viewer_response_data[1]["affiliation"] == "admin-aff"
-#     assert viewer_response_data[1]["role"] == "Study Chair"
-#     assert viewer_response_data[2]["name"] == "editor-test"
-#     assert viewer_response_data[2]["affiliation"] == "editor-aff"
-#     assert viewer_response_data[2]["role"] == "Study Chair"
-#
-#
-# def test_delete_overall_official_metadata(clients):
-#     """
-#     Given a Flask application configured for testing and a
-#         study ID and overall official ID
-#     WHEN the '/study/{study_id}/metadata/overall-official/{overall_official_id}'
-#         endpoint is requested (DELETE)
-#     THEN check that the response is valid and deletes the overall-official metadata
-#     """
-#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-#     study_id = pytest.global_study_id["id"]  # type: ignore
-#     overall_official_id = pytest.global_overall_official_id
-#     oo_admin_id = pytest.global_overall_official_id_admin
-#     oo_editor_id = pytest.global_overall_official_id_editor
-#
-#     viewer_response = _viewer_client.delete(
-#         f"/study/{study_id}/metadata/overall-official/{overall_official_id}"
-#     )
-#     response = _logged_in_client.delete(
-#         f"/study/{study_id}/metadata/overall-official/{overall_official_id}"
-#     )
-#     admin_response = _admin_client.delete(
-#         f"/study/{study_id}/metadata/overall-official/{oo_admin_id}"
-#     )
-#     editor_response = _editor_client.delete(
-#         f"/study/{study_id}/metadata/overall-official/{oo_editor_id}"
-#     )
-#
-#     assert viewer_response.status_code == 403
-#     assert response.status_code == 204
-#     assert admin_response.status_code == 204
-#     assert editor_response.status_code == 204
+# ------------------- OVERALL-OFFICIAL METADATA ------------------- #
+def test_post_overall_official_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/overall-official' endpoint is requested (POST)
+    THEN check that the response is valid and creates the overall-official metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.post(
+        f"/study/{study_id}/metadata/overall-official",
+        json=[{
+            "first_name": "test",
+            "last_name": "test",
+            "degree": "aff",
+            "identifier": "identifier",
+            "identifier_scheme": "scheme",
+            "identifier_scheme_uri": "uri",
+            "affiliation": "aff",
+            "affiliation_identifier": "identifier",
+            "affiliation_identifier_scheme": "scheme",
+            "affiliation_identifier_scheme_uri": "uri",
+            "role": "chair",
+        }],
+    )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
+
+    assert response.status_code == 201
+    response_data = json.loads(response.data)
+    pytest.global_overall_official_id = response_data[0]["id"]
+
+    assert response_data[0]["first_name"] == "test"
+    assert response_data[0]["last_name"] == "test"
+    assert response_data[0]["affiliation"] == "aff"
+    assert response_data[0]["degree"] == "aff"
+    assert response_data[0]["identifier"] == "identifier"
+    assert response_data[0]["identifier_scheme"] == "scheme"
+    assert response_data[0]["identifier_scheme_uri"] == "uri"
+    assert response_data[0]["affiliation_identifier"] == "identifier"
+    assert response_data[0]["affiliation_identifier_scheme"] == "scheme"
+    assert response_data[0]["affiliation_identifier_scheme_uri"] == "uri"
+    assert response_data[0]["role"] == "chair"
+
+    admin_response = _admin_client.post(
+        f"/study/{study_id}/metadata/overall-official",
+        json=[{
+            "first_name": "admin test",
+            "last_name": "test",
+            "degree": "aff",
+            "identifier": "identifier",
+            "identifier_scheme": "scheme",
+            "identifier_scheme_uri": "uri",
+            "affiliation": "aff",
+            "affiliation_identifier": "identifier",
+            "affiliation_identifier_scheme": "scheme",
+            "affiliation_identifier_scheme_uri": "uri",
+            "role": "chair",
+        }],
+    )
+    # Add a one second delay to prevent duplicate timestamps
+    sleep(1)
+
+    assert admin_response.status_code == 201
+    admin_response_data = json.loads(admin_response.data)
+    pytest.global_overall_official_id_admin = admin_response_data[0]["id"]
+
+    assert admin_response_data[0]["first_name"] == "admin test"
+    assert admin_response_data[0]["last_name"] == "test"
+    assert admin_response_data[0]["affiliation"] == "aff"
+    assert admin_response_data[0]["degree"] == "aff"
+    assert admin_response_data[0]["identifier"] == "identifier"
+    assert admin_response_data[0]["identifier_scheme"] == "scheme"
+    assert admin_response_data[0]["identifier_scheme_uri"] == "uri"
+    assert admin_response_data[0]["affiliation"] == "aff"
+    assert admin_response_data[0]["affiliation_identifier"] == "identifier"
+    assert admin_response_data[0]["affiliation_identifier_scheme"] == "scheme"
+    assert admin_response_data[0]["affiliation_identifier_scheme_uri"] == "uri"
+    assert admin_response_data[0]["role"] == "chair"
+
+    editor_response = _editor_client.post(
+        f"/study/{study_id}/metadata/overall-official",
+        json=[{
+            "first_name": "editor test",
+            "last_name": "test",
+            "degree": "aff",
+            "identifier": "identifier",
+            "identifier_scheme": "scheme",
+            "identifier_scheme_uri": "uri",
+            "affiliation": "aff",
+            "affiliation_identifier": "identifier",
+            "affiliation_identifier_scheme": "scheme",
+            "affiliation_identifier_scheme_uri": "uri",
+            "role": "chair",
+        }],
+    )
+
+    assert editor_response.status_code == 201
+    editor_response_data = json.loads(editor_response.data)
+    pytest.global_overall_official_id_editor = editor_response_data[0]["id"]
+
+    assert editor_response_data[0]["first_name"] == "editor test"
+    assert editor_response_data[0]["last_name"] == "test"
+    assert editor_response_data[0]["affiliation"] == "aff"
+    assert editor_response_data[0]["degree"] == "aff"
+    assert editor_response_data[0]["identifier"] == "identifier"
+    assert editor_response_data[0]["identifier_scheme"] == "scheme"
+    assert editor_response_data[0]["identifier_scheme_uri"] == "uri"
+    assert editor_response_data[0]["affiliation"] == "aff"
+    assert editor_response_data[0]["affiliation_identifier"] == "identifier"
+    assert editor_response_data[0]["affiliation_identifier_scheme"] == "scheme"
+    assert editor_response_data[0]["affiliation_identifier_scheme_uri"] == "uri"
+    assert editor_response_data[0]["role"] == "chair"
+
+    viewer_response = _viewer_client.post(
+        f"/study/{study_id}/metadata/overall-official",
+        json=[{
+            "first_name": "editor test",
+            "last_name": "test",
+            "degree": "aff",
+            "identifier": "identifier",
+            "identifier_scheme": "scheme",
+            "identifier_scheme_uri": "uri",
+            "affiliation": "aff",
+            "affiliation_identifier": "identifier",
+            "affiliation_identifier_scheme": "scheme",
+            "affiliation_identifier_scheme_uri": "uri",
+            "role": "chair",
+        }],
+    )
+
+    assert viewer_response.status_code == 403
+
+
+def test_get_overall_official_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/overall-official' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the overall-official metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/overall-official")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/overall-official")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/overall-official")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/overall-official")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data[0]["first_name"] == "test"
+    assert response_data[0]["last_name"] == "test"
+    assert response_data[0]["affiliation"] == "aff"
+    assert response_data[0]["degree"] == "aff"
+    assert response_data[0]["identifier"] == "identifier"
+    assert response_data[0]["identifier_scheme"] == "scheme"
+    assert response_data[0]["identifier_scheme_uri"] == "uri"
+    assert response_data[0]["affiliation"] == "aff"
+    assert response_data[0]["affiliation_identifier"] == "identifier"
+    assert response_data[0]["affiliation_identifier_scheme"] == "scheme"
+    assert response_data[0]["affiliation_identifier_scheme_uri"] == "uri"
+    assert response_data[0]["role"] == "chair"
+
+    assert admin_response_data[0]["first_name"] == "test"
+    assert admin_response_data[0]["last_name"] == "test"
+    assert admin_response_data[0]["affiliation"] == "aff"
+    assert admin_response_data[0]["degree"] == "aff"
+    assert admin_response_data[0]["identifier"] == "identifier"
+    assert admin_response_data[0]["identifier_scheme"] == "scheme"
+    assert admin_response_data[0]["identifier_scheme_uri"] == "uri"
+    assert admin_response_data[0]["affiliation"] == "aff"
+    assert admin_response_data[0]["affiliation_identifier"] == "identifier"
+    assert admin_response_data[0]["affiliation_identifier_scheme"] == "scheme"
+    assert admin_response_data[0]["affiliation_identifier_scheme_uri"] == "uri"
+    assert admin_response_data[0]["role"] == "chair"
+
+    assert editor_response_data[0]["first_name"] == "test"
+    assert editor_response_data[0]["last_name"] == "test"
+    assert editor_response_data[0]["affiliation"] == "aff"
+    assert editor_response_data[0]["degree"] == "aff"
+    assert editor_response_data[0]["identifier"] == "identifier"
+    assert editor_response_data[0]["identifier_scheme"] == "scheme"
+    assert editor_response_data[0]["identifier_scheme_uri"] == "uri"
+    assert editor_response_data[0]["affiliation"] == "aff"
+    assert editor_response_data[0]["affiliation_identifier"] == "identifier"
+    assert editor_response_data[0]["affiliation_identifier_scheme"] == "scheme"
+    assert editor_response_data[0]["affiliation_identifier_scheme_uri"] == "uri"
+    assert editor_response_data[0]["role"] == "chair"
+
+    assert response_data[1]["first_name"] == "admin test"
+    assert response_data[1]["last_name"] == "test"
+    assert response_data[1]["affiliation"] == "aff"
+    assert response_data[1]["degree"] == "aff"
+    assert response_data[1]["identifier"] == "identifier"
+    assert response_data[1]["identifier_scheme"] == "scheme"
+    assert response_data[1]["identifier_scheme_uri"] == "uri"
+    assert response_data[1]["affiliation"] == "aff"
+    assert response_data[1]["affiliation_identifier"] == "identifier"
+    assert response_data[1]["affiliation_identifier_scheme"] == "scheme"
+    assert response_data[1]["affiliation_identifier_scheme_uri"] == "uri"
+    assert response_data[1]["role"] == "chair"
+
+    assert admin_response_data[1]["first_name"] == "admin test"
+    assert admin_response_data[1]["last_name"] == "test"
+    assert admin_response_data[1]["affiliation"] == "aff"
+    assert admin_response_data[1]["degree"] == "aff"
+    assert admin_response_data[1]["identifier"] == "identifier"
+    assert admin_response_data[1]["identifier_scheme"] == "scheme"
+    assert admin_response_data[1]["identifier_scheme_uri"] == "uri"
+    assert admin_response_data[1]["affiliation"] == "aff"
+    assert admin_response_data[1]["affiliation_identifier"] == "identifier"
+    assert admin_response_data[1]["affiliation_identifier_scheme"] == "scheme"
+    assert admin_response_data[1]["affiliation_identifier_scheme_uri"] == "uri"
+    assert admin_response_data[1]["role"] == "chair"
+
+    assert editor_response_data[1]["first_name"] == "admin test"
+    assert editor_response_data[1]["last_name"] == "test"
+    assert editor_response_data[1]["affiliation"] == "aff"
+    assert editor_response_data[1]["degree"] == "aff"
+    assert editor_response_data[1]["identifier"] == "identifier"
+    assert editor_response_data[1]["identifier_scheme"] == "scheme"
+    assert editor_response_data[1]["identifier_scheme_uri"] == "uri"
+    assert editor_response_data[1]["affiliation"] == "aff"
+    assert editor_response_data[1]["affiliation_identifier"] == "identifier"
+    assert editor_response_data[1]["affiliation_identifier_scheme"] == "scheme"
+    assert editor_response_data[1]["affiliation_identifier_scheme_uri"] == "uri"
+    assert editor_response_data[1]["role"] == "chair"
+
+    assert response_data[2]["first_name"] == "editor test"
+    assert response_data[2]["last_name"] == "test"
+    assert response_data[2]["affiliation"] == "aff"
+    assert response_data[2]["degree"] == "aff"
+    assert response_data[2]["identifier"] == "identifier"
+    assert response_data[2]["identifier_scheme"] == "scheme"
+    assert response_data[2]["identifier_scheme_uri"] == "uri"
+    assert response_data[2]["affiliation"] == "aff"
+    assert response_data[2]["affiliation_identifier"] == "identifier"
+    assert response_data[2]["affiliation_identifier_scheme"] == "scheme"
+    assert response_data[2]["affiliation_identifier_scheme_uri"] == "uri"
+    assert response_data[2]["role"] == "chair"
+
+    assert admin_response_data[2]["first_name"] == "editor test"
+    assert admin_response_data[2]["last_name"] == "test"
+    assert admin_response_data[2]["affiliation"] == "aff"
+    assert admin_response_data[2]["degree"] == "aff"
+    assert admin_response_data[2]["identifier"] == "identifier"
+    assert admin_response_data[2]["identifier_scheme"] == "scheme"
+    assert admin_response_data[2]["identifier_scheme_uri"] == "uri"
+    assert admin_response_data[2]["affiliation"] == "aff"
+    assert admin_response_data[2]["affiliation_identifier"] == "identifier"
+    assert admin_response_data[2]["affiliation_identifier_scheme"] == "scheme"
+    assert admin_response_data[2]["affiliation_identifier_scheme_uri"] == "uri"
+    assert admin_response_data[2]["role"] == "chair"
+
+    assert editor_response_data[2]["first_name"] == "editor test"
+    assert editor_response_data[2]["last_name"] == "test"
+    assert editor_response_data[2]["affiliation"] == "aff"
+    assert editor_response_data[2]["degree"] == "aff"
+    assert editor_response_data[2]["identifier"] == "identifier"
+    assert editor_response_data[2]["identifier_scheme"] == "scheme"
+    assert editor_response_data[2]["identifier_scheme_uri"] == "uri"
+    assert editor_response_data[2]["affiliation"] == "aff"
+    assert editor_response_data[2]["affiliation_identifier"] == "identifier"
+    assert editor_response_data[2]["affiliation_identifier_scheme"] == "scheme"
+    assert editor_response_data[2]["affiliation_identifier_scheme_uri"] == "uri"
+    assert editor_response_data[2]["role"] == "chair"
+
+
+def test_delete_overall_official_metadata(clients):
+    """
+    Given a Flask application configured for testing and a
+        study ID and overall official ID
+    WHEN the '/study/{study_id}/metadata/overall-official/{overall_official_id}'
+        endpoint is requested (DELETE)
+    THEN check that the response is valid and deletes the overall-official metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    overall_official_id = pytest.global_overall_official_id
+    oo_admin_id = pytest.global_overall_official_id_admin
+    oo_editor_id = pytest.global_overall_official_id_editor
+
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/metadata/overall-official/{overall_official_id}"
+    )
+    response = _logged_in_client.delete(
+        f"/study/{study_id}/metadata/overall-official/{overall_official_id}"
+    )
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/metadata/overall-official/{oo_admin_id}"
+    )
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/metadata/overall-official/{oo_editor_id}"
+    )
+
+    assert viewer_response.status_code == 403
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
 
 
 # ------------------- OVERSIGHT METADATA ------------------- #
@@ -3099,7 +2931,6 @@ def test_put_oversight_metadata(clients):
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
-    print(json.loads(response.data),"ffffff")
     assert response_data["fda_regulated_drug"] == "drug"
     assert response_data["fda_regulated_device"] == "device"
     assert response_data["has_dmc"] == "yes"
@@ -3199,195 +3030,313 @@ def test_get_oversight_metadata(clients):
 
 
 # ------------------- SPONSORS METADATA ------------------- #
-# def test_put_sponsors_metadata(clients):
-#     """
-#     Given a Flask application configured for testing and a study ID
-#     WHEN the '/study/{study_id}/metadata/sponsors' endpoint is requested (PUT)
-#     THEN check that the response is valid and updates the sponsors metadata
-#     """
-#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-#     study_id = pytest.global_study_id["id"]  # type: ignore
-#
-#     response = _logged_in_client.put(
-#         f"/study/{study_id}/metadata/sponsors",
-#         json={
-#             "responsible_party_type": "Sponsor",
-#             "responsible_party_investigator_name": "party name",
-#             "responsible_party_investigator_title": "party title",
-#             "responsible_party_investigator_affiliation": "party affiliation",
-#             "lead_sponsor_name": "sponsor name",
-#         },
-#     )
-#
-#     assert response.status_code == 200
-#     response_data = json.loads(response.data)
-#
-#     assert response_data["responsible_party_type"] == "Sponsor"
-#     assert response_data["responsible_party_investigator_name"] == "party name"
-#     assert response_data["responsible_party_investigator_title"] == "party title"
-#     assert (
-#         response_data["responsible_party_investigator_affiliation"]
-#         == "party affiliation"  # noqa: W503
-#     )
-#     assert response_data["lead_sponsor_name"] == "sponsor name"
-#
-#     admin_response = _admin_client.put(
-#         f"/study/{study_id}/metadata/sponsors",
-#         json={
-#             "responsible_party_type": "Sponsor",
-#             "responsible_party_investigator_name": "admin sponsor name",
-#             "responsible_party_investigator_title": "admin sponsor title",
-#             "responsible_party_investigator_affiliation": "admin sponsor affiliation",
-#             "lead_sponsor_name": "admin sponsor name",
-#         },
-#     )
-#
-#     assert admin_response.status_code == 200
-#     admin_response_data = json.loads(admin_response.data)
-#
-#     assert admin_response_data["responsible_party_type"] == "Sponsor"
-#     assert (
-#         admin_response_data["responsible_party_investigator_name"]
-#         == "admin sponsor name"
-#     )
-#     assert (
-#         admin_response_data["responsible_party_investigator_title"]
-#         == "admin sponsor title"
-#     )
-#     # pylint: disable=line-too-long
-#     assert (
-#         admin_response_data["responsible_party_investigator_affiliation"]
-#         == "admin sponsor affiliation"
-#     )
-#     # pylint: disable=line-too-long
-#     assert (
-#         admin_response_data["responsible_party_investigator_affiliation"]
-#         == "admin sponsor affiliation"
-#     )
-#     assert admin_response_data["lead_sponsor_name"] == "admin sponsor name"
-#
-#     editor_response = _editor_client.put(
-#         f"/study/{study_id}/metadata/sponsors",
-#         json={
-#             "responsible_party_type": "Sponsor",
-#             "responsible_party_investigator_name": "editor sponsor name",
-#             "responsible_party_investigator_title": "editor sponsor title",
-#             "responsible_party_investigator_affiliation": "editor sponsor affiliation",
-#             "lead_sponsor_name": "editor sponsor name",
-#         },
-#     )
-#
-#     assert editor_response.status_code == 200
-#     editor_response_data = json.loads(editor_response.data)
-#
-#     assert editor_response_data["responsible_party_type"] == "Sponsor"
-#     assert (
-#         editor_response_data["responsible_party_investigator_name"]
-#         == "editor sponsor name"
-#     )
-#     assert (
-#         editor_response_data["responsible_party_investigator_title"]
-#         == "editor sponsor title"
-#     )
-#     assert (
-#         editor_response_data["responsible_party_investigator_affiliation"]
-#         == "editor sponsor affiliation"
-#     )  # noqa: E501
-#     assert editor_response_data["lead_sponsor_name"] == "editor sponsor name"
-#
-#     viewer_response = _viewer_client.put(
-#         f"/study/{study_id}/metadata/sponsors",
-#         json={
-#             "responsible_party_type": "Sponsor",
-#             "responsible_party_investigator_name": "viewer sponsor name",
-#             "responsible_party_investigator_title": "viewer sponsor title",
-#             "responsible_party_investigator_affiliation": "viewer sponsor affiliation",
-#             "lead_sponsor_name": "viewer sponsor name",
-#         },
-#     )
-#
-#     assert viewer_response.status_code == 403
-#
-#
-# def test_get_sponsors_metadata(clients):
-#     """
-#     Given a Flask application configured for testing and a study ID
-#     WHEN the '/study/{study_id}/metadata/sponsors' endpoint is requested (GET)
-#     THEN check that the response is valid and retrieves the sponsors metadata
-#     """
-#     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-#     study_id = pytest.global_study_id["id"]  # type: ignore
-#
-#     response = _logged_in_client.get(f"/study/{study_id}/metadata/sponsors")
-#     admin_response = _admin_client.get(f"/study/{study_id}/metadata/sponsors")
-#     editor_response = _editor_client.get(f"/study/{study_id}/metadata/sponsors")
-#     viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/sponsors")
-#
-#     assert response.status_code == 200
-#     assert admin_response.status_code == 200
-#     assert editor_response.status_code == 200
-#     assert viewer_response.status_code == 200
-#
-#     response_data = json.loads(response.data)
-#     admin_response_data = json.loads(admin_response.data)
-#     editor_response_data = json.loads(editor_response.data)
-#     viewer_response_data = json.loads(viewer_response.data)
-#
-#     assert response_data["responsible_party_type"] == "Sponsor"
-#     assert response_data["responsible_party_investigator_name"] == "editor sponsor name"
-#     assert (
-#         response_data["responsible_party_investigator_title"] == "editor sponsor title"
-#     )
-#     assert (
-#         response_data["responsible_party_investigator_affiliation"]
-#         == "editor sponsor affiliation"
-#     )
-#     assert response_data["lead_sponsor_name"] == "editor sponsor name"
-#
-#     assert admin_response_data["responsible_party_type"] == "Sponsor"
-#     assert (
-#         admin_response_data["responsible_party_investigator_name"]
-#         == "editor sponsor name"
-#     )
-#     assert (
-#         admin_response_data["responsible_party_investigator_title"]
-#         == "editor sponsor title"
-#     )
-#     assert (
-#         admin_response_data["responsible_party_investigator_affiliation"]
-#         == "editor sponsor affiliation"
-#     )
-#     assert admin_response_data["lead_sponsor_name"] == "editor sponsor name"
-#
-#     assert editor_response_data["responsible_party_type"] == "Sponsor"
-#     assert (
-#         editor_response_data["responsible_party_investigator_name"]
-#         == "editor sponsor name"
-#     )
-#     assert (
-#         editor_response_data["responsible_party_investigator_title"]
-#         == "editor sponsor title"
-#     )
-#     assert (
-#         editor_response_data["responsible_party_investigator_affiliation"]
-#         == "editor sponsor affiliation"
-#     )
-#     assert editor_response_data["lead_sponsor_name"] == "editor sponsor name"
-#
-#     assert viewer_response_data["responsible_party_type"] == "Sponsor"
-#     assert (
-#         viewer_response_data["responsible_party_investigator_name"]
-#         == "editor sponsor name"
-#     )
-#     assert (
-#         viewer_response_data["responsible_party_investigator_title"]
-#         == "editor sponsor title"
-#     )
-#     assert (
-#         viewer_response_data["responsible_party_investigator_affiliation"]
-#         == "editor sponsor affiliation"
-#     )
-#     assert viewer_response_data["lead_sponsor_name"] == "editor sponsor name"
+def test_put_sponsors_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/sponsors' endpoint is requested (PUT)
+    THEN check that the response is valid and updates the sponsors metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.put(
+        f"/study/{study_id}/metadata/sponsor",
+        json={
+            "lead_sponsor_identifier_scheme": "scheme",
+            "lead_sponsor_identifier_scheme_uri": "uri",
+            "responsible_party_type": "Sponsor",
+            "responsible_party_investigator_first_name": "name",
+            "responsible_party_investigator_last_name": "surname",
+            "responsible_party_investigator_title": "title",
+            "responsible_party_investigator_identifier_value": "identifier",
+            "responsible_party_investigator_identifier_scheme": "scheme",
+            "responsible_party_investigator_identifier_scheme_uri": "uri",
+            "responsible_party_investigator_affiliation_name": "affiliation",
+            "responsible_party_investigator_affiliation_identifier_value": "identifier",
+            "responsible_party_investigator_affiliation_identifier_scheme": "scheme",
+            "responsible_party_investigator_affiliation_identifier_scheme_uri": "uri",
+            "lead_sponsor_name": "name",
+            "lead_sponsor_identifier": "identifier",
+
+        },
+    )
+    assert response.status_code == 200
+    response_data = json.loads(response.data)
+
+    assert response_data["responsible_party_type"] == "Sponsor"
+    assert (
+        response_data["responsible_party_investigator_first_name"]
+        == "name"
+    )
+    assert (
+        response_data["responsible_party_investigator_last_name"]
+        == "surname"
+    )
+    assert (
+        response_data["responsible_party_investigator_title"]
+        == "title"
+    )  # noqa: E501
+    assert response_data["responsible_party_investigator_identifier_value"] == "identifier"
+    assert response_data["responsible_party_investigator_identifier_scheme"] == "scheme"
+    assert response_data["responsible_party_investigator_identifier_scheme_uri"] == "uri"
+    assert response_data["responsible_party_investigator_affiliation_name"] == "affiliation"
+    assert response_data["responsible_party_investigator_affiliation_identifier_value"] == "identifier"
+    assert response_data["responsible_party_investigator_affiliation_identifier_scheme"] == "scheme"
+    assert response_data["responsible_party_investigator_affiliation_identifier_scheme_uri"] == "uri"
+    assert response_data["lead_sponsor_name"] == "name"
+    assert response_data["lead_sponsor_identifier"] == "identifier"
+    assert response_data["lead_sponsor_identifier_scheme"] == "scheme"
+    assert response_data["lead_sponsor_identifier_scheme_uri"] == "uri"
+
+    admin_response = _admin_client.put(
+        f"/study/{study_id}/metadata/sponsor",
+        json={
+            "lead_sponsor_identifier_scheme": "scheme",
+            "lead_sponsor_identifier_scheme_uri": "uri",
+            "responsible_party_type": "Sponsor",
+            "responsible_party_investigator_first_name": "name",
+            "responsible_party_investigator_last_name": "surname",
+            "responsible_party_investigator_title": "title",
+            "responsible_party_investigator_identifier_value": "identifier",
+            "responsible_party_investigator_identifier_scheme": "scheme",
+            "responsible_party_investigator_identifier_scheme_uri": "uri",
+            "responsible_party_investigator_affiliation_name": "affiliation",
+            "responsible_party_investigator_affiliation_identifier_value": "identifier",
+            "responsible_party_investigator_affiliation_identifier_scheme": "scheme",
+            "responsible_party_investigator_affiliation_identifier_scheme_uri": "uri",
+            "lead_sponsor_name": "name",
+            "lead_sponsor_identifier": "identifier",
+
+        },
+    )
+
+    assert admin_response.status_code == 200
+    admin_response_data = json.loads(admin_response.data)
+
+    assert admin_response_data["responsible_party_type"] == "Sponsor"
+    assert (
+        admin_response_data["responsible_party_investigator_first_name"]
+        == "name"
+    )
+    assert (
+        admin_response_data["responsible_party_investigator_last_name"]
+        == "surname"
+    )
+    assert (
+        admin_response_data["responsible_party_investigator_title"]
+        == "title"
+    )  # noqa: E501
+    assert admin_response_data["responsible_party_investigator_identifier_value"] == "identifier"
+    assert admin_response_data["responsible_party_investigator_identifier_scheme"] == "scheme"
+    assert admin_response_data["responsible_party_investigator_identifier_scheme_uri"] == "uri"
+    assert admin_response_data["responsible_party_investigator_affiliation_name"] == "affiliation"
+    assert admin_response_data["responsible_party_investigator_affiliation_identifier_value"] == "identifier"
+    assert admin_response_data["responsible_party_investigator_affiliation_identifier_scheme"] == "scheme"
+    assert admin_response_data["responsible_party_investigator_affiliation_identifier_scheme_uri"] == "uri"
+    assert admin_response_data["lead_sponsor_name"] == "name"
+    assert admin_response_data["lead_sponsor_identifier"] == "identifier"
+    assert admin_response_data["lead_sponsor_identifier_scheme"] == "scheme"
+    assert admin_response_data["lead_sponsor_identifier_scheme_uri"] == "uri"
+
+    editor_response = _editor_client.put(
+        f"/study/{study_id}/metadata/sponsor",
+        json={
+            "lead_sponsor_identifier_scheme": "scheme",
+            "lead_sponsor_identifier_scheme_uri": "uri",
+            "responsible_party_type": "Sponsor",
+            "responsible_party_investigator_first_name": "name",
+            "responsible_party_investigator_last_name": "surname",
+            "responsible_party_investigator_title": "title",
+            "responsible_party_investigator_identifier_value": "identifier",
+            "responsible_party_investigator_identifier_scheme": "scheme",
+            "responsible_party_investigator_identifier_scheme_uri": "uri",
+            "responsible_party_investigator_affiliation_name": "affiliation",
+            "responsible_party_investigator_affiliation_identifier_value": "identifier",
+            "responsible_party_investigator_affiliation_identifier_scheme": "scheme",
+            "responsible_party_investigator_affiliation_identifier_scheme_uri": "uri",
+            "lead_sponsor_name": "name",
+            "lead_sponsor_identifier": "identifier",
+
+        },
+
+    )
+
+    assert editor_response.status_code == 200
+    editor_response_data = json.loads(editor_response.data)
+
+    assert editor_response_data["responsible_party_type"] == "Sponsor"
+    assert (
+            editor_response_data["responsible_party_investigator_first_name"]
+            == "name"
+    )
+    assert (
+            editor_response_data["responsible_party_investigator_last_name"]
+            == "surname"
+    )
+    assert (
+            editor_response_data["responsible_party_investigator_title"]
+            == "title"
+    )  # noqa: E501
+    assert editor_response_data["responsible_party_investigator_identifier_value"] == "identifier"
+    assert editor_response_data["responsible_party_investigator_identifier_scheme"] == "scheme"
+    assert editor_response_data["responsible_party_investigator_identifier_scheme_uri"] == "uri"
+    assert editor_response_data["responsible_party_investigator_affiliation_name"] == "affiliation"
+    assert editor_response_data["responsible_party_investigator_affiliation_identifier_value"] == "identifier"
+    assert editor_response_data["responsible_party_investigator_affiliation_identifier_scheme"] == "scheme"
+    assert editor_response_data["responsible_party_investigator_affiliation_identifier_scheme_uri"] == "uri"
+    assert editor_response_data["lead_sponsor_name"] == "name"
+    assert editor_response_data["lead_sponsor_identifier"] == "identifier"
+    assert editor_response_data["lead_sponsor_identifier_scheme"] == "scheme"
+    assert editor_response_data["lead_sponsor_identifier_scheme_uri"] == "uri"
+
+    viewer_response = _viewer_client.put(
+        f"/study/{study_id}/metadata/sponsor",
+        json={
+            "responsible_party_type": "Sponsor",
+            "responsible_party_investigator_first_name": "name",
+            "responsible_party_investigator_last_name": "surname",
+            "responsible_party_investigator_title": "title",
+            "responsible_party_investigator_identifier_value": "identifier",
+            "responsible_party_investigator_identifier_scheme": "scheme",
+            "responsible_party_investigator_identifier_scheme_uri": "uri",
+            "responsible_party_investigator_affiliation_name": "affiliation",
+            "responsible_party_investigator_affiliation_identifier_value": "identifier",
+            "responsible_party_investigator_affiliation_identifier_scheme": "scheme",
+            "responsible_party_investigator_affiliation_identifier_scheme_uri": "uri",
+            "lead_sponsor_name": "name",
+            "lead_sponsor_identifier": "identifier",
+            "lead_sponsor_identifier_scheme": "scheme",
+            "lead_sponsor_identifier_scheme_uri": "uri",
+        },
+    )
+
+    assert viewer_response.status_code == 403
+
+
+def test_get_sponsors_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/sponsors' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the sponsors metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/sponsor")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/sponsor")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/sponsor")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/sponsor")
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 200
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data["responsible_party_type"] == "Sponsor"
+    assert (
+            response_data["responsible_party_investigator_first_name"]
+            == "name"
+    )
+    assert (
+            response_data["responsible_party_investigator_last_name"]
+            == "surname"
+    )
+    assert (
+            response_data["responsible_party_investigator_title"]
+            == "title"
+    )  # noqa: E501
+
+    assert response_data["responsible_party_investigator_identifier_value"] == "identifier"
+    assert response_data["responsible_party_investigator_identifier_scheme"] == "scheme"
+    assert response_data["responsible_party_investigator_identifier_scheme_uri"] == "uri"
+    assert response_data["responsible_party_investigator_affiliation_name"] == "affiliation"
+    assert response_data["responsible_party_investigator_affiliation_identifier_value"] == "identifier"
+    assert response_data["responsible_party_investigator_affiliation_identifier_scheme"] == "scheme"
+    assert response_data["responsible_party_investigator_affiliation_identifier_scheme_uri"] == "uri"
+    assert response_data["lead_sponsor_name"] == "name"
+    assert response_data["lead_sponsor_identifier"] == "identifier"
+    assert response_data["lead_sponsor_identifier_scheme"] == "scheme"
+    assert response_data["lead_sponsor_identifier_scheme_uri"] == "uri"
+
+    assert admin_response_data["responsible_party_type"] == "Sponsor"
+    assert (
+            admin_response_data["responsible_party_investigator_first_name"]
+            == "name"
+    )
+    assert (
+            admin_response_data["responsible_party_investigator_last_name"]
+            == "surname"
+    )
+    assert (
+            admin_response_data["responsible_party_investigator_title"]
+            == "title"
+    )  # noqa: E501
+    assert admin_response_data["responsible_party_investigator_identifier_value"] == "identifier"
+    assert admin_response_data["responsible_party_investigator_identifier_scheme"] == "scheme"
+    assert admin_response_data["responsible_party_investigator_identifier_scheme_uri"] == "uri"
+    assert admin_response_data["responsible_party_investigator_affiliation_name"] == "affiliation"
+    assert admin_response_data["responsible_party_investigator_affiliation_identifier_value"] == "identifier"
+    assert admin_response_data["responsible_party_investigator_affiliation_identifier_scheme"] == "scheme"
+    assert admin_response_data["responsible_party_investigator_affiliation_identifier_scheme_uri"] == "uri"
+    assert admin_response_data["lead_sponsor_name"] == "name"
+    assert admin_response_data["lead_sponsor_identifier"] == "identifier"
+    assert admin_response_data["lead_sponsor_identifier_scheme"] == "scheme"
+    assert admin_response_data["lead_sponsor_identifier_scheme_uri"] == "uri"
+
+    assert editor_response_data["responsible_party_type"] == "Sponsor"
+    assert (
+            editor_response_data["responsible_party_investigator_first_name"]
+            == "name"
+    )
+    assert (
+            editor_response_data["responsible_party_investigator_last_name"]
+            == "surname"
+    )
+    assert (
+            editor_response_data["responsible_party_investigator_title"]
+            == "title"
+    )  # noqa: E501
+    assert editor_response_data["responsible_party_investigator_identifier_value"] == "identifier"
+    assert editor_response_data["responsible_party_investigator_identifier_scheme"] == "scheme"
+    assert editor_response_data["responsible_party_investigator_identifier_scheme_uri"] == "uri"
+    assert editor_response_data["responsible_party_investigator_affiliation_name"] == "affiliation"
+    assert editor_response_data["responsible_party_investigator_affiliation_identifier_value"] == "identifier"
+    assert editor_response_data["responsible_party_investigator_affiliation_identifier_scheme"] == "scheme"
+    assert editor_response_data["responsible_party_investigator_affiliation_identifier_scheme_uri"] == "uri"
+    assert editor_response_data["lead_sponsor_name"] == "name"
+    assert editor_response_data["lead_sponsor_identifier"] == "identifier"
+    assert editor_response_data["lead_sponsor_identifier_scheme"] == "scheme"
+    assert editor_response_data["lead_sponsor_identifier_scheme_uri"] == "uri"
+
+    assert viewer_response_data["responsible_party_type"] == "Sponsor"
+    assert (
+            viewer_response_data["responsible_party_investigator_first_name"]
+            == "name"
+    )
+    assert (
+            viewer_response_data["responsible_party_investigator_last_name"]
+            == "surname"
+    )
+    assert (
+            viewer_response_data["responsible_party_investigator_title"]
+            == "title"
+    )  # noqa: E501
+    assert viewer_response_data["responsible_party_investigator_identifier_value"] == "identifier"
+    assert viewer_response_data["responsible_party_investigator_identifier_scheme"] == "scheme"
+    assert viewer_response_data["responsible_party_investigator_identifier_scheme_uri"] == "uri"
+    assert viewer_response_data["responsible_party_investigator_affiliation_name"] == "affiliation"
+    assert viewer_response_data["responsible_party_investigator_affiliation_identifier_value"] == "identifier"
+    assert viewer_response_data["responsible_party_investigator_affiliation_identifier_scheme"] == "scheme"
+    assert viewer_response_data["responsible_party_investigator_affiliation_identifier_scheme_uri"] == "uri"
+    assert viewer_response_data["lead_sponsor_name"] == "name"
+    assert viewer_response_data["lead_sponsor_identifier"] == "identifier"
+    assert viewer_response_data["lead_sponsor_identifier_scheme"] == "scheme"
+    assert viewer_response_data["lead_sponsor_identifier_scheme_uri"] == "uri"
 
 
 # ------------------- STATUS METADATA ------------------- #

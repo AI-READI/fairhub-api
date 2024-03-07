@@ -37,13 +37,13 @@ study_sponsors = api.model(
         ),
         "lead_sponsor_name": fields.String(required=True),
         "lead_sponsor_identifier": fields.String(required=True),
-        "lead_sponsor_scheme": fields.String(required=True),
-        "lead_sponsor_scheme_uri": fields.String(required=True),
+        "lead_sponsor_identifier_scheme": fields.String(required=True),
+        "lead_sponsor_identifier_scheme_uri": fields.String(required=True),
     },
 )
 
 
-@api.route("/study/<study_id>/metadata/sponsors")
+@api.route("/study/<study_id>/metadata/sponsor")
 class StudySponsorsResource(Resource):
     """Study Sponsors Metadata"""
 
@@ -78,7 +78,6 @@ class StudySponsorsResource(Resource):
                 "id": {"type": "string"},
                 "responsible_party_type": {
                     "type": ["string", "null"],
-                    "minLength": 1,
                     "enum": [
                         "Sponsor",
                         "Principal Investigator",
@@ -96,38 +95,30 @@ class StudySponsorsResource(Resource):
                 },
                 "responsible_party_investigator_identifier_value": {
                     "type": "string",
-                    "minLength": 1,
                 },
                 "responsible_party_investigator_identifier_scheme": {
                     "type": "string",
-                    "minLength": 1,
                 },
                 "responsible_party_investigator_identifier_scheme_uri": {
                     "type": "string",
-                    "minLength": 1,
                 },
                 "responsible_party_investigator_affiliation_name": {
                     "type": "string",
-                    "minLength": 1,
                 },
                 "responsible_party_investigator_affiliation_identifier_scheme": {
                     "type": "string",
-                    "minLength": 1,
                 },
                 "responsible_party_investigator_affiliation_identifier_value": {
                     "type": "string",
-                    "minLength": 1,
                 },
                 "responsible_party_investigator_affiliation_identifier_scheme_uri": {
                     "type": "string",
-                    "minLength": 1,
                 },
-                "lead_sponsor_name": {"type": "string", "minLength": 1},
-                "lead_sponsor_identifier": {"type": "string", "minLength": 1},
-                "lead_sponsor_identifier_scheme": {"type": "string", "minLength": 1},
+                "lead_sponsor_name": {"type": "string"},
+                "lead_sponsor_identifier": {"type": "string"},
+                "lead_sponsor_identifier_scheme": {"type": "string"},
                 "lead_sponsor_identifier_scheme_uri": {
                     "type": "string",
-                    "minLength": 1,
                 },
             },
         }
