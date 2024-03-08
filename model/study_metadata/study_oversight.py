@@ -37,12 +37,6 @@ class StudyOversight(db.Model):  # type: ignore
             "has_dmc": self.has_dmc,
         }
 
-    # def to_dict_metadata(self):
-    #     """Converts the study metadata to a dictionary"""
-    #     return {
-    #         "fda_regulated_drug": self.oversight_has_dmc,
-    #     }
-
     @staticmethod
     def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""

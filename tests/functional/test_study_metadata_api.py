@@ -1230,7 +1230,7 @@ def test_get_keywords_metadata(clients):
 def test_delete_keywords_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/conditions' endpoint is requested (GET)
+    WHEN the '/study/{study_id}/metadata/keywords' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the identification metadata
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients

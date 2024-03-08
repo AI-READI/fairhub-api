@@ -193,8 +193,8 @@ class Study(db.Model):  # type: ignore
 
         return {
             "arms": [i.to_dict_metadata() for i in self.study_arm],  # type: ignore
-            "central_contact": [
-                i.to_dict_metadata() for i in self.study_contact  # type: ignore
+            "central_contacts": [
+                i.to_dict_metadata() for i in self.study_central_contact  # type: ignore
             ],
             "description": self.study_description.to_dict_metadata(),
             "design": self.study_design.to_dict(),
@@ -215,12 +215,20 @@ class Study(db.Model):  # type: ignore
                 i.to_dict_metadata()
                 for i in self.study_overall_official  # type: ignore
             ],
-            "sponsors": self.study_sponsors_collaborators.to_dict_metadata(),
-            "collaborators": self.study_sponsors_collaborators.collaborator_name,
+            "sponsors": self.study_sponsors.to_dict_metadata(),
+            "collaborators": [
+                i.to_dict_metadata() for i in self.study_collaborators  # type: ignore
+            ],
             "status": self.study_status.to_dict_metadata(),
-            "oversight": self.study_other.oversight_has_dmc,
-            "conditions": self.study_other.conditions,
-            "keywords": self.study_other.keywords,
+            "oversight": self.study_oversight.to_dict(),
+            "conditions": [
+                i.to_dict_metadata()
+                for i in self.study_conditions  # type: ignore
+            ],
+            "keywords": [
+                i.to_dict_metadata()
+                for i in self.study_keywords  # type: ignore
+            ],
         }
 
     @staticmethod
