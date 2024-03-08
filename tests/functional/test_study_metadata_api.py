@@ -2946,7 +2946,7 @@ def test_get_overall_official_metadata(clients):
     assert editor_response_data[1]["affiliation_identifier_scheme_uri"] == "uri"
     assert editor_response_data[1]["role"] == "chair"
 
-    assert viewer_response_data[1]["first_name"] == "test"
+    assert viewer_response_data[1]["first_name"] == "admin test"
     assert viewer_response_data[1]["last_name"] == "test"
     assert viewer_response_data[1]["affiliation"] == "aff"
     assert viewer_response_data[1]["degree"] == "aff"
@@ -2998,7 +2998,7 @@ def test_get_overall_official_metadata(clients):
     assert editor_response_data[2]["affiliation_identifier_scheme_uri"] == "uri"
     assert editor_response_data[2]["role"] == "chair"
 
-    assert viewer_response_data[2]["first_name"] == "test"
+    assert viewer_response_data[2]["first_name"] == "editor test"
     assert viewer_response_data[2]["last_name"] == "test"
     assert viewer_response_data[2]["affiliation"] == "aff"
     assert viewer_response_data[2]["degree"] == "aff"
