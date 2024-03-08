@@ -55,7 +55,12 @@ class StudyCollaboratorsResource(Resource):
                     "identifier_scheme": {"type": "string"},
                     "identifier_scheme_uri": {"type": "string"},
                 },
-                "required": ["name", "identifier", "identifier_scheme", "identifier_scheme_uri"],
+                "required": [
+                    "name",
+                    "identifier",
+                    "identifier_scheme",
+                    "identifier_scheme_uri",
+                ],
             },
         }
         try:

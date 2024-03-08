@@ -295,8 +295,14 @@ def test_post_cc_metadata(clients):
     assert response_data[0]["identifier_scheme"] == "id"
     assert response_data[0]["identifier_scheme_uri"] == "uri"
     assert response_data[0]["affiliation_identifier"] == "affiliation identifier"
-    assert response_data[0]["affiliation_identifier_scheme"] == "affiliation identifier scheme"
-    assert response_data[0]["affiliation_identifier_scheme_uri"] == "affiliation identifier scheme uri"
+    assert (
+        response_data[0]["affiliation_identifier_scheme"]
+        == "affiliation identifier scheme"
+    )
+    assert (
+        response_data[0]["affiliation_identifier_scheme_uri"]
+        == "affiliation identifier scheme uri"
+    )
 
     admin_response = _admin_client.post(
         f"/study/{study_id}/metadata/central-contact",
@@ -336,8 +342,14 @@ def test_post_cc_metadata(clients):
     assert admin_response_data[0]["identifier_scheme"] == "id"
     assert admin_response_data[0]["identifier_scheme_uri"] == "uri"
     assert admin_response_data[0]["affiliation_identifier"] == "affiliation identifier"
-    assert admin_response_data[0]["affiliation_identifier_scheme"] == "affiliation identifier scheme"
-    assert admin_response_data[0]["affiliation_identifier_scheme_uri"] == "affiliation identifier scheme uri"
+    assert (
+        admin_response_data[0]["affiliation_identifier_scheme"]
+        == "affiliation identifier scheme"
+    )
+    assert (
+        admin_response_data[0]["affiliation_identifier_scheme_uri"]
+        == "affiliation identifier scheme uri"
+    )
 
     editor_response = _editor_client.post(
         f"/study/{study_id}/metadata/central-contact",
@@ -375,8 +387,14 @@ def test_post_cc_metadata(clients):
     assert editor_response_data[0]["identifier_scheme"] == "id"
     assert editor_response_data[0]["identifier_scheme_uri"] == "uri"
     assert editor_response_data[0]["affiliation_identifier"] == "affiliation identifier"
-    assert editor_response_data[0]["affiliation_identifier_scheme"] == "affiliation identifier scheme"
-    assert editor_response_data[0]["affiliation_identifier_scheme_uri"] == "affiliation identifier scheme uri"
+    assert (
+        editor_response_data[0]["affiliation_identifier_scheme"]
+        == "affiliation identifier scheme"
+    )
+    assert (
+        editor_response_data[0]["affiliation_identifier_scheme_uri"]
+        == "affiliation identifier scheme uri"
+    )
 
 
 def test_get_cc_metadata(clients):
@@ -414,8 +432,14 @@ def test_get_cc_metadata(clients):
     assert response_data[0]["identifier_scheme"] == "id"
     assert response_data[0]["identifier_scheme_uri"] == "uri"
     assert response_data[0]["affiliation_identifier"] == "affiliation identifier"
-    assert response_data[0]["affiliation_identifier_scheme"] == "affiliation identifier scheme"
-    assert response_data[0]["affiliation_identifier_scheme_uri"] == "affiliation identifier scheme uri"
+    assert (
+        response_data[0]["affiliation_identifier_scheme"]
+        == "affiliation identifier scheme"
+    )
+    assert (
+        response_data[0]["affiliation_identifier_scheme_uri"]
+        == "affiliation identifier scheme uri"
+    )
 
     assert admin_response_data[0]["affiliation"] == "affiliation"
     assert admin_response_data[0]["phone"] == "808"
@@ -428,8 +452,14 @@ def test_get_cc_metadata(clients):
     assert admin_response_data[0]["identifier_scheme"] == "id"
     assert admin_response_data[0]["identifier_scheme_uri"] == "uri"
     assert admin_response_data[0]["affiliation_identifier"] == "affiliation identifier"
-    assert admin_response_data[0]["affiliation_identifier_scheme"] == "affiliation identifier scheme"
-    assert admin_response_data[0]["affiliation_identifier_scheme_uri"] == "affiliation identifier scheme uri"
+    assert (
+        admin_response_data[0]["affiliation_identifier_scheme"]
+        == "affiliation identifier scheme"
+    )
+    assert (
+        admin_response_data[0]["affiliation_identifier_scheme_uri"]
+        == "affiliation identifier scheme uri"
+    )
 
     assert editor_response_data[0]["affiliation"] == "affiliation"
     assert editor_response_data[0]["phone"] == "808"
@@ -442,8 +472,14 @@ def test_get_cc_metadata(clients):
     assert editor_response_data[0]["identifier_scheme"] == "id"
     assert editor_response_data[0]["identifier_scheme_uri"] == "uri"
     assert editor_response_data[0]["affiliation_identifier"] == "affiliation identifier"
-    assert editor_response_data[0]["affiliation_identifier_scheme"] == "affiliation identifier scheme"
-    assert editor_response_data[0]["affiliation_identifier_scheme_uri"] == "affiliation identifier scheme uri"
+    assert (
+        editor_response_data[0]["affiliation_identifier_scheme"]
+        == "affiliation identifier scheme"
+    )
+    assert (
+        editor_response_data[0]["affiliation_identifier_scheme_uri"]
+        == "affiliation identifier scheme uri"
+    )
 
     assert viewer_response_data[0]["affiliation"] == "affiliation"
     assert viewer_response_data[0]["phone"] == "808"
@@ -456,8 +492,14 @@ def test_get_cc_metadata(clients):
     assert viewer_response_data[0]["identifier_scheme"] == "id"
     assert viewer_response_data[0]["identifier_scheme_uri"] == "uri"
     assert viewer_response_data[0]["affiliation_identifier"] == "affiliation identifier"
-    assert viewer_response_data[0]["affiliation_identifier_scheme"] == "affiliation identifier scheme"
-    assert viewer_response_data[0]["affiliation_identifier_scheme_uri"] == "affiliation identifier scheme uri"
+    assert (
+        viewer_response_data[0]["affiliation_identifier_scheme"]
+        == "affiliation identifier scheme"
+    )
+    assert (
+        viewer_response_data[0]["affiliation_identifier_scheme_uri"]
+        == "affiliation identifier scheme uri"
+    )
 
     assert response_data[1]["affiliation"] == "affiliation"
     assert response_data[1]["phone"] == "808"
@@ -470,8 +512,14 @@ def test_get_cc_metadata(clients):
     assert response_data[1]["identifier_scheme"] == "id"
     assert response_data[1]["identifier_scheme_uri"] == "uri"
     assert response_data[1]["affiliation_identifier"] == "affiliation identifier"
-    assert response_data[1]["affiliation_identifier_scheme"] == "affiliation identifier scheme"
-    assert response_data[1]["affiliation_identifier_scheme_uri"] == "affiliation identifier scheme uri"
+    assert (
+        response_data[1]["affiliation_identifier_scheme"]
+        == "affiliation identifier scheme"
+    )
+    assert (
+        response_data[1]["affiliation_identifier_scheme_uri"]
+        == "affiliation identifier scheme uri"
+    )
 
     assert admin_response_data[1]["affiliation"] == "affiliation"
     assert admin_response_data[1]["phone"] == "808"
@@ -484,8 +532,14 @@ def test_get_cc_metadata(clients):
     assert admin_response_data[1]["identifier_scheme"] == "id"
     assert admin_response_data[1]["identifier_scheme_uri"] == "uri"
     assert admin_response_data[1]["affiliation_identifier"] == "affiliation identifier"
-    assert admin_response_data[1]["affiliation_identifier_scheme"] == "affiliation identifier scheme"
-    assert admin_response_data[1]["affiliation_identifier_scheme_uri"] == "affiliation identifier scheme uri"
+    assert (
+        admin_response_data[1]["affiliation_identifier_scheme"]
+        == "affiliation identifier scheme"
+    )
+    assert (
+        admin_response_data[1]["affiliation_identifier_scheme_uri"]
+        == "affiliation identifier scheme uri"
+    )
 
     assert editor_response_data[1]["affiliation"] == "affiliation"
     assert editor_response_data[1]["phone"] == "808"
@@ -498,8 +552,14 @@ def test_get_cc_metadata(clients):
     assert editor_response_data[1]["identifier_scheme"] == "id"
     assert editor_response_data[1]["identifier_scheme_uri"] == "uri"
     assert editor_response_data[1]["affiliation_identifier"] == "affiliation identifier"
-    assert editor_response_data[1]["affiliation_identifier_scheme"] == "affiliation identifier scheme"
-    assert editor_response_data[1]["affiliation_identifier_scheme_uri"] == "affiliation identifier scheme uri"
+    assert (
+        editor_response_data[1]["affiliation_identifier_scheme"]
+        == "affiliation identifier scheme"
+    )
+    assert (
+        editor_response_data[1]["affiliation_identifier_scheme_uri"]
+        == "affiliation identifier scheme uri"
+    )
 
     assert viewer_response_data[1]["affiliation"] == "affiliation"
     assert viewer_response_data[1]["phone"] == "808"
@@ -512,8 +572,14 @@ def test_get_cc_metadata(clients):
     assert viewer_response_data[1]["identifier_scheme"] == "id"
     assert viewer_response_data[1]["identifier_scheme_uri"] == "uri"
     assert viewer_response_data[1]["affiliation_identifier"] == "affiliation identifier"
-    assert viewer_response_data[1]["affiliation_identifier_scheme"] == "affiliation identifier scheme"
-    assert viewer_response_data[1]["affiliation_identifier_scheme_uri"] == "affiliation identifier scheme uri"
+    assert (
+        viewer_response_data[1]["affiliation_identifier_scheme"]
+        == "affiliation identifier scheme"
+    )
+    assert (
+        viewer_response_data[1]["affiliation_identifier_scheme_uri"]
+        == "affiliation identifier scheme uri"
+    )
 
     assert response_data[2]["affiliation"] == "affiliation"
     assert response_data[2]["phone"] == "808"
@@ -526,8 +592,14 @@ def test_get_cc_metadata(clients):
     assert response_data[2]["identifier_scheme"] == "id"
     assert response_data[2]["identifier_scheme_uri"] == "uri"
     assert response_data[2]["affiliation_identifier"] == "affiliation identifier"
-    assert response_data[2]["affiliation_identifier_scheme"] == "affiliation identifier scheme"
-    assert response_data[2]["affiliation_identifier_scheme_uri"] == "affiliation identifier scheme uri"
+    assert (
+        response_data[2]["affiliation_identifier_scheme"]
+        == "affiliation identifier scheme"
+    )
+    assert (
+        response_data[2]["affiliation_identifier_scheme_uri"]
+        == "affiliation identifier scheme uri"
+    )
 
     assert admin_response_data[2]["affiliation"] == "affiliation"
     assert admin_response_data[2]["phone"] == "808"
@@ -540,8 +612,14 @@ def test_get_cc_metadata(clients):
     assert admin_response_data[2]["identifier_scheme"] == "id"
     assert admin_response_data[2]["identifier_scheme_uri"] == "uri"
     assert admin_response_data[2]["affiliation_identifier"] == "affiliation identifier"
-    assert admin_response_data[2]["affiliation_identifier_scheme"] == "affiliation identifier scheme"
-    assert admin_response_data[2]["affiliation_identifier_scheme_uri"] == "affiliation identifier scheme uri"
+    assert (
+        admin_response_data[2]["affiliation_identifier_scheme"]
+        == "affiliation identifier scheme"
+    )
+    assert (
+        admin_response_data[2]["affiliation_identifier_scheme_uri"]
+        == "affiliation identifier scheme uri"
+    )
 
     assert editor_response_data[2]["affiliation"] == "affiliation"
     assert editor_response_data[2]["phone"] == "808"
@@ -554,8 +632,14 @@ def test_get_cc_metadata(clients):
     assert editor_response_data[2]["identifier_scheme"] == "id"
     assert editor_response_data[2]["identifier_scheme_uri"] == "uri"
     assert editor_response_data[2]["affiliation_identifier"] == "affiliation identifier"
-    assert editor_response_data[2]["affiliation_identifier_scheme"] == "affiliation identifier scheme"
-    assert editor_response_data[2]["affiliation_identifier_scheme_uri"] == "affiliation identifier scheme uri"
+    assert (
+        editor_response_data[2]["affiliation_identifier_scheme"]
+        == "affiliation identifier scheme"
+    )
+    assert (
+        editor_response_data[2]["affiliation_identifier_scheme_uri"]
+        == "affiliation identifier scheme uri"
+    )
 
     assert viewer_response_data[2]["affiliation"] == "affiliation"
     assert viewer_response_data[2]["phone"] == "808"
@@ -568,8 +652,14 @@ def test_get_cc_metadata(clients):
     assert viewer_response_data[2]["identifier_scheme"] == "id"
     assert viewer_response_data[2]["identifier_scheme_uri"] == "uri"
     assert viewer_response_data[2]["affiliation_identifier"] == "affiliation identifier"
-    assert viewer_response_data[2]["affiliation_identifier_scheme"] == "affiliation identifier scheme"
-    assert viewer_response_data[2]["affiliation_identifier_scheme_uri"] == "affiliation identifier scheme uri"
+    assert (
+        viewer_response_data[2]["affiliation_identifier_scheme"]
+        == "affiliation identifier scheme"
+    )
+    assert (
+        viewer_response_data[2]["affiliation_identifier_scheme_uri"]
+        == "affiliation identifier scheme uri"
+    )
 
 
 def test_delete_cc_metadata(clients):
@@ -832,9 +922,9 @@ def test_post_conditions_metadata(clients):
                 "classification_code": "classification code",
                 "scheme": "scheme",
                 "scheme_uri": "scheme uri",
-                "condition_uri": "condition"
+                "condition_uri": "condition",
             }
-        ]
+        ],
     )
 
     assert response.status_code == 201
@@ -855,7 +945,7 @@ def test_post_conditions_metadata(clients):
                 "classification_code": "classification code",
                 "scheme": "scheme",
                 "scheme_uri": "scheme uri",
-                "condition_uri": "condition"
+                "condition_uri": "condition",
             }
         ],
     )
@@ -878,7 +968,7 @@ def test_post_conditions_metadata(clients):
                 "classification_code": "classification code",
                 "scheme": "scheme",
                 "scheme_uri": "scheme uri",
-                "condition_uri": "condition"
+                "condition_uri": "condition",
             }
         ],
     )
@@ -901,7 +991,7 @@ def test_post_conditions_metadata(clients):
                 "classification_code": "classification code",
                 "scheme": "scheme",
                 "scheme_uri": "scheme uri",
-                "condition_uri": "condition"
+                "condition_uri": "condition",
             }
         ],
     )
@@ -1055,7 +1145,7 @@ def test_post_keywords_metadata(clients):
                 "classification_code": "classification code",
                 "scheme": "scheme",
                 "scheme_uri": "scheme uri",
-                "keyword_uri": "keywords"
+                "keyword_uri": "keywords",
             }
         ],
     )
@@ -1077,7 +1167,7 @@ def test_post_keywords_metadata(clients):
                 "classification_code": "classification code",
                 "scheme": "scheme",
                 "scheme_uri": "scheme uri",
-                "keyword_uri": "keywords"
+                "keyword_uri": "keywords",
             }
         ],
     )
@@ -1099,7 +1189,7 @@ def test_post_keywords_metadata(clients):
                 "classification_code": "classification code",
                 "scheme": "scheme",
                 "scheme_uri": "scheme uri",
-                "keyword_uri": "keywords"
+                "keyword_uri": "keywords",
             }
         ],
     )
@@ -1122,7 +1212,7 @@ def test_post_keywords_metadata(clients):
                 "classification_code": "classification code",
                 "scheme": "scheme",
                 "scheme_uri": "scheme uri",
-                "keyword_uri": "keywords"
+                "keyword_uri": "keywords",
             }
         ],
     )
@@ -1542,7 +1632,6 @@ def test_put_design_metadata(clients):
             "bio_spec_description": "dfasdf",
             "target_duration": "rewrwe",
             "is_patient_registry": "yes",
-
         },
     )
 
@@ -2611,19 +2700,21 @@ def test_post_overall_official_metadata(clients):
 
     response = _logged_in_client.post(
         f"/study/{study_id}/metadata/overall-official",
-        json=[{
-            "first_name": "test",
-            "last_name": "test",
-            "degree": "aff",
-            "identifier": "identifier",
-            "identifier_scheme": "scheme",
-            "identifier_scheme_uri": "uri",
-            "affiliation": "aff",
-            "affiliation_identifier": "identifier",
-            "affiliation_identifier_scheme": "scheme",
-            "affiliation_identifier_scheme_uri": "uri",
-            "role": "chair",
-        }],
+        json=[
+            {
+                "first_name": "test",
+                "last_name": "test",
+                "degree": "aff",
+                "identifier": "identifier",
+                "identifier_scheme": "scheme",
+                "identifier_scheme_uri": "uri",
+                "affiliation": "aff",
+                "affiliation_identifier": "identifier",
+                "affiliation_identifier_scheme": "scheme",
+                "affiliation_identifier_scheme_uri": "uri",
+                "role": "chair",
+            }
+        ],
     )
     # Add a one second delay to prevent duplicate timestamps
     sleep(1)
@@ -2646,19 +2737,21 @@ def test_post_overall_official_metadata(clients):
 
     admin_response = _admin_client.post(
         f"/study/{study_id}/metadata/overall-official",
-        json=[{
-            "first_name": "admin test",
-            "last_name": "test",
-            "degree": "aff",
-            "identifier": "identifier",
-            "identifier_scheme": "scheme",
-            "identifier_scheme_uri": "uri",
-            "affiliation": "aff",
-            "affiliation_identifier": "identifier",
-            "affiliation_identifier_scheme": "scheme",
-            "affiliation_identifier_scheme_uri": "uri",
-            "role": "chair",
-        }],
+        json=[
+            {
+                "first_name": "admin test",
+                "last_name": "test",
+                "degree": "aff",
+                "identifier": "identifier",
+                "identifier_scheme": "scheme",
+                "identifier_scheme_uri": "uri",
+                "affiliation": "aff",
+                "affiliation_identifier": "identifier",
+                "affiliation_identifier_scheme": "scheme",
+                "affiliation_identifier_scheme_uri": "uri",
+                "role": "chair",
+            }
+        ],
     )
     # Add a one second delay to prevent duplicate timestamps
     sleep(1)
@@ -2682,19 +2775,21 @@ def test_post_overall_official_metadata(clients):
 
     editor_response = _editor_client.post(
         f"/study/{study_id}/metadata/overall-official",
-        json=[{
-            "first_name": "editor test",
-            "last_name": "test",
-            "degree": "aff",
-            "identifier": "identifier",
-            "identifier_scheme": "scheme",
-            "identifier_scheme_uri": "uri",
-            "affiliation": "aff",
-            "affiliation_identifier": "identifier",
-            "affiliation_identifier_scheme": "scheme",
-            "affiliation_identifier_scheme_uri": "uri",
-            "role": "chair",
-        }],
+        json=[
+            {
+                "first_name": "editor test",
+                "last_name": "test",
+                "degree": "aff",
+                "identifier": "identifier",
+                "identifier_scheme": "scheme",
+                "identifier_scheme_uri": "uri",
+                "affiliation": "aff",
+                "affiliation_identifier": "identifier",
+                "affiliation_identifier_scheme": "scheme",
+                "affiliation_identifier_scheme_uri": "uri",
+                "role": "chair",
+            }
+        ],
     )
 
     assert editor_response.status_code == 201
@@ -2716,19 +2811,21 @@ def test_post_overall_official_metadata(clients):
 
     viewer_response = _viewer_client.post(
         f"/study/{study_id}/metadata/overall-official",
-        json=[{
-            "first_name": "editor test",
-            "last_name": "test",
-            "degree": "aff",
-            "identifier": "identifier",
-            "identifier_scheme": "scheme",
-            "identifier_scheme_uri": "uri",
-            "affiliation": "aff",
-            "affiliation_identifier": "identifier",
-            "affiliation_identifier_scheme": "scheme",
-            "affiliation_identifier_scheme_uri": "uri",
-            "role": "chair",
-        }],
+        json=[
+            {
+                "first_name": "editor test",
+                "last_name": "test",
+                "degree": "aff",
+                "identifier": "identifier",
+                "identifier_scheme": "scheme",
+                "identifier_scheme_uri": "uri",
+                "affiliation": "aff",
+                "affiliation_identifier": "identifier",
+                "affiliation_identifier_scheme": "scheme",
+                "affiliation_identifier_scheme_uri": "uri",
+                "role": "chair",
+            }
+        ],
     )
 
     assert viewer_response.status_code == 403
@@ -2797,6 +2894,19 @@ def test_get_overall_official_metadata(clients):
     assert editor_response_data[0]["affiliation_identifier_scheme_uri"] == "uri"
     assert editor_response_data[0]["role"] == "chair"
 
+    assert viewer_response_data[0]["first_name"] == "test"
+    assert viewer_response_data[0]["last_name"] == "test"
+    assert viewer_response_data[0]["affiliation"] == "aff"
+    assert viewer_response_data[0]["degree"] == "aff"
+    assert viewer_response_data[0]["identifier"] == "identifier"
+    assert viewer_response_data[0]["identifier_scheme"] == "scheme"
+    assert viewer_response_data[0]["identifier_scheme_uri"] == "uri"
+    assert viewer_response_data[0]["affiliation"] == "aff"
+    assert viewer_response_data[0]["affiliation_identifier"] == "identifier"
+    assert viewer_response_data[0]["affiliation_identifier_scheme"] == "scheme"
+    assert viewer_response_data[0]["affiliation_identifier_scheme_uri"] == "uri"
+    assert viewer_response_data[0]["role"] == "chair"
+
     assert response_data[1]["first_name"] == "admin test"
     assert response_data[1]["last_name"] == "test"
     assert response_data[1]["affiliation"] == "aff"
@@ -2836,6 +2946,19 @@ def test_get_overall_official_metadata(clients):
     assert editor_response_data[1]["affiliation_identifier_scheme_uri"] == "uri"
     assert editor_response_data[1]["role"] == "chair"
 
+    assert viewer_response_data[1]["first_name"] == "test"
+    assert viewer_response_data[1]["last_name"] == "test"
+    assert viewer_response_data[1]["affiliation"] == "aff"
+    assert viewer_response_data[1]["degree"] == "aff"
+    assert viewer_response_data[1]["identifier"] == "identifier"
+    assert viewer_response_data[1]["identifier_scheme"] == "scheme"
+    assert viewer_response_data[1]["identifier_scheme_uri"] == "uri"
+    assert viewer_response_data[1]["affiliation"] == "aff"
+    assert viewer_response_data[1]["affiliation_identifier"] == "identifier"
+    assert viewer_response_data[1]["affiliation_identifier_scheme"] == "scheme"
+    assert viewer_response_data[1]["affiliation_identifier_scheme_uri"] == "uri"
+    assert viewer_response_data[1]["role"] == "chair"
+
     assert response_data[2]["first_name"] == "editor test"
     assert response_data[2]["last_name"] == "test"
     assert response_data[2]["affiliation"] == "aff"
@@ -2874,6 +2997,19 @@ def test_get_overall_official_metadata(clients):
     assert editor_response_data[2]["affiliation_identifier_scheme"] == "scheme"
     assert editor_response_data[2]["affiliation_identifier_scheme_uri"] == "uri"
     assert editor_response_data[2]["role"] == "chair"
+
+    assert viewer_response_data[2]["first_name"] == "test"
+    assert viewer_response_data[2]["last_name"] == "test"
+    assert viewer_response_data[2]["affiliation"] == "aff"
+    assert viewer_response_data[2]["degree"] == "aff"
+    assert viewer_response_data[2]["identifier"] == "identifier"
+    assert viewer_response_data[2]["identifier_scheme"] == "scheme"
+    assert viewer_response_data[2]["identifier_scheme_uri"] == "uri"
+    assert viewer_response_data[2]["affiliation"] == "aff"
+    assert viewer_response_data[2]["affiliation_identifier"] == "identifier"
+    assert viewer_response_data[2]["affiliation_identifier_scheme"] == "scheme"
+    assert viewer_response_data[2]["affiliation_identifier_scheme_uri"] == "uri"
+    assert viewer_response_data[2]["role"] == "chair"
 
 
 def test_delete_overall_official_metadata(clients):
@@ -2925,8 +3061,8 @@ def test_put_oversight_metadata(clients):
             "fda_regulated_drug": "drug",
             "fda_regulated_device": "device",
             "has_dmc": "yes",
-            "human_subject_review_status": "yes"
-        }
+            "human_subject_review_status": "yes",
+        },
     )
 
     assert response.status_code == 200
@@ -2942,8 +3078,8 @@ def test_put_oversight_metadata(clients):
             "fda_regulated_drug": "drug",
             "fda_regulated_device": "device",
             "has_dmc": "yes",
-            "human_subject_review_status": "yes"
-        }
+            "human_subject_review_status": "yes",
+        },
     )
 
     assert admin_response.status_code == 200
@@ -2960,8 +3096,8 @@ def test_put_oversight_metadata(clients):
             "fda_regulated_drug": "drug",
             "fda_regulated_device": "device",
             "has_dmc": "yes",
-            "human_subject_review_status": "yes"
-        }
+            "human_subject_review_status": "yes",
+        },
     )
 
     editor_response_data = json.loads(editor_response.data)
@@ -2977,8 +3113,8 @@ def test_put_oversight_metadata(clients):
             "fda_regulated_drug": "drug",
             "fda_regulated_device": "device",
             "has_dmc": "yes",
-            "human_subject_review_status": "yes"
-        }
+            "human_subject_review_status": "yes",
+        },
     )
 
     assert viewer_response.status_code == 403
@@ -3057,32 +3193,42 @@ def test_put_sponsors_metadata(clients):
             "responsible_party_investigator_affiliation_identifier_scheme_uri": "uri",
             "lead_sponsor_name": "name",
             "lead_sponsor_identifier": "identifier",
-
         },
     )
     assert response.status_code == 200
     response_data = json.loads(response.data)
 
     assert response_data["responsible_party_type"] == "Sponsor"
+    assert response_data["responsible_party_investigator_first_name"] == "name"
+    assert response_data["responsible_party_investigator_last_name"] == "surname"
     assert (
-        response_data["responsible_party_investigator_first_name"]
-        == "name"
-    )
-    assert (
-        response_data["responsible_party_investigator_last_name"]
-        == "surname"
-    )
-    assert (
-        response_data["responsible_party_investigator_title"]
-        == "title"
+        response_data["responsible_party_investigator_title"] == "title"
     )  # noqa: E501
-    assert response_data["responsible_party_investigator_identifier_value"] == "identifier"
+    assert (
+        response_data["responsible_party_investigator_identifier_value"] == "identifier"
+    )
     assert response_data["responsible_party_investigator_identifier_scheme"] == "scheme"
-    assert response_data["responsible_party_investigator_identifier_scheme_uri"] == "uri"
-    assert response_data["responsible_party_investigator_affiliation_name"] == "affiliation"
-    assert response_data["responsible_party_investigator_affiliation_identifier_value"] == "identifier"
-    assert response_data["responsible_party_investigator_affiliation_identifier_scheme"] == "scheme"
-    assert response_data["responsible_party_investigator_affiliation_identifier_scheme_uri"] == "uri"
+    assert (
+        response_data["responsible_party_investigator_identifier_scheme_uri"] == "uri"
+    )
+    assert (
+        response_data["responsible_party_investigator_affiliation_name"]
+        == "affiliation"
+    )
+    assert (
+        response_data["responsible_party_investigator_affiliation_identifier_value"]
+        == "identifier"
+    )
+    assert (
+        response_data["responsible_party_investigator_affiliation_identifier_scheme"]
+        == "scheme"
+    )
+    assert (
+        response_data[
+            "responsible_party_investigator_affiliation_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
     assert response_data["lead_sponsor_name"] == "name"
     assert response_data["lead_sponsor_identifier"] == "identifier"
     assert response_data["lead_sponsor_identifier_scheme"] == "scheme"
@@ -3106,7 +3252,6 @@ def test_put_sponsors_metadata(clients):
             "responsible_party_investigator_affiliation_identifier_scheme_uri": "uri",
             "lead_sponsor_name": "name",
             "lead_sponsor_identifier": "identifier",
-
         },
     )
 
@@ -3114,25 +3259,45 @@ def test_put_sponsors_metadata(clients):
     admin_response_data = json.loads(admin_response.data)
 
     assert admin_response_data["responsible_party_type"] == "Sponsor"
+    assert admin_response_data["responsible_party_investigator_first_name"] == "name"
+    assert admin_response_data["responsible_party_investigator_last_name"] == "surname"
     assert (
-        admin_response_data["responsible_party_investigator_first_name"]
-        == "name"
-    )
-    assert (
-        admin_response_data["responsible_party_investigator_last_name"]
-        == "surname"
-    )
-    assert (
-        admin_response_data["responsible_party_investigator_title"]
-        == "title"
+        admin_response_data["responsible_party_investigator_title"] == "title"
     )  # noqa: E501
-    assert admin_response_data["responsible_party_investigator_identifier_value"] == "identifier"
-    assert admin_response_data["responsible_party_investigator_identifier_scheme"] == "scheme"
-    assert admin_response_data["responsible_party_investigator_identifier_scheme_uri"] == "uri"
-    assert admin_response_data["responsible_party_investigator_affiliation_name"] == "affiliation"
-    assert admin_response_data["responsible_party_investigator_affiliation_identifier_value"] == "identifier"
-    assert admin_response_data["responsible_party_investigator_affiliation_identifier_scheme"] == "scheme"
-    assert admin_response_data["responsible_party_investigator_affiliation_identifier_scheme_uri"] == "uri"
+    assert (
+        admin_response_data["responsible_party_investigator_identifier_value"]
+        == "identifier"
+    )
+    assert (
+        admin_response_data["responsible_party_investigator_identifier_scheme"]
+        == "scheme"
+    )
+    assert (
+        admin_response_data["responsible_party_investigator_identifier_scheme_uri"]
+        == "uri"
+    )
+    assert (
+        admin_response_data["responsible_party_investigator_affiliation_name"]
+        == "affiliation"
+    )
+    assert (
+        admin_response_data[
+            "responsible_party_investigator_affiliation_identifier_value"
+        ]
+        == "identifier"
+    )
+    assert (
+        admin_response_data[
+            "responsible_party_investigator_affiliation_identifier_scheme"
+        ]
+        == "scheme"
+    )
+    assert (
+        admin_response_data[
+            "responsible_party_investigator_affiliation_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
     assert admin_response_data["lead_sponsor_name"] == "name"
     assert admin_response_data["lead_sponsor_identifier"] == "identifier"
     assert admin_response_data["lead_sponsor_identifier_scheme"] == "scheme"
@@ -3156,34 +3321,52 @@ def test_put_sponsors_metadata(clients):
             "responsible_party_investigator_affiliation_identifier_scheme_uri": "uri",
             "lead_sponsor_name": "name",
             "lead_sponsor_identifier": "identifier",
-
         },
-
     )
 
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
 
     assert editor_response_data["responsible_party_type"] == "Sponsor"
+    assert editor_response_data["responsible_party_investigator_first_name"] == "name"
+    assert editor_response_data["responsible_party_investigator_last_name"] == "surname"
     assert (
-            editor_response_data["responsible_party_investigator_first_name"]
-            == "name"
-    )
-    assert (
-            editor_response_data["responsible_party_investigator_last_name"]
-            == "surname"
-    )
-    assert (
-            editor_response_data["responsible_party_investigator_title"]
-            == "title"
+        editor_response_data["responsible_party_investigator_title"] == "title"
     )  # noqa: E501
-    assert editor_response_data["responsible_party_investigator_identifier_value"] == "identifier"
-    assert editor_response_data["responsible_party_investigator_identifier_scheme"] == "scheme"
-    assert editor_response_data["responsible_party_investigator_identifier_scheme_uri"] == "uri"
-    assert editor_response_data["responsible_party_investigator_affiliation_name"] == "affiliation"
-    assert editor_response_data["responsible_party_investigator_affiliation_identifier_value"] == "identifier"
-    assert editor_response_data["responsible_party_investigator_affiliation_identifier_scheme"] == "scheme"
-    assert editor_response_data["responsible_party_investigator_affiliation_identifier_scheme_uri"] == "uri"
+    assert (
+        editor_response_data["responsible_party_investigator_identifier_value"]
+        == "identifier"
+    )
+    assert (
+        editor_response_data["responsible_party_investigator_identifier_scheme"]
+        == "scheme"
+    )
+    assert (
+        editor_response_data["responsible_party_investigator_identifier_scheme_uri"]
+        == "uri"
+    )
+    assert (
+        editor_response_data["responsible_party_investigator_affiliation_name"]
+        == "affiliation"
+    )
+    assert (
+        editor_response_data[
+            "responsible_party_investigator_affiliation_identifier_value"
+        ]
+        == "identifier"
+    )
+    assert (
+        editor_response_data[
+            "responsible_party_investigator_affiliation_identifier_scheme"
+        ]
+        == "scheme"
+    )
+    assert (
+        editor_response_data[
+            "responsible_party_investigator_affiliation_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
     assert editor_response_data["lead_sponsor_name"] == "name"
     assert editor_response_data["lead_sponsor_identifier"] == "identifier"
     assert editor_response_data["lead_sponsor_identifier_scheme"] == "scheme"
@@ -3238,101 +3421,172 @@ def test_get_sponsors_metadata(clients):
     viewer_response_data = json.loads(viewer_response.data)
 
     assert response_data["responsible_party_type"] == "Sponsor"
+    assert response_data["responsible_party_investigator_first_name"] == "name"
+    assert response_data["responsible_party_investigator_last_name"] == "surname"
     assert (
-            response_data["responsible_party_investigator_first_name"]
-            == "name"
-    )
-    assert (
-            response_data["responsible_party_investigator_last_name"]
-            == "surname"
-    )
-    assert (
-            response_data["responsible_party_investigator_title"]
-            == "title"
+        response_data["responsible_party_investigator_title"] == "title"
     )  # noqa: E501
 
-    assert response_data["responsible_party_investigator_identifier_value"] == "identifier"
+    assert (
+        response_data["responsible_party_investigator_identifier_value"] == "identifier"
+    )
     assert response_data["responsible_party_investigator_identifier_scheme"] == "scheme"
-    assert response_data["responsible_party_investigator_identifier_scheme_uri"] == "uri"
-    assert response_data["responsible_party_investigator_affiliation_name"] == "affiliation"
-    assert response_data["responsible_party_investigator_affiliation_identifier_value"] == "identifier"
-    assert response_data["responsible_party_investigator_affiliation_identifier_scheme"] == "scheme"
-    assert response_data["responsible_party_investigator_affiliation_identifier_scheme_uri"] == "uri"
+    assert (
+        response_data["responsible_party_investigator_identifier_scheme_uri"] == "uri"
+    )
+    assert (
+        response_data["responsible_party_investigator_affiliation_name"]
+        == "affiliation"
+    )
+    assert (
+        response_data["responsible_party_investigator_affiliation_identifier_value"]
+        == "identifier"
+    )
+    assert (
+        response_data["responsible_party_investigator_affiliation_identifier_scheme"]
+        == "scheme"
+    )
+    assert (
+        response_data[
+            "responsible_party_investigator_affiliation_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
     assert response_data["lead_sponsor_name"] == "name"
     assert response_data["lead_sponsor_identifier"] == "identifier"
     assert response_data["lead_sponsor_identifier_scheme"] == "scheme"
     assert response_data["lead_sponsor_identifier_scheme_uri"] == "uri"
 
     assert admin_response_data["responsible_party_type"] == "Sponsor"
+    assert admin_response_data["responsible_party_investigator_first_name"] == "name"
+    assert admin_response_data["responsible_party_investigator_last_name"] == "surname"
     assert (
-            admin_response_data["responsible_party_investigator_first_name"]
-            == "name"
-    )
-    assert (
-            admin_response_data["responsible_party_investigator_last_name"]
-            == "surname"
-    )
-    assert (
-            admin_response_data["responsible_party_investigator_title"]
-            == "title"
+        admin_response_data["responsible_party_investigator_title"] == "title"
     )  # noqa: E501
-    assert admin_response_data["responsible_party_investigator_identifier_value"] == "identifier"
-    assert admin_response_data["responsible_party_investigator_identifier_scheme"] == "scheme"
-    assert admin_response_data["responsible_party_investigator_identifier_scheme_uri"] == "uri"
-    assert admin_response_data["responsible_party_investigator_affiliation_name"] == "affiliation"
-    assert admin_response_data["responsible_party_investigator_affiliation_identifier_value"] == "identifier"
-    assert admin_response_data["responsible_party_investigator_affiliation_identifier_scheme"] == "scheme"
-    assert admin_response_data["responsible_party_investigator_affiliation_identifier_scheme_uri"] == "uri"
+    assert (
+        admin_response_data["responsible_party_investigator_identifier_value"]
+        == "identifier"
+    )
+    assert (
+        admin_response_data["responsible_party_investigator_identifier_scheme"]
+        == "scheme"
+    )
+    assert (
+        admin_response_data["responsible_party_investigator_identifier_scheme_uri"]
+        == "uri"
+    )
+    assert (
+        admin_response_data["responsible_party_investigator_affiliation_name"]
+        == "affiliation"
+    )
+    assert (
+        admin_response_data[
+            "responsible_party_investigator_affiliation_identifier_value"
+        ]
+        == "identifier"
+    )
+    assert (
+        admin_response_data[
+            "responsible_party_investigator_affiliation_identifier_scheme"
+        ]
+        == "scheme"
+    )
+    assert (
+        admin_response_data[
+            "responsible_party_investigator_affiliation_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
     assert admin_response_data["lead_sponsor_name"] == "name"
     assert admin_response_data["lead_sponsor_identifier"] == "identifier"
     assert admin_response_data["lead_sponsor_identifier_scheme"] == "scheme"
     assert admin_response_data["lead_sponsor_identifier_scheme_uri"] == "uri"
 
     assert editor_response_data["responsible_party_type"] == "Sponsor"
+    assert editor_response_data["responsible_party_investigator_first_name"] == "name"
+    assert editor_response_data["responsible_party_investigator_last_name"] == "surname"
     assert (
-            editor_response_data["responsible_party_investigator_first_name"]
-            == "name"
-    )
-    assert (
-            editor_response_data["responsible_party_investigator_last_name"]
-            == "surname"
-    )
-    assert (
-            editor_response_data["responsible_party_investigator_title"]
-            == "title"
+        editor_response_data["responsible_party_investigator_title"] == "title"
     )  # noqa: E501
-    assert editor_response_data["responsible_party_investigator_identifier_value"] == "identifier"
-    assert editor_response_data["responsible_party_investigator_identifier_scheme"] == "scheme"
-    assert editor_response_data["responsible_party_investigator_identifier_scheme_uri"] == "uri"
-    assert editor_response_data["responsible_party_investigator_affiliation_name"] == "affiliation"
-    assert editor_response_data["responsible_party_investigator_affiliation_identifier_value"] == "identifier"
-    assert editor_response_data["responsible_party_investigator_affiliation_identifier_scheme"] == "scheme"
-    assert editor_response_data["responsible_party_investigator_affiliation_identifier_scheme_uri"] == "uri"
+    assert (
+        editor_response_data["responsible_party_investigator_identifier_value"]
+        == "identifier"
+    )
+    assert (
+        editor_response_data["responsible_party_investigator_identifier_scheme"]
+        == "scheme"
+    )
+    assert (
+        editor_response_data["responsible_party_investigator_identifier_scheme_uri"]
+        == "uri"
+    )
+    assert (
+        editor_response_data["responsible_party_investigator_affiliation_name"]
+        == "affiliation"
+    )
+    assert (
+        editor_response_data[
+            "responsible_party_investigator_affiliation_identifier_value"
+        ]
+        == "identifier"
+    )
+    assert (
+        editor_response_data[
+            "responsible_party_investigator_affiliation_identifier_scheme"
+        ]
+        == "scheme"
+    )
+    assert (
+        editor_response_data[
+            "responsible_party_investigator_affiliation_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
     assert editor_response_data["lead_sponsor_name"] == "name"
     assert editor_response_data["lead_sponsor_identifier"] == "identifier"
     assert editor_response_data["lead_sponsor_identifier_scheme"] == "scheme"
     assert editor_response_data["lead_sponsor_identifier_scheme_uri"] == "uri"
 
     assert viewer_response_data["responsible_party_type"] == "Sponsor"
+    assert viewer_response_data["responsible_party_investigator_first_name"] == "name"
+    assert viewer_response_data["responsible_party_investigator_last_name"] == "surname"
     assert (
-            viewer_response_data["responsible_party_investigator_first_name"]
-            == "name"
-    )
-    assert (
-            viewer_response_data["responsible_party_investigator_last_name"]
-            == "surname"
-    )
-    assert (
-            viewer_response_data["responsible_party_investigator_title"]
-            == "title"
+        viewer_response_data["responsible_party_investigator_title"] == "title"
     )  # noqa: E501
-    assert viewer_response_data["responsible_party_investigator_identifier_value"] == "identifier"
-    assert viewer_response_data["responsible_party_investigator_identifier_scheme"] == "scheme"
-    assert viewer_response_data["responsible_party_investigator_identifier_scheme_uri"] == "uri"
-    assert viewer_response_data["responsible_party_investigator_affiliation_name"] == "affiliation"
-    assert viewer_response_data["responsible_party_investigator_affiliation_identifier_value"] == "identifier"
-    assert viewer_response_data["responsible_party_investigator_affiliation_identifier_scheme"] == "scheme"
-    assert viewer_response_data["responsible_party_investigator_affiliation_identifier_scheme_uri"] == "uri"
+    assert (
+        viewer_response_data["responsible_party_investigator_identifier_value"]
+        == "identifier"
+    )
+    assert (
+        viewer_response_data["responsible_party_investigator_identifier_scheme"]
+        == "scheme"
+    )
+    assert (
+        viewer_response_data["responsible_party_investigator_identifier_scheme_uri"]
+        == "uri"
+    )
+    assert (
+        viewer_response_data["responsible_party_investigator_affiliation_name"]
+        == "affiliation"
+    )
+    assert (
+        viewer_response_data[
+            "responsible_party_investigator_affiliation_identifier_value"
+        ]
+        == "identifier"
+    )
+    assert (
+        viewer_response_data[
+            "responsible_party_investigator_affiliation_identifier_scheme"
+        ]
+        == "scheme"
+    )
+    assert (
+        viewer_response_data[
+            "responsible_party_investigator_affiliation_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
     assert viewer_response_data["lead_sponsor_name"] == "name"
     assert viewer_response_data["lead_sponsor_identifier"] == "identifier"
     assert viewer_response_data["lead_sponsor_identifier_scheme"] == "scheme"

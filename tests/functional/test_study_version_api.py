@@ -330,7 +330,7 @@ def test_get_version_study_metadata(clients):
                 "classification_code": "classification code",
                 "scheme": "scheme",
                 "scheme_uri": "scheme uri",
-                "condition_uri": "condition"
+                "condition_uri": "condition",
             }
         ],
     )
@@ -342,26 +342,28 @@ def test_get_version_study_metadata(clients):
                 "classification_code": "classification code",
                 "scheme": "scheme",
                 "scheme_uri": "scheme uri",
-                "keyword_uri": "keywords"
+                "keyword_uri": "keywords",
             }
         ],
     )
 
     of_response = _logged_in_client.post(
         f"/study/{study_id}/metadata/overall-official",
-        json=[{
-            "first_name": "test",
-            "last_name": "test",
-            "degree": "aff",
-            "identifier": "identifier",
-            "identifier_scheme": "scheme",
-            "identifier_scheme_uri": "uri",
-            "affiliation": "aff",
-            "affiliation_identifier": "identifier",
-            "affiliation_identifier_scheme": "scheme",
-            "affiliation_identifier_scheme_uri": "uri",
-            "role": "chair",
-        }],
+        json=[
+            {
+                "first_name": "test",
+                "last_name": "test",
+                "degree": "aff",
+                "identifier": "identifier",
+                "identifier_scheme": "scheme",
+                "identifier_scheme_uri": "uri",
+                "affiliation": "aff",
+                "affiliation_identifier": "identifier",
+                "affiliation_identifier_scheme": "scheme",
+                "affiliation_identifier_scheme_uri": "uri",
+                "role": "chair",
+            }
+        ],
     )
 
     assert arm_response.status_code == 201
@@ -447,8 +449,13 @@ def test_get_version_study_metadata(clients):
     assert response_data["oversight"]["has_dmc"] == "yes"
     assert response_data["oversight"]["human_subject_review_status"] == "yes"
     assert response_data["sponsors"]["responsible_party_type"] == "Sponsor"
-    assert response_data["sponsors"]["responsible_party_investigator_first_name"] == "name"
-    assert response_data["sponsors"]["responsible_party_investigator_last_name"] == "surname"
+    assert (
+        response_data["sponsors"]["responsible_party_investigator_first_name"] == "name"
+    )
+    assert (
+        response_data["sponsors"]["responsible_party_investigator_last_name"]
+        == "surname"
+    )
     assert response_data["sponsors"]["lead_sponsor_name"] == "name"
     assert response_data["status"]["overall_status"] == "Withdrawn"
     assert response_data["status"]["start_date"] == "2023-11-15 00:00:00"
@@ -465,7 +472,9 @@ def test_get_version_study_metadata(clients):
     assert admin_response_data["design"]["design_allocation"] == "editor-dfasdfasd"
     assert admin_response_data["design"]["study_type"] == "Interventional"
     assert admin_response_data["design"]["design_intervention_model"] == "Treatment"
-    assert admin_response_data["design"]["design_primary_purpose"] == "Parallel Assignment"
+    assert (
+        admin_response_data["design"]["design_primary_purpose"] == "Parallel Assignment"
+    )
     assert admin_response_data["design"]["design_masking"] == "Double"
     assert admin_response_data["design"]["design_masking_description"] == "tewsfdasf"
     assert admin_response_data["design"]["design_who_masked_list"] == [
@@ -504,25 +513,38 @@ def test_get_version_study_metadata(clients):
     assert admin_response_data["oversight"]["has_dmc"] == "yes"
     assert admin_response_data["oversight"]["human_subject_review_status"] == "yes"
     assert admin_response_data["sponsors"]["responsible_party_type"] == "Sponsor"
-    assert admin_response_data["sponsors"]["responsible_party_investigator_first_name"] == "name"
-    assert admin_response_data["sponsors"]["responsible_party_investigator_last_name"] == "surname"
+    assert (
+        admin_response_data["sponsors"]["responsible_party_investigator_first_name"]
+        == "name"
+    )
+    assert (
+        admin_response_data["sponsors"]["responsible_party_investigator_last_name"]
+        == "surname"
+    )
     assert admin_response_data["sponsors"]["lead_sponsor_name"] == "name"
     assert admin_response_data["status"]["overall_status"] == "Withdrawn"
     assert admin_response_data["status"]["start_date"] == "2023-11-15 00:00:00"
 
     assert editor_response_data["arms"][0]["label"] == "Label1"
     assert editor_response_data["central_contacts"][0]["phone"] == "808"
-    assert editor_response_data["central_contacts"][0]["first_name"] == "central-contact"
+    assert (
+        editor_response_data["central_contacts"][0]["first_name"] == "central-contact"
+    )
     assert editor_response_data["central_contacts"][0]["last_name"] == "central-contact"
     assert editor_response_data["central_contacts"][0]["affiliation"] == "affiliation"
     assert editor_response_data["collaborators"][0]["name"] == "collaborator1123"
     assert editor_response_data["conditions"][0]["name"] == "condition"
     assert editor_response_data["keywords"][0]["name"] == "keywords"
-    assert editor_response_data["description"]["brief_summary"] == "editor-brief_summary"
+    assert (
+        editor_response_data["description"]["brief_summary"] == "editor-brief_summary"
+    )
     assert editor_response_data["design"]["design_allocation"] == "editor-dfasdfasd"
     assert editor_response_data["design"]["study_type"] == "Interventional"
     assert editor_response_data["design"]["design_intervention_model"] == "Treatment"
-    assert editor_response_data["design"]["design_primary_purpose"] == "Parallel Assignment"
+    assert (
+        editor_response_data["design"]["design_primary_purpose"]
+        == "Parallel Assignment"
+    )
     assert editor_response_data["design"]["design_masking"] == "Double"
     assert editor_response_data["design"]["design_masking_description"] == "tewsfdasf"
     assert editor_response_data["design"]["design_who_masked_list"] == [
@@ -561,25 +583,38 @@ def test_get_version_study_metadata(clients):
     assert editor_response_data["oversight"]["has_dmc"] == "yes"
     assert editor_response_data["oversight"]["human_subject_review_status"] == "yes"
     assert editor_response_data["sponsors"]["responsible_party_type"] == "Sponsor"
-    assert editor_response_data["sponsors"]["responsible_party_investigator_first_name"] == "name"
-    assert editor_response_data["sponsors"]["responsible_party_investigator_last_name"] == "surname"
+    assert (
+        editor_response_data["sponsors"]["responsible_party_investigator_first_name"]
+        == "name"
+    )
+    assert (
+        editor_response_data["sponsors"]["responsible_party_investigator_last_name"]
+        == "surname"
+    )
     assert editor_response_data["sponsors"]["lead_sponsor_name"] == "name"
     assert editor_response_data["status"]["overall_status"] == "Withdrawn"
     assert editor_response_data["status"]["start_date"] == "2023-11-15 00:00:00"
 
     assert viewer_response_data["arms"][0]["label"] == "Label1"
     assert viewer_response_data["central_contacts"][0]["phone"] == "808"
-    assert viewer_response_data["central_contacts"][0]["first_name"] == "central-contact"
+    assert (
+        viewer_response_data["central_contacts"][0]["first_name"] == "central-contact"
+    )
     assert viewer_response_data["central_contacts"][0]["last_name"] == "central-contact"
     assert viewer_response_data["central_contacts"][0]["affiliation"] == "affiliation"
     assert viewer_response_data["collaborators"][0]["name"] == "collaborator1123"
     assert viewer_response_data["conditions"][0]["name"] == "condition"
     assert viewer_response_data["keywords"][0]["name"] == "keywords"
-    assert viewer_response_data["description"]["brief_summary"] == "editor-brief_summary"
+    assert (
+        viewer_response_data["description"]["brief_summary"] == "editor-brief_summary"
+    )
     assert viewer_response_data["design"]["design_allocation"] == "editor-dfasdfasd"
     assert viewer_response_data["design"]["study_type"] == "Interventional"
     assert viewer_response_data["design"]["design_intervention_model"] == "Treatment"
-    assert viewer_response_data["design"]["design_primary_purpose"] == "Parallel Assignment"
+    assert (
+        viewer_response_data["design"]["design_primary_purpose"]
+        == "Parallel Assignment"
+    )
     assert viewer_response_data["design"]["design_masking"] == "Double"
     assert viewer_response_data["design"]["design_masking_description"] == "tewsfdasf"
     assert viewer_response_data["design"]["design_who_masked_list"] == [
@@ -618,8 +653,14 @@ def test_get_version_study_metadata(clients):
     assert viewer_response_data["oversight"]["has_dmc"] == "yes"
     assert viewer_response_data["oversight"]["human_subject_review_status"] == "yes"
     assert viewer_response_data["sponsors"]["responsible_party_type"] == "Sponsor"
-    assert viewer_response_data["sponsors"]["responsible_party_investigator_first_name"] == "name"
-    assert viewer_response_data["sponsors"]["responsible_party_investigator_last_name"] == "surname"
+    assert (
+        viewer_response_data["sponsors"]["responsible_party_investigator_first_name"]
+        == "name"
+    )
+    assert (
+        viewer_response_data["sponsors"]["responsible_party_investigator_last_name"]
+        == "surname"
+    )
     assert viewer_response_data["sponsors"]["lead_sponsor_name"] == "name"
     assert viewer_response_data["status"]["overall_status"] == "Withdrawn"
     assert viewer_response_data["status"]["start_date"] == "2023-11-15 00:00:00"

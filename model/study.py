@@ -222,12 +222,10 @@ class Study(db.Model):  # type: ignore
             "status": self.study_status.to_dict_metadata(),
             "oversight": self.study_oversight.to_dict(),
             "conditions": [
-                i.to_dict_metadata()
-                for i in self.study_conditions  # type: ignore
+                i.to_dict_metadata() for i in self.study_conditions  # type: ignore
             ],
             "keywords": [
-                i.to_dict_metadata()
-                for i in self.study_keywords  # type: ignore
+                i.to_dict_metadata() for i in self.study_keywords  # type: ignore
             ],
         }
 

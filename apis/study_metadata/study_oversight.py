@@ -53,7 +53,11 @@ class StudyOversightResource(Resource):
                     "has_dmc": {"type": "string"},
                     "human_subject_review_status": {"type": "string"},
                 },
-                "required": ["fda_regulated_drug", "has_dmc", "human_subject_review_status"],
+                "required": [
+                    "fda_regulated_drug",
+                    "has_dmc",
+                    "human_subject_review_status",
+                ],
             },
             "uniqueItems": True,
         }

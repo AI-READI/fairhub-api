@@ -12,7 +12,6 @@ class StudyOther(db.Model):  # type: ignore
 
     __tablename__ = "study_other"
 
-
     size = db.Column(db.BigInteger, nullable=False)
 
     study_id = db.Column(

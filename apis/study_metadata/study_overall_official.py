@@ -69,7 +69,13 @@ class StudyOverallOfficialResource(Resource):
                     "role": {"type": ["string", "null"]},
                     "degree": {"type": "string"},
                 },
-                "required": ["first_name", "last_name", "affiliation", "affiliation_identifier", "role"],
+                "required": [
+                    "first_name",
+                    "last_name",
+                    "affiliation",
+                    "affiliation_identifier",
+                    "role",
+                ],
             },
             "uniqueItems": True,
         }
