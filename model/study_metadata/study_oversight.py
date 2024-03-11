@@ -15,10 +15,10 @@ class StudyOversight(db.Model):  # type: ignore
 
     __tablename__ = "study_oversight"
 
-    fda_regulated_drug = db.Column(db.String, nullable=False)
-    fda_regulated_device = db.Column(db.String, nullable=False)
-    human_subject_review_status = db.Column(db.String, nullable=False)
-    has_dmc = db.Column(db.String, nullable=False)
+    fda_regulated_drug = db.Column(db.String, nullable=True)
+    fda_regulated_device = db.Column(db.String, nullable=True)
+    human_subject_review_status = db.Column(db.String, nullable=True)
+    has_dmc = db.Column(db.String, nullable=True)
 
     study_id = db.Column(
         db.CHAR(36),
