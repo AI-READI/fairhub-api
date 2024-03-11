@@ -2247,7 +2247,6 @@ def test_post_intervention_metadata(clients):
                 "type": "Device",
                 "name": "name test",
                 "description": "desc",
-                "arm_group_label_list": ["test", "one"],
                 "other_name_list": ["uhh", "yes"],
             }
         ],
@@ -2262,7 +2261,6 @@ def test_post_intervention_metadata(clients):
     assert response_data[0]["type"] == "Device"
     assert response_data[0]["name"] == "name test"
     assert response_data[0]["description"] == "desc"
-    assert response_data[0]["arm_group_label_list"] == ["test", "one"]
     assert response_data[0]["other_name_list"] == ["uhh", "yes"]
 
     admin_response = _admin_client.post(
@@ -2272,7 +2270,6 @@ def test_post_intervention_metadata(clients):
                 "type": "Device",
                 "name": "admin-name test",
                 "description": "desc",
-                "arm_group_label_list": ["test", "one"],
                 "other_name_list": ["uhh", "yes"],
             }
         ],
@@ -2287,7 +2284,6 @@ def test_post_intervention_metadata(clients):
     assert admin_response_data[0]["type"] == "Device"
     assert admin_response_data[0]["name"] == "admin-name test"
     assert admin_response_data[0]["description"] == "desc"
-    assert admin_response_data[0]["arm_group_label_list"] == ["test", "one"]
     assert admin_response_data[0]["other_name_list"] == ["uhh", "yes"]
 
     editor_response = _editor_client.post(
@@ -2297,7 +2293,6 @@ def test_post_intervention_metadata(clients):
                 "type": "Device",
                 "name": "editor-name test",
                 "description": "desc",
-                "arm_group_label_list": ["test", "one"],
                 "other_name_list": ["uhh", "yes"],
             }
         ],
@@ -2310,7 +2305,6 @@ def test_post_intervention_metadata(clients):
     assert editor_response_data[0]["type"] == "Device"
     assert editor_response_data[0]["name"] == "editor-name test"
     assert editor_response_data[0]["description"] == "desc"
-    assert editor_response_data[0]["arm_group_label_list"] == ["test", "one"]
     assert editor_response_data[0]["other_name_list"] == ["uhh", "yes"]
 
     viewer_response = _viewer_client.post(
@@ -2320,7 +2314,6 @@ def test_post_intervention_metadata(clients):
                 "type": "Device",
                 "name": "viewer-name test",
                 "description": "desc",
-                "arm_group_label_list": ["test", "one"],
                 "other_name_list": ["uhh", "yes"],
             }
         ],
@@ -2356,65 +2349,53 @@ def test_get_intervention_metadata(clients):
     assert response_data[0]["type"] == "Device"
     assert response_data[0]["name"] == "name test"
     assert response_data[0]["description"] == "desc"
-    assert response_data[0]["arm_group_label_list"] == ["test", "one"]
     assert response_data[0]["other_name_list"] == ["uhh", "yes"]
     assert response_data[1]["type"] == "Device"
     assert response_data[1]["name"] == "admin-name test"
     assert response_data[1]["description"] == "desc"
-    assert response_data[1]["arm_group_label_list"] == ["test", "one"]
     assert response_data[1]["other_name_list"] == ["uhh", "yes"]
     assert response_data[2]["type"] == "Device"
     assert response_data[2]["name"] == "editor-name test"
     assert response_data[2]["description"] == "desc"
-    assert response_data[2]["arm_group_label_list"] == ["test", "one"]
     assert response_data[2]["other_name_list"] == ["uhh", "yes"]
 
     assert admin_response_data[0]["type"] == "Device"
     assert admin_response_data[0]["name"] == "name test"
     assert admin_response_data[0]["description"] == "desc"
-    assert admin_response_data[0]["arm_group_label_list"] == ["test", "one"]
     assert admin_response_data[0]["other_name_list"] == ["uhh", "yes"]
     assert admin_response_data[1]["type"] == "Device"
     assert admin_response_data[1]["name"] == "admin-name test"
     assert admin_response_data[1]["description"] == "desc"
-    assert admin_response_data[1]["arm_group_label_list"] == ["test", "one"]
     assert admin_response_data[1]["other_name_list"] == ["uhh", "yes"]
     assert admin_response_data[2]["type"] == "Device"
     assert admin_response_data[2]["name"] == "editor-name test"
     assert admin_response_data[2]["description"] == "desc"
-    assert admin_response_data[2]["arm_group_label_list"] == ["test", "one"]
     assert admin_response_data[2]["other_name_list"] == ["uhh", "yes"]
 
     assert editor_response_data[0]["type"] == "Device"
     assert editor_response_data[0]["name"] == "name test"
     assert editor_response_data[0]["description"] == "desc"
-    assert editor_response_data[0]["arm_group_label_list"] == ["test", "one"]
     assert editor_response_data[0]["other_name_list"] == ["uhh", "yes"]
     assert editor_response_data[1]["type"] == "Device"
     assert editor_response_data[1]["name"] == "admin-name test"
     assert editor_response_data[1]["description"] == "desc"
-    assert editor_response_data[1]["arm_group_label_list"] == ["test", "one"]
     assert editor_response_data[1]["other_name_list"] == ["uhh", "yes"]
     assert editor_response_data[2]["type"] == "Device"
     assert editor_response_data[2]["name"] == "editor-name test"
     assert editor_response_data[2]["description"] == "desc"
-    assert editor_response_data[2]["arm_group_label_list"] == ["test", "one"]
     assert editor_response_data[2]["other_name_list"] == ["uhh", "yes"]
 
     assert viewer_response_data[0]["type"] == "Device"
     assert viewer_response_data[0]["name"] == "name test"
     assert viewer_response_data[0]["description"] == "desc"
-    assert viewer_response_data[0]["arm_group_label_list"] == ["test", "one"]
     assert viewer_response_data[0]["other_name_list"] == ["uhh", "yes"]
     assert viewer_response_data[1]["type"] == "Device"
     assert viewer_response_data[1]["name"] == "admin-name test"
     assert viewer_response_data[1]["description"] == "desc"
-    assert viewer_response_data[1]["arm_group_label_list"] == ["test", "one"]
     assert viewer_response_data[1]["other_name_list"] == ["uhh", "yes"]
     assert viewer_response_data[2]["type"] == "Device"
     assert viewer_response_data[2]["name"] == "editor-name test"
     assert viewer_response_data[2]["description"] == "desc"
-    assert viewer_response_data[2]["arm_group_label_list"] == ["test", "one"]
     assert viewer_response_data[2]["other_name_list"] == ["uhh", "yes"]
 
 

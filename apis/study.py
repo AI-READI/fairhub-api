@@ -120,7 +120,7 @@ class StudyResource(Resource):
             "properties": {
                 "title": {"type": "string", "minLength": 1},
                 "image": {"type": "string", "minLength": 1},
-                "acronym": {"type": "string", "minLength": 1, "maxLength": 14},
+                "acronym": {"type": "string", "maxLength": 14},
             },
         }
 

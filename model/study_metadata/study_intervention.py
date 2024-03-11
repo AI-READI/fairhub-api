@@ -24,7 +24,6 @@ class StudyIntervention(db.Model):  # type: ignore
     type = db.Column(db.String, nullable=True)
     name = db.Column(db.String, nullable=False)
     description = db.Column(db.String, nullable=False)
-    arm_group_label_list = db.Column(ARRAY(String), nullable=False)
     other_name_list = db.Column(ARRAY(String), nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
 
@@ -40,7 +39,6 @@ class StudyIntervention(db.Model):  # type: ignore
             "type": self.type,
             "name": self.name,
             "description": self.description,
-            "arm_group_label_list": self.arm_group_label_list,
             "other_name_list": self.other_name_list,
             "created_at": self.created_at,
         }
@@ -66,7 +64,6 @@ class StudyIntervention(db.Model):  # type: ignore
         self.type = data["type"]
         self.name = data["name"]
         self.description = data["description"]
-        self.arm_group_label_list = data["arm_group_label_list"]
         self.other_name_list = data["other_name_list"]
         self.study.touch()
 
