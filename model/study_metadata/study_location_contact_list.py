@@ -15,7 +15,7 @@ class StudyLocationContactList(db.Model):  # type: ignore
         self.study = study
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
 
-    __tablename__ = "study_location_location_list"
+    __tablename__ = "study_location_contact_list"
 
     id = db.Column(db.CHAR(36), primary_key=True)
     first_name = db.Column(db.String, nullable=False)
