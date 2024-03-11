@@ -203,7 +203,6 @@ class StudyDesignResource(Resource):
                 "enrollment_count",
                 "enrollment_type",
                 "target_duration",
-                "number_groups_cohorts",
             ]
 
             for field in required_fields:
