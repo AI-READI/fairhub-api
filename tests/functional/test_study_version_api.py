@@ -306,7 +306,6 @@ def test_get_version_study_metadata(clients):
                 "type": "Device",
                 "name": "name test",
                 "description": "desc",
-                "arm_group_label_list": ["test", "one"],
                 "other_name_list": ["uhh", "yes"],
             }
         ],
