@@ -19,7 +19,7 @@ class Study(db.Model):  # type: ignore
     def __init__(self):
         self.id = str(uuid.uuid4())
         self.created_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
-        #
+
         self.study_status = model.StudyStatus(self)
         self.study_sponsors = model.StudySponsors(self)
         self.study_design = model.StudyDesign(self)
@@ -28,7 +28,6 @@ class Study(db.Model):  # type: ignore
         self.study_identification.append(model.StudyIdentification(self, False))
         self.study_other = model.StudyOther(self)
         self.study_oversight = model.StudyOversight(self)
-        self.acronym = "acronym"
 
     __tablename__ = "study"
     id = db.Column(db.CHAR(36), primary_key=True)
@@ -246,7 +245,7 @@ class Study(db.Model):  # type: ignore
 
         self.title = data["title"]
         self.image = data["image"]
-        # self.acronym = data["acronym"]
+        self.acronym = data["acronym"]
         self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
 
     def validate(self):
