@@ -75,7 +75,6 @@ class StudySponsorsResource(Resource):
                 "responsible_party_investigator_title",
             ],
             "properties": {
-                "id": {"type": "string"},
                 "responsible_party_type": {
                     "type": ["string", "null"],
                     "enum": [
