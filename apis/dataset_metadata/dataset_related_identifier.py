@@ -88,13 +88,17 @@ class DatasetRelatedIdentifierResource(Resource):
         list_of_elements = []
         for i in data:
             if "id" in i and i["id"]:
-                dataset_related_identifier_ = model.DatasetRelatedIdentifier.query.get(i["id"])
+                dataset_related_identifier_ = model.DatasetRelatedIdentifier.query.get(
+                    i["id"]
+                )
                 if not dataset_related_identifier_:
                     return f"{i['id']} Id is not found", 404
                 dataset_related_identifier_.update(i)
                 list_of_elements.append(dataset_related_identifier_.to_dict())
             elif "id" not in i or not i["id"]:
-                dataset_related_identifier_ = model.DatasetRelatedIdentifier.from_data(data_obj, i)
+                dataset_related_identifier_ = model.DatasetRelatedIdentifier.from_data(
+                    data_obj, i
+                )
                 model.db.session.add(dataset_related_identifier_)
                 list_of_elements.append(dataset_related_identifier_.to_dict())
         model.db.session.commit()
@@ -111,16 +115,18 @@ class DatasetRelatedIdentifierUpdate(Resource):
     @api.response(204, "Success")
     @api.response(400, "Validation Error")
     def delete(
-            self,
-            study_id: int,
-            dataset_id: int,  # pylint: disable= unused-argument
-            related_identifier_id: int,
+        self,
+        study_id: int,
+        dataset_id: int,  # pylint: disable= unused-argument
+        related_identifier_id: int,
     ):
         """Delete dataset related identifier"""
         study_obj = model.Study.query.get(study_id)
         if not is_granted("dataset_metadata", study_obj):
             return "Access denied, you can not make any change in dataset metadata", 403
-        dataset_related_identifier_ = model.DatasetRelatedIdentifier.query.get(related_identifier_id)
+        dataset_related_identifier_ = model.DatasetRelatedIdentifier.query.get(
+            related_identifier_id
+        )
 
         model.db.session.delete(dataset_related_identifier_)
         model.db.session.commit()

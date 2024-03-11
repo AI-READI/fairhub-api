@@ -32,6 +32,7 @@ study_design = api.model(
         "bio_spec_description": fields.String(required=True),
         "target_duration": fields.String(required=True),
         "number_groups_cohorts": fields.Integer(required=True),
+        "is_patient_registry": fields.String(required=True),
     },
 )
 
@@ -160,6 +161,7 @@ class StudyDesignResource(Resource):
                 "bio_spec_description": {"type": ["string", "null"]},
                 "target_duration": {"type": ["string", "null"]},
                 "number_groups_cohorts": {"type": ["integer", "null"]},
+                "is_patient_registry": {"type": ["string", "null"]},
             },
         }
 
@@ -201,7 +203,6 @@ class StudyDesignResource(Resource):
                 "enrollment_count",
                 "enrollment_type",
                 "target_duration",
-                "number_groups_cohorts",
             ]
 
             for field in required_fields:

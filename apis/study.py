@@ -62,11 +62,12 @@ class Studies(Resource):
         # Schema validation
         schema = {
             "type": "object",
-            "required": ["title", "image"],
+            "required": ["title", "image", "acronym"],
             "additionalProperties": False,
             "properties": {
-                "title": {"type": "string", "minLength": 1},
-                "image": {"type": "string", "minLength": 1},
+                "title": {"type": "string", "minLength": 1, "maxLength": 300},
+                "acronym": {"type": "string", "maxLength": 14},
+                "image": {"type": "string"},
             },
         }
 
@@ -114,11 +115,12 @@ class StudyResource(Resource):
         # Schema validation
         schema = {
             "type": "object",
-            "required": ["title", "image"],
+            "required": ["title", "image", "acronym"],
             "additionalProperties": False,
             "properties": {
                 "title": {"type": "string", "minLength": 1},
                 "image": {"type": "string", "minLength": 1},
+                "acronym": {"type": "string", "minLength": 1, "maxLength": 14},
             },
         }
 
@@ -146,16 +148,6 @@ class StudyResource(Resource):
 
         if not is_granted("delete_study", study):
             return "Access denied, you can not delete study", 403
-
-        # for d in study.dataset:
-        #     for version in d.dataset_versions:
-        #         version.participants.clear()
-        # for d in study.dataset:
-        #     for version in d.dataset_versions:
-        #         model.db.session.delete(version)
-        #     model.db.session.delete(d)
-        # for p in study.participants:
-        #     model.db.session.delete(p)
 
         model.db.session.delete(study)
         model.db.session.commit()

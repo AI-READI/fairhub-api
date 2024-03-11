@@ -246,27 +246,24 @@ def test_get_version_study_metadata(clients):
             }
         ],
     )
-    avail_ipd_response = _logged_in_client.post(
-        f"/study/{study_id}/metadata/available-ipd",
-        json=[
-            {
-                "identifier": "identifier1",
-                "type": "Clinical Study Report",
-                "url": "google.com",
-                "comment": "comment1",
-            }
-        ],
-    )
+
     cc_response = _logged_in_client.post(
         f"/study/{study_id}/metadata/central-contact",
         json=[
             {
-                "name": "central-contact",
                 "affiliation": "affiliation",
-                "role": "role",
                 "phone": "808",
                 "phone_ext": "909",
                 "email_address": "sample@gmail.com",
+                "first_name": "central-contact",
+                "last_name": "central-contact",
+                "degree": "degree",
+                "identifier": "central-contact",
+                "identifier_scheme": "id",
+                "identifier_scheme_uri": "uri",
+                "affiliation_identifier": "affiliation identifier",
+                "affiliation_identifier_scheme": "affiliation identifier scheme",
+                "affiliation_identifier_scheme_uri": "affiliation identifier scheme uri",
             }
         ],
     )
@@ -314,34 +311,70 @@ def test_get_version_study_metadata(clients):
             }
         ],
     )
-    link_response = _logged_in_client.post(
-        f"/study/{study_id}/metadata/link",
-        json=[{"url": "google.com", "title": "google link"}],
-    )
-    of_response = _logged_in_client.post(
-        f"/study/{study_id}/metadata/overall-official",
-        json=[{"name": "test", "affiliation": "aff", "role": "Study Chair"}],
-    )
-    reference_response = _logged_in_client.post(
-        f"/study/{study_id}/metadata/reference",
+    collaborators_response = _logged_in_client.post(
+        f"/study/{study_id}/metadata/collaborators",
         json=[
             {
-                "identifier": "reference identifier",
-                "type": "Yes",
-                "citation": "reference citation",
+                "name": "collaborator1123",
+                "identifier": "collaborator1123",
+                "identifier_scheme": "collaborator1123",
+                "identifier_scheme_uri": "collaborator1123",
+            }
+        ],
+    )
+    conditions_response = _logged_in_client.post(
+        f"/study/{study_id}/metadata/conditions",
+        json=[
+            {
+                "name": "condition",
+                "classification_code": "classification code",
+                "scheme": "scheme",
+                "scheme_uri": "scheme uri",
+                "condition_uri": "condition",
+            }
+        ],
+    )
+    keywords_response = _logged_in_client.post(
+        f"/study/{study_id}/metadata/keywords",
+        json=[
+            {
+                "name": "keywords",
+                "classification_code": "classification code",
+                "scheme": "scheme",
+                "scheme_uri": "scheme uri",
+                "keyword_uri": "keywords",
+            }
+        ],
+    )
+
+    of_response = _logged_in_client.post(
+        f"/study/{study_id}/metadata/overall-official",
+        json=[
+            {
+                "first_name": "test",
+                "last_name": "test",
+                "degree": "aff",
+                "identifier": "identifier",
+                "identifier_scheme": "scheme",
+                "identifier_scheme_uri": "uri",
+                "affiliation": "aff",
+                "affiliation_identifier": "identifier",
+                "affiliation_identifier_scheme": "scheme",
+                "affiliation_identifier_scheme_uri": "uri",
+                "role": "chair",
             }
         ],
     )
 
     assert arm_response.status_code == 201
-    assert avail_ipd_response.status_code == 201
     assert cc_response.status_code == 201
     assert location_response.status_code == 201
     assert id_response.status_code == 201
     assert intervention_response.status_code == 201
-    assert link_response.status_code == 201
     assert of_response.status_code == 201
-    assert reference_response.status_code == 201
+    assert collaborators_response.status_code == 201
+    assert conditions_response.status_code == 201
+    assert keywords_response.status_code == 201
 
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/study-metadata"
@@ -363,31 +396,18 @@ def test_get_version_study_metadata(clients):
     response_data = json.loads(response.data)
     admin_response_data = json.loads(admin_response.data)
     editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(editor_response.data)
 
-    assert response_data["available_ipd"][0]["identifier"] == "identifier1"
-    assert response_data["available_ipd"][0]["url"] == "google.com"
     assert response_data["arms"][0]["label"] == "Label1"
-
-    assert response_data["contacts"][0]["name"] == "central-contact"
-    assert response_data["contacts"][0]["affiliation"] == "affiliation"
-
-    assert response_data["secondary_identifiers"][0]["identifier"] == "test"
-    assert response_data["secondary_identifiers"][0]["identifier_type"] == "test"
-    assert response_data["interventions"][0]["type"] == "Device"
-    assert response_data["interventions"][0]["name"] == "name test"
-    assert response_data["links"][0]["title"] == "google link"
-    assert response_data["links"][0]["url"] == "google.com"
-    assert response_data["locations"][0]["country"] == "yes"
-    assert response_data["locations"][0]["facility"] == "test"
-    assert response_data["overall_officials"][0]["name"] == "test"
-    assert response_data["overall_officials"][0]["role"] == "Study Chair"
-    assert response_data["overall_officials"][0]["affiliation"] == "aff"
-    assert response_data["references"][0]["identifier"] == "reference identifier"
-    assert response_data["references"][0]["citation"] == "reference citation"
-
+    assert response_data["central_contacts"][0]["phone"] == "808"
+    assert response_data["central_contacts"][0]["first_name"] == "central-contact"
+    assert response_data["central_contacts"][0]["last_name"] == "central-contact"
+    assert response_data["central_contacts"][0]["affiliation"] == "affiliation"
+    assert response_data["collaborators"][0]["name"] == "collaborator1123"
+    assert response_data["conditions"][0]["name"] == "condition"
+    assert response_data["keywords"][0]["name"] == "keywords"
     assert response_data["description"]["brief_summary"] == "editor-brief_summary"
     assert response_data["design"]["design_allocation"] == "editor-dfasdfasd"
-
     assert response_data["design"]["study_type"] == "Interventional"
     assert response_data["design"]["design_intervention_model"] == "Treatment"
     assert response_data["design"]["design_primary_purpose"] == "Parallel Assignment"
@@ -408,60 +428,48 @@ def test_get_version_study_metadata(clients):
     assert response_data["design"]["design_time_perspective_list"] == ["Other"]
     assert response_data["design"]["bio_spec_retention"] == "None Retained"
     assert response_data["design"]["target_duration"] == "rewrwe"
-    assert response_data["design"]["number_groups_cohorts"] == 1
-    assert response_data["eligibility"]["gender"] == "All"
+    assert response_data["design"]["is_patient_registry"] == "yes"
+    assert response_data["eligibility"]["sex"] == "All"
     assert response_data["eligibility"]["gender_based"] == "Yes"
     assert response_data["eligibility"]["minimum_age_value"] == 18
     assert response_data["primary_identifier"]["identifier"] == "test"
     assert response_data["primary_identifier"]["identifier_type"] == "test"
+    assert response_data["secondary_identifiers"][0]["identifier"] == "test"
+    assert response_data["secondary_identifiers"][0]["identifier_type"] == "test"
+    assert response_data["interventions"][0]["type"] == "Device"
+    assert response_data["interventions"][0]["name"] == "name test"
+    assert response_data["locations"][0]["country"] == "yes"
+    assert response_data["locations"][0]["facility"] == "test"
+    assert response_data["overall_officials"][0]["first_name"] == "test"
+    assert response_data["overall_officials"][0]["last_name"] == "test"
+    assert response_data["overall_officials"][0]["role"] == "chair"
+    assert response_data["overall_officials"][0]["affiliation"] == "aff"
+    assert response_data["oversight"]["fda_regulated_drug"] == "drug"
+    assert response_data["oversight"]["fda_regulated_device"] == "device"
+    assert response_data["oversight"]["has_dmc"] == "yes"
+    assert response_data["oversight"]["human_subject_review_status"] == "yes"
+    assert response_data["sponsors"]["responsible_party_type"] == "Sponsor"
+    assert (
+        response_data["sponsors"]["responsible_party_investigator_first_name"] == "name"
+    )
+    assert (
+        response_data["sponsors"]["responsible_party_investigator_last_name"]
+        == "surname"
+    )
+    assert response_data["sponsors"]["lead_sponsor_name"] == "name"
     assert response_data["status"]["overall_status"] == "Withdrawn"
     assert response_data["status"]["start_date"] == "2023-11-15 00:00:00"
-    assert (
-        response_data["sponsors"]["responsible_party_investigator_name"]
-        == "editor sponsor name"
-    )
-    assert response_data["sponsors"]["responsible_party_type"] == "Sponsor"
-    assert response_data["sponsors"]["lead_sponsor_name"] == "editor sponsor name"
-    assert response_data["collaborators"] == ["editor-collaborator1123"]
-    assert response_data["conditions"] == [
-        "true",
-        "editor-conditions string",
-        "editor-keywords string",
-        "editor-size string",
-    ]
 
-    assert response_data["ipd_sharing"]["ipd_sharing"] == "Yes"
-    assert response_data["ipd_sharing"]["ipd_sharing_info_type_list"] == [
-        "Study Protocol",
-        "Analytical Code",
-    ]
-
-    assert response_data["oversight"] is True
-
-    assert admin_response_data["available_ipd"][0]["identifier"] == "identifier1"
-    assert admin_response_data["available_ipd"][0]["url"] == "google.com"
     assert admin_response_data["arms"][0]["label"] == "Label1"
-
-    assert admin_response_data["contacts"][0]["name"] == "central-contact"
-    assert admin_response_data["contacts"][0]["affiliation"] == "affiliation"
-
-    assert admin_response_data["secondary_identifiers"][0]["identifier"] == "test"
-    assert admin_response_data["secondary_identifiers"][0]["identifier_type"] == "test"
-    assert admin_response_data["interventions"][0]["type"] == "Device"
-    assert admin_response_data["interventions"][0]["name"] == "name test"
-    assert admin_response_data["links"][0]["title"] == "google link"
-    assert admin_response_data["links"][0]["url"] == "google.com"
-    assert admin_response_data["locations"][0]["country"] == "yes"
-    assert admin_response_data["locations"][0]["facility"] == "test"
-    assert admin_response_data["overall_officials"][0]["name"] == "test"
-    assert admin_response_data["overall_officials"][0]["role"] == "Study Chair"
-    assert admin_response_data["overall_officials"][0]["affiliation"] == "aff"
-    assert admin_response_data["references"][0]["identifier"] == "reference identifier"
-    assert admin_response_data["references"][0]["citation"] == "reference citation"
-
+    assert admin_response_data["central_contacts"][0]["phone"] == "808"
+    assert admin_response_data["central_contacts"][0]["first_name"] == "central-contact"
+    assert admin_response_data["central_contacts"][0]["last_name"] == "central-contact"
+    assert admin_response_data["central_contacts"][0]["affiliation"] == "affiliation"
+    assert admin_response_data["collaborators"][0]["name"] == "collaborator1123"
+    assert admin_response_data["conditions"][0]["name"] == "condition"
+    assert admin_response_data["keywords"][0]["name"] == "keywords"
     assert admin_response_data["description"]["brief_summary"] == "editor-brief_summary"
     assert admin_response_data["design"]["design_allocation"] == "editor-dfasdfasd"
-
     assert admin_response_data["design"]["study_type"] == "Interventional"
     assert admin_response_data["design"]["design_intervention_model"] == "Treatment"
     assert (
@@ -484,62 +492,53 @@ def test_get_version_study_metadata(clients):
     assert admin_response_data["design"]["design_time_perspective_list"] == ["Other"]
     assert admin_response_data["design"]["bio_spec_retention"] == "None Retained"
     assert admin_response_data["design"]["target_duration"] == "rewrwe"
-    assert admin_response_data["design"]["number_groups_cohorts"] == 1
-    assert admin_response_data["eligibility"]["gender"] == "All"
+    assert admin_response_data["design"]["is_patient_registry"] == "yes"
+    assert admin_response_data["eligibility"]["sex"] == "All"
     assert admin_response_data["eligibility"]["gender_based"] == "Yes"
     assert admin_response_data["eligibility"]["minimum_age_value"] == 18
     assert admin_response_data["primary_identifier"]["identifier"] == "test"
     assert admin_response_data["primary_identifier"]["identifier_type"] == "test"
+    assert admin_response_data["secondary_identifiers"][0]["identifier"] == "test"
+    assert admin_response_data["secondary_identifiers"][0]["identifier_type"] == "test"
+    assert admin_response_data["interventions"][0]["type"] == "Device"
+    assert admin_response_data["interventions"][0]["name"] == "name test"
+    assert admin_response_data["locations"][0]["country"] == "yes"
+    assert admin_response_data["locations"][0]["facility"] == "test"
+    assert admin_response_data["overall_officials"][0]["first_name"] == "test"
+    assert admin_response_data["overall_officials"][0]["last_name"] == "test"
+    assert admin_response_data["overall_officials"][0]["role"] == "chair"
+    assert admin_response_data["overall_officials"][0]["affiliation"] == "aff"
+    assert admin_response_data["oversight"]["fda_regulated_drug"] == "drug"
+    assert admin_response_data["oversight"]["fda_regulated_device"] == "device"
+    assert admin_response_data["oversight"]["has_dmc"] == "yes"
+    assert admin_response_data["oversight"]["human_subject_review_status"] == "yes"
+    assert admin_response_data["sponsors"]["responsible_party_type"] == "Sponsor"
+    assert (
+        admin_response_data["sponsors"]["responsible_party_investigator_first_name"]
+        == "name"
+    )
+    assert (
+        admin_response_data["sponsors"]["responsible_party_investigator_last_name"]
+        == "surname"
+    )
+    assert admin_response_data["sponsors"]["lead_sponsor_name"] == "name"
     assert admin_response_data["status"]["overall_status"] == "Withdrawn"
     assert admin_response_data["status"]["start_date"] == "2023-11-15 00:00:00"
-    assert (
-        admin_response_data["sponsors"]["responsible_party_investigator_name"]
-        == "editor sponsor name"
-    )
-    assert admin_response_data["sponsors"]["responsible_party_type"] == "Sponsor"
-    assert admin_response_data["sponsors"]["lead_sponsor_name"] == "editor sponsor name"
-    assert admin_response_data["collaborators"] == ["editor-collaborator1123"]
-    assert admin_response_data["conditions"] == [
-        "true",
-        "editor-conditions string",
-        "editor-keywords string",
-        "editor-size string",
-    ]
 
-    assert admin_response_data["ipd_sharing"]["ipd_sharing"] == "Yes"
-    assert admin_response_data["ipd_sharing"]["ipd_sharing_info_type_list"] == [
-        "Study Protocol",
-        "Analytical Code",
-    ]
-
-    assert admin_response_data["oversight"] is True
-
-    assert editor_response_data["available_ipd"][0]["identifier"] == "identifier1"
-    assert editor_response_data["available_ipd"][0]["url"] == "google.com"
     assert editor_response_data["arms"][0]["label"] == "Label1"
-
-    assert editor_response_data["contacts"][0]["name"] == "central-contact"
-    assert editor_response_data["contacts"][0]["affiliation"] == "affiliation"
-
-    assert editor_response_data["secondary_identifiers"][0]["identifier"] == "test"
-    assert editor_response_data["secondary_identifiers"][0]["identifier_type"] == "test"
-    assert editor_response_data["interventions"][0]["type"] == "Device"
-    assert editor_response_data["interventions"][0]["name"] == "name test"
-    assert editor_response_data["links"][0]["title"] == "google link"
-    assert editor_response_data["links"][0]["url"] == "google.com"
-    assert editor_response_data["locations"][0]["country"] == "yes"
-    assert editor_response_data["locations"][0]["facility"] == "test"
-    assert editor_response_data["overall_officials"][0]["name"] == "test"
-    assert editor_response_data["overall_officials"][0]["role"] == "Study Chair"
-    assert editor_response_data["overall_officials"][0]["affiliation"] == "aff"
-    assert editor_response_data["references"][0]["identifier"] == "reference identifier"
-    assert editor_response_data["references"][0]["citation"] == "reference citation"
-
+    assert editor_response_data["central_contacts"][0]["phone"] == "808"
+    assert (
+        editor_response_data["central_contacts"][0]["first_name"] == "central-contact"
+    )
+    assert editor_response_data["central_contacts"][0]["last_name"] == "central-contact"
+    assert editor_response_data["central_contacts"][0]["affiliation"] == "affiliation"
+    assert editor_response_data["collaborators"][0]["name"] == "collaborator1123"
+    assert editor_response_data["conditions"][0]["name"] == "condition"
+    assert editor_response_data["keywords"][0]["name"] == "keywords"
     assert (
         editor_response_data["description"]["brief_summary"] == "editor-brief_summary"
     )
     assert editor_response_data["design"]["design_allocation"] == "editor-dfasdfasd"
-
     assert editor_response_data["design"]["study_type"] == "Interventional"
     assert editor_response_data["design"]["design_intervention_model"] == "Treatment"
     assert (
@@ -563,37 +562,108 @@ def test_get_version_study_metadata(clients):
     assert editor_response_data["design"]["design_time_perspective_list"] == ["Other"]
     assert editor_response_data["design"]["bio_spec_retention"] == "None Retained"
     assert editor_response_data["design"]["target_duration"] == "rewrwe"
-    assert editor_response_data["design"]["number_groups_cohorts"] == 1
-    assert editor_response_data["eligibility"]["gender"] == "All"
+    assert editor_response_data["design"]["is_patient_registry"] == "yes"
+    assert editor_response_data["eligibility"]["sex"] == "All"
     assert editor_response_data["eligibility"]["gender_based"] == "Yes"
     assert editor_response_data["eligibility"]["minimum_age_value"] == 18
     assert editor_response_data["primary_identifier"]["identifier"] == "test"
     assert editor_response_data["primary_identifier"]["identifier_type"] == "test"
-    assert editor_response_data["status"]["overall_status"] == "Withdrawn"
-    assert editor_response_data["status"]["start_date"] == "2023-11-15 00:00:00"
-    assert (
-        editor_response_data["sponsors"]["responsible_party_investigator_name"]
-        == "editor sponsor name"
-    )
+    assert editor_response_data["secondary_identifiers"][0]["identifier"] == "test"
+    assert editor_response_data["secondary_identifiers"][0]["identifier_type"] == "test"
+    assert editor_response_data["interventions"][0]["type"] == "Device"
+    assert editor_response_data["interventions"][0]["name"] == "name test"
+    assert editor_response_data["locations"][0]["country"] == "yes"
+    assert editor_response_data["locations"][0]["facility"] == "test"
+    assert editor_response_data["overall_officials"][0]["first_name"] == "test"
+    assert editor_response_data["overall_officials"][0]["last_name"] == "test"
+    assert editor_response_data["overall_officials"][0]["role"] == "chair"
+    assert editor_response_data["overall_officials"][0]["affiliation"] == "aff"
+    assert editor_response_data["oversight"]["fda_regulated_drug"] == "drug"
+    assert editor_response_data["oversight"]["fda_regulated_device"] == "device"
+    assert editor_response_data["oversight"]["has_dmc"] == "yes"
+    assert editor_response_data["oversight"]["human_subject_review_status"] == "yes"
     assert editor_response_data["sponsors"]["responsible_party_type"] == "Sponsor"
     assert (
-        editor_response_data["sponsors"]["lead_sponsor_name"] == "editor sponsor name"
+        editor_response_data["sponsors"]["responsible_party_investigator_first_name"]
+        == "name"
     )
-    assert editor_response_data["collaborators"] == ["editor-collaborator1123"]
-    assert editor_response_data["conditions"] == [
-        "true",
-        "editor-conditions string",
-        "editor-keywords string",
-        "editor-size string",
-    ]
+    assert (
+        editor_response_data["sponsors"]["responsible_party_investigator_last_name"]
+        == "surname"
+    )
+    assert editor_response_data["sponsors"]["lead_sponsor_name"] == "name"
+    assert editor_response_data["status"]["overall_status"] == "Withdrawn"
+    assert editor_response_data["status"]["start_date"] == "2023-11-15 00:00:00"
 
-    assert editor_response_data["ipd_sharing"]["ipd_sharing"] == "Yes"
-    assert editor_response_data["ipd_sharing"]["ipd_sharing_info_type_list"] == [
-        "Study Protocol",
-        "Analytical Code",
+    assert viewer_response_data["arms"][0]["label"] == "Label1"
+    assert viewer_response_data["central_contacts"][0]["phone"] == "808"
+    assert (
+        viewer_response_data["central_contacts"][0]["first_name"] == "central-contact"
+    )
+    assert viewer_response_data["central_contacts"][0]["last_name"] == "central-contact"
+    assert viewer_response_data["central_contacts"][0]["affiliation"] == "affiliation"
+    assert viewer_response_data["collaborators"][0]["name"] == "collaborator1123"
+    assert viewer_response_data["conditions"][0]["name"] == "condition"
+    assert viewer_response_data["keywords"][0]["name"] == "keywords"
+    assert (
+        viewer_response_data["description"]["brief_summary"] == "editor-brief_summary"
+    )
+    assert viewer_response_data["design"]["design_allocation"] == "editor-dfasdfasd"
+    assert viewer_response_data["design"]["study_type"] == "Interventional"
+    assert viewer_response_data["design"]["design_intervention_model"] == "Treatment"
+    assert (
+        viewer_response_data["design"]["design_primary_purpose"]
+        == "Parallel Assignment"
+    )
+    assert viewer_response_data["design"]["design_masking"] == "Double"
+    assert viewer_response_data["design"]["design_masking_description"] == "tewsfdasf"
+    assert viewer_response_data["design"]["design_who_masked_list"] == [
+        "Participant",
+        "Care Provider",
     ]
-
-    assert editor_response_data["oversight"] is True
+    assert viewer_response_data["design"]["phase_list"] == ["N/A"]
+    assert viewer_response_data["design"]["enrollment_count"] == 3
+    assert viewer_response_data["design"]["enrollment_type"] == "Actual"
+    assert viewer_response_data["design"]["number_arms"] == 2
+    assert viewer_response_data["design"]["design_observational_model_list"] == [
+        "Cohort",
+        "Case-Control",
+    ]
+    assert viewer_response_data["design"]["design_time_perspective_list"] == ["Other"]
+    assert viewer_response_data["design"]["bio_spec_retention"] == "None Retained"
+    assert viewer_response_data["design"]["target_duration"] == "rewrwe"
+    assert viewer_response_data["design"]["is_patient_registry"] == "yes"
+    assert viewer_response_data["eligibility"]["sex"] == "All"
+    assert viewer_response_data["eligibility"]["gender_based"] == "Yes"
+    assert viewer_response_data["eligibility"]["minimum_age_value"] == 18
+    assert viewer_response_data["primary_identifier"]["identifier"] == "test"
+    assert viewer_response_data["primary_identifier"]["identifier_type"] == "test"
+    assert viewer_response_data["secondary_identifiers"][0]["identifier"] == "test"
+    assert viewer_response_data["secondary_identifiers"][0]["identifier_type"] == "test"
+    assert viewer_response_data["interventions"][0]["type"] == "Device"
+    assert viewer_response_data["interventions"][0]["name"] == "name test"
+    assert viewer_response_data["locations"][0]["country"] == "yes"
+    assert viewer_response_data["locations"][0]["facility"] == "test"
+    assert viewer_response_data["overall_officials"][0]["first_name"] == "test"
+    assert viewer_response_data["overall_officials"][0]["last_name"] == "test"
+    assert viewer_response_data["overall_officials"][0]["role"] == "chair"
+    assert viewer_response_data["overall_officials"][0]["affiliation"] == "aff"
+    assert viewer_response_data["oversight"]["fda_regulated_drug"] == "drug"
+    assert viewer_response_data["oversight"]["fda_regulated_device"] == "device"
+    assert viewer_response_data["oversight"]["has_dmc"] == "yes"
+    assert viewer_response_data["oversight"]["human_subject_review_status"] == "yes"
+    assert viewer_response_data["sponsors"]["responsible_party_type"] == "Sponsor"
+    assert (
+        viewer_response_data["sponsors"]["responsible_party_investigator_first_name"]
+        == "name"
+    )
+    assert (
+        viewer_response_data["sponsors"]["responsible_party_investigator_last_name"]
+        == "surname"
+    )
+    assert viewer_response_data["sponsors"]["lead_sponsor_name"] == "name"
+    assert viewer_response_data["status"]["overall_status"] == "Withdrawn"
+    assert viewer_response_data["status"]["start_date"] == "2023-11-15 00:00:00"
 
 
 def test_get_version_dataset_metadata(clients):
@@ -675,6 +745,7 @@ def test_get_version_dataset_metadata(clients):
             {
                 "identifier": "Identifier",
                 "identifier_scheme": "Identifier Scheme",
+                "identifier_scheme_uri": "Identifier Scheme",
                 "rights": "Rights",
                 "uri": "URI",
                 "license_text": "license text",
@@ -712,7 +783,7 @@ def test_get_version_dataset_metadata(clients):
                 "related_metadata_scheme": "test",
                 "scheme_uri": "test",
                 "scheme_type": "test",
-                "resource_type": "test"
+                "resource_type": "test",
             }
         ],
     )
@@ -791,8 +862,12 @@ def test_get_version_dataset_metadata(clients):
     assert response_data["identifiers"][0]["identifier"] == "identifier test"
     assert response_data["identifiers"][0]["type"] == "ARK"
 
-    assert response_data["related_identifier"][0]["identifier"] == "editor test identifier"
-    assert response_data["related_identifier"][0]["relation_type"] == "test relation type"
+    assert (
+        response_data["related_identifier"][0]["identifier"] == "editor test identifier"
+    )
+    assert (
+        response_data["related_identifier"][0]["relation_type"] == "test relation type"
+    )
     assert response_data["related_identifier"][0]["resource_type"] == "test"
 
     assert admin_response_data["contributors"][0]["given_name"] == "Given Name here"
@@ -828,8 +903,14 @@ def test_get_version_dataset_metadata(clients):
     assert admin_response_data["identifiers"][0]["identifier"] == "identifier test"
     assert admin_response_data["identifiers"][0]["type"] == "ARK"
 
-    assert admin_response_data["related_identifier"][0]["identifier"] == "editor test identifier"
-    assert admin_response_data["related_identifier"][0]["relation_type"] == "test relation type"
+    assert (
+        admin_response_data["related_identifier"][0]["identifier"]
+        == "editor test identifier"
+    )
+    assert (
+        admin_response_data["related_identifier"][0]["relation_type"]
+        == "test relation type"
+    )
     assert admin_response_data["related_identifier"][0]["resource_type"] == "test"
 
     assert editor_response_data["contributors"][0]["family_name"] == "Family Name here"
@@ -865,8 +946,14 @@ def test_get_version_dataset_metadata(clients):
     assert editor_response_data["identifiers"][0]["identifier"] == "identifier test"
     assert editor_response_data["identifiers"][0]["type"] == "ARK"
 
-    assert editor_response_data["related_identifier"][0]["identifier"] == "editor test identifier"
-    assert editor_response_data["related_identifier"][0]["relation_type"] == "test relation type"
+    assert (
+        editor_response_data["related_identifier"][0]["identifier"]
+        == "editor test identifier"
+    )
+    assert (
+        editor_response_data["related_identifier"][0]["relation_type"]
+        == "test relation type"
+    )
     assert editor_response_data["related_identifier"][0]["resource_type"] == "test"
 
 

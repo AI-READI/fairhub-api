@@ -29,6 +29,11 @@ class StudyLocation(db.Model):  # type: ignore
     study_id = db.Column(
         db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=False
     )
+    study_location_contact_list = db.relationship(
+        "StudyLocationContactList",
+        back_populates="study_location",
+        cascade="all, delete",
+    )
     study = db.relationship("Study", back_populates="study_location")
 
     def to_dict(self):

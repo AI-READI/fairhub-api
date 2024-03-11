@@ -13,7 +13,7 @@ study_eligibility = api.model(
     "StudyEligibility",
     {
         "id": fields.String(required=True),
-        "gender": fields.String(required=True),
+        "sex": fields.String(required=True),
         "gender_based": fields.String(required=True),
         "gender_description": fields.String(required=True),
         "minimum_age_value": fields.Integer(required=True),
@@ -54,13 +54,13 @@ class StudyEligibilityResource(Resource):
             "type": "object",
             "additionalProperties": False,
             "required": [
-                "gender",
+                "sex",
                 "gender_based",
                 "minimum_age_value",
                 "maximum_age_value",
             ],
             "properties": {
-                "gender": {"type": "string", "enum": ["All", "Female", "Male"]},
+                "sex": {"type": "string", "enum": ["All", "Female", "Male"]},
                 "gender_based": {"type": "string", "enum": ["Yes", "No"]},
                 "gender_description": {"type": "string"},
                 "minimum_age_value": {"type": "integer"},
