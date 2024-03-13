@@ -45,8 +45,8 @@ class DatasetContributor(db.Model):  # type: ignore
     def to_dict_metadata(self):
         return {
             "id": self.id,
-            "given_name": self.given_name,
-            "family_name": self.family_name,
+            "first_name": self.given_name,
+            "last_name": self.family_name,
             "name_type": self.name_type,
             "contributor_type": self.contributor_type,
             "creator": self.creator,

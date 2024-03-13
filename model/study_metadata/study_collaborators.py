@@ -37,8 +37,8 @@ class StudyCollaborators(db.Model):  # type: ignore
             "id": self.id,
             "name": self.name,
             "identifier": self.identifier,
-            "scheme": self.scheme,
-            "scheme_uri": self.scheme_uri,
+            "identifier_scheme": self.scheme,
+            "identifier_scheme_uri": self.scheme_uri,
             "created_at": self.created_at,
         }
 
