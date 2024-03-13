@@ -726,8 +726,8 @@ def test_post_collaborators_metadata(clients):
 
     assert response_data[0]["name"] == "collaborator1123"
     assert response_data[0]["identifier"] == "collaborator1123"
-    assert response_data[0]["scheme"] == "collaborator1123"
-    assert response_data[0]["scheme_uri"] == "collaborator1123"
+    assert response_data[0]["identifier_scheme"] == "collaborator1123"
+    assert response_data[0]["identifier_scheme_uri"] == "collaborator1123"
 
     admin_response = _admin_client.post(
         f"/study/{study_id}/metadata/collaborators",
@@ -749,8 +749,8 @@ def test_post_collaborators_metadata(clients):
 
     assert admin_response_data[0]["name"] == "admin collaborator1123"
     assert admin_response_data[0]["identifier"] == "collaborator1123"
-    assert admin_response_data[0]["scheme"] == "collaborator1123"
-    assert admin_response_data[0]["scheme_uri"] == "collaborator1123"
+    assert admin_response_data[0]["identifier_scheme"] == "collaborator1123"
+    assert admin_response_data[0]["identifier_scheme_uri"] == "collaborator1123"
 
     editor_response = _editor_client.post(
         f"/study/{study_id}/metadata/collaborators",
@@ -770,8 +770,8 @@ def test_post_collaborators_metadata(clients):
 
     assert editor_response_data[0]["name"] == "editor collaborator1123"
     assert editor_response_data[0]["identifier"] == "collaborator1123"
-    assert editor_response_data[0]["scheme"] == "collaborator1123"
-    assert editor_response_data[0]["scheme_uri"] == "collaborator1123"
+    assert editor_response_data[0]["identifier_scheme"] == "collaborator1123"
+    assert editor_response_data[0]["identifier_scheme_uri"] == "collaborator1123"
 
     viewer_response = _viewer_client.post(
         f"/study/{study_id}/metadata/collaborators",
@@ -814,63 +814,63 @@ def test_get_collaborators_metadata(clients):
 
     assert response_data[0]["name"] == "collaborator1123"
     assert response_data[0]["identifier"] == "collaborator1123"
-    assert response_data[0]["scheme"] == "collaborator1123"
-    assert response_data[0]["scheme_uri"] == "collaborator1123"
+    assert response_data[0]["identifier_scheme"] == "collaborator1123"
+    assert response_data[0]["identifier_scheme_uri"] == "collaborator1123"
 
     assert admin_response_data[0]["name"] == "collaborator1123"
     assert admin_response_data[0]["identifier"] == "collaborator1123"
-    assert admin_response_data[0]["scheme"] == "collaborator1123"
-    assert admin_response_data[0]["scheme_uri"] == "collaborator1123"
+    assert admin_response_data[0]["identifier_scheme"] == "collaborator1123"
+    assert admin_response_data[0]["identifier_scheme_uri"] == "collaborator1123"
 
     assert editor_response_data[0]["name"] == "collaborator1123"
     assert editor_response_data[0]["identifier"] == "collaborator1123"
-    assert editor_response_data[0]["scheme"] == "collaborator1123"
-    assert editor_response_data[0]["scheme_uri"] == "collaborator1123"
+    assert editor_response_data[0]["identifier_scheme"] == "collaborator1123"
+    assert editor_response_data[0]["identifier_scheme_uri"] == "collaborator1123"
 
     assert viewer_response_data[0]["name"] == "collaborator1123"
     assert viewer_response_data[0]["identifier"] == "collaborator1123"
-    assert viewer_response_data[0]["scheme"] == "collaborator1123"
-    assert viewer_response_data[0]["scheme_uri"] == "collaborator1123"
+    assert viewer_response_data[0]["identifier_scheme"] == "collaborator1123"
+    assert viewer_response_data[0]["identifier_scheme_uri"] == "collaborator1123"
 
     assert response_data[1]["name"] == "admin collaborator1123"
     assert response_data[1]["identifier"] == "collaborator1123"
-    assert response_data[1]["scheme"] == "collaborator1123"
-    assert response_data[1]["scheme_uri"] == "collaborator1123"
+    assert response_data[1]["identifier_scheme"] == "collaborator1123"
+    assert response_data[1]["identifier_scheme_uri"] == "collaborator1123"
 
     assert admin_response_data[1]["name"] == "admin collaborator1123"
     assert admin_response_data[1]["identifier"] == "collaborator1123"
-    assert admin_response_data[1]["scheme"] == "collaborator1123"
-    assert admin_response_data[1]["scheme_uri"] == "collaborator1123"
+    assert admin_response_data[1]["identifier_scheme"] == "collaborator1123"
+    assert admin_response_data[1]["identifier_scheme_uri"] == "collaborator1123"
 
     assert editor_response_data[1]["name"] == "admin collaborator1123"
     assert editor_response_data[1]["identifier"] == "collaborator1123"
-    assert editor_response_data[1]["scheme"] == "collaborator1123"
-    assert editor_response_data[1]["scheme_uri"] == "collaborator1123"
+    assert editor_response_data[1]["identifier_scheme"] == "collaborator1123"
+    assert editor_response_data[1]["identifier_scheme_uri"] == "collaborator1123"
 
     assert viewer_response_data[1]["name"] == "admin collaborator1123"
     assert viewer_response_data[1]["identifier"] == "collaborator1123"
-    assert viewer_response_data[1]["scheme"] == "collaborator1123"
-    assert viewer_response_data[1]["scheme_uri"] == "collaborator1123"
+    assert viewer_response_data[1]["identifier_scheme"] == "collaborator1123"
+    assert viewer_response_data[1]["identifier_scheme_uri"] == "collaborator1123"
 
     assert response_data[2]["name"] == "editor collaborator1123"
     assert response_data[2]["identifier"] == "collaborator1123"
-    assert response_data[2]["scheme"] == "collaborator1123"
-    assert response_data[2]["scheme_uri"] == "collaborator1123"
+    assert response_data[2]["identifier_scheme"] == "collaborator1123"
+    assert response_data[2]["identifier_scheme_uri"] == "collaborator1123"
 
     assert admin_response_data[2]["name"] == "editor collaborator1123"
     assert admin_response_data[2]["identifier"] == "collaborator1123"
-    assert admin_response_data[2]["scheme"] == "collaborator1123"
-    assert admin_response_data[2]["scheme_uri"] == "collaborator1123"
+    assert admin_response_data[2]["identifier_scheme"] == "collaborator1123"
+    assert admin_response_data[2]["identifier_scheme_uri"] == "collaborator1123"
 
     assert editor_response_data[2]["name"] == "editor collaborator1123"
     assert editor_response_data[2]["identifier"] == "collaborator1123"
-    assert editor_response_data[2]["scheme"] == "collaborator1123"
-    assert editor_response_data[2]["scheme_uri"] == "collaborator1123"
+    assert editor_response_data[2]["identifier_scheme"] == "collaborator1123"
+    assert editor_response_data[2]["identifier_scheme_uri"] == "collaborator1123"
 
     assert viewer_response_data[2]["name"] == "editor collaborator1123"
     assert viewer_response_data[2]["identifier"] == "collaborator1123"
-    assert viewer_response_data[2]["scheme"] == "collaborator1123"
-    assert viewer_response_data[2]["scheme_uri"] == "collaborator1123"
+    assert viewer_response_data[2]["identifier_scheme"] == "collaborator1123"
+    assert viewer_response_data[2]["identifier_scheme_uri"] == "collaborator1123"
 
 
 def test_delete_collaborators_metadata(clients):

@@ -430,7 +430,7 @@ def test_get_version_study_metadata(clients):
     assert response_data["design"]["is_patient_registry"] == "yes"
     assert response_data["eligibility"]["sex"] == "All"
     assert response_data["eligibility"]["gender_based"] == "Yes"
-    assert response_data["eligibility"]["minimum_age_value"] == 18
+    assert response_data["eligibility"]["maximum_age_value"] == 61
     assert response_data["primary_identifier"]["identifier"] == "test"
     assert response_data["primary_identifier"]["identifier_type"] == "test"
     assert response_data["secondary_identifiers"][0]["identifier"] == "test"
@@ -494,7 +494,7 @@ def test_get_version_study_metadata(clients):
     assert admin_response_data["design"]["is_patient_registry"] == "yes"
     assert admin_response_data["eligibility"]["sex"] == "All"
     assert admin_response_data["eligibility"]["gender_based"] == "Yes"
-    assert admin_response_data["eligibility"]["minimum_age_value"] == 18
+    assert admin_response_data["eligibility"]["maximum_age_value"] == 61
     assert admin_response_data["primary_identifier"]["identifier"] == "test"
     assert admin_response_data["primary_identifier"]["identifier_type"] == "test"
     assert admin_response_data["secondary_identifiers"][0]["identifier"] == "test"
@@ -564,7 +564,7 @@ def test_get_version_study_metadata(clients):
     assert editor_response_data["design"]["is_patient_registry"] == "yes"
     assert editor_response_data["eligibility"]["sex"] == "All"
     assert editor_response_data["eligibility"]["gender_based"] == "Yes"
-    assert editor_response_data["eligibility"]["minimum_age_value"] == 18
+    assert editor_response_data["eligibility"]["maximum_age_value"] == 61
     assert editor_response_data["primary_identifier"]["identifier"] == "test"
     assert editor_response_data["primary_identifier"]["identifier_type"] == "test"
     assert editor_response_data["secondary_identifiers"][0]["identifier"] == "test"
@@ -634,7 +634,7 @@ def test_get_version_study_metadata(clients):
     assert viewer_response_data["design"]["is_patient_registry"] == "yes"
     assert viewer_response_data["eligibility"]["sex"] == "All"
     assert viewer_response_data["eligibility"]["gender_based"] == "Yes"
-    assert viewer_response_data["eligibility"]["minimum_age_value"] == 18
+    assert viewer_response_data["eligibility"]["maximum_age_value"] == 61
     assert viewer_response_data["primary_identifier"]["identifier"] == "test"
     assert viewer_response_data["primary_identifier"]["identifier_type"] == "test"
     assert viewer_response_data["secondary_identifiers"][0]["identifier"] == "test"
@@ -819,16 +819,16 @@ def test_get_version_dataset_metadata(clients):
     # seach for main title index in response_data[n]["titles"]
     # pylint: disable=line-too-long
 
-    assert response_data["contributors"][0]["given_name"] == "Given Name here"
-    assert response_data["contributors"][0]["family_name"] == "Family Name here"
+    assert response_data["contributors"][0]["last_name"] == "Family Name here"
+    assert response_data["contributors"][0]["first_name"] == "Given Name here"
     assert response_data["contributors"][0]["name_type"] == "Personal"
     assert response_data["contributors"][0]["contributor_type"] == "Con Type"
 
     assert response_data["dates"][0]["date"] == "01-01-1970"
     assert response_data["dates"][0]["type"] == "Type"
 
-    assert response_data["creators"][0]["given_name"] == "Given Name here"
-    assert response_data["creators"][0]["family_name"] == "Family Name here"
+    assert response_data["creators"][0]["last_name"] == "Family Name here"
+    assert response_data["creators"][0]["first_name"] == "Given Name here"
     assert response_data["creators"][0]["name_type"] == "Personal"
 
     assert response_data["funders"][0]["name"] == "Name"
@@ -869,14 +869,14 @@ def test_get_version_dataset_metadata(clients):
     )
     assert response_data["related_identifier"][0]["resource_type"] == "test"
 
-    assert admin_response_data["contributors"][0]["given_name"] == "Given Name here"
-    assert admin_response_data["contributors"][0]["family_name"] == "Family Name here"
+    assert admin_response_data["contributors"][0]["first_name"] == "Given Name here"
+    assert admin_response_data["contributors"][0]["last_name"] == "Family Name here"
     assert admin_response_data["contributors"][0]["name_type"] == "Personal"
     assert admin_response_data["contributors"][0]["contributor_type"] == "Con Type"
     assert admin_response_data["dates"][0]["date"] == "01-01-1970"
     assert admin_response_data["dates"][0]["type"] == "Type"
-    assert admin_response_data["creators"][0]["given_name"] == "Given Name here"
-    assert admin_response_data["creators"][0]["family_name"] == "Family Name here"
+    assert admin_response_data["creators"][0]["first_name"] == "Given Name here"
+    assert admin_response_data["creators"][0]["last_name"] == "Family Name here"
     assert admin_response_data["creators"][0]["name_type"] == "Personal"
     assert admin_response_data["funders"][0]["name"] == "Name"
     assert admin_response_data["funders"][0]["identifier"] == "Identifier"
@@ -912,14 +912,14 @@ def test_get_version_dataset_metadata(clients):
     )
     assert admin_response_data["related_identifier"][0]["resource_type"] == "test"
 
-    assert editor_response_data["contributors"][0]["family_name"] == "Family Name here"
-    assert editor_response_data["contributors"][0]["given_name"] == "Given Name here"
+    assert editor_response_data["contributors"][0]["first_name"] == "Given Name here"
+    assert editor_response_data["contributors"][0]["last_name"] == "Family Name here"
     assert editor_response_data["contributors"][0]["name_type"] == "Personal"
     assert editor_response_data["contributors"][0]["contributor_type"] == "Con Type"
     assert editor_response_data["dates"][0]["date"] == "01-01-1970"
     assert editor_response_data["dates"][0]["type"] == "Type"
-    assert editor_response_data["creators"][0]["given_name"] == "Given Name here"
-    assert editor_response_data["creators"][0]["family_name"] == "Family Name here"
+    assert editor_response_data["creators"][0]["first_name"] == "Given Name here"
+    assert editor_response_data["creators"][0]["last_name"] == "Family Name here"
     assert editor_response_data["creators"][0]["name_type"] == "Personal"
     assert editor_response_data["funders"][0]["name"] == "Name"
     assert editor_response_data["funders"][0]["identifier"] == "Identifier"
