@@ -83,14 +83,14 @@ class StudyCentralContactResource(Resource):
                     "id": {"type": "string"},
                     "first_name": {"type": "string", "minLength": 1},
                     "last_name": {"type": "string", "minLength": 1},
-                    "degree": {"type": "string", "minLength": 1},
-                    "identifier": {"type": "string", "minLength": 1},
-                    "identifier_scheme": {"type": "string", "minLength": 1},
-                    "identifier_scheme_uri": {"type": "string", "minLength": 1},
+                    "degree": {"type": "string"},
+                    "identifier": {"type": "string"},
+                    "identifier_scheme": {"type": "string"},
+                    "identifier_scheme_uri": {"type": "string"},
                     "affiliation": {"type": "string", "minLength": 1},
                     "affiliation_identifier": {
                         "type": "string",
-                        "minLength": 1,
+
                     },
                     "affiliation_identifier_scheme": {
                         "type": "string",

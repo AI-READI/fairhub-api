@@ -59,7 +59,6 @@ class StudyCollaboratorsResource(Resource):
                     "name",
                     "identifier",
                     "identifier_scheme",
-                    "identifier_scheme_uri",
                 ],
             },
         }

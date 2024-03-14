@@ -52,7 +52,7 @@ class StudyKeywords(Resource):
                 "properties": {
                     "id": {"type": "string"},
                     "name": {"type": "string", "minLength": 1},
-                    "classification_code": {"type": "string", "minLength": 1},
+                    "classification_code": {"type": "string"},
                     "scheme": {"type": "string"},
                     "scheme_uri": {"type": "string"},
                     "keyword_uri": {"type": "string"},
