@@ -90,7 +90,6 @@ class StudyCentralContactResource(Resource):
                     "affiliation": {"type": "string", "minLength": 1},
                     "affiliation_identifier": {
                         "type": "string",
-
                     },
                     "affiliation_identifier_scheme": {
                         "type": "string",
