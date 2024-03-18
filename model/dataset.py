@@ -94,6 +94,9 @@ class Dataset(db.Model):  # type: ignore
     dataset_other = db.relationship(
         "DatasetOther", back_populates="dataset", uselist=False, cascade="all, delete"
     )
+    dataset_managing_organization = db.relationship(
+        "DatasetManagingOrganization", back_populates="dataset", uselist=False, cascade="all, delete"
+    )
     dataset_related_identifier = db.relationship(
         "DatasetRelatedIdentifier", back_populates="dataset", cascade="all, delete"
     )

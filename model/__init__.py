@@ -38,6 +38,7 @@ from .study_metadata.study_keywords import StudyKeywords
 from .study_metadata.study_location import StudyLocation
 from .study_metadata.study_location_contact_list import StudyLocationContactList
 from .study_metadata.study_other import StudyOther
+from .dataset_metadata.dataset_managing_organization import DatasetManagingOrganization
 from .study_metadata.study_overall_official import StudyOverallOfficial
 from .study_metadata.study_oversight import StudyOversight
 from .study_metadata.study_sponsors import StudySponsors
@@ -60,6 +61,7 @@ __all__ = [
     "DatasetContributor",
     "StudyContributor",
     "DatasetOther",
+    "DatasetManagingOrganization",
     "DatasetAccess",
     "DatasetConsent",
     "DatasetHealthsheet",
