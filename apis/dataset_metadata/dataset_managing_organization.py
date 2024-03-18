@@ -11,8 +11,10 @@ from apis.dataset_metadata_namespace import api
 dataset_managing_organization = api.model(
     "DatasetManagingOrganization",
     {
-        "managing_organization_name": fields.String(required=True),
-        "managing_organization_ror_id": fields.String(required=True),
+        "name": fields.String(required=True),
+        "identifier": fields.String(required=True),
+        "identifier_scheme": fields.String(required=True),
+        "identifier_scheme_uri": fields.String(required=True),
     },
 )
 
@@ -28,7 +30,7 @@ class DatasetManagingOrganization(Resource):
     def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         """Get dataset publisher metadata"""
         dataset_ = model.Dataset.query.get(dataset_id)
-        managing_organization_ = dataset_.dataset_other
+        managing_organization_ = dataset_.dataset_managing_organization
         return managing_organization_.to_dict(), 200
 
     @api.doc("update organization")
@@ -46,12 +48,13 @@ class DatasetManagingOrganization(Resource):
             "type": "object",
             "additionalProperties": False,
             "properties": {
-                "managing_organization_name": {"type": "string", "minLength": 1},
-                "managing_organization_ror_id": {
-                    "type": "string",
-                },
+                "name": {"type": "string", "minLength": 1},
+                "identifier": {"type": "string"},
+                "identifier_scheme": {"type": "string"},
+                "identifier_scheme_uri": {"type": "string"},
+
             },
-            "required": ["managing_organization_name", "managing_organization_ror_id"],
+            "required": ["name", "identifier", "identifier_scheme", "identifier_scheme_uri"],
         }
         try:
             validate(instance=request.json, schema=schema)
@@ -60,7 +63,7 @@ class DatasetManagingOrganization(Resource):
 
         data = request.json
         dataset_ = model.Dataset.query.get(dataset_id)
-        dataset_.dataset_other.update(data)
+        dataset_.dataset_managing_organization.update(data)
 
         model.db.session.commit()
-        return dataset_.dataset_other.to_dict(), 200
+        return dataset_.dataset_managing_organization.to_dict(), 200
