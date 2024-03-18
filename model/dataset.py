@@ -21,6 +21,7 @@ class Dataset(db.Model):  # type: ignore
         self.dataset_consent = model.DatasetConsent(self)
         self.dataset_healthsheet = model.DatasetHealthsheet(self)
         self.dataset_other = model.DatasetOther(self)
+        self.dataset_managing_organization = model.DatasetManagingOrganization(self)
 
         self.dataset_title.append(model.DatasetTitle(self))
         self.dataset_description.append(model.DatasetDescription(self))
