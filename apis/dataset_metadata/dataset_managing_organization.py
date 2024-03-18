@@ -26,7 +26,7 @@ class DatasetManagingOrganization(Resource):
     @api.doc("publisher")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.marshal_with(dataset_managing_organization)
+    @api.marshal_with(dataset_managing_organization)
     def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         """Get dataset publisher metadata"""
         dataset_ = model.Dataset.query.get(dataset_id)
@@ -36,7 +36,7 @@ class DatasetManagingOrganization(Resource):
     @api.doc("update organization")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.marshal_with(dataset_managing_organization)
+    @api.marshal_with(dataset_managing_organization)
     def put(self, study_id: int, dataset_id: int):
         """Update dataset managing organization metadata"""
         study_obj = model.Study.query.get(study_id)
@@ -52,9 +52,13 @@ class DatasetManagingOrganization(Resource):
                 "identifier": {"type": "string"},
                 "identifier_scheme": {"type": "string"},
                 "identifier_scheme_uri": {"type": "string"},
-
             },
-            "required": ["name", "identifier", "identifier_scheme", "identifier_scheme_uri"],
+            "required": [
+                "name",
+                "identifier",
+                "identifier_scheme",
+                "identifier_scheme_uri",
+            ],
         }
         try:
             validate(instance=request.json, schema=schema)

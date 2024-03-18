@@ -10,6 +10,7 @@ from .dataset_metadata.dataset_de_ident_level import DatasetDeIdentLevel
 from .dataset_metadata.dataset_description import DatasetDescription
 from .dataset_metadata.dataset_funder import DatasetFunder
 from .dataset_metadata.dataset_healthsheet import DatasetHealthsheet
+from .dataset_metadata.dataset_managing_organization import DatasetManagingOrganization
 from .dataset_metadata.dataset_other import DatasetOther
 from .dataset_metadata.dataset_rights import DatasetRights
 from .dataset_metadata.dataset_subject import DatasetSubject
@@ -38,7 +39,6 @@ from .study_metadata.study_keywords import StudyKeywords
 from .study_metadata.study_location import StudyLocation
 from .study_metadata.study_location_contact_list import StudyLocationContactList
 from .study_metadata.study_other import StudyOther
-from .dataset_metadata.dataset_managing_organization import DatasetManagingOrganization
 from .study_metadata.study_overall_official import StudyOverallOfficial
 from .study_metadata.study_oversight import StudyOversight
 from .study_metadata.study_sponsors import StudySponsors
