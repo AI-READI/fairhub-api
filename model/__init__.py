@@ -10,6 +10,7 @@ from .dataset_metadata.dataset_de_ident_level import DatasetDeIdentLevel
 from .dataset_metadata.dataset_description import DatasetDescription
 from .dataset_metadata.dataset_funder import DatasetFunder
 from .dataset_metadata.dataset_healthsheet import DatasetHealthsheet
+from .dataset_metadata.dataset_managing_organization import DatasetManagingOrganization
 from .dataset_metadata.dataset_other import DatasetOther
 from .dataset_metadata.dataset_rights import DatasetRights
 from .dataset_metadata.dataset_subject import DatasetSubject
@@ -60,6 +61,7 @@ __all__ = [
     "DatasetContributor",
     "StudyContributor",
     "DatasetOther",
+    "DatasetManagingOrganization",
     "DatasetAccess",
     "DatasetConsent",
     "DatasetHealthsheet",

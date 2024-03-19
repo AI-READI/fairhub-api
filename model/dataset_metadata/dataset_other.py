@@ -9,8 +9,6 @@ class DatasetOther(db.Model):  # type: ignore
         self.dataset = dataset
         self.resource_type = ""
         self.language = None
-        self.managing_organization_name = ""
-        self.managing_organization_ror_id = ""
         self.size = ""
         self.format = ""
         self.standards_followed = ""
@@ -20,8 +18,6 @@ class DatasetOther(db.Model):  # type: ignore
 
     resource_type = db.Column(db.String, nullable=False)
     language = db.Column(db.String, nullable=True)
-    managing_organization_name = db.Column(db.String, nullable=False)
-    managing_organization_ror_id = db.Column(db.String, nullable=False)
     size = db.Column(ARRAY(String), nullable=False)
     format = db.Column(ARRAY(String), nullable=False)
     standards_followed = db.Column(db.String, nullable=False)
@@ -35,8 +31,6 @@ class DatasetOther(db.Model):  # type: ignore
     def to_dict(self):
         return {
             "language": self.language,
-            "managing_organization_name": self.managing_organization_name,
-            "managing_organization_ror_id": self.managing_organization_ror_id,
             "standards_followed": self.standards_followed,
             "acknowledgement": self.acknowledgement,
             "size": self.size,
@@ -51,11 +45,6 @@ class DatasetOther(db.Model):  # type: ignore
             "resource_type": self.resource_type,
         }
 
-    def to_dict_managing_organization(self):
-        return {
-            "managing_organization_name": self.managing_organization_name,
-        }
-
     @staticmethod
     def from_data(dataset, data: dict):
         dataset_other = DatasetOther(dataset)
@@ -65,10 +54,6 @@ class DatasetOther(db.Model):  # type: ignore
     def update(self, data: dict):
         if "language" in data:
             self.language = data["language"]
-        if "managing_organization_name" in data:
-            self.managing_organization_name = data["managing_organization_name"]
-        if "managing_organization_ror_id" in data:
-            self.managing_organization_ror_id = data["managing_organization_ror_id"]
         if "size" in data:
             self.size = data["size"]
         if "format" in data:

@@ -855,9 +855,10 @@ def test_get_version_dataset_metadata(clients):
     assert response_data["de_identification"]["type"] == "Level"
 
     assert (
-        response_data["managing_organization"]["managing_organization_name"]
-        == "Managing Editor Organization Name"
+        response_data["managing_organization"]["name"]
+        == "editor Managing Organization Name"
     )
+    assert response_data["managing_organization"]["identifier"] == "identifier"
     assert response_data["identifiers"][0]["identifier"] == "identifier test"
     assert response_data["identifiers"][0]["type"] == "ARK"
 
@@ -895,9 +896,10 @@ def test_get_version_dataset_metadata(clients):
     assert admin_response_data["de_identification"]["direct"] is True
     assert admin_response_data["de_identification"]["type"] == "Level"
     assert (
-        admin_response_data["managing_organization"]["managing_organization_name"]
-        == "Managing Editor Organization Name"
+        admin_response_data["managing_organization"]["name"]
+        == "editor Managing Organization Name"
     )
+    assert admin_response_data["managing_organization"]["identifier"] == "identifier"
 
     assert admin_response_data["identifiers"][0]["identifier"] == "identifier test"
     assert admin_response_data["identifiers"][0]["type"] == "ARK"
@@ -938,9 +940,10 @@ def test_get_version_dataset_metadata(clients):
     assert editor_response_data["de_identification"]["direct"] is True
     assert editor_response_data["de_identification"]["type"] == "Level"
     assert (
-        editor_response_data["managing_organization"]["managing_organization_name"]
-        == "Managing Editor Organization Name"
+        editor_response_data["managing_organization"]["name"]
+        == "editor Managing Organization Name"
     )
+    assert editor_response_data["managing_organization"]["identifier"] == "identifier"
 
     assert editor_response_data["identifiers"][0]["identifier"] == "identifier test"
     assert editor_response_data["identifiers"][0]["type"] == "ARK"

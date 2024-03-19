@@ -21,6 +21,7 @@ class Dataset(db.Model):  # type: ignore
         self.dataset_consent = model.DatasetConsent(self)
         self.dataset_healthsheet = model.DatasetHealthsheet(self)
         self.dataset_other = model.DatasetOther(self)
+        self.dataset_managing_organization = model.DatasetManagingOrganization(self)
 
         self.dataset_title.append(model.DatasetTitle(self))
         self.dataset_description.append(model.DatasetDescription(self))
@@ -94,6 +95,12 @@ class Dataset(db.Model):  # type: ignore
     dataset_other = db.relationship(
         "DatasetOther", back_populates="dataset", uselist=False, cascade="all, delete"
     )
+    dataset_managing_organization = db.relationship(
+        "DatasetManagingOrganization",
+        back_populates="dataset",
+        uselist=False,
+        cascade="all, delete",
+    )
     dataset_related_identifier = db.relationship(
         "DatasetRelatedIdentifier", back_populates="dataset", cascade="all, delete"
     )
@@ -131,7 +138,7 @@ class Dataset(db.Model):  # type: ignore
                 if not i.creator
             ],
             "about": self.dataset_other.to_dict_metadata(),
-            "managing_organization": self.dataset_other.to_dict_managing_organization(),  # type: ignore
+            "managing_organization": self.dataset_managing_organization.to_dict_metadata(),  # type: ignore
             "access": self.dataset_access.to_dict_metadata(),
             "consent": self.dataset_consent.to_dict_metadata(),
             "dates": [i.to_dict_metadata() for i in self.dataset_date],  # type: ignore

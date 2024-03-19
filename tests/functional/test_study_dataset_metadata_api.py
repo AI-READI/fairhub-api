@@ -2866,64 +2866,64 @@ def test_put_dataset_managing_organization_metadata(clients):
     response = _logged_in_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/managing-organization",
         json={
-            "managing_organization_name": "Managing Organization Name",
-            "managing_organization_ror_id": "Managing Organization ROR ID",
+            "name": "Managing Organization Name",
+            "identifier": "identifier",
+            "identifier_scheme": "identifier scheme",
+            "identifier_scheme_uri": "identifier scheme_uri",
         },
     )
 
     assert response.status_code == 200
     response_data = json.loads(response.data)
 
-    assert response_data["managing_organization_name"] == "Managing Organization Name"
-    assert (
-        response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
-    )
+    assert response_data["name"] == "Managing Organization Name"
+    assert response_data["identifier"] == "identifier"
+    assert response_data["identifier_scheme"] == "identifier scheme"
+    assert response_data["identifier_scheme_uri"] == "identifier scheme_uri"
 
     admin_response = _admin_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/managing-organization",
         json={
-            "managing_organization_name": "Managing Admin Organization Name",
-            "managing_organization_ror_id": "Managing Organization ROR ID",
+            "name": "admin Managing Organization Name",
+            "identifier": "identifier",
+            "identifier_scheme": "identifier scheme",
+            "identifier_scheme_uri": "identifier scheme_uri",
         },
     )
 
     assert admin_response.status_code == 200
     admin_response_data = json.loads(admin_response.data)
 
-    assert (
-        admin_response_data["managing_organization_name"]
-        == "Managing Admin Organization Name"
-    )
-    assert (
-        admin_response_data["managing_organization_ror_id"]
-        == "Managing Organization ROR ID"
-    )
+    assert admin_response_data["name"] == "admin Managing Organization Name"
+    assert admin_response_data["identifier"] == "identifier"
+    assert admin_response_data["identifier_scheme"] == "identifier scheme"
+    assert admin_response_data["identifier_scheme_uri"] == "identifier scheme_uri"
 
     editor_response = _editor_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/managing-organization",
         json={
-            "managing_organization_name": "Managing Editor Organization Name",
-            "managing_organization_ror_id": "Managing Organization ROR ID",
+            "name": "editor Managing Organization Name",
+            "identifier": "identifier",
+            "identifier_scheme": "identifier scheme",
+            "identifier_scheme_uri": "identifier scheme_uri",
         },
     )
 
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
 
-    assert (
-        editor_response_data["managing_organization_name"]
-        == "Managing Editor Organization Name"
-    )
-    assert (
-        editor_response_data["managing_organization_ror_id"]
-        == "Managing Organization ROR ID"
-    )
+    assert editor_response_data["name"] == "editor Managing Organization Name"
+    assert editor_response_data["identifier"] == "identifier"
+    assert editor_response_data["identifier_scheme"] == "identifier scheme"
+    assert editor_response_data["identifier_scheme_uri"] == "identifier scheme_uri"
 
     viewer_response = _viewer_client.put(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/managing-organization",
         json={
-            "managing_organization_name": "Managing Viewer Organization Name",
-            "managing_organization_ror_id": "Managing Organization ROR ID",
+            "name": "editor Managing Organization Name",
+            "identifier": "identifier",
+            "identifier_scheme": "identifier scheme",
+            "identifier_scheme_uri": "identifier scheme_uri",
         },
     )
 
@@ -2967,40 +2967,25 @@ def test_get_dataset_managing_organization_metadata(clients):
 
     # Editor was the last to update the metadata successfully so
     # the response should reflect that
-    assert (
-        response_data["managing_organization_name"]
-        == "Managing Editor Organization Name"
-    )
-    assert (
-        response_data["managing_organization_ror_id"] == "Managing Organization ROR ID"
-    )
+    assert response_data["name"] == "editor Managing Organization Name"
+    assert response_data["identifier"] == "identifier"
+    assert response_data["identifier_scheme"] == "identifier scheme"
+    assert response_data["identifier_scheme_uri"] == "identifier scheme_uri"
 
-    assert (
-        admin_response_data["managing_organization_name"]
-        == "Managing Editor Organization Name"
-    )
-    assert (
-        admin_response_data["managing_organization_ror_id"]
-        == "Managing Organization ROR ID"
-    )
+    assert admin_response_data["name"] == "editor Managing Organization Name"
+    assert admin_response_data["identifier"] == "identifier"
+    assert admin_response_data["identifier_scheme"] == "identifier scheme"
+    assert admin_response_data["identifier_scheme_uri"] == "identifier scheme_uri"
 
-    assert (
-        editor_response_data["managing_organization_name"]
-        == "Managing Editor Organization Name"
-    )
-    assert (
-        editor_response_data["managing_organization_ror_id"]
-        == "Managing Organization ROR ID"
-    )
+    assert editor_response_data["name"] == "editor Managing Organization Name"
+    assert editor_response_data["identifier"] == "identifier"
+    assert editor_response_data["identifier_scheme"] == "identifier scheme"
+    assert editor_response_data["identifier_scheme_uri"] == "identifier scheme_uri"
 
-    assert (
-        viewer_response_data["managing_organization_name"]
-        == "Managing Editor Organization Name"
-    )
-    assert (
-        viewer_response_data["managing_organization_ror_id"]
-        == "Managing Organization ROR ID"
-    )
+    assert viewer_response_data["name"] == "editor Managing Organization Name"
+    assert viewer_response_data["identifier"] == "identifier"
+    assert viewer_response_data["identifier_scheme"] == "identifier scheme"
+    assert viewer_response_data["identifier_scheme_uri"] == "identifier scheme_uri"
 
 
 # ------------------- RELATED IDENTIFIER METADATA ------------------- #
