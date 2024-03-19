@@ -1,6 +1,3 @@
-from sqlalchemy import String
-from sqlalchemy.dialects.postgresql import ARRAY
-
 from model import Study
 
 from ..db import db
@@ -11,16 +8,10 @@ class StudyOther(db.Model):  # type: ignore
 
     def __init__(self, study):
         self.study = study
-        self.oversight_has_dmc = False
-        self.conditions = []
-        self.keywords = []
         self.size = 0
 
     __tablename__ = "study_other"
 
-    oversight_has_dmc = db.Column(db.BOOLEAN, nullable=False)
-    conditions = db.Column(ARRAY(String), nullable=False)
-    keywords = db.Column(ARRAY(String), nullable=False)
     size = db.Column(db.BigInteger, nullable=False)
 
     study_id = db.Column(
@@ -35,19 +26,14 @@ class StudyOther(db.Model):  # type: ignore
         """Converts the study to a dictionary"""
         return {
             "id": self.study_id,
-            "oversight_has_dmc": self.oversight_has_dmc,
-            "conditions": self.conditions,
-            "keywords": self.keywords,
             "size": self.size,
         }
 
-    # def to_dict_metadata(self):
-    #     """Converts the study metadata to a dictionary"""
-    #     return {
-    #         "oversight_has_dmc": self.oversight_has_dmc,
-    #         "conditions": self.conditions,
-    #         "keywords": self.keywords
-    #     }
+    def to_dict_metadata(self):
+        """Converts the study metadata to a dictionary"""
+        return {
+            "size": self.size,
+        }
 
     @staticmethod
     def from_data(study: Study, data: dict):
@@ -59,9 +45,7 @@ class StudyOther(db.Model):  # type: ignore
 
     def update(self, data: dict):
         """Updates the study from a dictionary"""
-        self.oversight_has_dmc = data["oversight_has_dmc"]
-        self.conditions = data["conditions"]
-        self.keywords = data["keywords"]
+
         self.size = data["size"]
         self.study.touch()
 

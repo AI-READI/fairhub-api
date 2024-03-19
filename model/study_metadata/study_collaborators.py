@@ -2,12 +2,12 @@ import datetime
 import uuid
 from datetime import timezone
 
-import model
+from model import Study
 
 from ..db import db
 
 
-class StudyAvailableIpd(db.Model):  # type: ignore
+class StudyCollaborators(db.Model):  # type: ignore
     """A study is a collection of datasets and participants"""
 
     def __init__(self, study):
@@ -15,48 +15,53 @@ class StudyAvailableIpd(db.Model):  # type: ignore
         self.study = study
         self.created_at = datetime.datetime.now(timezone.utc).timestamp()
 
-    __tablename__ = "study_available_ipd"
+    __tablename__ = "study_collaborators"
 
     id = db.Column(db.CHAR(36), primary_key=True)
+    name = db.Column(db.String, nullable=False)
     identifier = db.Column(db.String, nullable=False)
-    type = db.Column(db.String, nullable=True)
-    url = db.Column(db.String, nullable=False)
-    comment = db.Column(db.String, nullable=False)
+    scheme = db.Column(db.String, nullable=False)
+    scheme_uri = db.Column(db.String, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
 
     study_id = db.Column(
-        db.CHAR(36), db.ForeignKey("study.id", ondelete="CASCADE"), nullable=False
+        db.CHAR(36),
+        db.ForeignKey("study.id", ondelete="CASCADE"),
+        nullable=False,
     )
-    study = db.relationship("Study", back_populates="study_available_ipd")
+    study = db.relationship("Study", back_populates="study_collaborators")
 
     def to_dict(self):
         """Converts the study to a dictionary"""
         return {
             "id": self.id,
+            "name": self.name,
             "identifier": self.identifier,
-            "type": self.type,
-            "url": self.url,
-            "comment": self.comment,
+            "identifier_scheme": self.scheme,
+            "identifier_scheme_uri": self.scheme_uri,
             "created_at": self.created_at,
         }
 
     def to_dict_metadata(self):
         """Converts the study metadata to a dictionary"""
-        return {"identifier": self.identifier, "url": self.url}
+        return {
+            "name": self.name,
+        }
 
     @staticmethod
-    def from_data(study: model.StudyArm, data: dict):
-        """Creates a new study metadata from a dictionary"""
-        study_available = StudyAvailableIpd(study)
-        study_available.update(data)
-        return study_available
+    def from_data(study: Study, data: dict):
+        """Creates a new study from a dictionary"""
+        study_keywords = StudyCollaborators(study)
+        study_keywords.update(data)
+
+        return study_keywords
 
     def update(self, data: dict):
-        """Updates the study metadata from a dictionary"""
+        """Updates the study from a dictionary"""
+        self.name = data["name"]
         self.identifier = data["identifier"]
-        self.type = data["type"]
-        self.url = data["url"]
-        self.comment = data["comment"]
+        self.scheme = data["identifier_scheme"]
+        self.scheme_uri = data["identifier_scheme_uri"]
         self.study.touch()
 
     def validate(self):

@@ -18,6 +18,7 @@ dataset_rights = api.model(
         "uri": fields.String(required=True),
         "identifier": fields.String(required=True),
         "identifier_scheme": fields.String(required=True),
+        "identifier_scheme_uri": fields.String(required=True),
         "license_text": fields.String(required=True),
     },
 )
@@ -58,6 +59,7 @@ class DatasetRightsResource(Resource):
                     "id": {"type": "string"},
                     "identifier": {"type": "string"},
                     "identifier_scheme": {"type": "string"},
+                    "identifier_scheme_uri": {"type": "string"},
                     "rights": {"type": "string", "minLength": 1},
                     "uri": {"type": "string"},
                     "license_text": {"type": "string"},
