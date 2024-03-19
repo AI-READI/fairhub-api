@@ -48,7 +48,10 @@ class StudyOversightResource(Resource):
                 "additionalProperties": False,
                 "properties": {
                     "fda_regulated_drug": {"type": ["string", "null"], "minLength": 1},
-                    "fda_regulated_device": {"type": ["string", "null"], "minLength": 1},
+                    "fda_regulated_device": {
+                        "type": ["string", "null"],
+                        "minLength": 1,
+                    },
                     "has_dmc": {"type": ["string", "null"]},
                     "human_subject_review_status": {"type": "string"},
                 },
