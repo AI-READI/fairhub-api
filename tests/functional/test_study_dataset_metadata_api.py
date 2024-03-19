@@ -3026,7 +3026,7 @@ def test_post_dataset_related_identifier_metadata(clients):
                 "related_metadata_scheme": "test",
                 "scheme_uri": "test",
                 "scheme_type": "test",
-                "resource_type": "test"
+                "resource_type": "test",
             }
         ],
     )
@@ -3056,7 +3056,7 @@ def test_post_dataset_related_identifier_metadata(clients):
                 "related_metadata_scheme": "test",
                 "scheme_uri": "test",
                 "scheme_type": "test",
-                "resource_type": "test"
+                "resource_type": "test",
             }
         ],
     )
@@ -3084,7 +3084,7 @@ def test_post_dataset_related_identifier_metadata(clients):
                 "related_metadata_scheme": "test",
                 "scheme_uri": "test",
                 "scheme_type": "test",
-                "resource_type": "test"
+                "resource_type": "test",
             }
         ],
     )
@@ -3110,7 +3110,7 @@ def test_post_dataset_related_identifier_metadata(clients):
                 "related_metadata_scheme": "test",
                 "scheme_uri": "test",
                 "scheme_type": "test",
-                "resource_type": "test"
+                "resource_type": "test",
             }
         ],
     )

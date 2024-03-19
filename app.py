@@ -6,12 +6,15 @@ import logging
 import os
 from datetime import timezone
 
+import click
 import jwt
 from flask import Flask, g, request
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from growthbook import GrowthBook
 from sqlalchemy import MetaData, inspect
+from sqlalchemy.ext.compiler import compiles
+from sqlalchemy.schema import DropTable
 from waitress import serve
 
 import caching
@@ -24,6 +27,12 @@ from apis.exception import ValidationException
 # from pyfairdatatools import __version__
 
 bcrypt = Bcrypt()
+
+
+# Add Cascade to Table Drop Call in destroy-schema CLI command
+@compiles(DropTable, "postgresql")
+def _compile_drop_table(element, compiler):
+    return f"{compiler.visit_drop_table(element)} CASCADE"
 
 
 def create_app(config_module=None, loglevel="INFO"):
@@ -141,21 +150,27 @@ def create_app(config_module=None, loglevel="INFO"):
                 model.db.drop_all()
                 model.db.create_all()
 
-    @app.cli.command("inspect-schemas")
-    def inspect_schemas():
-        """Print database schemas, tables, and columns to CLI."""
+    @app.cli.command("inspect-schema")
+    @click.argument("schema")
+    def inspect_schema(schema=None):
+        """Print database schemas, tables, and columns to CLI.
+        Optional argument schema. Default all schemas inspected.
+        """
         engine = model.db.session.get_bind()
         inspector = inspect(engine)
-        schemas = inspector.get_schema_names()
-        for schema in schemas:
-            print("-" * 32)
-            print(f"Schema: {schema}")
-            for table_name in inspector.get_table_names(schema=schema):
-                print(f"\n  Table: {table_name}")
-                for column in inspector.get_columns(table_name, schema=schema):
-                    print(f"    Column: {column['name']}")
-                    for k, v in column.items():
-                        print(f"      {k:<16}{str(v):>16}")
+        schema_names = inspector.get_schema_names()
+        for schema_name in schema_names:
+            if schema is None or schema == schema_name:
+                print("-" * 38)
+                print(f"SCHEMA: {schema_name}")
+                print("-" * 38)
+                for table_name in inspector.get_table_names(schema=schema_name):
+                    print(f"  Table: {table_name}")
+                    for column in inspector.get_columns(table_name, schema=schema_name):
+                        print(f"    Column: {column['name']}")
+                        for k, v in column.items():
+                            print(f"      {k:<16}{str(v):>16}")
+                    print("\n ", "-" * 36)
 
     @app.before_request
     def on_before_request():  # pylint: disable = inconsistent-return-statements

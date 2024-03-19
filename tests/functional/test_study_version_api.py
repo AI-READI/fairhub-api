@@ -712,7 +712,7 @@ def test_get_version_dataset_metadata(clients):
                 "related_metadata_scheme": "test",
                 "scheme_uri": "test",
                 "scheme_type": "test",
-                "resource_type": "test"
+                "resource_type": "test",
             }
         ],
     )
@@ -791,8 +791,12 @@ def test_get_version_dataset_metadata(clients):
     assert response_data["identifiers"][0]["identifier"] == "identifier test"
     assert response_data["identifiers"][0]["type"] == "ARK"
 
-    assert response_data["related_identifier"][0]["identifier"] == "editor test identifier"
-    assert response_data["related_identifier"][0]["relation_type"] == "test relation type"
+    assert (
+        response_data["related_identifier"][0]["identifier"] == "editor test identifier"
+    )
+    assert (
+        response_data["related_identifier"][0]["relation_type"] == "test relation type"
+    )
     assert response_data["related_identifier"][0]["resource_type"] == "test"
 
     assert admin_response_data["contributors"][0]["given_name"] == "Given Name here"
@@ -828,8 +832,14 @@ def test_get_version_dataset_metadata(clients):
     assert admin_response_data["identifiers"][0]["identifier"] == "identifier test"
     assert admin_response_data["identifiers"][0]["type"] == "ARK"
 
-    assert admin_response_data["related_identifier"][0]["identifier"] == "editor test identifier"
-    assert admin_response_data["related_identifier"][0]["relation_type"] == "test relation type"
+    assert (
+        admin_response_data["related_identifier"][0]["identifier"]
+        == "editor test identifier"
+    )
+    assert (
+        admin_response_data["related_identifier"][0]["relation_type"]
+        == "test relation type"
+    )
     assert admin_response_data["related_identifier"][0]["resource_type"] == "test"
 
     assert editor_response_data["contributors"][0]["family_name"] == "Family Name here"
@@ -865,8 +875,14 @@ def test_get_version_dataset_metadata(clients):
     assert editor_response_data["identifiers"][0]["identifier"] == "identifier test"
     assert editor_response_data["identifiers"][0]["type"] == "ARK"
 
-    assert editor_response_data["related_identifier"][0]["identifier"] == "editor test identifier"
-    assert editor_response_data["related_identifier"][0]["relation_type"] == "test relation type"
+    assert (
+        editor_response_data["related_identifier"][0]["identifier"]
+        == "editor test identifier"
+    )
+    assert (
+        editor_response_data["related_identifier"][0]["relation_type"]
+        == "test relation type"
+    )
     assert editor_response_data["related_identifier"][0]["resource_type"] == "test"
 
 

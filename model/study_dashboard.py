@@ -24,6 +24,7 @@ class StudyDashboard(db.Model):  # type: ignore
     modules: list[dict[str, (str | bool | int)]] = db.Column(
         NestedMutableJson, nullable=True
     )
+    public: bool = db.Column(db.Boolean, nullable=True)
     redcap_pid: int = db.Column(db.BigInteger, nullable=True)
     reports: list[dict[str, str]] = db.Column(NestedMutableJson, nullable=True)
     created_at: float = db.Column(db.BigInteger, nullable=False)
@@ -63,6 +64,7 @@ class StudyDashboard(db.Model):  # type: ignore
             "redcap_id": self.redcap_id,
             "redcap_pid": self.redcap_pid,
             "reports": self.reports,
+            "public": self.public,
             "created_at": self.created_at,
             "updated_on": self.updated_on,
         }
@@ -82,6 +84,7 @@ class StudyDashboard(db.Model):  # type: ignore
             "redcap_id",
             "redcap_pid",
             "reports",
+            "public",
         ]
         for key, val in data.items():
             if key in user_updatable_props:

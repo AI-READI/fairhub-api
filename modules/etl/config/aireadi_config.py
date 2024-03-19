@@ -49,15 +49,15 @@ data_columns: List = [
     "cmtrt_insln",
     "cmtrt_glcs",
     "cmtrt_lfst",
-    "scrcmpdat",
+    "dricmpdat",
 ]
 
 computed_columns: List = [
     "phenotypes",
     "treatments",
-    "scrweek",
-    "scryear",
-    "scrdate",
+    "visitweek",
+    "visityear",
+    "visitdate",
 ]
 
 # Survey Column Groups
@@ -179,8 +179,8 @@ redcapTransformConfig: Dict[str, Any] = {
                 (
                     "transform_values_by_column",
                     {
-                        "column": "scrcmpdat",
-                        "new_column_name": "scrweek",
+                        "column": "dricmpdat",
+                        "new_column_name": "visitweek",
                         # ISO 8601 string format token for front-end: %V
                         "transform": lambda x: datetime.strptime(x, "%Y-%m-%d").isocalendar().week,
                         "missing_value": missing_value_generic,
@@ -189,8 +189,8 @@ redcapTransformConfig: Dict[str, Any] = {
                 (
                     "transform_values_by_column",
                     {
-                        "column": "scrcmpdat",
-                        "new_column_name": "scryear",
+                        "column": "dricmpdat",
+                        "new_column_name": "visityear",
                         # ISO 8601 string format token for front-end: %Y
                         "transform": lambda x: datetime.strptime(x, "%Y-%m-%d").isocalendar().year,
                         "missing_value": missing_value_generic,
@@ -199,8 +199,8 @@ redcapTransformConfig: Dict[str, Any] = {
                 (
                     "transform_values_by_column",
                     {
-                        "column": "scrcmpdat",
-                        "new_column_name": "scrdate",
+                        "column": "dricmpdat",
+                        "new_column_name": "visitdate",
                         # ISO 8601 string format token for front-end: %Y
                         "transform": lambda x: datetime.strptime(x, "%Y-%m-%d"),
                         "missing_value": missing_value_generic,
@@ -1210,7 +1210,7 @@ raceRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                 "vtype": "DoubleDiscreteTimeseries",
                 "methods": [
                     {
-                        "groups": ["siteid", "race", "scrdate"],
+                        "groups": ["siteid", "race", "visitdate"],
                         "value": "record_id",
                         "func": "count",
                     }
@@ -1230,7 +1230,7 @@ raceRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                     },
                     "x": {
                         "name": "Week of the Year",
-                        "field": "scrdate",
+                        "field": "visitdate",
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
@@ -1258,7 +1258,7 @@ phenotypeRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                 "vtype": "DoubleDiscreteTimeseries",
                 "methods": [
                     {
-                        "groups": ["siteid", "phenotypes", "scrdate"],
+                        "groups": ["siteid", "phenotypes", "visitdate"],
                         "value": "record_id",
                         "func": "count",
                     }
@@ -1278,7 +1278,7 @@ phenotypeRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                     },
                     "x": {
                         "name": "Week of the Year",
-                        "field": "scrdate",
+                        "field": "visitdate",
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
