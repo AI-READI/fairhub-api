@@ -17,8 +17,8 @@ def get_env(key):
     """Return environment variable from .env or native environment."""
     return config.get(key) if LOCAL_ENV_FILE else environ.get(key)
 
-
 FAIRHUB_DATABASE_URL = get_env("FAIRHUB_DATABASE_URL")
+
 FAIRHUB_SECRET = get_env("FAIRHUB_SECRET")
 
 FAIRHUB_AZURE_READ_SAS_TOKEN = get_env("FAIRHUB_AZURE_READ_SAS_TOKEN")
