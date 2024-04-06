@@ -41,6 +41,7 @@ DROP TABLE IF EXISTS dataset_de_ident_level CASCADE;
 DROP TABLE IF EXISTS dataset_description CASCADE;
 DROP TABLE IF EXISTS dataset_funder CASCADE;
 DROP TABLE IF EXISTS dataset_healthsheet CASCADE;
+DROP TABLE IF EXISTS dataset_managing_organization CASCADE;
 DROP TABLE IF EXISTS dataset_other CASCADE;
 DROP TABLE IF EXISTS dataset_record_keys CASCADE;
 DROP TABLE IF EXISTS dataset_rights CASCADE;
