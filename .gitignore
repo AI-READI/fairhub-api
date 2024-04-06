@@ -41,3 +41,4 @@ coverage
 # Database 
 postgres-data/*
 redis-data/*
+storage/*

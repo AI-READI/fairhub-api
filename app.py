@@ -150,6 +150,15 @@ def create_app(config_module=None, loglevel="INFO"):
                 model.db.drop_all()
                 model.db.create_all()
 
+    @app.cli.command("list-schemas")
+    def list_schemas():
+        engine = model.db.session.get_bind()
+        inspector = inspect(engine)
+        schema_names = inspector.get_schema_names()
+        print("SCHEMAS")
+        for schema_name in schema_names:
+            print(schema_name)
+
     @app.cli.command("inspect-schema")
     @click.argument("schema")
     def inspect_schema(schema=None):

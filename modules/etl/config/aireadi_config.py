@@ -119,6 +119,7 @@ survey_instrument_map: Dict[str, str] = {
     "2": "Complete",
     "1": "Unverified",
     "0": "Incomplete",
+    "": "Value Unavailable",
 }
 
 phenotypes_column_map: Dict[str, str] = {
@@ -126,6 +127,18 @@ phenotypes_column_map: Dict[str, str] = {
     "mhterm_predm": "Prediabetes",
     "mh_a1c": "Elevated A1C",
 }
+
+# sex_column_map: Dict[str, str] = {
+#     "M": "Male",
+#     "F": "Female",
+#     "I": "Intersex",
+#     "888": "Other",
+#     "777": "Prefer not to say",
+# }
+
+# race_column_map: Dict[str, str] = {
+
+# }
 
 treatments_column_map: Dict[str, str] = {
     "cmtrt_a1c": "Oral Medication",
@@ -138,23 +151,30 @@ treatments_column_map: Dict[str, str] = {
 # REDCap Report Merge Map
 #
 
-redcap_report_merge_map: Dict[str, Dict[str, Any]] = {
-    "participant-list": {"on": index_columns, "how": "inner"},
-    "participant-values": {"on": index_columns, "how": "inner"},
-    "instrument-status": {"on": index_columns, "how": "inner"},
-    "repeat-instrument": {"on": index_columns, "how": "outer"},
-}
+redcap_report_merge_map: List[Tuple[str, Dict[str, Any]]] = [
+    ("participant-list", {"on": index_columns, "how": "inner", "suffixes": (None, '_merged')}),
+    ("participant-values", {"on": index_columns, "how": "inner", "suffixes": (None, '_merged')}),
+    ("instrument-status", {"on": index_columns, "how": "inner", "suffixes": (None, '_merged')}),
+    ("repeat-instrument", {"on": index_columns, "how": "outer", "suffixes": (None, '_merged')}),
+]
 
 #
-# REDCap Transform Config
+# REDCap API Transform Config
 #
 
 # Note: The REDCap report_id is matched to the transform
 # by the value of the key property in the report dictionary.
-redcapTransformConfig: Dict[str, Any] = {
+redcapLiveTransformConfig: Dict[str, Any] = {
+    "redcap_data_dir": "storage/release/raw-storage",
+    "project_metadata": {
+        "filepath": "AI-READI/REDCap",
+        "filename": "Redcap_project_metadata.json",
+    },
     "reports": [  # Dict[str, Dict[str, str | Dict[str, Any] | List[Tuple[str, Dict[str, Any]]]]]
         {
             "key": "participant-list",
+            "filepath": "AI-READI/REDCap",
+            "filename": "Redcap_data_report_247884.csv",
             "kwdargs": {
                 "raw_or_label": "raw",
                 "raw_or_label_headers": "raw",
@@ -166,6 +186,8 @@ redcapTransformConfig: Dict[str, Any] = {
         },
         {
             "key": "participant-values",
+            "filepath": "AI-READI/REDCap",
+            "filename": "Redcap_data_report_242544.csv",
             "kwdargs": {
                 "raw_or_label": "raw",
                 "raw_or_label_headers": "raw",
@@ -232,6 +254,8 @@ redcapTransformConfig: Dict[str, Any] = {
         },
         {
             "key": "instrument-status",
+            "filepath": "AI-READI/REDCap",
+            "filename": "Redcap_data_report_251954.csv",
             "kwdargs": {
                 "raw_or_label": "raw",
                 "raw_or_label_headers": "raw",
@@ -250,6 +274,8 @@ redcapTransformConfig: Dict[str, Any] = {
         },
         {
             "key": "repeat-instrument",
+            "filepath": "AI-READI/REDCap",
+            "filename": "Redcap_data_report_259920.csv",
             "kwdargs": {
                 "raw_or_label": "raw",
                 "raw_or_label_headers": "raw",
@@ -271,13 +297,7 @@ redcapTransformConfig: Dict[str, Any] = {
         },
     ],
     "post_transform_merge": (
-        index_columns,
-        [
-            ("participant-list", {"on": index_columns, "how": "inner"}),
-            ("participant-values", {"on": index_columns, "how": "inner"}),
-            ("instrument-status", {"on": index_columns, "how": "inner"}),
-            ("repeat-instrument", {"on": index_columns, "how": "outer"}),
-        ],
+        index_columns, redcap_report_merge_map
     ),
     "post_merge_transforms": [
         (
@@ -289,6 +309,159 @@ redcapTransformConfig: Dict[str, Any] = {
     "index_columns": ["record_id"],
     "missing_value_generic": missing_value_generic,
 }
+
+#
+# REDCap Transform Config
+#
+
+# Note: The REDCap report_id is matched to the transform
+# by the value of the key property in the report dictionary.
+redcapReleaseTransformConfig: Dict[str, Any] = {
+    "redcap_data_dir": "storage/release/raw-storage",
+    "project_metadata": {
+        "filepath": "AI-READI/REDCap",
+        "filename": "Redcap_project_metadata.json",
+    },
+    "reports": [  # Dict[str, Dict[str, str | Dict[str, Any] | List[Tuple[str, Dict[str, Any]]]]]
+        {
+            "key": "participant-list",
+            "filepath": "AI-READI/REDCap",
+            "filename": "Redcap_data_report_247884.csv",
+            "kwdargs": {
+                "raw_or_label": "raw",
+                "raw_or_label_headers": "raw",
+                "export_checkbox_labels": False,
+                "csv_delimiter": "\t",
+                "report_id": "",
+            },
+            "transforms": [],
+        },
+        {
+            "key": "participant-values",
+            "filepath": "AI-READI/REDCap",
+            "filename": "Redcap_data_report_242544.csv",
+            "kwdargs": {
+                "raw_or_label": "raw",
+                "raw_or_label_headers": "raw",
+                "export_checkbox_labels": False,
+                "csv_delimiter": "\t",
+                "report_id": "",
+            },
+            "transforms": [
+                ("remap_values_by_columns", {"columns": data_columns}),
+                ("map_missing_values_by_columns", {"columns": data_columns}),
+                (
+                    "transform_values_by_column",
+                    {
+                        "column": "dricmpdat",
+                        "new_column_name": "visitweek",
+                        # ISO 8601 string format token for front-end: %V
+                        "transform": lambda x: datetime.strptime(x, "%Y-%m-%d").isocalendar().week,
+                        "missing_value": missing_value_generic,
+                    },
+                ),
+                (
+                    "transform_values_by_column",
+                    {
+                        "column": "dricmpdat",
+                        "new_column_name": "visityear",
+                        # ISO 8601 string format token for front-end: %Y
+                        "transform": lambda x: datetime.strptime(x, "%Y-%m-%d").isocalendar().year,
+                        "missing_value": missing_value_generic,
+                    },
+                ),
+                (
+                    "transform_values_by_column",
+                    {
+                        "column": "dricmpdat",
+                        "new_column_name": "visitdate",
+                        # ISO 8601 string format token for front-end: %Y
+                        "transform": lambda x: datetime.strptime(x, "%Y-%m-%d"),
+                        "missing_value": missing_value_generic,
+                    },
+                ),
+                (
+                    "new_column_from_binary_columns_positive_class",
+                    {
+                        "column_name_map": phenotypes_column_map,
+                        "new_column_name": "phenotypes",
+                        "all_negative_value": "Control",
+                        "default_value": missing_value_generic,
+                    },
+                ),
+                (
+                    "new_column_from_binary_columns_positive_class",
+                    {
+                        "column_name_map": treatments_column_map,
+                        "new_column_name": "treatments",
+                        "all_negative_value": "No Treatments",
+                        "default_value": missing_value_generic,
+                    },
+                ),
+                (
+                    "keep_columns",
+                    {"columns": index_columns + data_columns + computed_columns},
+                ),
+            ],
+        },
+        {
+            "key": "instrument-status",
+            "filepath": "AI-READI/REDCap",
+            "filename": "Redcap_data_report_251954.csv",
+            "kwdargs": {
+                "raw_or_label": "raw",
+                "raw_or_label_headers": "raw",
+                "export_checkbox_labels": False,
+                "csv_delimiter": "\t",
+                "report_id": "",
+            },
+            "transforms": [
+                (
+                    "remap_values_by_columns",
+                    {"columns": survey_columns, "value_map": survey_instrument_map},
+                ),
+                ("map_missing_values_by_columns", {"columns": survey_columns}),
+                ("keep_columns", {"columns": index_columns + survey_columns}),
+            ],
+        },
+        {
+            "key": "repeat-instrument",
+            "filepath": "AI-READI/REDCap",
+            "filename": "Redcap_data_report_259920.csv",
+            "kwdargs": {
+                "raw_or_label": "raw",
+                "raw_or_label_headers": "raw",
+                "export_checkbox_labels": False,
+                "csv_delimiter": "\t",
+                "report_id": "",
+            },
+            "transforms": [
+                ("drop_rows", {"columns": repeat_survey_columns}),
+                (
+                    "aggregate_repeat_instrument_by_index",
+                    {"aggregator": "max", "dtype": str},
+                ),
+                (
+                    "keep_columns",
+                    {"columns": index_columns + repeat_survey_data_columns},
+                ),
+            ],
+        },
+    ],
+    "post_transform_merge": (
+        index_columns, redcap_report_merge_map
+    ),
+    "post_merge_transforms": [
+        (
+            "remap_values_by_columns",
+            {"columns": repeat_survey_columns, "value_map": survey_instrument_map},
+        ),
+        ("map_missing_values_by_columns", {"columns": repeat_survey_data_columns}),
+    ],
+    "index_columns": ["record_id"],
+    "missing_value_generic": missing_value_generic,
+}
+
 
 #
 # Visualization Transforms
@@ -1198,7 +1371,151 @@ recruitmentOperationsBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
     },
 )
 
-# Recruitment Counts by Site
+# Phenotype Recruitment Counts by Site
+phenotypeRecruitmentTransformConfig: Tuple[str, Dict[str, Any]] = (
+    "simpleTransform",
+    {
+        "key": "phenotype-recruitment",
+        "strict": True,
+        "transforms": [
+            {
+                "name": "Phenotype Recruitment",
+                "vtype": "DoubleDiscreteTimeseries",
+                "methods": [
+                    {
+                        "groups": ["phenotypes", "visitdate"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Phenotype",
+                        "field": "phenotypes",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "name": "Phenotype",
+                        "field": "phenotypes",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "x": {
+                        "name": "Week of the Year",
+                        "field": "visitdate",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "y": {
+                        "name": "Cumulative Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+        ],
+    },
+)
+
+# Phenotype Recruitment Counts by Site
+phenotypeRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
+    "simpleTransform",
+    {
+        "key": "phenotype-recruitment-by-site",
+        "strict": True,
+        "transforms": [
+            {
+                "name": "Phenotype Recruitment by Site",
+                "vtype": "DoubleDiscreteTimeseries",
+                "methods": [
+                    {
+                        "groups": ["siteid", "phenotypes", "visitdate"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Site",
+                        "field": "siteid",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "name": "Phenotype",
+                        "field": "phenotypes",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "x": {
+                        "name": "Week of the Year",
+                        "field": "visitdate",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "y": {
+                        "name": "Cumulative Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+        ],
+    },
+)
+
+# Race Recruitment Counts
+raceRecruitmentTransformConfig: Tuple[str, Dict[str, Any]] = (
+    "simpleTransform",
+    {
+        "key": "race-recruitment",
+        "strict": True,
+        "transforms": [
+            {
+                "name": "Race Recruitment",
+                "vtype": "DoubleDiscreteTimeseries",
+                "methods": [
+                    {
+                        "groups": ["race", "visitdate"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Race",
+                        "field": "race",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "name": "Race",
+                        "field": "race",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "x": {
+                        "name": "Week of the Year",
+                        "field": "visitdate",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "y": {
+                        "name": "Cumulative Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+        ],
+    },
+)
+
+# Race Recruitment Counts by Site
 raceRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
     "simpleTransform",
     {
@@ -1246,19 +1563,67 @@ raceRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
     },
 )
 
-# Recruitment Counts by Site
-phenotypeRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
+# Sex Recruitment Counts
+sexRecruitmentTransformConfig: Tuple[str, Dict[str, Any]] = (
     "simpleTransform",
     {
-        "key": "phenotype-recruitment-by-site",
+        "key": "sex-recruitment",
         "strict": True,
         "transforms": [
             {
-                "name": "Phenotype Recruitment by Site",
+                "name": "Sex Recruitment",
                 "vtype": "DoubleDiscreteTimeseries",
                 "methods": [
                     {
-                        "groups": ["siteid", "phenotypes", "visitdate"],
+                        "groups": ["scrsex", "visitdate"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Sex",
+                        "field": "scrsex",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "name": "Sex",
+                        "field": "scrsex",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "x": {
+                        "name": "Week of the Year",
+                        "field": "visitdate",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "y": {
+                        "name": "Cumulative Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+        ],
+    },
+)
+
+# Sex Recruitment Counts By Site
+sexRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
+    "simpleTransform",
+    {
+        "key": "sex-recruitment-by-site",
+        "strict": True,
+        "transforms": [
+            {
+                "name": "Sex Recruitment by Site",
+                "vtype": "DoubleDiscreteTimeseries",
+                "methods": [
+                    {
+                        "groups": ["siteid", "scrsex", "visitdate"],
                         "value": "record_id",
                         "func": "count",
                     }
@@ -1271,8 +1636,8 @@ phenotypeRecruitmentBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                         "astype": str,
                     },
                     "group": {
-                        "name": "Phenotype",
-                        "field": "phenotypes",
+                        "name": "Sex",
+                        "field": "scrsex",
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
@@ -1482,6 +1847,242 @@ phenotypeRaceBySexTransformConfig: Tuple[str, Dict[str, Any]] = (
     },
 )
 
+# Phenotype & Sex Counts by Race
+phenotypeSexByRaceTransformConfig: Tuple[str, Dict[str, Any]] = (
+    "simpleTransform",
+    {
+        "key": "phenotype-sex-by-race",
+        "strict": True,
+        "transforms": [
+            {
+                "name": "Phenotype & Sex by Race",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["phenotypes", "race", "scrsex"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Race",
+                        "field": "race",
+                        "missing_value": missing_value_generic,
+                    },
+                    "group": {
+                        "name": "Phenotype",
+                        "field": "phenotypes",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Sex",
+                        "field": "scrsex",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+        ],
+    },
+)
+
+# Sex & Phenotype Counts by Race
+sexPhenotypeByRaceTransformConfig: Tuple[str, Dict[str, Any]] = (
+    "simpleTransform",
+    {
+        "key": "sex-phenotype-by-race",
+        "strict": True,
+        "transforms": [
+            {
+                "name": "Sex & Phenotype by Race",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["phenotypes", "race", "scrsex"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Race",
+                        "field": "race",
+                        "missing_value": missing_value_generic,
+                    },
+                    "group": {
+                        "name": "Sex",
+                        "field": "scrsex",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Phenotype",
+                        "field": "phenotypes",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+        ],
+    },
+)
+
+# Sex & Race Counts by Phenotype
+sexRaceByPhenotypeTransformConfig: Tuple[str, Dict[str, Any]] = (
+    "simpleTransform",
+    {
+        "key": "sex-race-by-phenotype",
+        "strict": True,
+        "transforms": [
+            {
+                "name": "Sex & Race by Phenotype",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["phenotypes", "race", "scrsex"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Phenotype",
+                        "field": "phenotypes",
+                        "missing_value": missing_value_generic,
+                    },
+                    "group": {
+                        "name": "Sex",
+                        "field": "scrsex",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Race",
+                        "field": "race",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+        ],
+    },
+)
+
+# Race & Sex Counts by Phenotype
+raceSexByPhenotypeTransformConfig: Tuple[str, Dict[str, Any]] = (
+    "simpleTransform",
+    {
+        "key": "race-sex-by-phenotype",
+        "strict": True,
+        "transforms": [
+            {
+                "name": "Race & Sex by Phenotype",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["phenotypes", "race", "scrsex"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Phenotype",
+                        "field": "phenotypes",
+                        "missing_value": missing_value_generic,
+                    },
+                    "group": {
+                        "name": "Race",
+                        "field": "race",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Sex",
+                        "field": "scrsex",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+        ],
+    },
+)
+
+# Race & Phenotype Counts by Sex
+racePhenotypeBySexTransformConfig: Tuple[str, Dict[str, Any]] = (
+    "simpleTransform",
+    {
+        "key": "race-phenotype-by-sex",
+        "strict": True,
+        "transforms": [
+            {
+                "name": "Race & Phenotype by Sex",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["phenotypes", "race", "scrsex"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Sex",
+                        "field": "scrsex",
+                        "missing_value": missing_value_generic,
+                    },
+                    "group": {
+                        "name": "Race",
+                        "field": "race",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Phenotype",
+                        "field": "phenotypes",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+        ],
+    },
+)
+
+
 currentMedicationsBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
     "simpleTransform",
     {
@@ -1525,6 +2126,359 @@ currentMedicationsBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
                     },
                 },
             }
+        ],
+    },
+)
+
+# Overview
+deviceCollectionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
+    "compoundTransform",
+    {
+        "key": "device-collection-status-by-site",
+        "strict": True,
+        "transforms": [
+            {
+                "name": "Device Distribution",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["siteid", "device_distribution_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Site",
+                        "field": "siteid",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "Device Distribution",
+                        "field": "device_distribution_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Device Distribution",
+                        "field": "device_distribution_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+            {
+                "name": "BCVA",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["siteid", "bcva_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Site",
+                        "field": "siteid",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "BCVA",
+                        "field": "bcva_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "BCVA",
+                        "field": "bcva_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+            {
+                "name": "Photopic MARS",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["siteid", "photopic_mars_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Site",
+                        "field": "siteid",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "Photopic MARS",
+                        "field": "photopic_mars_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Photopic MARS",
+                        "field": "photopic_mars_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+            {
+                "name": "Mesopic MARS",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["siteid", "mesopic_mars_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Site",
+                        "field": "siteid",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "Mesopic MARS",
+                        "field": "mesopic_mars_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Mesopic MARS",
+                        "field": "mesopic_mars_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+            {
+                "name": "Monofilament",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["siteid", "monofilament_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Site",
+                        "field": "siteid",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "Monofilament",
+                        "field": "monofilament_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Monofilament",
+                        "field": "monofilament_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+            {
+                "name": "ECG Survey",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["siteid", "ecg_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Site",
+                        "field": "siteid",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "ECG Survey",
+                        "field": "ecg_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "ECG Survey",
+                        "field": "ecg_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+            {
+                "name": "Lab Results Survey",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["siteid", "lab_results_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Site",
+                        "field": "siteid",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "Lab Results Survey",
+                        "field": "lab_results_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Lab Results Survey",
+                        "field": "lab_results_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+            {
+                "name": "Specimen Management",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["siteid", "specimen_management_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Site",
+                        "field": "siteid",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "Specimen Management",
+                        "field": "specimen_management_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Specimen Management",
+                        "field": "specimen_management_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+            {
+                "name": "Device Return",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["siteid", "device_return_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Site",
+                        "field": "siteid",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "Device Return",
+                        "field": "device_return_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Device Return",
+                        "field": "device_return_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
         ],
     },
 )
@@ -2879,15 +3833,530 @@ instrumentCompletionStatusBySiteTransformConfig: Tuple[str, Dict[str, Any]] = (
     },
 )
 
+# Overview
+surveyCompletionStatusTransformConfig: Tuple[str, Dict[str, Any]] = (
+    "compoundTransform",
+    {
+        "key": "instrument-completion-status",
+        "strict": True,
+        "transforms": [
+            {
+                "name": "Demographics Survey",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["demographics_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Demographics Survey",
+                        "field": "demographics_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "Demographics Survey",
+                        "field": "demographics_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Demographics Survey",
+                        "field": "demographics_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+            {
+                "name": "Health Survey",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["health_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Health Survey",
+                        "field": "health_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "Health Survey",
+                        "field": "health_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Health Survey",
+                        "field": "health_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+            {
+                "name": "Substance Use Survey",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["substance_use_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Substance Use Survey",
+                        "field": "substance_use_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "Substance Use Survey",
+                        "field": "substance_use_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Substance Use Survey",
+                        "field": "substance_use_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+            {
+                "name": "CES-D-10 Survey",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["cesd10_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "CES-D-10 Survey",
+                        "field": "cesd10_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "CES-D-10 Survey",
+                        "field": "cesd10_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "CES-D-10 Survey",
+                        "field": "cesd10_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+            {
+                "name": "PAID-5 DM Survey",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["paid5_dm_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "PAID-5 DM Survey",
+                        "field": "paid5_dm_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "PAID-5 DM Survey",
+                        "field": "paid5_dm_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "PAID-5 DM Survey",
+                        "field": "paid5_dm_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+            {
+                "name": "Diabetes Survey",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["diabetes_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Diabetes Survey",
+                        "field": "diabetes_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "Diabetes Survey",
+                        "field": "diabetes_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Diabetes Survey",
+                        "field": "diabetes_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+            {
+                "name": "Dietary Survey",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["dietary_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Dietary Survey",
+                        "field": "dietary_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "Dietary Survey",
+                        "field": "dietary_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Dietary Survey",
+                        "field": "dietary_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+            {
+                "name": "Opthalmic Survey",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["ophthalmic_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Opthalmic Survey",
+                        "field": "ophthalmic_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "Opthalmic Survey",
+                        "field": "ophthalmic_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Opthalmic Survey",
+                        "field": "ophthalmic_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+            {
+                "name": "PhenX SDOH Combined Survey",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["px_sdoh_combined_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "PhenX SDOH Combined Survey",
+                        "field": "px_sdoh_combined_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "PhenX SDOH Combined Survey",
+                        "field": "px_sdoh_combined_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "PhenX SDOH Combined Survey",
+                        "field": "px_sdoh_combined_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+            {
+                "name": "PhenX Food Insecurity Survey",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["px_food_insecurity_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "PhenX Food Insecurity Survey",
+                        "field": "px_food_insecurity_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "PhenX Food Insecurity Survey",
+                        "field": "px_food_insecurity_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "PhenX Food Insecurity Survey",
+                        "field": "px_food_insecurity_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+            {
+                "name": "PhenX Neighborhood Environment Survey",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["px_neighborhood_environment_survey_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "PhenX Neighborhood Environment Survey",
+                        "field": "px_neighborhood_environment_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "PhenX Neighborhood Environment Survey",
+                        "field": "px_neighborhood_environment_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "PhenX Neighborhood Environment Survey",
+                        "field": "px_neighborhood_environment_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+            {
+                "name": "PhenX Racial and Ethnic Discrimination Survey",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["px_racial_ethnic_discrimination_survey_complete",],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "PhenX Racial and Ethnic Discrimination Survey",
+                        "field": "px_racial_ethnic_discrimination_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "PhenX Racial and Ethnic Discrimination Survey",
+                        "field": "px_racial_ethnic_discrimination_survey_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+            {
+                "name": "Medications Assessment",
+                "vtype": "DoubleCategorical",
+                "methods": [
+                    {
+                        "groups": ["meds_assessment_complete"],
+                        "value": "record_id",
+                        "func": "count",
+                    }
+                ],
+                "accessors": {
+                    "filterby": {
+                        "name": "Medications Assessment",
+                        "field": "meds_assessment_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "group": {
+                        "remap": lambda x: x["name"],
+                        "name": "Medications Assessment",
+                        "field": "meds_assessment_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "subgroup": {
+                        "name": "Medications Assessment",
+                        "field": "meds_assessment_complete",
+                        "missing_value": missing_value_generic,
+                        "astype": str,
+                    },
+                    "value": {
+                        "name": "Count (N)",
+                        "field": "record_id",
+                        "missing_value": missing_value_generic,
+                        "astype": int,
+                    },
+                },
+            },
+        ],
+    },
+)
 moduleTransformConfigs: Dict[str, Any] = {
+    "device-collection-status-by-site": deviceCollectionStatusBySiteTransformConfig,
     "instrument-completion-status-by-site": instrumentCompletionStatusBySiteTransformConfig,
+    "survey-completion-status": surveyCompletionStatusTransformConfig,
     "survey-completion-status-by-site": surveyCompletionStatusBySiteTransformConfig,
     "recruitment-operations-status-by-site": recruitmentOperationsBySiteTransformConfig,
     "phenotype-sex-by-site": phenotypeSexBySiteTransformConfig,
     "phenotype-site-by-sex": phenotypeSiteBySexTransformConfig,
     "phenotype-race-by-sex": phenotypeRaceBySexTransformConfig,
+    "phenotype-sex-by-race": phenotypeSexByRaceTransformConfig,
+    "race-phenotype-by-sex": racePhenotypeBySexTransformConfig,
+    "race-sex-by-phenotype": raceSexByPhenotypeTransformConfig,
+    "sex-phenotype-by-race": sexPhenotypeByRaceTransformConfig,
+    "sex-race-by-phenotype": sexRaceByPhenotypeTransformConfig,
+    "phenotype-recruitment": phenotypeRecruitmentTransformConfig,
     "phenotype-recruitment-by-site": phenotypeRecruitmentBySiteTransformConfig,
+    "race-recruitment": raceRecruitmentTransformConfig,
     "race-recruitment-by-site": raceRecruitmentBySiteTransformConfig,
+    "sex-recruitment": sexRecruitmentTransformConfig,
+    "sex-recruitment-by-site": sexRecruitmentBySiteTransformConfig,
     "race-sex-by-site": raceSexBySiteTransformConfig,
     "current-medications-by-site": currentMedicationsBySiteTransformConfig,
 }

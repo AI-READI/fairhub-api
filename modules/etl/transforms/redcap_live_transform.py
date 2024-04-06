@@ -8,8 +8,9 @@ import pandas as pd
 import numpy as np
 
 
-class RedcapTransform(object):
+class RedcapLiveTransform(object):
     def __init__(self, config: dict) -> None:
+
         #
         # Config
         #
@@ -17,6 +18,8 @@ class RedcapTransform(object):
         # REDCap API Config
         self.redcap_api_url = config["redcap_api_url"]
         self.redcap_api_key = config["redcap_api_key"]
+        self.redcap_data_dir = config["redcap_data_dir"]
+        self.redcap_metadata_config = config["project_metadata"]
 
         # Set Transform Key
         self.key = config["key"] if "key" in config else "redcap-transform"
@@ -118,8 +121,9 @@ class RedcapTransform(object):
         # Initialize PyCap Objects
         self.logger.info(f"Retrieving REDCap project data")
         self.project = Project(self.redcap_api_url, self.redcap_api_key)
+
+        # Load REDCap Project Metadata
         self.metadata = self.project.export_metadata()
-        self.repeat_events_data = self.project.export_repeating_instruments_events()
 
         #
         # Setup Reports & Apply Transforms
@@ -143,17 +147,17 @@ class RedcapTransform(object):
             report_kwdargs = report_config["kwdargs"] | self._reports_kwdargs
             report_transforms = report_config["transforms"]
             report = self.project.export_report(**report_kwdargs)
+
             # Structure Reports
             self.reports[report_key] = {
                 "id": report_kwdargs["report_id"],
-                "report": report,
-                "df": pd.DataFrame(report),
+                "df": pd.DataFrame(report, dtype = str),
                 "transforms": report_transforms,
                 "transformed": None,
                 "annotation": self._get_redcap_type_metadata(pd.DataFrame(report)),
             }
 
-        # Generate Transformed Report
+        # Apply Pre-Merge Report Transforms
         self.logger.info(f"Applying REDCap report transforms")
         for report_key, report_object in self.reports.items():
             self._apply_report_transforms(report_key)
@@ -184,14 +188,6 @@ class RedcapTransform(object):
         """
         return self.reports[report_key]["id"]
 
-    def get_report_pycap(
-        self, report_key: str
-    ) -> Union[List[Dict[str, Any]], str, pd.DataFrame]:
-        """
-        Returns a PyCap Report object containing the report.
-        """
-        return self.reports[report_key]["report"]
-
     def get_report_df(self, report_key: str) -> pd.DataFrame:
         """
         Returns a pd.DataFrame instance containing the report.
@@ -220,6 +216,37 @@ class RedcapTransform(object):
         REDCap metadata API call.
         """
         return self.reports[report_key]["annotations"]
+
+    #
+    # Report Merging
+    #
+
+    def _merge_reports(
+        self,
+        index_columns: List[str],
+        merge_steps: List[Tuple[str, Dict[str, Any]]],
+    ) -> pd.DataFrame:
+        """
+        Performs N - 1 merge transforms on N reports.
+        """
+
+        receiving_report_key, _ = merge_steps[0]
+        df_receiving_report = self.reports[receiving_report_key]["transformed"][
+            index_columns
+        ]
+
+        if len(merge_steps) > 0:
+            for providing_report_key, merge_kwdargs in merge_steps:
+                df_providing_report = self.reports[providing_report_key]["transformed"]
+                df_receiving_report = df_receiving_report.merge(
+                    df_providing_report, **merge_kwdargs
+                )
+        else:
+            self.logger.warn(
+                f"Unable to Merge – No merge steps provided, returning receiving_report pd.DataFrame."
+            )
+
+        return df_receiving_report
 
     #
     # Transform Applicator
@@ -265,7 +292,7 @@ class RedcapTransform(object):
         columns: List[str] = [],
         annotation: List[Dict[str, Any]] = [],
     ) -> pd.DataFrame:
-        columns = self._resolve_columns_with_dataframe(df=df, columns=columns)
+        columns = self._resolve_columns_with_dataframe(df=df, columns=columns, default_columns=[])
         df = df.drop(columns=columns)
         return df
 
@@ -287,7 +314,7 @@ class RedcapTransform(object):
     ) -> pd.DataFrame:
         columns = list(
             set(df.columns)
-            - set(self._resolve_columns_with_dataframe(df=df, columns=columns))
+            - set(self._resolve_columns_with_dataframe(df=df, columns=columns, default_columns=df.columns))
         )
         df = df.drop(columns=columns)
         return df
@@ -310,7 +337,7 @@ class RedcapTransform(object):
         separator: str = "",
         annotation: List[Dict[str, Any]] = [],
     ) -> pd.DataFrame:
-        columns = self._resolve_columns_with_dataframe(df=df, columns=columns)
+        columns = self._resolve_columns_with_dataframe(df=df, columns=columns, default_columns=[])
         df[columns] = df[columns].rename(
             mapper=lambda name: f"{name}{separator}{suffix}"
         )
@@ -347,7 +374,7 @@ class RedcapTransform(object):
         separator: str = "",
         annotation: List[Dict[str, Any]] = [],
     ) -> pd.DataFrame:
-        columns = self._resolve_columns_with_dataframe(df=df, columns=columns)
+        columns = self._resolve_columns_with_dataframe(df=df, columns=columns, default_columns=[])
         df[columns] = df[columns].rename(
             mapper=lambda name: f"{prefix}{separator}{name}"
         )
@@ -384,7 +411,7 @@ class RedcapTransform(object):
         annotation: List[Dict[str, Any]] = [],
     ) -> pd.DataFrame:
         # Resolve Mappable Fields and Available Value Maps
-        columns = self._resolve_columns_with_dataframe(df=df, columns=columns)
+        columns = self._resolve_columns_with_dataframe(df=df, columns=columns, default_columns=[])
 
         mappable_fields: List[Dict[str, Any]]
         if len(value_map) > 0:
@@ -498,7 +525,7 @@ class RedcapTransform(object):
         missing_value: Any = None,
         annotation: List[Dict[str, Any]] = [],
     ) -> pd.DataFrame:
-        columns = self._resolve_columns_with_dataframe(df=df, columns=columns)
+        columns = self._resolve_columns_with_dataframe(df=df, columns=columns, default_columns=[])
         missing_value = (
             missing_value if missing_value is not None else self.missing_value_generic
         )
@@ -537,7 +564,7 @@ class RedcapTransform(object):
         condition: Callable = lambda column: column == "",
         annotation: List[Dict[str, Any]] = [],
     ) -> pd.DataFrame:
-        columns = self._resolve_columns_with_dataframe(df=df, columns=columns)
+        columns = self._resolve_columns_with_dataframe(df=df, columns=columns, default_columns=[])
         df = df[~df[columns].apply(lambda column: column.apply(condition)).any(axis=1)]
         return df
 
@@ -692,43 +719,12 @@ class RedcapTransform(object):
         )
 
     #
-    # Report Merging
-    #
-
-    def _merge_reports(
-        self,
-        index_columns: List[str],
-        merge_steps: List[Tuple[str, Dict[str, Any]]],
-    ) -> pd.DataFrame:
-        """
-        Performs N - 1 merge transforms on N reports.
-        """
-
-        receiving_report_key, _ = merge_steps[0]
-        df_receiving_report = self.reports[receiving_report_key]["transformed"][
-            index_columns
-        ]
-
-        if len(merge_steps) > 0:
-            for providing_report_key, merge_kwdargs in merge_steps:
-                df_providing_report = self.reports[providing_report_key]["transformed"]
-                df_receiving_report = df_receiving_report.merge(
-                    df_providing_report, **merge_kwdargs
-                )
-        else:
-            self.logger.warn(
-                f"Unable to Merge – No merge steps provided, returning receiving_report pd.DataFrame."
-            )
-
-        return df_receiving_report
-
-    #
     # Utilities
     #
 
     # Transform Prelude - Get Applicable Transform Columns
     def _resolve_columns_with_dataframe(
-        self, df: pd.DataFrame, columns: List[str]
+        self, df: pd.DataFrame, columns: List[str], default_columns: List[str]
     ) -> List[str]:
         """
         Internal utility function. Uses set logic to ensure
@@ -740,21 +736,21 @@ class RedcapTransform(object):
 
         if len(requested_columns) == 0:
             self.logger.warn(
-                f"Unexpected Transform – columns parameter has no values. Defaulting to df.columns"
+                f"Unexpected Transform – columns parameter has no values. Defaulting to all df.columns"
             )
-            resolved_columns = [*available_columns]
+            resolved_columns = default_columns
         elif len(available_columns & requested_columns) == 0:
             self.logger.warn(
-                f"Unexpected Transform – none of the values in the columns parameter were found in df.columns. Defaulting to df.columns"
+                f"Unexpected Transform – none of the requested columns were found in df.columns. Defaulting to all df.columns"
             )
-            resolved_columns = [*available_columns]
+            resolved_columns = default_columns
         elif len(requested_columns - available_columns) > 0:
             self.logger.warn(
                 f"Unexpected Transform – df.columns missing values present in columns parameter: {', '.join([*requested_columns - available_columns])}. Continuing with union."
             )
             resolved_columns = [*(available_columns & requested_columns)]
         else:
-            resolved_columns = [*requested_columns]
+            resolved_columns = columns
 
         return resolved_columns
 

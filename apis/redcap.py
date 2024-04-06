@@ -12,21 +12,8 @@ from .authentication import is_granted
 
 api = Namespace("Redcap", description="REDCap operations", path="/")
 
-redcap_project_view_model = api.model(
-    "RedcapProjectAPI",
-    {
-        "study_id": fields.String(required=True, description="Study ID"),
-        "id": fields.String(required=True, description="REDCap project ID"),
-        "title": fields.String(required=True, description="REDCap project title"),
-        "api_pid": fields.String(required=True, description="REDCap project PID"),
-        "api_url": fields.String(required=True, description="REDCap project API url"),
-        "api_active": fields.Boolean(
-            required=True, description="REDCap project is active"
-        ),
-    },
-)
 
-redcap_api_model = api.model(
+redcap_project_api_model = api.model(
     "RedcapProjectAPI",
     {
         "study_id": fields.String(required=True, description="Study ID"),
@@ -40,14 +27,28 @@ redcap_api_model = api.model(
         ),
     },
 )
+# Omit API Key from View
+redcap_project_api_view_model = api.model(
+    "RedcapProjectAPIView",
+    {
+        "study_id": fields.String(required=True, description="Study ID"),
+        "id": fields.String(required=True, description="REDCap project ID"),
+        "title": fields.String(required=True, description="REDCap project title"),
+        "api_pid": fields.String(required=True, description="REDCap project PID"),
+        "api_url": fields.String(required=True, description="REDCap project API url"),
+        "api_active": fields.Boolean(
+            required=True, description="REDCap project is active"
+        ),
+    },
+)
 
 
 @api.route("/study/<study_id>/redcap")
-class RedcapProjectAPILink(Resource):
+class RedcapProjectAPIViews(Resource):
     @api.doc("Get all REDCap project API links")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(redcap_project_view_model, as_list=True)
+    @api.marshal_with(redcap_project_api_view_model, as_list=True)
     def get(self, study_id: str):
         """Get all REDCap project API links"""
         study = model.Study.query.get(study_id)
@@ -66,7 +67,7 @@ class RedcapProjectAPILink(Resource):
     @api.doc("Create a REDCap project API link")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(redcap_api_model)
+    @api.marshal_with(redcap_project_api_model)
     def post(self, study_id: str):
         """Create REDCap project API link"""
         study = model.Study.query.get(study_id)
@@ -136,87 +137,13 @@ class RedcapProjectAPILink(Resource):
         return add_redcap_api, 201
 
 
-# @api.route("/study/<study_id>/redcap/add")
-# class AddRedcapProjectAPI(Resource):
-#     @api.response(200, "Success")
-#     @api.response(400, "Validation Error")
-#     @api.marshal_with(redcap_project_view_model)
-#     def post(self, study_id: int):
-#         """Create REDCap project API link"""
-#         study = model.Study.query.get(study_id)
-#         if not is_granted("add_redcap", study):
-#             return "Access denied, you can not create a redcap project", 403
-#         # Schema validation
-#         data: Union[Any, dict] = request.json
-#         schema = {
-#             "type": "object",
-#             "additionalProperties": False,
-#             "required": [
-#                 "title",
-#                 "api_pid",
-#                 "api_url",
-#                 "api_key",
-#                 "api_active",
-#             ],
-#             "properties": {
-#                 "title": {"type": "string", "minLength": 1},
-#                 "api_pid": {"type": "string", "minLength": 5},
-#                 "api_url": {"type": "string", "minLength": 1},
-#                 "api_key": {"type": "string", "minLength": 32},
-#                 "api_active": {"type": "boolean"},
-#             },
-#         }
-
-#         try:
-#             validate(request.json, schema)
-#         except ValidationError as e:
-#             return e.message, 400
-
-#         if len(data["title"]) < 1:
-#             return (
-#                 f"""redcap title is required for redcap access:
-#                 {data['title']}""",
-#                 400,
-#             )
-#         if len(data["api_pid"]) < 1:
-#             return (
-#                 f"""redcap api_pid is required for redcap access:
-#                 {data['api_pid']}""",
-#                 400,
-#             )
-#         if len(data["api_url"]) < 1:
-#             return (
-#                 f"""redcap api_url is required for redcap access:
-#                 {data['api_url']}""",
-#                 400,
-#             )
-#         if len(data["api_key"]) < 1:
-#             return (
-#                 f"""redcap api_key is required for redcap access:
-#                 {data['api_key']}""",
-#                 400,
-#             )
-#         if not isinstance(data["api_active"], bool):
-#             return (
-#                 f"""redcap api_active is required for redcap access:
-#                 {data['api_active']}""",
-#                 400,
-#             )
-
-#         add_redcap_api = model.StudyRedcap.from_data(study, data)
-#         model.db.session.add(add_redcap_api)
-#         model.db.session.commit()
-#         add_redcap_api = add_redcap_api.to_dict()
-#         return add_redcap_api, 201
-
-
 @api.route("/study/<study_id>/redcap/<redcap_id>")
-class RedcapProjectAPI(Resource):
+class RedcapProjectAPIView(Resource):
     # Get a REDCap API Link
     @api.doc("Get a REDCap project API link")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(redcap_project_view_model)
+    @api.marshal_with(redcap_project_api_view_model)
     def get(self, study_id: str, redcap_id: str):
         """Get REDCap project API link"""
         study = model.db.session.query(model.Study).get(study_id)
@@ -232,7 +159,7 @@ class RedcapProjectAPI(Resource):
     @api.doc("Update a REDCap project API link")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(redcap_project_view_model)
+    @api.marshal_with(redcap_project_api_view_model)
     def put(self, study_id: str, redcap_id: str):
         """Update REDCap project API link"""
         study = model.Study.query.get(study_id)
@@ -244,12 +171,14 @@ class RedcapProjectAPI(Resource):
             "type": "object",
             "additionalProperties": False,
             "required": [
+                "id",
                 "title",
                 "api_pid",
                 "api_url",
                 "api_active",
             ],
             "properties": {
+                "id": {"type": "string", "minLength": 36, "maxLength": 36},
                 "title": {"type": "string", "minLength": 1},
                 "api_pid": {"type": "string", "minLength": 5},
                 "api_url": {"type": "string", "minLength": 1},
@@ -261,6 +190,18 @@ class RedcapProjectAPI(Resource):
         except ValidationError as e:
             return e.message, 400
 
+        if len(data["id"]) != 36:
+            return (
+                f"""redcap id is required for redcap access and must be a length-36 string UUID:
+                {data['id']}""",
+                400,
+            )
+        if data["id"] != redcap_id:
+            return (
+                f"""redcap id in post body and URL must be consistent:
+                {data['id']} != {redcap_id}""",
+                400,
+            )
         if len(data["title"]) < 1:
             return (
                 f"""redcap title is required for redcap access:
@@ -296,7 +237,7 @@ class RedcapProjectAPI(Resource):
     @api.doc("Delete a REDCap project API link")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(redcap_project_view_model)
+    @api.marshal_with(redcap_project_api_view_model)
     def delete(self, study_id: str, redcap_id: str):
         """Delete REDCap project API link"""
         study = model.Study.query.get(study_id)
@@ -312,7 +253,7 @@ class RedcapProjectAPI(Resource):
 #     @api.doc(parser=project_parser)
 #     @api.response(200, "Success")
 #     @api.response(400, "Validation Error")
-#     @api.marshal_with(redcap_project_view_model)
+#     @api.marshal_with(redcap_project_api_view_model)
 #     def put(self, study_id: int):
 #         """Update REDCap project API link"""
 #         study = model.Study.query.get(study_id)
@@ -379,7 +320,7 @@ class RedcapProjectAPI(Resource):
 #     @api.doc(parser=project_parser)
 #     @api.response(200, "Success")
 #     @api.response(400, "Validation Error")
-#     @api.marshal_with(redcap_project_view_model)
+#     @api.marshal_with(redcap_project_api_view_model)
 #     def delete(self, study_id: int):
 #         """Delete REDCap project API link"""
 #         study = model.Study.query.get(study_id)
