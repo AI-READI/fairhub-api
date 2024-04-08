@@ -12,6 +12,8 @@ import numpy as np
 class RedcapReleaseTransform(object):
     def __init__(self, config: dict) -> None:
 
+        print("REDCap Release Transform")
+
         #
         # Config
         #
@@ -19,14 +21,9 @@ class RedcapReleaseTransform(object):
         # Get CWD
         self.cwd = os.getcwd()
 
-        # REDCap API Config
-        self.redcap_api_url = config["redcap_api_url"]
-        self.redcap_api_key = config["redcap_api_key"]
+        # REDCap Azure Storage Access Config
         self.redcap_data_dir = config["redcap_data_dir"]
         self.redcap_metadata_config = config["project_metadata"]
-
-        # Set Transform Key
-        self.key = config["key"] if "key" in config else "redcap-transform"
 
         # Data Config
         self.index_columns = (
@@ -115,20 +112,6 @@ class RedcapReleaseTransform(object):
             "0": "Incomplete",
             "": self.missing_value_generic,
         }
-        # self.boolean_map = {
-        #     "Yes": 1.0,
-        #     "1.0": 1.0,
-        #     "true": 1.0,
-        #     "True": 1.0,
-        #     1: 1.0,
-        #     "No": 0.0,
-        #     "0.0": 0.0
-        #     "false": 0.0,
-        #     "False": 0.0,
-        #     0: 0.0,
-        #     "": self.missing_value_generic,
-        #     "NaN": self.missing_value_generic,
-        # }
 
         self.logger.info(f"Initialized")
 
@@ -138,7 +121,6 @@ class RedcapReleaseTransform(object):
 
         # Initialize PyCap Objects
         self.logger.info(f"Retrieving REDCap project data")
-        self.project = Project(self.redcap_api_url, self.redcap_api_key)
 
         # Load Release REDCap Project Metadata
         self.metadata = self.get_stored_project_metadata(
@@ -154,32 +136,33 @@ class RedcapReleaseTransform(object):
         # Internal Defaults
         # - Key Assumptions for Transform Functions
         # – Only Update if REDCap API and/or PyCap Update
-        self._reports_kwdargs = {
+        self._default_report_kwdargs = {
             "raw_or_label": "raw",
             "raw_or_label_headers": "raw",
             "export_checkbox_labels": False,
-            "csv_delimiter": "\t",
+            "csv_delimiter": "",
         }
         # Get & Structure Report
-        self.logger.info(f"Retrieving REDCap reports")
+        self.logger.info(f"Retrieving Stored REDCap reports")
         self.reports = {}
         for report_config in self.reports_configs:
             # Get Report
             report_key = report_config["key"]
-            report_kwdargs = report_config["kwdargs"] | self._reports_kwdargs
+            report_kwdargs = report_config["kwdargs"] | self._default_report_kwdargs
             report_transforms = report_config["transforms"]
 
             # Load Release REDCap Reports
-            report = self.get_stored_report(
+            report = report_dataframe = self.get_stored_report(
                 os.environ.get("FAIRHUB_BLOB_STORAGE_REDCAP_ETL_SAS_CONNECTION") or "",
                 os.environ.get("FAIRHUB_BLOB_STORAGE_REDCAP_ETL_CONTAINER") or "",
                 f"{report_config['filepath']}/{report_config['filename']}"
             )
 
+            report.to_csv(f"~/Downloads/etl-redcap-export-release-{report_kwdargs['report_id']}")
             # Structure Reports
             self.reports[report_key] = {
                 "id": report_kwdargs["report_id"],
-                "df": pd.read_csv(f"{self.cwd}/{self.redcap_data_dir}/{report_config['filepath']}/{report_config['filename']}", delimiter = self._reports_kwdargs["csv_delimiter"], dtype = str),
+                "df": report_dataframe,
                 "transforms": report_transforms,
                 "transformed": None,
                 "annotation": self._get_redcap_type_metadata(pd.DataFrame(report)),
@@ -230,7 +213,7 @@ class RedcapReleaseTransform(object):
         blob_client = container_client.get_blob_client(blob_path)
 
         # Get Blob
-        df = pd.read_csv(blob_client.download_blob())
+        df = pd.read_csv(blob_client.download_blob(), dtype = str)
         return df
 
     def get_report_id(self, report_key: str) -> str:
@@ -888,7 +871,7 @@ class RedcapReleaseTransform(object):
     ) -> object:
         for report_key, report_object in self.reports.items():
             filename = f"{report_key}_raw{filetype}"
-            filepath = os.path.join(path, filename)
+            filepath = os.path.join(self.cwd, path, filename)
             transformed = report_object["df"]
             transformed.to_csv(
                 filepath,
@@ -904,7 +887,7 @@ class RedcapReleaseTransform(object):
     ) -> object:
         for report_key, report_object in self.reports.items():
             filename = f"{report_key}_transformed{filetype}"
-            filepath = os.path.join(path, filename)
+            filepath = os.path.join(self.cwd, path, filename)
             transformed = report_object["transformed"]
             transformed.to_csv(
                 filepath,
@@ -919,7 +902,7 @@ class RedcapReleaseTransform(object):
         self, path: str = "", separator: str = "\t", filetype: str = ".tsv"
     ) -> object:
         filename = f"transformed-merged_redcap-extract{filetype}"
-        filepath = os.path.join(path, filename)
+        filepath = os.path.join(self.cwd, path, filename)
         self.merged.to_csv(
             filepath,
             sep=separator,
@@ -927,7 +910,6 @@ class RedcapReleaseTransform(object):
             float_format=self.csv_float_format,
         )
         return self
-
 
 if __name__ == "__main__":
     pass

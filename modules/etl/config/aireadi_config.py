@@ -125,7 +125,7 @@ survey_instrument_map: Dict[str, str] = {
 phenotypes_column_map: Dict[str, str] = {
     "mhterm_dm2": "Type II Diabetes",
     "mhterm_predm": "Prediabetes",
-    "mh_a1c": "Elevated A1C",
+    # "mh_a1c": "Elevated A1C",
 }
 
 # sex_column_map: Dict[str, str] = {
@@ -136,9 +136,6 @@ phenotypes_column_map: Dict[str, str] = {
 #     "777": "Prefer not to say",
 # }
 
-# race_column_map: Dict[str, str] = {
-
-# }
 
 treatments_column_map: Dict[str, str] = {
     "cmtrt_a1c": "Oral Medication",
@@ -155,7 +152,7 @@ redcap_report_merge_map: List[Tuple[str, Dict[str, Any]]] = [
     ("participant-list", {"on": index_columns, "how": "inner", "suffixes": (None, '_merged')}),
     ("participant-values", {"on": index_columns, "how": "inner", "suffixes": (None, '_merged')}),
     ("instrument-status", {"on": index_columns, "how": "inner", "suffixes": (None, '_merged')}),
-    ("repeat-instrument", {"on": index_columns, "how": "outer", "suffixes": (None, '_merged')}),
+    ("repeat-instrument", {"on": index_columns, "how": "inner", "suffixes": (None, '_merged')}),
 ]
 
 #
@@ -170,6 +167,8 @@ redcapLiveTransformConfig: Dict[str, Any] = {
         "filepath": "AI-READI/REDCap",
         "filename": "Redcap_project_metadata.json",
     },
+    "redcap_api_url": "",
+    "redcap_api_key": "",
     "reports": [  # Dict[str, Dict[str, str | Dict[str, Any] | List[Tuple[str, Dict[str, Any]]]]]
         {
             "key": "participant-list",
@@ -179,7 +178,7 @@ redcapLiveTransformConfig: Dict[str, Any] = {
                 "raw_or_label": "raw",
                 "raw_or_label_headers": "raw",
                 "export_checkbox_labels": False,
-                "csv_delimiter": "\t",
+                "csv_delimiter": "",
                 "report_id": "",
             },
             "transforms": [],
@@ -192,7 +191,7 @@ redcapLiveTransformConfig: Dict[str, Any] = {
                 "raw_or_label": "raw",
                 "raw_or_label_headers": "raw",
                 "export_checkbox_labels": False,
-                "csv_delimiter": "\t",
+                "csv_delimiter": "",
                 "report_id": "",
             },
             "transforms": [
@@ -260,7 +259,7 @@ redcapLiveTransformConfig: Dict[str, Any] = {
                 "raw_or_label": "raw",
                 "raw_or_label_headers": "raw",
                 "export_checkbox_labels": False,
-                "csv_delimiter": "\t",
+                "csv_delimiter": "",
                 "report_id": "",
             },
             "transforms": [
@@ -280,7 +279,7 @@ redcapLiveTransformConfig: Dict[str, Any] = {
                 "raw_or_label": "raw",
                 "raw_or_label_headers": "raw",
                 "export_checkbox_labels": False,
-                "csv_delimiter": "\t",
+                "csv_delimiter": "",
                 "report_id": "",
             },
             "transforms": [
@@ -331,7 +330,7 @@ redcapReleaseTransformConfig: Dict[str, Any] = {
                 "raw_or_label": "raw",
                 "raw_or_label_headers": "raw",
                 "export_checkbox_labels": False,
-                "csv_delimiter": "\t",
+                "csv_delimiter": "",
                 "report_id": "",
             },
             "transforms": [],
@@ -344,7 +343,7 @@ redcapReleaseTransformConfig: Dict[str, Any] = {
                 "raw_or_label": "raw",
                 "raw_or_label_headers": "raw",
                 "export_checkbox_labels": False,
-                "csv_delimiter": "\t",
+                "csv_delimiter": "",
                 "report_id": "",
             },
             "transforms": [
@@ -412,7 +411,7 @@ redcapReleaseTransformConfig: Dict[str, Any] = {
                 "raw_or_label": "raw",
                 "raw_or_label_headers": "raw",
                 "export_checkbox_labels": False,
-                "csv_delimiter": "\t",
+                "csv_delimiter": "",
                 "report_id": "",
             },
             "transforms": [
@@ -432,7 +431,7 @@ redcapReleaseTransformConfig: Dict[str, Any] = {
                 "raw_or_label": "raw",
                 "raw_or_label_headers": "raw",
                 "export_checkbox_labels": False,
-                "csv_delimiter": "\t",
+                "csv_delimiter": "",
                 "report_id": "",
             },
             "transforms": [

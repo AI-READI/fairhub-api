@@ -11,18 +11,18 @@ import numpy as np
 class RedcapLiveTransform(object):
     def __init__(self, config: dict) -> None:
 
+        print("REDCap Live Transform")
+
         #
         # Config
         #
 
+        # Get CWD
+        self.cwd = os.getcwd()
+
         # REDCap API Config
         self.redcap_api_url = config["redcap_api_url"]
         self.redcap_api_key = config["redcap_api_key"]
-        self.redcap_data_dir = config["redcap_data_dir"]
-        self.redcap_metadata_config = config["project_metadata"]
-
-        # Set Transform Key
-        self.key = config["key"] if "key" in config else "redcap-transform"
 
         # Data Config
         self.index_columns = (
@@ -132,22 +132,22 @@ class RedcapLiveTransform(object):
         # Internal Defaults
         # - Key Assumptions for Transform Functions
         # – Only Update if REDCap API and/or PyCap Update
-        self._reports_kwdargs = {
+        self._default_report_kwdargs = {
             "raw_or_label": "raw",
             "raw_or_label_headers": "raw",
             "export_checkbox_labels": False,
-            "csv_delimiter": "\t",
+            "csv_delimiter": "",
         }
         # Get & Structure Report
-        self.logger.info(f"Retrieving REDCap reports")
+        self.logger.info(f"Retrieving Live REDCap reports")
         self.reports = {}
         for report_config in self.reports_configs:
             # Get Report
             report_key = report_config["key"]
-            report_kwdargs = report_config["kwdargs"] | self._reports_kwdargs
+            report_kwdargs = report_config["kwdargs"] | self._default_report_kwdargs
             report_transforms = report_config["transforms"]
             report = self.project.export_report(**report_kwdargs)
-
+            pd.DataFrame(report, dtype = str).to_csv(f"~/Downloads/etl-redcap-export-live-{report_kwdargs['report_id']}")
             # Structure Reports
             self.reports[report_key] = {
                 "id": report_kwdargs["report_id"],
@@ -836,7 +836,7 @@ class RedcapLiveTransform(object):
     ) -> object:
         for report_key, report_object in self.reports.items():
             filename = f"{report_key}_raw{filetype}"
-            filepath = os.path.join(path, filename)
+            filepath = os.path.join(self.cwd, path, filename)
             transformed = report_object["df"]
             transformed.to_csv(
                 filepath,
@@ -852,7 +852,7 @@ class RedcapLiveTransform(object):
     ) -> object:
         for report_key, report_object in self.reports.items():
             filename = f"{report_key}_transformed{filetype}"
-            filepath = os.path.join(path, filename)
+            filepath = os.path.join(self.cwd, path, filename)
             transformed = report_object["transformed"]
             transformed.to_csv(
                 filepath,
@@ -867,7 +867,7 @@ class RedcapLiveTransform(object):
         self, path: str = "", separator: str = "\t", filetype: str = ".tsv"
     ) -> object:
         filename = f"transformed-merged_redcap-extract{filetype}"
-        filepath = os.path.join(path, filename)
+        filepath = os.path.join(self.cwd, path, filename)
         self.merged.to_csv(
             filepath,
             sep=separator,

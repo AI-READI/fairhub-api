@@ -292,10 +292,18 @@ def authentication():
 def authorization():
     """it checks whether url is allowed to be reached to specific routes"""
     # white listed routes
-    public_routes = ["/auth", "/docs", "/echo", "/swaggerui", "/swagger.json", "/utils"]
+    public_route_patterns = [
+        r"^/auth.*",
+        r"^/docs",
+        r"^/echo",
+        r"^/swaggerui.*",
+        r"^/swagger.json",
+        r"^/utils.*",
+        r"^/study/(?P<uuid>[0-9a-f]{8}\-[0-9a-f]{4}\-4[0-9a-f]{3}\-[89ab][0-9a-f]{3}\-[0-9a-f]{12})/dashboard/public",
+    ]
 
-    for route in public_routes:
-        if request.path.startswith(route):
+    for route_pattern in public_route_patterns:
+        if bool(re.search(route_pattern, request.path)):
             return
     if g.user:
         return
@@ -372,6 +380,7 @@ def is_granted(permission: str, study=None):
             "study_metadata",
             "version",
             "dataset_metadata",
+            "update_dashboard",
         ],
         "viewer": ["viewer", "view"],
     }

@@ -229,7 +229,6 @@ class RedcapProjectDashboards(Resource):
             redcap_project_dashboard.to_dict()
             for redcap_project_dashboard in redcap_project_dashboards_query
         ]
-        print(redcap_project_dashboards)
         return redcap_project_dashboards, 201
 
     @api.doc("Create a new study dashboard")
@@ -351,28 +350,6 @@ class RedcapProjectDashboards(Resource):
         return connect_redcap_project_dashboard, 201
 
 
-@api.route("/study/<study_id>/dashboard/public")
-class RedcapProjectDashboardsPublic(Resource):
-    @api.doc("Get public study dashboards")
-    @api.response(200, "Success")
-    @api.response(400, "Validation Error")
-    @api.marshal_with(redcap_project_dashboard_model, as_list=True)
-    def get(self, study_id: str):
-        """Get all REDCap project dashboards"""
-        study = model.db.session.query(model.Study).get(study_id)
-        redcap_project_dashboards_query = model.StudyDashboard.query.filter_by(
-            study=study
-        )
-        redcap_project_dashboards: List[Dict[str, Any]] = [
-            redcap_project_dashboard.to_dict()
-            for redcap_project_dashboard in redcap_project_dashboards_query
-        ]
-        public_redcap_project_dashboards: List[Dict[str, Any]] = list(
-            filter(lambda dashboard: dashboard["public"], redcap_project_dashboards)
-        )
-        return public_redcap_project_dashboards, 201
-
-
 @api.route("/study/<study_id>/dashboard/<dashboard_id>/connector")
 class RedcapProjectDashboardConnector(Resource):
     @api.doc("Get a study dashboard connector")
@@ -410,16 +387,17 @@ class RedcapProjectDashboard(Resource):
         if not is_granted("view", study):
             return "Access denied, you can not view this dashboard", 403
 
-        # Retrieve Dashboard Redis Cache
-        cached_redcap_project_dashboard = caching.cache.get(
-            f"$study_id#{study_id}$dashboard_id#{dashboard_id}"
-        )
+        # Retrieve Dashboard Redis Cache if Available
+        # cached_redcap_project_dashboard = caching.cache.get(
+        #     f"$study_id#{study_id}$dashboard_id#{dashboard_id}"
+        # )
+        # if cached_redcap_project_dashboard is not None:
+        #     return cached_redcap_project_dashboard, 201
 
-        if cached_redcap_project_dashboard is not None:
-            return cached_redcap_project_dashboard, 201
-
+        # Get Base Transform Config for ETL - Live
         transformConfig = redcapLiveTransformConfig
 
+        # Query Project Dashboard by ID
         redcap_project_dashboard_query: Any = model.db.session.query(
             model.StudyDashboard
         ).get(dashboard_id)
@@ -465,11 +443,12 @@ class RedcapProjectDashboard(Resource):
             ],
         )
 
-        # Structure REDCap ETL Config
-        redcap_etl_config = {
-            "redcap_api_url": redcap_project_view["api_url"],
-            "redcap_api_key": redcap_project_view["api_key"],
-        } | transformConfig
+        # Set REDCap API Config
+        transformConfig["redcap_api_url"] = redcap_project_view["api_url"]
+        transformConfig["redcap_api_key"] = redcap_project_view["api_key"]
+
+        # Finalize ETL Config
+        redcap_etl_config = transformConfig
 
         redcapTransform = RedcapLiveTransform(redcap_etl_config)
 
@@ -499,7 +478,7 @@ class RedcapProjectDashboard(Resource):
             f"$study_id#{study_id}$dashboard_id#{dashboard_id}",
             redcap_project_dashboard,
         )
-        print("Live Transform")
+
         return redcap_project_dashboard, 201
 
     @api.doc("Update a study dashboard")
@@ -647,42 +626,50 @@ class RedcapProjectDashboard(Resource):
         return 204
 
 
-@api.route("/study/<study_id>/dashboard/<dashboard_id>/release")
-class RedcapProjectDashboardRelease(Resource):
-    @api.doc("Get a study dashboard")
+@api.route("/study/<study_id>/dashboard/public")
+class RedcapProjectDashboardPublic(Resource):
+    @api.doc("Get the public study dashboard")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(redcap_project_dashboard_model)
-    def get(self, study_id: str, dashboard_id: str):
+    def get(self, study_id: str):
         """Get REDCap project dashboard"""
         model.db.session.flush()
         study = model.db.session.query(model.Study).get(study_id)
-        if not is_granted("view", study):
-            return "Access denied, you can not view this dashboard", 403
+        # if not is_granted("view", study):
+        #     return "Access denied, you can not view this dashboard", 403
 
-        # Retrieve Dashboard Redis Cache
-        cached_redcap_project_dashboard = caching.cache.get(
-            f"$study_id#{study_id}$dashboard_id#{dashboard_id}#release"
+        # Get Dashboard
+        redcap_project_dashboards_query = model.StudyDashboard.query.filter_by(
+            study=study, public=True
         )
+        #  List of Dashboards
+        redcap_project_dashboards: List[Dict[str, Any]] = [
+            redcap_project_dashboard.to_dict()
+            for redcap_project_dashboard in redcap_project_dashboards_query
+        ]
+        # There Should Only Be One, Pop it From The List If It's There
+        if len(redcap_project_dashboards) > 0:
+            redcap_project_dashboard = redcap_project_dashboards.pop()
+        else:
+            return "No public dashboard found", 404
 
-        if cached_redcap_project_dashboard is not None:
-            return cached_redcap_project_dashboard, 201
+        # Public Dashboard ID
+        dashboard_id = redcap_project_dashboard["id"]
 
+        # Retrieve Dashboard Redis Cache if Available
+        # cached_redcap_project_dashboard = caching.cache.get(
+        #     f"$study_id#{study_id}$dashboard_id#{dashboard_id}#public"
+        # )
+        # if cached_redcap_project_dashboard is not None:
+        #     return cached_redcap_project_dashboard, 201
+
+        #
+        # No Cache, Do ETL
+        #
+
+        # Get Base Transform Config for ETL - Release
         transformConfig = redcapReleaseTransformConfig
-
-        redcap_project_dashboard_query: Any = model.db.session.query(
-            model.StudyDashboard
-        ).get(dashboard_id)
-        redcap_project_dashboard: Dict[
-            str, Any
-        ] = redcap_project_dashboard_query.to_dict()
-
-        # Get REDCap Project
-        redcap_id = redcap_project_dashboard["redcap_id"]
-        redcap_project_view_query: Any = model.db.session.query(model.StudyRedcap).get(
-            redcap_id
-        )
-        redcap_project_view: Dict[str, Any] = redcap_project_view_query.to_dict()
 
         # Set report_ids for ETL
         report_keys = []
@@ -703,7 +690,7 @@ class RedcapProjectDashboardRelease(Resource):
             for report in redcapLiveTransformConfig["reports"]
             if report["key"] in report_keys
         ]
-        print(transformConfig["reports"])
+
         # Set Post Transform Merge
         index_columns, post_transform_merges = transformConfig["post_transform_merge"]
         transformConfig["post_transform_merge"] = (
@@ -715,12 +702,10 @@ class RedcapProjectDashboardRelease(Resource):
             ],
         )
 
-        # Structure REDCap ETL Config
-        redcap_etl_config = {
-            "redcap_api_url": redcap_project_view["api_url"],
-            "redcap_api_key": redcap_project_view["api_key"],
-        } | transformConfig
+        # Finalize ETL Config
+        redcap_etl_config = transformConfig
 
+        # Execute REDCap Release ETL
         redcapTransform = RedcapReleaseTransform(redcap_etl_config)
 
         # Execute Dashboard Module Transforms
@@ -746,8 +731,8 @@ class RedcapProjectDashboardRelease(Resource):
 
         # Create Dashboard Redis Cache
         caching.cache.set(
-            f"$study_id#{study_id}$dashboard_id#{dashboard_id}#release",
+            f"$study_id#{study_id}$dashboard_id#{dashboard_id}#public",
             redcap_project_dashboard,
         )
-        print("Release Transform")
+
         return redcap_project_dashboard, 201
