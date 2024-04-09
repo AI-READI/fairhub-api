@@ -4262,15 +4262,15 @@ surveyCompletionStatusTransformConfig: Tuple[str, Dict[str, Any]] = (
                 "vtype": "DoubleCategorical",
                 "methods": [
                     {
-                        "groups": ["px_racial_ethnic_discrimination_survey_complete",],
+                        "groups": ["px_racial_ethnic_discrimination_survey_complete"],
                         "value": "record_id",
                         "func": "count",
                     }
                 ],
                 "accessors": {
                     "filterby": {
-                        "name": "Count (N)",
-                        "field": "record_id",
+                        "name": "PhenX Racial and Ethnic Discrimination Survey",
+                        "field": "px_racial_ethnic_discrimination_survey_complete",
                         "missing_value": missing_value_generic,
                         "astype": str,
                     },
