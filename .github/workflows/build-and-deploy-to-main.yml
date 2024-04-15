@@ -3,6 +3,9 @@
 name: (main) Build and push api image to Azure Container Registry
 
 on:
+  push:
+    branches:
+      - main
   pull_request:
     types: [closed]
     branches:
