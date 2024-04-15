@@ -1,0 +1,13 @@
+version: '3'
+services:
+  flask-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    environment:
+      FLASK_DEBUG: 0
+      FLASK_APP: ./app.py
+      FAIRHUB_DATABASE_URL: "${FAIRHUB_DATABASE_URL}"
+      FAIRHUB_SECRET: "${FAIRHUB_SECRET}"

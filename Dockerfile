@@ -1,4 +1,6 @@
-FROM python:3.8-alpine
+FROM python:3.10-alpine
+
+EXPOSE 5000
 
 WORKDIR /app
 
@@ -14,6 +16,19 @@ COPY poetry.lock pyproject.toml ./
 RUN poetry config virtualenvs.create false
 RUN poetry install
 
-COPY . .
+COPY apis ./apis
+COPY model ./model
+COPY core ./core
+COPY modules ./modules
+COPY app.py .
+COPY config.py .
+COPY caching.py .
 
-CMD ["python3", "-m" , "flask", "run", "--host=0.0.0.0", "--port=5000"]
+COPY alembic ./alembic
+COPY alembic.ini .
+
+COPY entrypoint.sh .
+
+RUN chmod +x entrypoint.sh
+
+ENTRYPOINT ["./entrypoint.sh"]

@@ -1,117 +1,155 @@
-from flask import request
-from flask_restx import Namespace, Resource, fields
+"""APIs for study operations""" ""
+from typing import Any, Union
 
-from model import Study, db
+from flask import Response, g, request
+from flask_restx import Namespace, Resource, fields, reqparse
+from jsonschema import ValidationError, validate
 
-api = Namespace("study", description="study operations", path="/")
+import model
 
-owner = api.model(
-    "Owner",
-    {
-        "id": fields.String(required=True),
-        "affiliations": fields.String(required=True),
-        "email": fields.String(required=True),
-        "first_name": fields.String(required=True),
-        "last_name": fields.String(required=True),
-        "orcid": fields.String(required=True),
-        "roles": fields.List(fields.String, required=True),
-        "permission": fields.String(required=True),
-        "status": fields.String(required=True),
-    },
-)
+from .authentication import is_granted
 
-study = api.model(
+api = Namespace("Study", description="Study operations", path="/")
+
+
+study_model = api.model(
     "Study",
     {
-        "id": fields.String(required=True),
-        "name": fields.String(required=True),
-        "title": fields.String(required=True),
-        "description": fields.String(required=True),
-        "image": fields.String(required=True),
-        "size": fields.String(required=True),
-        "keywords": fields.String(required=True),
-        "last_updated": fields.String(required=True),
-        "owner": fields.Nested(owner, required=True),
+        "title": fields.String(required=True, default=""),
+        "image": fields.String(required=True, default=""),
     },
 )
 
 
 @api.route("/study")
 class Studies(Resource):
-    @api.doc("list_study")
+    """All studies"""
+
+    parser_study = reqparse.RequestParser(bundle_errors=True)
+    parser_study.add_argument(
+        "title", type=str, required=True, location="json", help="The title of the Study"
+    )
+    parser_study.add_argument(
+        "image",
+        type=list,
+        required=True,
+        location="json",
+        help="The image for the Study",
+    )
+
+    @api.doc(description="Return a list of all studies")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.param("id", "The study identifier")
-    # @api.marshal_list_with(study)
+    # @api.marshal_with(study_model)
     def get(self):
-        studies = Study.query.all()
-        return [s.to_dict() for s in studies]
+        """Return a list of all studies"""
+        study_contributors = model.StudyContributor.query.filter(
+            model.StudyContributor.user_id == g.user.id
+        ).all()  # Filter contributors where user_id matches the user's id
 
+        study_ids = [contributor.study_id for contributor in study_contributors]
+
+        studies = model.Study.query.filter(model.Study.id.in_(study_ids)).all()
+
+        return [s.to_dict() for s in studies], 200
+
+    @api.expect(study_model)
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
     def post(self):
-        add_study = Study.from_data(request.json)
-        db.session.add(add_study)
-        db.session.commit()
-        return add_study.to_dict()
+        """Create a new study"""
+
+        # Schema validation
+        schema = {
+            "type": "object",
+            "required": ["title", "image", "acronym"],
+            "additionalProperties": False,
+            "properties": {
+                "title": {"type": "string", "minLength": 1, "maxLength": 300},
+                "acronym": {"type": "string", "maxLength": 14},
+                "image": {"type": "string"},
+            },
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+
+        data: Union[Any, dict] = request.json
+
+        add_study = model.Study.from_data(data)
+        model.db.session.add(add_study)
+
+        study_id = add_study.id
+        study_ = model.Study.query.get(study_id)
+
+        study_contributor = model.StudyContributor.from_data(study_, g.user, "owner")
+        model.db.session.add(study_contributor)
+
+        model.db.session.commit()
+
+        return study_.to_dict(), 201
 
 
 @api.route("/study/<study_id>")
 class StudyResource(Resource):
-    @api.doc("update study")
+    """Return a study's details"""
+
+    @api.doc(description="Get a study's details")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.param("id", "The study identifier")
     # @api.marshal_with(study)
     def get(self, study_id: int):
-        study1 = Study.query.get(study_id)
-        return study1.to_dict()
+        """Return a study's details"""
+        study1 = model.Study.query.get(study_id)
 
+        return study1.to_dict(), 200
+
+    @api.expect(study_model)
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    @api.doc(description="Update a study's details")
     def put(self, study_id: int):
-        update_study = Study.query.get(study_id)
-        # if not addStudy.validate():
-        #     return 'error', 422
+        """Update a study"""
+        # Schema validation
+        schema = {
+            "type": "object",
+            "required": ["title", "image", "acronym"],
+            "additionalProperties": False,
+            "properties": {
+                "title": {"type": "string", "minLength": 1},
+                "image": {"type": "string", "minLength": 1},
+                "acronym": {"type": "string", "maxLength": 14},
+            },
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
+
+        update_study = model.Study.query.get(study_id)
+
+        if not is_granted("update_study", update_study):
+            return "Access denied, you can not modify", 403
+
         update_study.update(request.json)
-        db.session.commit()
-        return update_study.to_dict()
+        model.db.session.commit()
 
+        return update_study.to_dict(), 200
+
+    @api.response(204, "Success")
+    @api.response(400, "Validation Error")
+    @api.doc(description="Delete a study")
     def delete(self, study_id: int):
-        delete_study = Study.query.get(study_id)
-        for d in delete_study.dataset:
-            for version in d.dataset_versions:
-                version.participants.clear()
-        for d in delete_study.dataset:
-            for version in d.dataset_versions:
-                db.session.delete(version)
-            db.session.delete(d)
-        for p in delete_study.participants:
-            db.session.delete(p)
-        db.session.delete(delete_study)
-        db.session.commit()
-        return "", 204
+        """Delete a study"""
+        study = model.Study.query.get(study_id)
 
+        if not is_granted("delete_study", study):
+            return "Access denied, you can not delete study", 403
 
-# @api.route("/viewProfile", methods=["GET"])
-# def viewProfile():
-#     dic = {
-#         "username": "admin",
-#         "email": "aydan.gasimova2@gmail.com",
-#         "fullname": "Aydan Gasimova",
-#         "image": f" https://api.dicebear.com/5.x/shapes/svg?seed=$"
-#         f"{str(random.randint(0,1000))}",
-#         "institution": "CALMI2",
-#         "location": "San Diego, CA",
-#         "password": "admin",
-#         "timezone": "(GMT-11:00) Midway Island",
-#     }
-#     return jsonify(dic)
-#
+        model.db.session.delete(study)
+        model.db.session.commit()
 
-
-# @study.route("/viewProfile", methods=["POST"])
-# def update_user_profile():
-#     data = request.json
-#
-#     if data is not None:
-#         data["id"] = 3
-#
-#     return jsonify(data), 201
-#
+        return Response(status=204)

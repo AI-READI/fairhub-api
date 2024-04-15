@@ -1,0 +1,30 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: fairhub_local
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+  cache:
+    image: redis:7.2-alpine
+    restart: always
+    environment:
+      CACHE_DB: fairhub
+      CACHE_HOST: localhost
+      CACHE_PORT: 6379
+      CACHE_URL: redis://127.0.0.1:6379
+      CACHE_PREFIX: $fairhub-io
+      CACHE_TIMEOUT: 86400
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - ./redis-data:/data
+

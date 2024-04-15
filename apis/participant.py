@@ -1,17 +1,22 @@
-from flask import Response, jsonify, request
+from typing import Any, Union
+
+from flask import Response, request
 from flask_restx import Namespace, Resource, fields
 
-from model import Participant, Study, db
+import model
 
-api = Namespace("participant", description="participant operations", path="/")
+from .authentication import is_granted
 
-participants = api.model(
-    "Study",
+api = Namespace("Participant", description="Participant operations", path="/")
+
+participant_model = api.model(
+    "Participant",
     {
         "id": fields.String(required=True),
         "first_name": fields.String(required=True),
         "last_name": fields.String(required=True),
-        "firstname": fields.String(required=True),
+        "created_at": fields.String(required=True),
+        "updated_on": fields.String(required=True),
         "address": fields.String(required=True),
         "age": fields.String(required=True),
     },
@@ -23,32 +28,48 @@ class AddParticipant(Resource):
     @api.doc("participants")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.param("id", "Adding participants")
-    @api.marshal_with(participants)
-    def get(self, study_id: int):
-        participants = Participant.query.all()
-        return [p.to_dict() for p in participants]
+    @api.marshal_with(participant_model)
+    def get(self, study_id: int):  # pylint: disable= unused-argument
+        participants = model.Participant.query.all()
+        return [p.to_dict() for p in participants], 200
 
+    @api.response(201, "Success")
+    @api.response(400, "Validation Error")
+    # @api.marshal_with(participant_model)
     def post(self, study_id: int):
-        study = Study.query.get(study_id)
-        add_participant = Participant.from_data(request.json, study)
-        db.session.add(add_participant)
-        db.session.commit()
-        return jsonify(add_participant.to_dict()), 201
+        data: Union[Any, dict] = request.json
+        if is_granted("viewer", study_id):
+            return "Access denied, you can not modify", 403
+        study = model.Study.query.get(study_id)
+        add_participant = model.Participant.from_data(data, study)
+        model.db.session.add(add_participant)
+        model.db.session.commit()
+        return add_participant.to_dict(), 201
 
 
 @api.route("/study/<study_id>/participants/<participant_id>")
 class UpdateParticipant(Resource):
+    @api.doc("participants")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def put(self, study_id, participant_id: int):
-        update_participant = Participant.query.get(participant_id)
+    @api.marshal_with(participant_model)
+    def put(self, study_id: int, participant_id: int):
+        if is_granted("viewer", study_id):
+            return "Access denied, you can not modify", 403
+        is_granted("viewer", study_id)
+        update_participant = model.Participant.query.get(participant_id)
         update_participant.update(request.json)
-        db.session.commit()
-        return jsonify(update_participant.to_dict())
+        model.db.session.commit()
+        return update_participant.to_dict(), 200
 
-    def delete(self, study_id, participant_id: int):
-        delete_participant = Participant.query.get(participant_id)
-        db.session.delete(delete_participant)
-        db.session.commit()
+    @api.response(204, "Success")
+    @api.response(400, "Validation Error")
+    def delete(self, study_id: int, participant_id: int):
+        if is_granted("viewer", study_id):
+            return "Access denied, you can not modify", 403
+        is_granted("viewer", study_id)
+
+        delete_participant = model.Participant.query.get(participant_id)
+        model.db.session.delete(delete_participant)
+        model.db.session.commit()
         return Response(status=204)
