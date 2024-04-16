@@ -66,6 +66,7 @@ class SignUpUser(Resource):
                 "bpatel@fairhub.io",
                 "sanjay@fairhub.io",
                 "aydan@fairhub.io",
+                "cordier@ohsu.edu",
             ]
 
             if data["email_address"] not in bypassed_emails:
