@@ -147,7 +147,6 @@ class RedcapLiveTransform(object):
             report_kwdargs = report_config["kwdargs"] | self._default_report_kwdargs
             report_transforms = report_config["transforms"]
             report = self.project.export_report(**report_kwdargs)
-            pd.DataFrame(report, dtype = str).to_csv(f"~/Downloads/etl-redcap-export-live-{report_kwdargs['report_id']}")
             # Structure Reports
             self.reports[report_key] = {
                 "id": report_kwdargs["report_id"],

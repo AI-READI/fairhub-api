@@ -157,8 +157,6 @@ class RedcapReleaseTransform(object):
                 os.environ.get("FAIRHUB_BLOB_STORAGE_REDCAP_ETL_CONTAINER") or "",
                 f"{report_config['filepath']}/{report_config['filename']}"
             )
-
-            report.to_csv(f"~/Downloads/etl-redcap-export-release-{report_kwdargs['report_id']}")
             # Structure Reports
             self.reports[report_key] = {
                 "id": report_kwdargs["report_id"],
