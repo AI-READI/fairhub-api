@@ -27,7 +27,6 @@ from apis.authentication import (
     UnauthenticatedException,
     authentication,
     authorization,
-    is_public,
 )
 from apis.exception import ValidationException
 

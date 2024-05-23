@@ -383,19 +383,6 @@ def authorization():
     for route_pattern in public_route_patterns:
         if bool(re.search(route_pattern, request.path)):
             return
-    for route in public_routes:
-        if path.startswith(route):
-            return True
-
-    return False
-
-
-def authorization():
-    """it checks whether url is allowed to be reached to specific routes"""
-    # white listed routes
-    if is_public(request.path):
-        return
-
     if g.user:
         return
     raise UnauthenticatedException("Access denied", 403)

@@ -17,7 +17,7 @@ from .dataset_metadata.dataset_subject import DatasetSubject
 from .dataset_metadata.dataset_title import DatasetTitle
 from .db import db
 from .email_verification import EmailVerification
-from .invite import Invite
+from .invited_study_contributor import StudyInvitedContributor
 from .notification import Notification
 from .participant import Participant
 from .published_dataset import PublishedDataset
@@ -95,7 +95,7 @@ __all__ = [
     "StudyStatus",
     "Identifiers",
     "Arm",
-    "Invite",
+    "StudyInvitedContributor",
     "StudyException",
     "EmailVerification",
     "TokenBlacklist",

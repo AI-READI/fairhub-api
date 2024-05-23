@@ -1,6 +1,5 @@
 from flask_mailman import EmailMessage
 from flask import render_template, Response
-import app
 import os
 import importlib
 import datetime

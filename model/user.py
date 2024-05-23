@@ -52,12 +52,6 @@ class User(db.Model):  # type: ignore
         back_populates="user",
         cascade="all, delete",
     )
-    invited_contributors = db.relationship(
-        "Invite",
-        back_populates="user",
-        lazy="dynamic",
-        cascade="all, delete",
-    )
 
     def to_dict(self):
         # latest_object = max(self.email_verification, key=lambda x: x.created_at) if self.email_verification else None

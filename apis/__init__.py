@@ -24,7 +24,6 @@ from .dataset_metadata.dataset_rights import api as rights
 from .dataset_metadata.dataset_subject import api as subject
 from .dataset_metadata.dataset_title import api as title
 from .file import api as file_api
-from .invite_users import api as invite_general_users
 from .participant import api as participants_api
 from .redcap import api as redcap
 from .study import api as study_api
@@ -105,7 +104,6 @@ __all__ = [
 api.add_namespace(dataset_metadata_namespace)
 api.add_namespace(study_metadata_namespace)
 api.add_namespace(authentication)
-api.add_namespace(invite_general_users)
 
 
 @api.route("/echo", endpoint="echo")
