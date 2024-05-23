@@ -1,13 +1,16 @@
 # Will be deployed to https://api.fairhub.io
 
-name: (main) Build and push api image to Azure Container Registry 
+name: (main) Build and push api image to Azure Container Registry
 
 on:
-    pull_request:
-      types: [closed]
-      branches:
-        - main
-    workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
@@ -22,31 +25,24 @@ jobs:
       AZURE_REGISTRY_LOGIN_SERVER: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}
       AZURE_REGISTRY_USERNAME: ${{ secrets.AZURE_REGISTRY_USERNAME }}
       AZURE_REGISTRY_PASSWORD: ${{ secrets.AZURE_REGISTRY_PASSWORD }}
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Wait for format check
-        uses: lewagon/wait-on-check-action@v1.3.1
-        with:
-          ref: main
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          check-name: 'Run formatter'
-      
       - name: Wait for linting to pass
         uses: lewagon/wait-on-check-action@v1.3.1
         with:
           ref: main
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          check-name: 'Run linters (3.10)'
+          check-name: "Run linters (3.10)"
 
       - name: Wait for tests to pass
         uses: lewagon/wait-on-check-action@v1.3.1
         with:
           ref: main
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          check-name: 'Run tests (3.10)'
+          check-name: "Run tests (3.10)"
 
       - name: Login to Azure Container Registry
         uses: azure/docker-login@v1
@@ -65,4 +61,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/fairhub:latest,${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/fairhub:${{ steps.git_sha.outputs.sha }}
+          tags: ${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/fairhub-api:latest,${{ secrets.AZURE_REGISTRY_LOGIN_SERVER }}/fairhub-api:${{ steps.git_sha.outputs.sha }}

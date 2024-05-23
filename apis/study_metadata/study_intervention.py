@@ -1,4 +1,5 @@
 """API routes for study intervention metadata"""
+
 import typing
 
 from flask import Response, request
@@ -17,7 +18,6 @@ study_intervention = api.model(
         "type": fields.String(required=True),
         "name": fields.String(required=True),
         "description": fields.String(required=True),
-        "arm_group_label_list": fields.List(fields.String, required=True),
         "other_name_list": fields.List(fields.String, required=True),
     },
 )
@@ -75,19 +75,13 @@ class StudyInterventionResource(Resource):
                     },
                     "name": {"type": "string", "minLength": 1},
                     "description": {"type": "string"},
-                    "arm_group_label_list": {
-                        "type": "array",
-                        "items": {"type": "string", "minLength": 1},
-                        "minItems": 1,
-                        "uniqueItems": True,
-                    },
                     "other_name_list": {
                         "type": "array",
                         "items": {"type": "string", "minLength": 1},
                         "uniqueItems": True,
                     },
                 },
-                "required": ["name", "type", "arm_group_label_list"],
+                "required": ["name", "type"],
             },
             "uniqueItems": True,
         }

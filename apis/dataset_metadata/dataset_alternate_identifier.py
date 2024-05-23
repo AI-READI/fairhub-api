@@ -1,4 +1,5 @@
 """API endpoints for dataset alternate identifier"""
+
 from typing import Any, Union
 
 from flask import Response, request

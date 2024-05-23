@@ -13,7 +13,8 @@ class DatasetContributor(db.Model):  # type: ignore
 
     __tablename__ = "dataset_contributor"
     id = db.Column(db.CHAR(36), primary_key=True)
-    name = db.Column(db.String, nullable=False)
+    family_name = db.Column(db.String, nullable=True)
+    given_name = db.Column(db.String, nullable=False)
     name_type = db.Column(db.String, nullable=True)
     name_identifier = db.Column(db.String, nullable=False)
     name_identifier_scheme = db.Column(db.String, nullable=False)
@@ -29,7 +30,8 @@ class DatasetContributor(db.Model):  # type: ignore
     def to_dict(self):
         return {
             "id": self.id,
-            "name": self.name,
+            "given_name": self.given_name,
+            "family_name": self.family_name,
             "name_type": self.name_type,
             "name_identifier": self.name_identifier,
             "name_identifier_scheme": self.name_identifier_scheme,
@@ -43,7 +45,8 @@ class DatasetContributor(db.Model):  # type: ignore
     def to_dict_metadata(self):
         return {
             "id": self.id,
-            "name": self.name,
+            "first_name": self.given_name,
+            "last_name": self.family_name,
             "name_type": self.name_type,
             "contributor_type": self.contributor_type,
             "creator": self.creator,
@@ -56,7 +59,8 @@ class DatasetContributor(db.Model):  # type: ignore
         return dataset_contributor
 
     def update(self, data: dict):
-        self.name = data["name"]
+        self.given_name = data["given_name"]
+        self.family_name = data["family_name"]
         self.name_type = data["name_type"]
         self.name_identifier = data["name_identifier"]
         self.name_identifier_scheme = data["name_identifier_scheme"]

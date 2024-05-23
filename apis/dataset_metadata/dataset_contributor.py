@@ -1,4 +1,5 @@
 """API for dataset contributor metadata"""
+
 from typing import Any, Union
 
 from flask import Response, request
@@ -53,10 +54,11 @@ class DatasetContributorResource(Resource):
                         "type": "string",
                         "minLength": 1,
                     },
-                    "name": {
+                    "given_name": {
                         "type": "string",
                         "minLength": 1,
                     },
+                    "family_name": {"type": ["string", "null"]},
                     "name_identifier": {
                         "type": "string",
                         "minLength": 1,
@@ -102,7 +104,7 @@ class DatasetContributorResource(Resource):
                 "required": [
                     "contributor_type",
                     "name_type",
-                    "name",
+                    "given_name",
                     "affiliations",
                     "name_identifier",
                     "name_identifier_scheme",
@@ -193,10 +195,11 @@ class DatasetCreatorResource(Resource):
                 "additionalProperties": False,
                 "properties": {
                     "id": {"type": "string"},
-                    "name": {
+                    "given_name": {
                         "type": "string",
                         "minLength": 1,
                     },
+                    "family_name": {"type": ["string", "null"]},
                     "name_identifier": {
                         "type": "string",
                         "minLength": 1,
@@ -241,7 +244,7 @@ class DatasetCreatorResource(Resource):
                 },
                 "required": [
                     "name_type",
-                    "name",
+                    "given_name",
                     "affiliations",
                     "name_identifier",
                     "name_identifier_scheme",

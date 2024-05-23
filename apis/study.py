@@ -62,11 +62,12 @@ class Studies(Resource):
         # Schema validation
         schema = {
             "type": "object",
-            "required": ["title", "image"],
+            "required": ["title", "image", "acronym"],
             "additionalProperties": False,
             "properties": {
-                "title": {"type": "string", "minLength": 1},
-                "image": {"type": "string", "minLength": 1},
+                "title": {"type": "string", "minLength": 1, "maxLength": 300},
+                "acronym": {"type": "string", "maxLength": 14},
+                "image": {"type": "string"},
             },
         }
 
@@ -81,14 +82,14 @@ class Studies(Resource):
         model.db.session.add(add_study)
 
         study_id = add_study.id
-        study_obj = model.Study.query.get(study_id)
+        study_ = model.Study.query.get(study_id)
 
-        study_contributor = model.StudyContributor.from_data(study_obj, g.user, "owner")
+        study_contributor = model.StudyContributor.from_data(study_, g.user, "owner")
         model.db.session.add(study_contributor)
 
         model.db.session.commit()
 
-        return study_obj.to_dict(), 201
+        return study_.to_dict(), 201
 
 
 @api.route("/study/<study_id>")
@@ -114,11 +115,12 @@ class StudyResource(Resource):
         # Schema validation
         schema = {
             "type": "object",
-            "required": ["title", "image"],
+            "required": ["title", "image", "acronym"],
             "additionalProperties": False,
             "properties": {
                 "title": {"type": "string", "minLength": 1},
                 "image": {"type": "string", "minLength": 1},
+                "acronym": {"type": "string", "maxLength": 14},
             },
         }
 
@@ -146,6 +148,7 @@ class StudyResource(Resource):
 
         if not is_granted("delete_study", study):
             return "Access denied, you can not delete study", 403
+
         model.db.session.delete(study)
         model.db.session.commit()
 

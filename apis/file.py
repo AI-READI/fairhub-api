@@ -1,4 +1,5 @@
 """APIs for study files"""
+
 import importlib
 import os
 import uuid
@@ -80,6 +81,8 @@ class Files(Resource):
             )
 
             response_json = response.json()
+
+            print(response_json)
 
             paths = []
 

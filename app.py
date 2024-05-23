@@ -1,10 +1,12 @@
 """Entry point for the application."""
+
 import datetime
 import importlib
 import logging
 import os
 from datetime import timezone
 
+import click
 import jwt
 from flask import Flask, request, g
 from flask_bcrypt import Bcrypt
@@ -12,8 +14,12 @@ from flask_cors import CORS
 from flask_mailman import Mail
 from growthbook import GrowthBook
 from sqlalchemy import MetaData, text
+from sqlalchemy import MetaData, inspect
+from sqlalchemy.ext.compiler import compiles
+from sqlalchemy.schema import DropTable
 from waitress import serve
 
+import caching
 import config
 import model
 from apis import api
@@ -31,7 +37,13 @@ bcrypt = Bcrypt()
 mail = Mail()
 
 
-def create_app(config_module=None):
+# Add Cascade to Table Drop Call in destroy-schema CLI command
+@compiles(DropTable, "postgresql")
+def _compile_drop_table(element, compiler):
+    return f"{compiler.visit_drop_table(element)} CASCADE"
+
+
+def create_app(config_module=None, loglevel="INFO"):
     """Initialize the core application."""
     # create and configure the app
     app = Flask(__name__)
@@ -40,7 +52,7 @@ def create_app(config_module=None):
     app.config["RESTX_MASK_SWAGGER"] = False
 
     # set up logging
-    logging.basicConfig(level=logging.DEBUG)
+    logging.basicConfig(level=getattr(logging, loglevel))
 
     # Initialize config
     app.config.from_object(config_module or "config")
@@ -70,15 +82,18 @@ def create_app(config_module=None):
     model.db.init_app(app)
     api.init_app(app)
     bcrypt.init_app(app)
+    caching.cache.init_app(app)
+
     mail.init_app(app)
     cors_origins = [
         "https://brave-ground-.*-.*.centralus.2.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
+        "https://staging.app.fairhub.io",
+        "https://app.fairhub.io",
         "https://staging.fairhub.io",
         "https://fairhub.io",
     ]
-
     if app.debug:
-        cors_origins.append("http://localhost:3000")
+        cors_origins.extend(["http://localhost:3000"])
 
     # Only allow CORS origin for localhost:3000
     # and any subdomain of azurestaticapps.net/
@@ -100,29 +115,80 @@ def create_app(config_module=None):
 
     # app.config[
     #     "CORS_ALLOW_HEADERS"
-    # ] = "Content-Type, Authorization, Access-Control-Allow-Origin,
-    # Access-Control-Allow-Credentials"
-    # app.config["CORS_SUPPORTS_CREDENTIALS"] = True
+    # ] = "Content-Type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
     # app.config[
     #     "CORS_EXPOSE_HEADERS"
-    # ] = "Content-Type, Authorization, Access-Control-Allow-Origin,
-    # Access-Control-Allow-Credentials"
+    # ] = "Content-Type, Authorization, Access-Control-Allow-Origin, Access-Control-Allow-Credentials"
+    # app.config["CORS_SUPPORTS_CREDENTIALS"] = True
 
-    # CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": "True"}})
+    # CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": True}})
 
-    #
-    # @app.cli.command("create-schema")
-    # def create_schema():
-    #     engine = model.db.session.get_bind()
-    #     metadata = MetaData()
-    #     metadata = MetaData()
-    #     metadata.reflect(bind=engine)
-    #     table_names = [table.name for table in metadata.tables.values()]
-    #     print(table_names)
-    #     if len(table_names) == 0:
-    #         with engine.begin() as conn:
-    #             """Create the database schema."""
-    #             model.db.create_all()
+    @app.cli.command("create-schema")
+    def create_schema():
+        """Create the database schema."""
+        engine = model.db.session.get_bind()
+        metadata = MetaData()
+        metadata.reflect(bind=engine)
+        table_names = [table.name for table in metadata.tables.values()]
+        if len(table_names) == 0:
+            with engine.begin():
+                model.db.create_all()
+
+    @app.cli.command("destroy-schema")
+    def destroy_schema():
+        """Create the database schema."""
+        # If DB is Azure, Skip
+        if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
+            return
+        engine = model.db.session.get_bind()
+        with engine.begin():
+            model.db.drop_all()
+
+    @app.cli.command("cycle-schema")
+    def cycle_schema():
+        """Destroy then re-create the database schema."""
+        # If DB is Azure, Skip
+        if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
+            return
+        engine = model.db.session.get_bind()
+        metadata = MetaData()
+        metadata.reflect(bind=engine)
+        table_names = [table.name for table in metadata.tables.values()]
+        if len(table_names) == 0:
+            with engine.begin():
+                model.db.drop_all()
+                model.db.create_all()
+
+    @app.cli.command("list-schemas")
+    def list_schemas():
+        engine = model.db.session.get_bind()
+        inspector = inspect(engine)
+        schema_names = inspector.get_schema_names()
+        print("SCHEMAS")
+        for schema_name in schema_names:
+            print(schema_name)
+
+    @app.cli.command("inspect-schema")
+    @click.argument("schema")
+    def inspect_schema(schema=None):
+        """Print database schemas, tables, and columns to CLI.
+        Optional argument schema. Default all schemas inspected.
+        """
+        engine = model.db.session.get_bind()
+        inspector = inspect(engine)
+        schema_names = inspector.get_schema_names()
+        for schema_name in schema_names:
+            if schema is None or schema == schema_name:
+                print("-" * 38)
+                print(f"SCHEMA: {schema_name}")
+                print("-" * 38)
+                for table_name in inspector.get_table_names(schema=schema_name):
+                    print(f"  Table: {table_name}")
+                    for column in inspector.get_columns(table_name, schema=schema_name):
+                        print(f"    Column: {column['name']}")
+                        for k, v in column.items():
+                            print(f"      {k:<16}{str(v):>16}")
+                    print("\n ", "-" * 36)
 
     @app.before_request
     def on_before_request():  # pylint: disable = inconsistent-return-statements
@@ -152,8 +218,17 @@ def create_app(config_module=None):
         if hasattr(g, "gb"):
             g.gb.destroy()
 
-        if is_public(request.path):
-            return resp
+        public_routes = [
+            "/auth",
+            "/docs",
+            "/echo",
+            "/swaggerui",
+            "/swagger.json",
+            "/favicon.ico",
+        ]
+        for route in public_routes:
+            if request.path.startswith(route):
+                return resp
 
         if "token" not in request.cookies:
             return resp
@@ -211,7 +286,6 @@ def create_app(config_module=None):
         #     "Access-Control-Expose-Headers"
         # ] = "Content-Type, Authorization, Access-Control-Allow-Origin,
         # Access-Control-Allow-Credentials"
-
         app.logger.info(resp.headers)
 
         return resp
@@ -244,6 +318,7 @@ def create_app(config_module=None):
         if len(table_names) <= 1:
             with engine.begin():
                 model.db.create_all()
+
     return app
 
 
@@ -252,12 +327,17 @@ if __name__ == "__main__":
 
     parser = ArgumentParser()
     parser.add_argument(
-        "-p", "--port", default=5000, type=int, help="port to listen on"
+        "-P", "--port", default=5000, type=int, help="Port to listen on"
+    )
+    parser.add_argument("-H", "--host", default="0.0.0.0", type=str, help="Host")
+    parser.add_argument(
+        "-L", "--loglevel", default="INFO", type=str, help="Logging level"
     )
     args = parser.parse_args()
     port = args.port
+    host = args.host
+    loglevel = args.loglevel
 
-    flask_app = create_app()
+    flask_app = create_app(loglevel=loglevel)
 
-    # flask_app.run(host="0.0.0.0", port=port)
-    serve(flask_app, port=port)
+    serve(flask_app, port=port, host=host)

@@ -1,6 +1,7 @@
 """This module is used to authenticate users to the system and
 handle few authentication errors. Also, it sets token for logged user
 along with expiration date"""
+
 import datetime
 import importlib
 import os
@@ -60,16 +61,22 @@ class SignUpUser(Resource):
     def post(self):
         """signs up the new users and saves data in DB"""
         data: Union[Any, dict] = request.json
+
+        # Check if the signup feature is enabled
+        if g.gb.is_on("signup") is False or g.gb.is_on("signup") is None:
+            return "Signup is disabled", 403
+
         if os.environ.get("FLASK_ENV") != "testing":
             bypassed_emails = [
                 "test@fairhub.io",
                 "bpatel@fairhub.io",
                 "sanjay@fairhub.io",
                 "aydan@fairhub.io",
+                "cordier@ohsu.edu",
             ]
 
             if data["email_address"] not in bypassed_emails:
-                invite = model.Invite.query.filter_by(
+                invite = model.StudyInvitedContributor.query.filter_by(
                     email_address=data["email_address"]
                 ).one_or_none()
                 if not invite:
@@ -147,9 +154,10 @@ class SignUpUser(Resource):
         ).one_or_none()
         if user:
             return "This email address is already in use", 409
-        invitations = model.Invite.query.filter_by(
+        invitations = model.StudyInvitedContributor.query.filter_by(
             email_address=data["email_address"]
         ).all()
+
         new_user = model.User.from_data(data)
         verification = model.EmailVerification(new_user)
         new_user.email_verified = True
@@ -226,7 +234,7 @@ class Login(Resource):
             email_address = instance
 
             try:
-                validate_email(email_address)
+                validate_email(email_address, check_deliverability=False)
                 return True
             except EmailNotValidError as e:
                 raise ValidationError("Invalid email address format") from e
@@ -359,15 +367,22 @@ def authentication():
     g.user = user
 
 
-def is_public(path: str) -> bool:
-    public_routes = [
-        "/auth",
-        "/docs",
-        "/echo",
-        "/swaggerui",
-        "/swagger.json",
+def authorization():
+    """it checks whether url is allowed to be reached to specific routes"""
+    # white listed routes
+    public_route_patterns = [
+        r"^/auth.*",
+        r"^/docs",
+        r"^/echo",
+        r"^/swaggerui.*",
+        r"^/swagger.json",
+        r"^/utils.*",
+        r"^/study/(?P<uuid>[0-9a-f]{8}\-[0-9a-f]{4}\-4[0-9a-f]{3}\-[89ab][0-9a-f]{3}\-[0-9a-f]{12})/dashboard/public",
     ]
 
+    for route_pattern in public_route_patterns:
+        if bool(re.search(route_pattern, request.path)):
+            return
     for route in public_routes:
         if path.startswith(route):
             return True
@@ -412,6 +427,12 @@ def is_granted(permission: str, study=None):
             "participant",
             "study_metadata",
             "dataset_metadata",
+            "add_redcap",
+            "update_redcap",
+            "delete_redcap",
+            "add_dashboard",
+            "update_dashboard",
+            "delete_dashboard",
             "make_owner",
         ],
         "admin": [
@@ -431,6 +452,12 @@ def is_granted(permission: str, study=None):
             "participant",
             "study_metadata",
             "dataset_metadata",
+            "add_redcap",
+            "update_redcap",
+            "delete_redcap",
+            "add_dashboard",
+            "update_dashboard",
+            "delete_delete",
         ],
         "editor": [
             "editor",
@@ -444,6 +471,7 @@ def is_granted(permission: str, study=None):
             "study_metadata",
             "version",
             "dataset_metadata",
+            "update_dashboard",
         ],
         "viewer": ["viewer", "view"],
     }

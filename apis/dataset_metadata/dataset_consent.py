@@ -1,4 +1,5 @@
 """API for dataset consent metadata"""
+
 from flask import request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate

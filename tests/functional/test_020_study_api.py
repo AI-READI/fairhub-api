@@ -1,4 +1,5 @@
 """Tests for API endpoints related to studies"""
+
 import json
 
 import pytest
@@ -16,6 +17,7 @@ def test_post_study(_logged_in_client):
         json={
             "title": "Study Title",
             "image": "https://api.dicebear.com/6.x/adventurer/svg",
+            "acronym": "acronym",
         },
     )
 
@@ -24,6 +26,7 @@ def test_post_study(_logged_in_client):
 
     assert response_data["title"] == "Study Title"
     assert response_data["image"] == "https://api.dicebear.com/6.x/adventurer/svg"
+    assert response_data["acronym"] == "acronym"
     pytest.global_study_id = response_data
 
 
@@ -91,6 +94,7 @@ def test_update_study(clients):
         json={
             "title": "Study Title Updated",
             "image": pytest.global_study_id["image"],  # type: ignore
+            "acronym": pytest.global_study_id["acronym"],  # type: ignore
         },
     )
 
@@ -100,6 +104,7 @@ def test_update_study(clients):
 
     assert response_data["title"] == "Study Title Updated"
     assert response_data["image"] == pytest.global_study_id["image"]  # type: ignore
+    assert response_data["acronym"] == pytest.global_study_id["acronym"]  # type: ignore
     assert response_data["id"] == pytest.global_study_id["id"]  # type: ignore
 
     admin_response = _admin_client.put(
@@ -107,6 +112,7 @@ def test_update_study(clients):
         json={
             "title": "Admin Study Title",
             "image": pytest.global_study_id["image"],  # type: ignore
+            "acronym": pytest.global_study_id["acronym"],  # type: ignore
         },
     )
 
@@ -115,6 +121,7 @@ def test_update_study(clients):
     pytest.global_study_id = admin_response_data
 
     assert admin_response_data["title"] == "Admin Study Title"
+    assert admin_response_data["acronym"] == pytest.global_study_id["acronym"]  # type: ignore
     assert admin_response_data["image"] == pytest.global_study_id["image"]  # type: ignore
     assert admin_response_data["id"] == pytest.global_study_id["id"]  # type: ignore
 
@@ -123,6 +130,7 @@ def test_update_study(clients):
         json={
             "title": "Editor Study Title",
             "image": pytest.global_study_id["image"],  # type: ignore
+            "acronym": pytest.global_study_id["acronym"],  # type: ignore
         },
     )
 
@@ -132,6 +140,7 @@ def test_update_study(clients):
 
     assert editor_response_data["title"] == "Editor Study Title"
     assert editor_response_data["image"] == pytest.global_study_id["image"]  # type: ignore
+    assert editor_response_data["acronym"] == pytest.global_study_id["acronym"]  # type: ignore
     assert editor_response_data["id"] == pytest.global_study_id["id"]  # type: ignore
 
     viewer_response = _viewer_client.put(
@@ -139,6 +148,7 @@ def test_update_study(clients):
         json={
             "title": "Viewer Study Title",
             "image": pytest.global_study_id["image"],  # type: ignore
+            "acronym": pytest.global_study_id["acronym"],  # type: ignore
         },
     )
 
@@ -175,18 +185,22 @@ def test_get_study_by_id(clients):
     assert response_data["id"] == pytest.global_study_id["id"]  # type: ignore
     assert response_data["title"] == pytest.global_study_id["title"]  # type: ignore
     assert response_data["image"] == pytest.global_study_id["image"]  # type: ignore
+    assert response_data["acronym"] == pytest.global_study_id["acronym"]  # type: ignore
 
     assert admin_response_data["id"] == pytest.global_study_id["id"]  # type: ignore
     assert admin_response_data["title"] == pytest.global_study_id["title"]  # type: ignore
     assert admin_response_data["image"] == pytest.global_study_id["image"]  # type: ignore
+    assert admin_response_data["acronym"] == pytest.global_study_id["acronym"]  # type: ignore
 
     assert editor_response_data["id"] == pytest.global_study_id["id"]  # type: ignore
     assert editor_response_data["title"] == pytest.global_study_id["title"]  # type: ignore
     assert editor_response_data["image"] == pytest.global_study_id["image"]  # type: ignore
+    assert editor_response_data["acronym"] == pytest.global_study_id["acronym"]  # type: ignore
 
     assert viewer_response_data["id"] == pytest.global_study_id["id"]  # type: ignore
     assert viewer_response_data["title"] == pytest.global_study_id["title"]  # type: ignore
     assert viewer_response_data["image"] == pytest.global_study_id["image"]  # type: ignore
+    assert viewer_response_data["acronym"] == pytest.global_study_id["acronym"]  # type: ignore
 
 
 def test_delete_studies_created(clients):
@@ -204,6 +218,7 @@ def test_delete_studies_created(clients):
         json={
             "title": "Delete Me",
             "image": "https://api.dicebear.com/6.x/adventurer/svg",
+            "acronym": "acronym",
         },
     )
 

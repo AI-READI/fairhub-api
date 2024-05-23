@@ -1,4 +1,5 @@
 """API for dataset title metadata"""
+
 from typing import Any, Union
 
 from flask import Response, request

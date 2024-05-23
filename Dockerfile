@@ -1,4 +1,4 @@
-FROM python:3.8-alpine
+FROM python:3.10-alpine
 
 EXPOSE 5000
 
@@ -19,8 +19,10 @@ RUN poetry install
 COPY apis ./apis
 COPY model ./model
 COPY core ./core
+COPY modules ./modules
 COPY app.py .
 COPY config.py .
+COPY caching.py .
 
 COPY alembic ./alembic
 COPY alembic.ini .

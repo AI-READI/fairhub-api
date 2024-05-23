@@ -11,7 +11,7 @@ class StudyEligibility(db.Model):  # type: ignore
 
     def __init__(self, study: Study):
         self.study = study
-        self.gender = None
+        self.sex = None
         self.gender_based = None
         self.gender_description = ""
         self.minimum_age_value = None  # 18
@@ -26,7 +26,7 @@ class StudyEligibility(db.Model):  # type: ignore
 
     __tablename__ = "study_eligibility"
 
-    gender = db.Column(db.String, nullable=True)
+    sex = db.Column(db.String, nullable=True)
     gender_based = db.Column(db.String, nullable=True)
     gender_description = db.Column(db.String, nullable=False)
     minimum_age_value = db.Column(db.Integer, nullable=True)
@@ -50,7 +50,7 @@ class StudyEligibility(db.Model):  # type: ignore
     def to_dict(self):
         """Converts the study to a dictionary"""
         return {
-            "gender": self.gender,
+            "sex": self.sex,
             "gender_based": self.gender_based,
             "gender_description": self.gender_description,
             "minimum_age_unit": self.minimum_age_unit,
@@ -62,16 +62,16 @@ class StudyEligibility(db.Model):  # type: ignore
             "exclusion_criteria": self.exclusion_criteria,
             "study_population": self.study_population,
             "sampling_method": self.sampling_method,
-            "study_type": self.study.study_design.study_type
-            if self.study.study_design
-            else None,
+            "study_type": (
+                self.study.study_design.study_type if self.study.study_design else None
+            ),
         }
 
     def to_dict_metadata(self):
         """Converts the study metadata to a dictionary"""
         return {
-            "gender": self.gender,
-            "minimum_age_value": self.minimum_age_value,
+            "sex": self.sex,
+            "maximum_age_value": self.maximum_age_value,
             "gender_based": self.gender_based,
         }
 
@@ -85,7 +85,7 @@ class StudyEligibility(db.Model):  # type: ignore
 
     def update(self, data: dict):
         """Updates the study from a dictionary"""
-        self.gender = data["gender"]
+        self.sex = data["sex"]
         self.gender_based = data["gender_based"]
         self.gender_description = data["gender_description"]
         self.minimum_age_value = data["minimum_age_value"]

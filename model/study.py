@@ -19,22 +19,23 @@ class Study(db.Model):  # type: ignore
     def __init__(self):
         self.id = str(uuid.uuid4())
         self.created_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
-        #
+
         self.study_status = model.StudyStatus(self)
-        self.study_sponsors_collaborators = model.StudySponsorsCollaborators(self)
+        self.study_sponsors = model.StudySponsors(self)
         self.study_design = model.StudyDesign(self)
         self.study_eligibility = model.StudyEligibility(self)
-        self.study_ipdsharing = model.StudyIpdsharing(self)
         self.study_description = model.StudyDescription(self)
         self.study_identification.append(model.StudyIdentification(self, False))
-
         self.study_other = model.StudyOther(self)
-        # self.study_contributors = model.StudyContributor(self)
+        self.study_oversight = model.StudyOversight(self)
 
     __tablename__ = "study"
     id = db.Column(db.CHAR(36), primary_key=True)
-    title = db.Column(db.String, nullable=False)
+
+    title = db.Column(db.String(300), nullable=False)
     image = db.Column(db.String, nullable=False)
+    acronym = db.Column(db.String(14), nullable=False)
+
     created_at = db.Column(db.BigInteger, nullable=False)
     updated_on = db.Column(db.BigInteger, nullable=False)
 
@@ -60,19 +61,19 @@ class Study(db.Model):  # type: ignore
         lazy="dynamic",
         cascade="all, delete",
     )
-
     study_arm = db.relationship(
         "StudyArm",
         back_populates="study",
         cascade="all, delete",
     )
-    study_available_ipd = db.relationship(
-        "StudyAvailableIpd",
+    study_sponsors = db.relationship(
+        "StudySponsors",
+        uselist=False,
         back_populates="study",
         cascade="all, delete",
     )
-    study_contact = db.relationship(
-        "StudyContact",
+    study_central_contact = db.relationship(
+        "StudyCentralContact",
         back_populates="study",
         cascade="all, delete",
     )
@@ -99,22 +100,20 @@ class Study(db.Model):  # type: ignore
         back_populates="study",
         cascade="all, delete",
     )
+    # NOTE: Has not been tested
+    study_redcap = db.relationship(
+        "StudyRedcap", back_populates="study", cascade="all, delete"
+    )
+    # NOTE: Has not been tested
+    study_dashboard = db.relationship(
+        "StudyDashboard", back_populates="study", cascade="all, delete"
+    )
     study_intervention = db.relationship(
         "StudyIntervention",
         back_populates="study",
         cascade="all, delete",
     )
-    study_ipdsharing = db.relationship(
-        "StudyIpdsharing",
-        uselist=False,
-        back_populates="study",
-        cascade="all, delete",
-    )
-    study_link = db.relationship(
-        "StudyLink",
-        back_populates="study",
-        cascade="all, delete",
-    )
+
     study_location = db.relationship(
         "StudyLocation",
         back_populates="study",
@@ -126,19 +125,29 @@ class Study(db.Model):  # type: ignore
         back_populates="study",
         cascade="all, delete",
     )
+    study_keywords = db.relationship(
+        "StudyKeywords",
+        back_populates="study",
+        cascade="all, delete",
+    )
+    study_conditions = db.relationship(
+        "StudyConditions",
+        back_populates="study",
+        cascade="all, delete",
+    )
+    study_collaborators = db.relationship(
+        "StudyCollaborators",
+        back_populates="study",
+        cascade="all, delete",
+    )
+    study_oversight = db.relationship(
+        "StudyOversight",
+        uselist=False,
+        back_populates="study",
+        cascade="all, delete",
+    )
     study_overall_official = db.relationship(
         "StudyOverallOfficial",
-        back_populates="study",
-        cascade="all, delete",
-    )
-    study_reference = db.relationship(
-        "StudyReference",
-        back_populates="study",
-        cascade="all, delete",
-    )
-    study_sponsors_collaborators = db.relationship(
-        "StudySponsorsCollaborators",
-        uselist=False,
         back_populates="study",
         cascade="all, delete",
     )
@@ -161,13 +170,14 @@ class Study(db.Model):  # type: ignore
         return {
             "id": self.id,
             "title": self.title,
+            "acronym": self.acronym,
             "image": self.image,
             "created_at": self.created_at,
             "updated_on": self.updated_on,
             "size": self.study_other.size if self.study_other else None,
-            "description": self.study_description.brief_summary
-            if self.study_description
-            else None,
+            "description": (
+                self.study_description.brief_summary if self.study_description else None
+            ),
             "owner": owner.to_dict()["id"] if owner else None,
             "role": contributor_permission.to_dict()["role"]
             if contributor_permission
@@ -184,11 +194,8 @@ class Study(db.Model):  # type: ignore
 
         return {
             "arms": [i.to_dict_metadata() for i in self.study_arm],  # type: ignore
-            "available_ipd": [
-                i.to_dict_metadata() for i in self.study_available_ipd  # type: ignore
-            ],
-            "contacts": [
-                i.to_dict_metadata() for i in self.study_contact  # type: ignore
+            "central_contacts": [
+                i.to_dict_metadata() for i in self.study_central_contact  # type: ignore
             ],
             "description": self.study_description.to_dict_metadata(),
             "design": self.study_design.to_dict(),
@@ -202,8 +209,6 @@ class Study(db.Model):  # type: ignore
             "interventions": [
                 i.to_dict_metadata() for i in self.study_intervention  # type: ignore
             ],
-            "ipd_sharing": self.study_ipdsharing.to_dict_metadata(),
-            "links": [i.to_dict_metadata() for i in self.study_link],  # type: ignore
             "locations": [
                 i.to_dict_metadata() for i in self.study_location  # type: ignore
             ],
@@ -211,14 +216,18 @@ class Study(db.Model):  # type: ignore
                 i.to_dict_metadata()
                 for i in self.study_overall_official  # type: ignore
             ],
-            "references": [
-                i.to_dict_metadata() for i in self.study_reference  # type: ignore
+            "sponsors": self.study_sponsors.to_dict_metadata(),
+            "collaborators": [
+                i.to_dict_metadata() for i in self.study_collaborators  # type: ignore
             ],
-            "sponsors": self.study_sponsors_collaborators.to_dict_metadata(),
-            "collaborators": self.study_sponsors_collaborators.collaborator_name,
             "status": self.study_status.to_dict_metadata(),
-            "oversight": self.study_other.oversight_has_dmc,
-            "conditions": self.study_other.conditions,
+            "oversight": self.study_oversight.to_dict(),
+            "conditions": [
+                i.to_dict_metadata() for i in self.study_conditions  # type: ignore
+            ],
+            "keywords": [
+                i.to_dict_metadata() for i in self.study_keywords  # type: ignore
+            ],
         }
 
     @staticmethod
@@ -238,6 +247,7 @@ class Study(db.Model):  # type: ignore
 
         self.title = data["title"]
         self.image = data["image"]
+        self.acronym = data["acronym"]
         self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
 
     def validate(self):

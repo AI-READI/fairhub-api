@@ -33,7 +33,12 @@ coverage
 
 # Environment variables
 .env
+.venv
+
+# Virutal Environments
+.venv
 
 # Database 
-postgres_data/*
 postgres-data/*
+redis-data/*
+storage/*
