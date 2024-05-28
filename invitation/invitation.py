@@ -5,40 +5,61 @@ import importlib
 import datetime
 import config
 from datetime import timezone
-
+from azure.communication.email import EmailClient
+import templates
 import jwt
 
 from flask import g, request
 
 
+def azure_email_connection(html_content, subject):
+    connection_string = config.FAIRHUB_SMTP_CONNECTION_STRING
+    email_client = EmailClient.from_connection_string(connection_string)
+    message = {
+        "content": {
+            "subject": subject,
+            "html": html_content
+        },
+        "recipients": {
+            "to": [
+                {
+                    "address": "aydan.gasimova2@gmail.com",
+                    "displayName": "Customer Name"
+                }
+            ]
+        },
+        "senderAddress": config.FAIRHUB_SMTP_SENDER_EMAIL_ADDRESS
+    }
+
+    email_client.begin_send(message)
+    # poller = email_client.begin_send(message)
+    # result = poller.result()
+
+
 def send_invitation_study(to, token, study_name, role):
     accept_url = f"{config.FAIRHUB_FRONTEND_URL}auth/signup?code={token}&email={to}"
-    subject, from_email, to = (
-        f"You have been invited to {study_name} invitation",
-        "aydan.gasimova2@example.com",
-        to,
-    )
     html_content = render_template(
-        "accept_study_invitation.html",
+        "accept_general_invitation.html",
         token=token,
         accept_url=accept_url,
         study_name=study_name,
         role=role,
         to=to,
     )
+    subject, from_email, to = (
+        f"You have been invited to {study_name} invitation",
+        "aydan.gasimova2@example.com",
+        to,
+    )
 
-    msg = EmailMessage(subject, html_content, from_email, [to])
-    msg.content_subtype = "html"
-    msg.send()
+    # msg = EmailMessage(subject, html_content, from_email, [to])
+    # msg.content_subtype = "html"
+    # msg.send()
+    azure_email_connection(html_content, subject)
 
 
 def send_access_contributors(to, study, first_name, last_name, role):
     accept_url = f"{config.FAIRHUB_FRONTEND_URL}study/{study.id}/overview"
-    subject, from_email, to = (
-        f"You have been invited to {study.title} invitation",
-        "aydan.gasimova2@example.com",
-        to,
-    )
     html_content = render_template(
         "accept_study_invitation.html",
         accept_url=accept_url,
@@ -48,26 +69,32 @@ def send_access_contributors(to, study, first_name, last_name, role):
         study_id=study.id,
         role=role,
     )
-
-    msg = EmailMessage(subject, html_content, from_email, [to])
-    msg.content_subtype = "html"
-    msg.send()
+    subject, from_email, to = (
+                f"You have been invited to {study.title} invitation",
+                "aydan.gasimova2@example.com",
+                to,
+    )
+    # msg = EmailMessage(subject, html_content, from_email, [to])
+    # msg.content_subtype = "html"
+    # msg.send()
+    azure_email_connection(html_content, subject)
 
 
 def send_invitation_general(to, token):
     accept_url = f"{config.FAIRHUB_FRONTEND_URL}auth/signup?code={token}&email={to}"
+    html_content = render_template(
+        "accept_general_invitation.html", token=token, accept_url=accept_url, to=to
+    )
     subject, from_email, to = (
         f"You have been invited to signup to FAIRhub",
         "aydan.gasimova2@example.com",
         to,
     )
-    html_content = render_template(
-        "accept_general_invitation.html", token=token, accept_url=accept_url, to=to
-    )
 
-    msg = EmailMessage(subject, html_content, from_email, [to])
-    msg.content_subtype = "html"
-    msg.send()
+    # msg = EmailMessage(subject, html_content, from_email, [to])
+    # msg.content_subtype = "html"
+    # msg.send()
+    azure_email_connection(html_content, subject)
 
 
 def send_email_verification(email_address, token):
@@ -86,9 +113,10 @@ def send_email_verification(email_address, token):
         verification_url=verification_url,
         email=email_address,
     )
-    msg = EmailMessage(subject, html_content, from_email, [email_address])
-    msg.content_subtype = "html"
-    msg.send()
+    # msg = EmailMessage(subject, html_content, from_email, [email_address])
+    # msg.content_subtype = "html"
+    # msg.send()
+    azure_email_connection(html_content, subject)
 
 
 def signin_notification(user, device_ip):
@@ -103,9 +131,10 @@ def signin_notification(user, device_ip):
         user_profile_url=user_profile_url,
         device_ip=device_ip,
     )
-    msg = EmailMessage(subject, html_content, from_email, [user.email_address])
-    msg.content_subtype = "html"
-    msg.send()
+    # msg = EmailMessage(subject, html_content, from_email, [user.email_address])
+    # msg.content_subtype = "html"
+    # msg.send()
+    azure_email_connection(html_content, subject)
 
 
 def get_config():
