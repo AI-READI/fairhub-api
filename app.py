@@ -13,8 +13,7 @@ from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from flask_mailman import Mail
 from growthbook import GrowthBook
-from sqlalchemy import MetaData, text
-from sqlalchemy import MetaData, inspect
+from sqlalchemy import MetaData, inspect, text
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.schema import DropTable
 from waitress import serve
@@ -133,15 +132,15 @@ def create_app(config_module=None, loglevel="INFO"):
             with engine.begin():
                 model.db.create_all()
 
-    @app.cli.command("destroy-schema")
-    def destroy_schema():
-        """Create the database schema."""
-        # If DB is Azure, Skip
-        if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
-            return
-        engine = model.db.session.get_bind()
-        with engine.begin():
-            model.db.drop_all()
+    # @app.cli.command("destroy-schema")
+    # def destroy_schema():
+    #     """Create the database schema."""
+    #     # If DB is Azure, Skip
+    #     if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
+    #         return
+    #     engine = model.db.session.get_bind()
+    #     with engine.begin():
+    #         model.db.drop_all()
 
     @app.cli.command("cycle-schema")
     def cycle_schema():

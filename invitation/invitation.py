@@ -137,76 +137,76 @@ def signin_notification(user, device_ip):
     azure_email_connection(html_content, subject)
 
 
-def get_config():
-    if os.environ.get("FLASK_ENV") == "testing":
-        config_module_name = "pytest_config"
-    else:
-        config_module_name = "config"
-
-    config_module = importlib.import_module(config_module_name)
-
-    if os.environ.get("FLASK_ENV") == "testing":
-        # If testing, use the 'TestConfig' class for accessing 'secret'
-        config = config_module.TestConfig
-    else:
-        config = config_module
-
-    return config
+# def get_config():
+#     if os.environ.get("FLASK_ENV") == "testing":
+#         config_module_name = "pytest_config"
+#     else:
+#         config_module_name = "config"
+#
+#     config_module = importlib.import_module(config_module_name)
+#
+#     if os.environ.get("FLASK_ENV") == "testing":
+#         # If testing, use the 'TestConfig' class for accessing 'secret'
+#         config = config_module.TestConfig
+#     else:
+#         config = config_module
+#
+#     return config
 
 
 # Get list of user ids that have previously authenticated on this device
-def get_device_user_list() -> list[str]:
-    # FIX THE TYPE OF THE TOKEN["USERS"], IT WAS GETTING ERROR SINCE token returns a dict instead of list
-    # Check if cookie exists
-    if "token_device" not in request.cookies:
-        return []
+# def get_device_user_list() -> list[str]:
+#     # FIX THE TYPE OF THE TOKEN["USERS"], IT WAS GETTING ERROR SINCE token returns a dict instead of list
+#     # Check if cookie exists
+#     if "token_device" not in request.cookies:
+#         return []
+#
+#     # Get value from cookie
+#     cookie = request.cookies.get("token_device")
+#     if not cookie:
+#         return []
+#
+#     token = {}
+#     config = get_config()
+#     try:
+#         token = jwt.decode(cookie, config.FAIRHUB_SECRET, algorithms=["HS256"])
+#     except jwt.ExpiredSignatureError:
+#         return []
+#
+#     if "users" not in token:
+#         return []
+#
+#     return token["users"]
+#
+#
+# def add_user_to_device_list(response: Response, user) -> None:
+#     users = get_device_user_list()
+#     if user.id not in users:
+#         users.append(user.id)
+#
+#     config = get_config()
+#     expiration = datetime.datetime.now(timezone.utc) + datetime.timedelta(days=365)
+#     cookie = jwt.encode(
+#         {
+#             "users": users,
+#             "exp": expiration,
+#         },
+#         config.FAIRHUB_SECRET,
+#         algorithm="HS256",
+#     )
+#
+#     response.set_cookie(
+#         "token_device",
+#         cookie,
+#         secure=True,
+#         httponly=True,
+#         samesite="None",
+#         expires=expiration,
+#     )
 
-    # Get value from cookie
-    cookie = request.cookies.get("token_device")
-    if not cookie:
-        return []
-
-    token = {}
-    config = get_config()
-    try:
-        token = jwt.decode(cookie, config.FAIRHUB_SECRET, algorithms=["HS256"])
-    except jwt.ExpiredSignatureError:
-        return []
-
-    if "users" not in token:
-        return []
-
-    return token["users"]
-
-
-def add_user_to_device_list(response: Response, user) -> None:
-    users = get_device_user_list()
-    if user.id not in users:
-        users.append(user.id)
-
-    config = get_config()
-    expiration = datetime.datetime.now(timezone.utc) + datetime.timedelta(days=365)
-    cookie = jwt.encode(
-        {
-            "users": users,
-            "exp": expiration,
-        },
-        config.FAIRHUB_SECRET,
-        algorithm="HS256",
-    )
-
-    response.set_cookie(
-        "token_device",
-        cookie,
-        secure=True,
-        httponly=True,
-        samesite="None",
-        expires=expiration,
-    )
-
-
-def check_trusted_device() -> bool:
-    users = get_device_user_list()
-    for user in users:
-        print("User known: " + user)
-    return g.user.id in users
+#
+# def check_trusted_device() -> bool:
+#     users = get_device_user_list()
+#     for user in users:
+#         print("User known: " + user)
+#     return g.user.id in users
