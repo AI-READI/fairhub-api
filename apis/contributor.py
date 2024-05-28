@@ -39,6 +39,7 @@ class AllContributors(Resource):
     @api.response(400, "Validation Error")
     # @api.marshal_with(contributors_model)
     def post(self, study_id: int):
+
         study_obj = model.Study.query.get(study_id)
         if not is_granted("invite_contributor", study_obj):
             return "Access denied, you can not modify study", 403
@@ -76,7 +77,6 @@ class AllContributors(Resource):
                     study_name,
                     contributor_.permission,
                 )
-
         return contributor_.to_dict(), 201
 
 

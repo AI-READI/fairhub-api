@@ -160,7 +160,7 @@ class SignUpUser(Resource):
 
         new_user = model.User.from_data(data)
         verification = model.EmailVerification(new_user)
-        new_user.email_verified = True
+        new_user.email_verified = False
         for invite in invitations:
             invite.study.add_user_to_study(new_user, invite.permission)
             model.db.session.delete(invite)
@@ -208,10 +208,14 @@ class GenerateVerification(Resource):
             return "user not found", 404
         if user.email_verified:
             return "user already verified", 422
+
+        # user.email_verified = True
         token = user.generate_token()
+
         if g.gb.is_on("email-verification"):
             if os.environ.get("FLASK_ENV") != "testing":
                 send_email_verification(user.email_address, token)
+
         model.db.session.commit()
         return "Your email is verified", 201
 
@@ -304,29 +308,29 @@ class Login(Resource):
         )
         g.user = user
 
-        if g.gb.is_on("email-verification"):
-            if os.environ.get("FLASK_ENV") != "testing":
-                if not check_trusted_device():
-                    title = "you logged in"
-                    device_ip = request.remote_addr
-                    notification_type = "info"
-                    target = ""
-                    read = False
-                    send_notification = model.Notification.from_data(
-                        user,
-                        {
-                            "title": title,
-                            "message": device_ip,
-                            "type": notification_type,
-                            "target": target,
-                            "read": read,
-                        },
-                    )
-                    model.db.session.add(send_notification)
-                    model.db.session.commit()
-                    signin_notification(user, device_ip)
-                add_user_to_device_list(resp, user)
-            resp.status_code = 200
+        # if g.gb.is_on("email-verification"):
+        #     if os.environ.get("FLASK_ENV") != "testing":
+        #         if not check_trusted_device():
+        #             title = "you logged in"
+        #             device_ip = request.remote_addr
+        #             notification_type = "info"
+        #             target = ""
+        #             read = False
+        #             send_notification = model.Notification.from_data(
+        #                 user,
+        #                 {
+        #                     "title": title,
+        #                     "message": device_ip,
+        #                     "type": notification_type,
+        #                     "target": target,
+        #                     "read": read,
+        #                 },
+        #             )
+        #             model.db.session.add(send_notification)
+        #             model.db.session.commit()
+        #             signin_notification(user, device_ip)
+        #         add_user_to_device_list(resp, user)
+        #     resp.status_code = 200
 
         return resp
 
