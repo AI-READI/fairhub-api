@@ -39,7 +39,7 @@ def azure_email_connection(html_content, subject):
 def send_invitation_study(to, token, study_name, role):
     accept_url = f"{config.FAIRHUB_FRONTEND_URL}auth/signup?code={token}&email={to}"
     html_content = render_template(
-        "accept_general_invitation.html",
+        "accept_study_invitation.html",
         token=token,
         accept_url=accept_url,
         study_name=study_name,
@@ -61,7 +61,7 @@ def send_invitation_study(to, token, study_name, role):
 def send_access_contributors(to, study, first_name, last_name, role):
     accept_url = f"{config.FAIRHUB_FRONTEND_URL}study/{study.id}/overview"
     html_content = render_template(
-        "accept_study_invitation.html",
+        "invite_contributors.html",
         accept_url=accept_url,
         first_name=first_name,
         last_name=last_name,
@@ -80,22 +80,22 @@ def send_access_contributors(to, study, first_name, last_name, role):
     azure_email_connection(html_content, subject)
 
 
-def send_invitation_general(to, token):
-    accept_url = f"{config.FAIRHUB_FRONTEND_URL}auth/signup?code={token}&email={to}"
-    html_content = render_template(
-        "accept_general_invitation.html", token=token, accept_url=accept_url, to=to
-    )
-    subject, from_email, to = (
-        f"You have been invited to signup to FAIRhub",
-        "aydan.gasimova2@example.com",
-        to,
-    )
-
-    # msg = EmailMessage(subject, html_content, from_email, [to])
-    # msg.content_subtype = "html"
-    # msg.send()
-    azure_email_connection(html_content, subject)
-
+# def send_invitation_general(to, token):
+#     accept_url = f"{config.FAIRHUB_FRONTEND_URL}auth/signup?code={token}&email={to}"
+#     html_content = render_template(
+#         "accept_general_invitation.html", token=token, accept_url=accept_url, to=to
+#     )
+#     subject, from_email, to = (
+#         f"You have been invited to signup to FAIRhub",
+#         "aydan.gasimova2@example.com",
+#         to,
+#     )
+#
+#     # msg = EmailMessage(subject, html_content, from_email, [to])
+#     # msg.content_subtype = "html"
+#     # msg.send()
+#     azure_email_connection(html_content, subject)
+#
 
 def send_email_verification(email_address, token):
     verification_url = (
