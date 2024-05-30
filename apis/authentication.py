@@ -384,8 +384,10 @@ def authorization():
     for route_pattern in public_route_patterns:
         if bool(re.search(route_pattern, request.path)):
             return
-    if g.user:
+    if g.user and g.user.email_verified:
         return
+    # if not g.user.email_verified:
+    #     return
     raise UnauthenticatedException("Access denied", 403)
 
 
@@ -394,7 +396,9 @@ def is_granted(permission: str, study=None):
     contributor = model.StudyContributor.query.filter(
         model.StudyContributor.user == g.user, model.StudyContributor.study == study
     ).first()
-    if not contributor:
+    # if not contributor:
+    #     return False
+    if not contributor or not g.user.email_verified:
         return False
     role = {
         "owner": [
