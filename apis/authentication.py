@@ -385,10 +385,10 @@ def authorization():
         if bool(re.search(route_pattern, request.path)):
             return
     if g.user:
-        return
-        # if os.environ.get("FLASK_ENV") != "testing":
-        #     if g.user.email_verified:
-        #         return
+        if os.environ.get("FLASK_ENV") == "testing":
+            return
+        if g.user.email_verified:
+            return
     raise UnauthenticatedException("Access denied", 403)
 
 
