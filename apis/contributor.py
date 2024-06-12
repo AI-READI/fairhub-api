@@ -1,10 +1,12 @@
 from collections import OrderedDict
 from typing import Any, Dict, List, Union
+import os
 
 from flask import Response, g, request
 from flask_restx import Namespace, Resource, fields
 
 import model
+from invitation.invitation import send_access_contributors, send_invitation_study
 
 from .authentication import is_granted
 
@@ -20,16 +22,14 @@ contributors_model = api.model(
 
 
 @api.route("/study/<study_id>/contributor")
-class AddContributor(Resource):
+class AllContributors(Resource):
     @api.doc("contributor list")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(contributors_model)
     def get(self, study_id: int):
         contributors = model.StudyContributor.query.filter_by(study_id=study_id).all()
-        invited_contributors = model.StudyInvitedContributor.query.filter_by(
-            study_id=study_id
-        ).all()
+        invited_contributors = model.StudyInvitedContributor.query.filter_by(study_id=study_id).all()
 
         contributors_list = [c.to_dict() for c in contributors] + [
             c.to_dict() for c in invited_contributors
@@ -40,6 +40,7 @@ class AddContributor(Resource):
     @api.response(400, "Validation Error")
     # @api.marshal_with(contributors_model)
     def post(self, study_id: int):
+
         study_obj = model.Study.query.get(study_id)
         if not is_granted("invite_contributor", study_obj):
             return "Access denied, you can not modify study", 403
@@ -49,7 +50,9 @@ class AddContributor(Resource):
         user = model.User.query.filter_by(email_address=email_address).first()
         permission = data["role"]
         contributor_ = None
-
+        study_name = study_obj.title
+        first_name = user.user_details.first_name if user else ""
+        last_name = user.user_details.last_name if user else ""
         try:
             if user:
                 contributor_ = study_obj.add_user_to_study(user, permission)
@@ -59,6 +62,23 @@ class AddContributor(Resource):
         except model.StudyException as ex:
             return ex.args[0], 409
         model.db.session.commit()
+        if os.environ.get("FLASK_ENV") != "testing":
+            if g.gb.is_on("email-verification"):
+                if user:
+                    send_access_contributors(
+                        email_address,
+                        study_obj,
+                        first_name,
+                        last_name,
+                        contributor_.permission,
+                    )
+                else:
+                    send_invitation_study(
+                        email_address,
+                        contributor_.token,
+                        study_name,
+                        contributor_.permission,
+                    )
         return contributor_.to_dict(), 201
 
 
@@ -100,7 +120,6 @@ class ContributorResource(Resource):
         if not can_grant:
             return f"User cannot grant {permission}", 403
 
-        # TODO: Owners downgrading themselves
         if user != g.user:
             grantee_level = list(grants.keys()).index(grantee.permission)  # 1
             new_level: int = list(grants.keys()).index(str(permission))  # 2

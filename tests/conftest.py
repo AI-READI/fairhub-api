@@ -6,7 +6,6 @@ import unittest.mock
 
 import pytest
 from dotenv import load_dotenv
-
 from app import create_app
 from model.db import db
 from pytest_config import TestConfig
@@ -150,7 +149,6 @@ def _create_user(_test_client):
                 "code": "",
             },
         )
-
         assert response.status_code == 201
 
 
@@ -186,7 +184,7 @@ def _test_invite_study_contributor(_logged_in_client):
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
-
+    print("permission given", response_data)
     pytest.global_editor_token = response_data["token"]
 
     response = _logged_in_client.post(

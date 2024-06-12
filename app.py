@@ -8,11 +8,12 @@ from datetime import timezone
 
 import click
 import jwt
-from flask import Flask, g, request
+from flask import Flask, request, g
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
+from flask_mailman import Mail
 from growthbook import GrowthBook
-from sqlalchemy import MetaData, inspect
+from sqlalchemy import MetaData, inspect, text
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.schema import DropTable
 from waitress import serve
@@ -21,12 +22,17 @@ import caching
 import config
 import model
 from apis import api
-from apis.authentication import UnauthenticatedException, authentication, authorization
+from apis.authentication import (
+    UnauthenticatedException,
+    authentication,
+    authorization,
+)
 from apis.exception import ValidationException
 
 # from pyfairdatatools import __version__
 
 bcrypt = Bcrypt()
+mail = Mail()
 
 
 # Add Cascade to Table Drop Call in destroy-schema CLI command
@@ -76,6 +82,7 @@ def create_app(config_module=None, loglevel="INFO"):
     bcrypt.init_app(app)
     caching.cache.init_app(app)
 
+    mail.init_app(app)
     cors_origins = [
         "https://brave-ground-.*-.*.centralus.2.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
         "https://staging.app.fairhub.io",
@@ -125,15 +132,15 @@ def create_app(config_module=None, loglevel="INFO"):
             with engine.begin():
                 model.db.create_all()
 
-    @app.cli.command("destroy-schema")
-    def destroy_schema():
-        """Create the database schema."""
-        # If DB is Azure, Skip
-        if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
-            return
-        engine = model.db.session.get_bind()
-        with engine.begin():
-            model.db.drop_all()
+    # @app.cli.command("destroy-schema")
+    # def destroy_schema():
+    #     """Create the database schema."""
+    #     # If DB is Azure, Skip
+    #     if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
+    #         return
+    #     engine = model.db.session.get_bind()
+    #     with engine.begin():
+    #         model.db.drop_all()
 
     @app.cli.command("cycle-schema")
     def cycle_schema():
@@ -284,6 +291,20 @@ def create_app(config_module=None, loglevel="INFO"):
     @app.errorhandler(ValidationException)
     def validation_exception_handler(error):
         return error.args[0], 422
+
+    @app.cli.command("destroy-schema")
+    def destroy_schema():
+        """destroy the database schema."""
+
+        # if db is azure, then skip
+        if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
+            return
+
+        engine = model.db.session.get_bind()
+
+        with engine.begin() as conn:
+            model.db.drop_all()
+            conn.execute(text("DROP TABLE IF EXISTS alembic_version"))  # type: ignore
 
     with app.app_context():
         engine = model.db.session.get_bind()

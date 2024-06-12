@@ -179,7 +179,9 @@ class Study(db.Model):  # type: ignore
                 self.study_description.brief_summary if self.study_description else None
             ),
             "owner": owner.to_dict()["id"] if owner else None,
-            "role": contributor_permission.to_dict()["role"],
+            "role": contributor_permission.to_dict()["role"]
+            if contributor_permission
+            else None,
         }
 
     def to_dict_study_metadata(self):

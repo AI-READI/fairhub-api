@@ -15,28 +15,53 @@ class User(db.Model):  # type: ignore
         self.created_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
         self.set_password(password)
         self.user_details = model.UserDetails(self)
+        self.email_verified = False
 
+    db.Column(db.BigInteger, nullable=False)
     __tablename__ = "user"
     id = db.Column(db.CHAR(36), primary_key=True)
     email_address = db.Column(db.String, nullable=False, unique=True)
     username = db.Column(db.String, nullable=False, unique=True)
     hash = db.Column(db.String, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
-    email_verified = db.Column(db.String, nullable=True)
+    email_verified = db.Column(db.BOOLEAN, nullable=True)
 
-    study_contributors = db.relationship("StudyContributor", back_populates="user")
-    email_verification = db.relationship("EmailVerification", back_populates="user")
-    user_details = db.relationship("UserDetails", uselist=False, back_populates="user")
-    token_blacklist = db.relationship("TokenBlacklist", back_populates="user")
-    notification = db.relationship("Notification", back_populates="user")
+    study_contributors = db.relationship(
+        "StudyContributor",
+        back_populates="user",
+        cascade="all, delete",
+    )
+    email_verification = db.relationship(
+        "EmailVerification",
+        back_populates="user",
+        cascade="all, delete",
+    )
+    user_details = db.relationship(
+        "UserDetails",
+        uselist=False,
+        back_populates="user",
+        cascade="all, delete",
+    )
+    token_blacklist = db.relationship(
+        "TokenBlacklist",
+        back_populates="user",
+        cascade="all, delete",
+    )
+    notification = db.relationship(
+        "Notification",
+        back_populates="user",
+        cascade="all, delete",
+    )
 
     def to_dict(self):
+        # latest_object = max(self.email_verification, key=lambda x: x.created_at) if self.email_verification else None
         return {
             "id": self.id,
             "email_address": self.email_address,
             "username": self.username,
             "first_name": self.user_details.first_name if self.user_details else None,
             "last_name": self.user_details.last_name if self.user_details else None,
+            "email_verified": self.email_verified,
         }
 
     @staticmethod
@@ -66,3 +91,33 @@ class User(db.Model):  # type: ignore
         app.bcrypt.generate_password_hash(password).decode("utf-8")
         is_valid = app.bcrypt.check_password_hash(self.hash, password)
         return is_valid
+
+    def verify_token(self, token: str) -> bool:
+        latest_object = (
+            max(self.email_verification, key=lambda x: x.created_at)
+            if self.email_verification
+            else None
+        )
+        if token != latest_object.token:
+            return False
+        current_time = datetime.datetime.now()
+        datetime_obj = datetime.datetime.utcfromtimestamp(self.created_at)
+        formatted_time = datetime_obj.strftime("%Y-%m-%d %H:%M:%S.%f")
+        created_time = datetime.datetime.strptime(
+            formatted_time, "%Y-%m-%d %H:%M:%S.%f"
+        )
+        return created_time - current_time > datetime.timedelta(minutes=15)
+
+    def generate_token(self) -> str:
+        email_verification = model.EmailVerification(self)
+        db.session.add(email_verification)
+        db.session.commit()
+        return email_verification.token
+
+    def change_email(self, email: str):
+        if email == self.email_address:
+            return
+
+        self.email_verified = False
+        self.email_address = email
+        self.generate_token()
