@@ -11,7 +11,7 @@ from datetime import datetime
 class Session(db.Model):  # type: ignore
     def __init__(self, user: User):
         self.id = str(uuid.uuid4())
-        self.expires_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
+        # self.expires_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
         self.user = user
 
     __tablename__ = "session"
@@ -33,10 +33,10 @@ class Session(db.Model):  # type: ignore
         }
 
     @staticmethod
-    def from_data(data: dict, user: User):
+    def from_data(expires_at, user: User):
         session = Session(user)
-        session.update(data)
+        session.update(expires_at)
         return session
 
-    # def update(self, data):
-    #     # self.email_verified = data["email_verified"]
+    def update(self, data):
+        self.expires_at = data["expires_at"]
