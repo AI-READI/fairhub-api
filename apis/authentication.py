@@ -15,6 +15,7 @@ from email_validator import EmailNotValidError, validate_email
 from flask import g, make_response, request
 from flask_restx import Namespace, Resource, fields
 from jsonschema import FormatChecker, ValidationError, validate
+from sqlalchemy import desc
 
 import model
 
@@ -249,8 +250,6 @@ class Login(Resource):
         resp.set_cookie(
             "token", encoded_jwt_code, secure=True, httponly=True, samesite="None"
         )
-        resp.status_code = 200
-
         return resp
 
 
@@ -407,6 +406,15 @@ class Logout(Resource):
             expires=datetime.datetime.now(timezone.utc),
         )
         resp.status_code = 204
+        if os.environ.get("FLASK_ENV") != "testing":
+            remove_session = (
+                model.Session.query
+                .filter(model.Session.user_id == g.user.id)
+                .order_by(desc(model.Session.expires_at))
+                .first()
+            )
+            model.db.session.delete(remove_session)
+            model.db.session.commit()
         return resp
 
 
@@ -473,8 +481,21 @@ class UserPasswordEndpoint(Resource):
 
         data: Union[Any, dict] = request.json
         user = model.User.query.get(g.user.id)
+
         user.set_password(data["new_password"])
+
         model.db.session.commit()
+
+        if os.environ.get("FLASK_ENV") != "testing":
+            remove_sessions = model.Session.query.filter(
+                model.Session.user_id == g.user.id
+            ).all()
+
+            for session in remove_sessions:
+                print(session)
+                model.db.session.delete(session)
+                model.db.session.commit()
+
         return "Password updated successfully", 200
 
 

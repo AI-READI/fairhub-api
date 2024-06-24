@@ -29,7 +29,7 @@ class Session(db.Model):  # type: ignore
         return {
             "id": self.id,
             "expires_at": self.expires_at,
-
+            "user_id": self.user_id,
         }
 
     @staticmethod
@@ -38,5 +38,5 @@ class Session(db.Model):  # type: ignore
         session.update(expires_at)
         return session
 
-    def update(self, data):
-        self.expires_at = data["expires_at"]
+    def update(self, expires_at):
+        self.expires_at = expires_at
