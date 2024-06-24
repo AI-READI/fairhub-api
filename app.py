@@ -264,6 +264,11 @@ def create_app(config_module=None, loglevel="INFO"):
         )
         resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="None")
 
+        if os.environ.get("FLASK_ENV") != "testing":
+            added_session = model.Session.from_data(expired_in.timestamp(), g.user)
+            model.db.session.add(added_session)
+            model.db.session.commit()
+
         app.logger.info("after request")
         app.logger.info(request.headers.get("Origin"))
 
@@ -278,7 +283,6 @@ def create_app(config_module=None, loglevel="INFO"):
         # ] = "Content-Type, Authorization, Access-Control-Allow-Origin,
         # Access-Control-Allow-Credentials"
         app.logger.info(resp.headers)
-
         return resp
 
     @app.errorhandler(ValidationException)
