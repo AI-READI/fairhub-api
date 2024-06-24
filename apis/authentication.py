@@ -234,12 +234,21 @@ class Login(Resource):
             # If not testing, directly use the 'config' module
             config = config_module
 
+        expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
+            minutes=180
+        )
+
+        added_session = model.Session.from_data(expired_in.timestamp(), user)
+        model.db.session.add(added_session)
+        model.db.session.commit()
+
         encoded_jwt_code = jwt.encode(
             {
+                "session": added_session.id,
                 "user": user.id,
-                "exp": datetime.datetime.now(timezone.utc)
-                + datetime.timedelta(minutes=180),  # noqa: W503
+                "exp": expired_in,
                 "jti": str(uuid.uuid4()),
+
             },  # noqa: W503
             config.FAIRHUB_SECRET,
             algorithm="HS256",
@@ -257,7 +266,7 @@ def authentication():
     """it authenticates users to a study, sets access and refresh token.
     In addition, it handles error handling of expired token and non existed users"""
     g.user = None
-
+    g.session = None
     if "token" not in request.cookies:
         return
     token: str = (
@@ -285,7 +294,12 @@ def authentication():
     token_blacklist = model.TokenBlacklist.query.get(decoded["jti"])
     if token_blacklist:
         return
+    # decode user
     user = model.User.query.get(decoded["user"])
+    # decode session
+    session = model.Session.query.get(decoded["session"])
+
+    g.session = session
     g.user = user
 
 
@@ -396,6 +410,7 @@ class Logout(Resource):
     @api.response(400, "Validation Error")
     def post(self):
         """simply logges out user from the system"""
+
         resp = make_response()
         resp.set_cookie(
             "token",
@@ -406,15 +421,14 @@ class Logout(Resource):
             expires=datetime.datetime.now(timezone.utc),
         )
         resp.status_code = 204
-        if os.environ.get("FLASK_ENV") != "testing":
-            remove_session = (
-                model.Session.query
-                .filter(model.Session.user_id == g.user.id)
-                .order_by(desc(model.Session.expires_at))
-                .first()
-            )
-            model.db.session.delete(remove_session)
-            model.db.session.commit()
+        remove_session = (
+            model.Session.query
+            .filter(model.Session.user_id == g.user.id,
+                    model.Session.id == g.session.id)
+            .first()
+        )
+        model.db.session.delete(remove_session)
+        model.db.session.commit()
         return resp
 
 
@@ -486,15 +500,13 @@ class UserPasswordEndpoint(Resource):
 
         model.db.session.commit()
 
-        if os.environ.get("FLASK_ENV") != "testing":
-            remove_sessions = model.Session.query.filter(
-                model.Session.user_id == g.user.id
-            ).all()
+        remove_sessions = model.Session.query.filter(
+            model.Session.user_id == g.user.id
+        ).all()
 
-            for session in remove_sessions:
-                print(session)
-                model.db.session.delete(session)
-                model.db.session.commit()
+        for session in remove_sessions:
+            model.db.session.delete(session)
+            model.db.session.commit()
 
         return "Password updated successfully", 200
 

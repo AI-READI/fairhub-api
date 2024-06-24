@@ -257,17 +257,14 @@ def create_app(config_module=None, loglevel="INFO"):
         expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
             minutes=180
         )
+        session = model.Session.query.get(decoded["session"])
+
         new_token = jwt.encode(
-            {"user": decoded["user"], "exp": expired_in, "jti": decoded["jti"]},
+            {"user": decoded["user"], "exp": expired_in, "session": session.id, "jti": decoded["jti"]},
             config.FAIRHUB_SECRET,
             algorithm="HS256",
         )
         resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="None")
-
-        if os.environ.get("FLASK_ENV") != "testing":
-            added_session = model.Session.from_data(expired_in.timestamp(), g.user)
-            model.db.session.add(added_session)
-            model.db.session.commit()
 
         app.logger.info("after request")
         app.logger.info(request.headers.get("Origin"))
