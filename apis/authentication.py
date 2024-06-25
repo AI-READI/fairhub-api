@@ -421,14 +421,15 @@ class Logout(Resource):
             expires=datetime.datetime.now(timezone.utc),
         )
         resp.status_code = 204
-        remove_session = (
-            model.Session.query
-            .filter(model.Session.user_id == g.user.id,
-                    model.Session.id == g.session.id)
-            .first()
-        )
-        model.db.session.delete(remove_session)
-        model.db.session.commit()
+        if g.user and g.session:
+            remove_session = (
+                model.Session.query
+                .filter(model.Session.user_id == g.user.id,
+                        model.Session.id == g.session.id)
+                .first()
+            )
+            model.db.session.delete(remove_session)
+            model.db.session.commit()
         return resp
 
 
@@ -499,7 +500,12 @@ class UserPasswordEndpoint(Resource):
         user.set_password(data["new_password"])
 
         model.db.session.commit()
+        session_logout()
+        return "Password updated successfully", 200
 
+
+def session_logout():
+    if g.user and g.session:
         remove_sessions = model.Session.query.filter(
             model.Session.user_id == g.user.id
         ).all()
@@ -507,19 +513,5 @@ class UserPasswordEndpoint(Resource):
         for session in remove_sessions:
             model.db.session.delete(session)
             model.db.session.commit()
-
-        return "Password updated successfully", 200
-
-
-# @api.route("/auth/current-users")
-# class CurrentUsers(Resource):
-#     """function is used to see all logged users in
-#     the system. For now, it is used for testing purposes"""
-
-#     @api.response(200, "Success")
-#     @api.response(400, "Validation Error")
-#     def get(self):
-#         """returns all logged users in the system"""
-#         if not g.user:
-#             return None
-#         return g.user.to_dict()
+    else:
+        return "User or session does not exist", 400

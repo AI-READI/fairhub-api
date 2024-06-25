@@ -260,7 +260,7 @@ def create_app(config_module=None, loglevel="INFO"):
         session = model.Session.query.get(decoded["session"])
 
         new_token = jwt.encode(
-            {"user": decoded["user"], "exp": expired_in, "session": session.id, "jti": decoded["jti"]},
+            {"user": decoded["user"], "exp": expired_in, "session": decoded["session"], "jti": decoded["jti"]},
             config.FAIRHUB_SECRET,
             algorithm="HS256",
         )
