@@ -15,7 +15,6 @@ from email_validator import EmailNotValidError, validate_email
 from flask import g, make_response, request
 from flask_restx import Namespace, Resource, fields
 from jsonschema import FormatChecker, ValidationError, validate
-from sqlalchemy import desc
 
 import model
 

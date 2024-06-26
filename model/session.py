@@ -1,11 +1,8 @@
-import datetime
 import uuid
 
 from . import User
 
 from .db import db
-
-from datetime import datetime
 
 
 class Session(db.Model):  # type: ignore

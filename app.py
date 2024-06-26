@@ -257,7 +257,6 @@ def create_app(config_module=None, loglevel="INFO"):
         expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
             minutes=180
         )
-        session = model.Session.query.get(decoded["session"])
 
         new_token = jwt.encode(
             {"user": decoded["user"], "exp": expired_in, "session": decoded["session"], "jti": decoded["jti"]},
