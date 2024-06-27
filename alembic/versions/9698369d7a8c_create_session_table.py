@@ -22,5 +22,6 @@ def upgrade() -> None:
         'session',
         sa.Column('id', sa.CHAR(36), primary_key=True),
         sa.Column('user_id', sa.CHAR(36), sa.ForeignKey("user.id"), nullable=False),
-        sa.Column('expires_at', sa.BigInteger, nullable=True),
+        sa.Column('expires_at', sa.BigInteger, nullable=False)
     )
+
