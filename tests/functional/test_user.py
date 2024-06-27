@@ -148,4 +148,3 @@ def test_post_logout(clients):
         if table.name == 'session':
             session_entries = db.session.execute(table.select()).fetchall()
             assert len(session_entries) == 0
-
