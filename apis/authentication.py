@@ -513,4 +513,3 @@ def session_logout():
             model.db.session.delete(session)
             model.db.session.commit()
         # return "Sessions are removed successfully", 200
-
