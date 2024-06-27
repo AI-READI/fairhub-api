@@ -512,6 +512,5 @@ def session_logout():
         for session in remove_sessions:
             model.db.session.delete(session)
             model.db.session.commit()
-            return "Sessions are removed successfully", 200
-    else:
-        return "User or session does not exist", 400
+        # return "Sessions are removed successfully", 200
+
