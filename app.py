@@ -135,6 +135,7 @@ def create_app(config_module=None, loglevel="INFO"):
         with engine.begin() as conn:
             model.db.drop_all()
             conn.execute(text("DROP TABLE IF EXISTS alembic_version"))  # type: ignore
+
     @app.cli.command("cycle-schema")
     def cycle_schema():
         """Destroy then re-create the database schema."""
