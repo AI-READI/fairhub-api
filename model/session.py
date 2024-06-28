@@ -1,14 +1,11 @@
-import uuid
-
 from . import User
 
 from .db import db
 
 
 class Session(db.Model):  # type: ignore
-    def __init__(self, id, user: User):
+    def __init__(self, id, user: User):  # pylint: disable=redefined-builtin
         self.id = id
-        # self.expires_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
         self.user = user
 
     __tablename__ = "session"
@@ -30,7 +27,7 @@ class Session(db.Model):  # type: ignore
         }
 
     @staticmethod
-    def from_data(id, expires_at, user: User):
+    def from_data(id, expires_at, user: User):  # pylint: disable=redefined-builtin
         session = Session(id, user)
         session.update(expires_at)
         return session
