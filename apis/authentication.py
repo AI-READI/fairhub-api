@@ -419,6 +419,7 @@ class Logout(Resource):
             expires=datetime.datetime.now(timezone.utc),
         )
         resp.status_code = 204
+
         if g.user and g.token:
             remove_session = (
                 model.Session.query
@@ -426,8 +427,9 @@ class Logout(Resource):
                         model.Session.id == g.token)
                 .first()
             )
-            model.db.session.delete(remove_session)
-            model.db.session.commit()
+            if remove_session:
+                model.db.session.delete(remove_session)
+                model.db.session.commit()
         return resp
 
 
