@@ -12,7 +12,7 @@ from flask import Flask, g, request
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from growthbook import GrowthBook
-from sqlalchemy import MetaData, inspect, text
+from sqlalchemy import MetaData, inspect
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.schema import DropTable
 from waitress import serve
@@ -260,7 +260,7 @@ def create_app(config_module=None, loglevel="INFO"):
         )
 
         new_token = jwt.encode(
-            {"user": decoded["user"], "exp": expired_in, "session": decoded["session"], "jti": decoded["jti"]},
+            {"user": decoded["user"], "exp": expired_in,  "jti": decoded["jti"]},
             config.FAIRHUB_SECRET,
             algorithm="HS256",
         )

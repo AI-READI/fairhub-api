@@ -236,28 +236,26 @@ class Login(Resource):
         expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
             minutes=180
         )
-
-        added_session = model.Session.from_data(expired_in.timestamp(), user)
-        model.db.session.add(added_session)
-        model.db.session.commit()
-
+        jti = str(uuid.uuid4())
         encoded_jwt_code = jwt.encode(
             {
-                "session": added_session.id,
                 "user": user.id,
                 "exp": expired_in,
-                "jti": str(uuid.uuid4()),
+                "jti": jti,
 
             },  # noqa: W503
             config.FAIRHUB_SECRET,
             algorithm="HS256",
         )
-
         resp = make_response(user.to_dict())
 
         resp.set_cookie(
             "token", encoded_jwt_code, secure=True, httponly=True, samesite="None"
         )
+
+        added_session = model.Session.from_data(jti, expired_in.timestamp(), user)
+        model.db.session.add(added_session)
+        model.db.session.commit()
         return resp
 
 
@@ -265,7 +263,7 @@ def authentication():
     """it authenticates users to a study, sets access and refresh token.
     In addition, it handles error handling of expired token and non existed users"""
     g.user = None
-    g.session = None
+    g.token = None
     if "token" not in request.cookies:
         return
     token: str = (
@@ -296,9 +294,10 @@ def authentication():
     # decode user
     user = model.User.query.get(decoded["user"])
     # decode session
-    session = model.Session.query.get(decoded["session"])
+    # session = model.Session.query.get(decoded["jti"])
 
-    g.session = session
+    g.token = decoded["jti"]
+    print(g.token, "tokiiiii")
     g.user = user
 
 
@@ -420,11 +419,11 @@ class Logout(Resource):
             expires=datetime.datetime.now(timezone.utc),
         )
         resp.status_code = 204
-        if g.user and g.session:
+        if g.user and g.token:
             remove_session = (
                 model.Session.query
                 .filter(model.Session.user_id == g.user.id,
-                        model.Session.id == g.session.id)
+                        model.Session.id == g.token)
                 .first()
             )
             model.db.session.delete(remove_session)
@@ -504,7 +503,7 @@ class UserPasswordEndpoint(Resource):
 
 
 def session_logout():
-    if g.user and g.session:
+    if g.user and g.token:
         remove_sessions = model.Session.query.filter(
             model.Session.user_id == g.user.id
         ).all()

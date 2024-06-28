@@ -6,8 +6,8 @@ from .db import db
 
 
 class Session(db.Model):  # type: ignore
-    def __init__(self, user: User):
-        self.id = str(uuid.uuid4())
+    def __init__(self, id, user: User):
+        self.id = id
         # self.expires_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
         self.user = user
 
@@ -30,8 +30,8 @@ class Session(db.Model):  # type: ignore
         }
 
     @staticmethod
-    def from_data(expires_at, user: User):
-        session = Session(user)
+    def from_data(id, expires_at, user: User):
+        session = Session(id, user)
         session.update(expires_at)
         return session
 
