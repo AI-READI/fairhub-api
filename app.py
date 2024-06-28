@@ -134,7 +134,7 @@ def create_app(config_module=None, loglevel="INFO"):
         engine = model.db.session.get_bind()
         with engine.begin() as conn:
             model.db.drop_all()
-            conn.execute(text("DROP TABLE IF EXISTS alembic_version"))
+            # conn.execute(text("DROP TABLE IF EXISTS alembic_version"))
 
     @app.cli.command("cycle-schema")
     def cycle_schema():
