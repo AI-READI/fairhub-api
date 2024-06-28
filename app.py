@@ -132,7 +132,7 @@ def create_app(config_module=None, loglevel="INFO"):
         if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
             return
         engine = model.db.session.get_bind()
-        with engine.begin() as conn:
+        with engine.begin():
             model.db.drop_all()
             # conn.execute(text("DROP TABLE IF EXISTS alembic_version"))
 
