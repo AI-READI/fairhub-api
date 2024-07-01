@@ -12,7 +12,7 @@ from flask import Flask, g, request
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from growthbook import GrowthBook
-from sqlalchemy import MetaData, inspect
+from sqlalchemy import MetaData, inspect, text
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.schema import DropTable
 from waitress import serve
@@ -132,8 +132,9 @@ def create_app(config_module=None, loglevel="INFO"):
         if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
             return
         engine = model.db.session.get_bind()
-        with engine.begin():
+        with engine.begin() as conn:
             model.db.drop_all()
+            conn.execute(text("DROP TABLE IF EXISTS alembic_version"))  # type: ignore
 
     @app.cli.command("cycle-schema")
     def cycle_schema():
@@ -257,6 +258,7 @@ def create_app(config_module=None, loglevel="INFO"):
         expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
             minutes=180
         )
+
         new_token = jwt.encode(
             {"user": decoded["user"], "exp": expired_in, "jti": decoded["jti"]},
             config.FAIRHUB_SECRET,
@@ -278,7 +280,6 @@ def create_app(config_module=None, loglevel="INFO"):
         # ] = "Content-Type, Authorization, Access-Control-Allow-Origin,
         # Access-Control-Allow-Credentials"
         app.logger.info(resp.headers)
-
         return resp
 
     @app.errorhandler(ValidationException)
