@@ -9,13 +9,13 @@ import re
 import uuid
 from datetime import timezone
 from typing import Any, Union
+import time
 
 import jwt
 from email_validator import EmailNotValidError, validate_email
 from flask import g, make_response, request
 from flask_restx import Namespace, Resource, fields
 from jsonschema import FormatChecker, ValidationError, validate
-
 import model
 
 api = Namespace("Authentication", description="Authentication paths", path="/")
@@ -298,12 +298,15 @@ def authentication():
 
     g.token = decoded["jti"]
     session = model.Session.query.get(decoded["jti"])
-    session_expiration = datetime.datetime.fromtimestamp(session.expires_at / 1000, tz=datetime.timezone.utc)
-    if not session or session_expiration < datetime.datetime.now(tz=datetime.timezone.utc):
+    if not session:
         g.user = None
-        print("here?")
+        return
+
+    if session.expires_at < time.time():
+        g.user = None
+        return
+
     g.user = user
-    print("here", g.user)
 
 
 def authorization():
