@@ -297,8 +297,13 @@ def authentication():
     # session = model.Session.query.get(decoded["jti"])
 
     g.token = decoded["jti"]
-    print(g.token, "tokiiiii")
+    session = model.Session.query.get(decoded["jti"])
+    session_expiration = datetime.datetime.fromtimestamp(session.expires_at / 1000, tz=datetime.timezone.utc)
+    if not session or session_expiration < datetime.datetime.now(tz=datetime.timezone.utc):
+        g.user = None
+        print("here?")
     g.user = user
+    print("here", g.user)
 
 
 def authorization():
@@ -423,8 +428,7 @@ class Logout(Resource):
         if g.user and g.token:
             remove_session = (
                 model.Session.query
-                .filter(model.Session.user_id == g.user.id,
-                        model.Session.id == g.token)
+                .filter(model.Session.id == g.token)
                 .first()
             )
             if remove_session:
