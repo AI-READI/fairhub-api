@@ -294,17 +294,17 @@ def authentication():
     # decode user
     user = model.User.query.get(decoded["user"])
     # decode session
-    # session = model.Session.query.get(decoded["jti"])
-
-    g.token = decoded["jti"]
     session = model.Session.query.get(decoded["jti"])
     if not session:
         g.user = None
+        g.token = None
         return
 
     if session.expires_at < time.time():
         g.user = None
+        g.token = None
         return
+    g.token = decoded["jti"]
     g.user = user
 
 

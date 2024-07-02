@@ -126,17 +126,6 @@ def create_app(config_module=None, loglevel="INFO"):
             with engine.begin():
                 model.db.create_all()
 
-    @app.cli.command("destroy-schema")
-    def destroy_schema():
-        """Create the database schema."""
-        # If DB is Azure, Skip
-        if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
-            return
-        engine = model.db.session.get_bind()
-        with engine.begin() as conn:
-            model.db.drop_all()
-            conn.execute(text("DROP TABLE IF EXISTS alembic_version"))  # type: ignore
-
     @app.cli.command("cycle-schema")
     def cycle_schema():
         """Destroy then re-create the database schema."""
@@ -223,7 +212,7 @@ def create_app(config_module=None, loglevel="INFO"):
             if request.path.startswith(route):
                 return resp
 
-        if "token" not in request.cookies:
+        if not g.token:
             return resp
 
         token: str = request.cookies.get("token") or ""  # type: ignore
@@ -260,17 +249,17 @@ def create_app(config_module=None, loglevel="INFO"):
         expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
             minutes=180
         )
-        new_token = jwt.encode(
-            {"user": decoded["user"], "exp": expired_in, "jti": decoded["jti"]},
-            config.FAIRHUB_SECRET,
-            algorithm="HS256",
-        )
-        resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="None")
-
         session = model.Session.query.get(g.token)
-        # session_expires_at = datetime.datetime.fromtimestamp(session.expires_at, timezone.utc)
-        # if expired_in - session_expires_at < datetime.timedelta(minutes=90):
-        if session:
+        session_expires_at = datetime.datetime.fromtimestamp(session.expires_at, timezone.utc)
+
+        if expired_in - session_expires_at < datetime.timedelta(minutes=90):
+
+            new_token = jwt.encode(
+                {"user": decoded["user"], "exp": expired_in, "jti": decoded["jti"]},
+                config.FAIRHUB_SECRET,
+                algorithm="HS256",
+            )
+            resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="None")
             session.expires_at = expired_in
 
         app.logger.info("after request")
