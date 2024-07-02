@@ -12,7 +12,7 @@ from flask import Flask, g, request
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from growthbook import GrowthBook
-from sqlalchemy import MetaData, inspect, text
+from sqlalchemy import MetaData, inspect
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.schema import DropTable
 from waitress import serve
