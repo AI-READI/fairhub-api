@@ -77,7 +77,8 @@ def create_app(config_module=None, loglevel="INFO"):
     caching.cache.init_app(app)
 
     cors_origins = [
-        "https://brave-ground-.*-.*.centralus.2.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
+        "https://brave-ground-.*-.*.centralus.2.azurestaticapps.net",
+        # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
         "https://staging.app.fairhub.io",
         "https://app.fairhub.io",
         "https://staging.fairhub.io",
@@ -255,16 +256,22 @@ def create_app(config_module=None, loglevel="INFO"):
         if token_blacklist:
             resp.delete_cookie("token")
             return resp
+
         expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
             minutes=180
         )
-
         new_token = jwt.encode(
             {"user": decoded["user"], "exp": expired_in, "jti": decoded["jti"]},
             config.FAIRHUB_SECRET,
             algorithm="HS256",
         )
         resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="None")
+
+        session = model.Session.query.get(g.token)
+        # session_expires_at = datetime.datetime.fromtimestamp(session.expires_at, timezone.utc)
+        # if expired_in - session_expires_at < datetime.timedelta(minutes=90):
+        if session:
+            session.expires_at = expired_in
 
         app.logger.info("after request")
         app.logger.info(request.headers.get("Origin"))

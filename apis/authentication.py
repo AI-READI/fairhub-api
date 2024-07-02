@@ -305,7 +305,6 @@ def authentication():
     if session.expires_at < time.time():
         g.user = None
         return
-
     g.user = user
 
 
