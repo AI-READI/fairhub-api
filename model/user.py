@@ -29,6 +29,7 @@ class User(db.Model):  # type: ignore
     user_details = db.relationship("UserDetails", uselist=False, back_populates="user")
     token_blacklist = db.relationship("TokenBlacklist", back_populates="user")
     notification = db.relationship("Notification", back_populates="user")
+    session = db.relationship("Session", back_populates="user")
 
     def to_dict(self):
         return {
