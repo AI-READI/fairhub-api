@@ -150,6 +150,17 @@ def create_app(config_module=None, loglevel="INFO"):
         for schema_name in schema_names:
             print(schema_name)
 
+    @app.cli.command("destroy-schema")
+    def destroy_schema():
+        """Create the database schema."""
+        # If DB is Azure, Skip
+        if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
+            return
+        engine = model.db.session.get_bind()
+        with engine.begin() as conn:
+            model.db.drop_all()
+            conn.execute(text("DROP TABLE IF EXISTS alembic_version"))  # type: ignore
+
     @app.cli.command("inspect-schema")
     @click.argument("schema")
     def inspect_schema(schema=None):
@@ -212,7 +223,7 @@ def create_app(config_module=None, loglevel="INFO"):
             if request.path.startswith(route):
                 return resp
 
-        if "token" not in request.cookies:
+        if "token" not in request.cookies or not g.token:
             return resp
 
         token: str = request.cookies.get("token") or ""  # type: ignore
