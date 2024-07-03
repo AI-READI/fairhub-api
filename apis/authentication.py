@@ -252,7 +252,7 @@ class Login(Resource):
         resp.set_cookie(
             "token", encoded_jwt_code, secure=True, httponly=True, samesite="None"
         )
-
+        g.token = jti
         added_session = model.Session.from_data(jti, expired_in.timestamp(), user)
         model.db.session.add(added_session)
         model.db.session.commit()

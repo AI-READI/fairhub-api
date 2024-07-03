@@ -12,7 +12,7 @@ from flask import Flask, g, request
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from growthbook import GrowthBook
-from sqlalchemy import MetaData, inspect
+from sqlalchemy import MetaData, inspect, text
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.schema import DropTable
 from waitress import serve
@@ -212,7 +212,7 @@ def create_app(config_module=None, loglevel="INFO"):
             if request.path.startswith(route):
                 return resp
 
-        if not g.token:
+        if "token" not in request.cookies:
             return resp
 
         token: str = request.cookies.get("token") or ""  # type: ignore
@@ -260,7 +260,7 @@ def create_app(config_module=None, loglevel="INFO"):
                 algorithm="HS256",
             )
             resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="None")
-            session.expires_at = expired_in
+            session.expires_at = expired_in.timestamp()
 
         app.logger.info("after request")
         app.logger.info(request.headers.get("Origin"))
