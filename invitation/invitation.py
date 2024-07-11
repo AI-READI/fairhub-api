@@ -30,11 +30,11 @@ def azure_email_connection(html_content, subject):
 
 
 def forgot_password(to, first_name, last_name, token):
-    reset_password = f"{config.FAIRHUB_FRONTEND_URL}auth/reset-password?token={token}"
+    forgot_password_ = f"{config.FAIRHUB_FRONTEND_URL}auth/reset-password?token={token}"
 
     html_content = render_template(
         "forgot_password.html",
-        reset_password=reset_password,
+        forgot_password_=forgot_password_,
         email=to,
         first_name=first_name,
         last_name=last_name
@@ -48,11 +48,11 @@ def forgot_password(to, first_name, last_name, token):
 
 
 def reset_password(to, first_name, last_name):
-    reset_password = f"{config.FAIRHUB_FRONTEND_URL}/user/profile"
+    reset_password_ = f"{config.FAIRHUB_FRONTEND_URL}/user/profile"
 
     html_content = render_template(
         "reset_password.html",
-        reset_password=reset_password,
+        reset_password_=reset_password_,
         email=to,
         first_name=first_name,
         last_name=last_name
