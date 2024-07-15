@@ -109,6 +109,9 @@ pytest.global_editor_token = ""
 pytest.global_viewer_token = ""
 
 
+pytest.global_reset_token = ""
+
+
 # Create the flask app for testing
 @pytest.fixture(scope="session")
 def flask_app():
@@ -269,6 +272,7 @@ def clients(flask_app):
     _admin_client = flask_app.test_client()
     _editor_client = flask_app.test_client()
     _viewer_client = flask_app.test_client()
+    # _test_client = flask_app.test_client()
 
     with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
         response = _logged_in_client.post(

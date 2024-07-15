@@ -16,6 +16,7 @@ from email_validator import EmailNotValidError, validate_email
 from flask import g, make_response, request, Response
 from flask_restx import Namespace, Resource, fields
 from jsonschema import FormatChecker, ValidationError, validate
+
 import model
 from invitation.invitation import reset_password, forgot_password
 
@@ -581,8 +582,8 @@ class ForgotPassword(Resource):
         if not user:
             raise ValidationError("User associated with this email does not exist")
 
-        expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
-            minutes=50
+        expired_in = get_now() + datetime.timedelta(
+            minutes=5
         )
         jti = str(uuid.uuid4())
         reset_token = jwt.encode(
@@ -605,7 +606,11 @@ class ForgotPassword(Resource):
                 forgot_password(email_address, first_name, last_name, reset_token)
         user.update_password_reset(reset_token)
         model.db.session.commit()
-        return "email is sent successfully", 200
+
+        response = make_response("email is sent successfully", 200)
+        if os.environ.get("FLASK_ENV") == "testing":
+            response.headers.add("X-Token", reset_token)
+        return response
 
 
 @api.route("/auth/reset-password")
@@ -633,17 +638,14 @@ class ResetPassword(Resource):
         try:
             decoded = jwt.decode(data["token"], config.FAIRHUB_SECRET, algorithms=["HS256"])
         except (jwt.ExpiredSignatureError, jwt.DecodeError, jwt.InvalidSignatureError):
-            return Response(status=403)
+            return Response(status=401)
         user = model.User.query.filter(model.User.email_address == decoded["email"]).first()
         if not user:
             raise ValidationError("Email doesnt exist")
 
-        # def validate_current_password(instance):
-        #     new_password = data["new_password"]
-        #
-        #     if not g.user.check_password(instance["new_password"]):
-        #         raise ValidationError("choose different password")
-        #     return True
+        validate_pass = user.check_password(data["new_password"])
+        if validate_pass:
+            return "old and new password can not be same. Please select a new one", 422
 
         def confirm_new_password(instance):
             new_password = data["new_password"]
@@ -696,3 +698,17 @@ class ResetPassword(Resource):
                     )
 
         return "Password reset successfully", 200
+
+
+frozen_date: Union[datetime.datetime, None] = None
+
+
+def set_now(now: Union[datetime.datetime, None]) -> None:
+    global frozen_date
+    frozen_date = now
+
+
+def get_now() -> datetime.datetime:
+    if frozen_date:
+        return frozen_date
+    return datetime.datetime.now(datetime.timezone.utc)
