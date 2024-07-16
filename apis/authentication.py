@@ -643,6 +643,9 @@ class ResetPassword(Resource):
         if not user:
             raise ValidationError("Email doesnt exist")
 
+        if data["token"] != user.password_reset_token:
+            return "You have already reset your password", 400
+
         validate_pass = user.check_password(data["new_password"])
         if validate_pass:
             return "old and new password can not be same. Please select a new one", 422
@@ -683,6 +686,9 @@ class ResetPassword(Resource):
             return e.message, 400
 
         user.set_password(data["new_password"])
+        model.db.session.commit()
+
+        user.update_password_reset(None)
         model.db.session.commit()
 
         email_address = user.email_address if user else ""

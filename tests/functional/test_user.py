@@ -167,7 +167,7 @@ def test_post_reset_password(flask_app):
     assert logout_response.status_code == 204
 
 
-def test_post_reset_password_is_not_same_old(flask_app):
+def test_post_reset_password_invalidation(flask_app):
     """
     Given a Flask application configured for testing
     WHEN the '/auth/password/reset-password' endpoint is requested (POST)
@@ -191,8 +191,8 @@ def test_post_reset_password_is_not_same_old(flask_app):
         "/auth/reset-password",
         json={
             "token": token,
-            "confirm_password": "uniquepassword4testing!",
-            "new_password": "uniquepassword4testing!",
+            "confirm_password": "invalidatepassword4testing!",
+            "new_password": "invalidatepassword4testing!",
         },
     )
 
@@ -204,6 +204,38 @@ def test_post_reset_password_is_not_same_old(flask_app):
             "token": token,
             "confirm_password": "uniquepassword4testing!",
             "new_password": "uniquepassword4testing!",
+        },
+    )
+
+    assert reset_response_old.status_code == 400
+
+
+def test_post_reset_password_is_not_same_old(flask_app):
+    """
+    Given a Flask application configured for testing
+    WHEN the '/auth/password/reset-password' endpoint is requested (POST)
+    THEN check that the response is valid and the password is changed
+    """
+    _test_client = flask_app.test_client()
+
+    forgot_response = _test_client.post(
+        "/auth/forgot-password",
+        json={
+            "email_address": "test@fairhub.io",
+
+        },
+    )
+    assert forgot_response.status_code == 200
+
+    token = forgot_response.headers["X-Token"]
+    assert token is not None
+
+    reset_response_old = _test_client.post(
+        "/auth/reset-password",
+        json={
+            "token": token,
+            "confirm_password": "invalidatepassword4testing!",
+            "new_password": "invalidatepassword4testing!",
         },
     )
 
