@@ -251,35 +251,6 @@ tests-mypy = ["mypy (>=1.6)", "pytest-mypy-plugins"]
 tests-no-zope = ["attrs[tests-mypy]", "cloudpickle", "hypothesis", "pympler", "pytest (>=4.3.0)", "pytest-xdist[psutil]"]
 
 [[package]]
-name = "azure-common"
-version = "1.1.28"
-description = "Microsoft Azure Client Library for Python (Common)"
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "azure-common-1.1.28.zip", hash = "sha256:4ac0cd3214e36b6a1b6a442686722a5d8cc449603aa833f3f0f40bda836704a3"},
-    {file = "azure_common-1.1.28-py2.py3-none-any.whl", hash = "sha256:5c12d3dcf4ec20599ca6b0d3e09e86e146353d443e7fcc050c9a19c1f9df20ad"},
-]
-
-[[package]]
-name = "azure-communication-email"
-version = "1.0.0"
-description = "Microsoft Azure MyService Management Client Library for Python"
-category = "main"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "azure-communication-email-1.0.0.zip", hash = "sha256:5df96b8b4389696244982ffc3740722f1948abb289f19af00ce2e1c534450095"},
-    {file = "azure_communication_email-1.0.0-py3-none-any.whl", hash = "sha256:b580ccfc9f1372d0b65f235334e569f3909894316bc3203bd9deb5760612693a"},
-]
-
-[package.dependencies]
-azure-common = ">=1.1,<2.0"
-azure-mgmt-core = ">=1.3.2,<2.0.0"
-msrest = ">=0.7.1"
-
-[[package]]
 name = "azure-core"
 version = "1.30.1"
 description = "Microsoft Azure Core Library for Python"
@@ -1130,23 +1101,6 @@ files = [
 [package.dependencies]
 blinker = "*"
 Flask = "*"
-
-[[package]]
-name = "flask-mailman"
-version = "1.1.0"
-description = "Porting Django's email implementation to your Flask applications."
-category = "main"
-optional = false
-python-versions = "<4.0,>=3.7"
-files = [
-    {file = "flask_mailman-1.1.0-py3-none-any.whl", hash = "sha256:538c94334f211f29d18fab5f5870c3711f8ded08d6fe93ca488b10d3e7c107e6"},
-    {file = "flask_mailman-1.1.0.tar.gz", hash = "sha256:1bb2b701cb332cf888962fd9d9155714f84b7f2c0d75a4d596548cae5d479bff"},
-]
-
-[package.extras]
-dev = ["bump2version", "pip", "pre-commit", "toml", "tox", "twine", "virtualenv"]
-doc = ["mkdocs", "mkdocs-autorefs", "mkdocs-include-markdown-plugin", "mkdocs-material", "mkdocs-material-extensions", "mkdocstrings"]
-test = ["aiosmtpd (>=1.4.4.post2,<2.0.0)", "black", "flake8", "isort", "pytest", "pytest-cov"]
 
 [[package]]
 name = "flask-restx"

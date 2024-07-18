@@ -38,8 +38,6 @@ waitress = "^2.1.2"
 
 # Email 
 flask-mail = "^0.9.1"
-flask-mailman = "^1.0.0"
-azure-communication-email = "^1.0.0"
 
 # API Client
 requests = "^2.31.0"
