@@ -19,8 +19,8 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    pass
-
-
-def downgrade() -> None:
-    pass
+    op.add_column(
+        "user", sa.Column("password_reset_token", sa.String, nullable=True)
+    )
+    with op.batch_alter_table("user") as batch_op:
+        batch_op.alter_column("password_reset_token", nullable=False)
