@@ -9,6 +9,7 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
+import uuid
 
 
 # revision identifiers, used by Alembic.
@@ -17,10 +18,14 @@ down_revision: Union[str, None] = '3ffefbd9c03b'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
+password_reset_token = str(uuid.uuid4())
+
 
 def upgrade() -> None:
     op.add_column(
         "user", sa.Column("password_reset_token", sa.String, nullable=True)
     )
+    op.execute(f"UPDATE \"user\" SET password_reset_token ='{password_reset_token}'")
+
     with op.batch_alter_table("user") as batch_op:
         batch_op.alter_column("password_reset_token", nullable=False)
