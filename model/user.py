@@ -55,7 +55,7 @@ class User(db.Model):  # type: ignore
         # self.email_verified = data["email_verified"]
 
     def update_password_reset(self, password_reset_token):
-        self.password_reset_token = password_reset_token if password_reset_token else ""
+        self.password_reset_token = password_reset_token
 
     def set_password(self, password: str):
         """setting bcrypt passwords"""

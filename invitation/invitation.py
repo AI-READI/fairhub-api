@@ -4,8 +4,7 @@ import config
 from azure.communication.email import EmailClient
 
 
-
-def azure_email_connection(html_content, subject):
+def azure_email_connection(html_content, subject, to: str):
     connection_string = config.FAIRHUB_SMTP_CONNECTION_STRING
     email_client = EmailClient.from_connection_string(connection_string)
     message = {
@@ -16,7 +15,7 @@ def azure_email_connection(html_content, subject):
         "recipients": {
             "to": [
                 {
-                    "address": "aydan.gasimova2@gmail.com",
+                    "address": to,
                     "displayName": "Customer Name"
                 }
             ]
@@ -44,7 +43,7 @@ def forgot_password(to, first_name, last_name, token):
                 "aydan.gasimova2@example.com",
                 to,
     )
-    azure_email_connection(html_content, subject)
+    azure_email_connection(html_content, subject, to)
 
 
 def reset_password(to, first_name, last_name):
@@ -62,5 +61,5 @@ def reset_password(to, first_name, last_name):
                 "aydan.gasimova2@example.com",
                 to,
     )
-    azure_email_connection(html_content, subject)
+    azure_email_connection(html_content, subject, to)
 

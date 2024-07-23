@@ -644,7 +644,7 @@ class ResetPassword(Resource):
             raise ValidationError("Email doesnt exist")
 
         if data["token"] != user.password_reset_token:
-            return "You have already reset your password", 400
+            return "Invalid token", 400
 
         validate_pass = user.check_password(data["new_password"])
         if validate_pass:
