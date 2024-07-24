@@ -12,7 +12,7 @@ import jwt
 from flask import g, request
 
 
-def azure_email_connection(html_content, subject):
+def azure_email_connection(html_content, subject: str, to: str):
     connection_string = config.FAIRHUB_SMTP_CONNECTION_STRING
     email_client = EmailClient.from_connection_string(connection_string)
     message = {
@@ -23,7 +23,7 @@ def azure_email_connection(html_content, subject):
         "recipients": {
             "to": [
                 {
-                    "address": "aydan.gasimova2@gmail.com",
+                    "address": to,
                     "displayName": "Customer Name"
                 }
             ]
@@ -55,7 +55,7 @@ def send_invitation_study(to, token, study_name, role):
     # msg = EmailMessage(subject, html_content, from_email, [to])
     # msg.content_subtype = "html"
     # msg.send()
-    azure_email_connection(html_content, subject)
+    azure_email_connection(html_content, subject, to)
 
 
 def send_access_contributors(to, study, first_name, last_name, role):
@@ -77,7 +77,7 @@ def send_access_contributors(to, study, first_name, last_name, role):
     # msg = EmailMessage(subject, html_content, from_email, [to])
     # msg.content_subtype = "html"
     # msg.send()
-    azure_email_connection(html_content, subject)
+    azure_email_connection(html_content, subject, to)
 
 
 # def send_invitation_general(to, token):
@@ -116,7 +116,7 @@ def send_email_verification(email_address, token):
     # msg = EmailMessage(subject, html_content, from_email, [email_address])
     # msg.content_subtype = "html"
     # msg.send()
-    azure_email_connection(html_content, subject)
+    azure_email_connection(html_content, subject, to)
 
 
 def signin_notification(user, device_ip):
@@ -134,7 +134,7 @@ def signin_notification(user, device_ip):
     # msg = EmailMessage(subject, html_content, from_email, [user.email_address])
     # msg.content_subtype = "html"
     # msg.send()
-    azure_email_connection(html_content, subject)
+    azure_email_connection(html_content, subject, to)
 
 
 # def get_config():
