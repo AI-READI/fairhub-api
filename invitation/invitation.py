@@ -1,15 +1,6 @@
-from flask_mailman import EmailMessage
-from flask import render_template, Response
-import os
-import importlib
-import datetime
+from flask import render_template
 import config
-from datetime import timezone
 from azure.communication.email import EmailClient
-import templates
-import jwt
-
-from flask import g, request
 
 
 def azure_email_connection(html_content, subject: str, to: str):
