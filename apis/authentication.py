@@ -9,13 +9,13 @@ import re
 import uuid
 from datetime import timezone
 from typing import Any, Union
-import time
 
 import jwt
 from email_validator import EmailNotValidError, validate_email
 from flask import g, make_response, request
 from flask_restx import Namespace, Resource, fields
 from jsonschema import FormatChecker, ValidationError, validate
+
 import model
 
 api = Namespace("Authentication", description="Authentication paths", path="/")
@@ -233,29 +233,24 @@ class Login(Resource):
             # If not testing, directly use the 'config' module
             config = config_module
 
-        expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
-            minutes=180
-        )
-        jti = str(uuid.uuid4())
         encoded_jwt_code = jwt.encode(
             {
                 "user": user.id,
-                "exp": expired_in,
-                "jti": jti,
-
+                "exp": datetime.datetime.now(timezone.utc)
+                + datetime.timedelta(minutes=180),  # noqa: W503
+                "jti": str(uuid.uuid4()),
             },  # noqa: W503
             config.FAIRHUB_SECRET,
             algorithm="HS256",
         )
+
         resp = make_response(user.to_dict())
 
         resp.set_cookie(
             "token", encoded_jwt_code, secure=True, httponly=True, samesite="None"
         )
-        g.token = jti
-        added_session = model.Session.from_data(jti, expired_in.timestamp(), user)
-        model.db.session.add(added_session)
-        model.db.session.commit()
+        resp.status_code = 200
+
         return resp
 
 
@@ -263,7 +258,7 @@ def authentication():
     """it authenticates users to a study, sets access and refresh token.
     In addition, it handles error handling of expired token and non existed users"""
     g.user = None
-    g.token = None
+
     if "token" not in request.cookies:
         return
     token: str = (
@@ -291,20 +286,7 @@ def authentication():
     token_blacklist = model.TokenBlacklist.query.get(decoded["jti"])
     if token_blacklist:
         return
-    # decode user
     user = model.User.query.get(decoded["user"])
-    # decode session
-    session = model.Session.query.get(decoded["jti"])
-    if not session:
-        g.user = None
-        g.token = None
-        return
-
-    if session.expires_at < time.time():
-        g.user = None
-        g.token = None
-        return
-    g.token = decoded["jti"]
     g.user = user
 
 
@@ -415,7 +397,6 @@ class Logout(Resource):
     @api.response(400, "Validation Error")
     def post(self):
         """simply logges out user from the system"""
-
         resp = make_response()
         resp.set_cookie(
             "token",
@@ -426,16 +407,6 @@ class Logout(Resource):
             expires=datetime.datetime.now(timezone.utc),
         )
         resp.status_code = 204
-
-        if g.user and g.token:
-            remove_session = (
-                model.Session.query
-                .filter(model.Session.id == g.token)
-                .first()
-            )
-            if remove_session:
-                model.db.session.delete(remove_session)
-                model.db.session.commit()
         return resp
 
 
@@ -502,21 +473,20 @@ class UserPasswordEndpoint(Resource):
 
         data: Union[Any, dict] = request.json
         user = model.User.query.get(g.user.id)
-
         user.set_password(data["new_password"])
-
         model.db.session.commit()
-        session_logout()
         return "Password updated successfully", 200
 
 
-def session_logout():
-    if g.user and g.token:
-        remove_sessions = model.Session.query.filter(
-            model.Session.user_id == g.user.id
-        ).all()
+# @api.route("/auth/current-users")
+# class CurrentUsers(Resource):
+#     """function is used to see all logged users in
+#     the system. For now, it is used for testing purposes"""
 
-        for session in remove_sessions:
-            model.db.session.delete(session)
-            model.db.session.commit()
-        # return "Sessions are removed successfully", 200
+#     @api.response(200, "Success")
+#     @api.response(400, "Validation Error")
+#     def get(self):
+#         """returns all logged users in the system"""
+#         if not g.user:
+#             return None
+#         return g.user.to_dict()
