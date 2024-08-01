@@ -48,7 +48,6 @@ from .token_blacklist import TokenBlacklist
 from .user import User
 from .user_details import UserDetails
 from .version import Version
-from .session import Session
 from .version_readme import VersionReadme
 
 __all__ = [
@@ -103,5 +102,4 @@ __all__ = [
     "UserDetails",
     "Notification",
     "VersionReadme",
-    "Session",
 ]
