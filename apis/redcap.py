@@ -246,4 +246,3 @@ class RedcapProjectAPIView(Resource):
         model.StudyRedcap.query.filter_by(id=redcap_id).delete()
         model.db.session.commit()
         return 204
-
