@@ -387,7 +387,7 @@ class RedcapProjectDashboard(Resource):
         if not is_granted("view", study):
             return "Access denied, you can not view this dashboard", 403
 
-        # Retrieve Dashboard Redis Cache if Available
+        # # Retrieve Dashboard Redis Cache if Available
         # cached_redcap_project_dashboard = caching.cache.get(
         #     f"$study_id#{study_id}$dashboard_id#{dashboard_id}"
         # )
@@ -657,7 +657,7 @@ class RedcapProjectDashboardPublic(Resource):
         # Public Dashboard ID
         dashboard_id = redcap_project_dashboard["id"]
 
-        # Retrieve Dashboard Redis Cache if Available
+        # # Retrieve Dashboard Redis Cache if Available
         # cached_redcap_project_dashboard = caching.cache.get(
         #     f"$study_id#{study_id}$dashboard_id#{dashboard_id}#public"
         # )

@@ -67,7 +67,7 @@ class ModuleTransform(object):
 
         # Normalize Transforms to List Type, Check Validity, and Warn on Missing Attributes
         for indexed_transform in enumerate(self.transforms):
-            self.valid = True if self._transformIsValid(indexed_transform) else False
+            self.valid: bool = self._transformIsValid(indexed_transform)
         if self.strict and not self.valid:
             raise ValueError(
                 f"{self.key}:Missing properties in transforms argument, see log at {self.logging_config['filename']} for details"
