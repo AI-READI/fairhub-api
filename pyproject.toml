@@ -171,7 +171,7 @@ quiet = true
 profile = "black"
 
 [tool.mypy]
-
+package-mode = false
 ignore_missing_imports = true
 no_implicit_optional = true
 check_untyped_defs = true

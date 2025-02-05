@@ -105,12 +105,6 @@ class RedcapLiveTransform(object):
             self.missing_value_generic,
         ]
         self.none_map = {key: self.missing_value_generic for key in self.none_values}
-        self.survey_instrument_map = {
-            "2": "Complete",
-            "1": "Unverified",
-            "0": "Incomplete",
-            "": self.missing_value_generic,
-        }
 
         self.logger.info(f"Initialized")
 
@@ -235,7 +229,8 @@ class RedcapLiveTransform(object):
         ]
 
         if len(merge_steps) > 0:
-            for providing_report_key, merge_kwdargs in merge_steps:
+            for merge_step in merge_steps:
+                providing_report_key, merge_kwdargs = merge_step
                 df_providing_report = self.reports[providing_report_key]["transformed"]
                 df_receiving_report = df_receiving_report.merge(
                     df_providing_report, **merge_kwdargs
@@ -432,13 +427,14 @@ class RedcapLiveTransform(object):
                     for subvalue in str(value).split(",")
                     if len(subvalue) > 0
                 ]
-                df.loc[i, column] = self.multivalue_separator.join(
+                remapped_value = self.multivalue_separator.join(
                     [
                         value_map[subvalue]
                         for subvalue in subvalues
                         if subvalue in value_map.keys()
                     ]
                 )
+                df.loc[i, column] = remapped_value
 
         return df
 
@@ -863,10 +859,9 @@ class RedcapLiveTransform(object):
 
     # Export Merged Transforms
     def export_merged_transformed(
-        self, path: str = "", separator: str = "\t", filetype: str = ".tsv"
+        self, filepath: str = "transformed-merged_redcap-extract.tsv", separator: str = "\t"
     ) -> object:
-        filename = f"transformed-merged_redcap-extract{filetype}"
-        filepath = os.path.join(self.cwd, path, filename)
+        filepath = os.path.join(self.cwd, filepath)
         self.merged.to_csv(
             filepath,
             sep=separator,
