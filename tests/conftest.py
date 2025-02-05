@@ -307,6 +307,12 @@ def clients(flask_app):
         )
         assert response.status_code == 200
 
+    meta = db.metadata
+    for table in reversed(meta.sorted_tables):
+        if table.name == 'session':
+            session_entries = db.session.execute(table.select()).fetchall()
+            assert len(session_entries) == 5
+
     yield _logged_in_client, _admin_client, _editor_client, _viewer_client
 
     ctx.pop()
