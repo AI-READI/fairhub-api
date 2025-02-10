@@ -84,6 +84,7 @@ def create_app(config_module=None, loglevel="INFO"):
 
     mail.init_app(app)
     cors_origins = [
+        "https://witty-mushroom-.*-.*.centralus.4.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
         "https://brave-ground-.*-.*.centralus.2.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
         "https://staging.app.fairhub.io",
         "https://app.fairhub.io",
@@ -132,16 +133,6 @@ def create_app(config_module=None, loglevel="INFO"):
             with engine.begin():
                 model.db.create_all()
 
-    # @app.cli.command("destroy-schema")
-    # def destroy_schema():
-    #     """Create the database schema."""
-    #     # If DB is Azure, Skip
-    #     if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
-    #         return
-    #     engine = model.db.session.get_bind()
-    #     with engine.begin():
-    #         model.db.drop_all()
-
     @app.cli.command("cycle-schema")
     def cycle_schema():
         """Destroy then re-create the database schema."""
@@ -165,6 +156,17 @@ def create_app(config_module=None, loglevel="INFO"):
         print("SCHEMAS")
         for schema_name in schema_names:
             print(schema_name)
+
+    @app.cli.command("destroy-schema")
+    def destroy_schema():
+        """Create the database schema."""
+        # If DB is Azure, Skip
+        if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
+            return
+        engine = model.db.session.get_bind()
+        with engine.begin() as conn:
+            model.db.drop_all()
+            conn.execute(text("DROP TABLE IF EXISTS alembic_version"))  # type: ignore
 
     @app.cli.command("inspect-schema")
     @click.argument("schema")
@@ -228,7 +230,7 @@ def create_app(config_module=None, loglevel="INFO"):
             if request.path.startswith(route):
                 return resp
 
-        if "token" not in request.cookies:
+        if "token" not in request.cookies or not g.token:
             return resp
 
         token: str = request.cookies.get("token") or ""  # type: ignore
@@ -261,15 +263,22 @@ def create_app(config_module=None, loglevel="INFO"):
         if token_blacklist:
             resp.delete_cookie("token")
             return resp
+
         expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
             minutes=180
         )
-        new_token = jwt.encode(
-            {"user": decoded["user"], "exp": expired_in, "jti": decoded["jti"]},
-            config.FAIRHUB_SECRET,
-            algorithm="HS256",
-        )
-        resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="None")
+        session = model.Session.query.get(g.token)
+        session_expires_at = datetime.datetime.fromtimestamp(session.expires_at, timezone.utc)
+
+        if expired_in - session_expires_at < datetime.timedelta(minutes=90):
+
+            new_token = jwt.encode(
+                {"user": decoded["user"], "exp": expired_in, "jti": decoded["jti"]},
+                config.FAIRHUB_SECRET,
+                algorithm="HS256",
+            )
+            resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="None")
+            session.expires_at = expired_in.timestamp()
 
         app.logger.info("after request")
         app.logger.info(request.headers.get("Origin"))
@@ -285,26 +294,11 @@ def create_app(config_module=None, loglevel="INFO"):
         # ] = "Content-Type, Authorization, Access-Control-Allow-Origin,
         # Access-Control-Allow-Credentials"
         app.logger.info(resp.headers)
-
         return resp
 
     @app.errorhandler(ValidationException)
     def validation_exception_handler(error):
         return error.args[0], 422
-
-    @app.cli.command("destroy-schema")
-    def destroy_schema():
-        """destroy the database schema."""
-
-        # if db is azure, then skip
-        if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
-            return
-
-        engine = model.db.session.get_bind()
-
-        with engine.begin() as conn:
-            model.db.drop_all()
-            conn.execute(text("DROP TABLE IF EXISTS alembic_version"))  # type: ignore
 
     with app.app_context():
         engine = model.db.session.get_bind()

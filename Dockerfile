@@ -14,7 +14,7 @@ RUN pip install "poetry==$POETRY_VERSION"
 COPY poetry.lock pyproject.toml ./
 
 RUN poetry config virtualenvs.create false
-RUN poetry install
+RUN poetry install --no-root
 
 COPY apis ./apis
 COPY model ./model

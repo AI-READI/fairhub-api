@@ -26,6 +26,11 @@ class User(db.Model):  # type: ignore
     created_at = db.Column(db.BigInteger, nullable=False)
     email_verified = db.Column(db.BOOLEAN, nullable=True)
 
+    study_contributors = db.relationship("StudyContributor", back_populates="user")
+    email_verification = db.relationship("EmailVerification", back_populates="user")
+    user_details = db.relationship("UserDetails", uselist=False, back_populates="user")
+    token_blacklist = db.relationship("TokenBlacklist", back_populates="user")
+    notification = db.relationship("Notification", back_populates="user")
     study_contributors = db.relationship(
         "StudyContributor",
         back_populates="user",
@@ -52,6 +57,7 @@ class User(db.Model):  # type: ignore
         back_populates="user",
         cascade="all, delete",
     )
+    session = db.relationship("Session", back_populates="user")
 
     def to_dict(self):
         # latest_object = max(self.email_verification, key=lambda x: x.created_at) if self.email_verification else None

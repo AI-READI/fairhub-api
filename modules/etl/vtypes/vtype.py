@@ -55,24 +55,6 @@ class ComplexVType(object):
     def __str__(self):
         return f"{self.__dict__}"
 
-    # def isvalid(
-    #     self, df: pd.DataFrame, accessorsList: List[Dict[str, Dict[str, str]]]
-    # ) -> bool:
-    #     """
-    #     Extends the VType.isvalid method to operate on a list
-    #     of pd.DataFrames and accessors.
-    #     """
-    #     valid = True
-    #     for accessors in accessorsList:
-    #         if not super(Compound, self).isvalid(df, accessors):
-    #             self.validation_errors.append(
-    #                 f"VType {self.name.title()} has invalid accessors. See additional details above."
-    #             )
-    #             valid = False
-    #         else:
-    #             continue
-    #     return valid
-
     def isvalid(
         self, df: pd.DataFrame, accessorsList: List[Dict[str, Dict[str, str]]]
     ) -> bool:
