@@ -104,10 +104,10 @@ class User(db.Model):  # type: ignore
             if self.email_verification
             else None
         )
-        if token != latest_object.token:
+        if not latest_object or token != latest_object.token:
             return False
         current_time = datetime.datetime.now()
-        datetime_obj = datetime.datetime.utcfromtimestamp(self.created_at)
+        datetime_obj = datetime.datetime.utcfromtimestamp(latest_object.created_at)
         formatted_time = datetime_obj.strftime("%Y-%m-%d %H:%M:%S.%f")
         created_time = datetime.datetime.strptime(
             formatted_time, "%Y-%m-%d %H:%M:%S.%f"
