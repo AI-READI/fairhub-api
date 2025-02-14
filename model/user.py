@@ -112,7 +112,7 @@ class User(db.Model):  # type: ignore
         created_time = datetime.datetime.strptime(
             formatted_time, "%Y-%m-%d %H:%M:%S.%f"
         )
-        return created_time - current_time > datetime.timedelta(minutes=15)
+        return current_time - created_time < datetime.timedelta(minutes=15)
 
     def generate_token(self) -> str:
         email_verification = model.EmailVerification(self)
