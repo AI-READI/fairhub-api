@@ -90,7 +90,7 @@ def send_access_contributors(to, study, first_name, last_name, role):
 
 def send_email_verification(email_address, token):
     verification_url = (
-        f"{config.FAIRHUB_FRONTEND_URL}auth/email-verification/confirm?email={email_address}&token={token}"
+        f"{config.FAIRHUB_FRONTEND_URL}auth/verify-email?email={email_address}&token={token}"
     )
     subject, from_email, to = (
         f"Verify email address",

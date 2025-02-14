@@ -217,6 +217,19 @@ class GenerateVerification(Resource):
         return "Your email is verified", 201
 
 
+@api.route("/auth/email-verification/check")
+class GenerateVerification(Resource):
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    # @api.marshal_with(contributors_model)
+    def post(self):
+        data: Union[Any, dict] = request.json
+        user = model.User.query.filter_by(email_address=data["email"]).one_or_none()
+        if not user:
+            return {"message": "User not found"}, 404
+        return  user.email_verified, 201
+
+
 @api.route("/auth/login")
 class Login(Resource):
     """Login class is used to login users to the system"""
