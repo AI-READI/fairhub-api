@@ -227,7 +227,7 @@ class GenerateVerification(Resource):
         user = model.User.query.filter_by(email_address=data["email"]).one_or_none()
         if not user:
             return {"message": "User not found"}, 404
-        return  user.email_verified, 201
+        return {"isVerified": user.email_verified}, 200
 
 
 @api.route("/auth/login")
@@ -315,7 +315,8 @@ class Login(Resource):
             algorithm="HS256",
         )
         resp = make_response(user.to_dict())
-
+        if not user.email_verified:
+            return resp
         resp.set_cookie(
             "token", encoded_jwt_code, secure=True, httponly=True, samesite="None"
         )
