@@ -219,7 +219,7 @@ class GenerateVerification(Resource):
 
 
 @api.route("/auth/email-verification/check")
-class GenerateVerification(Resource):
+class GenerateVerificationCheck(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.marshal_with(contributors_model)
