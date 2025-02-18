@@ -151,18 +151,13 @@ class SignUpUser(Resource):
         ).one_or_none()
         if user:
             return "This email address is already in use", 409
-        invitations = model.StudyInvitedContributor.query.filter_by(
-            email_address=data["email_address"]
-        ).all()
-
         new_user = model.User.from_data(data)
         verification = model.EmailVerification(new_user)
         new_user.email_verified = False
-        for invite in invitations:
-            invite.study.add_user_to_study(new_user, invite.permission)
-            model.db.session.delete(invite)
+
         model.db.session.add(new_user)
         model.db.session.add(verification)
+
         model.db.session.commit()
         if os.environ.get("FLASK_ENV") == "testing":
             new_user.email_verified = True
@@ -189,6 +184,12 @@ class EmailVerification(Resource):
         if not user.verify_token(data["token"]):
             return "Token invalid or expired", 422
         user.email_verified = True
+        invitations = model.StudyInvitedContributor.query.filter_by(
+            email_address=user.email_address
+        ).all()
+        for invite in invitations:
+            invite.study.add_user_to_study(user, invite.permission)
+            model.db.session.delete(invite)
         model.db.session.commit()
         return "Email verified", 201
 
