@@ -50,6 +50,11 @@ def test_viewer_editor_user(_create_viewer_user):
     print("Viewer user created for testing")
 
 
+def test_user_verification(_user_verification_for_testing):
+    """User are verified for testing"""
+    print("Users are verified for testing")
+
+
 def test_signin_all_clients(clients):
     """Signs in all clients for verifying permissions before testing continues."""
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
