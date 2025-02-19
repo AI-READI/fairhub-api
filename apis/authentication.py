@@ -161,16 +161,14 @@ class SignUpUser(Resource):
         model.db.session.add(new_user)
         model.db.session.add(verification)
         if os.environ.get("FLASK_ENV") != "testing":
-            new_user.email_verified = True
+            if new_user.email_address in bypassed_emails:
+                new_user.email_verified = True
 
         model.db.session.commit()
 
         if g.gb.is_on("email-verification"):
-            print("yes")
-
             if os.environ.get("FLASK_ENV") != "testing":
                 if new_user.email_address not in bypassed_emails:
-                    print("yes")
                     send_email_verification(new_user.email_address, verification.token)
         return f"Hi, {new_user.email_address}, you have successfully signed up", 201
 

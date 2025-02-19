@@ -127,4 +127,3 @@ class User(db.Model):  # type: ignore
         self.email_verified = False
         self.email_address = email
         self.generate_token()
-        

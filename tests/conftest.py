@@ -151,6 +151,7 @@ def _create_user(_test_client):
         )
         assert response.status_code == 201
 
+
 @pytest.fixture()
 def _verified_client(flask_app):
     """Verify the user for testing."""
@@ -186,7 +187,6 @@ def _logged_in_client(flask_app):
                 assert response.status_code == 200
                 response.close()
                 yield _test_client
-
 
 
 @pytest.fixture(scope="session")

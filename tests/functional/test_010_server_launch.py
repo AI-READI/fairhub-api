@@ -31,6 +31,7 @@ def test_verify_user(_verified_client):
     """Verifies user before testing."""
     print("User verified  for testing")
 
+
 def test_signin_user(_logged_in_client):
     """Signs in user before testing."""
     print("User signed in for testing")
