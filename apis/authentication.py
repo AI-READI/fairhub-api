@@ -166,8 +166,12 @@ class SignUpUser(Resource):
         model.db.session.commit()
 
         if g.gb.is_on("email-verification"):
+            print("yes")
+
             if os.environ.get("FLASK_ENV") != "testing":
-                send_email_verification(new_user.email_address, verification.token)
+                if new_user.email_address not in bypassed_emails:
+                    print("yes")
+                    send_email_verification(new_user.email_address, verification.token)
         return f"Hi, {new_user.email_address}, you have successfully signed up", 201
 
 
@@ -179,7 +183,7 @@ class EmailVerification(Resource):
     def post(self):
         data: Union[Any, dict] = request.json
         if "token" not in data or "email" not in data:
-             return "email or token are required", 422
+            return "email or token are required", 422
         user = model.User.query.filter_by(email_address=data["email"]).one_or_none()
         if not user:
             return "user not found", 404
