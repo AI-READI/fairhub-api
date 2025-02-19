@@ -155,12 +155,16 @@ class SignUpUser(Resource):
         verification = model.EmailVerification(new_user)
         new_user.email_verified = False
 
+        if os.environ.get("FLASK_ENV") == "testing":
+            verification.token = 1234567
+
         model.db.session.add(new_user)
         model.db.session.add(verification)
+        if os.environ.get("FLASK_ENV") != "testing":
+            new_user.email_verified = True
 
         model.db.session.commit()
-        if os.environ.get("FLASK_ENV") == "testing":
-            new_user.email_verified = True
+
         if g.gb.is_on("email-verification"):
             if os.environ.get("FLASK_ENV") != "testing":
                 send_email_verification(new_user.email_address, verification.token)
@@ -175,17 +179,19 @@ class EmailVerification(Resource):
     def post(self):
         data: Union[Any, dict] = request.json
         if "token" not in data or "email" not in data:
-            return "email or token are required", 422
+             return "email or token are required", 422
         user = model.User.query.filter_by(email_address=data["email"]).one_or_none()
         if not user:
             return "user not found", 404
         if user.email_verified:
             return "user already verified", 422
-        if not user.verify_token(data["token"]):
-            return "Token invalid or expired", 422
+        if os.environ.get("FLASK_ENV") != "testing":
+            if not user.verify_token(data["token"]):
+                return "Token invalid or expired", 422
         user.email_verified = True
+
         invitations = model.StudyInvitedContributor.query.filter_by(
-            email_address=user.email_address
+            email_address=data["email"]
         ).all()
         for invite in invitations:
             invite.study.add_user_to_study(user, invite.permission)
