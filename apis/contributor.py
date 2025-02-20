@@ -6,7 +6,7 @@ from flask import Response, g, request
 from flask_restx import Namespace, Resource, fields
 
 import model
-from invitation import send_access_contributors, send_invitation_study
+from modules.invitation import send_access_contributors, send_invitation_study
 
 from .authentication import is_granted
 

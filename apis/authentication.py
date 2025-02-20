@@ -17,7 +17,7 @@ from flask import g, make_response, request
 from flask_restx import Namespace, Resource, fields
 from jsonschema import FormatChecker, ValidationError, validate
 import model
-from invitation import (
+from modules.invitation import (
     send_email_verification,
 )
 
