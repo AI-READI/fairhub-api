@@ -62,11 +62,11 @@ class Studies(Resource):
         # Schema validation
         schema = {
             "type": "object",
-            "required": ["title", "image", "acronym"],
+            "required": ["title", "image", "short_description"],
             "additionalProperties": False,
             "properties": {
                 "title": {"type": "string", "minLength": 1, "maxLength": 300},
-                "acronym": {"type": "string", "maxLength": 14},
+                "short_description": {"type": "string", "maxLength": 300},
                 "image": {"type": "string"},
             },
         }
@@ -115,12 +115,12 @@ class StudyResource(Resource):
         # Schema validation
         schema = {
             "type": "object",
-            "required": ["title", "image", "acronym"],
+            "required": ["title", "image", "short_description"],
             "additionalProperties": False,
             "properties": {
                 "title": {"type": "string", "minLength": 1},
                 "image": {"type": "string", "minLength": 1},
-                "acronym": {"type": "string", "maxLength": 14},
+                "short_description": {"type": "string", "maxLength": 300},
             },
         }
 
