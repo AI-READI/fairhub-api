@@ -3145,7 +3145,6 @@ def test_get_dataset_related_identifier_metadata(clients):
     # assert len(admin_response_data) == 3
     # assert len(editor_response_data) == 3
     # assert len(viewer_response_data) == 3
-    print(len(response_data), "lennnnnnnnnn")
     assert response_data[0]["identifier"] == "test identifier"
     assert response_data[0]["identifier_type"] == "test identifier type"
     assert response_data[0]["relation_type"] == "test relation type"

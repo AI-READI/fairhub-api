@@ -8,9 +8,10 @@ from datetime import timezone
 
 import click
 import jwt
-from flask import Flask, g, request
+from flask import Flask, request, g
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
+from flask_mailman import Mail
 from growthbook import GrowthBook
 from sqlalchemy import MetaData, inspect, text
 from sqlalchemy.ext.compiler import compiles
@@ -21,12 +22,17 @@ import caching
 import config
 import model
 from apis import api
-from apis.authentication import UnauthenticatedException, authentication, authorization
+from apis.authentication import (
+    UnauthenticatedException,
+    authentication,
+    authorization,
+)
 from apis.exception import ValidationException
 
 # from pyfairdatatools import __version__
 
 bcrypt = Bcrypt()
+mail = Mail()
 
 
 # Add Cascade to Table Drop Call in destroy-schema CLI command
@@ -76,6 +82,7 @@ def create_app(config_module=None, loglevel="INFO"):
     bcrypt.init_app(app)
     caching.cache.init_app(app)
 
+    mail.init_app(app)
     cors_origins = [
         "https://witty-mushroom-.*-.*.centralus.4.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
         "https://brave-ground-.*-.*.centralus.2.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string

@@ -1,7 +1,6 @@
 """Initialize the api system for the backend"""
 
 from flask_restx import Api, Resource
-
 from apis.dataset_metadata_namespace import api as dataset_metadata_namespace
 from apis.study_metadata_namespace import api as study_metadata_namespace
 
@@ -98,6 +97,7 @@ __all__ = [
     "redcap",
     "dashboard",
     "utils",
+    # "invite_general_users",
 ]
 
 
@@ -114,7 +114,6 @@ class HelloEverynyan(Resource):
     @api.response(400, "Validation Error")
     def get(self):
         """Returns a simple 'Server Active' message"""
-
         return "Server active!"
 
 

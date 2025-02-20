@@ -17,6 +17,9 @@ from flask import g, make_response, request
 from flask_restx import Namespace, Resource, fields
 from jsonschema import FormatChecker, ValidationError, validate
 import model
+from invitation.invitation import (
+    send_email_verification,
+)
 
 api = Namespace("Authentication", description="Authentication paths", path="/")
 
@@ -148,17 +151,92 @@ class SignUpUser(Resource):
         ).one_or_none()
         if user:
             return "This email address is already in use", 409
-        invitations = model.StudyInvitedContributor.query.filter_by(
-            email_address=data["email_address"]
-        ).all()
-
         new_user = model.User.from_data(data)
-        for invite in invitations:
-            invite.study.add_user_to_study(new_user, invite.permission)
-            model.db.session.delete(invite)
+        verification = model.EmailVerification(new_user)
+        new_user.email_verified = False
+
+        if os.environ.get("FLASK_ENV") == "testing":
+            verification.token = 1234567
+
         model.db.session.add(new_user)
+        model.db.session.add(verification)
+        if os.environ.get("FLASK_ENV") != "testing":
+            if new_user.email_address in bypassed_emails:
+                new_user.email_verified = True
+
         model.db.session.commit()
+
+        if g.gb.is_on("email-verification"):
+            if os.environ.get("FLASK_ENV") != "testing":
+                if new_user.email_address not in bypassed_emails:
+                    send_email_verification(new_user.email_address, verification.token)
         return f"Hi, {new_user.email_address}, you have successfully signed up", 201
+
+
+@api.route("/auth/email-verification/confirm")
+class EmailVerification(Resource):
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    # @api.marshal_with(contributors_model)
+    def post(self):
+        data: Union[Any, dict] = request.json
+        if "token" not in data or "email" not in data:
+            return "email or token are required", 422
+        user = model.User.query.filter_by(email_address=data["email"]).one_or_none()
+        if not user:
+            return "user not found", 404
+        if user.email_verified:
+            return "user already verified", 422
+        if os.environ.get("FLASK_ENV") != "testing":
+            if not user.verify_token(data["token"]):
+                return "Token invalid or expired", 422
+        user.email_verified = True
+
+        invitations = model.StudyInvitedContributor.query.filter_by(
+            email_address=data["email"]
+        ).all()
+        for invite in invitations:
+            invite.study.add_user_to_study(user, invite.permission)
+            model.db.session.delete(invite)
+        model.db.session.commit()
+        return "Email verified", 201
+
+
+@api.route("/auth/email-verification/resend")
+class GenerateVerification(Resource):
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    # @api.marshal_with(contributors_model)
+    def post(self):
+        data: Union[Any, dict] = request.json
+        user = model.User.query.filter_by(email_address=data["email"]).one_or_none()
+        if not user:
+            return "user not found", 404
+        if user.email_verified:
+            return "user already verified", 422
+
+        # user.email_verified = True
+        token = user.generate_token()
+
+        if g.gb.is_on("email-verification"):
+            if os.environ.get("FLASK_ENV") != "testing":
+                send_email_verification(user.email_address, token)
+
+        model.db.session.commit()
+        return "Your email is verified", 201
+
+
+@api.route("/auth/email-verification/check")
+class GenerateVerificationCheck(Resource):
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    # @api.marshal_with(contributors_model)
+    def post(self):
+        data: Union[Any, dict] = request.json
+        user = model.User.query.filter_by(email_address=data["email"]).one_or_none()
+        if not user:
+            return {"message": "User not found"}, 404
+        return {"isVerified": user.email_verified}, 200
 
 
 @api.route("/auth/login")
@@ -173,7 +251,6 @@ class Login(Resource):
         """logs in user and handles few authentication errors.
         Also, it sets token for logged user along with expiration date"""
         data: Union[Any, dict] = request.json
-
         email_address = data["email_address"]
 
         def validate_is_valid_email(instance):
@@ -207,10 +284,19 @@ class Login(Resource):
             validate(instance=data, schema=schema, format_checker=format_checker)
         except ValidationError as e:
             return e.message, 400
-
         user = model.User.query.filter_by(email_address=email_address).one_or_none()
         if not user:
             return "Invalid credentials", 401
+        if os.environ.get("FLASK_ENV") != "testing":
+            bypassed_emails = [
+                "test@fairhub.io",
+                "bpatel@fairhub.io",
+                "sanjay@fairhub.io",
+                "aydan@fairhub.io",
+                "cordier@ohsu.edu",
+            ]
+            if email_address in bypassed_emails:
+                user.email_verified = True
 
         validate_pass = user.check_password(data["password"])
 
@@ -249,11 +335,38 @@ class Login(Resource):
         )
         resp = make_response(user.to_dict())
 
+        if not user.email_verified:
+            return resp
         resp.set_cookie(
             "token", encoded_jwt_code, secure=True, httponly=True, samesite="None"
         )
+        # if g.gb.is_on("email-verification"):
+        #     if os.environ.get("FLASK_ENV") != "testing":
+        #         if not check_trusted_device():
+        #             title = "you logged in"
+        #             device_ip = request.remote_addr
+        #             notification_type = "info"
+        #             target = ""
+        #             read = False
+        #             send_notification = model.Notification.from_data(
+        #                 user,
+        #                 {
+        #                     "title": title,
+        #                     "message": device_ip,
+        #                     "type": notification_type,
+        #                     "target": target,
+        #                     "read": read,
+        #                 },
+        #             )
+        #             model.db.session.add(send_notification)
+        #             model.db.session.commit()
+        #             signin_notification(user, device_ip)
+        #         add_user_to_device_list(resp, user)
+        #     resp.status_code = 200
+
         g.token = jti
         added_session = model.Session.from_data(jti, expired_in.timestamp(), user)
+
         model.db.session.add(added_session)
         model.db.session.commit()
         return resp
@@ -325,7 +438,10 @@ def authorization():
         if bool(re.search(route_pattern, request.path)):
             return
     if g.user:
-        return
+        if os.environ.get("FLASK_ENV") == "testing":
+            return
+        if g.user.email_verified:
+            return
     raise UnauthenticatedException("Access denied", 403)
 
 
@@ -336,6 +452,9 @@ def is_granted(permission: str, study=None):
     ).first()
     if not contributor:
         return False
+    if os.environ.get("FLASK_ENV") != "testing":
+        if not g.user.email_verified:
+            return False
     role = {
         "owner": [
             "owner",

@@ -36,8 +36,10 @@ Flask-Cors = "^4.0.0"
 flask-restx = "^1.1.0"
 waitress = "^2.1.2"
 
-# Email 
+# Email
 flask-mail = "^0.9.1"
+flask-mailman = "^1.0.0"
+azure-communication-email = "^1.0.0"
 
 # API Client
 requests = "^2.31.0"
