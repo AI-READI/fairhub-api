@@ -152,21 +152,21 @@ def _create_user(_test_client):
         assert response.status_code == 201
 
 
-@pytest.fixture()
-def _verified_client(flask_app):
-    """Verify the user for testing."""
-
-    with flask_app.test_client() as _test_client:
-        response = _test_client.post(
-            "/auth/email-verification/confirm",
-            json={
-                "email": "test@fairhub.io",
-                "token": 1234567,
-            },
-        )
-        assert response.status_code == 201
-        response.close()
-        yield _test_client
+# @pytest.fixture()
+# def _verified_client(flask_app):
+#     """Verify the user for testing."""
+#
+#     with flask_app.test_client() as _test_client:
+#         response = _test_client.post(
+#             "/auth/email-verification/confirm",
+#             json={
+#                 "email": "test@fairhub.io",
+#                 "token": 1234567,
+#             },
+#         )
+#         assert response.status_code == 201
+#         response.close()
+#         yield _test_client
 
 
 # Fixture to sign in the user for module testing
@@ -272,40 +272,40 @@ def _create_viewer_user(flask_app):
             assert response.status_code == 201
 
 
-@pytest.fixture(scope="session")
-def _user_verification_for_testing(flask_app):
-    """Create a viewer user for testing."""
-    with flask_app.test_client() as _test_client:
-        with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
-            a_response = _test_client.post(
-                "/auth/email-verification/confirm",
-                json={
-                    "email": "admin@fairhub.io",
-                    "token": 1234567,
-                },
-            )
-
-            assert a_response.status_code == 201
-
-            e_response = _test_client.post(
-                "/auth/email-verification/confirm",
-                json={
-                    "email": "editor@fairhub.io",
-                    "token": 1234567,
-                },
-            )
-
-            assert e_response.status_code == 201
-
-            v_response = _test_client.post(
-                "/auth/email-verification/confirm",
-                json={
-                    "email": "viewer@fairhub.io",
-                    "token": 1234567,
-                },
-            )
-
-            assert v_response.status_code == 201
+# @pytest.fixture(scope="session")
+# def _user_verification_for_testing(flask_app):
+#     """Create a viewer user for testing."""
+#     with flask_app.test_client() as _test_client:
+#         with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
+#             a_response = _test_client.post(
+#                 "/auth/email-verification/confirm",
+#                 json={
+#                     "email": "admin@fairhub.io",
+#                     "token": 1234567,
+#                 },
+#             )
+#
+#             assert a_response.status_code == 201
+#
+#             e_response = _test_client.post(
+#                 "/auth/email-verification/confirm",
+#                 json={
+#                     "email": "editor@fairhub.io",
+#                     "token": 1234567,
+#                 },
+#             )
+#
+#             assert e_response.status_code == 201
+#
+#             v_response = _test_client.post(
+#                 "/auth/email-verification/confirm",
+#                 json={
+#                     "email": "viewer@fairhub.io",
+#                     "token": 1234567,
+#                 },
+#             )
+#
+#             assert v_response.status_code == 201
 
 
 @pytest.fixture(scope="session")
