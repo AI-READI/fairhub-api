@@ -62,23 +62,23 @@ class AllContributors(Resource):
         except model.StudyException as ex:
             return ex.args[0], 409
         model.db.session.commit()
-        if os.environ.get("FLASK_ENV") != "testing":
-            if g.gb.is_on("email-verification"):
-                if user:
-                    send_access_contributors(
-                        email_address,
-                        study_obj,
-                        first_name,
-                        last_name,
-                        contributor_.permission,
-                    )
-                else:
-                    send_invitation_study(
-                        email_address,
-                        contributor_.token,
-                        study_name,
-                        contributor_.permission,
-                    )
+        # if os.environ.get("FLASK_ENV") != "testing":
+        #     if g.gb.is_on("email-verification"):
+        #         if user:
+        #             send_access_contributors(
+        #                 email_address,
+        #                 study_obj,
+        #                 first_name,
+        #                 last_name,
+        #                 contributor_.permission,
+        #             )
+        #         else:
+        #             send_invitation_study(
+        #                 email_address,
+        #                 contributor_.token,
+        #                 study_name,
+        #                 contributor_.permission,
+        #             )
         return contributor_.to_dict(), 201
 
 

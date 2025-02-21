@@ -15,7 +15,7 @@ class User(db.Model):  # type: ignore
         self.created_at = datetime.datetime.now(datetime.timezone.utc).timestamp()
         self.set_password(password)
         self.user_details = model.UserDetails(self)
-        self.email_verified = False
+        self.email_verified = True
 
     db.Column(db.BigInteger, nullable=False)
     __tablename__ = "user"

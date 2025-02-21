@@ -155,21 +155,37 @@ class SignUpUser(Resource):
         verification = model.EmailVerification(new_user)
         new_user.email_verified = False
 
-        if os.environ.get("FLASK_ENV") == "testing":
-            verification.token = 1234567
+        """enable once email verification is on"""
+        # if os.environ.get("FLASK_ENV") == "testing":
+        #     verification.token = 1234567
 
         model.db.session.add(new_user)
         model.db.session.add(verification)
-        if os.environ.get("FLASK_ENV") != "testing":
-            if new_user.email_address in bypassed_emails:
-                new_user.email_verified = True
 
+        new_user.email_verified = True
+
+        """When /confirm endpoint will be enabled, this logic will be moved there
+             since users can not be a study contributor without email verification 
+             set to true, and this can happen only there"""
+        invitations = model.StudyInvitedContributor.query.filter_by(
+            email_address=data["email_address"]
+        ).all()
+        for invite in invitations:
+            invite.study.add_user_to_study(new_user, invite.permission)
+            model.db.session.delete(invite)
         model.db.session.commit()
+        """When the email verification functionality fully enabled these
+         lines will be commented out and email will not be verified without email verification."""
+        # if os.environ.get("FLASK_ENV") != "testing":
+        #     if new_user.email_address in bypassed_emails:
+        #         new_user.email_verified = True
 
-        if g.gb.is_on("email-verification"):
-            if os.environ.get("FLASK_ENV") != "testing":
-                if new_user.email_address not in bypassed_emails:
-                    send_email_verification(new_user.email_address, verification.token)
+        # if g.gb.is_on("email-verification"):
+        #     if os.environ.get("FLASK_ENV") != "testing":
+        #         if new_user.email_address not in bypassed_emails:
+        #             send_email_verification(new_user.email_address, verification.token)
+
+
         return f"Hi, {new_user.email_address}, you have successfully signed up", 201
 
 
@@ -192,12 +208,6 @@ class EmailVerification(Resource):
                 return "Token invalid or expired", 422
         user.email_verified = True
 
-        invitations = model.StudyInvitedContributor.query.filter_by(
-            email_address=data["email"]
-        ).all()
-        for invite in invitations:
-            invite.study.add_user_to_study(user, invite.permission)
-            model.db.session.delete(invite)
         model.db.session.commit()
         return "Email verified", 201
 
