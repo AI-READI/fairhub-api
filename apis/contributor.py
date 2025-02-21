@@ -1,12 +1,12 @@
 from collections import OrderedDict
 from typing import Any, Dict, List, Union
-import os
+# import os
 
 from flask import Response, g, request
 from flask_restx import Namespace, Resource, fields
 
 import model
-from modules.invitation import send_access_contributors, send_invitation_study
+# from modules.invitation import send_access_contributors, send_invitation_study
 
 from .authentication import is_granted
 
@@ -49,10 +49,10 @@ class AllContributors(Resource):
         email_address = data["email_address"]
         user = model.User.query.filter_by(email_address=email_address).first()
         permission = data["role"]
-        contributor_ = None
-        study_name = study_obj.title
-        first_name = user.user_details.first_name if user else ""
-        last_name = user.user_details.last_name if user else ""
+        # contributor_ = None
+        # study_name = study_obj.title
+        # first_name = user.user_details.first_name if user else ""
+        # last_name = user.user_details.last_name if user else ""
         try:
             if user:
                 contributor_ = study_obj.add_user_to_study(user, permission)
