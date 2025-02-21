@@ -17,9 +17,9 @@ from flask import g, make_response, request
 from flask_restx import Namespace, Resource, fields
 from jsonschema import FormatChecker, ValidationError, validate
 import model
-from modules.invitation import (
-    send_email_verification,
-)
+# from modules.invitation import (
+#     send_email_verification,
+# )
 
 api = Namespace("Authentication", description="Authentication paths", path="/")
 
@@ -155,75 +155,83 @@ class SignUpUser(Resource):
         verification = model.EmailVerification(new_user)
         new_user.email_verified = False
 
-        if os.environ.get("FLASK_ENV") == "testing":
-            verification.token = 1234567
+        # '''enable once email verification is on'''
+        # if os.environ.get("FLASK_ENV") == "testing":
+        #     verification.token = 1234567
 
         model.db.session.add(new_user)
         model.db.session.add(verification)
-        if os.environ.get("FLASK_ENV") != "testing":
-            if new_user.email_address in bypassed_emails:
-                new_user.email_verified = True
 
-        model.db.session.commit()
+        new_user.email_verified = True
 
-        if g.gb.is_on("email-verification"):
-            if os.environ.get("FLASK_ENV") != "testing":
-                if new_user.email_address not in bypassed_emails:
-                    send_email_verification(new_user.email_address, verification.token)
-        return f"Hi, {new_user.email_address}, you have successfully signed up", 201
-
-
-@api.route("/auth/email-verification/confirm")
-class EmailVerification(Resource):
-    @api.response(200, "Success")
-    @api.response(400, "Validation Error")
-    # @api.marshal_with(contributors_model)
-    def post(self):
-        data: Union[Any, dict] = request.json
-        if "token" not in data or "email" not in data:
-            return "email or token are required", 422
-        user = model.User.query.filter_by(email_address=data["email"]).one_or_none()
-        if not user:
-            return "user not found", 404
-        if user.email_verified:
-            return "user already verified", 422
-        if os.environ.get("FLASK_ENV") != "testing":
-            if not user.verify_token(data["token"]):
-                return "Token invalid or expired", 422
-        user.email_verified = True
-
+        # '''When /confirm endpoint will be enabled, this logic will be moved there
+        #      since users can not be a study contributor without email verification
+        #      set to true, and this can happen only there'''
         invitations = model.StudyInvitedContributor.query.filter_by(
-            email_address=data["email"]
+            email_address=data["email_address"]
         ).all()
         for invite in invitations:
-            invite.study.add_user_to_study(user, invite.permission)
+            invite.study.add_user_to_study(new_user, invite.permission)
             model.db.session.delete(invite)
         model.db.session.commit()
-        return "Email verified", 201
+        # """When the email verification functionality fully enabled these
+        #  lines will be commented out and email will not be verified without email verification."""
+        # if os.environ.get("FLASK_ENV") != "testing":
+        #     if new_user.email_address in bypassed_emails:
+        #         new_user.email_verified = True
 
+        # if g.gb.is_on("email-verification"):
+        #     if os.environ.get("FLASK_ENV") != "testing":
+        #         if new_user.email_address not in bypassed_emails:
+        #             send_email_verification(new_user.email_address, verification.token)
 
-@api.route("/auth/email-verification/resend")
-class GenerateVerification(Resource):
-    @api.response(200, "Success")
-    @api.response(400, "Validation Error")
-    # @api.marshal_with(contributors_model)
-    def post(self):
-        data: Union[Any, dict] = request.json
-        user = model.User.query.filter_by(email_address=data["email"]).one_or_none()
-        if not user:
-            return "user not found", 404
-        if user.email_verified:
-            return "user already verified", 422
+        return f"Hi, {new_user.email_address}, you have successfully signed up", 201
 
-        # user.email_verified = True
-        token = user.generate_token()
+# @api.route("/auth/email-verification/confirm")
+# class EmailVerification(Resource):
+#     @api.response(200, "Success")
+#     @api.response(400, "Validation Error")
+#     # @api.marshal_with(contributors_model)
+#     def post(self):
+#         data: Union[Any, dict] = request.json
+#         if "token" not in data or "email" not in data:
+#             return "email or token are required", 422
+#         user = model.User.query.filter_by(email_address=data["email"]).one_or_none()
+#         if not user:
+#             return "user not found", 404
+#         if user.email_verified:
+#             return "user already verified", 422
+#         if os.environ.get("FLASK_ENV") != "testing":
+#             if not user.verify_token(data["token"]):
+#                 return "Token invalid or expired", 422
+#         user.email_verified = True
+#
+#         model.db.session.commit()
+#         return "Email verified", 201
+#
 
-        if g.gb.is_on("email-verification"):
-            if os.environ.get("FLASK_ENV") != "testing":
-                send_email_verification(user.email_address, token)
-
-        model.db.session.commit()
-        return "Your email is verified", 201
+# @api.route("/auth/email-verification/resend")
+# class GenerateVerification(Resource):
+#     @api.response(200, "Success")
+#     @api.response(400, "Validation Error")
+#     # @api.marshal_with(contributors_model)
+#     def post(self):
+#         data: Union[Any, dict] = request.json
+#         user = model.User.query.filter_by(email_address=data["email"]).one_or_none()
+#         if not user:
+#             return "user not found", 404
+#         if user.email_verified:
+#             return "user already verified", 422
+#
+#         # user.email_verified = True
+#         # token = user.generate_token()
+#
+#         # if g.gb.is_on("email-verification"):
+#         #     if os.environ.get("FLASK_ENV") != "testing":
+#         #         send_email_verification(user.email_address, token)
+#
+#         model.db.session.commit()
+#         return "Your email is verified", 201
 
 
 @api.route("/auth/email-verification/check")
