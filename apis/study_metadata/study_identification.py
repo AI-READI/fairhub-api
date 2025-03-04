@@ -99,7 +99,7 @@ from ..authentication import is_granted
 #
 #         final_identifiers = model.Identifiers(study_obj)
 #
-#         return {final_identifiers.to_dict()}, 201
+#         return final_identifiers.to_dict(), 201
 
 @api.route("/study/<study_id>/metadata/identification/<identification_id>")
 class StudyIdentificationdUpdate(Resource):
