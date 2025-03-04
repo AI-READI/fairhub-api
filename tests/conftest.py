@@ -6,6 +6,7 @@ import unittest.mock
 
 import pytest
 from dotenv import load_dotenv
+
 from app import create_app
 from model.db import db
 from pytest_config import TestConfig
@@ -358,7 +359,7 @@ def clients(flask_app):
 
     meta = db.metadata
     for table in reversed(meta.sorted_tables):
-        if table.name == 'session':
+        if table.name == "session":
             session_entries = db.session.execute(table.select()).fetchall()
             assert len(session_entries) == 5
 

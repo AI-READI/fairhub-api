@@ -1,14 +1,18 @@
 from collections import OrderedDict
 from typing import Any, Dict, List, Union
-# import os
 
 from flask import Response, g, request
 from flask_restx import Namespace, Resource, fields
 
 import model
-# from modules.invitation import send_access_contributors, send_invitation_study
 
 from .authentication import is_granted
+
+# import os
+
+
+# from modules.invitation import send_access_contributors, send_invitation_study
+
 
 api = Namespace("Contributor", description="Contributors", path="/")
 
@@ -29,7 +33,9 @@ class AllContributors(Resource):
     # @api.marshal_with(contributors_model)
     def get(self, study_id: int):
         contributors = model.StudyContributor.query.filter_by(study_id=study_id).all()
-        invited_contributors = model.StudyInvitedContributor.query.filter_by(study_id=study_id).all()
+        invited_contributors = model.StudyInvitedContributor.query.filter_by(
+            study_id=study_id
+        ).all()
 
         contributors_list = [c.to_dict() for c in contributors] + [
             c.to_dict() for c in invited_contributors
@@ -40,7 +46,6 @@ class AllContributors(Resource):
     @api.response(400, "Validation Error")
     # @api.marshal_with(contributors_model)
     def post(self, study_id: int):
-
         study_obj = model.Study.query.get(study_id)
         if not is_granted("invite_contributor", study_obj):
             return "Access denied, you can not modify study", 403
