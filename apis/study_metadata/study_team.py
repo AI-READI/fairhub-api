@@ -75,7 +75,7 @@ class StudySponsorsResource(Resource):
         study_sponsors_ = study_.study_sponsors
         study_collaborators_ = study_.study_collaborators
         # print(study_sponsors_.to_dict(),"ggg")
-        print([collab.to_dict() for collab in study_collaborators_], "dd")
+
         return {
             "sponsors": study_sponsors_.to_dict(),
             "collaborators": [collab.to_dict() for collab in study_collaborators_],
@@ -87,104 +87,111 @@ class StudySponsorsResource(Resource):
     def post(self, study_id: int):
         """Update study team metadata"""
         # Schema validation
-        schema = {
-            "type": "object",
-            "additionalProperties": False,
-            "required": [
-                "responsible_party_type",
-                "lead_sponsor_name",
-                "responsible_party_investigator_last_name",
-                "responsible_party_investigator_first_name",
-                "responsible_party_investigator_title",
-            ],
-            "properties": {
-                "collaborators": {
-                    "type": "array",
-                    "additionalProperties": False,
-                    "items": {
-                        "type": "object",
-                        "properties": {
-                            "id": {"type": "string"},
-                            "name": {"type": "string"},
-                            "identifier": {"type": "string"},
-                            "identifier_scheme": {"type": "string"},
-                            "identifier_scheme_uri": {"type": "string"},
-                        },
-                        "required": [
-                            "name",
-                            "identifier",
-                            "identifier_scheme",
-                        ],
-                    },
-                },
-                "responsible_party_type": {
-                    "type": ["string", "null"],
-                    "enum": [
-                        "Sponsor",
-                        "Principal Investigator",
-                        "Sponsor-Investigator",
-                    ],
-                },
-                "responsible_party_investigator_first_name": {
-                    "type": "string",
-                },
-                "responsible_party_investigator_last_name": {
-                    "type": "string",
-                },
-                "responsible_party_investigator_title": {
-                    "type": "string",
-                },
-                "responsible_party_investigator_identifier_value": {
-                    "type": "string",
-                },
-                "responsible_party_investigator_identifier_scheme": {
-                    "type": "string",
-                },
-                "responsible_party_investigator_identifier_scheme_uri": {
-                    "type": "string",
-                },
-                "responsible_party_investigator_affiliation_name": {
-                    "type": "string",
-                },
-                "responsible_party_investigator_affiliation_identifier_scheme": {
-                    "type": "string",
-                },
-                "responsible_party_investigator_affiliation_identifier_value": {
-                    "type": "string",
-                },
-                "responsible_party_investigator_affiliation_identifier_scheme_uri": {
-                    "type": "string",
-                },
-                "lead_sponsor_name": {"type": "string"},
-                "lead_sponsor_identifier": {"type": "string"},
-                "lead_sponsor_identifier_scheme": {"type": "string"},
-                "lead_sponsor_identifier_scheme_uri": {
-                    "type": "string",
-                },
-            },
-        }
-
-        try:
-            validate(request.json, schema)
-        except ValidationError as e:
-            return e.message, 400
-
+        # schema = {
+        #     "type": "object",
+        #     "additionalProperties": False,
+        #     "properties": {
+        #         "collaborators": {
+        #             "type": "array",
+        #             "additionalProperties": False,
+        #             "items": {
+        #                 "type": "object",
+        #                 "properties": {
+        #                     "id": {"type": "string"},
+        #                     "name": {"type": "string"},
+        #                     "identifier": {"type": "string"},
+        #                     "identifier_scheme": {"type": "string"},
+        #                     "identifier_scheme_uri": {"type": "string"},
+        #                 },
+        #                 "required": [
+        #                     "name",
+        #                     "identifier",
+        #                     "identifier_scheme",
+        #                 ],
+        #             },
+        #         },
+        #         "sponsors":
+        #             {
+        #             "type": "object",
+        #             "additionalProperties": False,
+        #              "properties": {
+        #                 "responsible_party_type": {
+        #                 "type": ["string", "null"],
+        #                 "enum": [
+        #                     "Sponsor",
+        #                     "Principal Investigator",
+        #                     "Sponsor-Investigator",
+        #                 ],
+        #             },
+        #                 "responsible_party_investigator_first_name": {
+        #                     "type": "string",
+        #                 },
+        #                 "responsible_party_investigator_last_name": {
+        #                     "type": "string",
+        #                 },
+        #                 "responsible_party_investigator_title": {
+        #                     "type": "string",
+        #                 },
+        #                 "responsible_party_investigator_identifier_value": {
+        #                     "type": "string",
+        #                 },
+        #                 "responsible_party_investigator_identifier_scheme": {
+        #                     "type": "string",
+        #                 },
+        #                 "responsible_party_investigator_identifier_scheme_uri": {
+        #                     "type": "string",
+        #                 },
+        #                 "responsible_party_investigator_affiliation_name": {
+        #                     "type": "string",
+        #                 },
+        #                 "responsible_party_investigator_affiliation_identifier_scheme": {
+        #                     "type": "string",
+        #                 },
+        #                 "responsible_party_investigator_affiliation_identifier_value": {
+        #                     "type": "string",
+        #                 },
+        #                 "responsible_party_investigator_affiliation_identifier_scheme_uri": {
+        #                     "type": "string",
+        #                 },
+        #                 "lead_sponsor_name": {"type": "string"},
+        #                 "lead_sponsor_identifier": {"type": "string"},
+        #                 "lead_sponsor_identifier_scheme": {"type": "string"},
+        #                 "lead_sponsor_identifier_scheme_uri": {
+        #                 "type": "string",
+        #             },
+        #         },
+        #              "required": [
+        #                 "responsible_party_type",
+        #                 "lead_sponsor_name",
+        #                 "responsible_party_investigator_last_name",
+        #                 "responsible_party_investigator_first_name",
+        #                 "responsible_party_investigator_title",
+        #             ],
+        #             }
+        #     }
+        # }
+        #
+        # try:
+        #     validate(request.json, schema)
+        # except ValidationError as e:
+        #     return e.message, 400
         data: typing.Union[dict, typing.Any] = request.json
-        if data["responsible_party_type"] in [
+
+        if data["sponsors"]["responsible_party_type"] in [
             "Principal Investigator",
             "Sponsor-Investigator",
         ]:
-            if not data["responsible_party_investigator_last_name"]:
+            if not data["sponsors"]["responsible_party_investigator_last_name"]:
                 return "Principal Investigator name is required", 400
-            if not data["responsible_party_investigator_first_name"]:
+            if not data["sponsors"]["responsible_party_investigator_first_name"]:
                 return "Principal Investigator name is required", 400
 
-            if not data["responsible_party_investigator_title"]:
+            if not data["sponsors"]["responsible_party_investigator_title"]:
                 return "Principal Investigator title is required", 400
 
-            investigator_first_name = data["responsible_party_investigator_first_name"]
-            investigator_last_name = data["responsible_party_investigator_last_name"]
-            investigator_title = data["responsible_party_investigator_title"]
+            investigator_first_name = data["sponsors"]["responsible_party_investigator_first_name"]
+            investigator_last_name = data["sponsors"]["responsible_party_investigator_last_name"]
+            investigator_title = data["sponsors"]["responsible_party_investigator_title"]
 
             if investigator_first_name == "":
                 return "Principal Investigator first name cannot be empty", 400
@@ -209,8 +216,8 @@ class StudySponsorsResource(Resource):
                 model.db.session.add(study_collaborators_)
             list_of_elements.append(study_collaborators_.to_dict())
 
-        study_.study_sponsors.update(data)
+        study_.study_sponsors.update(data["sponsors"])
 
         model.db.session.commit()
 
-        return study_.study_sponsors.to_dict(), 200
+        return {"collaborators": list_of_elements,"sponsors": study_.study_sponsors.to_dict()}, 201

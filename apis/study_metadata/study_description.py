@@ -216,4 +216,4 @@ class StudyDescriptionResource(Resource):
 
         final_identifiers = model.Identifiers(study_obj)
 
-        return (study_obj.study_description.to_dict(), final_identifiers.to_dict()), 200
+        return (study_obj.study_description.to_dict(),list_of_conditions,list_of_keywords, final_identifiers.to_dict()), 200
