@@ -14,8 +14,8 @@ from ..authentication import is_granted
 study_sponsors = api.model(
     "StudySponsors",
     {
-        "responsible_party_type": fields.String(required=True),
-        "responsible_party_investigator_first_name": fields.String(required=False),
+        "responsible_party_type": fields.String(required=False),
+        "responsible_party_investigator_first_name": fields.String(required=True),
         "responsible_party_investigator_last_name": fields.String(required=True),
         "responsible_party_investigator_title": fields.String(required=True),
         "responsible_party_investigator_identifier_value": fields.String(required=True),
@@ -42,27 +42,50 @@ study_sponsors = api.model(
     },
 )
 
+study_collaborators = api.model(
+    "StudyCollaborators",
+    {
+        "id": fields.String(required=True),
+        "name": fields.String(required=True),
+        "identifier": fields.String(required=True),
+        "scheme": fields.String(required=True),
+        "scheme_uri": fields.String(required=True),
+        "created_at": fields.Integer(required=True),
+    },
+)
 
-@api.route("/study/<study_id>/metadata/sponsor")
+
+@api.route("/study/<study_id>/metadata/team")
 class StudySponsorsResource(Resource):
-    """Study Sponsors Metadata"""
+    """Study team Metadata"""
 
     @api.doc("sponsors")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(study_sponsors)
+    # @api.marshal_with(
+    #     {
+    #         "sponsors": study_sponsors,
+    #         "collaborators": study_collaborators
+    #     }
+    # )
     def get(self, study_id: int):
-        """Get study sponsors metadata"""
+        """Get study team metadata"""
         study_ = model.Study.query.get(study_id)
 
         study_sponsors_ = study_.study_sponsors
-
-        return study_sponsors_.to_dict(), 200
+        study_collaborators_ = study_.study_collaborators
+        # print(study_sponsors_.to_dict(),"ggg")
+        print([collab.to_dict() for collab in study_collaborators_], "dd")
+        return {
+            "sponsors": study_sponsors_.to_dict(),
+            "collaborators": [collab.to_dict() for collab in study_collaborators_],
+        }
+        200
 
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    def put(self, study_id: int):
-        """Update study sponsors metadata"""
+    def post(self, study_id: int):
+        """Update study team metadata"""
         # Schema validation
         schema = {
             "type": "object",
@@ -75,6 +98,25 @@ class StudySponsorsResource(Resource):
                 "responsible_party_investigator_title",
             ],
             "properties": {
+                "collaborators": {
+                    "type": "array",
+                    "additionalProperties": False,
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {"type": "string"},
+                            "name": {"type": "string"},
+                            "identifier": {"type": "string"},
+                            "identifier_scheme": {"type": "string"},
+                            "identifier_scheme_uri": {"type": "string"},
+                        },
+                        "required": [
+                            "name",
+                            "identifier",
+                            "identifier_scheme",
+                        ],
+                    },
+                },
                 "responsible_party_type": {
                     "type": ["string", "null"],
                     "enum": [
@@ -156,6 +198,16 @@ class StudySponsorsResource(Resource):
         # Check user permissions
         if not is_granted("study_metadata", study_):
             return "Access denied, you can not modify study", 403
+
+        list_of_elements = []
+        for i in data["collaborators"]:
+            if "id" in i and i["id"]:
+                study_collaborators_ = model.StudyCollaborators.query.get(i["id"])
+                study_collaborators_.update(i)
+            else:
+                study_collaborators_ = model.StudyCollaborators.from_data(study_, i)
+                model.db.session.add(study_collaborators_)
+            list_of_elements.append(study_collaborators_.to_dict())
 
         study_.study_sponsors.update(data)
 

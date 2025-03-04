@@ -19,6 +19,7 @@ study_collaborators = api.model(
         "identifier": fields.String(required=True),
         "scheme": fields.String(required=True),
         "scheme_uri": fields.String(required=True),
+        # "created_at": fields.Integer(required=True),
     },
 )
 
@@ -68,6 +69,7 @@ class StudyCollaboratorsResource(Resource):
             return e.message, 400
 
         data: typing.Union[dict, typing.Any] = request.json
+        print(data, "dsdsdsdsdsdsdsdsdsdsdsdsd")
 
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):

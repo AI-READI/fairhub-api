@@ -43,7 +43,7 @@ from .study_metadata.study_keywords import api as keywords
 from .study_metadata.study_location import api as location
 from .study_metadata.study_overall_official import api as overall_official
 from .study_metadata.study_oversight import api as oversight
-from .study_metadata.study_sponsors import api as sponsors
+from .study_metadata.study_team import api as sponsors
 from .study_metadata.study_status import api as status
 from .user import api as user
 from .utils import api as utils
