@@ -130,7 +130,7 @@ class StudyDescriptionResource(Resource):
                             "type": "object",
                             "additionalProperties": False,
                             "properties": {
-                                "identifier": {"type": "string", "minLength": 1},
+                                "identifier": {"type": "string"},
                                 "identifier_type": {"type": "string", "minLength": 1},
                                 "identifier_domain": {"type": "string"},
                                 "identifier_link": {"type": "string"},
@@ -143,7 +143,7 @@ class StudyDescriptionResource(Resource):
                     "type": "object",
                     "additionalProperties": False,
                     "properties": {
-                        "brief_summary": {"type": "string", "minLength": 1},
+                        "brief_summary": {"type": "string"},
                         "detailed_description": {"type": "string"},
                     },
                 },
