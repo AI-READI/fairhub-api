@@ -1,10 +1,7 @@
 """API routes for study other metadata"""
 
-import typing
-
-from flask import Response, request
-from flask_restx import Resource, fields
-from jsonschema import ValidationError, validate
+from flask import Response
+from flask_restx import Resource
 
 import model
 from apis.study_metadata_namespace import api

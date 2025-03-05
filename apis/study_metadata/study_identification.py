@@ -1,16 +1,12 @@
 """API routes for study identification metadata"""
 
-import typing
-
-from flask import Response, request
-from flask_restx import Resource, fields
-from jsonschema import ValidationError, validate
+from flask import Response
+from flask_restx import Resource
 
 import model
 from apis.study_metadata_namespace import api
 
 from ..authentication import is_granted
-
 
 # @api.route("/study/<study_id>/metadata/identification")
 # class StudyIdentificationResource(Resource):
@@ -101,6 +97,7 @@ from ..authentication import is_granted
 #
 #         return final_identifiers.to_dict(), 201
 
+
 @api.route("/study/<study_id>/metadata/identification/<identification_id>")
 class StudyIdentificationdUpdate(Resource):
     """Study Identification Metadata"""
@@ -114,9 +111,7 @@ class StudyIdentificationdUpdate(Resource):
         if not is_granted("study_metadata", study):
             return "Access denied, you can not delete study", 403
 
-        study_identification_ = model.StudyIdentification.query.get(
-            identification_id
-        )
+        study_identification_ = model.StudyIdentification.query.get(identification_id)
         if not study_identification_.secondary:
             return "primary identifier can not be deleted", 400
 

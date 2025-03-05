@@ -1,5 +1,7 @@
 """API routes for study description metadata"""
 
+import typing
+
 from flask import request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
@@ -72,10 +74,10 @@ class StudyDescriptionResource(Resource):
         study_conditions = study_.study_conditions
         study_description_ = study_.study_description
         return {
-            "identification":identifiers.to_dict(),
-            "keywords":  [k.to_dict() for k in study_keywords],
+            "identification": identifiers.to_dict(),
+            "keywords": [k.to_dict() for k in study_keywords],
             "conditions": [c.to_dict() for c in study_conditions],
-            "description":study_description_.to_dict()
+            "description": study_description_.to_dict(),
         }, 200
 
     @api.response(200, "Success")
@@ -101,8 +103,8 @@ class StudyDescriptionResource(Resource):
                             "condition_uri": {"type": "string"},
                         },
                         "required": ["name", "classification_code", "condition_uri"],
-                        "additionalProperties": False
-                    }
+                        "additionalProperties": False,
+                    },
                 },
                 "keywords": {
                     "type": "array",
@@ -117,8 +119,8 @@ class StudyDescriptionResource(Resource):
                             "keyword_uri": {"type": "string"},
                         },
                         "required": ["name", "classification_code", "keyword_uri"],
-                        "additionalProperties": False
-                    }
+                        "additionalProperties": False,
+                    },
                 },
                 "identification": {
                     "type": "object",
@@ -132,22 +134,20 @@ class StudyDescriptionResource(Resource):
                                 "identifier_type": {"type": "string", "minLength": 1},
                                 "identifier_domain": {"type": "string"},
                                 "identifier_link": {"type": "string"},
-                            }
+                            },
                         },
-                        "secondary": {
-                            "type": "array"
-                        }
-                    }
+                        "secondary": {"type": "array"},
+                    },
                 },
                 "description": {
                     "type": "object",
                     "additionalProperties": False,
                     "properties": {
                         "brief_summary": {"type": "string", "minLength": 1},
-                        "detailed_description": {"type": "string"}
-                    }
-                }
-            }
+                        "detailed_description": {"type": "string"},
+                    },
+                },
+            },
         }
 
         try:
@@ -217,8 +217,8 @@ class StudyDescriptionResource(Resource):
         final_identifiers = model.Identifiers(study_obj)
 
         return {
-            "description":study_obj.study_description.to_dict(),
+            "description": study_obj.study_description.to_dict(),
             "conditions": list_of_conditions,
             "keywords": list_of_keywords,
-            "identification": final_identifiers.to_dict()
+            "identification": final_identifiers.to_dict(),
         }, 200

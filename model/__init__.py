@@ -1,5 +1,5 @@
-from model.dataset_metadata.dataset_contributor import DatasetContributor
-from model.dataset_metadata.dataset_related_identifier import DatasetRelatedIdentifier
+from .dataset_metadata.dataset_contributor import DatasetContributor
+from .dataset_metadata.dataset_related_identifier import DatasetRelatedIdentifier
 
 from .dataset import Dataset
 from .dataset_metadata.dataset_access import DatasetAccess
@@ -44,7 +44,6 @@ from .study_metadata.study_oversight import StudyOversight
 from .study_metadata.study_sponsors import StudySponsors
 from .study_metadata.study_status import StudyStatus
 from .study_redcap import StudyRedcap
-from .study_metadata.study_team import StudyTeam
 from .token_blacklist import TokenBlacklist
 from .user import User
 from .user_details import UserDetails
@@ -55,7 +54,6 @@ from .version_readme import VersionReadme
 __all__ = [
     "Study",
     "Dataset",
-    "StudyTeam",
     "Participant",
     "PublishedDataset",
     "Version",

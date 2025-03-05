@@ -1,15 +1,13 @@
 """API routes for study collaborators metadata"""
 
-import typing
-
-from flask import Response, request
-from flask_restx import Resource, fields
-from jsonschema import ValidationError, validate
+from flask import Response
+from flask_restx import Resource
 
 import model
 from apis.study_metadata_namespace import api
 
 from ..authentication import is_granted
+
 #
 # study_collaborators = api.model(
 #     "StudyCollaborators",
@@ -86,6 +84,7 @@ from ..authentication import is_granted
 #
 #         return list_of_elements, 201
 #
+
 
 @api.route("/study/<study_id>/metadata/collaborators/<collaborator_id>")
 class StudyLocationUpdate(Resource):

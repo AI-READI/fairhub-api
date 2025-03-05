@@ -4,7 +4,6 @@ import typing
 
 from flask import request
 from flask_restx import Resource, fields
-from jsonschema import ValidationError, validate
 
 import model
 from apis.study_metadata_namespace import api
@@ -189,9 +188,15 @@ class StudySponsorsResource(Resource):
             if not data["sponsors"]["responsible_party_investigator_title"]:
                 return "Principal Investigator title is required", 400
 
-            investigator_first_name = data["sponsors"]["responsible_party_investigator_first_name"]
-            investigator_last_name = data["sponsors"]["responsible_party_investigator_last_name"]
-            investigator_title = data["sponsors"]["responsible_party_investigator_title"]
+            investigator_first_name = data["sponsors"][
+                "responsible_party_investigator_first_name"
+            ]
+            investigator_last_name = data["sponsors"][
+                "responsible_party_investigator_last_name"
+            ]
+            investigator_title = data["sponsors"][
+                "responsible_party_investigator_title"
+            ]
 
             if investigator_first_name == "":
                 return "Principal Investigator first name cannot be empty", 400
@@ -220,4 +225,7 @@ class StudySponsorsResource(Resource):
 
         model.db.session.commit()
 
-        return {"collaborators": list_of_elements,"sponsors": study_.study_sponsors.to_dict()}, 201
+        return {
+            "collaborators": list_of_elements,
+            "sponsors": study_.study_sponsors.to_dict(),
+        }, 201
