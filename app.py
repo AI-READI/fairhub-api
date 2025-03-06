@@ -8,7 +8,7 @@ from datetime import timezone
 
 import click
 import jwt
-from flask import Flask, request, g
+from flask import Flask, g, request
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from flask_mailman import Mail
@@ -22,11 +22,7 @@ import caching
 import config
 import model
 from apis import api
-from apis.authentication import (
-    UnauthenticatedException,
-    authentication,
-    authorization,
-)
+from apis.authentication import UnauthenticatedException, authentication, authorization
 from apis.exception import ValidationException
 
 # from pyfairdatatools import __version__
@@ -268,16 +264,19 @@ def create_app(config_module=None, loglevel="INFO"):
             minutes=180
         )
         session = model.Session.query.get(g.token)
-        session_expires_at = datetime.datetime.fromtimestamp(session.expires_at, timezone.utc)
+        session_expires_at = datetime.datetime.fromtimestamp(
+            session.expires_at, timezone.utc
+        )
 
         if expired_in - session_expires_at < datetime.timedelta(minutes=90):
-
             new_token = jwt.encode(
                 {"user": decoded["user"], "exp": expired_in, "jti": decoded["jti"]},
                 config.FAIRHUB_SECRET,
                 algorithm="HS256",
             )
-            resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="None")
+            resp.set_cookie(
+                "token", new_token, secure=True, httponly=True, samesite="None"
+            )
             session.expires_at = expired_in.timestamp()
 
         app.logger.info("after request")

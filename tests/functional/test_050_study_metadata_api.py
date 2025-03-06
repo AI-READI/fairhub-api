@@ -695,11 +695,11 @@ def test_delete_cc_metadata(clients):
     assert editor_response.status_code == 204
 
 
-#  ------------------- COLLABORATORS METADATA ------------------- #
-def test_post_collaborators_metadata(clients):
+# ------------------- TEAM METADATA ------------------- #
+def test_post_team_metadata(clients):
     """
     GIVEN a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/collaborators'
+    WHEN the '/study/{study_id}/metadata/team'
         endpoint is requested (POST)
     THEN check that the response is valid and creates the collaborators metadata
     """
@@ -707,100 +707,395 @@ def test_post_collaborators_metadata(clients):
     study_id = pytest.global_study_id["id"]  # type: ignore
 
     response = _logged_in_client.post(
-        f"/study/{study_id}/metadata/collaborators",
-        json=[
-            {
-                "name": "collaborator1123",
-                "identifier": "collaborator1123",
-                "identifier_scheme": "collaborator1123",
-                "identifier_scheme_uri": "collaborator1123",
-            }
-        ],
+        f"/study/{study_id}/metadata/team",
+        json={
+            "collaborators": [
+                {
+                    "name": "collaborator1123",
+                    "identifier": "collaborator1123",
+                    "identifier_scheme": "collaborator1123",
+                    "identifier_scheme_uri": "collaborator1123",
+                },
+                {
+                    "name": "collaborator1123",
+                    "identifier": "collaborator1123",
+                    "identifier_scheme": "collaborator1123",
+                    "identifier_scheme_uri": "collaborator1123",
+                },
+            ],
+            "sponsors": {
+                "lead_sponsor_identifier_scheme": "scheme",
+                "lead_sponsor_identifier_scheme_uri": "uri",
+                "responsible_party_type": "Sponsor",
+                "responsible_party_investigator_first_name": "name",
+                "responsible_party_investigator_last_name": "surname",
+                "responsible_party_investigator_title": "title",
+                "responsible_party_investigator_identifier_value": "identifier",
+                "responsible_party_investigator_identifier_scheme": "scheme",
+                "responsible_party_investigator_identifier_scheme_uri": "uri",
+                "responsible_party_investigator_affiliation_name": "affiliation",
+                "responsible_party_investigator_affiliation_identifier_value": "identifier",
+                "responsible_party_investigator_affiliation_identifier_scheme": "scheme",
+                "responsible_party_investigator_affiliation_identifier_scheme_uri": "uri",
+                "lead_sponsor_name": "name",
+                "lead_sponsor_identifier": "identifier",
+            },
+        },
     )
     # Add a one second delay to prevent duplicate timestamps
     sleep(1)
-
     assert response.status_code == 201
     response_data = json.loads(response.data)
-    pytest.global_collaborators_id = response_data[0]["id"]
+    pytest.global_collaborators_id = response_data["collaborators"][0]["id"]
 
-    assert response_data[0]["name"] == "collaborator1123"
-    assert response_data[0]["identifier"] == "collaborator1123"
-    assert response_data[0]["identifier_scheme"] == "collaborator1123"
-    assert response_data[0]["identifier_scheme_uri"] == "collaborator1123"
+    assert response_data["collaborators"][0]["name"] == "collaborator1123"
+    assert response_data["collaborators"][0]["identifier"] == "collaborator1123"
+    assert response_data["collaborators"][0]["identifier_scheme"] == "collaborator1123"
+    assert (
+        response_data["collaborators"][0]["identifier_scheme_uri"] == "collaborator1123"
+    )
+
+    assert response_data["sponsors"]["responsible_party_type"] == "Sponsor"
+    assert (
+        response_data["sponsors"]["responsible_party_investigator_first_name"] == "name"
+    )
+    assert (
+        response_data["sponsors"]["responsible_party_investigator_last_name"]
+        == "surname"
+    )
+    assert (
+        response_data["sponsors"]["responsible_party_investigator_title"] == "title"
+    )  # noqa: E501
+    assert (
+        response_data["sponsors"]["responsible_party_investigator_identifier_value"]
+        == "identifier"
+    )
+    assert (
+        response_data["sponsors"]["responsible_party_investigator_identifier_scheme"]
+        == "scheme"
+    )
+    assert (
+        response_data["sponsors"][
+            "responsible_party_investigator_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
+    assert (
+        response_data["sponsors"]["responsible_party_investigator_affiliation_name"]
+        == "affiliation"
+    )
+    assert (
+        response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_value"
+        ]
+        == "identifier"
+    )
+    assert (
+        response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_scheme"
+        ]
+        == "scheme"
+    )
+    assert (
+        response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
+    assert response_data["sponsors"]["lead_sponsor_name"] == "name"
+    assert response_data["sponsors"]["lead_sponsor_identifier"] == "identifier"
+    assert response_data["sponsors"]["lead_sponsor_identifier_scheme"] == "scheme"
+    assert response_data["sponsors"]["lead_sponsor_identifier_scheme_uri"] == "uri"
 
     admin_response = _admin_client.post(
-        f"/study/{study_id}/metadata/collaborators",
-        json=[
-            {
-                "name": "admin collaborator1123",
-                "identifier": "collaborator1123",
-                "identifier_scheme": "collaborator1123",
-                "identifier_scheme_uri": "collaborator1123",
-            }
-        ],
+        f"/study/{study_id}/metadata/team",
+        json={
+            "collaborators": [
+                {
+                    "name": "admin collaborator1123",
+                    "identifier": "collaborator1123",
+                    "identifier_scheme": "collaborator1123",
+                    "identifier_scheme_uri": "collaborator1123",
+                },
+                {
+                    "name": "admin collaborator1123",
+                    "identifier": "collaborator1123",
+                    "identifier_scheme": "collaborator1123",
+                    "identifier_scheme_uri": "collaborator1123",
+                },
+            ],
+            "sponsors": {
+                "lead_sponsor_identifier_scheme": "scheme",
+                "lead_sponsor_identifier_scheme_uri": "uri",
+                "responsible_party_type": "Sponsor",
+                "responsible_party_investigator_first_name": "name",
+                "responsible_party_investigator_last_name": "surname",
+                "responsible_party_investigator_title": "title",
+                "responsible_party_investigator_identifier_value": "identifier",
+                "responsible_party_investigator_identifier_scheme": "scheme",
+                "responsible_party_investigator_identifier_scheme_uri": "uri",
+                "responsible_party_investigator_affiliation_name": "affiliation",
+                "responsible_party_investigator_affiliation_identifier_value": "identifier",
+                "responsible_party_investigator_affiliation_identifier_scheme": "scheme",
+                "responsible_party_investigator_affiliation_identifier_scheme_uri": "uri",
+                "lead_sponsor_name": "name",
+                "lead_sponsor_identifier": "identifier",
+            },
+        },
     )
     # Add a one second delay to prevent duplicate timestamps
     sleep(1)
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
-    pytest.global_admin_collaborators_id_admin = admin_response_data[0]["id"]
+    pytest.global_admin_collaborators_id_admin = admin_response_data["collaborators"][
+        0
+    ]["id"]
 
-    assert admin_response_data[0]["name"] == "admin collaborator1123"
-    assert admin_response_data[0]["identifier"] == "collaborator1123"
-    assert admin_response_data[0]["identifier_scheme"] == "collaborator1123"
-    assert admin_response_data[0]["identifier_scheme_uri"] == "collaborator1123"
+    assert admin_response_data["collaborators"][0]["name"] == "admin collaborator1123"
+    assert admin_response_data["collaborators"][0]["identifier"] == "collaborator1123"
+    assert (
+        admin_response_data["collaborators"][0]["identifier_scheme"]
+        == "collaborator1123"
+    )
+    assert (
+        admin_response_data["collaborators"][0]["identifier_scheme_uri"]
+        == "collaborator1123"
+    )
+
+    assert admin_response_data["sponsors"]["responsible_party_type"] == "Sponsor"
+    assert (
+        admin_response_data["sponsors"]["responsible_party_investigator_first_name"]
+        == "name"
+    )
+    assert (
+        admin_response_data["sponsors"]["responsible_party_investigator_last_name"]
+        == "surname"
+    )
+    assert (
+        admin_response_data["sponsors"]["responsible_party_investigator_title"]
+        == "title"
+    )  # noqa: E501
+    assert (
+        admin_response_data["sponsors"][
+            "responsible_party_investigator_identifier_value"
+        ]
+        == "identifier"
+    )
+    assert (
+        admin_response_data["sponsors"][
+            "responsible_party_investigator_identifier_scheme"
+        ]
+        == "scheme"
+    )
+    assert (
+        admin_response_data["sponsors"][
+            "responsible_party_investigator_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
+    assert (
+        admin_response_data["sponsors"][
+            "responsible_party_investigator_affiliation_name"
+        ]
+        == "affiliation"
+    )
+    assert (
+        admin_response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_value"
+        ]
+        == "identifier"
+    )
+    assert (
+        admin_response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_scheme"
+        ]
+        == "scheme"
+    )
+    assert (
+        admin_response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
+    assert admin_response_data["sponsors"]["lead_sponsor_name"] == "name"
+    assert admin_response_data["sponsors"]["lead_sponsor_identifier"] == "identifier"
+    assert admin_response_data["sponsors"]["lead_sponsor_identifier_scheme"] == "scheme"
+    assert (
+        admin_response_data["sponsors"]["lead_sponsor_identifier_scheme_uri"] == "uri"
+    )
 
     editor_response = _editor_client.post(
-        f"/study/{study_id}/metadata/collaborators",
-        json=[
-            {
-                "name": "editor collaborator1123",
-                "identifier": "collaborator1123",
-                "identifier_scheme": "collaborator1123",
-                "identifier_scheme_uri": "collaborator1123",
-            }
-        ],
+        f"/study/{study_id}/metadata/team",
+        json={
+            "collaborators": [
+                {
+                    "name": "editor collaborator1123",
+                    "identifier": "collaborator1123",
+                    "identifier_scheme": "collaborator1123",
+                    "identifier_scheme_uri": "collaborator1123",
+                },
+                {
+                    "name": "editor collaborator1123",
+                    "identifier": "collaborator1123",
+                    "identifier_scheme": "collaborator1123",
+                    "identifier_scheme_uri": "collaborator1123",
+                },
+            ],
+            "sponsors": {
+                "lead_sponsor_identifier_scheme": "scheme",
+                "lead_sponsor_identifier_scheme_uri": "uri",
+                "responsible_party_type": "Sponsor",
+                "responsible_party_investigator_first_name": "name",
+                "responsible_party_investigator_last_name": "surname",
+                "responsible_party_investigator_title": "title",
+                "responsible_party_investigator_identifier_value": "identifier",
+                "responsible_party_investigator_identifier_scheme": "scheme",
+                "responsible_party_investigator_identifier_scheme_uri": "uri",
+                "responsible_party_investigator_affiliation_name": "affiliation",
+                "responsible_party_investigator_affiliation_identifier_value": "identifier",
+                "responsible_party_investigator_affiliation_identifier_scheme": "scheme",
+                "responsible_party_investigator_affiliation_identifier_scheme_uri": "uri",
+                "lead_sponsor_name": "name",
+                "lead_sponsor_identifier": "identifier",
+            },
+        },
     )
 
     assert editor_response.status_code == 201
     editor_response_data = json.loads(editor_response.data)
-    pytest.global_editor_collaborators_id_editor = editor_response_data[0]["id"]
+    pytest.global_editor_collaborators_id_editor = editor_response_data[
+        "collaborators"
+    ][0]["id"]
 
-    assert editor_response_data[0]["name"] == "editor collaborator1123"
-    assert editor_response_data[0]["identifier"] == "collaborator1123"
-    assert editor_response_data[0]["identifier_scheme"] == "collaborator1123"
-    assert editor_response_data[0]["identifier_scheme_uri"] == "collaborator1123"
+    assert editor_response_data["collaborators"][0]["name"] == "editor collaborator1123"
+    assert editor_response_data["collaborators"][0]["identifier"] == "collaborator1123"
+    assert (
+        editor_response_data["collaborators"][0]["identifier_scheme"]
+        == "collaborator1123"
+    )
+    assert (
+        editor_response_data["collaborators"][0]["identifier_scheme_uri"]
+        == "collaborator1123"
+    )
+
+    assert editor_response_data["sponsors"]["responsible_party_type"] == "Sponsor"
+    assert (
+        editor_response_data["sponsors"]["responsible_party_investigator_first_name"]
+        == "name"
+    )
+    assert (
+        editor_response_data["sponsors"]["responsible_party_investigator_last_name"]
+        == "surname"
+    )
+    assert (
+        editor_response_data["sponsors"]["responsible_party_investigator_title"]
+        == "title"
+    )  # noqa: E501
+    assert (
+        editor_response_data["sponsors"][
+            "responsible_party_investigator_identifier_value"
+        ]
+        == "identifier"
+    )
+    assert (
+        editor_response_data["sponsors"][
+            "responsible_party_investigator_identifier_scheme"
+        ]
+        == "scheme"
+    )
+    assert (
+        editor_response_data["sponsors"][
+            "responsible_party_investigator_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
+    assert (
+        editor_response_data["sponsors"][
+            "responsible_party_investigator_affiliation_name"
+        ]
+        == "affiliation"
+    )
+    assert (
+        editor_response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_value"
+        ]
+        == "identifier"
+    )
+    assert (
+        editor_response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_scheme"
+        ]
+        == "scheme"
+    )
+    assert (
+        editor_response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
+    assert editor_response_data["sponsors"]["lead_sponsor_name"] == "name"
+    assert editor_response_data["sponsors"]["lead_sponsor_identifier"] == "identifier"
+    assert (
+        editor_response_data["sponsors"]["lead_sponsor_identifier_scheme"] == "scheme"
+    )
+    assert (
+        editor_response_data["sponsors"]["lead_sponsor_identifier_scheme_uri"] == "uri"
+    )
 
     viewer_response = _viewer_client.post(
-        f"/study/{study_id}/metadata/collaborators",
-        json=[
-            {
-                "name": "editor collaborator1123",
-                "identifier": "collaborator1123",
-                "identifier_scheme": "collaborator1123",
-                "identifier_scheme_uri": "collaborator1123",
-            }
-        ],
+        f"/study/{study_id}/metadata/team",
+        json={
+            "collaborators": [
+                {
+                    "name": "collaborator1123",
+                    "identifier": "collaborator1123",
+                    "identifier_scheme": "collaborator1123",
+                    "identifier_scheme_uri": "collaborator1123",
+                },
+                {
+                    "name": "collaborator1123",
+                    "identifier": "collaborator1123",
+                    "identifier_scheme": "collaborator1123",
+                    "identifier_scheme_uri": "collaborator1123",
+                },
+            ],
+            "sponsors": {
+                "lead_sponsor_identifier_scheme": "scheme",
+                "lead_sponsor_identifier_scheme_uri": "uri",
+                "responsible_party_type": "Sponsor",
+                "responsible_party_investigator_first_name": "name",
+                "responsible_party_investigator_last_name": "surname",
+                "responsible_party_investigator_title": "title",
+                "responsible_party_investigator_identifier_value": "identifier",
+                "responsible_party_investigator_identifier_scheme": "scheme",
+                "responsible_party_investigator_identifier_scheme_uri": "uri",
+                "responsible_party_investigator_affiliation_name": "affiliation",
+                "responsible_party_investigator_affiliation_identifier_value": "identifier",
+                "responsible_party_investigator_affiliation_identifier_scheme": "scheme",
+                "responsible_party_investigator_affiliation_identifier_scheme_uri": "uri",
+                "lead_sponsor_name": "name",
+                "lead_sponsor_identifier": "identifier",
+            },
+        },
     )
 
     assert viewer_response.status_code == 403
 
 
-def test_get_collaborators_metadata(clients):
+def test_get_team_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/collaborators' endpoint is requested (GET)
+    WHEN the '/study/{study_id}/metadata/team' endpoint is requested (GET)
     THEN check that the response is valid and retrieves the collaborators metadata
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
 
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/collaborators")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/collaborators")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/collaborators")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/collaborators")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/team")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/team")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/team")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/team")
 
     assert response.status_code == 200
     assert admin_response.status_code == 200
@@ -812,65 +1107,392 @@ def test_get_collaborators_metadata(clients):
     editor_response_data = json.loads(editor_response.data)
     viewer_response_data = json.loads(viewer_response.data)
 
-    assert response_data[0]["name"] == "collaborator1123"
-    assert response_data[0]["identifier"] == "collaborator1123"
-    assert response_data[0]["identifier_scheme"] == "collaborator1123"
-    assert response_data[0]["identifier_scheme_uri"] == "collaborator1123"
+    assert response_data["collaborators"][0]["name"] == "collaborator1123"
+    assert response_data["collaborators"][0]["identifier"] == "collaborator1123"
+    assert response_data["collaborators"][0]["identifier_scheme"] == "collaborator1123"
+    assert (
+        response_data["collaborators"][0]["identifier_scheme_uri"] == "collaborator1123"
+    )
 
-    assert admin_response_data[0]["name"] == "collaborator1123"
-    assert admin_response_data[0]["identifier"] == "collaborator1123"
-    assert admin_response_data[0]["identifier_scheme"] == "collaborator1123"
-    assert admin_response_data[0]["identifier_scheme_uri"] == "collaborator1123"
+    assert admin_response_data["collaborators"][0]["name"] == "collaborator1123"
+    assert admin_response_data["collaborators"][0]["identifier"] == "collaborator1123"
+    assert (
+        admin_response_data["collaborators"][0]["identifier_scheme"]
+        == "collaborator1123"
+    )
+    assert (
+        admin_response_data["collaborators"][0]["identifier_scheme_uri"]
+        == "collaborator1123"
+    )
 
-    assert editor_response_data[0]["name"] == "collaborator1123"
-    assert editor_response_data[0]["identifier"] == "collaborator1123"
-    assert editor_response_data[0]["identifier_scheme"] == "collaborator1123"
-    assert editor_response_data[0]["identifier_scheme_uri"] == "collaborator1123"
+    assert editor_response_data["collaborators"][0]["name"] == "collaborator1123"
+    assert editor_response_data["collaborators"][0]["identifier"] == "collaborator1123"
+    assert (
+        editor_response_data["collaborators"][0]["identifier_scheme"]
+        == "collaborator1123"
+    )
+    assert (
+        editor_response_data["collaborators"][0]["identifier_scheme_uri"]
+        == "collaborator1123"
+    )
 
-    assert viewer_response_data[0]["name"] == "collaborator1123"
-    assert viewer_response_data[0]["identifier"] == "collaborator1123"
-    assert viewer_response_data[0]["identifier_scheme"] == "collaborator1123"
-    assert viewer_response_data[0]["identifier_scheme_uri"] == "collaborator1123"
+    assert viewer_response_data["collaborators"][0]["name"] == "collaborator1123"
+    assert viewer_response_data["collaborators"][0]["identifier"] == "collaborator1123"
+    assert (
+        viewer_response_data["collaborators"][0]["identifier_scheme"]
+        == "collaborator1123"
+    )
+    assert (
+        viewer_response_data["collaborators"][0]["identifier_scheme_uri"]
+        == "collaborator1123"
+    )
 
-    assert response_data[1]["name"] == "admin collaborator1123"
-    assert response_data[1]["identifier"] == "collaborator1123"
-    assert response_data[1]["identifier_scheme"] == "collaborator1123"
-    assert response_data[1]["identifier_scheme_uri"] == "collaborator1123"
+    assert response_data["collaborators"][1]["name"] == "collaborator1123"
+    assert response_data["collaborators"][1]["identifier"] == "collaborator1123"
+    assert response_data["collaborators"][1]["identifier_scheme"] == "collaborator1123"
+    assert (
+        response_data["collaborators"][1]["identifier_scheme_uri"] == "collaborator1123"
+    )
 
-    assert admin_response_data[1]["name"] == "admin collaborator1123"
-    assert admin_response_data[1]["identifier"] == "collaborator1123"
-    assert admin_response_data[1]["identifier_scheme"] == "collaborator1123"
-    assert admin_response_data[1]["identifier_scheme_uri"] == "collaborator1123"
+    assert admin_response_data["collaborators"][1]["name"] == "collaborator1123"
+    assert admin_response_data["collaborators"][1]["identifier"] == "collaborator1123"
+    assert (
+        admin_response_data["collaborators"][1]["identifier_scheme"]
+        == "collaborator1123"
+    )
+    assert (
+        admin_response_data["collaborators"][1]["identifier_scheme_uri"]
+        == "collaborator1123"
+    )
 
-    assert editor_response_data[1]["name"] == "admin collaborator1123"
-    assert editor_response_data[1]["identifier"] == "collaborator1123"
-    assert editor_response_data[1]["identifier_scheme"] == "collaborator1123"
-    assert editor_response_data[1]["identifier_scheme_uri"] == "collaborator1123"
+    assert editor_response_data["collaborators"][1]["name"] == "collaborator1123"
+    assert editor_response_data["collaborators"][1]["identifier"] == "collaborator1123"
+    assert (
+        editor_response_data["collaborators"][1]["identifier_scheme"]
+        == "collaborator1123"
+    )
+    assert (
+        editor_response_data["collaborators"][1]["identifier_scheme_uri"]
+        == "collaborator1123"
+    )
 
-    assert viewer_response_data[1]["name"] == "admin collaborator1123"
-    assert viewer_response_data[1]["identifier"] == "collaborator1123"
-    assert viewer_response_data[1]["identifier_scheme"] == "collaborator1123"
-    assert viewer_response_data[1]["identifier_scheme_uri"] == "collaborator1123"
+    assert viewer_response_data["collaborators"][1]["name"] == "collaborator1123"
+    assert viewer_response_data["collaborators"][1]["identifier"] == "collaborator1123"
+    assert (
+        viewer_response_data["collaborators"][1]["identifier_scheme"]
+        == "collaborator1123"
+    )
+    assert (
+        viewer_response_data["collaborators"][1]["identifier_scheme_uri"]
+        == "collaborator1123"
+    )
 
-    assert response_data[2]["name"] == "editor collaborator1123"
-    assert response_data[2]["identifier"] == "collaborator1123"
-    assert response_data[2]["identifier_scheme"] == "collaborator1123"
-    assert response_data[2]["identifier_scheme_uri"] == "collaborator1123"
+    assert response_data["sponsors"]["responsible_party_type"] == "Sponsor"
+    assert (
+        response_data["sponsors"]["responsible_party_investigator_first_name"] == "name"
+    )
+    assert (
+        response_data["sponsors"]["responsible_party_investigator_last_name"]
+        == "surname"
+    )
+    assert (
+        response_data["sponsors"]["responsible_party_investigator_title"] == "title"
+    )  # noqa: E501
 
-    assert admin_response_data[2]["name"] == "editor collaborator1123"
-    assert admin_response_data[2]["identifier"] == "collaborator1123"
-    assert admin_response_data[2]["identifier_scheme"] == "collaborator1123"
-    assert admin_response_data[2]["identifier_scheme_uri"] == "collaborator1123"
+    assert (
+        response_data["sponsors"]["responsible_party_investigator_identifier_value"]
+        == "identifier"
+    )
+    assert (
+        response_data["sponsors"]["responsible_party_investigator_identifier_scheme"]
+        == "scheme"
+    )
+    assert (
+        response_data["sponsors"][
+            "responsible_party_investigator_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
+    assert (
+        response_data["sponsors"]["responsible_party_investigator_affiliation_name"]
+        == "affiliation"
+    )
+    assert (
+        response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_value"
+        ]
+        == "identifier"
+    )
+    assert (
+        response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_scheme"
+        ]
+        == "scheme"
+    )
+    assert (
+        response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
+    assert response_data["sponsors"]["lead_sponsor_name"] == "name"
+    assert response_data["sponsors"]["lead_sponsor_identifier"] == "identifier"
+    assert response_data["sponsors"]["lead_sponsor_identifier_scheme"] == "scheme"
+    assert response_data["sponsors"]["lead_sponsor_identifier_scheme_uri"] == "uri"
 
-    assert editor_response_data[2]["name"] == "editor collaborator1123"
-    assert editor_response_data[2]["identifier"] == "collaborator1123"
-    assert editor_response_data[2]["identifier_scheme"] == "collaborator1123"
-    assert editor_response_data[2]["identifier_scheme_uri"] == "collaborator1123"
+    assert admin_response_data["sponsors"]["responsible_party_type"] == "Sponsor"
+    assert (
+        admin_response_data["sponsors"]["responsible_party_investigator_first_name"]
+        == "name"
+    )
+    assert (
+        admin_response_data["sponsors"]["responsible_party_investigator_last_name"]
+        == "surname"
+    )
+    assert (
+        admin_response_data["sponsors"]["responsible_party_investigator_title"]
+        == "title"
+    )  # noqa: E501
+    assert (
+        admin_response_data["sponsors"][
+            "responsible_party_investigator_identifier_value"
+        ]
+        == "identifier"
+    )
+    assert (
+        admin_response_data["sponsors"][
+            "responsible_party_investigator_identifier_scheme"
+        ]
+        == "scheme"
+    )
+    assert (
+        admin_response_data["sponsors"][
+            "responsible_party_investigator_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
+    assert (
+        admin_response_data["sponsors"][
+            "responsible_party_investigator_affiliation_name"
+        ]
+        == "affiliation"
+    )
+    assert (
+        admin_response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_value"
+        ]
+        == "identifier"
+    )
+    assert (
+        admin_response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_scheme"
+        ]
+        == "scheme"
+    )
+    assert (
+        admin_response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
+    assert admin_response_data["sponsors"]["lead_sponsor_name"] == "name"
+    assert admin_response_data["sponsors"]["lead_sponsor_identifier"] == "identifier"
+    assert admin_response_data["sponsors"]["lead_sponsor_identifier_scheme"] == "scheme"
+    assert (
+        admin_response_data["sponsors"]["lead_sponsor_identifier_scheme_uri"] == "uri"
+    )
 
-    assert viewer_response_data[2]["name"] == "editor collaborator1123"
-    assert viewer_response_data[2]["identifier"] == "collaborator1123"
-    assert viewer_response_data[2]["identifier_scheme"] == "collaborator1123"
-    assert viewer_response_data[2]["identifier_scheme_uri"] == "collaborator1123"
+    assert editor_response_data["sponsors"]["responsible_party_type"] == "Sponsor"
+    assert (
+        editor_response_data["sponsors"]["responsible_party_investigator_first_name"]
+        == "name"
+    )
+    assert (
+        editor_response_data["sponsors"]["responsible_party_investigator_last_name"]
+        == "surname"
+    )
+    assert (
+        editor_response_data["sponsors"]["responsible_party_investigator_title"]
+        == "title"
+    )  # noqa: E501
+    assert (
+        editor_response_data["sponsors"][
+            "responsible_party_investigator_identifier_value"
+        ]
+        == "identifier"
+    )
+    assert (
+        editor_response_data["sponsors"][
+            "responsible_party_investigator_identifier_scheme"
+        ]
+        == "scheme"
+    )
+    assert (
+        editor_response_data["sponsors"][
+            "responsible_party_investigator_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
+    assert (
+        editor_response_data["sponsors"][
+            "responsible_party_investigator_affiliation_name"
+        ]
+        == "affiliation"
+    )
+    assert (
+        editor_response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_value"
+        ]
+        == "identifier"
+    )
+    assert (
+        editor_response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_scheme"
+        ]
+        == "scheme"
+    )
+    assert (
+        editor_response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
+    assert editor_response_data["sponsors"]["lead_sponsor_name"] == "name"
+    assert editor_response_data["sponsors"]["lead_sponsor_identifier"] == "identifier"
+    assert (
+        editor_response_data["sponsors"]["lead_sponsor_identifier_scheme"] == "scheme"
+    )
+    assert (
+        editor_response_data["sponsors"]["lead_sponsor_identifier_scheme_uri"] == "uri"
+    )
+
+    assert viewer_response_data["sponsors"]["responsible_party_type"] == "Sponsor"
+    assert (
+        viewer_response_data["sponsors"]["responsible_party_investigator_first_name"]
+        == "name"
+    )
+    assert (
+        viewer_response_data["sponsors"]["responsible_party_investigator_last_name"]
+        == "surname"
+    )
+    assert (
+        viewer_response_data["sponsors"]["responsible_party_investigator_title"]
+        == "title"
+    )  # noqa: E501
+    assert (
+        viewer_response_data["sponsors"][
+            "responsible_party_investigator_identifier_value"
+        ]
+        == "identifier"
+    )
+    assert (
+        viewer_response_data["sponsors"][
+            "responsible_party_investigator_identifier_scheme"
+        ]
+        == "scheme"
+    )
+    assert (
+        viewer_response_data["sponsors"][
+            "responsible_party_investigator_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
+    assert (
+        viewer_response_data["sponsors"][
+            "responsible_party_investigator_affiliation_name"
+        ]
+        == "affiliation"
+    )
+    assert (
+        viewer_response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_value"
+        ]
+        == "identifier"
+    )
+    assert (
+        viewer_response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_scheme"
+        ]
+        == "scheme"
+    )
+    assert (
+        viewer_response_data["sponsors"][
+            "responsible_party_investigator_affiliation_identifier_scheme_uri"
+        ]
+        == "uri"
+    )
+    assert viewer_response_data["sponsors"]["lead_sponsor_name"] == "name"
+    assert viewer_response_data["sponsors"]["lead_sponsor_identifier"] == "identifier"
+    assert (
+        viewer_response_data["sponsors"]["lead_sponsor_identifier_scheme"] == "scheme"
+    )
+    assert (
+        viewer_response_data["sponsors"]["lead_sponsor_identifier_scheme_uri"] == "uri"
+    )
+
+    assert response_data["collaborators"][1]["name"] == "collaborator1123"
+    assert response_data["collaborators"][1]["identifier"] == "collaborator1123"
+    assert response_data["collaborators"][1]["identifier_scheme"] == "collaborator1123"
+    assert (
+        response_data["collaborators"][1]["identifier_scheme_uri"] == "collaborator1123"
+    )
+
+    assert admin_response_data["collaborators"][1]["name"] == "collaborator1123"
+    assert admin_response_data["collaborators"][1]["identifier"] == "collaborator1123"
+    assert (
+        admin_response_data["collaborators"][1]["identifier_scheme"]
+        == "collaborator1123"
+    )
+    assert (
+        admin_response_data["collaborators"][1]["identifier_scheme_uri"]
+        == "collaborator1123"
+    )
+
+    assert editor_response_data["collaborators"][1]["name"] == "collaborator1123"
+    assert editor_response_data["collaborators"][1]["identifier"] == "collaborator1123"
+    assert (
+        editor_response_data["collaborators"][1]["identifier_scheme"]
+        == "collaborator1123"
+    )
+    assert (
+        editor_response_data["collaborators"][1]["identifier_scheme_uri"]
+        == "collaborator1123"
+    )
+
+    assert viewer_response_data["collaborators"][1]["name"] == "collaborator1123"
+    assert viewer_response_data["collaborators"][1]["identifier"] == "collaborator1123"
+    assert (
+        viewer_response_data["collaborators"][1]["identifier_scheme"]
+        == "collaborator1123"
+    )
+    assert (
+        viewer_response_data["collaborators"][1]["identifier_scheme_uri"]
+        == "collaborator1123"
+    )
+
+    # assert response_data[2]["name"] == "editor collaborator1123"
+    # assert response_data[2]["identifier"] == "collaborator1123"
+    # assert response_data[2]["identifier_scheme"] == "collaborator1123"
+    # assert response_data[2]["identifier_scheme_uri"] == "collaborator1123"
+    #
+    # assert admin_response_data[2]["name"] == "editor collaborator1123"
+    # assert admin_response_data[2]["identifier"] == "collaborator1123"
+    # assert admin_response_data[2]["identifier_scheme"] == "collaborator1123"
+    # assert admin_response_data[2]["identifier_scheme_uri"] == "collaborator1123"
+    #
+    # assert editor_response_data[2]["name"] == "editor collaborator1123"
+    # assert editor_response_data[2]["identifier"] == "collaborator1123"
+    # assert editor_response_data[2]["identifier_scheme"] == "collaborator1123"
+    # assert editor_response_data[2]["identifier_scheme_uri"] == "collaborator1123"
+    #
+    # assert viewer_response_data[2]["name"] == "editor collaborator1123"
+    # assert viewer_response_data[2]["identifier"] == "collaborator1123"
+    # assert viewer_response_data[2]["identifier_scheme"] == "collaborator1123"
+    # assert viewer_response_data[2]["identifier_scheme_uri"] == "collaborator1123"
+    #
+
+
+# ------------------- COLLABORATORS DELETE METADATA ------------------- #
 
 
 def test_delete_collaborators_metadata(clients):
@@ -904,114 +1526,359 @@ def test_delete_collaborators_metadata(clients):
     assert editor_response.status_code == 204
 
 
-# # ------------------- CONDITIONS METADATA ------------------- #
-def test_post_conditions_metadata(clients):
+# ------------------- DESCRIPTION METADATA ------------------- #
+def test_post_description_metadata(clients):
     """
     GIVEN a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/conditions' endpoint is requested (POST)
-    THEN check that the response is valid and creates the conditions metadata
+    WHEN the '/study/{study_id}/metadata/description' endpoint is requested (POST)
+    THEN check that the response is valid and creates the description metadata
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
 
     response = _logged_in_client.post(
-        f"/study/{study_id}/metadata/conditions",
-        json=[
-            {
-                "name": "condition",
-                "classification_code": "classification code",
-                "scheme": "scheme",
-                "scheme_uri": "scheme uri",
-                "condition_uri": "condition",
-            }
-        ],
+        f"/study/{study_id}/metadata/description",
+        json={
+            "conditions": [
+                {
+                    "name": "condition",
+                    "classification_code": "classification code",
+                    "scheme": "scheme",
+                    "scheme_uri": "scheme uri",
+                    "condition_uri": "condition",
+                }
+            ],
+            "keywords": [
+                {
+                    "name": "keywords",
+                    "classification_code": "classification code",
+                    "scheme": "scheme",
+                    "scheme_uri": "scheme uri",
+                    "keyword_uri": "keywords",
+                }
+            ],
+            "identification": {
+                "primary": {
+                    "identifier": "first",
+                    "identifier_type": "test",
+                    "identifier_domain": "domain",
+                    "identifier_link": "link",
+                },
+                "secondary": [
+                    {
+                        "identifier": "test",
+                        "identifier_type": "test",
+                        "identifier_domain": "dodfasdfmain",
+                        "identifier_link": "link",
+                    }
+                ],
+            },
+            "description": {
+                "brief_summary": "brief_summary",
+                "detailed_description": "detailed_description",
+            },
+        },
     )
-
     assert response.status_code == 201
     response_data = json.loads(response.data)
-    pytest.global_conditions_id = response_data[0]["id"]
+    pytest.global_identification_id = response_data["identification"]["secondary"][0][
+        "id"
+    ]
 
-    assert response_data[0]["name"] == "condition"
-    assert response_data[0]["classification_code"] == "classification code"
-    assert response_data[0]["scheme"] == "scheme"
-    assert response_data[0]["scheme_uri"] == "scheme uri"
-    assert response_data[0]["condition_uri"] == "condition"
+    pytest.global_keywords_id = response_data["keywords"][0]["id"]
+    pytest.global_conditions_id = response_data["conditions"][0]["id"]
+
+    assert response_data["conditions"][0]["name"] == "condition"
+    assert (
+        response_data["conditions"][0]["classification_code"] == "classification code"
+    )
+    assert response_data["conditions"][0]["scheme"] == "scheme"
+    assert response_data["conditions"][0]["scheme_uri"] == "scheme uri"
+    assert response_data["conditions"][0]["condition_uri"] == "condition"
+
+    assert response_data["keywords"][0]["name"] == "keywords"
+    assert response_data["keywords"][0]["classification_code"] == "classification code"
+    assert response_data["keywords"][0]["scheme"] == "scheme"
+    assert response_data["keywords"][0]["scheme_uri"] == "scheme uri"
+    assert response_data["keywords"][0]["keyword_uri"] == "keywords"
+    assert response_data["identification"]["primary"]["identifier"] == "first"
+    assert response_data["identification"]["primary"]["identifier_type"] == "test"
+    assert response_data["identification"]["primary"]["identifier_domain"] == "domain"
+    assert response_data["identification"]["primary"]["identifier_link"] == "link"
+    assert response_data["identification"]["secondary"][0]["identifier"] == "test"
+    assert response_data["identification"]["secondary"][0]["identifier_type"] == "test"
+    assert (
+        response_data["identification"]["secondary"][0]["identifier_domain"]
+        == "dodfasdfmain"
+    )
+    assert response_data["identification"]["secondary"][0]["identifier_link"] == "link"
+
+    assert response_data["description"]["brief_summary"] == "brief_summary"
+    assert (
+        response_data["description"]["detailed_description"] == "detailed_description"
+    )
 
     admin_response = _admin_client.post(
-        f"/study/{study_id}/metadata/conditions",
-        json=[
-            {
-                "name": "admin condition",
-                "classification_code": "classification code",
-                "scheme": "scheme",
-                "scheme_uri": "scheme uri",
-                "condition_uri": "condition",
-            }
-        ],
+        f"/study/{study_id}/metadata/description",
+        json={
+            "conditions": [
+                {
+                    "name": "condition",
+                    "classification_code": "classification code",
+                    "scheme": "scheme",
+                    "scheme_uri": "scheme uri",
+                    "condition_uri": "condition",
+                }
+            ],
+            "keywords": [
+                {
+                    "name": "keywords",
+                    "classification_code": "classification code",
+                    "scheme": "scheme",
+                    "scheme_uri": "scheme uri",
+                    "keyword_uri": "keywords",
+                }
+            ],
+            "identification": {
+                "primary": {
+                    "identifier": "first",
+                    "identifier_type": "test",
+                    "identifier_domain": "domain",
+                    "identifier_link": "link",
+                },
+                "secondary": [
+                    {
+                        "identifier": "test",
+                        "identifier_type": "test",
+                        "identifier_domain": "dodfasdfmain",
+                        "identifier_link": "link",
+                    }
+                ],
+            },
+            "description": {
+                "brief_summary": "brief_summary",
+                "detailed_description": "detailed_description",
+            },
+        },
     )
 
     assert admin_response.status_code == 201
     admin_response_data = json.loads(admin_response.data)
-    pytest.global_admin_conditions_id_admin = admin_response_data[0]["id"]
+    pytest.global_identification_id_admin = admin_response_data["identification"][
+        "secondary"
+    ][1]["id"]
+    pytest.global_admin_keywords_id_admin = admin_response_data["keywords"][0]["id"]
+    pytest.global_admin_conditions_id_admin = admin_response_data["conditions"][0]["id"]
 
-    assert admin_response_data[0]["name"] == "admin condition"
-    assert admin_response_data[0]["classification_code"] == "classification code"
-    assert admin_response_data[0]["scheme"] == "scheme"
-    assert admin_response_data[0]["scheme_uri"] == "scheme uri"
-    assert admin_response_data[0]["condition_uri"] == "condition"
+    assert admin_response_data["conditions"][0]["name"] == "condition"
+    assert (
+        admin_response_data["conditions"][0]["classification_code"]
+        == "classification code"
+    )
+    assert admin_response_data["conditions"][0]["scheme"] == "scheme"
+    assert admin_response_data["conditions"][0]["scheme_uri"] == "scheme uri"
+    assert admin_response_data["conditions"][0]["condition_uri"] == "condition"
+
+    assert admin_response_data["keywords"][0]["name"] == "keywords"
+    assert (
+        admin_response_data["keywords"][0]["classification_code"]
+        == "classification code"
+    )
+    assert admin_response_data["keywords"][0]["scheme"] == "scheme"
+    assert admin_response_data["keywords"][0]["scheme_uri"] == "scheme uri"
+    assert admin_response_data["keywords"][0]["keyword_uri"] == "keywords"
+    assert admin_response_data["identification"]["primary"]["identifier"] == "first"
+    assert admin_response_data["identification"]["primary"]["identifier_type"] == "test"
+    assert (
+        admin_response_data["identification"]["primary"]["identifier_domain"]
+        == "domain"
+    )
+    assert admin_response_data["identification"]["primary"]["identifier_link"] == "link"
+    assert admin_response_data["identification"]["secondary"][0]["identifier"] == "test"
+    assert (
+        admin_response_data["identification"]["secondary"][0]["identifier_type"]
+        == "test"
+    )
+    assert (
+        admin_response_data["identification"]["secondary"][0]["identifier_domain"]
+        == "dodfasdfmain"
+    )
+    assert (
+        admin_response_data["identification"]["secondary"][0]["identifier_link"]
+        == "link"
+    )
+
+    assert admin_response_data["description"]["brief_summary"] == "brief_summary"
+    assert (
+        admin_response_data["description"]["detailed_description"]
+        == "detailed_description"
+    )
 
     editor_response = _editor_client.post(
-        f"/study/{study_id}/metadata/conditions",
-        json=[
-            {
-                "name": "editor condition",
-                "classification_code": "classification code",
-                "scheme": "scheme",
-                "scheme_uri": "scheme uri",
-                "condition_uri": "condition",
-            }
-        ],
+        f"/study/{study_id}/metadata/description",
+        json={
+            "conditions": [
+                {
+                    "name": "condition",
+                    "classification_code": "classification code",
+                    "scheme": "scheme",
+                    "scheme_uri": "scheme uri",
+                    "condition_uri": "condition",
+                }
+            ],
+            "keywords": [
+                {
+                    "name": "keywords",
+                    "classification_code": "classification code",
+                    "scheme": "scheme",
+                    "scheme_uri": "scheme uri",
+                    "keyword_uri": "keywords",
+                }
+            ],
+            "identification": {
+                "primary": {
+                    "identifier": "first",
+                    "identifier_type": "test",
+                    "identifier_domain": "domain",
+                    "identifier_link": "link",
+                },
+                "secondary": [
+                    {
+                        "identifier": "test",
+                        "identifier_type": "test",
+                        "identifier_domain": "dodfasdfmain",
+                        "identifier_link": "link",
+                    }
+                ],
+            },
+            "description": {
+                "brief_summary": "brief_summary",
+                "detailed_description": "detailed_description",
+            },
+        },
     )
 
     assert editor_response.status_code == 201
     editor_response_data = json.loads(editor_response.data)
-    pytest.global_editor_conditions_id_editor = editor_response_data[0]["id"]
 
-    assert editor_response_data[0]["name"] == "editor condition"
-    assert editor_response_data[0]["classification_code"] == "classification code"
-    assert editor_response_data[0]["scheme"] == "scheme"
-    assert editor_response_data[0]["scheme_uri"] == "scheme uri"
-    assert editor_response_data[0]["condition_uri"] == "condition"
+    pytest.global_identification_id_editor = editor_response_data["identification"][
+        "secondary"
+    ][2]["id"]
+    pytest.global_editor_keywords_id_editor = editor_response_data["keywords"][0]["id"]
+    pytest.global_editor_conditions_id_editor = editor_response_data["conditions"][0][
+        "id"
+    ]
+
+    assert editor_response_data["conditions"][0]["name"] == "condition"
+    assert (
+        editor_response_data["conditions"][0]["classification_code"]
+        == "classification code"
+    )
+    assert editor_response_data["conditions"][0]["scheme"] == "scheme"
+    assert editor_response_data["conditions"][0]["scheme_uri"] == "scheme uri"
+    assert editor_response_data["conditions"][0]["condition_uri"] == "condition"
+
+    assert editor_response_data["keywords"][0]["name"] == "keywords"
+    assert (
+        editor_response_data["keywords"][0]["classification_code"]
+        == "classification code"
+    )
+    assert editor_response_data["keywords"][0]["scheme"] == "scheme"
+    assert editor_response_data["keywords"][0]["scheme_uri"] == "scheme uri"
+    assert editor_response_data["keywords"][0]["keyword_uri"] == "keywords"
+    assert editor_response_data["identification"]["primary"]["identifier"] == "first"
+    assert (
+        editor_response_data["identification"]["primary"]["identifier_type"] == "test"
+    )
+    assert (
+        editor_response_data["identification"]["primary"]["identifier_domain"]
+        == "domain"
+    )
+    assert (
+        editor_response_data["identification"]["primary"]["identifier_link"] == "link"
+    )
+    assert (
+        editor_response_data["identification"]["secondary"][0]["identifier"] == "test"
+    )
+    assert (
+        editor_response_data["identification"]["secondary"][0]["identifier_type"]
+        == "test"
+    )
+    assert (
+        editor_response_data["identification"]["secondary"][0]["identifier_domain"]
+        == "dodfasdfmain"
+    )
+    assert (
+        editor_response_data["identification"]["secondary"][0]["identifier_link"]
+        == "link"
+    )
+
+    assert editor_response_data["description"]["brief_summary"] == "brief_summary"
+    assert (
+        editor_response_data["description"]["detailed_description"]
+        == "detailed_description"
+    )
 
     viewer_response = _viewer_client.post(
-        f"/study/{study_id}/metadata/conditions",
-        json=[
-            {
-                "name": "editor condition",
-                "classification_code": "classification code",
-                "scheme": "scheme",
-                "scheme_uri": "scheme uri",
-                "condition_uri": "condition",
-            }
-        ],
+        f"/study/{study_id}/metadata/description",
+        json={
+            "conditions": [
+                {
+                    "name": "condition",
+                    "classification_code": "classification code",
+                    "scheme": "scheme",
+                    "scheme_uri": "scheme uri",
+                    "condition_uri": "condition",
+                }
+            ],
+            "keywords": [
+                {
+                    "name": "keywords",
+                    "classification_code": "classification code",
+                    "scheme": "scheme",
+                    "scheme_uri": "scheme uri",
+                    "keyword_uri": "keywords",
+                }
+            ],
+            "identification": {
+                "primary": {
+                    "identifier": "first",
+                    "identifier_type": "test",
+                    "identifier_domain": "domain",
+                    "identifier_link": "link",
+                },
+                "secondary": [
+                    {
+                        "identifier": "test",
+                        "identifier_type": "test",
+                        "identifier_domain": "dodfasdfmain",
+                        "identifier_link": "link",
+                    }
+                ],
+            },
+            "description": {
+                "brief_summary": "brief_summary",
+                "detailed_description": "detailed_description",
+            },
+        },
     )
 
     assert viewer_response.status_code == 403
 
 
-def test_get_conditions_metadata(clients):
+def test_get_description_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/conditions' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the conditions metadata
+    WHEN the '/study/{study_id}/metadata/description' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the description metadata
     """
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
 
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/conditions")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/conditions")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/conditions")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/conditions")
+    response = _logged_in_client.get(f"/study/{study_id}/metadata/description")
+    admin_response = _admin_client.get(f"/study/{study_id}/metadata/description")
+    editor_response = _editor_client.get(f"/study/{study_id}/metadata/description")
+    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/description")
 
     assert response.status_code == 200
     assert admin_response.status_code == 200
@@ -1023,79 +1890,148 @@ def test_get_conditions_metadata(clients):
     editor_response_data = json.loads(editor_response.data)
     viewer_response_data = json.loads(viewer_response.data)
 
-    assert response_data[0]["name"] == "condition"
-    assert response_data[0]["classification_code"] == "classification code"
-    assert response_data[0]["scheme"] == "scheme"
-    assert response_data[0]["scheme_uri"] == "scheme uri"
-    assert response_data[0]["condition_uri"] == "condition"
+    assert response_data["description"]["brief_summary"] == "brief_summary"
+    assert (
+        response_data["description"]["detailed_description"] == "detailed_description"
+    )
 
-    assert admin_response_data[0]["name"] == "condition"
-    assert admin_response_data[0]["classification_code"] == "classification code"
-    assert admin_response_data[0]["scheme"] == "scheme"
-    assert admin_response_data[0]["scheme_uri"] == "scheme uri"
-    assert admin_response_data[0]["condition_uri"] == "condition"
+    assert admin_response_data["description"]["brief_summary"] == "brief_summary"
+    assert (
+        admin_response_data["description"]["detailed_description"]
+        == "detailed_description"
+    )
 
-    assert editor_response_data[0]["name"] == "condition"
-    assert editor_response_data[0]["classification_code"] == "classification code"
-    assert editor_response_data[0]["scheme"] == "scheme"
-    assert editor_response_data[0]["scheme_uri"] == "scheme uri"
-    assert editor_response_data[0]["condition_uri"] == "condition"
+    assert editor_response_data["description"]["brief_summary"] == "brief_summary"
+    assert (
+        editor_response_data["description"]["detailed_description"]
+        == "detailed_description"
+    )
 
-    assert viewer_response_data[0]["name"] == "condition"
-    assert viewer_response_data[0]["classification_code"] == "classification code"
-    assert viewer_response_data[0]["scheme"] == "scheme"
-    assert viewer_response_data[0]["scheme_uri"] == "scheme uri"
-    assert viewer_response_data[0]["condition_uri"] == "condition"
+    assert viewer_response_data["description"]["brief_summary"] == "brief_summary"
+    assert (
+        viewer_response_data["description"]["detailed_description"]
+        == "detailed_description"
+    )
 
-    assert response_data[1]["name"] == "admin condition"
-    assert response_data[1]["classification_code"] == "classification code"
-    assert response_data[1]["scheme"] == "scheme"
-    assert response_data[1]["scheme_uri"] == "scheme uri"
-    assert response_data[1]["condition_uri"] == "condition"
+    assert response_data["conditions"][0]["name"] == "condition"
+    assert (
+        response_data["conditions"][0]["classification_code"] == "classification code"
+    )
+    assert response_data["conditions"][0]["scheme"] == "scheme"
+    assert response_data["conditions"][0]["scheme_uri"] == "scheme uri"
+    assert response_data["conditions"][0]["condition_uri"] == "condition"
 
-    assert admin_response_data[1]["name"] == "admin condition"
-    assert admin_response_data[1]["classification_code"] == "classification code"
-    assert admin_response_data[1]["scheme"] == "scheme"
-    assert admin_response_data[1]["scheme_uri"] == "scheme uri"
-    assert admin_response_data[1]["condition_uri"] == "condition"
+    assert admin_response_data["conditions"][0]["name"] == "condition"
+    assert (
+        admin_response_data["conditions"][0]["classification_code"]
+        == "classification code"
+    )
+    assert admin_response_data["conditions"][0]["scheme"] == "scheme"
+    assert admin_response_data["conditions"][0]["scheme_uri"] == "scheme uri"
+    assert admin_response_data["conditions"][0]["condition_uri"] == "condition"
 
-    assert editor_response_data[1]["name"] == "admin condition"
-    assert editor_response_data[1]["classification_code"] == "classification code"
-    assert editor_response_data[1]["scheme"] == "scheme"
-    assert editor_response_data[1]["scheme_uri"] == "scheme uri"
-    assert editor_response_data[1]["condition_uri"] == "condition"
+    assert editor_response_data["conditions"][0]["name"] == "condition"
+    assert (
+        editor_response_data["conditions"][0]["classification_code"]
+        == "classification code"
+    )
+    assert editor_response_data["conditions"][0]["scheme"] == "scheme"
+    assert editor_response_data["conditions"][0]["scheme_uri"] == "scheme uri"
+    assert editor_response_data["conditions"][0]["condition_uri"] == "condition"
 
-    assert viewer_response_data[1]["name"] == "admin condition"
-    assert viewer_response_data[1]["classification_code"] == "classification code"
-    assert viewer_response_data[1]["scheme"] == "scheme"
-    assert viewer_response_data[1]["scheme_uri"] == "scheme uri"
-    assert viewer_response_data[1]["condition_uri"] == "condition"
+    assert viewer_response_data["conditions"][0]["name"] == "condition"
+    assert (
+        viewer_response_data["conditions"][0]["classification_code"]
+        == "classification code"
+    )
+    assert viewer_response_data["conditions"][0]["scheme"] == "scheme"
+    assert viewer_response_data["conditions"][0]["scheme_uri"] == "scheme uri"
+    assert viewer_response_data["conditions"][0]["condition_uri"] == "condition"
 
-    assert response_data[2]["name"] == "editor condition"
-    assert response_data[2]["classification_code"] == "classification code"
-    assert response_data[2]["scheme"] == "scheme"
-    assert response_data[2]["scheme_uri"] == "scheme uri"
-    assert response_data[2]["condition_uri"] == "condition"
+    assert response_data["keywords"][0]["name"] == "keywords"
+    assert response_data["keywords"][0]["classification_code"] == "classification code"
+    assert response_data["keywords"][0]["scheme"] == "scheme"
+    assert response_data["keywords"][0]["scheme_uri"] == "scheme uri"
+    assert response_data["keywords"][0]["keyword_uri"] == "keywords"
 
-    assert admin_response_data[2]["name"] == "editor condition"
-    assert admin_response_data[2]["classification_code"] == "classification code"
-    assert admin_response_data[2]["scheme"] == "scheme"
-    assert admin_response_data[2]["scheme_uri"] == "scheme uri"
-    assert admin_response_data[2]["condition_uri"] == "condition"
+    assert admin_response_data["keywords"][0]["name"] == "keywords"
+    assert (
+        admin_response_data["keywords"][0]["classification_code"]
+        == "classification code"
+    )
+    assert admin_response_data["keywords"][0]["scheme"] == "scheme"
+    assert admin_response_data["keywords"][0]["scheme_uri"] == "scheme uri"
+    assert admin_response_data["keywords"][0]["keyword_uri"] == "keywords"
 
-    assert editor_response_data[2]["name"] == "editor condition"
-    assert editor_response_data[2]["classification_code"] == "classification code"
-    assert editor_response_data[2]["scheme"] == "scheme"
-    assert editor_response_data[2]["scheme_uri"] == "scheme uri"
-    assert editor_response_data[2]["condition_uri"] == "condition"
+    assert editor_response_data["keywords"][0]["name"] == "keywords"
+    assert (
+        editor_response_data["keywords"][0]["classification_code"]
+        == "classification code"
+    )
+    assert editor_response_data["keywords"][0]["scheme"] == "scheme"
+    assert editor_response_data["keywords"][0]["scheme_uri"] == "scheme uri"
+    assert editor_response_data["keywords"][0]["keyword_uri"] == "keywords"
 
-    assert viewer_response_data[2]["name"] == "editor condition"
-    assert viewer_response_data[2]["classification_code"] == "classification code"
-    assert viewer_response_data[2]["scheme"] == "scheme"
-    assert viewer_response_data[2]["scheme_uri"] == "scheme uri"
-    assert viewer_response_data[2]["condition_uri"] == "condition"
+    assert viewer_response_data["keywords"][0]["name"] == "keywords"
+    assert (
+        viewer_response_data["keywords"][0]["classification_code"]
+        == "classification code"
+    )
+    assert viewer_response_data["keywords"][0]["scheme"] == "scheme"
+    assert viewer_response_data["keywords"][0]["scheme_uri"] == "scheme uri"
+    assert viewer_response_data["keywords"][0]["keyword_uri"] == "keywords"
+
+    assert response_data["identification"]["primary"]["identifier"] == "first"
+    assert response_data["identification"]["primary"]["identifier_type"] == "test"
+    assert response_data["identification"]["primary"]["identifier_domain"] == "domain"
+    assert response_data["identification"]["primary"]["identifier_link"] == "link"
+    assert response_data["identification"]["secondary"][0]["identifier"] == "test"
+    assert response_data["identification"]["secondary"][0]["identifier_type"] == "test"
+    assert (
+        response_data["identification"]["secondary"][0]["identifier_domain"]
+        == "dodfasdfmain"
+    )
+    assert response_data["identification"]["secondary"][0]["identifier_link"] == "link"
+    assert response_data["identification"]["secondary"][1]["identifier"] == "test"
+    assert response_data["identification"]["secondary"][1]["identifier_type"] == "test"
 
 
+# ------------------- IDENTIFICATION METADATA ------------------- #
+def test_delete_identification_metadata(clients):
+    """
+    Given a Flask application configured for testing and a study ID
+    WHEN the '/study/{study_id}/metadata/identification' endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the identification metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    identification_id = pytest.global_identification_id
+    admin_identification_id = pytest.global_identification_id_admin
+    editor_identification_id = pytest.global_identification_id_editor
+
+    viewer_response = _viewer_client.delete(
+        f"/study/{study_id}/metadata/identification/{identification_id}"
+    )
+
+    response = _logged_in_client.delete(
+        f"/study/{study_id}/metadata/identification/{identification_id}"
+    )
+
+    admin_response = _admin_client.delete(
+        f"/study/{study_id}/metadata/identification/{admin_identification_id}"
+    )
+
+    editor_response = _editor_client.delete(
+        f"/study/{study_id}/metadata/identification/{editor_identification_id}"
+    )
+
+    assert viewer_response.status_code == 403
+    assert response.status_code == 204
+    assert admin_response.status_code == 204
+    assert editor_response.status_code == 204
+
+
+# ------------------- CONDITIONS METADATA ------------------- #
 def test_delete_conditions_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
@@ -1128,195 +2064,6 @@ def test_delete_conditions_metadata(clients):
 
 
 # ------------------- KEYWORDS METADATA ------------------- #
-def test_post_keywords_metadata(clients):
-    """
-    GIVEN a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/keywords' endpoint is requested (POST)
-    THEN check that the response is valid and creates the keywords metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.post(
-        f"/study/{study_id}/metadata/keywords",
-        json=[
-            {
-                "name": "keywords",
-                "classification_code": "classification code",
-                "scheme": "scheme",
-                "scheme_uri": "scheme uri",
-                "keyword_uri": "keywords",
-            }
-        ],
-    )
-    assert response.status_code == 201
-    response_data = json.loads(response.data)
-    pytest.global_keywords_id = response_data[0]["id"]
-
-    assert response_data[0]["name"] == "keywords"
-    assert response_data[0]["classification_code"] == "classification code"
-    assert response_data[0]["scheme"] == "scheme"
-    assert response_data[0]["scheme_uri"] == "scheme uri"
-    assert response_data[0]["keyword_uri"] == "keywords"
-
-    admin_response = _admin_client.post(
-        f"/study/{study_id}/metadata/keywords",
-        json=[
-            {
-                "name": "admin keywords",
-                "classification_code": "classification code",
-                "scheme": "scheme",
-                "scheme_uri": "scheme uri",
-                "keyword_uri": "keywords",
-            }
-        ],
-    )
-
-    assert admin_response.status_code == 201
-    admin_response_data = json.loads(admin_response.data)
-    pytest.global_admin_keywords_id_admin = admin_response_data[0]["id"]
-    assert admin_response_data[0]["name"] == "admin keywords"
-    assert admin_response_data[0]["classification_code"] == "classification code"
-    assert admin_response_data[0]["scheme"] == "scheme"
-    assert admin_response_data[0]["scheme_uri"] == "scheme uri"
-    assert admin_response_data[0]["keyword_uri"] == "keywords"
-
-    editor_response = _editor_client.post(
-        f"/study/{study_id}/metadata/keywords",
-        json=[
-            {
-                "name": "editor keywords",
-                "classification_code": "classification code",
-                "scheme": "scheme",
-                "scheme_uri": "scheme uri",
-                "keyword_uri": "keywords",
-            }
-        ],
-    )
-
-    assert editor_response.status_code == 201
-    editor_response_data = json.loads(editor_response.data)
-    pytest.global_editor_keywords_id_editor = editor_response_data[0]["id"]
-
-    assert editor_response_data[0]["name"] == "editor keywords"
-    assert editor_response_data[0]["classification_code"] == "classification code"
-    assert editor_response_data[0]["scheme"] == "scheme"
-    assert editor_response_data[0]["scheme_uri"] == "scheme uri"
-    assert editor_response_data[0]["keyword_uri"] == "keywords"
-
-    viewer_response = _viewer_client.post(
-        f"/study/{study_id}/metadata/keywords",
-        json=[
-            {
-                "name": "editor keywords",
-                "classification_code": "classification code",
-                "scheme": "scheme",
-                "scheme_uri": "scheme uri",
-                "keyword_uri": "keywords",
-            }
-        ],
-    )
-
-    assert viewer_response.status_code == 403
-
-
-def test_get_keywords_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/keywords' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the keywords metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/keywords")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/keywords")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/keywords")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/keywords")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-    response_data = json.loads(response.data)
-    admin_response_data = json.loads(admin_response.data)
-    editor_response_data = json.loads(editor_response.data)
-    viewer_response_data = json.loads(viewer_response.data)
-
-    assert response_data[0]["name"] == "keywords"
-    assert response_data[0]["classification_code"] == "classification code"
-    assert response_data[0]["scheme"] == "scheme"
-    assert response_data[0]["scheme_uri"] == "scheme uri"
-    assert response_data[0]["keyword_uri"] == "keywords"
-
-    assert admin_response_data[0]["name"] == "keywords"
-    assert admin_response_data[0]["classification_code"] == "classification code"
-    assert admin_response_data[0]["scheme"] == "scheme"
-    assert admin_response_data[0]["scheme_uri"] == "scheme uri"
-    assert admin_response_data[0]["keyword_uri"] == "keywords"
-
-    assert editor_response_data[0]["name"] == "keywords"
-    assert editor_response_data[0]["classification_code"] == "classification code"
-    assert editor_response_data[0]["scheme"] == "scheme"
-    assert editor_response_data[0]["scheme_uri"] == "scheme uri"
-    assert editor_response_data[0]["keyword_uri"] == "keywords"
-
-    assert viewer_response_data[0]["name"] == "keywords"
-    assert viewer_response_data[0]["classification_code"] == "classification code"
-    assert viewer_response_data[0]["scheme"] == "scheme"
-    assert viewer_response_data[0]["scheme_uri"] == "scheme uri"
-    assert viewer_response_data[0]["keyword_uri"] == "keywords"
-
-    assert response_data[1]["name"] == "admin keywords"
-    assert response_data[1]["classification_code"] == "classification code"
-    assert response_data[1]["scheme"] == "scheme"
-    assert response_data[1]["scheme_uri"] == "scheme uri"
-    assert response_data[1]["keyword_uri"] == "keywords"
-
-    assert admin_response_data[1]["name"] == "admin keywords"
-    assert admin_response_data[1]["classification_code"] == "classification code"
-    assert admin_response_data[1]["scheme"] == "scheme"
-    assert admin_response_data[1]["scheme_uri"] == "scheme uri"
-    assert admin_response_data[1]["keyword_uri"] == "keywords"
-
-    assert editor_response_data[1]["name"] == "admin keywords"
-    assert editor_response_data[1]["classification_code"] == "classification code"
-    assert editor_response_data[1]["scheme"] == "scheme"
-    assert editor_response_data[1]["scheme_uri"] == "scheme uri"
-    assert editor_response_data[1]["keyword_uri"] == "keywords"
-
-    assert viewer_response_data[1]["name"] == "admin keywords"
-    assert viewer_response_data[1]["classification_code"] == "classification code"
-    assert viewer_response_data[1]["scheme"] == "scheme"
-    assert viewer_response_data[1]["scheme_uri"] == "scheme uri"
-    assert viewer_response_data[1]["keyword_uri"] == "keywords"
-
-    assert response_data[2]["name"] == "editor keywords"
-    assert response_data[2]["classification_code"] == "classification code"
-    assert response_data[2]["scheme"] == "scheme"
-    assert response_data[2]["scheme_uri"] == "scheme uri"
-    assert response_data[2]["keyword_uri"] == "keywords"
-
-    assert admin_response_data[2]["name"] == "editor keywords"
-    assert admin_response_data[2]["classification_code"] == "classification code"
-    assert admin_response_data[2]["scheme"] == "scheme"
-    assert admin_response_data[2]["scheme_uri"] == "scheme uri"
-    assert admin_response_data[2]["keyword_uri"] == "keywords"
-
-    assert editor_response_data[2]["name"] == "editor keywords"
-    assert editor_response_data[2]["classification_code"] == "classification code"
-    assert editor_response_data[2]["scheme"] == "scheme"
-    assert editor_response_data[2]["scheme_uri"] == "scheme uri"
-    assert editor_response_data[2]["keyword_uri"] == "keywords"
-
-    assert viewer_response_data[2]["name"] == "editor keywords"
-    assert viewer_response_data[2]["classification_code"] == "classification code"
-    assert viewer_response_data[2]["scheme"] == "scheme"
-    assert viewer_response_data[2]["scheme_uri"] == "scheme uri"
-    assert viewer_response_data[2]["keyword_uri"] == "keywords"
-
-
 def test_delete_keywords_metadata(clients):
     """
     Given a Flask application configured for testing and a study ID
@@ -1346,106 +2093,6 @@ def test_delete_keywords_metadata(clients):
     assert response.status_code == 204
     assert admin_response.status_code == 204
     assert editor_response.status_code == 204
-
-
-# ------------------- DESCRIPTION METADATA ------------------- #
-def test_put_description_metadata(clients):
-    """
-    GIVEN a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/description' endpoint is requested (POST)
-    THEN check that the response is valid and creates the description metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.put(
-        f"/study/{study_id}/metadata/description",
-        json={
-            "brief_summary": "brief_summary",
-            "detailed_description": "detailed_description",
-        },
-    )
-
-    assert response.status_code == 200
-    response_data = json.loads(response.data)
-
-    assert response_data["brief_summary"] == "brief_summary"
-    assert response_data["detailed_description"] == "detailed_description"
-
-    admin_response = _admin_client.put(
-        f"/study/{study_id}/metadata/description",
-        json={
-            "brief_summary": "admin-brief_summary",
-            "detailed_description": "admin-detailed_description",
-        },
-    )
-
-    assert admin_response.status_code == 200
-    admin_response_data = json.loads(admin_response.data)
-
-    assert admin_response_data["brief_summary"] == "admin-brief_summary"
-    assert admin_response_data["detailed_description"] == "admin-detailed_description"
-
-    editor_response = _editor_client.put(
-        f"/study/{study_id}/metadata/description",
-        json={
-            "brief_summary": "editor-brief_summary",
-            "detailed_description": "editor-detailed_description",
-        },
-    )
-
-    assert editor_response.status_code == 200
-    editor_response_data = json.loads(editor_response.data)
-
-    assert editor_response_data["brief_summary"] == "editor-brief_summary"
-    assert editor_response_data["detailed_description"] == "editor-detailed_description"
-
-    viewer_response = _viewer_client.put(
-        f"/study/{study_id}/metadata/description",
-        json={
-            "brief_summary": "viewer-brief_summary",
-            "detailed_description": "viewer-detailed_description",
-        },
-    )
-
-    assert viewer_response.status_code == 403
-
-
-def test_get_description_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/description' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the description metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/description")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/description")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/description")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/description")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-    response_data = json.loads(response.data)
-    admin_response_data = json.loads(admin_response.data)
-    editor_response_data = json.loads(editor_response.data)
-    viewer_response_data = json.loads(viewer_response.data)
-
-    assert response_data["brief_summary"] == "editor-brief_summary"
-    assert response_data["detailed_description"] == "editor-detailed_description"
-
-    assert admin_response_data["brief_summary"] == "editor-brief_summary"
-    assert admin_response_data["detailed_description"] == "editor-detailed_description"
-
-    assert editor_response_data["brief_summary"] == "editor-brief_summary"
-    assert editor_response_data["detailed_description"] == "editor-detailed_description"
-
-    assert viewer_response_data["brief_summary"] == "editor-brief_summary"
-    assert viewer_response_data["detailed_description"] == "editor-detailed_description"
 
 
 # ------------------- DESIGN METADATA ------------------- #
@@ -1968,266 +2615,6 @@ def test_get_eligibility_metadata(clients):
     assert viewer_response_data["exclusion_criteria"] == ["Probability Sample"]
     assert viewer_response_data["study_population"] == "study_population"
     assert viewer_response_data["sampling_method"] == "Probability Sample"
-
-
-# ------------------- IDENTIFICATION METADATA ------------------- #
-def test_post_identification_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/identification' endpoint is requested (POST)
-    THEN check that the response is valid and creates the identification metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.post(
-        f"/study/{study_id}/metadata/identification",
-        json={
-            "primary": {
-                "identifier": "first",
-                "identifier_type": "test",
-                "identifier_domain": "domain",
-                "identifier_link": "link",
-            },
-            "secondary": [
-                {
-                    "identifier": "test",
-                    "identifier_type": "test",
-                    "identifier_domain": "dodfasdfmain",
-                    "identifier_link": "link",
-                }
-            ],
-        },
-    )
-    # Add a one second delay to prevent duplicate timestamps
-    sleep(1)
-
-    assert response.status_code == 201
-    response_data = json.loads(response.data)
-    pytest.global_identification_id = response_data["secondary"][0]["id"]
-
-    assert response_data["primary"]["identifier"] == "first"
-    assert response_data["primary"]["identifier_type"] == "test"
-    assert response_data["primary"]["identifier_domain"] == "domain"
-    assert response_data["primary"]["identifier_link"] == "link"
-    assert response_data["secondary"][0]["identifier"] == "test"
-    assert response_data["secondary"][0]["identifier_type"] == "test"
-    assert response_data["secondary"][0]["identifier_domain"] == "dodfasdfmain"
-    assert response_data["secondary"][0]["identifier_link"] == "link"
-
-    admin_response = _admin_client.post(
-        f"/study/{study_id}/metadata/identification",
-        json={
-            "primary": {
-                "identifier": "admin-first",
-                "identifier_type": "test",
-                "identifier_domain": "domain",
-                "identifier_link": "link",
-            },
-            "secondary": [
-                {
-                    "identifier": "test",
-                    "identifier_type": "test",
-                    "identifier_domain": "dodfasdfmain",
-                    "identifier_link": "link",
-                }
-            ],
-        },
-    )
-    # Add a one second delay to prevent duplicate timestamps
-    sleep(1)
-
-    assert admin_response.status_code == 201
-    admin_response_data = json.loads(admin_response.data)
-    pytest.global_identification_id_admin = admin_response_data["secondary"][1]["id"]
-
-    assert admin_response_data["primary"]["identifier"] == "admin-first"
-    assert admin_response_data["primary"]["identifier_type"] == "test"
-    assert admin_response_data["primary"]["identifier_domain"] == "domain"
-    assert admin_response_data["primary"]["identifier_link"] == "link"
-    assert admin_response_data["secondary"][1]["identifier"] == "test"
-    assert admin_response_data["secondary"][1]["identifier_type"] == "test"
-    assert admin_response_data["secondary"][1]["identifier_domain"] == "dodfasdfmain"
-    assert admin_response_data["secondary"][1]["identifier_link"] == "link"
-
-    editor_response = _editor_client.post(
-        f"/study/{study_id}/metadata/identification",
-        json={
-            "primary": {
-                "identifier": "editor-first",
-                "identifier_type": "test",
-                "identifier_domain": "domain",
-                "identifier_link": "link",
-            },
-            "secondary": [
-                {
-                    "identifier": "test",
-                    "identifier_type": "test",
-                    "identifier_domain": "dodfasdfmain",
-                    "identifier_link": "link",
-                }
-            ],
-        },
-    )
-
-    assert editor_response.status_code == 201
-    editor_response_data = json.loads(editor_response.data)
-    pytest.global_identification_id_editor = editor_response_data["secondary"][2]["id"]
-
-    assert editor_response_data["primary"]["identifier"] == "editor-first"
-    assert editor_response_data["primary"]["identifier_type"] == "test"
-    assert editor_response_data["primary"]["identifier_domain"] == "domain"
-    assert editor_response_data["primary"]["identifier_link"] == "link"
-    assert editor_response_data["secondary"][2]["identifier"] == "test"
-    assert editor_response_data["secondary"][2]["identifier_type"] == "test"
-    assert editor_response_data["secondary"][2]["identifier_domain"] == "dodfasdfmain"
-    assert editor_response_data["secondary"][2]["identifier_link"] == "link"
-
-    viewer_response = _viewer_client.post(
-        f"/study/{study_id}/metadata/identification",
-        json={
-            "primary": {
-                "identifier": "viewer-first",
-                "identifier_type": "test",
-                "identifier_domain": "domain",
-                "identifier_link": "link",
-            },
-            "secondary": [
-                {
-                    "identifier": "test",
-                    "identifier_type": "test",
-                    "identifier_domain": "dodfasdfmain",
-                    "identifier_link": "link",
-                }
-            ],
-        },
-    )
-
-    assert viewer_response.status_code == 403
-
-
-def test_get_identification_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/identification' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the identification metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/identification")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/identification")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/identification")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/identification")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-    response_data = json.loads(response.data)
-    admin_response_data = json.loads(admin_response.data)
-    editor_response_data = json.loads(editor_response.data)
-    viewer_response_data = json.loads(viewer_response.data)
-
-    assert response_data["primary"]["identifier"] == "editor-first"
-    assert response_data["primary"]["identifier_type"] == "test"
-    assert response_data["primary"]["identifier_domain"] == "domain"
-    assert response_data["primary"]["identifier_link"] == "link"
-    assert response_data["secondary"][0]["identifier"] == "test"
-    assert response_data["secondary"][0]["identifier_type"] == "test"
-    assert response_data["secondary"][0]["identifier_domain"] == "dodfasdfmain"
-    assert response_data["secondary"][0]["identifier_link"] == "link"
-    assert response_data["secondary"][1]["identifier"] == "test"
-    assert response_data["secondary"][1]["identifier_type"] == "test"
-    assert response_data["secondary"][1]["identifier_domain"] == "dodfasdfmain"
-    assert response_data["secondary"][1]["identifier_link"] == "link"
-    assert response_data["secondary"][2]["identifier"] == "test"
-    assert response_data["secondary"][2]["identifier_type"] == "test"
-    assert response_data["secondary"][2]["identifier_domain"] == "dodfasdfmain"
-    assert response_data["secondary"][2]["identifier_link"] == "link"
-
-    assert admin_response_data["primary"]["identifier"] == "editor-first"
-    assert admin_response_data["primary"]["identifier_type"] == "test"
-    assert admin_response_data["primary"]["identifier_domain"] == "domain"
-    assert admin_response_data["primary"]["identifier_link"] == "link"
-    assert admin_response_data["secondary"][0]["identifier"] == "test"
-    assert admin_response_data["secondary"][0]["identifier_type"] == "test"
-    assert admin_response_data["secondary"][0]["identifier_domain"] == "dodfasdfmain"
-    assert admin_response_data["secondary"][0]["identifier_link"] == "link"
-    assert admin_response_data["secondary"][1]["identifier"] == "test"
-    assert admin_response_data["secondary"][1]["identifier_type"] == "test"
-    assert admin_response_data["secondary"][1]["identifier_domain"] == "dodfasdfmain"
-    assert admin_response_data["secondary"][1]["identifier_link"] == "link"
-    assert admin_response_data["secondary"][2]["identifier"] == "test"
-    assert admin_response_data["secondary"][2]["identifier_type"] == "test"
-    assert admin_response_data["secondary"][2]["identifier_domain"] == "dodfasdfmain"
-    assert admin_response_data["secondary"][2]["identifier_link"] == "link"
-
-    assert editor_response_data["primary"]["identifier"] == "editor-first"
-    assert editor_response_data["primary"]["identifier_type"] == "test"
-    assert editor_response_data["primary"]["identifier_domain"] == "domain"
-    assert editor_response_data["primary"]["identifier_link"] == "link"
-    assert editor_response_data["secondary"][0]["identifier"] == "test"
-    assert editor_response_data["secondary"][0]["identifier_type"] == "test"
-    assert editor_response_data["secondary"][0]["identifier_domain"] == "dodfasdfmain"
-    assert editor_response_data["secondary"][0]["identifier_link"] == "link"
-    assert editor_response_data["secondary"][1]["identifier"] == "test"
-    assert editor_response_data["secondary"][1]["identifier_type"] == "test"
-    assert editor_response_data["secondary"][1]["identifier_domain"] == "dodfasdfmain"
-    assert editor_response_data["secondary"][1]["identifier_link"] == "link"
-    assert editor_response_data["secondary"][2]["identifier"] == "test"
-    assert editor_response_data["secondary"][2]["identifier_type"] == "test"
-    assert editor_response_data["secondary"][2]["identifier_domain"] == "dodfasdfmain"
-    assert editor_response_data["secondary"][2]["identifier_link"] == "link"
-
-    assert viewer_response_data["primary"]["identifier"] == "editor-first"
-    assert viewer_response_data["primary"]["identifier_type"] == "test"
-    assert viewer_response_data["primary"]["identifier_domain"] == "domain"
-    assert viewer_response_data["primary"]["identifier_link"] == "link"
-    assert viewer_response_data["secondary"][0]["identifier"] == "test"
-    assert viewer_response_data["secondary"][0]["identifier_type"] == "test"
-    assert viewer_response_data["secondary"][0]["identifier_domain"] == "dodfasdfmain"
-    assert viewer_response_data["secondary"][0]["identifier_link"] == "link"
-    assert viewer_response_data["secondary"][1]["identifier"] == "test"
-    assert viewer_response_data["secondary"][1]["identifier_type"] == "test"
-    assert viewer_response_data["secondary"][1]["identifier_domain"] == "dodfasdfmain"
-    assert viewer_response_data["secondary"][1]["identifier_link"] == "link"
-    assert viewer_response_data["secondary"][2]["identifier"] == "test"
-    assert viewer_response_data["secondary"][2]["identifier_type"] == "test"
-    assert viewer_response_data["secondary"][2]["identifier_domain"] == "dodfasdfmain"
-    assert viewer_response_data["secondary"][2]["identifier_link"] == "link"
-
-
-def test_delete_identification_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/identification' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the identification metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-    identification_id = pytest.global_identification_id
-    admin_identification_id = pytest.global_identification_id_admin
-    editor_identification_id = pytest.global_identification_id_editor
-
-    viewer_response = _viewer_client.delete(
-        f"/study/{study_id}/metadata/identification/{identification_id}"
-    )
-    response = _logged_in_client.delete(
-        f"/study/{study_id}/metadata/identification/{identification_id}"
-    )
-    admin_response = _admin_client.delete(
-        f"/study/{study_id}/metadata/identification/{admin_identification_id}"
-    )
-    editor_response = _editor_client.delete(
-        f"/study/{study_id}/metadata/identification/{editor_identification_id}"
-    )
-
-    assert viewer_response.status_code == 403
-    assert response.status_code == 204
-    assert admin_response.status_code == 204
-    assert editor_response.status_code == 204
 
 
 # ------------------- INTERVENTION METADATA ------------------- #
@@ -3144,434 +3531,6 @@ def test_get_oversight_metadata(clients):
     assert viewer_response_data["fda_regulated_device"] == "device"
     assert viewer_response_data["has_dmc"] == "yes"
     assert viewer_response_data["human_subject_review_status"] == "yes"
-
-
-# ------------------- SPONSORS METADATA ------------------- #
-def test_put_sponsors_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/sponsors' endpoint is requested (PUT)
-    THEN check that the response is valid and updates the sponsors metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.put(
-        f"/study/{study_id}/metadata/sponsor",
-        json={
-            "lead_sponsor_identifier_scheme": "scheme",
-            "lead_sponsor_identifier_scheme_uri": "uri",
-            "responsible_party_type": "Sponsor",
-            "responsible_party_investigator_first_name": "name",
-            "responsible_party_investigator_last_name": "surname",
-            "responsible_party_investigator_title": "title",
-            "responsible_party_investigator_identifier_value": "identifier",
-            "responsible_party_investigator_identifier_scheme": "scheme",
-            "responsible_party_investigator_identifier_scheme_uri": "uri",
-            "responsible_party_investigator_affiliation_name": "affiliation",
-            "responsible_party_investigator_affiliation_identifier_value": "identifier",
-            "responsible_party_investigator_affiliation_identifier_scheme": "scheme",
-            "responsible_party_investigator_affiliation_identifier_scheme_uri": "uri",
-            "lead_sponsor_name": "name",
-            "lead_sponsor_identifier": "identifier",
-        },
-    )
-    assert response.status_code == 200
-    response_data = json.loads(response.data)
-
-    assert response_data["responsible_party_type"] == "Sponsor"
-    assert response_data["responsible_party_investigator_first_name"] == "name"
-    assert response_data["responsible_party_investigator_last_name"] == "surname"
-    assert (
-        response_data["responsible_party_investigator_title"] == "title"
-    )  # noqa: E501
-    assert (
-        response_data["responsible_party_investigator_identifier_value"] == "identifier"
-    )
-    assert response_data["responsible_party_investigator_identifier_scheme"] == "scheme"
-    assert (
-        response_data["responsible_party_investigator_identifier_scheme_uri"] == "uri"
-    )
-    assert (
-        response_data["responsible_party_investigator_affiliation_name"]
-        == "affiliation"
-    )
-    assert (
-        response_data["responsible_party_investigator_affiliation_identifier_value"]
-        == "identifier"
-    )
-    assert (
-        response_data["responsible_party_investigator_affiliation_identifier_scheme"]
-        == "scheme"
-    )
-    assert (
-        response_data[
-            "responsible_party_investigator_affiliation_identifier_scheme_uri"
-        ]
-        == "uri"
-    )
-    assert response_data["lead_sponsor_name"] == "name"
-    assert response_data["lead_sponsor_identifier"] == "identifier"
-    assert response_data["lead_sponsor_identifier_scheme"] == "scheme"
-    assert response_data["lead_sponsor_identifier_scheme_uri"] == "uri"
-
-    admin_response = _admin_client.put(
-        f"/study/{study_id}/metadata/sponsor",
-        json={
-            "lead_sponsor_identifier_scheme": "scheme",
-            "lead_sponsor_identifier_scheme_uri": "uri",
-            "responsible_party_type": "Sponsor",
-            "responsible_party_investigator_first_name": "name",
-            "responsible_party_investigator_last_name": "surname",
-            "responsible_party_investigator_title": "title",
-            "responsible_party_investigator_identifier_value": "identifier",
-            "responsible_party_investigator_identifier_scheme": "scheme",
-            "responsible_party_investigator_identifier_scheme_uri": "uri",
-            "responsible_party_investigator_affiliation_name": "affiliation",
-            "responsible_party_investigator_affiliation_identifier_value": "identifier",
-            "responsible_party_investigator_affiliation_identifier_scheme": "scheme",
-            "responsible_party_investigator_affiliation_identifier_scheme_uri": "uri",
-            "lead_sponsor_name": "name",
-            "lead_sponsor_identifier": "identifier",
-        },
-    )
-
-    assert admin_response.status_code == 200
-    admin_response_data = json.loads(admin_response.data)
-
-    assert admin_response_data["responsible_party_type"] == "Sponsor"
-    assert admin_response_data["responsible_party_investigator_first_name"] == "name"
-    assert admin_response_data["responsible_party_investigator_last_name"] == "surname"
-    assert (
-        admin_response_data["responsible_party_investigator_title"] == "title"
-    )  # noqa: E501
-    assert (
-        admin_response_data["responsible_party_investigator_identifier_value"]
-        == "identifier"
-    )
-    assert (
-        admin_response_data["responsible_party_investigator_identifier_scheme"]
-        == "scheme"
-    )
-    assert (
-        admin_response_data["responsible_party_investigator_identifier_scheme_uri"]
-        == "uri"
-    )
-    assert (
-        admin_response_data["responsible_party_investigator_affiliation_name"]
-        == "affiliation"
-    )
-    assert (
-        admin_response_data[
-            "responsible_party_investigator_affiliation_identifier_value"
-        ]
-        == "identifier"
-    )
-    assert (
-        admin_response_data[
-            "responsible_party_investigator_affiliation_identifier_scheme"
-        ]
-        == "scheme"
-    )
-    assert (
-        admin_response_data[
-            "responsible_party_investigator_affiliation_identifier_scheme_uri"
-        ]
-        == "uri"
-    )
-    assert admin_response_data["lead_sponsor_name"] == "name"
-    assert admin_response_data["lead_sponsor_identifier"] == "identifier"
-    assert admin_response_data["lead_sponsor_identifier_scheme"] == "scheme"
-    assert admin_response_data["lead_sponsor_identifier_scheme_uri"] == "uri"
-
-    editor_response = _editor_client.put(
-        f"/study/{study_id}/metadata/sponsor",
-        json={
-            "lead_sponsor_identifier_scheme": "scheme",
-            "lead_sponsor_identifier_scheme_uri": "uri",
-            "responsible_party_type": "Sponsor",
-            "responsible_party_investigator_first_name": "name",
-            "responsible_party_investigator_last_name": "surname",
-            "responsible_party_investigator_title": "title",
-            "responsible_party_investigator_identifier_value": "identifier",
-            "responsible_party_investigator_identifier_scheme": "scheme",
-            "responsible_party_investigator_identifier_scheme_uri": "uri",
-            "responsible_party_investigator_affiliation_name": "affiliation",
-            "responsible_party_investigator_affiliation_identifier_value": "identifier",
-            "responsible_party_investigator_affiliation_identifier_scheme": "scheme",
-            "responsible_party_investigator_affiliation_identifier_scheme_uri": "uri",
-            "lead_sponsor_name": "name",
-            "lead_sponsor_identifier": "identifier",
-        },
-    )
-
-    assert editor_response.status_code == 200
-    editor_response_data = json.loads(editor_response.data)
-
-    assert editor_response_data["responsible_party_type"] == "Sponsor"
-    assert editor_response_data["responsible_party_investigator_first_name"] == "name"
-    assert editor_response_data["responsible_party_investigator_last_name"] == "surname"
-    assert (
-        editor_response_data["responsible_party_investigator_title"] == "title"
-    )  # noqa: E501
-    assert (
-        editor_response_data["responsible_party_investigator_identifier_value"]
-        == "identifier"
-    )
-    assert (
-        editor_response_data["responsible_party_investigator_identifier_scheme"]
-        == "scheme"
-    )
-    assert (
-        editor_response_data["responsible_party_investigator_identifier_scheme_uri"]
-        == "uri"
-    )
-    assert (
-        editor_response_data["responsible_party_investigator_affiliation_name"]
-        == "affiliation"
-    )
-    assert (
-        editor_response_data[
-            "responsible_party_investigator_affiliation_identifier_value"
-        ]
-        == "identifier"
-    )
-    assert (
-        editor_response_data[
-            "responsible_party_investigator_affiliation_identifier_scheme"
-        ]
-        == "scheme"
-    )
-    assert (
-        editor_response_data[
-            "responsible_party_investigator_affiliation_identifier_scheme_uri"
-        ]
-        == "uri"
-    )
-    assert editor_response_data["lead_sponsor_name"] == "name"
-    assert editor_response_data["lead_sponsor_identifier"] == "identifier"
-    assert editor_response_data["lead_sponsor_identifier_scheme"] == "scheme"
-    assert editor_response_data["lead_sponsor_identifier_scheme_uri"] == "uri"
-
-    viewer_response = _viewer_client.put(
-        f"/study/{study_id}/metadata/sponsor",
-        json={
-            "responsible_party_type": "Sponsor",
-            "responsible_party_investigator_first_name": "name",
-            "responsible_party_investigator_last_name": "surname",
-            "responsible_party_investigator_title": "title",
-            "responsible_party_investigator_identifier_value": "identifier",
-            "responsible_party_investigator_identifier_scheme": "scheme",
-            "responsible_party_investigator_identifier_scheme_uri": "uri",
-            "responsible_party_investigator_affiliation_name": "affiliation",
-            "responsible_party_investigator_affiliation_identifier_value": "identifier",
-            "responsible_party_investigator_affiliation_identifier_scheme": "scheme",
-            "responsible_party_investigator_affiliation_identifier_scheme_uri": "uri",
-            "lead_sponsor_name": "name",
-            "lead_sponsor_identifier": "identifier",
-            "lead_sponsor_identifier_scheme": "scheme",
-            "lead_sponsor_identifier_scheme_uri": "uri",
-        },
-    )
-
-    assert viewer_response.status_code == 403
-
-
-def test_get_sponsors_metadata(clients):
-    """
-    Given a Flask application configured for testing and a study ID
-    WHEN the '/study/{study_id}/metadata/sponsors' endpoint is requested (GET)
-    THEN check that the response is valid and retrieves the sponsors metadata
-    """
-    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
-    study_id = pytest.global_study_id["id"]  # type: ignore
-
-    response = _logged_in_client.get(f"/study/{study_id}/metadata/sponsor")
-    admin_response = _admin_client.get(f"/study/{study_id}/metadata/sponsor")
-    editor_response = _editor_client.get(f"/study/{study_id}/metadata/sponsor")
-    viewer_response = _viewer_client.get(f"/study/{study_id}/metadata/sponsor")
-
-    assert response.status_code == 200
-    assert admin_response.status_code == 200
-    assert editor_response.status_code == 200
-    assert viewer_response.status_code == 200
-
-    response_data = json.loads(response.data)
-    admin_response_data = json.loads(admin_response.data)
-    editor_response_data = json.loads(editor_response.data)
-    viewer_response_data = json.loads(viewer_response.data)
-
-    assert response_data["responsible_party_type"] == "Sponsor"
-    assert response_data["responsible_party_investigator_first_name"] == "name"
-    assert response_data["responsible_party_investigator_last_name"] == "surname"
-    assert (
-        response_data["responsible_party_investigator_title"] == "title"
-    )  # noqa: E501
-
-    assert (
-        response_data["responsible_party_investigator_identifier_value"] == "identifier"
-    )
-    assert response_data["responsible_party_investigator_identifier_scheme"] == "scheme"
-    assert (
-        response_data["responsible_party_investigator_identifier_scheme_uri"] == "uri"
-    )
-    assert (
-        response_data["responsible_party_investigator_affiliation_name"]
-        == "affiliation"
-    )
-    assert (
-        response_data["responsible_party_investigator_affiliation_identifier_value"]
-        == "identifier"
-    )
-    assert (
-        response_data["responsible_party_investigator_affiliation_identifier_scheme"]
-        == "scheme"
-    )
-    assert (
-        response_data[
-            "responsible_party_investigator_affiliation_identifier_scheme_uri"
-        ]
-        == "uri"
-    )
-    assert response_data["lead_sponsor_name"] == "name"
-    assert response_data["lead_sponsor_identifier"] == "identifier"
-    assert response_data["lead_sponsor_identifier_scheme"] == "scheme"
-    assert response_data["lead_sponsor_identifier_scheme_uri"] == "uri"
-
-    assert admin_response_data["responsible_party_type"] == "Sponsor"
-    assert admin_response_data["responsible_party_investigator_first_name"] == "name"
-    assert admin_response_data["responsible_party_investigator_last_name"] == "surname"
-    assert (
-        admin_response_data["responsible_party_investigator_title"] == "title"
-    )  # noqa: E501
-    assert (
-        admin_response_data["responsible_party_investigator_identifier_value"]
-        == "identifier"
-    )
-    assert (
-        admin_response_data["responsible_party_investigator_identifier_scheme"]
-        == "scheme"
-    )
-    assert (
-        admin_response_data["responsible_party_investigator_identifier_scheme_uri"]
-        == "uri"
-    )
-    assert (
-        admin_response_data["responsible_party_investigator_affiliation_name"]
-        == "affiliation"
-    )
-    assert (
-        admin_response_data[
-            "responsible_party_investigator_affiliation_identifier_value"
-        ]
-        == "identifier"
-    )
-    assert (
-        admin_response_data[
-            "responsible_party_investigator_affiliation_identifier_scheme"
-        ]
-        == "scheme"
-    )
-    assert (
-        admin_response_data[
-            "responsible_party_investigator_affiliation_identifier_scheme_uri"
-        ]
-        == "uri"
-    )
-    assert admin_response_data["lead_sponsor_name"] == "name"
-    assert admin_response_data["lead_sponsor_identifier"] == "identifier"
-    assert admin_response_data["lead_sponsor_identifier_scheme"] == "scheme"
-    assert admin_response_data["lead_sponsor_identifier_scheme_uri"] == "uri"
-
-    assert editor_response_data["responsible_party_type"] == "Sponsor"
-    assert editor_response_data["responsible_party_investigator_first_name"] == "name"
-    assert editor_response_data["responsible_party_investigator_last_name"] == "surname"
-    assert (
-        editor_response_data["responsible_party_investigator_title"] == "title"
-    )  # noqa: E501
-    assert (
-        editor_response_data["responsible_party_investigator_identifier_value"]
-        == "identifier"
-    )
-    assert (
-        editor_response_data["responsible_party_investigator_identifier_scheme"]
-        == "scheme"
-    )
-    assert (
-        editor_response_data["responsible_party_investigator_identifier_scheme_uri"]
-        == "uri"
-    )
-    assert (
-        editor_response_data["responsible_party_investigator_affiliation_name"]
-        == "affiliation"
-    )
-    assert (
-        editor_response_data[
-            "responsible_party_investigator_affiliation_identifier_value"
-        ]
-        == "identifier"
-    )
-    assert (
-        editor_response_data[
-            "responsible_party_investigator_affiliation_identifier_scheme"
-        ]
-        == "scheme"
-    )
-    assert (
-        editor_response_data[
-            "responsible_party_investigator_affiliation_identifier_scheme_uri"
-        ]
-        == "uri"
-    )
-    assert editor_response_data["lead_sponsor_name"] == "name"
-    assert editor_response_data["lead_sponsor_identifier"] == "identifier"
-    assert editor_response_data["lead_sponsor_identifier_scheme"] == "scheme"
-    assert editor_response_data["lead_sponsor_identifier_scheme_uri"] == "uri"
-
-    assert viewer_response_data["responsible_party_type"] == "Sponsor"
-    assert viewer_response_data["responsible_party_investigator_first_name"] == "name"
-    assert viewer_response_data["responsible_party_investigator_last_name"] == "surname"
-    assert (
-        viewer_response_data["responsible_party_investigator_title"] == "title"
-    )  # noqa: E501
-    assert (
-        viewer_response_data["responsible_party_investigator_identifier_value"]
-        == "identifier"
-    )
-    assert (
-        viewer_response_data["responsible_party_investigator_identifier_scheme"]
-        == "scheme"
-    )
-    assert (
-        viewer_response_data["responsible_party_investigator_identifier_scheme_uri"]
-        == "uri"
-    )
-    assert (
-        viewer_response_data["responsible_party_investigator_affiliation_name"]
-        == "affiliation"
-    )
-    assert (
-        viewer_response_data[
-            "responsible_party_investigator_affiliation_identifier_value"
-        ]
-        == "identifier"
-    )
-    assert (
-        viewer_response_data[
-            "responsible_party_investigator_affiliation_identifier_scheme"
-        ]
-        == "scheme"
-    )
-    assert (
-        viewer_response_data[
-            "responsible_party_investigator_affiliation_identifier_scheme_uri"
-        ]
-        == "uri"
-    )
-    assert viewer_response_data["lead_sponsor_name"] == "name"
-    assert viewer_response_data["lead_sponsor_identifier"] == "identifier"
-    assert viewer_response_data["lead_sponsor_identifier_scheme"] == "scheme"
-    assert viewer_response_data["lead_sponsor_identifier_scheme_uri"] == "uri"
 
 
 # ------------------- STATUS METADATA ------------------- #

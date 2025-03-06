@@ -6,17 +6,19 @@ import datetime
 import importlib
 import os
 import re
+import time
 import uuid
 from datetime import timezone
 from typing import Any, Union
-import time
 
 import jwt
 from email_validator import EmailNotValidError, validate_email
 from flask import g, make_response, request
 from flask_restx import Namespace, Resource, fields
 from jsonschema import FormatChecker, ValidationError, validate
+
 import model
+
 # from modules.invitation import (
 #     send_email_verification,
 # )
@@ -187,6 +189,7 @@ class SignUpUser(Resource):
 
         return f"Hi, {new_user.email_address}, you have successfully signed up", 201
 
+
 # @api.route("/auth/email-verification/confirm")
 # class EmailVerification(Resource):
 #     @api.response(200, "Success")
@@ -336,7 +339,6 @@ class Login(Resource):
                 "user": user.id,
                 "exp": expired_in,
                 "jti": jti,
-
             },  # noqa: W503
             config.FAIRHUB_SECRET,
             algorithm="HS256",
@@ -555,11 +557,9 @@ class Logout(Resource):
         resp.status_code = 204
 
         if g.user and g.token:
-            remove_session = (
-                model.Session.query
-                .filter(model.Session.id == g.token)
-                .first()
-            )
+            remove_session = model.Session.query.filter(
+                model.Session.id == g.token
+            ).first()
             if remove_session:
                 model.db.session.delete(remove_session)
                 model.db.session.commit()

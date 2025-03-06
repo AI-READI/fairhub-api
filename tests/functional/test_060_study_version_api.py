@@ -280,23 +280,47 @@ def test_get_version_study_metadata(clients):
             }
         ],
     )
-    id_response = _logged_in_client.post(
-        f"/study/{study_id}/metadata/identification",
+    description_response = _logged_in_client.post(
+        f"/study/{study_id}/metadata/description",
         json={
-            "primary": {
-                "identifier": "test",
-                "identifier_type": "test",
-                "identifier_domain": "domain",
-                "identifier_link": "link",
-            },
-            "secondary": [
+            "conditions": [
                 {
-                    "identifier": "test",
-                    "identifier_type": "test",
-                    "identifier_domain": "dodfasdfmain",
-                    "identifier_link": "link",
+                    "name": "condition",
+                    "classification_code": "classification code",
+                    "scheme": "scheme",
+                    "scheme_uri": "scheme uri",
+                    "condition_uri": "condition",
                 }
             ],
+            "keywords": [
+                {
+                    "name": "keywords",
+                    "classification_code": "classification code",
+                    "scheme": "scheme",
+                    "scheme_uri": "scheme uri",
+                    "keyword_uri": "keywords",
+                }
+            ],
+            "identification": {
+                "primary": {
+                    "identifier": "first",
+                    "identifier_type": "test",
+                    "identifier_domain": "domain",
+                    "identifier_link": "link",
+                },
+                "secondary": [
+                    {
+                        "identifier": "test",
+                        "identifier_type": "test",
+                        "identifier_domain": "dodfasdfmain",
+                        "identifier_link": "link",
+                    }
+                ],
+            },
+            "description": {
+                "brief_summary": "brief_summary",
+                "detailed_description": "detailed_description",
+            },
         },
     )
     intervention_response = _logged_in_client.post(
@@ -310,40 +334,41 @@ def test_get_version_study_metadata(clients):
             }
         ],
     )
-    collaborators_response = _logged_in_client.post(
-        f"/study/{study_id}/metadata/collaborators",
-        json=[
-            {
-                "name": "collaborator1123",
-                "identifier": "collaborator1123",
-                "identifier_scheme": "collaborator1123",
-                "identifier_scheme_uri": "collaborator1123",
-            }
-        ],
-    )
-    conditions_response = _logged_in_client.post(
-        f"/study/{study_id}/metadata/conditions",
-        json=[
-            {
-                "name": "condition",
-                "classification_code": "classification code",
-                "scheme": "scheme",
-                "scheme_uri": "scheme uri",
-                "condition_uri": "condition",
-            }
-        ],
-    )
-    keywords_response = _logged_in_client.post(
-        f"/study/{study_id}/metadata/keywords",
-        json=[
-            {
-                "name": "keywords",
-                "classification_code": "classification code",
-                "scheme": "scheme",
-                "scheme_uri": "scheme uri",
-                "keyword_uri": "keywords",
-            }
-        ],
+    team_response = _logged_in_client.post(
+        f"/study/{study_id}/metadata/team",
+        json={
+            "collaborators": [
+                {
+                    "name": "collaborator1123",
+                    "identifier": "collaborator1123",
+                    "identifier_scheme": "collaborator1123",
+                    "identifier_scheme_uri": "collaborator1123",
+                },
+                {
+                    "name": "collaborator1123",
+                    "identifier": "collaborator1123",
+                    "identifier_scheme": "collaborator1123",
+                    "identifier_scheme_uri": "collaborator1123",
+                },
+            ],
+            "sponsors": {
+                "lead_sponsor_identifier_scheme": "scheme",
+                "lead_sponsor_identifier_scheme_uri": "uri",
+                "responsible_party_type": "Sponsor",
+                "responsible_party_investigator_first_name": "name",
+                "responsible_party_investigator_last_name": "surname",
+                "responsible_party_investigator_title": "title",
+                "responsible_party_investigator_identifier_value": "identifier",
+                "responsible_party_investigator_identifier_scheme": "scheme",
+                "responsible_party_investigator_identifier_scheme_uri": "uri",
+                "responsible_party_investigator_affiliation_name": "affiliation",
+                "responsible_party_investigator_affiliation_identifier_value": "identifier",
+                "responsible_party_investigator_affiliation_identifier_scheme": "scheme",
+                "responsible_party_investigator_affiliation_identifier_scheme_uri": "uri",
+                "lead_sponsor_name": "name",
+                "lead_sponsor_identifier": "identifier",
+            },
+        },
     )
 
     of_response = _logged_in_client.post(
@@ -368,12 +393,10 @@ def test_get_version_study_metadata(clients):
     assert arm_response.status_code == 201
     assert cc_response.status_code == 201
     assert location_response.status_code == 201
-    assert id_response.status_code == 201
+    assert description_response.status_code == 201
     assert intervention_response.status_code == 201
+    assert team_response.status_code == 201
     assert of_response.status_code == 201
-    assert collaborators_response.status_code == 201
-    assert conditions_response.status_code == 201
-    assert keywords_response.status_code == 201
 
     response = _logged_in_client.get(
         f"/study/{study_id}/dataset/{dataset_id}/version/{version_id}/study-metadata"
@@ -405,7 +428,7 @@ def test_get_version_study_metadata(clients):
     assert response_data["collaborators"][0]["name"] == "collaborator1123"
     assert response_data["conditions"][0]["name"] == "condition"
     assert response_data["keywords"][0]["name"] == "keywords"
-    assert response_data["description"]["brief_summary"] == "editor-brief_summary"
+    assert response_data["description"]["brief_summary"] == "brief_summary"
     assert response_data["design"]["design_allocation"] == "editor-dfasdfasd"
     assert response_data["design"]["study_type"] == "Interventional"
     assert response_data["design"]["design_intervention_model"] == "Treatment"
@@ -431,7 +454,7 @@ def test_get_version_study_metadata(clients):
     assert response_data["eligibility"]["sex"] == "All"
     assert response_data["eligibility"]["gender_based"] == "Yes"
     assert response_data["eligibility"]["maximum_age_value"] == 61
-    assert response_data["primary_identifier"]["identifier"] == "test"
+    assert response_data["primary_identifier"]["identifier"] == "first"
     assert response_data["primary_identifier"]["identifier_type"] == "test"
     assert response_data["secondary_identifiers"][0]["identifier"] == "test"
     assert response_data["secondary_identifiers"][0]["identifier_type"] == "test"
@@ -467,7 +490,7 @@ def test_get_version_study_metadata(clients):
     assert admin_response_data["collaborators"][0]["name"] == "collaborator1123"
     assert admin_response_data["conditions"][0]["name"] == "condition"
     assert admin_response_data["keywords"][0]["name"] == "keywords"
-    assert admin_response_data["description"]["brief_summary"] == "editor-brief_summary"
+    assert admin_response_data["description"]["brief_summary"] == "brief_summary"
     assert admin_response_data["design"]["design_allocation"] == "editor-dfasdfasd"
     assert admin_response_data["design"]["study_type"] == "Interventional"
     assert admin_response_data["design"]["design_intervention_model"] == "Treatment"
@@ -495,7 +518,7 @@ def test_get_version_study_metadata(clients):
     assert admin_response_data["eligibility"]["sex"] == "All"
     assert admin_response_data["eligibility"]["gender_based"] == "Yes"
     assert admin_response_data["eligibility"]["maximum_age_value"] == 61
-    assert admin_response_data["primary_identifier"]["identifier"] == "test"
+    assert admin_response_data["primary_identifier"]["identifier"] == "first"
     assert admin_response_data["primary_identifier"]["identifier_type"] == "test"
     assert admin_response_data["secondary_identifiers"][0]["identifier"] == "test"
     assert admin_response_data["secondary_identifiers"][0]["identifier_type"] == "test"
@@ -534,9 +557,7 @@ def test_get_version_study_metadata(clients):
     assert editor_response_data["collaborators"][0]["name"] == "collaborator1123"
     assert editor_response_data["conditions"][0]["name"] == "condition"
     assert editor_response_data["keywords"][0]["name"] == "keywords"
-    assert (
-        editor_response_data["description"]["brief_summary"] == "editor-brief_summary"
-    )
+    assert editor_response_data["description"]["brief_summary"] == "brief_summary"
     assert editor_response_data["design"]["design_allocation"] == "editor-dfasdfasd"
     assert editor_response_data["design"]["study_type"] == "Interventional"
     assert editor_response_data["design"]["design_intervention_model"] == "Treatment"
@@ -565,7 +586,7 @@ def test_get_version_study_metadata(clients):
     assert editor_response_data["eligibility"]["sex"] == "All"
     assert editor_response_data["eligibility"]["gender_based"] == "Yes"
     assert editor_response_data["eligibility"]["maximum_age_value"] == 61
-    assert editor_response_data["primary_identifier"]["identifier"] == "test"
+    assert editor_response_data["primary_identifier"]["identifier"] == "first"
     assert editor_response_data["primary_identifier"]["identifier_type"] == "test"
     assert editor_response_data["secondary_identifiers"][0]["identifier"] == "test"
     assert editor_response_data["secondary_identifiers"][0]["identifier_type"] == "test"
@@ -604,9 +625,7 @@ def test_get_version_study_metadata(clients):
     assert viewer_response_data["collaborators"][0]["name"] == "collaborator1123"
     assert viewer_response_data["conditions"][0]["name"] == "condition"
     assert viewer_response_data["keywords"][0]["name"] == "keywords"
-    assert (
-        viewer_response_data["description"]["brief_summary"] == "editor-brief_summary"
-    )
+    assert viewer_response_data["description"]["brief_summary"] == "brief_summary"
     assert viewer_response_data["design"]["design_allocation"] == "editor-dfasdfasd"
     assert viewer_response_data["design"]["study_type"] == "Interventional"
     assert viewer_response_data["design"]["design_intervention_model"] == "Treatment"
@@ -635,7 +654,7 @@ def test_get_version_study_metadata(clients):
     assert viewer_response_data["eligibility"]["sex"] == "All"
     assert viewer_response_data["eligibility"]["gender_based"] == "Yes"
     assert viewer_response_data["eligibility"]["maximum_age_value"] == 61
-    assert viewer_response_data["primary_identifier"]["identifier"] == "test"
+    assert viewer_response_data["primary_identifier"]["identifier"] == "first"
     assert viewer_response_data["primary_identifier"]["identifier_type"] == "test"
     assert viewer_response_data["secondary_identifiers"][0]["identifier"] == "test"
     assert viewer_response_data["secondary_identifiers"][0]["identifier_type"] == "test"
