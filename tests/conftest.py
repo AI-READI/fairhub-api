@@ -330,32 +330,32 @@ def clients(flask_app):
         )
         assert response.status_code == 200
 
-        response = _admin_client.post(
+        a_response = _admin_client.post(
             "/auth/login",
             json={
                 "email_address": "admin@fairhub.io",
                 "password": "Testingyeshello11!",
             },
         )
-        assert response.status_code == 200
+        assert a_response.status_code == 200
 
-        response = _editor_client.post(
+        e_response = _editor_client.post(
             "/auth/login",
             json={
                 "email_address": "editor@fairhub.io",
                 "password": "Testingyeshello11!",
             },
         )
-        assert response.status_code == 200
+        assert e_response.status_code == 200
 
-        response = _viewer_client.post(
+        v_response = _viewer_client.post(
             "/auth/login",
             json={
                 "email_address": "viewer@fairhub.io",
                 "password": "Testingyeshello11!",
             },
         )
-        assert response.status_code == 200
+        assert v_response.status_code == 200
 
     meta = db.metadata
     for table in reversed(meta.sorted_tables):
