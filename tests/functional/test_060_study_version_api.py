@@ -557,9 +557,7 @@ def test_get_version_study_metadata(clients):
     assert editor_response_data["collaborators"][0]["name"] == "collaborator1123"
     assert editor_response_data["conditions"][0]["name"] == "condition"
     assert editor_response_data["keywords"][0]["name"] == "keywords"
-    assert (
-        editor_response_data["description"]["brief_summary"] == "brief_summary"
-    )
+    assert editor_response_data["description"]["brief_summary"] == "brief_summary"
     assert editor_response_data["design"]["design_allocation"] == "editor-dfasdfasd"
     assert editor_response_data["design"]["study_type"] == "Interventional"
     assert editor_response_data["design"]["design_intervention_model"] == "Treatment"
@@ -627,9 +625,7 @@ def test_get_version_study_metadata(clients):
     assert viewer_response_data["collaborators"][0]["name"] == "collaborator1123"
     assert viewer_response_data["conditions"][0]["name"] == "condition"
     assert viewer_response_data["keywords"][0]["name"] == "keywords"
-    assert (
-        viewer_response_data["description"]["brief_summary"] == "brief_summary"
-    )
+    assert viewer_response_data["description"]["brief_summary"] == "brief_summary"
     assert viewer_response_data["design"]["design_allocation"] == "editor-dfasdfasd"
     assert viewer_response_data["design"]["study_type"] == "Interventional"
     assert viewer_response_data["design"]["design_intervention_model"] == "Treatment"

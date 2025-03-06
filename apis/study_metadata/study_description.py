@@ -221,4 +221,4 @@ class StudyDescriptionResource(Resource):
             "conditions": list_of_conditions,
             "keywords": list_of_keywords,
             "identification": final_identifiers.to_dict(),
-        }, 200
+        }, 201

@@ -99,7 +99,7 @@ from ..authentication import is_granted
 
 
 @api.route("/study/<study_id>/metadata/identification/<identification_id>")
-class StudyIdentificationdUpdate(Resource):
+class StudyIdentificationdDelete(Resource):
     """Study Identification Metadata"""
 
     @api.doc("Delete Study Identifications")
