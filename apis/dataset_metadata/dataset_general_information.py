@@ -21,7 +21,7 @@ dataset_title = api.model(
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/general-information")
-class DatasetTitleResource(Resource):
+class DatasetGeneralInformation(Resource):
     """Dataset Title Resource"""
 
     @api.doc("title")

@@ -23,7 +23,7 @@ from .dataset_metadata.dataset_other import api as dataset_other
 from .dataset_metadata.dataset_related_identifier import api as related_identifier
 from .dataset_metadata.dataset_rights import api as rights
 from .dataset_metadata.dataset_subject import api as subject
-from .dataset_metadata.dataset_title import api as title
+from .dataset_metadata.dataset_general_information import api as general_information
 from .file import api as file_api
 from .participant import api as participants_api
 from .redcap import api as redcap
@@ -74,7 +74,7 @@ __all__ = [
     "api",
     "rights",
     "subject",
-    "title",
+    "general_information",
     "participants_api",
     "study_api",
     "arm",
