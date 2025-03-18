@@ -51,36 +51,87 @@ class DatasetConsentResource(Resource):
 
         if not is_granted("dataset_metadata", study_obj):
             return "Access denied, you can not make any change in dataset metadata", 403
-        #
-        # schema = {
-        #     "type": "object",
-        #     "additionalProperties": False,
-        #     "properties": {
-        #         "type": {"type": "string", "minLength": 1},
-        #         "details": {
-        #             "type": "string",
-        #         },
-        #         "genetic_only": {"type": "boolean"},
-        #         "geog_restrict": {"type": "boolean"},
-        #         "no_methods": {"type": "boolean"},
-        #         "noncommercial": {"type": "boolean"},
-        #         "research_type": {"type": "boolean"},
-        #     },
-        #     "required": [
-        #         "type",
-        #         "details",
-        #         "genetic_only",
-        #         "geog_restrict",
-        #         "no_methods",
-        #         "noncommercial",
-        #         "research_type",
-        #     ],
-        # }
-        #
-        # try:
-        #     validate(instance=request.json, schema=schema)
-        # except ValidationError as err:
-        #     return err.message, 400
+
+        schema = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "consent": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "type": {"type": "string", "minLength": 1},
+                "details": {"type": "string"},
+                "genetic_only": {"type": "boolean"},
+                "geog_restrict": {"type": "boolean"},
+                "no_methods": {"type": "boolean"},
+                "noncommercial": {"type": "boolean"},
+                "research_type": {"type": "boolean"}
+            },
+            "required": [
+                "type",
+                "details",
+                "genetic_only",
+                "geog_restrict",
+                "no_methods",
+                "noncommercial",
+                "research_type"
+            ]
+        },
+        "subjects": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": {
+                    "id": {"type": "string"},
+                    "classification_code": {"type": "string"},
+                    "scheme": {"type": "string"},
+                    "scheme_uri": {"type": "string"},
+                    "subject": {"type": "string", "minLength": 1},
+                    "value_uri": {"type": "string"}
+                },
+                "required": [
+                    "subject",
+                    "scheme",
+                    "scheme_uri",
+                    "value_uri",
+                    "classification_code"
+                ]
+            },
+            "uniqueItems": True
+        },
+        "deident": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "type": {"type": "string", "minLength": 1},
+                "details": {"type": "string"},
+                "direct": {"type": "boolean"},
+                "hipaa": {"type": "boolean"},
+                "dates": {"type": "boolean"},
+                "k_anon": {"type": "boolean"},
+                "nonarr": {"type": "boolean"}
+            },
+            "required": [
+                "type",
+                "details",
+                "direct",
+                "hipaa",
+                "dates",
+                "k_anon",
+                "nonarr"
+            ]
+        }
+    },
+    "required": []
+}
+
+
+        try:
+            validate(instance=request.json, schema=schema)
+        except ValidationError as err:
+            return err.message, 400
 
         data = request.json
         dataset_ = model.Dataset.query.get(dataset_id)
