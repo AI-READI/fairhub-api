@@ -15,141 +15,6 @@ dataset_contributor = api.model(
     {},
 )
 
-
-@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/contributor")
-class DatasetContributorResource(Resource):
-    """Dataset Contributor Resource"""
-
-    @api.doc("update contributor")
-    @api.response(201, "Success")
-    @api.response(400, "Validation Error")
-    def post(self, study_id: int, dataset_id: int):
-        """Update dataset contributor"""
-        study_obj = model.Study.query.get(study_id)
-
-        if not is_granted("dataset_metadata", study_obj):
-            return "Access denied, can't modify dataset metadata", 403
-
-        schema = {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "additionalProperties": False,
-                "properties": {
-                    "id": {"type": "string"},
-                    "contributor_type": {
-                        "type": "string",
-                        "minLength": 1,
-                    },
-                    "given_name": {
-                        "type": "string",
-                        "minLength": 1,
-                    },
-                    "family_name": {"type": ["string", "null"]},
-                    "name_identifier": {
-                        "type": "string",
-                        "minLength": 1,
-                    },
-                    "name_identifier_scheme": {
-                        "type": "string",
-                        "minLength": 1,
-                    },
-                    "name_identifier_scheme_uri": {
-                        "type": "string",
-                    },
-                    "name_type": {
-                        "type": "string",
-                        "enum": [
-                            "Personal",
-                            "Organizational",
-                        ],
-                        "minLength": 1,
-                    },
-                    "affiliations": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "additionalProperties": False,
-                            "properties": {
-                                "name": {
-                                    "type": "string",
-                                },
-                                "identifier": {
-                                    "type": "string",
-                                },
-                                "scheme": {
-                                    "type": "string",
-                                },
-                                "scheme_uri": {
-                                    "type": "string",
-                                },
-                            },
-                        },
-                        "uniqueItems": True,
-                    },
-                },
-                "required": [
-                    "contributor_type",
-                    "name_type",
-                    "given_name",
-                    "affiliations",
-                    "name_identifier",
-                    "name_identifier_scheme",
-                ],
-            },
-        }
-
-        try:
-            validate(request.json, schema)
-        except ValidationError as e:
-            return e.message, 400
-
-        data: Union[Any, dict] = request.json
-        data_obj = model.Dataset.query.get(dataset_id)
-        list_of_elements = []
-        for i in data:
-            i["creator"] = False
-            if "id" in i and i["id"]:
-                dataset_contributor_ = model.DatasetContributor.query.get(i["id"])
-                if not dataset_contributor_:
-                    return f"Study link {i['id']} Id is not found", 404
-                dataset_contributor_.update(i)
-                list_of_elements.append(dataset_contributor_.to_dict())
-            elif "id" not in i or not i["id"]:
-                dataset_contributor_ = model.DatasetContributor.from_data(data_obj, i)
-                model.db.session.add(dataset_contributor_)
-                list_of_elements.append(dataset_contributor_.to_dict())
-        model.db.session.commit()
-        return list_of_elements, 201
-
-
-@api.route(
-    "/study/<study_id>/dataset/<dataset_id>/metadata/contributor/<contributor_id>"
-)
-class DatasetContributorDelete(Resource):
-    """Dataset Contributor Delete Resource"""
-
-    @api.doc("delete contributor")
-    @api.response(204, "Success")
-    @api.response(400, "Validation Error")
-    def delete(
-        self,
-        study_id: int,
-        dataset_id: int,  # pylint: disable= unused-argument
-        contributor_id: int,
-    ):
-        """Delete dataset contributor"""
-        study_obj = model.Study.query.get(study_id)
-        if not is_granted("dataset_metadata", study_obj):
-            return "Access denied, you can not make any change in dataset metadata", 403
-        contributor_ = model.DatasetContributor.query.get(contributor_id)
-
-        model.db.session.delete(contributor_)
-        model.db.session.commit()
-
-        return Response(status=204)
-
-
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/team")
 class DatasetTeamResource(Resource):
     """Dataset Team Resource"""
@@ -181,80 +46,150 @@ class DatasetTeamResource(Resource):
         if not is_granted("dataset_metadata", study_obj):
             return "Access denied, you can not make any change in dataset metadata", 403
 
-        # schema = {
-        #     "type": "array",
-        #     "items": {
-        #         "type": "object",
-        #         "additionalProperties": False,
-        #         "properties": {
-        #             "id": {"type": "string"},
-        #             "given_name": {
-        #                 "type": "string",
-        #                 "minLength": 1,
-        #             },
-        #             "family_name": {"type": ["string", "null"]},
-        #             "name_identifier": {
-        #                 "type": "string",
-        #                 "minLength": 1,
-        #             },
-        #             "name_identifier_scheme": {
-        #                 "type": "string",
-        #                 "minLength": 1,
-        #             },
-        #             "name_identifier_scheme_uri": {
-        #                 "type": "string",
-        #             },
-        #             "name_type": {
-        #                 "type": "string",
-        #                 "enum": [
-        #                     "Personal",
-        #                     "Organizational",
-        #                 ],
-        #                 "minLength": 1,
-        #             },
-        #             "affiliations": {
-        #                 "type": "array",
-        #                 "items": {
-        #                     "type": "object",
-        #                     "additionalProperties": False,
-        #                     "properties": {
-        #                         "name": {
-        #                             "type": "string",
-        #                         },
-        #                         "identifier": {
-        #                             "type": "string",
-        #                         },
-        #                         "scheme": {
-        #                             "type": "string",
-        #                         },
-        #                         "scheme_uri": {
-        #                             "type": "string",
-        #                         },
-        #                     },
-        #                 },
-        #                 "uniqueItems": True,
-        #             },
-        #         },
-        #         "required": [
-        #             "name_type",
-        #             "given_name",
-        #             "affiliations",
-        #             "name_identifier",
-        #             "name_identifier_scheme",
-        #         ],
-        #     },
-        # }
-        #
-        # try:
-        #     validate(request.json, schema)
-        # except ValidationError as e:
-        #     return e.message, 400
+        schema  = {
+    "type": "object",
+    "additionalProperties": False,
+    "properties": {
+        "creators": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": {
+                    "id": {"type": "string"},
+                    "given_name": {"type": "string", "minLength": 1},
+                    "family_name": {"type": ["string", "null"]},
+                    "name_identifier": {"type": "string", "minLength": 1},
+                    "name_identifier_scheme": {"type": "string", "minLength": 1},
+                    "name_identifier_scheme_uri": {"type": "string"},
+                    "name_type": {
+                        "type": "string",
+                        "enum": ["Personal", "Organizational"],
+                        "minLength": 1,
+                    },
+                    "affiliations": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": False,
+                            "properties": {
+                                "name": {"type": "string"},
+                                "identifier": {"type": "string"},
+                                "scheme": {"type": "string"},
+                                "scheme_uri": {"type": "string"},
+                            },
+                        },
+                        "uniqueItems": True,
+                    },
+                },
+                "required": [
+                    "name_type",
+                    "given_name",
+                    "affiliations",
+                    "name_identifier",
+                    "name_identifier_scheme",
+                ],
+            },
+        },
+        "contributors": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": {
+                    "id": {"type": "string"},
+                    "contributor_type": {"type": "string", "minLength": 1},
+                    "given_name": {"type": "string", "minLength": 1},
+                    "family_name": {"type": ["string", "null"]},
+                    "name_identifier": {"type": "string", "minLength": 1},
+                    "name_identifier_scheme": {"type": "string", "minLength": 1},
+                    "name_identifier_scheme_uri": {"type": "string"},
+                    "name_type": {
+                        "type": "string",
+                        "enum": ["Personal", "Organizational"],
+                        "minLength": 1,
+                    },
+                    "affiliations": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": False,
+                            "properties": {
+                                "name": {"type": "string"},
+                                "identifier": {"type": "string"},
+                                "scheme": {"type": "string"},
+                                "scheme_uri": {"type": "string"},
+                            },
+                        },
+                        "uniqueItems": True,
+                    },
+                },
+                "required": [
+                    "contributor_type",
+                    "name_type",
+                    "given_name",
+                    "affiliations",
+                    "name_identifier",
+                    "name_identifier_scheme",
+                ],
+            },
+        },
+        "funders": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "properties": {
+                    "id": {"type": "string"},
+                    "name": {"type": "string", "minLength": 1},
+                    "award_number": {"type": "string", "minLength": 1},
+                    "award_title": {"type": "string"},
+                    "award_uri": {"type": "string"},
+                    "identifier": {"type": "string", "minLength": 1},
+                    "identifier_scheme_uri": {"type": "string"},
+                    "identifier_type": {"type": ["string", "null"]},
+                },
+                "required": [
+                    "name",
+                    "award_number",
+                    "award_title",
+                    "award_uri",
+                    "identifier",
+                    "identifier_scheme_uri",
+                    "identifier_type",
+                ],
+            },
+            "uniqueItems": True,
+        },
+        "managing_organization": {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "name": {"type": "string", "minLength": 1},
+                "identifier": {"type": "string"},
+                "identifier_scheme": {"type": "string"},
+                "identifier_scheme_uri": {"type": "string"},
+            },
+            "required": [
+                "name",
+                "identifier",
+                "identifier_scheme",
+                "identifier_scheme_uri",
+            ],
+        },
+    },
+    "required": ["creators", "contributors", "funders", "managing_organization"],
+}
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
 
         data: Union[Any, dict] = request.json
         data_obj = model.Dataset.query.get(dataset_id)
-        list_of_creator = []
-        print(data, "hhhhhhhhhhhhhhhhhhhhhhhhhhh")
 
+        list_of_creator = []
         for i in data["creators"]:
             i["creator"] = True
             if "id" in i and i["id"]:
@@ -298,13 +233,40 @@ class DatasetTeamResource(Resource):
                 model.db.session.add(dataset_funder_)
                 list_of_funders.append(dataset_funder_.to_dict())
 
-        data_obj.dataset_managing_organization.update(data)
+        data_obj.dataset_managing_organization.update(data["managing_organization"])
         model.db.session.commit()
         return {"creators": list_of_creator,
                 "contributors":list_of_contributors,
                 "managing_organization":data_obj.dataset_managing_organization.to_dict(),
                 "funders": list_of_funders,
                 },201
+
+
+@api.route(
+    "/study/<study_id>/dataset/<dataset_id>/metadata/contributor/<contributor_id>"
+)
+class DatasetContributorDelete(Resource):
+    """Dataset Contributor Delete Resource"""
+
+    @api.doc("delete contributor")
+    @api.response(204, "Success")
+    @api.response(400, "Validation Error")
+    def delete(
+        self,
+        study_id: int,
+        dataset_id: int,  # pylint: disable= unused-argument
+        contributor_id: int,
+    ):
+        """Delete dataset contributor"""
+        study_obj = model.Study.query.get(study_id)
+        if not is_granted("dataset_metadata", study_obj):
+            return "Access denied, you can not make any change in dataset metadata", 403
+        contributor_ = model.DatasetContributor.query.get(contributor_id)
+
+        model.db.session.delete(contributor_)
+        model.db.session.commit()
+
+        return Response(status=204)
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/creator/<creator_id>")
