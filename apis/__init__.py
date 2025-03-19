@@ -9,7 +9,7 @@ from .authentication import api as authentication
 from .contributor import api as contributors_api
 from .dashboard import api as dashboard
 from .dataset import api as dataset_api
-from .dataset_metadata.dataset_access import api as access
+from .dataset_metadata.dataset_access_rights import api as access_rights
 from .dataset_metadata.dataset_alternate_identifier import api as alternate_identifier
 from .dataset_metadata.dataset_data_management import api as consent
 from .dataset_metadata.dataset_team import api as dataset_team
@@ -21,7 +21,6 @@ from .dataset_metadata.dataset_healthsheet import api as healthsheet
 from .dataset_metadata.dataset_managing_organization import api as managing_organization
 from .dataset_metadata.dataset_other import api as dataset_other
 from .dataset_metadata.dataset_related_identifier import api as related_identifier
-from .dataset_metadata.dataset_rights import api as rights
 from .dataset_metadata.dataset_subject import api as subject
 from .dataset_metadata.dataset_general_information import api as general_information
 from .file import api as file_api
@@ -61,7 +60,7 @@ __all__ = [
     "authentication",
     "contributors_api",
     "dataset_api",
-    "access",
+    "access_rights",
     "alternate_identifier",
     "consent",
     "healthsheet",
@@ -72,7 +71,6 @@ __all__ = [
     "dataset_other",
     "related_identifier",
     "api",
-    "rights",
     "subject",
     "general_information",
     "participants_api",
