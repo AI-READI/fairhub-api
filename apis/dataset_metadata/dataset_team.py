@@ -3,7 +3,7 @@
 from typing import Any, Union
 
 from flask import Response, request
-from flask_restx import Resource
+from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
 import model
@@ -13,6 +13,31 @@ from apis.dataset_metadata_namespace import api
 dataset_contributor = api.model(
     "DatasetContributor",
     {},
+)
+
+dataset_managing_organization = api.model(
+    "DatasetManagingOrganization",
+    {
+        "name": fields.String(required=True),
+        "identifier": fields.String(required=True),
+        "identifier_scheme": fields.String(required=True),
+        "identifier_scheme_uri": fields.String(required=True),
+    },
+)
+
+
+dataset_funder = api.model(
+    "DatasetFunder",
+    {
+        "id": fields.String(required=True),
+        "name": fields.String(required=True),
+        "identifier": fields.String(required=True),
+        "identifier_type": fields.String(required=True),
+        "identifier_scheme_uri": fields.String(required=True),
+        "award_number": fields.String(required=True),
+        "award_uri": fields.String(required=True),
+        "award_title": fields.String(required=True),
+    },
 )
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/team")
@@ -286,6 +311,31 @@ class DatasetCreatorDelete(Resource):
             return "Access denied, you can not make any change in dataset metadata", 403
         dataset_creator_ = model.DatasetContributor.query.get(creator_id)
         model.db.session.delete(dataset_creator_)
+        model.db.session.commit()
+
+        return Response(status=204)
+
+
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/funder/<funder_id>")
+class DatasetFunderUpdate(Resource):
+    """Dataset Funder Update Resource"""
+
+    @api.doc("delete funder")
+    @api.response(204, "Success")
+    @api.response(400, "Validation Error")
+    def delete(
+        self,
+        study_id: int,
+        dataset_id: int,  # pylint: disable= unused-argument
+        funder_id: int,
+    ):
+        """Delete dataset funder"""
+        study_obj = model.Study.query.get(study_id)
+        if not is_granted("dataset_metadata", study_obj):
+            return "Access denied, you can not make any change in dataset metadata", 403
+        dataset_funder_ = model.DatasetFunder.query.get(funder_id)
+
+        model.db.session.delete(dataset_funder_)
         model.db.session.commit()
 
         return Response(status=204)

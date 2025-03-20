@@ -19,6 +19,24 @@ dataset_title = api.model(
     },
 )
 
+dataset_description = api.model(
+    "DatasetDescription",
+    {
+        "id": fields.String(required=True),
+        "description": fields.String(required=True),
+        "description_type": fields.String(required=True),
+    },
+)
+
+dataset_date = api.model(
+    "DatasetDate",
+    {
+        "id": fields.String(required=True),
+        "date": fields.String(required=True),
+        "type": fields.String(required=True),
+        "information": fields.String(required=True),
+    },
+)
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/general-information")
 class DatasetGeneralInformation(Resource):
@@ -41,7 +59,7 @@ class DatasetGeneralInformation(Resource):
             "dates": [d.to_dict() for d in dataset_date_],
         }, 200
 
-    @api.doc("update title")
+    @api.doc("update general information")
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
     def post(self, study_id: int, dataset_id: int):
@@ -72,7 +90,7 @@ class DatasetGeneralInformation(Resource):
                                 ],
                             },
                         },
-                        "required": ["id", "title", "type"],
+                        "required": ["title", "type"],
                     },
                 },
                 "descriptions": {
@@ -94,7 +112,7 @@ class DatasetGeneralInformation(Resource):
                                 ],
                             },
                         },
-                        "required": ["id", "description", "type"],
+                        "required": ["description", "type"],
                     },
                 },
                 "dates": {
@@ -107,7 +125,7 @@ class DatasetGeneralInformation(Resource):
                             "type": {"type": "string", "minLength": 1},
                             "information": {"type": "string"},
                         },
-                        "required": ["id", "date", "type", "information"],
+                        "required": ["date", "type", "information"],
                     },
                 },
             },
@@ -204,4 +222,60 @@ class DatasetGeneralInformation(Resource):
                 )
             model.db.session.delete(dataset_title_)
             model.db.session.commit()
+            return Response(status=204)
+
+
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/date/<date_id>")
+class DatasetDateDeleteResource(Resource):
+    """Dataset Date Delete Resource"""
+
+    @api.doc("delete date")
+    @api.response(204, "Success")
+    @api.response(400, "Validation Error")
+    def delete(
+        self, study_id: int, dataset_id: int, date_id: int
+    ):  # pylint: disable= unused-argument
+        """Delete dataset date"""
+        study_obj = model.Study.query.get(study_id)
+        if not is_granted("dataset_metadata", study_obj):
+            return "Access denied, you can not make any change in dataset metadata", 403
+        date_ = model.DatasetDate.query.get(date_id)
+
+        model.db.session.delete(date_)
+        model.db.session.commit()
+        return Response(status=204)
+
+
+    @api.route(
+        "/study/<study_id>/dataset/<dataset_id>/"
+        "metadata/description/<description_id>"
+    )
+    class DatasetDescriptionUpdate(Resource):
+        """Dataset Description Update Resource"""
+
+        @api.doc("delete description")
+        @api.response(204, "Success")
+        @api.response(400, "Validation Error")
+        def delete(
+            self,
+            study_id: int,
+            dataset_id: int,  # pylint: disable= unused-argument
+            description_id: int,
+        ):
+            """Delete dataset description"""
+            study_obj = model.Study.query.get(study_id)
+            if not is_granted("dataset_metadata", study_obj):
+                return (
+                    "Access denied, you can not make any change in dataset metadata",
+                    403,
+                )
+            dataset_description_ = model.DatasetDescription.query.get(description_id)
+            if dataset_description_.type == "Abstract":
+                return (
+                    "Abstract description can not be deleted",
+                    403,
+                )
+            model.db.session.delete(dataset_description_)
+            model.db.session.commit()
+
             return Response(status=204)

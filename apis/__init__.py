@@ -11,17 +11,11 @@ from .dashboard import api as dashboard
 from .dataset import api as dataset_api
 from .dataset_metadata.dataset_access_rights import api as access_rights
 from .dataset_metadata.dataset_alternate_identifier import api as alternate_identifier
-from .dataset_metadata.dataset_data_management import api as consent
+from .dataset_metadata.dataset_data_management import api as dataset_data_management
 from .dataset_metadata.dataset_team import api as dataset_team
-from .dataset_metadata.dataset_date import api as date
-from .dataset_metadata.dataset_de_ident_level import api as de_ident_level
-from .dataset_metadata.dataset_description import api as description
-from .dataset_metadata.dataset_funder import api as funder
 from .dataset_metadata.dataset_healthsheet import api as healthsheet
-from .dataset_metadata.dataset_managing_organization import api as managing_organization
 from .dataset_metadata.dataset_other import api as dataset_other
 from .dataset_metadata.dataset_related_identifier import api as related_identifier
-from .dataset_metadata.dataset_subject import api as subject
 from .dataset_metadata.dataset_general_information import api as general_information
 from .file import api as file_api
 from .participant import api as participants_api
@@ -54,7 +48,6 @@ api = Api(
 )
 
 __all__ = [
-    "managing_organization",
     "dataset_metadata_namespace",
     "study_metadata_namespace",
     "authentication",
@@ -62,16 +55,11 @@ __all__ = [
     "dataset_api",
     "access_rights",
     "alternate_identifier",
-    "consent",
+    "dataset_data_management",
     "healthsheet",
-    "date",
-    "de_ident_level",
-    "description",
-    "funder",
     "dataset_other",
     "related_identifier",
     "api",
-    "subject",
     "general_information",
     "participants_api",
     "study_api",

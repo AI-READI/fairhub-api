@@ -7,6 +7,7 @@ from flask_restx import Resource, fields
 
 import model
 from apis.study_metadata_namespace import api
+from jsonschema import ValidationError, validate
 
 from ..authentication import is_granted
 
@@ -86,94 +87,70 @@ class StudySponsorsResource(Resource):
     def post(self, study_id: int):
         """Update study team metadata"""
         # Schema validation
-        # schema = {
-        #     "type": "object",
-        #     "additionalProperties": False,
-        #     "properties": {
-        #         "collaborators": {
-        #             "type": "array",
-        #             "additionalProperties": False,
-        #             "items": {
-        #                 "type": "object",
-        #                 "properties": {
-        #                     "id": {"type": "string"},
-        #                     "name": {"type": "string"},
-        #                     "identifier": {"type": "string"},
-        #                     "identifier_scheme": {"type": "string"},
-        #                     "identifier_scheme_uri": {"type": "string"},
-        #                 },
-        #                 "required": [
-        #                     "name",
-        #                     "identifier",
-        #                     "identifier_scheme",
-        #                 ],
-        #             },
-        #         },
-        #         "sponsors":
-        #             {
-        #             "type": "object",
-        #             "additionalProperties": False,
-        #              "properties": {
-        #                 "responsible_party_type": {
-        #                 "type": ["string", "null"],
-        #                 "enum": [
-        #                     "Sponsor",
-        #                     "Principal Investigator",
-        #                     "Sponsor-Investigator",
-        #                 ],
-        #             },
-        #                 "responsible_party_investigator_first_name": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_last_name": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_title": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_identifier_value": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_identifier_scheme": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_identifier_scheme_uri": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_affiliation_name": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_affiliation_identifier_scheme": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_affiliation_identifier_value": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_affiliation_identifier_scheme_uri": {
-        #                     "type": "string",
-        #                 },
-        #                 "lead_sponsor_name": {"type": "string"},
-        #                 "lead_sponsor_identifier": {"type": "string"},
-        #                 "lead_sponsor_identifier_scheme": {"type": "string"},
-        #                 "lead_sponsor_identifier_scheme_uri": {
-        #                 "type": "string",
-        #             },
-        #         },
-        #              "required": [
-        #                 "responsible_party_type",
-        #                 "lead_sponsor_name",
-        #                 "responsible_party_investigator_last_name",
-        #                 "responsible_party_investigator_first_name",
-        #                 "responsible_party_investigator_title",
-        #             ],
-        #             }
-        #     }
-        # }
-        #
-        # try:
-        #     validate(request.json, schema)
-        # except ValidationError as e:
-        #     return e.message, 400
+        schema = {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "collaborators": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": False,
+                        "properties": {
+                            "id": {"type": "string"},
+                            "name": {"type": "string"},
+                            "identifier": {"type": "string"},
+                            "identifier_scheme": {"type": "string"},
+                            "identifier_scheme_uri": {"type": "string"},
+                        },
+                        "required": [
+                            "name",
+                            "identifier",
+                            "identifier_scheme",
+                        ],
+                    },
+                },
+                "sponsors": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "responsible_party_type": {
+                            "type": ["string", "null"],
+                            "enum": [
+                                "Sponsor",
+                                "Principal Investigator",
+                                "Sponsor-Investigator",
+                            ],
+                        },
+                        "responsible_party_investigator_first_name": {"type": "string"},
+                        "responsible_party_investigator_last_name": {"type": "string"},
+                        "responsible_party_investigator_title": {"type": "string"},
+                        "responsible_party_investigator_identifier_value": {"type": "string"},
+                        "responsible_party_investigator_identifier_scheme": {"type": "string"},
+                        "responsible_party_investigator_identifier_scheme_uri": {"type": "string"},
+                        "responsible_party_investigator_affiliation_name": {"type": "string"},
+                        "responsible_party_investigator_affiliation_identifier_scheme": {"type": "string"},
+                        "responsible_party_investigator_affiliation_identifier_value": {"type": "string"},
+                        "responsible_party_investigator_affiliation_identifier_scheme_uri": {"type": "string"},
+                        "lead_sponsor_name": {"type": "string"},
+                        "lead_sponsor_identifier": {"type": "string"},
+                        "lead_sponsor_identifier_scheme": {"type": "string"},
+                        "lead_sponsor_identifier_scheme_uri": {"type": "string"},
+                    },
+                    "required": [
+                        "responsible_party_type",
+                        "lead_sponsor_name",
+                        "responsible_party_investigator_last_name",
+                        "responsible_party_investigator_first_name",
+                        "responsible_party_investigator_title",
+                    ],
+                },
+            },
+        }
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
         data: typing.Union[dict, typing.Any] = request.json
 
         if data["sponsors"]["responsible_party_type"] in [

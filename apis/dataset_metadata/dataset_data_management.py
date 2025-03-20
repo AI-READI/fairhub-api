@@ -1,6 +1,6 @@
 """API for dataset consent metadata"""
 
-from flask import request
+from flask import request, Response
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -22,10 +22,35 @@ dataset_consent = api.model(
     },
 )
 
+dataset_subject = api.model(
+    "DatasetSubject",
+    {
+        "id": fields.String(required=True),
+        "subject": fields.String(required=True),
+        "scheme": fields.String(required=True),
+        "scheme_uri": fields.String(required=True),
+        "value_uri": fields.String(required=True),
+        "classification_code": fields.String(required=True),
+    },
+)
+
+de_ident_level = api.model(
+    "DatasetDeIdentLevel",
+    {
+        "id": fields.String(required=True),
+        "type": fields.String(required=True),
+        "direct": fields.Boolean(required=True),
+        "hipaa": fields.Boolean(required=True),
+        "dates": fields.Boolean(required=True),
+        "nonarr": fields.Boolean(required=True),
+        "k_anon": fields.Boolean(required=True),
+        "details": fields.String(required=True),
+    },
+)
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/data-management")
-class DatasetConsentResource(Resource):
-    """Dataset Consent Resource"""
+class DatasetDataManagement(Resource):
+    """Dataset Data management Resource"""
 
     @api.doc("consent")
     @api.response(200, "Success")
@@ -126,8 +151,6 @@ class DatasetConsentResource(Resource):
     },
     "required": []
 }
-
-
         try:
             validate(instance=request.json, schema=schema)
         except ValidationError as err:
@@ -154,3 +177,28 @@ class DatasetConsentResource(Resource):
                 "deident": dataset_.dataset_de_ident_level.to_dict(),
                 "subjects": list_of_subjects
                 }, 200
+
+
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/subject/<subject_id>")
+class DatasetSubjectUpdate(Resource):
+    """Dataset Subject Update Resource"""
+
+    @api.doc("delete subject")
+    @api.response(204, "Success")
+    @api.response(400, "Validation Error")
+    def delete(
+        self,
+        study_id: int,  # pylint: disable= unused-argument
+        dataset_id: int,  # pylint: disable= unused-argument
+        subject_id: int,
+    ):
+        """Delete dataset subject"""
+        study_obj = model.Study.query.get(study_id)
+        if not is_granted("dataset_metadata", study_obj):
+            return "Access denied, you can't make change in dataset metadata", 403
+        dataset_subject_ = model.DatasetSubject.query.get(subject_id)
+
+        model.db.session.delete(dataset_subject_)
+        model.db.session.commit()
+
+        return Response(status=204)
