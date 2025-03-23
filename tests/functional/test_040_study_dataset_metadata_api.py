@@ -20,13 +20,12 @@ def test_post_dataset_access_rights_metadata(clients):
     response = _logged_in_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/access-rights",
         json={
-            "access":
-                {
-                    "type": "type",
-                    "description": "description",
-                    "url": "google.com",
-                    "url_last_checked": 123,
-                },
+            "access": {
+                "type": "type",
+                "description": "description",
+                "url": "google.com",
+                "url_last_checked": 123,
+            },
             "rights": [
                 {
                     "identifier": "Identifier",
@@ -36,7 +35,7 @@ def test_post_dataset_access_rights_metadata(clients):
                     "uri": "URI",
                     "license_text": "license text",
                 }
-            ]
+            ],
         },
     )
 
@@ -56,16 +55,15 @@ def test_post_dataset_access_rights_metadata(clients):
     assert response_data["rights"][0]["uri"] == "URI"
     assert response_data["rights"][0]["license_text"] == "license text"
 
-
     admin_response = _admin_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/access-rights",
         json={
             "access": {
                 "type": "admin type",
-                 "description": "admin description",
-                 "url": "google.com",
-                 "url_last_checked": 123,
-                },
+                "description": "admin description",
+                "url": "google.com",
+                "url_last_checked": 123,
+            },
             "rights": [
                 {
                     "identifier": "Admin Identifier",
@@ -75,7 +73,7 @@ def test_post_dataset_access_rights_metadata(clients):
                     "uri": "URI",
                     "license_text": "license text",
                 }
-            ]
+            ],
         },
     )
 
@@ -90,7 +88,9 @@ def test_post_dataset_access_rights_metadata(clients):
 
     assert admin_response_data["rights"][0]["identifier"] == "Admin Identifier"
     assert admin_response_data["rights"][0]["identifier_scheme"] == "Identifier Scheme"
-    assert admin_response_data["rights"][0]["identifier_scheme_uri"] == "Identifier Scheme"
+    assert (
+        admin_response_data["rights"][0]["identifier_scheme_uri"] == "Identifier Scheme"
+    )
     assert admin_response_data["rights"][0]["rights"] == "Rights"
     assert admin_response_data["rights"][0]["uri"] == "URI"
     assert admin_response_data["rights"][0]["license_text"] == "license text"
@@ -98,13 +98,12 @@ def test_post_dataset_access_rights_metadata(clients):
     editor_response = _editor_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/access-rights",
         json={
-            "access":
-                {
-                    "type": "editor type",
-                    "description": "editor description",
-                    "url": "google.com",
-                    "url_last_checked": 123,
-                },
+            "access": {
+                "type": "editor type",
+                "description": "editor description",
+                "url": "google.com",
+                "url_last_checked": 123,
+            },
             "rights": [
                 {
                     "identifier": "Editor Identifier",
@@ -114,7 +113,7 @@ def test_post_dataset_access_rights_metadata(clients):
                     "uri": "URI",
                     "license_text": "license text",
                 }
-            ]
+            ],
         },
     )
 
@@ -129,7 +128,10 @@ def test_post_dataset_access_rights_metadata(clients):
 
     assert editor_response_data["rights"][0]["identifier"] == "Editor Identifier"
     assert editor_response_data["rights"][0]["identifier_scheme"] == "Identifier Scheme"
-    assert editor_response_data["rights"][0]["identifier_scheme_uri"] == "Identifier Scheme"
+    assert (
+        editor_response_data["rights"][0]["identifier_scheme_uri"]
+        == "Identifier Scheme"
+    )
     assert editor_response_data["rights"][0]["rights"] == "Rights"
     assert editor_response_data["rights"][0]["uri"] == "URI"
     assert editor_response_data["rights"][0]["license_text"] == "license text"
@@ -137,13 +139,12 @@ def test_post_dataset_access_rights_metadata(clients):
     viewer_response = _viewer_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/access-rights",
         json={
-            "access":
-                {
-                    "type": "viewer type",
-                    "description": "viewer description",
-                    "url": "google.com",
-                    "url_last_checked": 123,
-                },
+            "access": {
+                "type": "viewer type",
+                "description": "viewer description",
+                "url": "google.com",
+                "url_last_checked": 123,
+            },
             "rights": [
                 {
                     "identifier": "Viewer Identifier",
@@ -153,7 +154,7 @@ def test_post_dataset_access_rights_metadata(clients):
                     "uri": "URI",
                     "license_text": "license text",
                 }
-            ]
+            ],
         },
     )
 
@@ -198,7 +199,7 @@ def test_get_dataset_access_rights_metadata(clients):
     assert response_data["access"]["description"] == "editor description"
     assert response_data["access"]["url"] == "google.com"
     assert response_data["access"]["url_last_checked"] == 123
-###
+    ###
     assert response_data["rights"][0]["identifier"] == "Identifier"
     assert response_data["rights"][0]["identifier_scheme"] == "Identifier Scheme"
     assert response_data["rights"][0]["identifier_scheme_uri"] == "Identifier Scheme"
@@ -208,14 +209,19 @@ def test_get_dataset_access_rights_metadata(clients):
 
     assert admin_response_data["rights"][0]["identifier"] == "Identifier"
     assert admin_response_data["rights"][0]["identifier_scheme"] == "Identifier Scheme"
-    assert admin_response_data["rights"][0]["identifier_scheme_uri"] == "Identifier Scheme"
+    assert (
+        admin_response_data["rights"][0]["identifier_scheme_uri"] == "Identifier Scheme"
+    )
     assert admin_response_data["rights"][0]["rights"] == "Rights"
     assert admin_response_data["rights"][0]["uri"] == "URI"
     assert admin_response_data["rights"][0]["license_text"] == "license text"
 
     assert editor_response_data["rights"][0]["identifier"] == "Identifier"
     assert editor_response_data["rights"][0]["identifier_scheme"] == "Identifier Scheme"
-    assert editor_response_data["rights"][0]["identifier_scheme_uri"] == "Identifier Scheme"
+    assert (
+        editor_response_data["rights"][0]["identifier_scheme_uri"]
+        == "Identifier Scheme"
+    )
     assert editor_response_data["rights"][0]["rights"] == "Rights"
     assert editor_response_data["rights"][0]["uri"] == "URI"
     assert editor_response_data["rights"][0]["license_text"] == "license text"
@@ -229,14 +235,19 @@ def test_get_dataset_access_rights_metadata(clients):
 
     assert admin_response_data["rights"][1]["identifier"] == "Admin Identifier"
     assert admin_response_data["rights"][1]["identifier_scheme"] == "Identifier Scheme"
-    assert admin_response_data["rights"][1]["identifier_scheme_uri"] == "Identifier Scheme"
+    assert (
+        admin_response_data["rights"][1]["identifier_scheme_uri"] == "Identifier Scheme"
+    )
     assert admin_response_data["rights"][1]["rights"] == "Rights"
     assert admin_response_data["rights"][1]["uri"] == "URI"
     assert admin_response_data["rights"][1]["license_text"] == "license text"
 
     assert editor_response_data["rights"][1]["identifier"] == "Admin Identifier"
     assert editor_response_data["rights"][1]["identifier_scheme"] == "Identifier Scheme"
-    assert editor_response_data["rights"][1]["identifier_scheme_uri"] == "Identifier Scheme"
+    assert (
+        editor_response_data["rights"][1]["identifier_scheme_uri"]
+        == "Identifier Scheme"
+    )
     assert editor_response_data["rights"][1]["rights"] == "Rights"
     assert editor_response_data["rights"][1]["uri"] == "URI"
     assert editor_response_data["rights"][1]["license_text"] == "license text"
@@ -250,39 +261,53 @@ def test_get_dataset_access_rights_metadata(clients):
 
     assert admin_response_data["rights"][2]["identifier"] == "Editor Identifier"
     assert admin_response_data["rights"][2]["identifier_scheme"] == "Identifier Scheme"
-    assert admin_response_data["rights"][2]["identifier_scheme_uri"] == "Identifier Scheme"
+    assert (
+        admin_response_data["rights"][2]["identifier_scheme_uri"] == "Identifier Scheme"
+    )
     assert admin_response_data["rights"][2]["rights"] == "Rights"
     assert admin_response_data["rights"][2]["uri"] == "URI"
     assert admin_response_data["rights"][2]["license_text"] == "license text"
 
     assert editor_response_data["rights"][2]["identifier"] == "Editor Identifier"
     assert editor_response_data["rights"][2]["identifier_scheme"] == "Identifier Scheme"
-    assert editor_response_data["rights"][2]["identifier_scheme_uri"] == "Identifier Scheme"
+    assert (
+        editor_response_data["rights"][2]["identifier_scheme_uri"]
+        == "Identifier Scheme"
+    )
     assert editor_response_data["rights"][2]["rights"] == "Rights"
     assert editor_response_data["rights"][2]["uri"] == "URI"
     assert editor_response_data["rights"][2]["license_text"] == "license text"
 
     assert viewer_response_data["rights"][0]["identifier"] == "Identifier"
     assert viewer_response_data["rights"][0]["identifier_scheme"] == "Identifier Scheme"
-    assert viewer_response_data["rights"][0]["identifier_scheme_uri"] == "Identifier Scheme"
+    assert (
+        viewer_response_data["rights"][0]["identifier_scheme_uri"]
+        == "Identifier Scheme"
+    )
     assert viewer_response_data["rights"][0]["rights"] == "Rights"
     assert viewer_response_data["rights"][0]["uri"] == "URI"
     assert viewer_response_data["rights"][0]["license_text"] == "license text"
 
     assert viewer_response_data["rights"][1]["identifier"] == "Admin Identifier"
     assert viewer_response_data["rights"][1]["identifier_scheme"] == "Identifier Scheme"
-    assert viewer_response_data["rights"][1]["identifier_scheme_uri"] == "Identifier Scheme"
+    assert (
+        viewer_response_data["rights"][1]["identifier_scheme_uri"]
+        == "Identifier Scheme"
+    )
     assert viewer_response_data["rights"][1]["rights"] == "Rights"
     assert viewer_response_data["rights"][1]["uri"] == "URI"
     assert viewer_response_data["rights"][1]["license_text"] == "license text"
 
     assert viewer_response_data["rights"][2]["identifier"] == "Editor Identifier"
     assert viewer_response_data["rights"][2]["identifier_scheme"] == "Identifier Scheme"
-    assert viewer_response_data["rights"][2]["identifier_scheme_uri"] == "Identifier Scheme"
+    assert (
+        viewer_response_data["rights"][2]["identifier_scheme_uri"]
+        == "Identifier Scheme"
+    )
     assert viewer_response_data["rights"][2]["rights"] == "Rights"
     assert viewer_response_data["rights"][2]["uri"] == "URI"
     assert viewer_response_data["rights"][2]["license_text"] == "license text"
-#######
+    #######
     assert admin_response_data["access"]["type"] == "editor type"
     assert admin_response_data["access"]["description"] == "editor description"
     assert admin_response_data["access"]["url"] == "google.com"
@@ -297,6 +322,7 @@ def test_get_dataset_access_rights_metadata(clients):
     assert viewer_response_data["access"]["description"] == "editor description"
     assert viewer_response_data["access"]["url"] == "google.com"
     assert viewer_response_data["access"]["url_last_checked"] == 123
+
 
 # ------------------- GENERAL INFORMATION METADATA ------------------- #
 def test_post_dataset_general_information_metadata(clients):
@@ -316,8 +342,8 @@ def test_post_dataset_general_information_metadata(clients):
         json={
             "titles": [{"title": "Owner Title", "type": "Subtitle"}],
             "descriptions": [{"description": "Owner Description", "type": "Methods"}],
-            "dates": [{"date": 20210101, "type": "Accepted", "information": "Info"}]
-              },
+            "dates": [{"date": 20210101, "type": "Accepted", "information": "Info"}],
+        },
     )
     # Add a one second delay to prevent duplicate timestamps
     sleep(1)
@@ -341,10 +367,10 @@ def test_post_dataset_general_information_metadata(clients):
     admin_response = _admin_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/general-information",
         json={
-                "titles": [{"title": "Admin Title", "type": "Subtitle"}],
-                "descriptions": [{"description": "Admin Description", "type": "Methods"}],
-                "dates": [{"date": 20210102, "type": "Accepted", "information": "Info"}],
-              },
+            "titles": [{"title": "Admin Title", "type": "Subtitle"}],
+            "descriptions": [{"description": "Admin Description", "type": "Methods"}],
+            "dates": [{"date": 20210102, "type": "Accepted", "information": "Info"}],
+        },
     )
     # Add a one second delay to prevent duplicate timestamps
     sleep(1)
@@ -354,7 +380,9 @@ def test_post_dataset_general_information_metadata(clients):
     admin_response_data = json.loads(admin_response.data)
 
     pytest.global_dataset_title_id_admin = admin_response_data["titles"][0]["id"]
-    pytest.global_dataset_description_id_admin = admin_response_data["descriptions"][0]["id"]
+    pytest.global_dataset_description_id_admin = admin_response_data["descriptions"][0][
+        "id"
+    ]
     pytest.global_dataset_date_id_admin = admin_response_data["dates"][0]["id"]
 
     assert admin_response_data["titles"][0]["title"] == "Admin Title"
@@ -368,23 +396,27 @@ def test_post_dataset_general_information_metadata(clients):
 
     editor_response = _editor_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/general-information",
-        json= {
-                "titles": [{"title": "Editor Title", "type": "Subtitle"}],
-                "descriptions": [{"description": "Editor Description", "type": "Methods"}],
-                "dates": [{"date": 20210103, "type": "Accepted", "information": "Info"}],
-              },
+        json={
+            "titles": [{"title": "Editor Title", "type": "Subtitle"}],
+            "descriptions": [{"description": "Editor Description", "type": "Methods"}],
+            "dates": [{"date": 20210103, "type": "Accepted", "information": "Info"}],
+        },
     )
 
     assert editor_response.status_code == 200
     editor_response_data = json.loads(editor_response.data)
     pytest.global_dataset_title_id_editor = editor_response_data["titles"][0]["id"]
-    pytest.global_dataset_description_id_editor = editor_response_data["descriptions"][0]["id"]
+    pytest.global_dataset_description_id_editor = editor_response_data["descriptions"][
+        0
+    ]["id"]
     pytest.global_dataset_date_id_editor = editor_response_data["dates"][0]["id"]
 
     assert editor_response_data["titles"][0]["title"] == "Editor Title"
     assert editor_response_data["titles"][0]["type"] == "Subtitle"
 
-    assert editor_response_data["descriptions"][0]["description"] == "Editor Description"
+    assert (
+        editor_response_data["descriptions"][0]["description"] == "Editor Description"
+    )
     assert editor_response_data["descriptions"][0]["type"] == "Methods"
 
     assert editor_response_data["dates"][0]["date"] == 20210103
@@ -396,8 +428,8 @@ def test_post_dataset_general_information_metadata(clients):
         json={
             "titles": [{"title": "Viewer Title", "type": "Subtitle"}],
             "descriptions": [{"description": "Viewer Description", "type": "Methods"}],
-            "dates": [{"date": 20210103, "type": "Accepted", "information": "Info"}]
-            },
+            "dates": [{"date": 20210103, "type": "Accepted", "information": "Info"}],
+        },
     )
 
     assert viewer_response.status_code == 403
@@ -475,19 +507,11 @@ def test_get_dataset_general_information_metadata(clients):
         None,
     )
     e_main_title = next(
-        (
-            index
-            for (index, d) in enumerate(editor_titles)
-            if d["type"] == "MainTitle"
-        ),
+        (index for (index, d) in enumerate(editor_titles) if d["type"] == "MainTitle"),
         None,
     )
     v_main_title = next(
-        (
-            index
-            for (index, d) in enumerate(viewer_titles)
-            if d["type"] == "MainTitle"
-        ),
+        (index for (index, d) in enumerate(viewer_titles) if d["type"] == "MainTitle"),
         None,
     )
     # search for admin title index
@@ -628,7 +652,6 @@ def test_get_dataset_general_information_metadata(clients):
     assert viewer_titles[v_editor_title]["title"] == "Editor Title"
     assert viewer_titles[v_editor_title]["type"] == "Subtitle"
 
-
     assert len(owner_descriptions) == 4
     assert len(admin_descriptions) == 4
     assert len(editor_descriptions) == 4
@@ -636,7 +659,11 @@ def test_get_dataset_general_information_metadata(clients):
 
     # seacrch for type abstract index
     main_descrip = next(
-        (index for (index, d) in enumerate(owner_descriptions) if d["type"] == "Abstract"),
+        (
+            index
+            for (index, d) in enumerate(owner_descriptions)
+            if d["type"] == "Abstract"
+        ),
         None,
     )
     a_main_descrip = next(
@@ -965,8 +992,7 @@ def test_post_dataset_team_metadata(clients):
 
     response = _logged_in_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/team",
-        json=
-            {
+        json={
             "creators": [
                 {
                     "given_name": "Given Name here",
@@ -984,26 +1010,26 @@ def test_post_dataset_team_metadata(clients):
                         }
                     ],
                 }
-        ],
+            ],
             "contributors": [
-                    {
-                        "given_name": "Given Name here",
-                        "family_name": "Family Name here",
-                        "name_type": "Personal",
-                        "name_identifier": "Name identifier",
-                        "name_identifier_scheme": "Name Scheme ID",
-                        "name_identifier_scheme_uri": "Name ID Scheme URI",
-                        "contributor_type": "Con Type",
-                        "affiliations": [
-                            {
-                                "name": "Test",
-                                "identifier": "yes",
-                                "scheme": "uh",
-                                "scheme_uri": "scheme uri",
-                            }
-                        ],
-                    }
-                ],
+                {
+                    "given_name": "Given Name here",
+                    "family_name": "Family Name here",
+                    "name_type": "Personal",
+                    "name_identifier": "Name identifier",
+                    "name_identifier_scheme": "Name Scheme ID",
+                    "name_identifier_scheme_uri": "Name ID Scheme URI",
+                    "contributor_type": "Con Type",
+                    "affiliations": [
+                        {
+                            "name": "Test",
+                            "identifier": "yes",
+                            "scheme": "uh",
+                            "scheme_uri": "scheme uri",
+                        }
+                    ],
+                }
+            ],
             "managing_organization": {
                 "name": "Managing Organization Name",
                 "identifier": "identifier",
@@ -1011,18 +1037,17 @@ def test_post_dataset_team_metadata(clients):
                 "identifier_scheme_uri": "identifier scheme_uri",
             },
             "funders": [
-                 {
-                "name": "Name",
-                "award_number": "award number",
-                "award_title": "Award Title",
-                "award_uri": "Award URI",
-                "identifier": "Identifier",
-                "identifier_scheme_uri": "Identifier Scheme URI",
-                "identifier_type": "Identifier Type",
-            }
-             ],
-            }
-
+                {
+                    "name": "Name",
+                    "award_number": "award number",
+                    "award_title": "Award Title",
+                    "award_uri": "Award URI",
+                    "identifier": "Identifier",
+                    "identifier_scheme_uri": "Identifier Scheme URI",
+                    "identifier_type": "Identifier Type",
+                }
+            ],
+        },
     )
     # Add a one second delay to prevent duplicate timestamps
     sleep(1)
@@ -1079,8 +1104,7 @@ def test_post_dataset_team_metadata(clients):
 
     admin_response = _admin_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/team",
-        json=
-            {
+        json={
             "creators": [
                 {
                     "given_name": "Admin Given Name here",
@@ -1123,20 +1147,19 @@ def test_post_dataset_team_metadata(clients):
                 "identifier": "identifier",
                 "identifier_scheme": "identifier scheme",
                 "identifier_scheme_uri": "identifier scheme_uri",
-        },
+            },
             "funders": [
-                 {
-                "name": "Admin Name",
-                "award_number": "award number",
-                "award_title": "Award Title",
-                "award_uri": "Award URI",
-                "identifier": "Identifier",
-                "identifier_scheme_uri": "Identifier Scheme URI",
-                "identifier_type": "Identifier Type",
-            }
-             ],
-            }
-
+                {
+                    "name": "Admin Name",
+                    "award_number": "award number",
+                    "award_title": "Award Title",
+                    "award_uri": "Award URI",
+                    "identifier": "Identifier",
+                    "identifier_scheme_uri": "Identifier Scheme URI",
+                    "identifier_type": "Identifier Type",
+                }
+            ],
+        },
     )
     # Add a one second delay to prevent duplicate timestamps
     sleep(1)
@@ -1189,31 +1212,31 @@ def test_post_dataset_team_metadata(clients):
     assert admin_managing_organization["name"] == "admin Managing Organization Name"
     assert admin_managing_organization["identifier"] == "identifier"
     assert admin_managing_organization["identifier_scheme"] == "identifier scheme"
-    assert admin_managing_organization["identifier_scheme_uri"] == "identifier scheme_uri"
-
+    assert (
+        admin_managing_organization["identifier_scheme_uri"] == "identifier scheme_uri"
+    )
 
     editor_response = _editor_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/team",
-        json=
-        {
+        json={
             "creators": [
-            {
-                "given_name": "Editor Given Name here",
-                "family_name": "Family Name here",
-                "name_type": "Personal",
-                "name_identifier": "Name identifier",
-                "name_identifier_scheme": "Name Scheme ID",
-                "name_identifier_scheme_uri": "Name ID Scheme URI",
-                "affiliations": [
-                    {
-                        "name": "Test",
-                        "identifier": "yes",
-                        "scheme": "uh",
-                        "scheme_uri": "scheme uri",
-                    }
-                ],
-            }
-        ],
+                {
+                    "given_name": "Editor Given Name here",
+                    "family_name": "Family Name here",
+                    "name_type": "Personal",
+                    "name_identifier": "Name identifier",
+                    "name_identifier_scheme": "Name Scheme ID",
+                    "name_identifier_scheme_uri": "Name ID Scheme URI",
+                    "affiliations": [
+                        {
+                            "name": "Test",
+                            "identifier": "yes",
+                            "scheme": "uh",
+                            "scheme_uri": "scheme uri",
+                        }
+                    ],
+                }
+            ],
             "contributors": [
                 {
                     "given_name": "Editor Given Name here",
@@ -1250,7 +1273,7 @@ def test_post_dataset_team_metadata(clients):
                     "identifier_type": "Identifier Type",
                 }
             ],
-        }
+        },
     )
 
     assert editor_response.status_code == 200
@@ -1303,11 +1326,13 @@ def test_post_dataset_team_metadata(clients):
     assert editor_managing_organization["name"] == "editor Managing Organization Name"
     assert editor_managing_organization["identifier"] == "identifier"
     assert editor_managing_organization["identifier_scheme"] == "identifier scheme"
-    assert editor_managing_organization["identifier_scheme_uri"] == "identifier scheme_uri"
+    assert (
+        editor_managing_organization["identifier_scheme_uri"] == "identifier scheme_uri"
+    )
 
     viewer_response = _viewer_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/team",
-        json= {
+        json={
             "creators": [
                 {
                     "given_name": "Viewer Given Name here",
@@ -1327,24 +1352,24 @@ def test_post_dataset_team_metadata(clients):
                 }
             ],
             "contributors": [
-            {
-                "given_name": "Viewer Given Name here",
-                "family_name": "Viewer Family Name here",
-                "name_type": "Personal",
-                "name_identifier": "Name identifier",
-                "name_identifier_scheme": "Name Scheme ID",
-                "name_identifier_scheme_uri": "Name ID Scheme URI",
-                "contributor_type": "Con Type",
-                "affiliations": [
-                    {
-                        "name": "Test",
-                        "identifier": "yes",
-                        "scheme": "uh",
-                        "scheme_uri": "scheme uri",
-                    }
-                ],
-            }
-        ],
+                {
+                    "given_name": "Viewer Given Name here",
+                    "family_name": "Viewer Family Name here",
+                    "name_type": "Personal",
+                    "name_identifier": "Name identifier",
+                    "name_identifier_scheme": "Name Scheme ID",
+                    "name_identifier_scheme_uri": "Name ID Scheme URI",
+                    "contributor_type": "Con Type",
+                    "affiliations": [
+                        {
+                            "name": "Test",
+                            "identifier": "yes",
+                            "scheme": "uh",
+                            "scheme_uri": "scheme uri",
+                        }
+                    ],
+                }
+            ],
             "managing_organization": {
                 "name": "editor Managing Organization Name",
                 "identifier": "identifier",
@@ -1362,7 +1387,7 @@ def test_post_dataset_team_metadata(clients):
                     "identifier_type": "Identifier Type",
                 }
             ],
-        }
+        },
     )
 
     assert viewer_response.status_code == 403
@@ -1418,10 +1443,9 @@ def test_get_dataset_team_metadata(clients):
     editor_funders = editor_response_data["funders"]
     editor_contributors = editor_response_data["contributors"]
 
-    viewer_creators = editor_response_data["creators"]
-    viewer_managing_organization = editor_response_data["managing_organization"]
-    viewer_funders = editor_response_data["funders"]
-    viewer_contributors = editor_response_data["contributors"]
+    viewer_creators = viewer_response_data["creators"]
+    viewer_managing_organization = viewer_response_data["managing_organization"]
+    viewer_funders = viewer_response_data["funders"]
 
     assert len(funders) == 3
     assert len(admin_funders) == 3
@@ -1779,17 +1803,23 @@ def test_get_dataset_team_metadata(clients):
     assert admin_managing_organization["name"] == "editor Managing Organization Name"
     assert admin_managing_organization["identifier"] == "identifier"
     assert admin_managing_organization["identifier_scheme"] == "identifier scheme"
-    assert admin_managing_organization["identifier_scheme_uri"] == "identifier scheme_uri"
+    assert (
+        admin_managing_organization["identifier_scheme_uri"] == "identifier scheme_uri"
+    )
 
     assert editor_managing_organization["name"] == "editor Managing Organization Name"
     assert editor_managing_organization["identifier"] == "identifier"
     assert editor_managing_organization["identifier_scheme"] == "identifier scheme"
-    assert editor_managing_organization["identifier_scheme_uri"] == "identifier scheme_uri"
+    assert (
+        editor_managing_organization["identifier_scheme_uri"] == "identifier scheme_uri"
+    )
 
     assert viewer_managing_organization["name"] == "editor Managing Organization Name"
     assert viewer_managing_organization["identifier"] == "identifier"
     assert viewer_managing_organization["identifier_scheme"] == "identifier scheme"
-    assert viewer_managing_organization["identifier_scheme_uri"] == "identifier scheme_uri"
+    assert (
+        viewer_managing_organization["identifier_scheme_uri"] == "identifier scheme_uri"
+    )
 
 
 # ------------------- DELETE CONTRIBUTOR METADATA ------------------- #
@@ -2350,16 +2380,15 @@ def test_post_dataset_data_management_metadata(clients):
     response = _logged_in_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/data-management",
         json={
-            "consent":
-                {
-                    "type": "test",
-                     "noncommercial": True,
-                     "geog_restrict": True,
-                     "research_type": True,
-                     "genetic_only": True,
-                     "no_methods": True,
-                     "details": "test",
-                 },
+            "consent": {
+                "type": "test",
+                "noncommercial": True,
+                "geog_restrict": True,
+                "research_type": True,
+                "genetic_only": True,
+                "no_methods": True,
+                "details": "test",
+            },
             "deident": {
                 "type": "Level",
                 "direct": True,
@@ -2369,14 +2398,15 @@ def test_post_dataset_data_management_metadata(clients):
                 "k_anon": True,
                 "details": "Details",
             },
-            "subjects":
-                [{
+            "subjects": [
+                {
                     "classification_code": "Classification Code",
                     "scheme": "Scheme",
                     "scheme_uri": "Scheme URI",
                     "subject": "Subject",
                     "value_uri": "Value URI",
-                }]
+                }
+            ],
         },
     )
 
@@ -2409,39 +2439,37 @@ def test_post_dataset_data_management_metadata(clients):
     assert deident["k_anon"] is True
     assert deident["details"] == "Details"
 
-
     admin_response = _admin_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/data-management",
         json={
-            "consent":
-                {
-                    "type": "admin test",
-                     "noncommercial": True,
-                     "geog_restrict": True,
-                     "research_type": True,
-                     "genetic_only": True,
-                     "no_methods": True,
-                     "details": "admin details test",
-                 },
+            "consent": {
+                "type": "admin test",
+                "noncommercial": True,
+                "geog_restrict": True,
+                "research_type": True,
+                "genetic_only": True,
+                "no_methods": True,
+                "details": "admin details test",
+            },
             "deident": {
-                    "type": "Level",
-                    "direct": True,
-                    "hipaa": True,
-                    "dates": True,
-                    "nonarr": True,
-                    "k_anon": True,
-                    "details": "Details",
-                },
+                "type": "Level",
+                "direct": True,
+                "hipaa": True,
+                "dates": True,
+                "nonarr": True,
+                "k_anon": True,
+                "details": "Details",
+            },
             "subjects": [
-                    {
-                        "classification_code": "Classification Code",
-                        "scheme": "Admin Scheme",
-                        "scheme_uri": "Scheme URI",
-                        "subject": "Subject",
-                        "value_uri": "Admin Value URI",
-                    }
-                ],
-    },
+                {
+                    "classification_code": "Classification Code",
+                    "scheme": "Admin Scheme",
+                    "scheme_uri": "Scheme URI",
+                    "subject": "Subject",
+                    "value_uri": "Admin Value URI",
+                }
+            ],
+        },
     )
 
     assert admin_response.status_code == 200
@@ -2477,36 +2505,35 @@ def test_post_dataset_data_management_metadata(clients):
 
     editor_response = _editor_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/data-management",
-        json = {
-                "consent":
-                    {
-                        "type": "editor test",
-                        "noncommercial": True,
-                        "geog_restrict": True,
-                        "research_type": True,
-                        "genetic_only": True,
-                        "no_methods": True,
-                        "details": "editor details test",
-                    },
-                "deident": {
-                    "type": "Level",
-                    "direct": True,
-                    "hipaa": True,
-                    "dates": True,
-                    "nonarr": True,
-                    "k_anon": True,
-                    "details": "Details",
-                },
-                "subjects": [
-                        {
-                            "classification_code": "Classification Code",
-                            "scheme": "Editor Scheme",
-                            "scheme_uri": "Scheme URI",
-                            "subject": "Subject",
-                            "value_uri": "Editor Value URI",
-                        }
-                    ],
-    },
+        json={
+            "consent": {
+                "type": "editor test",
+                "noncommercial": True,
+                "geog_restrict": True,
+                "research_type": True,
+                "genetic_only": True,
+                "no_methods": True,
+                "details": "editor details test",
+            },
+            "deident": {
+                "type": "Level",
+                "direct": True,
+                "hipaa": True,
+                "dates": True,
+                "nonarr": True,
+                "k_anon": True,
+                "details": "Details",
+            },
+            "subjects": [
+                {
+                    "classification_code": "Classification Code",
+                    "scheme": "Editor Scheme",
+                    "scheme_uri": "Scheme URI",
+                    "subject": "Subject",
+                    "value_uri": "Editor Value URI",
+                }
+            ],
+        },
     )
 
     assert editor_response.status_code == 200
@@ -2541,36 +2568,35 @@ def test_post_dataset_data_management_metadata(clients):
 
     viewer_response = _viewer_client.post(
         f"/study/{study_id}/dataset/{dataset_id}/metadata/data-management",
-        json= {
-                "consent":
-                    {
-                        "type": "viewer test",
-                        "noncommercial": True,
-                        "geog_restrict": True,
-                        "research_type": True,
-                        "genetic_only": True,
-                        "no_methods": True,
-                        "details": "viewer details test",
-                    },
-                "deident": {
-                    "type": "Level",
-                    "direct": True,
-                    "hipaa": True,
-                    "dates": True,
-                    "nonarr": True,
-                    "k_anon": True,
-                    "details": "Details",
-                },
-                "subjects": [
-                        {
-                            "classification_code": "Classification Code",
-                            "scheme": "Viewer Scheme",
-                            "scheme_uri": "Scheme URI",
-                            "subject": "Subject",
-                            "value_uri": "Viewer Value URI",
-                        }
-                    ],
-    },
+        json={
+            "consent": {
+                "type": "viewer test",
+                "noncommercial": True,
+                "geog_restrict": True,
+                "research_type": True,
+                "genetic_only": True,
+                "no_methods": True,
+                "details": "viewer details test",
+            },
+            "deident": {
+                "type": "Level",
+                "direct": True,
+                "hipaa": True,
+                "dates": True,
+                "nonarr": True,
+                "k_anon": True,
+                "details": "Details",
+            },
+            "subjects": [
+                {
+                    "classification_code": "Classification Code",
+                    "scheme": "Viewer Scheme",
+                    "scheme_uri": "Scheme URI",
+                    "subject": "Subject",
+                    "value_uri": "Viewer Value URI",
+                }
+            ],
+        },
     )
 
     assert viewer_response.status_code == 403
@@ -3676,4 +3702,3 @@ def test_get_dataset_healthsheet_maintenance_metadata(clients):
     )
 
     # Editor was the last successful PUT request, so the response data should match
-

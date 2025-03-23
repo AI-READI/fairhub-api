@@ -1,13 +1,14 @@
 """API for dataset access and rights metadata"""
 
-from flask import Response, request
+from typing import Any, Union
+
+from flask import request
 from flask_restx import Resource, fields
+from jsonschema import ValidationError, validate
+
 import model
 from apis.authentication import is_granted
 from apis.dataset_metadata_namespace import api
-from typing import Any, Union
-
-from jsonschema import ValidationError, validate
 
 dataset_access = api.model(
     "DatasetAccess",
@@ -47,9 +48,10 @@ class DatasetAccessRights(Resource):
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_access_ = dataset_.dataset_access
         dataset_rights_ = dataset_.dataset_rights
-        return {"access": dataset_access_.to_dict(),
-                "rights": [d.to_dict() for d in dataset_rights_]
-            }, 200
+        return {
+            "access": dataset_access_.to_dict(),
+            "rights": [d.to_dict() for d in dataset_rights_],
+        }, 200
 
     @api.doc("update access")
     @api.response(200, "Success")
@@ -130,10 +132,10 @@ class DatasetAccessRights(Resource):
                 model.db.session.add(dataset_rights_)
                 list_of_rights.append(dataset_rights_.to_dict())
         model.db.session.commit()
-        return {"access": dataset_.dataset_access.to_dict(),
-                "rights": list_of_rights
-            }, 200
-
+        return {
+            "access": dataset_.dataset_access.to_dict(),
+            "rights": list_of_rights,
+        }, 200
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/rights")

@@ -1,6 +1,6 @@
 """API for dataset consent metadata"""
 
-from flask import request, Response
+from flask import Response, request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -48,6 +48,7 @@ de_ident_level = api.model(
     },
 )
 
+
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/data-management")
 class DatasetDataManagement(Resource):
     """Dataset Data management Resource"""
@@ -62,10 +63,11 @@ class DatasetDataManagement(Resource):
         dataset_consent_ = dataset_.dataset_consent
         de_ident_level_ = dataset_.dataset_de_ident_level
         dataset_subject_ = dataset_.dataset_subject
-        return {"consent": dataset_consent_.to_dict(),
-                "deident": de_ident_level_.to_dict(),
-                "subjects": [d.to_dict() for d in dataset_subject_]}, 200
-
+        return {
+            "consent": dataset_consent_.to_dict(),
+            "deident": de_ident_level_.to_dict(),
+            "subjects": [d.to_dict() for d in dataset_subject_],
+        }, 200
 
     @api.doc("update consent")
     @api.response(200, "Success")
@@ -78,79 +80,79 @@ class DatasetDataManagement(Resource):
             return "Access denied, you can not make any change in dataset metadata", 403
 
         schema = {
-    "type": "object",
-    "additionalProperties": False,
-    "properties": {
-        "consent": {
             "type": "object",
             "additionalProperties": False,
             "properties": {
-                "type": {"type": "string", "minLength": 1},
-                "details": {"type": "string"},
-                "genetic_only": {"type": "boolean"},
-                "geog_restrict": {"type": "boolean"},
-                "no_methods": {"type": "boolean"},
-                "noncommercial": {"type": "boolean"},
-                "research_type": {"type": "boolean"}
-            },
-            "required": [
-                "type",
-                "details",
-                "genetic_only",
-                "geog_restrict",
-                "no_methods",
-                "noncommercial",
-                "research_type"
-            ]
-        },
-        "subjects": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "additionalProperties": False,
-                "properties": {
-                    "id": {"type": "string"},
-                    "classification_code": {"type": "string"},
-                    "scheme": {"type": "string"},
-                    "scheme_uri": {"type": "string"},
-                    "subject": {"type": "string", "minLength": 1},
-                    "value_uri": {"type": "string"}
+                "consent": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "type": {"type": "string", "minLength": 1},
+                        "details": {"type": "string"},
+                        "genetic_only": {"type": "boolean"},
+                        "geog_restrict": {"type": "boolean"},
+                        "no_methods": {"type": "boolean"},
+                        "noncommercial": {"type": "boolean"},
+                        "research_type": {"type": "boolean"},
+                    },
+                    "required": [
+                        "type",
+                        "details",
+                        "genetic_only",
+                        "geog_restrict",
+                        "no_methods",
+                        "noncommercial",
+                        "research_type",
+                    ],
                 },
-                "required": [
-                    "subject",
-                    "scheme",
-                    "scheme_uri",
-                    "value_uri",
-                    "classification_code"
-                ]
+                "subjects": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": False,
+                        "properties": {
+                            "id": {"type": "string"},
+                            "classification_code": {"type": "string"},
+                            "scheme": {"type": "string"},
+                            "scheme_uri": {"type": "string"},
+                            "subject": {"type": "string", "minLength": 1},
+                            "value_uri": {"type": "string"},
+                        },
+                        "required": [
+                            "subject",
+                            "scheme",
+                            "scheme_uri",
+                            "value_uri",
+                            "classification_code",
+                        ],
+                    },
+                    "uniqueItems": True,
+                },
+                "deident": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "type": {"type": "string", "minLength": 1},
+                        "details": {"type": "string"},
+                        "direct": {"type": "boolean"},
+                        "hipaa": {"type": "boolean"},
+                        "dates": {"type": "boolean"},
+                        "k_anon": {"type": "boolean"},
+                        "nonarr": {"type": "boolean"},
+                    },
+                    "required": [
+                        "type",
+                        "details",
+                        "direct",
+                        "hipaa",
+                        "dates",
+                        "k_anon",
+                        "nonarr",
+                    ],
+                },
             },
-            "uniqueItems": True
-        },
-        "deident": {
-            "type": "object",
-            "additionalProperties": False,
-            "properties": {
-                "type": {"type": "string", "minLength": 1},
-                "details": {"type": "string"},
-                "direct": {"type": "boolean"},
-                "hipaa": {"type": "boolean"},
-                "dates": {"type": "boolean"},
-                "k_anon": {"type": "boolean"},
-                "nonarr": {"type": "boolean"}
-            },
-            "required": [
-                "type",
-                "details",
-                "direct",
-                "hipaa",
-                "dates",
-                "k_anon",
-                "nonarr"
-            ]
+            "required": [],
         }
-    },
-    "required": []
-}
         try:
             validate(instance=request.json, schema=schema)
         except ValidationError as err:
@@ -173,10 +175,11 @@ class DatasetDataManagement(Resource):
                 model.db.session.add(dataset_subject_)
                 list_of_subjects.append(dataset_subject_.to_dict())
         model.db.session.commit()
-        return {"consent": dataset_.dataset_consent.to_dict(),
-                "deident": dataset_.dataset_de_ident_level.to_dict(),
-                "subjects": list_of_subjects
-                }, 200
+        return {
+            "consent": dataset_.dataset_consent.to_dict(),
+            "deident": dataset_.dataset_de_ident_level.to_dict(),
+            "subjects": list_of_subjects,
+        }, 200
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/subject/<subject_id>")

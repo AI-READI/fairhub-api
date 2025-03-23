@@ -38,6 +38,7 @@ dataset_date = api.model(
     },
 )
 
+
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/general-information")
 class DatasetGeneralInformation(Resource):
     """Dataset General Information Resource"""
@@ -189,12 +190,14 @@ class DatasetGeneralInformation(Resource):
 
         model.db.session.commit()
 
-        return ({
-            "titles": list_of_titles,
-            "descriptions": list_of_description,
-            "dates": list_of_dates,
-        },
-                200)
+        return (
+            {
+                "titles": list_of_titles,
+                "descriptions": list_of_description,
+                "dates": list_of_dates,
+            },
+            200,
+        )
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/title/<title_id>")
@@ -247,7 +250,6 @@ class DatasetDateDeleteResource(Resource):
         model.db.session.delete(date_)
         model.db.session.commit()
         return Response(status=204)
-
 
     @api.route(
         "/study/<study_id>/dataset/<dataset_id>/"

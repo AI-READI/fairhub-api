@@ -40,6 +40,7 @@ dataset_funder = api.model(
     },
 )
 
+
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/team")
 class DatasetTeamResource(Resource):
     """Dataset Team Resource"""
@@ -55,11 +56,16 @@ class DatasetTeamResource(Resource):
         dataset_contributor_ = dataset_.dataset_contributors
         dataset_funder_ = dataset_.dataset_funder
         managing_organization_ = dataset_.dataset_managing_organization
-        return {"creators": [d.to_dict() for d in dataset_creator_ if d.to_dict()["creator"]],
-                "contributors":[d.to_dict() for d in dataset_contributor_ if not d.to_dict()["creator"]],
-                "managing_organization":managing_organization_.to_dict(),
-                "funders": [d.to_dict() for d in dataset_funder_],
-                }, 200
+        return {
+            "creators": [
+                d.to_dict() for d in dataset_creator_ if d.to_dict()["creator"]
+            ],
+            "contributors": [
+                d.to_dict() for d in dataset_contributor_ if not d.to_dict()["creator"]
+            ],
+            "managing_organization": managing_organization_.to_dict(),
+            "funders": [d.to_dict() for d in dataset_funder_],
+        }, 200
 
     @api.doc("update team")
     @api.response(201, "Success")
@@ -71,140 +77,151 @@ class DatasetTeamResource(Resource):
         if not is_granted("dataset_metadata", study_obj):
             return "Access denied, you can not make any change in dataset metadata", 403
 
-        schema  = {
-    "type": "object",
-    "additionalProperties": False,
-    "properties": {
-        "creators": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "additionalProperties": False,
-                "properties": {
-                    "id": {"type": "string"},
-                    "given_name": {"type": "string", "minLength": 1},
-                    "family_name": {"type": ["string", "null"]},
-                    "name_identifier": {"type": "string", "minLength": 1},
-                    "name_identifier_scheme": {"type": "string", "minLength": 1},
-                    "name_identifier_scheme_uri": {"type": "string"},
-                    "name_type": {
-                        "type": "string",
-                        "enum": ["Personal", "Organizational"],
-                        "minLength": 1,
-                    },
-                    "affiliations": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "additionalProperties": False,
-                            "properties": {
-                                "name": {"type": "string"},
-                                "identifier": {"type": "string"},
-                                "scheme": {"type": "string"},
-                                "scheme_uri": {"type": "string"},
-                            },
-                        },
-                        "uniqueItems": True,
-                    },
-                },
-                "required": [
-                    "name_type",
-                    "given_name",
-                    "affiliations",
-                    "name_identifier",
-                    "name_identifier_scheme",
-                ],
-            },
-        },
-        "contributors": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "additionalProperties": False,
-                "properties": {
-                    "id": {"type": "string"},
-                    "contributor_type": {"type": "string", "minLength": 1},
-                    "given_name": {"type": "string", "minLength": 1},
-                    "family_name": {"type": ["string", "null"]},
-                    "name_identifier": {"type": "string", "minLength": 1},
-                    "name_identifier_scheme": {"type": "string", "minLength": 1},
-                    "name_identifier_scheme_uri": {"type": "string"},
-                    "name_type": {
-                        "type": "string",
-                        "enum": ["Personal", "Organizational"],
-                        "minLength": 1,
-                    },
-                    "affiliations": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "additionalProperties": False,
-                            "properties": {
-                                "name": {"type": "string"},
-                                "identifier": {"type": "string"},
-                                "scheme": {"type": "string"},
-                                "scheme_uri": {"type": "string"},
-                            },
-                        },
-                        "uniqueItems": True,
-                    },
-                },
-                "required": [
-                    "contributor_type",
-                    "name_type",
-                    "given_name",
-                    "affiliations",
-                    "name_identifier",
-                    "name_identifier_scheme",
-                ],
-            },
-        },
-        "funders": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "additionalProperties": False,
-                "properties": {
-                    "id": {"type": "string"},
-                    "name": {"type": "string", "minLength": 1},
-                    "award_number": {"type": "string", "minLength": 1},
-                    "award_title": {"type": "string"},
-                    "award_uri": {"type": "string"},
-                    "identifier": {"type": "string", "minLength": 1},
-                    "identifier_scheme_uri": {"type": "string"},
-                    "identifier_type": {"type": ["string", "null"]},
-                },
-                "required": [
-                    "name",
-                    "award_number",
-                    "award_title",
-                    "award_uri",
-                    "identifier",
-                    "identifier_scheme_uri",
-                    "identifier_type",
-                ],
-            },
-            "uniqueItems": True,
-        },
-        "managing_organization": {
+        schema = {
             "type": "object",
             "additionalProperties": False,
             "properties": {
-                "name": {"type": "string", "minLength": 1},
-                "identifier": {"type": "string"},
-                "identifier_scheme": {"type": "string"},
-                "identifier_scheme_uri": {"type": "string"},
+                "creators": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": False,
+                        "properties": {
+                            "id": {"type": "string"},
+                            "given_name": {"type": "string", "minLength": 1},
+                            "family_name": {"type": ["string", "null"]},
+                            "name_identifier": {"type": "string", "minLength": 1},
+                            "name_identifier_scheme": {
+                                "type": "string",
+                                "minLength": 1,
+                            },
+                            "name_identifier_scheme_uri": {"type": "string"},
+                            "name_type": {
+                                "type": "string",
+                                "enum": ["Personal", "Organizational"],
+                                "minLength": 1,
+                            },
+                            "affiliations": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "additionalProperties": False,
+                                    "properties": {
+                                        "name": {"type": "string"},
+                                        "identifier": {"type": "string"},
+                                        "scheme": {"type": "string"},
+                                        "scheme_uri": {"type": "string"},
+                                    },
+                                },
+                                "uniqueItems": True,
+                            },
+                        },
+                        "required": [
+                            "name_type",
+                            "given_name",
+                            "affiliations",
+                            "name_identifier",
+                            "name_identifier_scheme",
+                        ],
+                    },
+                },
+                "contributors": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": False,
+                        "properties": {
+                            "id": {"type": "string"},
+                            "contributor_type": {"type": "string", "minLength": 1},
+                            "given_name": {"type": "string", "minLength": 1},
+                            "family_name": {"type": ["string", "null"]},
+                            "name_identifier": {"type": "string", "minLength": 1},
+                            "name_identifier_scheme": {
+                                "type": "string",
+                                "minLength": 1,
+                            },
+                            "name_identifier_scheme_uri": {"type": "string"},
+                            "name_type": {
+                                "type": "string",
+                                "enum": ["Personal", "Organizational"],
+                                "minLength": 1,
+                            },
+                            "affiliations": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "additionalProperties": False,
+                                    "properties": {
+                                        "name": {"type": "string"},
+                                        "identifier": {"type": "string"},
+                                        "scheme": {"type": "string"},
+                                        "scheme_uri": {"type": "string"},
+                                    },
+                                },
+                                "uniqueItems": True,
+                            },
+                        },
+                        "required": [
+                            "contributor_type",
+                            "name_type",
+                            "given_name",
+                            "affiliations",
+                            "name_identifier",
+                            "name_identifier_scheme",
+                        ],
+                    },
+                },
+                "funders": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": False,
+                        "properties": {
+                            "id": {"type": "string"},
+                            "name": {"type": "string", "minLength": 1},
+                            "award_number": {"type": "string", "minLength": 1},
+                            "award_title": {"type": "string"},
+                            "award_uri": {"type": "string"},
+                            "identifier": {"type": "string", "minLength": 1},
+                            "identifier_scheme_uri": {"type": "string"},
+                            "identifier_type": {"type": ["string", "null"]},
+                        },
+                        "required": [
+                            "name",
+                            "award_number",
+                            "award_title",
+                            "award_uri",
+                            "identifier",
+                            "identifier_scheme_uri",
+                            "identifier_type",
+                        ],
+                    },
+                    "uniqueItems": True,
+                },
+                "managing_organization": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "name": {"type": "string", "minLength": 1},
+                        "identifier": {"type": "string"},
+                        "identifier_scheme": {"type": "string"},
+                        "identifier_scheme_uri": {"type": "string"},
+                    },
+                    "required": [
+                        "name",
+                        "identifier",
+                        "identifier_scheme",
+                        "identifier_scheme_uri",
+                    ],
+                },
             },
             "required": [
-                "name",
-                "identifier",
-                "identifier_scheme",
-                "identifier_scheme_uri",
+                "creators",
+                "contributors",
+                "funders",
+                "managing_organization",
             ],
-        },
-    },
-    "required": ["creators", "contributors", "funders", "managing_organization"],
-}
+        }
 
         try:
             validate(request.json, schema)
@@ -260,11 +277,12 @@ class DatasetTeamResource(Resource):
 
         data_obj.dataset_managing_organization.update(data["managing_organization"])
         model.db.session.commit()
-        return {"creators": list_of_creator,
-                "contributors":list_of_contributors,
-                "managing_organization":data_obj.dataset_managing_organization.to_dict(),
-                "funders": list_of_funders,
-                }, 200
+        return {
+            "creators": list_of_creator,
+            "contributors": list_of_contributors,
+            "managing_organization": data_obj.dataset_managing_organization.to_dict(),
+            "funders": list_of_funders,
+        }, 200
 
 
 @api.route(
