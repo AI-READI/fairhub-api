@@ -43,7 +43,6 @@ class DatasetRelatedIdentifierResource(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(dataset_related_identifier)
-
     def post(self, study_id: int, dataset_id: int):
         """Update dataset related identifier"""
         study_obj = model.Study.query.get(study_id)

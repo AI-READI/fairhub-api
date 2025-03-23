@@ -60,7 +60,6 @@ dataset_data_management = api.model(
 )
 
 
-
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/data-management")
 class DatasetDataManagement(Resource):
     """Dataset Data management Resource"""

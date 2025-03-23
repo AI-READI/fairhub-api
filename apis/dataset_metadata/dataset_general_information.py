@@ -79,7 +79,6 @@ class DatasetGeneralInformation(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(dataset_general_information)
-
     def post(self, study_id: int, dataset_id: int):
         """Update dataset title"""
         study_obj = model.Study.query.get(study_id)
