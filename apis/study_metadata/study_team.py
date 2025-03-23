@@ -7,6 +7,7 @@ from flask_restx import Resource, fields
 
 import model
 from apis.study_metadata_namespace import api
+from jsonschema import ValidationError, validate
 
 from ..authentication import is_granted
 
