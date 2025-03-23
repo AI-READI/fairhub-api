@@ -32,7 +32,7 @@ class DatasetRelatedIdentifierResource(Resource):
     @api.doc("related identifier")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.marshal_with(dataset_related_identifier)
+    @api.marshal_with(dataset_related_identifier)
     def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         """Get dataset related identifier"""
         dataset_ = model.Dataset.query.get(dataset_id)
@@ -42,6 +42,8 @@ class DatasetRelatedIdentifierResource(Resource):
     @api.doc("update related identifier")
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
+    @api.marshal_with(dataset_related_identifier)
+
     def post(self, study_id: int, dataset_id: int):
         """Update dataset related identifier"""
         study_obj = model.Study.query.get(study_id)

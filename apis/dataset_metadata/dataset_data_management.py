@@ -8,45 +8,57 @@ import model
 from apis.authentication import is_granted
 from apis.dataset_metadata_namespace import api
 
-dataset_consent = api.model(
-    "DatasetConsent",
+dataset_data_management = api.model(
+    "DatasetDataManagement",
     {
-        "id": fields.String(required=True),
-        "type": fields.String(required=True),
-        "noncommercial": fields.Boolean(required=True),
-        "geog_restrict": fields.Boolean(required=True),
-        "research_type": fields.Boolean(required=True),
-        "genetic_only": fields.Boolean(required=True),
-        "no_methods": fields.Boolean(required=True),
-        "details": fields.String(required=True),
+        "consent": fields.Nested(
+            api.model(
+                "DatasetConsent",
+                {
+                    "id": fields.String(required=True),
+                    "type": fields.String(required=True),
+                    "noncommercial": fields.Boolean(required=True),
+                    "geog_restrict": fields.Boolean(required=True),
+                    "research_type": fields.Boolean(required=True),
+                    "genetic_only": fields.Boolean(required=True),
+                    "no_methods": fields.Boolean(required=True),
+                    "details": fields.String(required=True),
+                },
+            )
+        ),
+        "subjects": fields.List(
+            fields.Nested(
+                api.model(
+                    "DatasetSubjects",
+                    {
+                        "id": fields.String(required=True),
+                        "subject": fields.String(required=True),
+                        "scheme": fields.String(required=True),
+                        "scheme_uri": fields.String(required=True),
+                        "value_uri": fields.String(required=True),
+                        "classification_code": fields.String(required=True),
+                    },
+                )
+            )
+        ),
+        "deident": fields.Nested(
+            api.model(
+                "DatasetDeIdentLevel",
+                {
+                    "id": fields.String(required=True),
+                    "type": fields.String(required=True),
+                    "direct": fields.Boolean(required=True),
+                    "hipaa": fields.Boolean(required=True),
+                    "dates": fields.Boolean(required=True),
+                    "nonarr": fields.Boolean(required=True),
+                    "k_anon": fields.Boolean(required=True),
+                    "details": fields.String(required=True),
+                },
+            )
+        ),
     },
 )
 
-dataset_subject = api.model(
-    "DatasetSubject",
-    {
-        "id": fields.String(required=True),
-        "subject": fields.String(required=True),
-        "scheme": fields.String(required=True),
-        "scheme_uri": fields.String(required=True),
-        "value_uri": fields.String(required=True),
-        "classification_code": fields.String(required=True),
-    },
-)
-
-de_ident_level = api.model(
-    "DatasetDeIdentLevel",
-    {
-        "id": fields.String(required=True),
-        "type": fields.String(required=True),
-        "direct": fields.Boolean(required=True),
-        "hipaa": fields.Boolean(required=True),
-        "dates": fields.Boolean(required=True),
-        "nonarr": fields.Boolean(required=True),
-        "k_anon": fields.Boolean(required=True),
-        "details": fields.String(required=True),
-    },
-)
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/data-management")

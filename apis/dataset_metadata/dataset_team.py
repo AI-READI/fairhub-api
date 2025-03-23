@@ -10,33 +10,77 @@ import model
 from apis.authentication import is_granted
 from apis.dataset_metadata_namespace import api
 
-dataset_contributor = api.model(
-    "DatasetContributor",
-    {},
-)
-
-dataset_managing_organization = api.model(
-    "DatasetManagingOrganization",
+dataset_team = api.model(
+    "DatasetTeam",
     {
-        "name": fields.String(required=True),
-        "identifier": fields.String(required=True),
-        "identifier_scheme": fields.String(required=True),
-        "identifier_scheme_uri": fields.String(required=True),
-    },
-)
-
-
-dataset_funder = api.model(
-    "DatasetFunder",
-    {
-        "id": fields.String(required=True),
-        "name": fields.String(required=True),
-        "identifier": fields.String(required=True),
-        "identifier_type": fields.String(required=True),
-        "identifier_scheme_uri": fields.String(required=True),
-        "award_number": fields.String(required=True),
-        "award_uri": fields.String(required=True),
-        "award_title": fields.String(required=True),
+        "contributors": fields.List(
+            fields.Nested(
+                api.model(
+                    "Contributor",
+                    {
+                        "id": fields.String(required=True),
+                        "family_name": fields.String(),
+                        "given_name": fields.String(required=True),
+                        "name_type": fields.String(),
+                        "name_identifier": fields.String(required=True),
+                        "name_identifier_scheme": fields.String(required=True),
+                        "name_identifier_scheme_uri": fields.String(required=True),
+                        "creator": fields.Boolean(required=True),
+                        "contributor_type": fields.String(),
+                        "affiliations": fields.Raw(required=True),
+                        "created_at": fields.Integer(required=True),
+                    },
+                )
+            )
+        ),
+        "creators": fields.List(
+            fields.Nested(
+                api.model(
+                    "Creator",
+                    {
+                        "id": fields.String(required=True),
+                        "family_name": fields.String(),
+                        "given_name": fields.String(required=True),
+                        "name_type": fields.String(),
+                        "name_identifier": fields.String(required=True),
+                        "name_identifier_scheme": fields.String(required=True),
+                        "name_identifier_scheme_uri": fields.String(required=True),
+                        "creator": fields.Boolean(required=True),
+                        "contributor_type": fields.String(),
+                        "affiliations": fields.Raw(required=True),
+                        "created_at": fields.Integer(required=True),
+                    },
+                )
+            )
+        ),
+        "managing_organization": fields.Nested(
+            api.model(
+                "DatasetManagingOrganization",
+                {
+                    "name": fields.String(required=True),
+                    "identifier": fields.String(required=True),
+                    "identifier_scheme": fields.String(required=True),
+                    "identifier_scheme_uri": fields.String(required=True),
+                },
+            )
+        ),
+        "funders": fields.List(
+            fields.Nested(
+                api.model(
+                    "Funders",
+                    {
+                        "id": fields.String(required=True),
+                        "name": fields.String(required=True),
+                        "identifier": fields.String(required=True),
+                        "identifier_type": fields.String(required=True),
+                        "identifier_scheme_uri": fields.String(required=True),
+                        "award_number": fields.String(required=True),
+                        "award_uri": fields.String(required=True),
+                        "award_title": fields.String(required=True),
+                    },
+                )
+            )
+        ),
     },
 )
 
@@ -48,7 +92,7 @@ class DatasetTeamResource(Resource):
     @api.doc("team")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.marshal_with(dataset_contributor)
+    @api.marshal_with(dataset_team)
     def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         """Get dataset creator"""
         dataset_ = model.Dataset.query.get(dataset_id)
@@ -70,6 +114,7 @@ class DatasetTeamResource(Resource):
     @api.doc("update team")
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
+    @api.marshal_with(dataset_team)
     def post(self, study_id: int, dataset_id: int):
         """Update dataset team"""
         study_obj = model.Study.query.get(study_id)

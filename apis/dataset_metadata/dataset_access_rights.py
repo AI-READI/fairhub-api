@@ -10,27 +10,35 @@ import model
 from apis.authentication import is_granted
 from apis.dataset_metadata_namespace import api
 
-dataset_access = api.model(
-    "DatasetAccess",
+dataset_access_rights = api.model(
+    "DatasetAccessRights",
     {
-        "id": fields.String(required=True),
-        "type": fields.String(required=True),
-        "description": fields.String(required=True),
-        "url": fields.String(required=True),
-        "url_last_checked": fields.String(required=True),
-    },
-)
-
-dataset_rights = api.model(
-    "DatasetRights",
-    {
-        "id": fields.String(required=True),
-        "rights": fields.String(required=True),
-        "uri": fields.String(required=True),
-        "identifier": fields.String(required=True),
-        "identifier_scheme": fields.String(required=True),
-        "identifier_scheme_uri": fields.String(required=True),
-        "license_text": fields.String(required=True),
+        "access": fields.Nested(
+            api.model(
+                "Access",
+                {
+                    "id": fields.String(required=True),
+                    "type": fields.String(required=True),
+                    "description": fields.String(required=True),
+                    "url": fields.String(required=True),
+                    "url_last_checked": fields.Integer(required=True),
+                },
+            )
+        ),
+        "rights": fields.Nested(
+            api.model(
+                "Rights",
+                {
+                    "id": fields.String(required=True),
+                    "rights": fields.String(required=True),
+                    "uri": fields.String(required=True),
+                    "identifier": fields.String(required=True),
+                    "identifier_scheme": fields.String(required=True),
+                    "identifier_scheme_uri": fields.String(required=True),
+                    "license_text": fields.String(required=True),
+                },
+            )
+        ),
     },
 )
 
@@ -42,7 +50,7 @@ class DatasetAccessRights(Resource):
     @api.doc("access")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.marshal_with(dataset_access)
+    @api.marshal_with(dataset_access_rights)
     def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         """Get dataset access"""
         dataset_ = model.Dataset.query.get(dataset_id)
@@ -54,6 +62,7 @@ class DatasetAccessRights(Resource):
         }, 200
 
     @api.doc("update access")
+    @api.marshal_with(dataset_access_rights)
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def post(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument

@@ -10,31 +10,46 @@ import model
 from apis.authentication import is_granted
 from apis.dataset_metadata_namespace import api
 
-dataset_title = api.model(
-    "DatasetTitle",
+dataset_general_information = api.model(
+    "DatasetGeneralInformation",
     {
-        "id": fields.String(required=True),
-        "title": fields.String(required=True),
-        "type": fields.String(required=True),
-    },
-)
-
-dataset_description = api.model(
-    "DatasetDescription",
-    {
-        "id": fields.String(required=True),
-        "description": fields.String(required=True),
-        "description_type": fields.String(required=True),
-    },
-)
-
-dataset_date = api.model(
-    "DatasetDate",
-    {
-        "id": fields.String(required=True),
-        "date": fields.String(required=True),
-        "type": fields.String(required=True),
-        "information": fields.String(required=True),
+        "titles": fields.List(
+            fields.Nested(
+                api.model(
+                    "DatasetTitle",
+                    {
+                        "id": fields.String(required=True),
+                        "title": fields.String(required=True),
+                        "type": fields.String(required=True),
+                    },
+                )
+            )
+        ),
+        "descriptions": fields.List(
+            fields.Nested(
+                api.model(
+                    "DatasetDescription",
+                    {
+                        "id": fields.String(required=True),
+                        "description": fields.String(required=True),
+                        "type": fields.String(required=True),
+                    },
+                )
+            )
+        ),
+        "dates": fields.List(
+            fields.Nested(
+                api.model(
+                    "DatasetDate",
+                    {
+                        "id": fields.String(required=True),
+                        "date": fields.Integer(required=True),
+                        "type": fields.String(required=True),
+                        "information": fields.String(required=True),
+                    },
+                )
+            )
+        ),
     },
 )
 
@@ -47,7 +62,7 @@ class DatasetGeneralInformation(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The dataset identifier")
-    # @api.marshal_with(dataset_title)
+    @api.marshal_with(dataset_general_information)
     def get(self, study_id: int, dataset_id: int):  # pylint: disable= unused-argument
         """Get dataset title"""
         dataset_ = model.Dataset.query.get(dataset_id)
@@ -63,6 +78,8 @@ class DatasetGeneralInformation(Resource):
     @api.doc("update general information")
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
+    @api.marshal_with(dataset_general_information)
+
     def post(self, study_id: int, dataset_id: int):
         """Update dataset title"""
         study_obj = model.Study.query.get(study_id)
