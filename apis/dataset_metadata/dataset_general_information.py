@@ -40,7 +40,7 @@ dataset_date = api.model(
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/general-information")
 class DatasetGeneralInformation(Resource):
-    """Dataset Title Resource"""
+    """Dataset General Information Resource"""
 
     @api.doc("title")
     @api.response(200, "Success")
@@ -152,6 +152,7 @@ class DatasetGeneralInformation(Resource):
                 dataset_title_ = model.DatasetTitle.from_data(data_obj, i)
                 model.db.session.add(dataset_title_)
                 list_of_titles.append(dataset_title_.to_dict())
+
         list_of_description = []
         for i in data["descriptions"]:
             if "id" in i and i["id"]:
@@ -188,41 +189,43 @@ class DatasetGeneralInformation(Resource):
 
         model.db.session.commit()
 
-        return {
+        return ({
             "titles": list_of_titles,
             "descriptions": list_of_description,
-            "dates  ": list_of_dates,
-        }, 201
+            "dates": list_of_dates,
+        },
+                200)
 
-    @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/title/<title_id>")
-    class DatasetTitleDelete(Resource):
-        """Dataset Title Update Resource"""
 
-        @api.doc("delete title")
-        @api.response(204, "Success")
-        @api.response(400, "Validation Error")
-        def delete(
-            self,
-            study_id: int,
-            dataset_id: int,  # pylint: disable= unused-argument
-            title_id: int,
-        ):
-            """Delete dataset title"""
-            study_obj = model.Study.query.get(study_id)
-            if not is_granted("dataset_metadata", study_obj):
-                return (
-                    "Access denied, you can not make any change in dataset metadata",
-                    403,
-                )
-            dataset_title_ = model.DatasetTitle.query.get(title_id)
-            if dataset_title_.type == "MainTitle":
-                return (
-                    "Main Title type can not be deleted",
-                    403,
-                )
-            model.db.session.delete(dataset_title_)
-            model.db.session.commit()
-            return Response(status=204)
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/title/<title_id>")
+class DatasetTitleDelete(Resource):
+    """Dataset Title Update Resource"""
+
+    @api.doc("delete title")
+    @api.response(204, "Success")
+    @api.response(400, "Validation Error")
+    def delete(
+        self,
+        study_id: int,
+        dataset_id: int,  # pylint: disable= unused-argument
+        title_id: int,
+    ):
+        """Delete dataset title"""
+        study_obj = model.Study.query.get(study_id)
+        if not is_granted("dataset_metadata", study_obj):
+            return (
+                "Access denied, you can not make any change in dataset metadata",
+                403,
+            )
+        dataset_title_ = model.DatasetTitle.query.get(title_id)
+        if dataset_title_.type == "MainTitle":
+            return (
+                "Main Title type can not be deleted",
+                403,
+            )
+        model.db.session.delete(dataset_title_)
+        model.db.session.commit()
+        return Response(status=204)
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/metadata/date/<date_id>")

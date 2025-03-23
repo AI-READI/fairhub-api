@@ -264,7 +264,7 @@ class DatasetTeamResource(Resource):
                 "contributors":list_of_contributors,
                 "managing_organization":data_obj.dataset_managing_organization.to_dict(),
                 "funders": list_of_funders,
-                },201
+                }, 200
 
 
 @api.route(

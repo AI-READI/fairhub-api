@@ -195,29 +195,4 @@ class DatasetRightsResource(Resource):
                 model.db.session.add(dataset_rights_)
                 list_of_elements.append(dataset_rights_.to_dict())
         model.db.session.commit()
-        return list_of_elements, 201
-
-
-@api.route("/study/<study_id>/dataset/<dataset_id>/metadata/rights/<rights_id>")
-class DatasetRightsUpdate(Resource):
-    """Dataset Rights Update Resource"""
-
-    @api.doc("delete rights")
-    @api.response(204, "Success")
-    @api.response(400, "Validation Error")
-    def delete(
-        self,
-        study_id: int,
-        dataset_id: int,  # pylint: disable= unused-argument
-        rights_id: int,
-    ):
-        """Delete dataset rights"""
-        study_obj = model.Study.query.get(study_id)
-        if not is_granted("dataset_metadata", study_obj):
-            return "Access denied, you can not make any change in dataset metadata", 403
-        dataset_rights_ = model.DatasetRights.query.get(rights_id)
-
-        model.db.session.delete(dataset_rights_)
-        model.db.session.commit()
-
-        return Response(status=204)
+        return list_of_elements, 200
