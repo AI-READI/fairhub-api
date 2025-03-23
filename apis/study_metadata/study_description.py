@@ -2,7 +2,7 @@
 
 import typing
 
-from flask import request
+from flask import Response, request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
 
@@ -222,3 +222,68 @@ class StudyDescriptionResource(Resource):
             "keywords": list_of_keywords,
             "identification": final_identifiers.to_dict(),
         }, 201
+
+
+@api.route("/study/<study_id>/metadata/keywords/<keyword_id>")
+class StudyKeywordsDelete(Resource):
+    """Study keywords Metadata update"""
+
+    @api.doc("Delete Study Keywords")
+    @api.response(204, "Success")
+    @api.response(400, "Validation Error")
+    def delete(self, study_id: int, keyword_id: int):
+        """Delete study conditions metadata"""
+        study = model.Study.query.get(study_id)
+        if not is_granted("study_metadata", study):
+            return "Access denied, you can not delete study", 403
+
+        study_keywords_ = model.StudyKeywords.query.get(keyword_id)
+
+        model.db.session.delete(study_keywords_)
+        model.db.session.commit()
+
+        return Response(status=204)
+
+
+@api.route("/study/<study_id>/metadata/conditions/<condition_id>")
+class StudyConditionsUpdate(Resource):
+    """Study Conditions Metadata update"""
+
+    @api.doc("Delete Study Identifications")
+    @api.response(204, "Success")
+    @api.response(400, "Validation Error")
+    def delete(self, study_id: int, condition_id: int):
+        """Delete study conditions metadata"""
+        study = model.Study.query.get(study_id)
+        if not is_granted("study_metadata", study):
+            return "Access denied, you can not delete study", 403
+
+        study_conditions_ = model.StudyConditions.query.get(condition_id)
+
+        model.db.session.delete(study_conditions_)
+        model.db.session.commit()
+
+        return Response(status=204)
+
+
+@api.route("/study/<study_id>/metadata/identification/<identification_id>")
+class StudyIdentificationdDelete(Resource):
+    """Study Identification Metadata"""
+
+    @api.doc("Delete Study Identifications")
+    @api.response(204, "Success")
+    @api.response(400, "Validation Error")
+    def delete(self, study_id: int, identification_id: int):
+        """Delete study identification metadata"""
+        study = model.Study.query.get(study_id)
+        if not is_granted("study_metadata", study):
+            return "Access denied, you can not delete study", 403
+
+        study_identification_ = model.StudyIdentification.query.get(identification_id)
+        if not study_identification_.secondary:
+            return "primary identifier can not be deleted", 400
+
+        model.db.session.delete(study_identification_)
+        model.db.session.commit()
+
+        return Response(status=204)

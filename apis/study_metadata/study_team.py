@@ -2,7 +2,7 @@
 
 import typing
 
-from flask import request
+from flask import Response, request
 from flask_restx import Resource, fields
 
 import model
@@ -86,94 +86,93 @@ class StudySponsorsResource(Resource):
     def post(self, study_id: int):
         """Update study team metadata"""
         # Schema validation
-        # schema = {
-        #     "type": "object",
-        #     "additionalProperties": False,
-        #     "properties": {
-        #         "collaborators": {
-        #             "type": "array",
-        #             "additionalProperties": False,
-        #             "items": {
-        #                 "type": "object",
-        #                 "properties": {
-        #                     "id": {"type": "string"},
-        #                     "name": {"type": "string"},
-        #                     "identifier": {"type": "string"},
-        #                     "identifier_scheme": {"type": "string"},
-        #                     "identifier_scheme_uri": {"type": "string"},
-        #                 },
-        #                 "required": [
-        #                     "name",
-        #                     "identifier",
-        #                     "identifier_scheme",
-        #                 ],
-        #             },
-        #         },
-        #         "sponsors":
-        #             {
-        #             "type": "object",
-        #             "additionalProperties": False,
-        #              "properties": {
-        #                 "responsible_party_type": {
-        #                 "type": ["string", "null"],
-        #                 "enum": [
-        #                     "Sponsor",
-        #                     "Principal Investigator",
-        #                     "Sponsor-Investigator",
-        #                 ],
-        #             },
-        #                 "responsible_party_investigator_first_name": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_last_name": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_title": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_identifier_value": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_identifier_scheme": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_identifier_scheme_uri": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_affiliation_name": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_affiliation_identifier_scheme": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_affiliation_identifier_value": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_affiliation_identifier_scheme_uri": {
-        #                     "type": "string",
-        #                 },
-        #                 "lead_sponsor_name": {"type": "string"},
-        #                 "lead_sponsor_identifier": {"type": "string"},
-        #                 "lead_sponsor_identifier_scheme": {"type": "string"},
-        #                 "lead_sponsor_identifier_scheme_uri": {
-        #                 "type": "string",
-        #             },
-        #         },
-        #              "required": [
-        #                 "responsible_party_type",
-        #                 "lead_sponsor_name",
-        #                 "responsible_party_investigator_last_name",
-        #                 "responsible_party_investigator_first_name",
-        #                 "responsible_party_investigator_title",
-        #             ],
-        #             }
-        #     }
-        # }
-        #
-        # try:
-        #     validate(request.json, schema)
-        # except ValidationError as e:
-        #     return e.message, 400
+        schema = {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {
+                "collaborators": {
+                    "type": "array",
+                    "additionalProperties": False,
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {"type": "string"},
+                            "name": {"type": "string"},
+                            "identifier": {"type": "string"},
+                            "identifier_scheme": {"type": "string"},
+                            "identifier_scheme_uri": {"type": "string"},
+                        },
+                        "required": [
+                            "name",
+                            "identifier",
+                            "identifier_scheme",
+                        ],
+                    },
+                },
+                "sponsors": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "responsible_party_type": {
+                            "type": ["string", "null"],
+                            "enum": [
+                                "Sponsor",
+                                "Principal Investigator",
+                                "Sponsor-Investigator",
+                            ],
+                        },
+                        "responsible_party_investigator_first_name": {
+                            "type": "string",
+                        },
+                        "responsible_party_investigator_last_name": {
+                            "type": "string",
+                        },
+                        "responsible_party_investigator_title": {
+                            "type": "string",
+                        },
+                        "responsible_party_investigator_identifier_value": {
+                            "type": "string",
+                        },
+                        "responsible_party_investigator_identifier_scheme": {
+                            "type": "string",
+                        },
+                        "responsible_party_investigator_identifier_scheme_uri": {
+                            "type": "string",
+                        },
+                        "responsible_party_investigator_affiliation_name": {
+                            "type": "string",
+                        },
+                        "responsible_party_investigator_affiliation_identifier_scheme": {
+                            "type": "string",
+                        },
+                        "responsible_party_investigator_affiliation_identifier_value": {
+                            "type": "string",
+                        },
+                        "responsible_party_investigator_affiliation_identifier_scheme_uri": {
+                            "type": "string",
+                        },
+                        "lead_sponsor_name": {"type": "string"},
+                        "lead_sponsor_identifier": {"type": "string"},
+                        "lead_sponsor_identifier_scheme": {"type": "string"},
+                        "lead_sponsor_identifier_scheme_uri": {
+                            "type": "string",
+                        },
+                    },
+                    "required": [
+                        "responsible_party_type",
+                        "lead_sponsor_name",
+                        "responsible_party_investigator_last_name",
+                        "responsible_party_investigator_first_name",
+                        "responsible_party_investigator_title",
+                    ],
+                },
+            },
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
         data: typing.Union[dict, typing.Any] = request.json
 
         if data["sponsors"]["responsible_party_type"] in [
@@ -229,3 +228,24 @@ class StudySponsorsResource(Resource):
             "collaborators": list_of_elements,
             "sponsors": study_.study_sponsors.to_dict(),
         }, 201
+
+
+@api.route("/study/<study_id>/metadata/collaborators/<collaborator_id>")
+class StudyLocationUpdate(Resource):
+    """delete Study Collaborators Metadata"""
+
+    @api.doc("delete study collaborators")
+    @api.response(204, "Success")
+    @api.response(400, "Validation Error")
+    def delete(self, study_id: int, collaborator_id: int):
+        """Delete study collaborators metadata"""
+        study_obj = model.Study.query.get(study_id)
+        if not is_granted("study_metadata", study_obj):
+            return "Access denied, you can not delete study", 403
+        study_collaborators_ = model.StudyCollaborators.query.get(collaborator_id)
+
+        model.db.session.delete(study_collaborators_)
+
+        model.db.session.commit()
+
+        return Response(status=204)
