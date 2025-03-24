@@ -28,7 +28,7 @@ class DatasetAlternateIdentifierResource(Resource):
     @api.doc("identifier")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.marshal_with(dataset_identifier)
+    @api.marshal_with(dataset_identifier)
     def get(self, study_id: int, dataset_id: int):  # pylint: disable = unused-argument
         """Get dataset alternate identifier"""
         dataset_ = model.Dataset.query.get(dataset_id)
@@ -38,6 +38,7 @@ class DatasetAlternateIdentifierResource(Resource):
     @api.doc("update identifier")
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
+    @api.marshal_with(dataset_identifier)
     def post(self, study_id: int, dataset_id: int):
         """Update dataset alternate identifier"""
         study_obj = model.Study.query.get(study_id)
