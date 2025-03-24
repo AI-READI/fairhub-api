@@ -1,4 +1,5 @@
 """API for dataset consent metadata"""
+import typing
 
 from flask import Response, request
 from flask_restx import Resource, fields
@@ -169,7 +170,7 @@ class DatasetDataManagement(Resource):
         except ValidationError as err:
             return err.message, 400
 
-        data = request.json
+        data: typing.Union[dict, typing.Any] = request.json
         dataset_ = model.Dataset.query.get(dataset_id)
         dataset_.dataset_consent.update(data["consent"])
         dataset_.dataset_de_ident_level.update(data["deident"])
