@@ -30,7 +30,7 @@ class StudyOversightResource(Resource):
     @api.doc("oversight")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.marshal_with(study_other)
+    @api.marshal_with(study_other)
     def get(self, study_id: int):
         """Get study oversight metadata"""
         study_ = model.Study.query.get(study_id)
@@ -38,6 +38,9 @@ class StudyOversightResource(Resource):
         study_oversight_has_dmc = study_.study_oversight
         return study_oversight_has_dmc.to_dict(), 200
 
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    @api.marshal_with(study_other)
     def put(self, study_id: int):
         """Update study oversight metadata"""
         # Schema validation

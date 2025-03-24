@@ -30,7 +30,7 @@ class StudyOverallOfficialResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")
-    # @api.marshal_with(study_overall_official)
+    @api.marshal_with(study_overall_official)
     def get(self, study_id: int):
         """Get study overall official metadata"""
         study_ = model.Study.query.get(study_id)
@@ -47,6 +47,8 @@ class StudyOverallOfficialResource(Resource):
 
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
+    @api.marshal_with(study_overall_official)
+
     def post(self, study_id: int):
         """Create study overall official metadata"""
         # Schema validation

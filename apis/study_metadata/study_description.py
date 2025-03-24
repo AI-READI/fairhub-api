@@ -12,35 +12,48 @@ from apis.study_metadata_namespace import api
 from ..authentication import is_granted
 
 study_description = api.model(
-    "StudyDescription",
+    "StudyMetadataDescription",
     {
-        "id": fields.String(required=True),
-        "brief_summary": fields.String(required=True),
-        "detailed_description": fields.String(required=True),
-    },
-)
-
-study_other = api.model(
-    "StudyConditions",
-    {
-        "id": fields.String(required=True),
-        "name": fields.Boolean(required=True),
-        "classification_code": fields.String(required=True),
-        "scheme": fields.String(required=True),
-        "scheme_uri": fields.String(required=True),
-        "condition_uri": fields.String(required=True),
-    },
-)
-
-study_keywords = api.model(
-    "StudyKeywords",
-    {
-        "id": fields.String(required=True),
-        "name": fields.Boolean(required=True),
-        "classification_code": fields.String(required=True),
-        "scheme": fields.String(required=True),
-        "scheme_uri": fields.String(required=True),
-        "keyword_uri": fields.String(required=True),
+        "description": fields.Nested(
+            api.model(
+                "StudyDescription",
+                {
+                    "id": fields.String(required=True),
+                    "brief_summary": fields.String(required=True),
+                    "detailed_description": fields.String(required=True),
+                },
+            )
+        ),
+        "conditions": fields.List(
+            fields.Nested(
+                api.model(
+                    "StudyConditions",
+                    {
+                        "id": fields.String(required=True),
+                        "name": fields.Boolean(required=True),
+                        "classification_code": fields.String(required=True),
+                        "scheme": fields.String(required=True),
+                        "scheme_uri": fields.String(required=True),
+                        "condition_uri": fields.String(required=True),
+                    },
+                )
+            )
+        ),
+        "keywords": fields.List(
+            fields.Nested(
+                api.model(
+                    "StudyKeywords",
+                    {
+                        "id": fields.String(required=True),
+                        "name": fields.Boolean(required=True),
+                        "classification_code": fields.String(required=True),
+                        "scheme": fields.String(required=True),
+                        "scheme_uri": fields.String(required=True),
+                        "keyword_uri": fields.String(required=True),
+                    },
+                )
+            )
+        ),
     },
 )
 
@@ -65,7 +78,7 @@ class StudyDescriptionResource(Resource):
     @api.doc("description")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.marshal_with(study_description)
+    @api.marshal_with(study_description)
     def get(self, study_id: int):
         """Get study description metadata"""
         study_ = model.Study.query.get(study_id)
@@ -82,6 +95,7 @@ class StudyDescriptionResource(Resource):
 
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
+    @api.marshal_with(study_description)
     def post(self, study_id: int):
         """Update study description metadata"""
         # Schema validation

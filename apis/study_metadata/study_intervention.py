@@ -41,11 +41,12 @@ class StudyInterventionResource(Resource):
         sorted_study_intervention = sorted(
             study_intervention_, key=lambda x: x.created_at
         )
-
         return [s.to_dict() for s in sorted_study_intervention], 200
 
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
+    @api.marshal_with(study_intervention)
+
     def post(self, study_id: int):
         """Create study intervention metadata"""
         # Schema validation

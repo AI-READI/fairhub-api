@@ -11,48 +11,49 @@ from jsonschema import ValidationError, validate
 
 from ..authentication import is_granted
 
-study_sponsors = api.model(
-    "StudySponsors",
+study_team_metadata = api.model(
+    "StudyTeamMetadata",
     {
-        "responsible_party_type": fields.String(required=False),
-        "responsible_party_investigator_first_name": fields.String(required=True),
-        "responsible_party_investigator_last_name": fields.String(required=True),
-        "responsible_party_investigator_title": fields.String(required=True),
-        "responsible_party_investigator_identifier_value": fields.String(required=True),
-        "responsible_party_investigator_identifier_scheme": fields.String(
-            required=True
+        "sponsors": fields.Nested(
+            api.model(
+                "StudySponsors",
+                {
+                    "responsible_party_type": fields.String(required=False),
+                    "responsible_party_investigator_first_name": fields.String(required=True),
+                    "responsible_party_investigator_last_name": fields.String(required=True),
+                    "responsible_party_investigator_title": fields.String(required=True),
+                    "responsible_party_investigator_identifier_value": fields.String(required=True),
+                    "responsible_party_investigator_identifier_scheme": fields.String(required=True),
+                    "responsible_party_investigator_identifier_scheme_uri": fields.String(required=True),
+                    "responsible_party_investigator_affiliation_name": fields.String(required=True),
+                    "responsible_party_investigator_affiliation_identifier_scheme": fields.String(required=True),
+                    "responsible_party_investigator_affiliation_identifier_value": fields.String(required=True),
+                    "responsible_party_investigator_affiliation_identifier_scheme_uri": fields.String(required=True),
+                    "lead_sponsor_name": fields.String(required=True),
+                    "lead_sponsor_identifier": fields.String(required=True),
+                    "lead_sponsor_identifier_scheme": fields.String(required=True),
+                    "lead_sponsor_identifier_scheme_uri": fields.String(required=True),
+                },
+            )
         ),
-        "responsible_party_investigator_identifier_scheme_uri": fields.String(
-            required=True
+        "collaborators": fields.List(
+            fields.Nested(
+                api.model(
+                    "StudyCollaborators",
+                    {
+                        "id": fields.String(required=True),
+                        "name": fields.String(required=True),
+                        "identifier": fields.String(required=True),
+                        "scheme": fields.String(required=True),
+                        "scheme_uri": fields.String(required=True),
+                        "created_at": fields.Integer(required=True),
+                    },
+                )
+            )
         ),
-        "responsible_party_investigator_affiliation_name": fields.String(required=True),
-        "responsible_party_investigator_affiliation_identifier_scheme": fields.String(
-            required=True
-        ),
-        "responsible_party_investigator_affiliation_identifier_value": fields.String(
-            required=True
-        ),
-        "responsible_party_investigator_affiliation_identifier_scheme_uri": fields.String(
-            required=True
-        ),
-        "lead_sponsor_name": fields.String(required=True),
-        "lead_sponsor_identifier": fields.String(required=True),
-        "lead_sponsor_identifier_scheme": fields.String(required=True),
-        "lead_sponsor_identifier_scheme_uri": fields.String(required=True),
     },
 )
 
-study_collaborators = api.model(
-    "StudyCollaborators",
-    {
-        "id": fields.String(required=True),
-        "name": fields.String(required=True),
-        "identifier": fields.String(required=True),
-        "scheme": fields.String(required=True),
-        "scheme_uri": fields.String(required=True),
-        "created_at": fields.Integer(required=True),
-    },
-)
 
 
 @api.route("/study/<study_id>/metadata/team")
@@ -62,12 +63,7 @@ class StudySponsorsResource(Resource):
     @api.doc("sponsors")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.marshal_with(
-    #     {
-    #         "sponsors": study_sponsors,
-    #         "collaborators": study_collaborators
-    #     }
-    # )
+    @api.marshal_with(study_team_metadata)
     def get(self, study_id: int):
         """Get study team metadata"""
         study_ = model.Study.query.get(study_id)
@@ -84,6 +80,7 @@ class StudySponsorsResource(Resource):
 
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
+    @api.marshal_with(study_team_metadata)
     def post(self, study_id: int):
         """Update study team metadata"""
         # Schema validation
