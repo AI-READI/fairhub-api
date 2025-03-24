@@ -316,7 +316,6 @@ class DatasetTeamResource(Resource):
                 list_of_funders.append(dataset_funder_.to_dict())
             elif "id" not in i or not i["id"]:
                 dataset_funder_ = model.DatasetFunder.from_data(data_obj, i)
-                print("herereeeeeeee", dataset_funder_.to_dict())
                 model.db.session.add(dataset_funder_)
                 list_of_funders.append(dataset_funder_.to_dict())
 

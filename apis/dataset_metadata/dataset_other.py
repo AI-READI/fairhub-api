@@ -11,9 +11,9 @@ from apis.dataset_metadata_namespace import api
 dataset_other = api.model(
     "DatasetOther",
     {
-        "language": fields.String(required=True),
-        "size": fields.List(fields.String, required=True),
-        "format": fields.List(fields.String, required=True),
+        "language": fields.String(required=False),
+        "size": fields.List(fields.String(required=False), required=True),
+        "format": fields.List(fields.String(required=False), required=True),
         "standards_followed": fields.String(required=True),
         "acknowledgement": fields.String(required=True),
         "resource_type": fields.String(required=True),
@@ -38,11 +38,10 @@ class DatasetOtherResource(Resource):
     @api.doc("other update")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(dataset_other)
+    # @api.marshal_with(dataset_other)
     def put(self, study_id: int, dataset_id: int):
         """Update dataset other metadata"""
         study_obj = model.Study.query.get(study_id)
-
         if not is_granted("dataset_metadata", study_obj):
             return "Access denied, you can not make any change in dataset metadata", 403
 
