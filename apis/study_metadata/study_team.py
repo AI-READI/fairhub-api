@@ -2,54 +2,63 @@
 
 import typing
 
-from flask import request
+from flask import Response, request
 from flask_restx import Resource, fields
 
 import model
 from apis.study_metadata_namespace import api
+from jsonschema import ValidationError, validate
 
 from ..authentication import is_granted
 
-study_sponsors = api.model(
-    "StudySponsors",
+study_team_metadata = api.model(
+    "StudyTeamMetadata",
     {
-        "responsible_party_type": fields.String(required=False),
-        "responsible_party_investigator_first_name": fields.String(required=True),
-        "responsible_party_investigator_last_name": fields.String(required=True),
-        "responsible_party_investigator_title": fields.String(required=True),
-        "responsible_party_investigator_identifier_value": fields.String(required=True),
-        "responsible_party_investigator_identifier_scheme": fields.String(
-            required=True
+        "sponsors": fields.Nested(  # Changed to Nested to make it a single object
+            api.model(
+                "StudySponsors",
+                {
+                    "responsible_party_type": fields.String(
+                        required=True,
+                        enum=[
+                            "Sponsor",
+                            "Principal Investigator",
+                            "Sponsor-Investigator",
+                        ]
+                    ),
+                    "responsible_party_investigator_first_name": fields.String(required=True),
+                    "responsible_party_investigator_last_name": fields.String(required=True),
+                    "responsible_party_investigator_title": fields.String(required=True),
+                    "lead_sponsor_name": fields.String(required=True),
+                    "responsible_party_investigator_identifier_value": fields.String(required=False),
+                    "responsible_party_investigator_identifier_scheme": fields.String(required=False),
+                    "responsible_party_investigator_identifier_scheme_uri": fields.String(required=False),
+                    "responsible_party_investigator_affiliation_name": fields.String(required=False),
+                    "responsible_party_investigator_affiliation_identifier_scheme": fields.String(required=False),
+                    "responsible_party_investigator_affiliation_identifier_value": fields.String(required=False),
+                    "responsible_party_investigator_affiliation_identifier_scheme_uri": fields.String(required=False),
+                    "lead_sponsor_identifier": fields.String(required=False),
+                    "lead_sponsor_identifier_scheme": fields.String(required=False),
+                    "lead_sponsor_identifier_scheme_uri": fields.String(required=False),
+                }
+            )
         ),
-        "responsible_party_investigator_identifier_scheme_uri": fields.String(
-            required=True
-        ),
-        "responsible_party_investigator_affiliation_name": fields.String(required=True),
-        "responsible_party_investigator_affiliation_identifier_scheme": fields.String(
-            required=True
-        ),
-        "responsible_party_investigator_affiliation_identifier_value": fields.String(
-            required=True
-        ),
-        "responsible_party_investigator_affiliation_identifier_scheme_uri": fields.String(
-            required=True
-        ),
-        "lead_sponsor_name": fields.String(required=True),
-        "lead_sponsor_identifier": fields.String(required=True),
-        "lead_sponsor_identifier_scheme": fields.String(required=True),
-        "lead_sponsor_identifier_scheme_uri": fields.String(required=True),
-    },
-)
 
-study_collaborators = api.model(
-    "StudyCollaborators",
-    {
-        "id": fields.String(required=True),
-        "name": fields.String(required=True),
-        "identifier": fields.String(required=True),
-        "scheme": fields.String(required=True),
-        "scheme_uri": fields.String(required=True),
-        "created_at": fields.Integer(required=True),
+        "collaborators": fields.List(
+            fields.Nested(
+                api.model(
+                    "StudyCollaborators",
+                    {
+                        "id": fields.String(required=True),
+                        "name": fields.String(required=True),
+                        "identifier": fields.String(required=False),
+                        "identifier_scheme": fields.String(required=False),
+                        "identifier_scheme_uri": fields.String(required=False),
+                        "created_at": fields.Integer(required=True),
+                    },
+                )
+            )
+        ),
     },
 )
 
@@ -61,12 +70,7 @@ class StudySponsorsResource(Resource):
     @api.doc("sponsors")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.marshal_with(
-    #     {
-    #         "sponsors": study_sponsors,
-    #         "collaborators": study_collaborators
-    #     }
-    # )
+    @api.marshal_with(study_team_metadata)
     def get(self, study_id: int):
         """Get study team metadata"""
         study_ = model.Study.query.get(study_id)
@@ -83,97 +87,98 @@ class StudySponsorsResource(Resource):
 
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
+    @api.marshal_with(study_team_metadata)
     def post(self, study_id: int):
         """Update study team metadata"""
         # Schema validation
-        # schema = {
-        #     "type": "object",
-        #     "additionalProperties": False,
-        #     "properties": {
-        #         "collaborators": {
-        #             "type": "array",
-        #             "additionalProperties": False,
-        #             "items": {
-        #                 "type": "object",
-        #                 "properties": {
-        #                     "id": {"type": "string"},
-        #                     "name": {"type": "string"},
-        #                     "identifier": {"type": "string"},
-        #                     "identifier_scheme": {"type": "string"},
-        #                     "identifier_scheme_uri": {"type": "string"},
-        #                 },
-        #                 "required": [
-        #                     "name",
-        #                     "identifier",
-        #                     "identifier_scheme",
-        #                 ],
-        #             },
-        #         },
-        #         "sponsors":
-        #             {
-        #             "type": "object",
-        #             "additionalProperties": False,
-        #              "properties": {
-        #                 "responsible_party_type": {
-        #                 "type": ["string", "null"],
-        #                 "enum": [
-        #                     "Sponsor",
-        #                     "Principal Investigator",
-        #                     "Sponsor-Investigator",
-        #                 ],
-        #             },
-        #                 "responsible_party_investigator_first_name": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_last_name": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_title": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_identifier_value": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_identifier_scheme": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_identifier_scheme_uri": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_affiliation_name": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_affiliation_identifier_scheme": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_affiliation_identifier_value": {
-        #                     "type": "string",
-        #                 },
-        #                 "responsible_party_investigator_affiliation_identifier_scheme_uri": {
-        #                     "type": "string",
-        #                 },
-        #                 "lead_sponsor_name": {"type": "string"},
-        #                 "lead_sponsor_identifier": {"type": "string"},
-        #                 "lead_sponsor_identifier_scheme": {"type": "string"},
-        #                 "lead_sponsor_identifier_scheme_uri": {
-        #                 "type": "string",
-        #             },
-        #         },
-        #              "required": [
-        #                 "responsible_party_type",
-        #                 "lead_sponsor_name",
-        #                 "responsible_party_investigator_last_name",
-        #                 "responsible_party_investigator_first_name",
-        #                 "responsible_party_investigator_title",
-        #             ],
-        #             }
-        #     }
-        # }
-        #
-        # try:
-        #     validate(request.json, schema)
-        # except ValidationError as e:
-        #     return e.message, 400
+        schema = {
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["collaborators", "sponsors"],
+            "properties": {
+                "collaborators": {
+                    "type": "array",
+                    "additionalProperties": False,
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {"type": "string"},
+                            "name": {"type": "string"},
+                            "identifier": {"type": "string"},
+                            "identifier_scheme": {"type": "string"},
+                            "identifier_scheme_uri": {"type": "string"},
+                        },
+                        "required": [
+                            "name",
+                            "identifier",
+                            "identifier_scheme",
+                        ],
+                    },
+                },
+                "sponsors": {
+                    "type": "object",
+                    "additionalProperties": False,
+                    "properties": {
+                        "responsible_party_type": {
+                            "type": ["string", "null"],
+                            "enum": [
+                                "Sponsor",
+                                "Principal Investigator",
+                                "Sponsor-Investigator",
+                            ],
+                        },
+                        "responsible_party_investigator_first_name": {
+                            "type": "string",
+                        },
+                        "responsible_party_investigator_last_name": {
+                            "type": "string",
+                        },
+                        "responsible_party_investigator_title": {
+                            "type": "string",
+                        },
+                        "responsible_party_investigator_identifier_value": {
+                            "type": "string",
+                        },
+                        "responsible_party_investigator_identifier_scheme": {
+                            "type": "string",
+                        },
+                        "responsible_party_investigator_identifier_scheme_uri": {
+                            "type": "string",
+                        },
+                        "responsible_party_investigator_affiliation_name": {
+                            "type": "string",
+                        },
+                        "responsible_party_investigator_affiliation_identifier_scheme": {
+                            "type": "string",
+                        },
+                        "responsible_party_investigator_affiliation_identifier_value": {
+                            "type": "string",
+                        },
+                        "responsible_party_investigator_affiliation_identifier_scheme_uri": {
+                            "type": "string",
+                        },
+                        "lead_sponsor_name": {"type": "string"},
+                        "lead_sponsor_identifier": {"type": "string"},
+                        "lead_sponsor_identifier_scheme": {"type": "string"},
+                        "lead_sponsor_identifier_scheme_uri": {
+                            "type": "string",
+                        },
+                    },
+                    "required": [
+                        "responsible_party_type",
+                        "lead_sponsor_name",
+                        "responsible_party_investigator_last_name",
+                        "responsible_party_investigator_first_name",
+                        "responsible_party_investigator_title",
+                    ],
+                },
+            },
+        }
+
+        try:
+            validate(request.json, schema)
+        except ValidationError as e:
+            return e.message, 400
         data: typing.Union[dict, typing.Any] = request.json
 
         if data["sponsors"]["responsible_party_type"] in [
@@ -229,3 +234,24 @@ class StudySponsorsResource(Resource):
             "collaborators": list_of_elements,
             "sponsors": study_.study_sponsors.to_dict(),
         }, 201
+
+
+@api.route("/study/<study_id>/metadata/collaborators/<collaborator_id>")
+class StudyLocationUpdate(Resource):
+    """delete Study Collaborators Metadata"""
+
+    @api.doc("delete study collaborators")
+    @api.response(204, "Success")
+    @api.response(400, "Validation Error")
+    def delete(self, study_id: int, collaborator_id: int):
+        """Delete study collaborators metadata"""
+        study_obj = model.Study.query.get(study_id)
+        if not is_granted("study_metadata", study_obj):
+            return "Access denied, you can not delete study", 403
+        study_collaborators_ = model.StudyCollaborators.query.get(collaborator_id)
+
+        model.db.session.delete(study_collaborators_)
+
+        model.db.session.commit()
+
+        return Response(status=204)
