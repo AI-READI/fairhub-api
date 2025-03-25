@@ -14,11 +14,10 @@ from ..authentication import is_granted
 study_other = api.model(
     "StudyOversight",
     {
-        "id": fields.String(required=True),
-        "oversight_has_dmc": fields.Boolean(required=True),
-        "conditions": fields.String(required=True),
-        "keywords": fields.String(required=True),
-        "size": fields.String(required=True),
+        "has_dmc": fields.String(required=True),
+        "fda_regulated_drug": fields.String(required=True),
+        "fda_regulated_device": fields.String(required=True),
+        "human_subject_review_status": fields.String(required=True),
     },
 )
 

@@ -3222,7 +3222,6 @@ def test_get_overall_official_metadata(clients):
     admin_response_data = json.loads(admin_response.data)
     editor_response_data = json.loads(editor_response.data)
     viewer_response_data = json.loads(viewer_response.data)
-
     assert response_data[0]["first_name"] == "test"
     assert response_data[0]["last_name"] == "test"
     assert response_data[0]["affiliation"] == "aff"

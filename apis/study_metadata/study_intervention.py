@@ -46,7 +46,6 @@ class StudyInterventionResource(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(study_intervention)
-
     def post(self, study_id: int):
         """Create study intervention metadata"""
         # Schema validation

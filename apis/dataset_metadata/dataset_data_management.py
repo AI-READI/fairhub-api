@@ -163,7 +163,7 @@ class DatasetDataManagement(Resource):
                     ],
                 },
             },
-            "required": [],
+            "required": ["consent", "subjects", "deident"],
         }
         try:
             validate(instance=request.json, schema=schema)

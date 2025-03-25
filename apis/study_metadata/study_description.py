@@ -30,7 +30,7 @@ study_description = api.model(
                     "StudyConditions",
                     {
                         "id": fields.String(required=True),
-                        "name": fields.Boolean(required=True),
+                        "name": fields.String(required=True),
                         "classification_code": fields.String(required=True),
                         "scheme": fields.String(required=True),
                         "scheme_uri": fields.String(required=True),
@@ -45,7 +45,7 @@ study_description = api.model(
                     "StudyKeywords",
                     {
                         "id": fields.String(required=True),
-                        "name": fields.Boolean(required=True),
+                        "name": fields.String(required=True),
                         "classification_code": fields.String(required=True),
                         "scheme": fields.String(required=True),
                         "scheme_uri": fields.String(required=True),
@@ -54,19 +54,40 @@ study_description = api.model(
                 )
             )
         ),
-    },
-)
-
-
-study_identification = api.model(
-    "StudyIdentification",
-    {
-        "id": fields.String(required=True),
-        "identifier": fields.String(required=True),
-        "identifier_type": fields.String(required=True),
-        "identifier_domain": fields.String(required=True),
-        "identifier_link": fields.String(required=True),
-        "secondary": fields.Boolean(required=True),
+        "identification": fields.Nested(
+            api.model(
+                "StudyIdentification",
+                {
+                    "primary": fields.Nested(
+                        api.model(
+                            "PrimaryIdentification",
+                            {
+                                "id": fields.String(required=True),
+                                "identifier": fields.String(required=True),
+                                "identifier_type": fields.String(required=True),
+                                "identifier_domain": fields.String(required=True),
+                                "identifier_link": fields.String(required=True),
+                            },
+                        )
+                    ),
+                    "secondary": fields.List(
+                        fields.Nested(
+                            api.model(
+                                "SecondaryIdentification",
+                                {
+                                    "id": fields.String(required=True),
+                                    "identifier": fields.String(required=True),
+                                    "identifier_type": fields.String(required=True),
+                                    "identifier_domain": fields.String(required=True),
+                                    "identifier_link": fields.String(required=True),
+                                },
+                            )
+                        ),
+                        required=True,
+                    ),
+                },
+            )
+        ),
     },
 )
 
@@ -87,10 +108,11 @@ class StudyDescriptionResource(Resource):
         study_conditions = study_.study_conditions
         study_description_ = study_.study_description
         return {
-            "identification": identifiers.to_dict(),
             "keywords": [k.to_dict() for k in study_keywords],
             "conditions": [c.to_dict() for c in study_conditions],
             "description": study_description_.to_dict(),
+            "identification": identifiers.to_dict(),
+
         }, 200
 
     @api.response(200, "Success")
@@ -102,7 +124,7 @@ class StudyDescriptionResource(Resource):
         schema = {
             "type": "object",
             "additionalProperties": False,
-            "required": [],
+            "required": ["conditions", "keywords", "description", "identification"],
             "properties": {
                 "conditions": {
                     "type": "array",

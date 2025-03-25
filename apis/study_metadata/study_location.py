@@ -47,7 +47,6 @@ class StudyLocationResource(Resource):
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
     @api.marshal_with(study_location)
-
     def post(self, study_id: int):
         """Create study location metadata"""
         # Schema validation

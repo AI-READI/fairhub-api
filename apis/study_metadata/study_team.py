@@ -14,28 +14,36 @@ from ..authentication import is_granted
 study_team_metadata = api.model(
     "StudyTeamMetadata",
     {
-        "sponsors": fields.Nested(
+        "sponsors": fields.Nested(  # Changed to Nested to make it a single object
             api.model(
                 "StudySponsors",
                 {
-                    "responsible_party_type": fields.String(required=False),
+                    "responsible_party_type": fields.String(
+                        required=True,
+                        enum=[
+                            "Sponsor",
+                            "Principal Investigator",
+                            "Sponsor-Investigator",
+                        ]
+                    ),
                     "responsible_party_investigator_first_name": fields.String(required=True),
                     "responsible_party_investigator_last_name": fields.String(required=True),
                     "responsible_party_investigator_title": fields.String(required=True),
-                    "responsible_party_investigator_identifier_value": fields.String(required=True),
-                    "responsible_party_investigator_identifier_scheme": fields.String(required=True),
-                    "responsible_party_investigator_identifier_scheme_uri": fields.String(required=True),
-                    "responsible_party_investigator_affiliation_name": fields.String(required=True),
-                    "responsible_party_investigator_affiliation_identifier_scheme": fields.String(required=True),
-                    "responsible_party_investigator_affiliation_identifier_value": fields.String(required=True),
-                    "responsible_party_investigator_affiliation_identifier_scheme_uri": fields.String(required=True),
                     "lead_sponsor_name": fields.String(required=True),
-                    "lead_sponsor_identifier": fields.String(required=True),
-                    "lead_sponsor_identifier_scheme": fields.String(required=True),
-                    "lead_sponsor_identifier_scheme_uri": fields.String(required=True),
-                },
+                    "responsible_party_investigator_identifier_value": fields.String(required=False),
+                    "responsible_party_investigator_identifier_scheme": fields.String(required=False),
+                    "responsible_party_investigator_identifier_scheme_uri": fields.String(required=False),
+                    "responsible_party_investigator_affiliation_name": fields.String(required=False),
+                    "responsible_party_investigator_affiliation_identifier_scheme": fields.String(required=False),
+                    "responsible_party_investigator_affiliation_identifier_value": fields.String(required=False),
+                    "responsible_party_investigator_affiliation_identifier_scheme_uri": fields.String(required=False),
+                    "lead_sponsor_identifier": fields.String(required=False),
+                    "lead_sponsor_identifier_scheme": fields.String(required=False),
+                    "lead_sponsor_identifier_scheme_uri": fields.String(required=False),
+                }
             )
         ),
+
         "collaborators": fields.List(
             fields.Nested(
                 api.model(
@@ -43,9 +51,9 @@ study_team_metadata = api.model(
                     {
                         "id": fields.String(required=True),
                         "name": fields.String(required=True),
-                        "identifier": fields.String(required=True),
-                        "scheme": fields.String(required=True),
-                        "scheme_uri": fields.String(required=True),
+                        "identifier": fields.String(required=False),
+                        "identifier_scheme": fields.String(required=False),
+                        "identifier_scheme_uri": fields.String(required=False),
                         "created_at": fields.Integer(required=True),
                     },
                 )
@@ -53,7 +61,6 @@ study_team_metadata = api.model(
         ),
     },
 )
-
 
 
 @api.route("/study/<study_id>/metadata/team")
@@ -87,6 +94,7 @@ class StudySponsorsResource(Resource):
         schema = {
             "type": "object",
             "additionalProperties": False,
+            "required": ["collaborators", "sponsors"],
             "properties": {
                 "collaborators": {
                     "type": "array",
