@@ -1,5 +1,5 @@
-from model.dataset_metadata.dataset_contributor import DatasetContributor
-from model.dataset_metadata.dataset_related_identifier import DatasetRelatedIdentifier
+from .dataset_metadata.dataset_contributor import DatasetContributor
+from .dataset_metadata.dataset_related_identifier import DatasetRelatedIdentifier
 
 from .dataset import Dataset
 from .dataset_metadata.dataset_access import DatasetAccess

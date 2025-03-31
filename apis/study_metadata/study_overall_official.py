@@ -15,9 +15,17 @@ study_overall_official = api.model(
     "StudyOverallOfficial",
     {
         "id": fields.String(required=True),
-        "name": fields.String(required=True),
+        "first_name": fields.String(required=True),
+        "last_name": fields.String(required=True),
+        "identifier": fields.String(required=False),
+        "identifier_scheme": fields.String(required=False),
+        "identifier_scheme_uri": fields.String(required=False),
         "affiliation": fields.String(required=True),
-        "role": fields.String(required=True),
+        "affiliation_identifier": fields.String(required=True),
+        "affiliation_identifier_scheme": fields.String(required=False),
+        "affiliation_identifier_scheme_uri": fields.String(required=False),
+        "role": fields.String(required=True),  # Allows null in JSON Schema but RESTx doesn't support nullable fields
+        "degree": fields.String(required=False),
     },
 )
 
@@ -30,7 +38,7 @@ class StudyOverallOfficialResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")
-    # @api.marshal_with(study_overall_official)
+    @api.marshal_with(study_overall_official)
     def get(self, study_id: int):
         """Get study overall official metadata"""
         study_ = model.Study.query.get(study_id)
@@ -47,6 +55,7 @@ class StudyOverallOfficialResource(Resource):
 
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
+    @api.marshal_with(study_overall_official)
     def post(self, study_id: int):
         """Create study overall official metadata"""
         # Schema validation

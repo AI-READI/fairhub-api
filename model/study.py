@@ -34,7 +34,7 @@ class Study(db.Model):  # type: ignore
 
     title = db.Column(db.String(300), nullable=False)
     image = db.Column(db.String, nullable=False)
-    acronym = db.Column(db.String(14), nullable=False)
+    short_description = db.Column(db.String(300), nullable=False)
 
     created_at = db.Column(db.BigInteger, nullable=False)
     updated_on = db.Column(db.BigInteger, nullable=False)
@@ -170,7 +170,7 @@ class Study(db.Model):  # type: ignore
         return {
             "id": self.id,
             "title": self.title,
-            "acronym": self.acronym,
+            "short_description": self.short_description,
             "image": self.image,
             "created_at": self.created_at,
             "updated_on": self.updated_on,
@@ -179,7 +179,9 @@ class Study(db.Model):  # type: ignore
                 self.study_description.brief_summary if self.study_description else None
             ),
             "owner": owner.to_dict()["id"] if owner else None,
-            "role": contributor_permission.to_dict()["role"],
+            "role": contributor_permission.to_dict()["role"]
+            if contributor_permission
+            else None,
         }
 
     def to_dict_study_metadata(self):
@@ -245,7 +247,7 @@ class Study(db.Model):  # type: ignore
 
         self.title = data["title"]
         self.image = data["image"]
-        self.acronym = data["acronym"]
+        self.short_description = data["short_description"]
         self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
 
     def validate(self):

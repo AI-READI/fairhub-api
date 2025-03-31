@@ -78,6 +78,7 @@ class UserDetailsEndpoint(Resource):
             "properties": {
                 "id": {"type": "string"},
                 "email_address": {"type": "string", "format": "valid_email"},
+                "email_verified": {"type": "boolean"},
                 "username": {"type": "string", "minLength": 0},
                 "first_name": {"type": "string", "minLength": 0},
                 "last_name": {"type": "string", "minLength": 0},
@@ -104,7 +105,7 @@ class UserDetailsEndpoint(Resource):
 
         data: Union[Any, dict] = request.json
         user = model.User.query.get(g.user.id)
-        # user.update(data) # don't update the username and email_address for now
+        # user.update(data) # don't update the email_address for now
         user_details = user.user_details
         user_details.update(data)
         model.db.session.commit()

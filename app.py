@@ -11,6 +11,7 @@ import jwt
 from flask import Flask, g, request
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
+from flask_mailman import Mail
 from growthbook import GrowthBook
 from sqlalchemy import MetaData, inspect, text
 from sqlalchemy.ext.compiler import compiles
@@ -27,6 +28,7 @@ from apis.exception import ValidationException
 # from pyfairdatatools import __version__
 
 bcrypt = Bcrypt()
+mail = Mail()
 
 
 # Add Cascade to Table Drop Call in destroy-schema CLI command
@@ -76,9 +78,10 @@ def create_app(config_module=None, loglevel="INFO"):
     bcrypt.init_app(app)
     caching.cache.init_app(app)
 
+    mail.init_app(app)
     cors_origins = [
-        "https://brave-ground-.*-.*.centralus.2.azurestaticapps.net",
-        # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
+        "https://witty-mushroom-.*-.*.centralus.4.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
+        "https://brave-ground-.*-.*.centralus.2.azurestaticapps.net",  # noqa E501 # pylint: disable=line-too-long # pylint: disable=anomalous-backslash-in-string
         "https://staging.app.fairhub.io",
         "https://app.fairhub.io",
         "https://staging.fairhub.io",
@@ -261,16 +264,19 @@ def create_app(config_module=None, loglevel="INFO"):
             minutes=180
         )
         session = model.Session.query.get(g.token)
-        session_expires_at = datetime.datetime.fromtimestamp(session.expires_at, timezone.utc)
+        session_expires_at = datetime.datetime.fromtimestamp(
+            session.expires_at, timezone.utc
+        )
 
         if expired_in - session_expires_at < datetime.timedelta(minutes=90):
-
             new_token = jwt.encode(
                 {"user": decoded["user"], "exp": expired_in, "jti": decoded["jti"]},
                 config.FAIRHUB_SECRET,
                 algorithm="HS256",
             )
-            resp.set_cookie("token", new_token, secure=True, httponly=True, samesite="None")
+            resp.set_cookie(
+                "token", new_token, secure=True, httponly=True, samesite="None"
+            )
             session.expires_at = expired_in.timestamp()
 
         app.logger.info("after request")

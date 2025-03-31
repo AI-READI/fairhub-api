@@ -8,6 +8,12 @@ import model
 
 from .authentication import is_granted
 
+# import os
+
+
+# from modules.invitation import send_access_contributors, send_invitation_study
+
+
 api = Namespace("Contributor", description="Contributors", path="/")
 
 
@@ -20,7 +26,7 @@ contributors_model = api.model(
 
 
 @api.route("/study/<study_id>/contributor")
-class AddContributor(Resource):
+class AllContributors(Resource):
     @api.doc("contributor list")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
@@ -48,8 +54,10 @@ class AddContributor(Resource):
         email_address = data["email_address"]
         user = model.User.query.filter_by(email_address=email_address).first()
         permission = data["role"]
-        contributor_ = None
-
+        # contributor_ = None
+        # study_name = study_obj.title
+        # first_name = user.user_details.first_name if user else ""
+        # last_name = user.user_details.last_name if user else ""
         try:
             if user:
                 contributor_ = study_obj.add_user_to_study(user, permission)
@@ -59,6 +67,23 @@ class AddContributor(Resource):
         except model.StudyException as ex:
             return ex.args[0], 409
         model.db.session.commit()
+        # if os.environ.get("FLASK_ENV") != "testing":
+        #     if g.gb.is_on("email-verification"):
+        #         if user:
+        #             send_access_contributors(
+        #                 email_address,
+        #                 study_obj,
+        #                 first_name,
+        #                 last_name,
+        #                 contributor_.permission,
+        #             )
+        #         else:
+        #             send_invitation_study(
+        #                 email_address,
+        #                 contributor_.token,
+        #                 study_name,
+        #                 contributor_.permission,
+        #             )
         return contributor_.to_dict(), 201
 
 
@@ -100,7 +125,6 @@ class ContributorResource(Resource):
         if not can_grant:
             return f"User cannot grant {permission}", 403
 
-        # TODO: Owners downgrading themselves
         if user != g.user:
             grantee_level = list(grants.keys()).index(grantee.permission)  # 1
             new_level: int = list(grants.keys()).index(str(permission))  # 2
