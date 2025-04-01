@@ -18,7 +18,7 @@ from flask_restx import Namespace, Resource, fields
 from jsonschema import FormatChecker, ValidationError, validate
 
 import model
-from invitation.invitation import reset_password, forgot_password
+from modules.invitation import reset_password, forgot_password
 
 # from modules.invitation import (
 #     send_email_verification,
@@ -727,9 +727,9 @@ class ForgotPassword(Resource):
         first_name = user.user_details.first_name if user else ""
         last_name = user.user_details.last_name if user else ""
 
-        if g.gb.is_on("email-verification"):
-            if os.environ.get("FLASK_ENV") != "testing":
-                forgot_password(email_address, first_name, last_name, reset_token)
+        # if g.gb.is_on("email-verification"):
+        #     if os.environ.get("FLASK_ENV") != "testing":
+        #         forgot_password(email_address, first_name, last_name, reset_token)
         user.update_password_reset(reset_token)
         model.db.session.commit()
 
