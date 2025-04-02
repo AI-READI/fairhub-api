@@ -18,7 +18,8 @@ from flask_restx import Namespace, Resource, fields
 from jsonschema import FormatChecker, ValidationError, validate
 
 import model
-from modules.invitation import reset_password, forgot_password
+
+# from modules.invitation import reset_password, forgot_password
 
 # from modules.invitation import (
 #     send_email_verification,
@@ -702,15 +703,14 @@ class ForgotPassword(Resource):
         data: Union[Any, dict] = request.json
         email_address: str = data["email_address"]
 
-        user = (model.User.query.filter
-                (model.User.email_address == email_address).first())
+        user = model.User.query.filter(
+            model.User.email_address == email_address
+        ).first()
 
         if not user:
             raise ValidationError("User associated with this email does not exist")
 
-        expired_in = get_now() + datetime.timedelta(
-            minutes=5
-        )
+        expired_in = get_now() + datetime.timedelta(minutes=5)
         jti = str(uuid.uuid4())
         reset_token = jwt.encode(
             {
@@ -718,14 +718,13 @@ class ForgotPassword(Resource):
                 "exp": expired_in,
                 "jti": jti,
                 "email": email_address,
-
             },  # noqa: W503
             config.FAIRHUB_SECRET,
             algorithm="HS256",
         )
-        email_address = email_address if user else ""
-        first_name = user.user_details.first_name if user else ""
-        last_name = user.user_details.last_name if user else ""
+        # email_address = email_address if user else ""
+        # first_name = user.user_details.first_name if user else ""
+        # last_name = user.user_details.last_name if user else ""
 
         # if g.gb.is_on("email-verification"):
         #     if os.environ.get("FLASK_ENV") != "testing":
@@ -762,10 +761,14 @@ class ResetPassword(Resource):
         data: Union[Any, dict] = request.json
 
         try:
-            decoded = jwt.decode(data["token"], config.FAIRHUB_SECRET, algorithms=["HS256"])
+            decoded = jwt.decode(
+                data["token"], config.FAIRHUB_SECRET, algorithms=["HS256"]
+            )
         except (jwt.ExpiredSignatureError, jwt.DecodeError, jwt.InvalidSignatureError):
             return Response(status=401)
-        user = model.User.query.filter(model.User.email_address == decoded["email"]).first()
+        user = model.User.query.filter(
+            model.User.email_address == decoded["email"]
+        ).first()
         if not user:
             raise ValidationError("Email doesnt exist")
 
@@ -817,17 +820,17 @@ class ResetPassword(Resource):
         user.update_password_reset(None)
         model.db.session.commit()
 
-        email_address = user.email_address if user else ""
-        first_name = user.user_details.first_name if user else ""
-        last_name = user.user_details.last_name if user else ""
-        if os.environ.get("FLASK_ENV") != "testing":
-            if g.gb.is_on("email-verification"):
-                if user:
-                    reset_password(
-                        email_address,
-                        first_name,
-                        last_name,
-                    )
+        # email_address = user.email_address if user else ""
+        # first_name = user.user_details.first_name if user else ""
+        # last_name = user.user_details.last_name if user else ""
+        # if os.environ.get("FLASK_ENV") != "testing":
+        #     if g.gb.is_on("email-verification"):
+        #         if user:
+        #             reset_password(
+        #                 email_address,
+        #                 first_name,
+        #                 last_name,
+        #             )
 
         return "Password reset successfully", 200
 
