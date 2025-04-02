@@ -25,6 +25,7 @@ class User(db.Model):  # type: ignore
     hash = db.Column(db.String, nullable=False)
     created_at = db.Column(db.BigInteger, nullable=False)
     email_verified = db.Column(db.BOOLEAN, nullable=True)
+    password_reset_token = db.Column(db.String, nullable=True)
 
     study_contributors = db.relationship("StudyContributor", back_populates="user")
     email_verification = db.relationship("EmailVerification", back_populates="user")
@@ -82,9 +83,9 @@ class User(db.Model):  # type: ignore
             data["username"] if "username" in data else data["email_address"]
         )
         # self.email_verified = data["email_verified"]
-        # self.username = data["username"]
-        # self.hash = data["hash"]
-        # self.created_at = data["created_at"]
+
+    def update_password_reset(self, password_reset_token):
+        self.password_reset_token = password_reset_token
 
     def set_password(self, password: str):
         """setting bcrypt passwords"""

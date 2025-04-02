@@ -71,22 +71,42 @@ def send_access_contributors(to, study, first_name, last_name, role):
     azure_email_connection(html_content, subject, to)
 
 
-# def send_invitation_general(to, token):
-#     accept_url = f"{config.FAIRHUB_FRONTEND_URL}auth/signup?code={token}&email={to}"
-#     html_content = render_template(
-#         "accept_general_invitation.html", token=token, accept_url=accept_url, to=to
-#     )
-#     subject, from_email, to = (
-#         f"You have been invited to signup to FAIRhub",
-#         "aydan.gasimova2@example.com",
-#         to,
-#     )
-#
-#     # msg = EmailMessage(subject, html_content, from_email, [to])
-#     # msg.content_subtype = "html"
-#     # msg.send()
-#     azure_email_connection(html_content, subject)
-#
+def forgot_password(to, first_name, last_name, token):
+    reset_password_ = f"{config.FAIRHUB_FRONTEND_URL}auth/reset-password?token={token}"
+
+    html_content = render_template(
+        "forgot_password.html",
+        forgot_password_=reset_password_,
+        email=to,
+        first_name=first_name,
+        last_name=last_name
+    )
+    subject, from_email, to = (
+                f" Password Change",
+                "aydan.gasimova2@gmail.com",
+                to,
+    )
+    azure_email_connection(html_content, subject, to)
+
+
+def reset_password(to, first_name, last_name):
+    reset_password_ = f"{config.FAIRHUB_FRONTEND_URL}/user/profile"
+
+    html_content = render_template(
+        "reset_password.html",
+        reset_password_=reset_password_,
+        email=to,
+        first_name=first_name,
+        last_name=last_name
+    )
+    subject, from_email, to = (
+                f" Password Change",
+                "aydan.gasimova2@gmail.com",
+                to,
+    )
+    azure_email_connection(html_content, subject, to)
+
+
 
 def send_email_verification(email_address, token):
     verification_url = (

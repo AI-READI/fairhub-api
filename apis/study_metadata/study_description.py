@@ -112,7 +112,6 @@ class StudyDescriptionResource(Resource):
             "conditions": [c.to_dict() for c in study_conditions],
             "description": study_description_.to_dict(),
             "identification": identifiers.to_dict(),
-
         }, 200
 
     @api.response(200, "Success")

@@ -24,7 +24,9 @@ study_overall_official = api.model(
         "affiliation_identifier": fields.String(required=True),
         "affiliation_identifier_scheme": fields.String(required=False),
         "affiliation_identifier_scheme_uri": fields.String(required=False),
-        "role": fields.String(required=True),  # Allows null in JSON Schema but RESTx doesn't support nullable fields
+        "role": fields.String(
+            required=True
+        ),  # Allows null in JSON Schema but RESTx doesn't support nullable fields
         "degree": fields.String(required=False),
     },
 )

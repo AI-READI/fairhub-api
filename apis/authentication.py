@@ -13,11 +13,13 @@ from typing import Any, Union
 
 import jwt
 from email_validator import EmailNotValidError, validate_email
-from flask import g, make_response, request
+from flask import g, make_response, request, Response
 from flask_restx import Namespace, Resource, fields
 from jsonschema import FormatChecker, ValidationError, validate
 
 import model
+
+# from modules.invitation import reset_password, forgot_password
 
 # from modules.invitation import (
 #     send_email_verification,
@@ -647,3 +649,201 @@ def session_logout():
             model.db.session.delete(session)
             model.db.session.commit()
         # return "Sessions are removed successfully", 200
+
+
+@api.route("/auth/forgot-password")
+class ForgotPassword(Resource):
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    def post(self):
+        """function is used to  reset password in case users forget"""
+
+        if os.environ.get("FLASK_ENV") == "testing":
+            config_module_name = "pytest_config"
+        else:
+            config_module_name = "config"
+
+        config_module = importlib.import_module(config_module_name)
+
+        if os.environ.get("FLASK_ENV") == "testing":
+            # If testing, use the 'TestConfig' class for accessing 'secret'
+            config = config_module.TestConfig
+        else:
+            # If not testing, directly use the 'config' module
+            config = config_module
+
+        def validate_is_valid_email(instance):
+            email_address = instance
+            try:
+                validate_email(email_address)
+                return True
+            except EmailNotValidError as e:
+                raise ValidationError("Invalid email address format") from e
+
+        # Schema validation
+        schema = {
+            "type": "object",
+            "required": ["email_address"],
+            "additionalProperties": False,
+            "properties": {
+                "email_address": {"type": "string", "format": "valid_email"}
+            },
+        }
+
+        format_checker = FormatChecker()
+        format_checker.checks("valid_email")(validate_is_valid_email)
+
+        try:
+            validate(
+                instance=request.json, schema=schema, format_checker=format_checker
+            )
+        except ValidationError as e:
+            return e.message, 400
+
+        data: Union[Any, dict] = request.json
+        email_address: str = data["email_address"]
+
+        user = model.User.query.filter(
+            model.User.email_address == email_address
+        ).first()
+
+        if not user:
+            raise ValidationError("User associated with this email does not exist")
+
+        expired_in = get_now() + datetime.timedelta(minutes=5)
+        jti = str(uuid.uuid4())
+        reset_token = jwt.encode(
+            {
+                "user": user.id,
+                "exp": expired_in,
+                "jti": jti,
+                "email": email_address,
+            },  # noqa: W503
+            config.FAIRHUB_SECRET,
+            algorithm="HS256",
+        )
+        # email_address = email_address if user else ""
+        # first_name = user.user_details.first_name if user else ""
+        # last_name = user.user_details.last_name if user else ""
+
+        # if g.gb.is_on("email-verification"):
+        #     if os.environ.get("FLASK_ENV") != "testing":
+        #         forgot_password(email_address, first_name, last_name, reset_token)
+        user.update_password_reset(reset_token)
+        model.db.session.commit()
+
+        response = make_response("email is sent successfully", 200)
+        if os.environ.get("FLASK_ENV") == "testing":
+            response.headers.add("X-Token", reset_token)
+        return response
+
+
+@api.route("/auth/reset-password")
+class ResetPassword(Resource):
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    def post(self):
+        """function is used to  reset password in case users forget"""
+        if os.environ.get("FLASK_ENV") == "testing":
+            config_module_name = "pytest_config"
+        else:
+            config_module_name = "config"
+
+        config_module = importlib.import_module(config_module_name)
+
+        if os.environ.get("FLASK_ENV") == "testing":
+            # If testing, use the 'TestConfig' class for accessing 'secret'
+            config = config_module.TestConfig
+        else:
+            # If not testing, directly use the 'config' module
+            config = config_module
+
+        data: Union[Any, dict] = request.json
+
+        try:
+            decoded = jwt.decode(
+                data["token"], config.FAIRHUB_SECRET, algorithms=["HS256"]
+            )
+        except (jwt.ExpiredSignatureError, jwt.DecodeError, jwt.InvalidSignatureError):
+            return Response(status=401)
+        user = model.User.query.filter(
+            model.User.email_address == decoded["email"]
+        ).first()
+        if not user:
+            raise ValidationError("Email doesnt exist")
+
+        if data["token"] != user.password_reset_token:
+            return "Invalid token", 400
+
+        validate_pass = user.check_password(data["new_password"])
+        if validate_pass:
+            return "old and new password can not be same. Please select a new one", 422
+
+        def confirm_new_password(instance):
+            new_password = data["new_password"]
+            confirm_password = instance
+
+            if new_password != confirm_password:
+                raise ValidationError("New password and confirm password do not match")
+
+            return True
+
+        schema = {
+            "type": "object",
+            "required": ["new_password", "confirm_password", "token"],
+            "additionalProperties": False,
+            "properties": {
+                "new_password": {"type": "string", "minLength": 1},
+                "token": {"type": "string", "minLength": 1},
+                "confirm_password": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "password confirmation",
+                },
+            },
+        }
+        format_checker = FormatChecker()
+
+        # format_checker.checks("current password")(validate_current_password)
+        format_checker.checks("password confirmation")(confirm_new_password)
+
+        try:
+            validate(
+                instance=request.json, schema=schema, format_checker=format_checker
+            )
+        except ValidationError as e:
+            return e.message, 400
+
+        user.set_password(data["new_password"])
+        model.db.session.commit()
+
+        user.update_password_reset(None)
+        model.db.session.commit()
+
+        # email_address = user.email_address if user else ""
+        # first_name = user.user_details.first_name if user else ""
+        # last_name = user.user_details.last_name if user else ""
+        # if os.environ.get("FLASK_ENV") != "testing":
+        #     if g.gb.is_on("email-verification"):
+        #         if user:
+        #             reset_password(
+        #                 email_address,
+        #                 first_name,
+        #                 last_name,
+        #             )
+
+        return "Password reset successfully", 200
+
+
+frozen_date: Union[datetime.datetime, None] = None
+
+
+def set_now(now: Union[datetime.datetime, None]) -> None:
+    global frozen_date
+    frozen_date = now
+
+
+def get_now() -> datetime.datetime:
+    if frozen_date:
+        return frozen_date
+    return datetime.datetime.now(datetime.timezone.utc)

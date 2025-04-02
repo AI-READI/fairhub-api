@@ -4,10 +4,10 @@ import typing
 
 from flask import Response, request
 from flask_restx import Resource, fields
+from jsonschema import ValidationError, validate
 
 import model
 from apis.study_metadata_namespace import api
-from jsonschema import ValidationError, validate
 
 from ..authentication import is_granted
 
@@ -24,26 +24,45 @@ study_team_metadata = api.model(
                             "Sponsor",
                             "Principal Investigator",
                             "Sponsor-Investigator",
-                        ]
+                        ],
                     ),
-                    "responsible_party_investigator_first_name": fields.String(required=True),
-                    "responsible_party_investigator_last_name": fields.String(required=True),
-                    "responsible_party_investigator_title": fields.String(required=True),
+                    "responsible_party_investigator_first_name": fields.String(
+                        required=True
+                    ),
+                    "responsible_party_investigator_last_name": fields.String(
+                        required=True
+                    ),
+                    "responsible_party_investigator_title": fields.String(
+                        required=True
+                    ),
                     "lead_sponsor_name": fields.String(required=True),
-                    "responsible_party_investigator_identifier_value": fields.String(required=False),
-                    "responsible_party_investigator_identifier_scheme": fields.String(required=False),
-                    "responsible_party_investigator_identifier_scheme_uri": fields.String(required=False),
-                    "responsible_party_investigator_affiliation_name": fields.String(required=False),
-                    "responsible_party_investigator_affiliation_identifier_scheme": fields.String(required=False),
-                    "responsible_party_investigator_affiliation_identifier_value": fields.String(required=False),
-                    "responsible_party_investigator_affiliation_identifier_scheme_uri": fields.String(required=False),
+                    "responsible_party_investigator_identifier_value": fields.String(
+                        required=False
+                    ),
+                    "responsible_party_investigator_identifier_scheme": fields.String(
+                        required=False
+                    ),
+                    "responsible_party_investigator_identifier_scheme_uri": fields.String(
+                        required=False
+                    ),
+                    "responsible_party_investigator_affiliation_name": fields.String(
+                        required=False
+                    ),
+                    "responsible_party_investigator_affiliation_identifier_scheme": fields.String(
+                        required=False
+                    ),
+                    "responsible_party_investigator_affiliation_identifier_value": fields.String(
+                        required=False
+                    ),
+                    "responsible_party_investigator_affiliation_identifier_scheme_uri": fields.String(
+                        required=False
+                    ),
                     "lead_sponsor_identifier": fields.String(required=False),
                     "lead_sponsor_identifier_scheme": fields.String(required=False),
                     "lead_sponsor_identifier_scheme_uri": fields.String(required=False),
-                }
+                },
             )
         ),
-
         "collaborators": fields.List(
             fields.Nested(
                 api.model(
