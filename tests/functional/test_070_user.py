@@ -3,7 +3,6 @@ import datetime
 from apis.authentication import set_now
 from model.db import db
 
-
 # ------------------- Password Change ------------------- #
 
 
@@ -134,7 +133,6 @@ def test_post_reset_password(flask_app):
         "/auth/forgot-password",
         json={
             "email_address": "test@fairhub.io",
-
         },
     )
     assert forgot_response.status_code == 200
@@ -161,9 +159,7 @@ def test_post_reset_password(flask_app):
     )
 
     assert response.status_code == 200
-    logout_response = _test_client.post(
-        "/auth/logout"
-    )
+    logout_response = _test_client.post("/auth/logout")
     assert logout_response.status_code == 204
 
 
@@ -179,7 +175,6 @@ def test_post_reset_password_invalidation(flask_app):
         "/auth/forgot-password",
         json={
             "email_address": "test@fairhub.io",
-
         },
     )
     assert forgot_response.status_code == 200
@@ -222,7 +217,6 @@ def test_post_reset_password_is_not_same_old(flask_app):
         "/auth/forgot-password",
         json={
             "email_address": "test@fairhub.io",
-
         },
     )
     assert forgot_response.status_code == 200
@@ -250,14 +244,13 @@ def test_post_reset_password_expired(flask_app):
     """
     _test_client = flask_app.test_client()
 
-    set_now(datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(
-        minutes=6
-    ))
+    set_now(
+        datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(minutes=6)
+    )
     forgot_response = _test_client.post(
         "/auth/forgot-password",
         json={
             "email_address": "test@fairhub.io",
-
         },
     )
     set_now(None)
