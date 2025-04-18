@@ -230,6 +230,52 @@ class Study(db.Model):  # type: ignore
             ],
         }
 
+    def to_dict_study_metadata_validation(self):
+        # self.study_contact: Iterable = []
+        primary = [
+            i.to_dict_metadata()
+            for i in self.study_identification  # type: ignore
+            if not i.secondary
+        ]
+
+        return {
+            "arms": [(i.label, i.description) for i in self.study_arm],  # type: ignore
+            "central_contacts": [
+                i.to_dict() for i in self.study_central_contact  # type: ignore
+            ],
+            "description": self.study_description.to_dict(),
+            "design": self.study_design.to_dict(),
+            "eligibility": self.study_eligibility.to_dict(),
+            "primary_identifier": primary[0] if len(primary) else None,
+            "secondary_identifiers": [
+                i.to_dict()
+                for i in self.study_identification  # type: ignore
+                if i.secondary
+            ],
+            "interventions": [
+                i.to_dict() for i in self.study_intervention  # type: ignore
+            ],
+            "locations": [
+                i.to_dict() for i in self.study_location  # type: ignore
+            ],
+            "overall_officials": [
+                i.to_dict()
+                for i in self.study_overall_official  # type: ignore
+            ],
+            "sponsors": self.study_sponsors.to_dict(),
+            "collaborators": [
+                i.to_dict() for i in self.study_collaborators  # type: ignore
+            ],
+            "status": self.study_status.to_dict(),
+            "oversight": self.study_oversight.to_dict(),
+            "conditions": [
+                i.to_dict() for i in self.study_conditions  # type: ignore
+            ],
+            "keywords": [
+                i.to_dict() for i in self.study_keywords  # type: ignore
+            ],
+        }
+
     @staticmethod
     def from_data(data: dict):
         """Creates a new study from a dictionary"""

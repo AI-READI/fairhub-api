@@ -198,21 +198,6 @@ class VersionList(Resource):
         return dataset_versions.to_dict(), 201
 
 
-# @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/publish")
-# class PublishResource(Resource):
-#     @api.response(201, "Success")
-#     @api.response(400, "Validation Error")
-#     @api.doc("version publish")
-#     def post(self, study_id: int, dataset_id: int, version_id: int):
-#         study = model.Study.query.get(study_id)
-#         if not is_granted("publish_version", study):
-#             return "Access denied, you can not modify", 403
-#         data_obj = model.Version.query.get(version_id)
-#         data: typing.Union[typing.Any, dict] = request.json
-#         model.db.session.commit()
-#         return dataset_versions.to_dict()
-
-
 @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/study-metadata")
 class VersionDatasetMetadataResource(Resource):
     @api.response(200, "Success")
@@ -245,6 +230,25 @@ class VersionStudyMetadataResource(Resource):
         return version.dataset.to_dict_dataset_metadata(), 200
 
 
+@api.route("/study/<study_id>/dataset/<dataset_id>/metadata-validation")
+class VersionDatasetMetadataValidation(Resource):
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    @api.doc("version study metadata validation get")
+    def get(self, study_id: str, dataset_id: str):
+        study = model.Study.query.get(study_id)
+        if not is_granted("version", study):
+            return "Access denied, you can not modify", 403
+
+        dataset_obj = model.Dataset.query.get(dataset_id)
+        return {
+            # "study": study.to_dict_study_metadata_validation(),
+                "dataset_metadata": dataset_obj.to_dict_dataset_metadata_validation(),
+                }, 200
+
+# if field is empty,
+# add field to required array. if required array is not
+# empty, add required fields error to error array
 @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/changelog")
 class VersionDatasetChangelog(Resource):
     @api.response(200, "Success")
@@ -303,3 +307,17 @@ class VersionDatasetReadme(Resource):
         version_.version_readme.update(data)
         model.db.session.commit()
         return version_.version_readme.to_dict(), 200
+
+# @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/publish")
+# class PublishResource(Resource):
+#     @api.response(201, "Success")
+#     @api.response(400, "Validation Error")
+#     @api.doc("version publish")
+#     def post(self, study_id: int, dataset_id: int, version_id: int):
+#         study = model.Study.query.get(study_id)
+#         if not is_granted("publish_version", study):
+#             return "Access denied, you can not modify", 403
+#         data_obj = model.Version.query.get(version_id)
+#         data: typing.Union[typing.Any, dict] = request.json
+#         model.db.session.commit()
+#         return dataset_versions.to_dict()

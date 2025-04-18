@@ -175,6 +175,7 @@ class DatasetDataManagement(Resource):
         dataset_.dataset_consent.update(data["consent"])
         dataset_.dataset_de_ident_level.update(data["deident"])
         list_of_subjects = []
+
         for i in data["subjects"]:
             if "id" in i and i["id"]:
                 dataset_subject_ = model.DatasetSubject.query.get(i["id"])
