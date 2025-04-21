@@ -45,6 +45,21 @@ class DatasetOther(db.Model):  # type: ignore
             "resource_type": self.resource_type,
         }
 
+    def to_dict_validation(self):
+        return {
+            "language": self.language,
+            "size": self.size,
+            "resource_type": self.resource_type,
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            if (isinstance(value, str) and value.strip() == "") or (isinstance(value, list) and len(value) == 0):
+                invalid_keys.append(key)
+        return invalid_keys
+
     @staticmethod
     def from_data(dataset, data: dict):
         dataset_other = DatasetOther(dataset)

@@ -8,7 +8,7 @@ import model
 
 from .db import db
 from .study import Study
-
+import json
 
 class Dataset(db.Model):  # type: ignore
     def __init__(self, study):
@@ -175,46 +175,43 @@ class Dataset(db.Model):  # type: ignore
 
     def to_dict_dataset_metadata_validation(self):
         metadata = {
-            "about": [self.dataset_other.resource_type],
-            "dataset_subjects": [i.subject for i in self.dataset_subject],
-            "managing_organization": [self.dataset_managing_organization.name, self.dataset_managing_organization.identifier],  # type: ignore
-            "dataset_access": [self.dataset_access.type, self.dataset_access.description],
-            "dataset_consent": [self.dataset_consent.type],
-            "dataset_de_ident": [self.dataset_de_ident_level.type],
-            "dates": [(i.type, i.date) for i in self.dataset_date],  # type: ignore
+            "about": self.dataset_other.validate(),
+            "dataset_subjects": [{"subject": i.subject} for i in self.dataset_subject],
+            "managing_organization": self.dataset_managing_organization.validate(),  # type: ignore
+            "dataset_access": self.dataset_access.validate(),
+            "dataset_consent": self.dataset_consent.validate(),
+            "dataset_de_ident": self.dataset_de_ident_level.validate(),
+            "dataset_dates": [i.validate() for i in self.dataset_date],  # type: ignore
             "dataset_descriptions": [
-                (i.type, i.description) for i in self.dataset_description  # type: ignore
+                i.validate() for i in self.dataset_description  # type: ignore
             ],
             "dataset_funders": [
-                (i.name, i.award_number, i.identifier, i.identifier_type ) for i in self.dataset_funder  # type: ignore
+                i.validate() for i in self.dataset_funder  # type: ignore
             ],
-            "dataset_alternative_identifiers": [(i.identifier, i.type) for i in self.dataset_alternate_identifier  # type: ignore
+            "dataset_alternative_identifiers": [i.validate() for i in self.dataset_alternate_identifier  # type: ignore
             ],
-            "related_identifier": [
-                (i.identifier, i.identifier_type, i.relation_type)
+            "dataset_related_identifier": [
+                i.validate()
                 for i in self.dataset_related_identifier  # type: ignore
             ],
-            "titles": [
-                (i.title, i.type) for i in self.dataset_title  # type: ignore
+            "dataset_titles": [
+                i.validate() for i in self.dataset_title  # type: ignore
             ],
-
-            "creators": [
-                (i.name_type,i.name_identifier_scheme, i.name_identifier, i.given_name, i.family_name, )
+            "dataset_creators": [
+                i.validate()
                 for i in self.dataset_contributors  # type: ignore
                 if i.creator
             ],
-            "rights": [
-                i.rights for i in self.dataset_rights  # type: ignore
+            "dataset_rights": [
+                i.validate() for i in self.dataset_rights  # type: ignore
             ],
-
             "dataset_contributors": [
-                (i.name_type,i.name_identifier_scheme, i.name_identifier, i.given_name, i.family_name, )
+                i.validate()
                 for i in self.dataset_contributors  # type: ignore
                 if not i.creator
             ],
-
         }
-
+        # print(metadata["about"]["resource_type"], "llll")
         return metadata
 
     def last_published(self):
