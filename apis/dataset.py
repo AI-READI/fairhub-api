@@ -243,13 +243,11 @@ class VersionDatasetMetadataValidation(Resource):
         study_metadata = study.to_dict_study_metadata_validation()
         dataset_metadata = dataset_obj.to_dict_dataset_metadata_validation()
         errors = []
-        # if len(study_metadata) > 0:
+        # if study_metadata and len(study_metadata) > 0:
         #     errors.append({"metadata": study_metadata, "message": "I haste coding"})
-        if len(dataset_metadata) > 0:
+        if dataset_metadata and len(dataset_metadata) > 0:
             errors.append({"metadata": dataset_metadata, "message": "Some required dataset metadata fields are missing"})
-
-        print(errors, "lllllllllllllllllllllllllllllll")
-
+        print(dataset_metadata)
         return errors, 200
         # "study_metadata": study_metadata,
         { "dataset_metadata": dataset_metadata}, 200

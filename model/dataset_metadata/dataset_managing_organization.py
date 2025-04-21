@@ -48,7 +48,8 @@ class DatasetManagingOrganization(db.Model):  # type: ignore
             # if isinstance(value, dict):
             #     if value["parent"] is not valid
             #       continue # skip to next loop
-            if (isinstance(value, str) and value.strip() == "") or (isinstance(value, list) and len(value) == 0):
+            if value is None or (isinstance(value, str) and value.strip() == "") or (
+                    isinstance(value, list) and len(value) == 0):
                 invalid_keys.append({"identifier": "managing-organization", "name": key})
         return invalid_keys
 
