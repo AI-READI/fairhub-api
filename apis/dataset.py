@@ -239,16 +239,22 @@ class VersionDatasetMetadataValidation(Resource):
         study = model.Study.query.get(study_id)
         if not is_granted("version", study):
             return "Access denied, you can not modify", 403
-
         dataset_obj = model.Dataset.query.get(dataset_id)
-        return {
-            # "study": study.to_dict_study_metadata_validation(),
-                "dataset_metadata": dataset_obj.to_dict_dataset_metadata_validation(),
-                }, 200
+        study_metadata = study.to_dict_study_metadata_validation()
+        dataset_metadata = dataset_obj.to_dict_dataset_metadata_validation()
+        errors = []
+        # if len(study_metadata) > 0:
+        #     errors.append({"metadata": study_metadata, "message": "I haste coding"})
+        if len(dataset_metadata) > 0:
+            errors.append({"metadata": dataset_metadata, "message": "Some required dataset metadata fields are missing"})
 
-# if field is empty,
-# add field to required array. if required array is not
-# empty, add required fields error to error array
+        print(errors, "lllllllllllllllllllllllllllllll")
+
+        return errors, 200
+        # "study_metadata": study_metadata,
+        { "dataset_metadata": dataset_metadata}, 200
+
+
 @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/changelog")
 class VersionDatasetChangelog(Resource):
     @api.response(200, "Success")

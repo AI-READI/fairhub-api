@@ -1,7 +1,7 @@
 import datetime
 import uuid
 from datetime import timezone
-
+import itertools
 from sqlalchemy.sql.expression import true
 
 import model
@@ -174,45 +174,30 @@ class Dataset(db.Model):  # type: ignore
         }
 
     def to_dict_dataset_metadata_validation(self):
-        metadata = {
-            "about": self.dataset_other.validate(),
-            "dataset_subjects": [{"subject": i.subject} for i in self.dataset_subject],
-            "managing_organization": self.dataset_managing_organization.validate(),  # type: ignore
-            "dataset_access": self.dataset_access.validate(),
-            "dataset_consent": self.dataset_consent.validate(),
-            "dataset_de_ident": self.dataset_de_ident_level.validate(),
-            "dataset_dates": [i.validate() for i in self.dataset_date],  # type: ignore
-            "dataset_descriptions": [
-                i.validate() for i in self.dataset_description  # type: ignore
-            ],
-            "dataset_funders": [
-                i.validate() for i in self.dataset_funder  # type: ignore
-            ],
-            "dataset_alternative_identifiers": [i.validate() for i in self.dataset_alternate_identifier  # type: ignore
-            ],
-            "dataset_related_identifier": [
-                i.validate()
-                for i in self.dataset_related_identifier  # type: ignore
-            ],
-            "dataset_titles": [
-                i.validate() for i in self.dataset_title  # type: ignore
-            ],
-            "dataset_creators": [
-                i.validate()
-                for i in self.dataset_contributors  # type: ignore
-                if i.creator
-            ],
-            "dataset_rights": [
-                i.validate() for i in self.dataset_rights  # type: ignore
-            ],
-            "dataset_contributors": [
-                i.validate()
-                for i in self.dataset_contributors  # type: ignore
-                if not i.creator
-            ],
-        }
-        # print(metadata["about"]["resource_type"], "llll")
-        return metadata
+
+        props = [
+            self.dataset_other,
+            *self.dataset_description,
+            *self.dataset_subject,
+            self.dataset_managing_organization,
+            self.dataset_access,
+            self.dataset_consent,
+            self.dataset_de_ident_level,
+            *self.dataset_date,
+            *self.dataset_funder,
+            *self.dataset_alternate_identifier,
+            *self.dataset_related_identifier,
+            *self.dataset_title,
+            *self.dataset_rights,
+            *self.dataset_contributors,
+        ]
+
+        error_field_list = list(itertools.chain(*[prop.validate() for prop in props]))
+        if not self.dataset_title:
+            error_field_list.append({"identifier": "title", "name": "title"})
+        if not self.dataset_description:
+            error_field_list.append({"identifier": "description", "name": "description"})
+        return error_field_list
 
     def last_published(self):
         return (

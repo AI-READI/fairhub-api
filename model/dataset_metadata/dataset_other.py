@@ -40,15 +40,12 @@ class DatasetOther(db.Model):  # type: ignore
 
     def to_dict_metadata(self):
         return {
-            "language": self.language,
-            "size": self.size,
             "resource_type": self.resource_type,
         }
 
     def to_dict_validation(self):
         return {
             "language": self.language,
-            "size": self.size,
             "resource_type": self.resource_type,
         }
 
@@ -57,7 +54,7 @@ class DatasetOther(db.Model):  # type: ignore
         invalid_keys = []
         for key, value in data.items():
             if (isinstance(value, str) and value.strip() == "") or (isinstance(value, list) and len(value) == 0):
-                invalid_keys.append(key)
+                invalid_keys.append({"identifier": "other", "name": key})
         return invalid_keys
 
     @staticmethod

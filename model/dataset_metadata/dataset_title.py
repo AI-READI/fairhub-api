@@ -48,7 +48,7 @@ class DatasetTitle(db.Model):  # type: ignore
         invalid_keys = []
         for key, value in data.items():
             if (isinstance(value, str) and value.strip() == "") or (isinstance(value, list) and len(value) == 0):
-                invalid_keys.append(key)
+                invalid_keys.append({"identifier": "title", "name": key})
         return invalid_keys
 
     @staticmethod
