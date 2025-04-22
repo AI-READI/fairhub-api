@@ -48,6 +48,21 @@ class StudyCollaborators(db.Model):  # type: ignore
             "name": self.name,
         }
 
+    def to_dict_validation(self):
+        return {
+            "name": self.name,
+            "identifier": self.identifier,
+            "identifier_scheme": self.scheme,
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            if (isinstance(value, str) and value.strip() == "") or (isinstance(value, list) and len(value) == 0):
+                invalid_keys.append({"identifier": "collaborators", "name": key})
+        return invalid_keys
+
     @staticmethod
     def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""
@@ -63,8 +78,3 @@ class StudyCollaborators(db.Model):  # type: ignore
         self.scheme = data["identifier_scheme"]
         self.scheme_uri = data["identifier_scheme_uri"]
         self.study.touch()
-
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        return violations

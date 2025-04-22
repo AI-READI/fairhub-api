@@ -70,6 +70,26 @@ class StudyCentralContact(db.Model):  # type: ignore
             "email_address": self.email_address,
         }
 
+    def to_dict_validation(self):
+        return {
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "affiliation": self.affiliation,
+            "email_address": self.email_address,
+            "identifier": self.identifier,
+            "identifier_scheme": self.identifier_scheme,
+            "affiliation_identifier_scheme_uri": self.affiliation_identifier_scheme_uri,
+
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            if (isinstance(value, str) and value.strip() == "") or (isinstance(value, list) and len(value) == 0):
+                invalid_keys.append({"identifier": "central_contact", "name": key})
+        return invalid_keys
+
     @staticmethod
     def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""
@@ -96,8 +116,3 @@ class StudyCentralContact(db.Model):  # type: ignore
         self.phone_ext = data["phone_ext"]
         self.email_address = data["email_address"]
         self.study.touch()
-
-    def validate(self):
-        """Validates the lead_sponsor_last_name study"""
-        violations: list = []
-        return violations

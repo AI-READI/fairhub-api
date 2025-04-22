@@ -50,6 +50,22 @@ class StudyKeywords(db.Model):  # type: ignore
             "name": self.name,
         }
 
+    def to_dict_validation(self):
+        return {
+            "name": self.name,
+            "classification_code": self.classification_code,
+            "scheme": self.scheme,
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            if (value is None or (isinstance(value, str) and value.strip() == "") or
+                    (isinstance(value, list) and len(value) == 0)):
+                invalid_keys.append({"identifier": "keywords", "name": key})
+        return invalid_keys
+
     @staticmethod
     def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""

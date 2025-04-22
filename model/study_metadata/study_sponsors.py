@@ -93,6 +93,20 @@ class StudySponsors(db.Model):  # type: ignore
             "lead_sponsor_name": self.lead_sponsor_name,
         }
 
+    def to_dict_validation(self):
+        return {
+
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            if (value is None or (isinstance(value, str) and value.strip() == "") or
+                    (isinstance(value, list) and len(value) == 0)):
+                invalid_keys.append({"identifier": "sponsors", "name": key})
+        return invalid_keys
+
     @staticmethod
     def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""
@@ -140,8 +154,3 @@ class StudySponsors(db.Model):  # type: ignore
         self.lead_sponsor_identifier_scheme_uri = data[
             "lead_sponsor_identifier_scheme_uri"
         ]
-
-    def validate(self):
-        """Validates the lead_sponsor_last_name study"""
-        violations: list = []
-        return violations

@@ -51,6 +51,21 @@ class StudyArm(db.Model):  # type: ignore
             "description": self.description,
         }
 
+    def to_dict_validation(self):
+        return {
+            "id": self.id,
+            "label": self.label,
+            "description": self.description,
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            if (isinstance(value, str) and value.strip() == "") or (isinstance(value, list) and len(value) == 0):
+                invalid_keys.append({"identifier": "arms", "name": key})
+        return invalid_keys
+
     @staticmethod
     def from_data(study: model.Study, data: dict):
         """Creates a new study from a dictionary"""
@@ -65,8 +80,3 @@ class StudyArm(db.Model):  # type: ignore
         self.description = data["description"]
         self.intervention_list = data["intervention_list"]
         self.study.touch()
-
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        return violations

@@ -75,6 +75,30 @@ class StudyEligibility(db.Model):  # type: ignore
             "gender_based": self.gender_based,
         }
 
+    def to_dict_validation(self):
+        return {
+            "sex": self.sex,
+            "gender_based": self.gender_based,
+            "minimum_age_unit": self.minimum_age_unit,
+            "maximum_age_unit": self.maximum_age_unit,
+            "minimum_age_value": self.minimum_age_value,
+            "maximum_age_value": self.maximum_age_value,
+            "inclusion_criteria": self.inclusion_criteria,
+            "exclusion_criteria": self.exclusion_criteria,
+            "study_population": self.study_population,
+            "sampling_method": self.sampling_method,
+
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            if (value is None or (isinstance(value, str) and value.strip() == "") or
+                    (isinstance(value, list) and len(value) == 0)):
+                invalid_keys.append({"identifier": "eligibility", "name": key})
+        return invalid_keys
+
     @staticmethod
     def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""
@@ -98,8 +122,3 @@ class StudyEligibility(db.Model):  # type: ignore
         self.study_population = data["study_population"]
         self.sampling_method = data["sampling_method"]
         self.study.touch()
-
-    def validate(self):
-        """Validates the lead_sponsor_last_name study"""
-        violations: list = []
-        return violations

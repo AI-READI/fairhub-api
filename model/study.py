@@ -1,5 +1,6 @@
 import datetime
 import uuid
+import itertools
 
 from flask import g
 
@@ -237,44 +238,27 @@ class Study(db.Model):  # type: ignore
             for i in self.study_identification  # type: ignore
             if not i.secondary
         ]
-
-        return {
-            "arms": [(i.label, i.description) for i in self.study_arm],  # type: ignore
-            "central_contacts": [
-                i.to_dict() for i in self.study_central_contact  # type: ignore
-            ],
-            "description": self.study_description.to_dict(),
-            "design": self.study_design.to_dict(),
-            "eligibility": self.study_eligibility.to_dict(),
-            "primary_identifier": primary[0] if len(primary) else None,
-            "secondary_identifiers": [
-                i.to_dict()
-                for i in self.study_identification  # type: ignore
-                if i.secondary
-            ],
-            "interventions": [
-                i.to_dict() for i in self.study_intervention  # type: ignore
-            ],
-            "locations": [
-                i.to_dict() for i in self.study_location  # type: ignore
-            ],
-            "overall_officials": [
-                i.to_dict()
-                for i in self.study_overall_official  # type: ignore
-            ],
-            "sponsors": self.study_sponsors.to_dict(),
-            "collaborators": [
-                i.to_dict() for i in self.study_collaborators  # type: ignore
-            ],
-            "status": self.study_status.to_dict(),
-            "oversight": self.study_oversight.to_dict(),
-            "conditions": [
-                i.to_dict() for i in self.study_conditions  # type: ignore
-            ],
-            "keywords": [
-                i.to_dict() for i in self.study_keywords  # type: ignore
-            ],
-        }
+        props =[
+           *self.study_arm,
+           *self.study_central_contact,
+            # self.study_design,
+            self.study_eligibility,
+            *self.study_identification,
+            *self.study_intervention,
+           *self.study_location,
+           *self.study_overall_official,
+            # self.study_sponsors,
+           *self.study_collaborators,
+            self.study_status,
+            self.study_oversight,
+           *self.study_conditions,
+           *self.study_keywords,
+        ]
+        print(self.study_eligibility)
+        error_field_list = list(itertools.chain(*[prop.validate() for prop in props]))
+        if self.study_design.study_type == "Observational":
+            error_field_list.append({"identifier": "arms", "name": "type"})
+        return error_field_list
 
     @staticmethod
     def from_data(data: dict):
@@ -295,15 +279,6 @@ class Study(db.Model):  # type: ignore
         self.image = data["image"]
         self.short_description = data["short_description"]
         self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
-
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        # if self.description.trim() == "":
-        #     violations.push("A description is required")
-        # if self.keywords.length < 1:
-        #     violations.push("At least one keyword must be specified")
-        return violations
 
     def touch(self):
         self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()

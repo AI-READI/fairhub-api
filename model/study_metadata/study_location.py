@@ -57,6 +57,24 @@ class StudyLocation(db.Model):  # type: ignore
             "country": self.country,
         }
 
+    def to_dict_validation(self):
+        return {
+            "facility": self.facility,
+            "status": self.status,
+            "city": self.city,
+            "country": self.country,
+
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            if (value is None or (isinstance(value, str) and value.strip() == "") or
+                    (isinstance(value, list) and len(value) == 0)):
+                invalid_keys.append({"identifier": "location", "name": key})
+        return invalid_keys
+
     @staticmethod
     def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""
@@ -74,8 +92,3 @@ class StudyLocation(db.Model):  # type: ignore
         self.zip = data["zip"]
         self.country = data["country"]
         self.study.touch()
-
-    def validate(self):
-        """Validates the lead_sponsor_last_name study"""
-        violations: list = []
-        return violations
