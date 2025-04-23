@@ -54,13 +54,17 @@ class StudyKeywords(db.Model):  # type: ignore
         return {
             "name": self.name,
             "classification_code": self.classification_code,
-            "scheme": self.scheme,
+            "scheme": {"value": self.scheme, "parent": self.classification_code},
+
         }
 
     def validate(self):
         data = self.to_dict_validation()
         invalid_keys = []
         for key, value in data.items():
+            if isinstance(value, dict):
+                if value["parent"] is not None and (not isinstance(value, str) or value.strip() != ""):
+                  continue # skip to next loop
             if (value is None or (isinstance(value, str) and value.strip() == "") or
                     (isinstance(value, list) and len(value) == 0)):
                 invalid_keys.append({"identifier": "keywords", "name": key})

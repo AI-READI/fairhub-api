@@ -45,9 +45,9 @@ class DatasetManagingOrganization(db.Model):  # type: ignore
         data = self.to_dict_validation()
         invalid_keys = []
         for key, value in data.items():
-            # if isinstance(value, dict):
-            #     if value["parent"] is not valid
-            #       continue # skip to next loop
+            if isinstance(value, dict):
+                if value["parent"] is not None and (not isinstance(value, str) or value.strip() != ""):
+                  continue # skip to next loop
             if value is None or (isinstance(value, str) and value.strip() == "") or (
                     isinstance(value, list) and len(value) == 0):
                 invalid_keys.append({"identifier": "managing-organization", "name": key})

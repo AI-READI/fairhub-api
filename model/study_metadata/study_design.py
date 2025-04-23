@@ -83,6 +83,28 @@ class StudyDesign(db.Model):  # type: ignore
             "is_patient_registry": self.is_patient_registry,
         }
 
+    def to_dict_validation(self):
+        return {
+            "study_type": self.study_type,
+            "is_patient_registry": self.is_patient_registry,
+            "design_observational_model_list": self.design_observational_model_list,
+            "design_time_perspective_list": self.design_time_perspective_list,
+            # "scheme": {"value": self.scheme, "parent": self.classification_code},
+
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            # if isinstance(value, dict):
+            #     if value["parent"] is not None and (not isinstance(value, str) or value.strip() != ""):
+            #       continue # skip to next loop
+            if (value is None or (isinstance(value, str) and value.strip() == "") or
+                    (isinstance(value, list) and len(value) == 0)):
+                invalid_keys.append({"identifier": "design", "name": key})
+        return invalid_keys
+
     @staticmethod
     def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""
@@ -114,8 +136,3 @@ class StudyDesign(db.Model):  # type: ignore
         self.target_duration = data["target_duration"]
         self.is_patient_registry = data["is_patient_registry"]
         self.study.touch()
-
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        return violations

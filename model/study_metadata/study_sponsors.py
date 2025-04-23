@@ -95,7 +95,9 @@ class StudySponsors(db.Model):  # type: ignore
 
     def to_dict_validation(self):
         return {
-
+            "responsible_party_type": self.responsible_party_type,
+            "responsible_party_investigator_first_name": self.responsible_party_investigator_first_name,
+            "responsible_party_investigator_last_name": self.responsible_party_investigator_last_name,
         }
 
     def validate(self):
@@ -104,7 +106,7 @@ class StudySponsors(db.Model):  # type: ignore
         for key, value in data.items():
             if (value is None or (isinstance(value, str) and value.strip() == "") or
                     (isinstance(value, list) and len(value) == 0)):
-                invalid_keys.append({"identifier": "sponsors", "name": key})
+                invalid_keys.append({"identifier": "team", "name": key})
         return invalid_keys
 
     @staticmethod
