@@ -254,6 +254,7 @@ class Study(db.Model):  # type: ignore
            *self.study_conditions,
            *self.study_keywords,
         ]
+
         error_field_list = list(itertools.chain(*[prop.validate() for prop in props]))
         if self.study_design.study_type == "Observational":
             error_field_list.append({"identifier": "arms", "name": "type"})
