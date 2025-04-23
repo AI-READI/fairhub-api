@@ -61,7 +61,9 @@ class StudyIntervention(db.Model):  # type: ignore
         data = self.to_dict_validation()
         invalid_keys = []
         for key, value in data.items():
-            if (isinstance(value, str) and value.strip() == "") or (isinstance(value, list) and len(value) == 0):
+            if (isinstance(value, str) and value.strip() == "") or (
+                isinstance(value, list) and len(value) == 0
+            ):
                 invalid_keys.append({"identifier": "intervention", "name": key})
         return invalid_keys
 
@@ -80,4 +82,3 @@ class StudyIntervention(db.Model):  # type: ignore
         self.description = data["description"]
         self.other_name_list = data["other_name_list"]
         self.study.touch()
-

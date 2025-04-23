@@ -52,7 +52,10 @@ class StudyCollaborators(db.Model):  # type: ignore
         return {
             "name": self.name,
             "identifier": self.identifier,
-            "identifier_scheme": {"value": self.identifier_scheme, "parent": self.identifier},
+            "identifier_scheme": {
+                "value": self.identifier_scheme,
+                "parent": self.identifier,
+            },
         }
 
     def validate(self):
@@ -60,9 +63,13 @@ class StudyCollaborators(db.Model):  # type: ignore
         invalid_keys = []
         for key, value in data.items():
             if isinstance(value, dict):
-                if value["parent"] is not None and (not isinstance(value, str) or value.strip() != ""):
-                  continue # skip to next loop
-            if (isinstance(value, str) and value.strip() == "") or (isinstance(value, list) and len(value) == 0):
+                if value["parent"] is not None and (
+                    not isinstance(value, str) or value.strip() != ""
+                ):
+                    continue  # skip to next loop
+            if (isinstance(value, str) and value.strip() == "") or (
+                isinstance(value, list) and len(value) == 0
+            ):
                 invalid_keys.append({"identifier": "team", "name": key})
         return invalid_keys
 

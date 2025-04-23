@@ -48,13 +48,16 @@ class StudyIdentification(db.Model):  # type: ignore
             "identifier_type": self.identifier_type,
             "id": self.id,
         }
+
     def to_dict_validation(self):
         return {
             "secondary": self.secondary,
             "identifier": self.identifier,
             "identifier_type": self.identifier_type,
-            "identifier_domain": {"value": self.identifier_domain, "parent": self.identifier_type},
-
+            "identifier_domain": {
+                "value": self.identifier_domain,
+                "parent": self.identifier_type,
+            },
         }
 
     def validate(self):
@@ -62,10 +65,15 @@ class StudyIdentification(db.Model):  # type: ignore
         invalid_keys = []
         for key, value in data.items():
             if isinstance(value, dict):
-                if value["parent"] == "EudraCT Number" or value["parent"] == "NIH Grant Number":
-                  continue # skip to next loop
+                if (
+                    value["parent"] == "EudraCT Number"
+                    or value["parent"] == "NIH Grant Number"
+                ):
+                    continue  # skip to next loop
             # if isinstance(data[key], bool) and key:
-            if (isinstance(value, str) and value.strip() == "") or (isinstance(value, list) and len(value) == 0):
+            if (isinstance(value, str) and value.strip() == "") or (
+                isinstance(value, list) and len(value) == 0
+            ):
                 invalid_keys.append({"identifier": "identification", "name": key})
         return invalid_keys
 

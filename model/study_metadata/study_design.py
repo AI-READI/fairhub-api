@@ -90,7 +90,6 @@ class StudyDesign(db.Model):  # type: ignore
             "design_observational_model_list": self.design_observational_model_list,
             "design_time_perspective_list": self.design_time_perspective_list,
             # "scheme": {"value": self.scheme, "parent": self.classification_code},
-
         }
 
     def validate(self):
@@ -100,8 +99,11 @@ class StudyDesign(db.Model):  # type: ignore
             # if isinstance(value, dict):
             #     if value["parent"] is not None and (not isinstance(value, str) or value.strip() != ""):
             #       continue # skip to next loop
-            if (value is None or (isinstance(value, str) and value.strip() == "") or
-                    (isinstance(value, list) and len(value) == 0)):
+            if (
+                value is None
+                or (isinstance(value, str) and value.strip() == "")
+                or (isinstance(value, list) and len(value) == 0)
+            ):
                 invalid_keys.append({"identifier": "design", "name": key})
         return invalid_keys
 

@@ -43,6 +43,7 @@ class DatasetDeIdentLevel(db.Model):  # type: ignore
             "direct": self.direct,
             "type": self.type,
         }
+
     def to_dict_validation(self):
         return {
             "type": self.type,
@@ -52,8 +53,11 @@ class DatasetDeIdentLevel(db.Model):  # type: ignore
         data = self.to_dict_validation()
         invalid_keys = []
         for key, value in data.items():
-            if value is None or (isinstance(value, str) and value.strip() == "") or (
-                    isinstance(value, list) and len(value) == 0):
+            if (
+                value is None
+                or (isinstance(value, str) and value.strip() == "")
+                or (isinstance(value, list) and len(value) == 0)
+            ):
                 invalid_keys.append({"identifier": "de-ident", "name": key})
         return invalid_keys
 

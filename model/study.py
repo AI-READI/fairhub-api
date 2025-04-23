@@ -1,6 +1,6 @@
 import datetime
-import uuid
 import itertools
+import uuid
 
 from flask import g
 
@@ -233,26 +233,26 @@ class Study(db.Model):  # type: ignore
 
     def to_dict_study_metadata_validation(self):
         # self.study_contact: Iterable = []
-        primary = [
-            i.to_dict_metadata()
-            for i in self.study_identification  # type: ignore
-            if not i.secondary
-        ]
-        props =[
-           *self.study_arm,
-           *self.study_central_contact,
+        # primary = [
+        #     i.to_dict_metadata()
+        #     for i in self.study_identification  # type: ignore
+        #     if not i.secondary
+        # ]
+        props = [
+            *self.study_arm,
+            *self.study_central_contact,
             self.study_design,
             self.study_eligibility,
             *self.study_identification,
             *self.study_intervention,
-           *self.study_location,
-           *self.study_overall_official,
+            *self.study_location,
+            *self.study_overall_official,
             self.study_sponsors,
-           *self.study_collaborators,
+            *self.study_collaborators,
             self.study_status,
             self.study_oversight,
-           *self.study_conditions,
-           *self.study_keywords,
+            *self.study_conditions,
+            *self.study_keywords,
         ]
 
         error_field_list = list(itertools.chain(*[prop.validate() for prop in props]))

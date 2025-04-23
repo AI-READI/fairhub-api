@@ -1,14 +1,15 @@
 import datetime
+import itertools
 import uuid
 from datetime import timezone
-import itertools
+
 from sqlalchemy.sql.expression import true
 
 import model
 
 from .db import db
 from .study import Study
-import json
+
 
 class Dataset(db.Model):  # type: ignore
     def __init__(self, study):
@@ -174,7 +175,6 @@ class Dataset(db.Model):  # type: ignore
         }
 
     def to_dict_dataset_metadata_validation(self):
-
         props = [
             self.dataset_other,
             *self.dataset_description,
@@ -196,7 +196,9 @@ class Dataset(db.Model):  # type: ignore
         if not self.dataset_title:
             error_field_list.append({"identifier": "title", "name": "title"})
         if not self.dataset_description:
-            error_field_list.append({"identifier": "description", "name": "description"})
+            error_field_list.append(
+                {"identifier": "description", "name": "description"}
+            )
         return error_field_list
 
     def last_published(self):

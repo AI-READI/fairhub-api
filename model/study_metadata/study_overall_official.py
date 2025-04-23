@@ -86,11 +86,15 @@ class StudyOverallOfficial(db.Model):  # type: ignore
             "affiliation": self.affiliation,
             "role": self.role,
             "identifier": self.identifier,
-            "identifier_scheme": {"value": self.identifier_scheme, "parent": self.identifier},
+            "identifier_scheme": {
+                "value": self.identifier_scheme,
+                "parent": self.identifier,
+            },
             "affiliation_identifier": self.affiliation_identifier,
-            "affiliation_identifier_scheme": {"value": self.affiliation_identifier_scheme,
-                                              "parent": self.affiliation_identifier},
-
+            "affiliation_identifier_scheme": {
+                "value": self.affiliation_identifier_scheme,
+                "parent": self.affiliation_identifier,
+            },
         }
 
     def validate(self):
@@ -98,10 +102,15 @@ class StudyOverallOfficial(db.Model):  # type: ignore
         invalid_keys = []
         for key, value in data.items():
             if isinstance(value, dict):
-                if value["parent"] is not None and (not isinstance(value, str) or value.strip() != ""):
-                    continue # skip to next loop
-            if (value is None or (isinstance(value, str) and value.strip() == "") or
-                    (isinstance(value, list) and len(value) == 0)):
+                if value["parent"] is not None and (
+                    not isinstance(value, str) or value.strip() != ""
+                ):
+                    continue  # skip to next loop
+            if (
+                value is None
+                or (isinstance(value, str) and value.strip() == "")
+                or (isinstance(value, list) and len(value) == 0)
+            ):
                 invalid_keys.append({"identifier": "overall-official", "name": key})
         return invalid_keys
 

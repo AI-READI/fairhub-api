@@ -57,15 +57,17 @@ class DatasetFunder(db.Model):  # type: ignore
             "identifier": self.identifier,
             "identifier_type": self.identifier_type,
             "award_number": self.award_number,
-
         }
 
     def validate(self):
         data = self.to_dict_validation()
         invalid_keys = []
         for key, value in data.items():
-            if value is None or (isinstance(value, str) and value.strip() == "") or (
-                    isinstance(value, list) and len(value) == 0):
+            if (
+                value is None
+                or (isinstance(value, str) and value.strip() == "")
+                or (isinstance(value, list) and len(value) == 0)
+            ):
                 invalid_keys.append({"identifier": "funder", "name": key})
         return invalid_keys
 

@@ -34,11 +34,15 @@ class DatasetManagingOrganization(db.Model):  # type: ignore
             "name": self.name,
             "identifier": self.identifier,
         }
+
     def to_dict_validation(self):
         return {
             "name": self.name,
             "identifier": self.identifier,
-            "identifier_scheme": {"value": self.identifier_scheme, "parent": self.identifier},
+            "identifier_scheme": {
+                "value": self.identifier_scheme,
+                "parent": self.identifier,
+            },
         }
 
     def validate(self):
@@ -46,11 +50,18 @@ class DatasetManagingOrganization(db.Model):  # type: ignore
         invalid_keys = []
         for key, value in data.items():
             if isinstance(value, dict):
-                if value["parent"] is not None and (not isinstance(value, str) or value.strip() != ""):
-                  continue # skip to next loop
-            if value is None or (isinstance(value, str) and value.strip() == "") or (
-                    isinstance(value, list) and len(value) == 0):
-                invalid_keys.append({"identifier": "managing-organization", "name": key})
+                if value["parent"] is not None and (
+                    not isinstance(value, str) or value.strip() != ""
+                ):
+                    continue  # skip to next loop
+            if (
+                value is None
+                or (isinstance(value, str) and value.strip() == "")
+                or (isinstance(value, list) and len(value) == 0)
+            ):
+                invalid_keys.append(
+                    {"identifier": "managing-organization", "name": key}
+                )
         return invalid_keys
 
     @staticmethod
