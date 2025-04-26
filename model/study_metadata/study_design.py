@@ -85,26 +85,53 @@ class StudyDesign(db.Model):  # type: ignore
 
     def to_dict_validation(self):
         return {
-            "study_type": self.study_type,
-            "is_patient_registry": self.is_patient_registry,
-            "design_observational_model_list": self.design_observational_model_list,
-            "design_time_perspective_list": self.design_time_perspective_list,
-            # "scheme": {"value": self.scheme, "parent": self.classification_code},
+            #observational_
+            "observational":{
+                "is_patient_registry": self.is_patient_registry,
+                "design_observational_model_list": self.design_observational_model_list,
+                "design_time_perspective_list": self.design_time_perspective_list,
+                "bio_spec_retention": self.bio_spec_retention,
+                "bio_spec_description": self.bio_spec_description,
+                "enrollment_count": self.enrollment_count,
+                "enrollment_type": self.enrollment_type,
+             },
+             "study_type": self.study_type,
+
+            "interventional":
+                {
+                "design_allocation": self.design_allocation,
+                 "design_intervention_model": self.design_intervention_model,
+                 "design_primary_purpose": self.design_primary_purpose,
+                 "design_masking": self.design_masking,
+                 "design_who_masked_list": self.design_who_masked_list,
+                 "phase_list": self.phase_list,
+                 "enrollment_count": self.enrollment_count,
+                 "enrollment_type": self.enrollment_type,
+                 "number_arms": self.number_arms
+                      }
+
         }
 
     def validate(self):
         data = self.to_dict_validation()
         invalid_keys = []
-        for key, value in data.items():
-            # if isinstance(value, dict):
-            #     if value["parent"] is not None and (not isinstance(value, str) or value.strip() != ""):
-            #       continue # skip to next loop
-            if (
-                value is None
-                or (isinstance(value, str) and value.strip() == "")
-                or (isinstance(value, list) and len(value) == 0)
-            ):
-                invalid_keys.append({"identifier": "design", "name": key})
+        observational_fields = data.get("observational", {})
+        interventional_fields = data.get("interventional", {})
+        if self.study_type is None or (isinstance(self.study_type, str) and self.study_type.strip() == ""):
+            invalid_keys.append({"identifier": "design", "name": "study_type"})
+        if self.study_type:
+            if self.study_type.lower() == "observational":
+                for key, value in observational_fields.items():
+                    if value is None or (isinstance(value, str) and value.strip() == "") or (
+                            isinstance(value, list) and len(value) == 0):
+                        invalid_keys.append({"identifier": "design", "name": key})
+
+            elif self.study_type.lower() == "interventional":
+                for key, value in interventional_fields.items():
+                    if value is None or (isinstance(value, str) and value.strip() == "") or (
+                            isinstance(value, list) and len(value) == 0):
+                        invalid_keys.append({"identifier": "design", "name": key})
+        print(invalid_keys, "ooooooooooooooooooooooo")
         return invalid_keys
 
     @staticmethod
