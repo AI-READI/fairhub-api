@@ -68,7 +68,7 @@ class StudyStatus(db.Model):  # type: ignore
                 or (isinstance(value, str) and value.strip() == "")
                 or (isinstance(value, list) and len(value) == 0)
             ):
-                invalid_keys.append({"identifier": "status", "name": key, "route": "status"})
+                invalid_keys.append({"metadata_header": "status", "name": key, "route": "status"})
         return invalid_keys
 
     @staticmethod

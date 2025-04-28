@@ -223,6 +223,44 @@ def test_put_dataset_version(clients):
     assert viewer_response.status_code == 403
 
 
+def test_get_version_metadata_validation(clients):
+    """
+    Given a Flask application configured for testing
+    WHEN the /study/{study_id}/dataset/{dataset_id}/metadata-validation
+    endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the design metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id  # type: ignore
+    version_id = pytest.global_dataset_version_id  # type: ignore
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/metadata/metadata-validation",
+    )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/metadata/metadata-validation"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/metadata/metadata-validation"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/metadata/metadata-validation"
+    )
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 403
+
+    response_data = json.loads(response.data)
+    admin_response_data = json.loads(admin_response.data)
+    editor_response_data = json.loads(editor_response.data)
+    viewer_response_data = json.loads(viewer_response.data)
+
+    assert response_data["contributors"][0]["first_name"] == "Given Name here"
+
+
 def test_get_version_study_metadata(clients):
     """
     Given a Flask application configured for testing

@@ -117,7 +117,7 @@ class StudyDesign(db.Model):  # type: ignore
         if self.study_type is None or (
             isinstance(self.study_type, str) and self.study_type.strip() == ""
         ):
-            invalid_keys.append({"identifier": "design", "name": "study_type", "route": "design"})
+            invalid_keys.append({"metadata_header": "design", "name": "study_type", "route": "design"})
         if self.study_type:
             if self.study_type.lower() == "observational":
                 for key, value in observational_fields.items():
@@ -126,7 +126,7 @@ class StudyDesign(db.Model):  # type: ignore
                         or (isinstance(value, str) and value.strip() == "")
                         or (isinstance(value, list) and len(value) == 0)
                     ):
-                        invalid_keys.append({"identifier": "design", "name": key, "route": "design"})
+                        invalid_keys.append({"metadata_header": "design", "name": key, "route": "design"})
 
             elif self.study_type.lower() == "interventional":
                 for key, value in interventional_fields.items():
@@ -135,7 +135,7 @@ class StudyDesign(db.Model):  # type: ignore
                         or (isinstance(value, str) and value.strip() == "")
                         or (isinstance(value, list) and len(value) == 0)
                     ):
-                        invalid_keys.append({"identifier": "design", "name": key, "route": "design"})
+                        invalid_keys.append({"metadata_header": "design", "name": key, "route": "design"})
         return invalid_keys
 
     @staticmethod

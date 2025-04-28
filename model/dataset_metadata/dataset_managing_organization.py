@@ -63,7 +63,7 @@ class DatasetManagingOrganization(db.Model):  # type: ignore
                 or (isinstance(value, list) and len(value) == 0)
             ):
                 invalid_keys.append(
-                    {"identifier": "managing organization", "name": key, "route": "team"}
+                    {"metadata_header": "managing organization", "name": key, "route": "team"}
                 )
         return invalid_keys
 
