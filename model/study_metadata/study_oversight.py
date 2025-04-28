@@ -59,7 +59,7 @@ class StudyOversight(db.Model):  # type: ignore
                 or (isinstance(value, str) and value.strip() == "")
                 or (isinstance(value, list) and len(value) == 0)
             ):
-                invalid_keys.append({"identifier": "oversight", "name": key})
+                invalid_keys.append({"identifier": "oversight", "name": key, "route": "oversight"})
         return invalid_keys
 
     def update(self, data: dict):

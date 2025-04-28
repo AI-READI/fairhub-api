@@ -257,7 +257,7 @@ class Study(db.Model):  # type: ignore
 
         error_field_list = list(itertools.chain(*[prop.validate() for prop in props]))
         if self.study_design.study_type == "Observational":
-            error_field_list.append({"identifier": "arms", "name": "type"})
+            error_field_list.append({"identifier": "arms", "name": "type", "route": "arms"})
         for i in error_field_list:
             i["identifier"] = i["identifier"].capitalize()
         return error_field_list

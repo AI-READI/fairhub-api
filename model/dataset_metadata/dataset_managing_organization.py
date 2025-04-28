@@ -38,7 +38,10 @@ class DatasetManagingOrganization(db.Model):  # type: ignore
     def to_dict_validation(self):
         return {
             "name": self.name,
-            "identifier": self.identifier,
+            "identifier": {
+                "value": self.identifier,
+                "parent" : self.identifier_scheme
+            },
             "identifier_scheme": {
                 "value": self.identifier_scheme,
                 "parent": self.identifier,
@@ -50,8 +53,8 @@ class DatasetManagingOrganization(db.Model):  # type: ignore
         invalid_keys = []
         for key, value in data.items():
             if isinstance(value, dict):
-                if value["parent"] is not None and (
-                    not isinstance(value, str) or value.strip() != ""
+                if value["parent"] is None or (
+                    isinstance(value, str) and value.strip() != ""
                 ):
                     continue  # skip to next loop
             if (
@@ -60,7 +63,7 @@ class DatasetManagingOrganization(db.Model):  # type: ignore
                 or (isinstance(value, list) and len(value) == 0)
             ):
                 invalid_keys.append(
-                    {"identifier": "managing-organization", "name": key}
+                    {"identifier": "managing organization", "name": key, "route": "team"}
                 )
         return invalid_keys
 

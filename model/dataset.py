@@ -194,11 +194,13 @@ class Dataset(db.Model):  # type: ignore
 
         error_field_list = list(itertools.chain(*[prop.validate() for prop in props]))
         if not self.dataset_title:
-            error_field_list.append({"identifier": "title", "name": "title"})
+            error_field_list.append({"identifier": "title", "name": "title", "route": "general-information"})
         if not self.dataset_description:
             error_field_list.append(
-                {"identifier": "description", "name": "description"}
+                {"identifier": "description", "name": "description", "route": "general-information"}
             )
+        for i in error_field_list:
+            i["identifier"] = i["identifier"].capitalize()
         return error_field_list
 
     def last_published(self):

@@ -74,7 +74,7 @@ class StudyLocation(db.Model):  # type: ignore
                 or (isinstance(value, str) and value.strip() == "")
                 or (isinstance(value, list) and len(value) == 0)
             ):
-                invalid_keys.append({"identifier": "location", "name": key})
+                invalid_keys.append({"identifier": "locations", "name": key, "route": "locations"})
         return invalid_keys
 
     @staticmethod

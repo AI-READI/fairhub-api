@@ -56,7 +56,7 @@ class DatasetSubject(db.Model):  # type: ignore
                 or (isinstance(value, str) and value.strip() == "")
                 or (isinstance(value, list) and len(value) == 0)
             ):
-                invalid_keys.append({"identifier": "subject", "name": key})
+                invalid_keys.append({"identifier": "subjects", "name": key, "route": "data-management"})
         return invalid_keys
 
     @staticmethod

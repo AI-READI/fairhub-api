@@ -45,7 +45,7 @@ class DatasetAccess(db.Model):  # type: ignore
                 or (isinstance(value, str) and value.strip() == "")
                 or (isinstance(value, list) and len(value) == 0)
             ):
-                invalid_keys.append({"identifier": "access", "name": key})
+                invalid_keys.append({"identifier": "access", "name": key, "route": "access-rights"})
         return invalid_keys
 
     @staticmethod

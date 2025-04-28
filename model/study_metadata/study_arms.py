@@ -65,7 +65,7 @@ class StudyArm(db.Model):  # type: ignore
             if (isinstance(value, str) and value.strip() == "") or (
                 isinstance(value, list) and len(value) == 0
             ):
-                invalid_keys.append({"identifier": "arms", "name": key})
+                invalid_keys.append({"identifier": "arms", "name": key, "route": "arms"})
         return invalid_keys
 
     @staticmethod

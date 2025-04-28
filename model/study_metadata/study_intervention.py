@@ -64,7 +64,7 @@ class StudyIntervention(db.Model):  # type: ignore
             if (isinstance(value, str) and value.strip() == "") or (
                 isinstance(value, list) and len(value) == 0
             ):
-                invalid_keys.append({"identifier": "intervention", "name": key})
+                invalid_keys.append({"identifier": "intervention", "name": key, "route": "intervention"})
         return invalid_keys
 
     @staticmethod

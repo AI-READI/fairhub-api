@@ -243,14 +243,31 @@ class VersionDatasetMetadataValidation(Resource):
         study_metadata = study.to_dict_study_metadata_validation()
         dataset_metadata = dataset_obj.to_dict_dataset_metadata_validation()
         errors = []
-        # if study_metadata and len(study_metadata) > 0:
-        #     errors.append({"metadata": study_metadata, "message": "I haste coding"})
+        if study_metadata and len(study_metadata) > 0:
+            errors.append(
+                {
+
+                            "route_identifier": "study:metadata",
+                            "metadata": study_metadata,
+                            "message": "All required study metadata fields should be "
+                                       "filled in order to publish a version. Some required "
+                                       "study metadata fields are missing:",
+
+                }
+            )
         if dataset_metadata and len(dataset_metadata) > 0:
-            errors.append({"metadata": dataset_metadata, "message": "Some required dataset metadata fields are missing"})
-        print(dataset_metadata)
+            errors.append(
+                {
+                    "route_identifier": "dataset:metadata",
+                    "metadata": dataset_metadata,
+                    "message": "All required dataset metadata fields should be filled"
+                               " in order to publish a version. Some required dataset"
+                               " metadata fields are missing",
+                }
+            )
+        # print(dataset_metadata)
         return errors, 200
         # "study_metadata": study_metadata,
-        { "dataset_metadata": dataset_metadata}, 200
 
 
 @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/changelog")
@@ -311,6 +328,7 @@ class VersionDatasetReadme(Resource):
         version_.version_readme.update(data)
         model.db.session.commit()
         return version_.version_readme.to_dict(), 200
+
 
 # @api.route("/study/<study_id>/dataset/<dataset_id>/version/<version_id>/publish")
 # class PublishResource(Resource):
