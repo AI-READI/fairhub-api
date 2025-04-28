@@ -233,19 +233,19 @@ def test_get_version_metadata_validation(clients):
     _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
     study_id = pytest.global_study_id["id"]  # type: ignore
     dataset_id = pytest.global_dataset_id  # type: ignore
-    version_id = pytest.global_dataset_version_id  # type: ignore
+
 
     response = _logged_in_client.get(
-        f"/study/{study_id}/metadata/metadata-validation",
+        f"/study/{study_id}/dataset/{dataset_id}/metadata-validation",
     )
     admin_response = _admin_client.get(
-        f"/study/{study_id}/metadata/metadata-validation"
+        f"/study/{study_id}/dataset/{dataset_id}/metadata-validation"
     )
     editor_response = _editor_client.get(
-        f"/study/{study_id}/metadata/metadata-validation"
+        f"/study/{study_id}/dataset/{dataset_id}/metadata-validation"
     )
     viewer_response = _viewer_client.get(
-        f"/study/{study_id}/metadata/metadata-validation"
+        f"/study/{study_id}/dataset/{dataset_id}/metadata-validation"
     )
 
     assert response.status_code == 200
