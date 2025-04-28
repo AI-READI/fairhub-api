@@ -38,10 +38,7 @@ class DatasetManagingOrganization(db.Model):  # type: ignore
     def to_dict_validation(self):
         return {
             "name": self.name,
-            "identifier": {
-                "value": self.identifier,
-                "parent" : self.identifier_scheme
-            },
+            "identifier": {"value": self.identifier, "parent": self.identifier_scheme},
             "identifier_scheme": {
                 "value": self.identifier_scheme,
                 "parent": self.identifier,
@@ -63,7 +60,11 @@ class DatasetManagingOrganization(db.Model):  # type: ignore
                 or (isinstance(value, list) and len(value) == 0)
             ):
                 invalid_keys.append(
-                    {"metadata_header": "managing organization", "name": key, "route": "team"}
+                    {
+                        "metadata_header": "managing organization",
+                        "name": key,
+                        "route": "team",
+                    }
                 )
         return invalid_keys
 

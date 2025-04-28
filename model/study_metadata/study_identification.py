@@ -74,7 +74,13 @@ class StudyIdentification(db.Model):  # type: ignore
             if (isinstance(value, str) and value.strip() == "") or (
                 isinstance(value, list) and len(value) == 0
             ):
-                invalid_keys.append({"metadata_header": "identification", "name": key, "route": "description"})
+                invalid_keys.append(
+                    {
+                        "metadata_header": "identification",
+                        "name": key,
+                        "route": "description",
+                    }
+                )
         return invalid_keys
 
     @staticmethod

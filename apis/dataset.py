@@ -246,13 +246,11 @@ class VersionDatasetMetadataValidation(Resource):
         if study_metadata and len(study_metadata) > 0:
             errors.append(
                 {
-
-                            "route_identifier": "study:metadata",
-                            "metadata": study_metadata,
-                            "message": "All required study metadata fields should be "
-                                       "filled in order to publish a version. Some required "
-                                       "study metadata fields are missing:",
-
+                    "route_identifier": "study:metadata",
+                    "metadata": study_metadata,
+                    "message": "All required study metadata fields should be "
+                    "filled in order to publish a version. Some required "
+                    "study metadata fields are missing:",
                 }
             )
         if dataset_metadata and len(dataset_metadata) > 0:
@@ -261,8 +259,8 @@ class VersionDatasetMetadataValidation(Resource):
                     "route_identifier": "dataset:metadata",
                     "metadata": dataset_metadata,
                     "message": "All required dataset metadata fields should be filled"
-                               " in order to publish a version. Some required dataset"
-                               " metadata fields are missing",
+                    " in order to publish a version. Some required dataset"
+                    " metadata fields are missing",
                 }
             )
         # print(dataset_metadata)

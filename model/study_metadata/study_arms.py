@@ -65,7 +65,9 @@ class StudyArm(db.Model):  # type: ignore
             if (isinstance(value, str) and value.strip() == "") or (
                 isinstance(value, list) and len(value) == 0
             ):
-                invalid_keys.append({"metadata_header": "arms", "name": key, "route": "arms"})
+                invalid_keys.append(
+                    {"metadata_header": "arms", "name": key, "route": "arms"}
+                )
         return invalid_keys
 
     @staticmethod

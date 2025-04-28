@@ -52,7 +52,13 @@ class DatasetTitle(db.Model):  # type: ignore
                 or (isinstance(value, str) and value.strip() == "")
                 or (isinstance(value, list) and len(value) == 0)
             ):
-                invalid_keys.append({"metadata_header": "titles", "name": key, "route": "general-information"})
+                invalid_keys.append(
+                    {
+                        "metadata_header": "titles",
+                        "name": key,
+                        "route": "general-information",
+                    }
+                )
         return invalid_keys
 
     @staticmethod

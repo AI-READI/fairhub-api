@@ -129,7 +129,11 @@ class StudySponsors(db.Model):  # type: ignore
             isinstance(self.study_type, str) and self.study_type.strip() == ""
         ):
             invalid_keys.append(
-                {"metadata_header": "team", "name": "responsible_party_type" , "route": "team"}
+                {
+                    "metadata_header": "team",
+                    "name": "responsible_party_type",
+                    "route": "team",
+                }
             )
 
         if self.responsible_party_type:
@@ -140,7 +144,13 @@ class StudySponsors(db.Model):  # type: ignore
                         or (isinstance(value, str) and value.strip() == "")
                         or (isinstance(value, list) and len(value) == 0)
                     ):
-                        invalid_keys.append({"metadata_header": "sponsors", "name": key, "route": "team"})
+                        invalid_keys.append(
+                            {
+                                "metadata_header": "sponsors",
+                                "name": key,
+                                "route": "team",
+                            }
+                        )
 
             elif self.responsible_party_type.lower() == "investigator":
                 for key, value in investigator_fields.items():
@@ -149,7 +159,13 @@ class StudySponsors(db.Model):  # type: ignore
                         or (isinstance(value, str) and value.strip() == "")
                         or (isinstance(value, list) and len(value) == 0)
                     ):
-                        invalid_keys.append({"metadata_header": "sponsors", "name": key, "route": "team"})
+                        invalid_keys.append(
+                            {
+                                "metadata_header": "sponsors",
+                                "name": key,
+                                "route": "team",
+                            }
+                        )
 
         return invalid_keys
 

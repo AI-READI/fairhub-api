@@ -59,7 +59,13 @@ class DatasetConsent(db.Model):  # type: ignore
                 or (isinstance(value, str) and value.strip() == "")
                 or (isinstance(value, list) and len(value) == 0)
             ):
-                invalid_keys.append({"metadata_header": "consent", "name": key, "route": "data-management"})
+                invalid_keys.append(
+                    {
+                        "metadata_header": "consent",
+                        "name": key,
+                        "route": "data-management",
+                    }
+                )
         return invalid_keys
 
     @staticmethod

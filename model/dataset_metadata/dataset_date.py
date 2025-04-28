@@ -59,7 +59,13 @@ class DatasetDate(db.Model):  # type: ignore
                 or (isinstance(value, str) and value.strip() == "")
                 or (isinstance(value, list) and len(value) == 0)
             ):
-                invalid_keys.append({"metadata_header": "dates", "name": key, "route": "general-information"})
+                invalid_keys.append(
+                    {
+                        "metadata_header": "dates",
+                        "name": key,
+                        "route": "general-information",
+                    }
+                )
         return invalid_keys
 
     @staticmethod
