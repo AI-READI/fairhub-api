@@ -40,12 +40,13 @@ class DatasetOther(db.Model):  # type: ignore
 
     def to_dict_metadata(self):
         return {
+            "language": self.language,
+            "size": self.size,
             "resource_type": self.resource_type,
         }
 
     def to_dict_validation(self):
         return {
-            "language": self.language,
             "resource_type": self.resource_type,
         }
 
