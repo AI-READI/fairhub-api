@@ -87,12 +87,19 @@ class StudyEligibility(db.Model):  # type: ignore
             "exclusion_criteria": self.exclusion_criteria,
             "study_population": self.study_population,
             "sampling_method": self.sampling_method,
+            "gender_description": {
+                "value": self.gender_description,
+                "parent": self.gender_based,
+            },
         }
 
     def validate(self):
         data = self.to_dict_validation()
         invalid_keys = []
         for key, value in data.items():
+            if isinstance(value, dict):
+                if value["parent"] and value["parent"] == "Yes":
+                    continue  # skip to next loop
             if (
                 value is None
                 or (isinstance(value, str) and value.strip() == "")

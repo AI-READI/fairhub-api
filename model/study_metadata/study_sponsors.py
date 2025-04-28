@@ -95,21 +95,62 @@ class StudySponsors(db.Model):  # type: ignore
 
     def to_dict_validation(self):
         return {
+            # sponsor
+            "sponsor": {
+                "responsible_party_investigator_first_name": self.responsible_party_investigator_first_name,
+                "responsible_party_investigator_last_name": self.responsible_party_investigator_last_name,
+                "responsible_party_investigator_title": self.responsible_party_investigator_title,
+                "responsible_party_investigator_affiliation_name": self.responsible_party_investigator_affiliation_name,
+                "responsible_party_investigator_identifier_value": self.responsible_party_investigator_identifier_value,
+                "responsible_party_investigator_identifier_scheme": self.responsible_party_investigator_identifier_scheme,
+                "lead_sponsor_name": self.lead_sponsor_name,
+                "lead_sponsor_identifier": self.lead_sponsor_identifier,
+                "lead_sponsor_identifier_scheme": self.lead_sponsor_identifier_scheme,
+            },
             "responsible_party_type": self.responsible_party_type,
-            "responsible_party_investigator_first_name": self.responsible_party_investigator_first_name,
-            "responsible_party_investigator_last_name": self.responsible_party_investigator_last_name,
+            "investigator": {
+                "responsible_party_investigator_affiliation_identifier_scheme": self.responsible_party_investigator_affiliation_identifier_scheme,
+                "responsible_party_investigator_identifier_value": self.responsible_party_investigator_identifier_value,
+                "responsible_party_investigator_identifier_scheme": self.responsible_party_investigator_identifier_scheme,
+                "lead_sponsor_name": self.lead_sponsor_name,
+                "lead_sponsor_identifier": self.lead_sponsor_identifier,
+                "lead_sponsor_identifier_scheme": self.lead_sponsor_identifier_scheme,
+            },
         }
 
     def validate(self):
         data = self.to_dict_validation()
         invalid_keys = []
-        for key, value in data.items():
-            if (
-                value is None
-                or (isinstance(value, str) and value.strip() == "")
-                or (isinstance(value, list) and len(value) == 0)
-            ):
-                invalid_keys.append({"identifier": "team", "name": key})
+
+        sponsor_fields = data.get("sponsor", {})
+        investigator_fields = data.get("investigator", {})
+
+        if self.responsible_party_type is None or (
+            isinstance(self.study_type, str) and self.study_type.strip() == ""
+        ):
+            invalid_keys.append(
+                {"identifier": "team", "name": "responsible_party_type"}
+            )
+
+        if self.responsible_party_type:
+            if self.responsible_party_type.lower() == "sponsor":
+                for key, value in sponsor_fields.items():
+                    if (
+                        value is None
+                        or (isinstance(value, str) and value.strip() == "")
+                        or (isinstance(value, list) and len(value) == 0)
+                    ):
+                        invalid_keys.append({"identifier": "team", "name": key})
+
+            elif self.responsible_party_type.lower() == "investigator":
+                for key, value in investigator_fields.items():
+                    if (
+                        value is None
+                        or (isinstance(value, str) and value.strip() == "")
+                        or (isinstance(value, list) and len(value) == 0)
+                    ):
+                        invalid_keys.append({"identifier": "team", "name": key})
+
         return invalid_keys
 
     @staticmethod
