@@ -252,8 +252,12 @@ def test_get_version_metadata_validation(clients):
     assert admin_response.status_code == 200
     assert editor_response.status_code == 200
     assert viewer_response.status_code == 403
-#
-#     response_data = json.loads(response.data)
+
+    assert response.get_json() == []
+    assert admin_response.get_json() == []
+    assert editor_response.get_json() == []
+
+    # assert response_data["title"] == "Dataset Version 2.0"
 #     admin_response_data = json.loads(admin_response.data)
 #     editor_response_data = json.loads(editor_response.data)
 #     viewer_response_data = json.loads(viewer_response.data)

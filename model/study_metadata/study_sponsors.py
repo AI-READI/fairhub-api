@@ -126,7 +126,7 @@ class StudySponsors(db.Model):  # type: ignore
         investigator_fields = data.get("investigator", {})
 
         if self.responsible_party_type is None or (
-            isinstance(self.study_type, str) and self.study_type.strip() == ""
+            isinstance(self.responsible_party_type, str) and self.responsible_party_type.strip() == ""
         ):
             invalid_keys.append(
                 {

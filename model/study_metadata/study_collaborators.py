@@ -53,7 +53,7 @@ class StudyCollaborators(db.Model):  # type: ignore
             "name": self.name,
             "identifier": self.identifier,
             "identifier_scheme": {
-                "value": self.identifier_scheme,
+                "value": self.scheme,
                 "parent": self.identifier,
             },
         }

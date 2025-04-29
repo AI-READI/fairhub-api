@@ -53,10 +53,12 @@ class StudyConditions(db.Model):  # type: ignore
     def to_dict_validation(self):
         return {
             "name": self.name,
-            "identifier": self.identifier,
-            "identifier_scheme": {
-                "value": self.identifier_scheme,
-                "parent": self.identifier,
+            "classification_code": {
+                "value": self.classification_code,
+                "parent": self.scheme},
+            "scheme": {
+                "value": self.scheme,
+                "parent": self.classification_code,
             },
         }
 
