@@ -51,6 +51,28 @@ class StudyIntervention(db.Model):  # type: ignore
             "name": self.name,
         }
 
+    def to_dict_validation(self):
+        return {
+            "type": self.type,
+            "name": self.name,
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            if (isinstance(value, str) and value.strip() == "") or (
+                isinstance(value, list) and len(value) == 0
+            ):
+                invalid_keys.append(
+                    {
+                        "metadata_header": "intervention",
+                        "name": key,
+                        "route": "intervention",
+                    }
+                )
+        return invalid_keys
+
     @staticmethod
     def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""
@@ -66,8 +88,3 @@ class StudyIntervention(db.Model):  # type: ignore
         self.description = data["description"]
         self.other_name_list = data["other_name_list"]
         self.study.touch()
-
-    def validate(self):
-        """Validates the lead_sponsor_last_name study"""
-        violations: list = []
-        return violations

@@ -35,6 +35,39 @@ class DatasetManagingOrganization(db.Model):  # type: ignore
             "identifier": self.identifier,
         }
 
+    def to_dict_validation(self):
+        return {
+            "name": self.name,
+            "identifier": {"value": self.identifier, "parent": self.identifier_scheme},
+            "identifier_scheme": {
+                "value": self.identifier_scheme,
+                "parent": self.identifier,
+            },
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            if isinstance(value, dict):
+                if value["parent"] is None or (
+                    isinstance(value, str) and value.strip() != ""
+                ):
+                    continue  # skip to next loop
+            if (
+                value is None
+                or (isinstance(value, str) and value.strip() == "")
+                or (isinstance(value, list) and len(value) == 0)
+            ):
+                invalid_keys.append(
+                    {
+                        "metadata_header": "managing organization",
+                        "name": key,
+                        "route": "team",
+                    }
+                )
+        return invalid_keys
+
     @staticmethod
     def from_data(dataset, data: dict):
         dataset_other = DatasetManagingOrganization(dataset)

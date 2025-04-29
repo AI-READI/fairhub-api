@@ -50,6 +50,39 @@ class StudyConditions(db.Model):  # type: ignore
             "name": self.name,
         }
 
+    def to_dict_validation(self):
+        return {
+            "name": self.name,
+            "classification_code": {
+                "value": self.classification_code,
+                "parent": self.scheme},
+            "scheme": {
+                "value": self.scheme,
+                "parent": self.classification_code,
+            },
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            if isinstance(value, dict):
+                if value["parent"] is not None and (
+                    not isinstance(value, str) or value.strip() != ""
+                ):
+                    continue  # skip to next loop
+            if (isinstance(value, str) and value.strip() == "") or (
+                isinstance(value, list) and len(value) == 0
+            ):
+                invalid_keys.append(
+                    {
+                        "metadata_header": "conditions",
+                        "name": key,
+                        "route": "description",
+                    }
+                )
+        return invalid_keys
+
     @staticmethod
     def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""
@@ -66,8 +99,3 @@ class StudyConditions(db.Model):  # type: ignore
         self.scheme_uri = data["scheme_uri"]
         self.condition_uri = data["condition_uri"]
         self.study.touch()
-
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        return violations

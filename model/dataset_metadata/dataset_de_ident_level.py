@@ -44,6 +44,29 @@ class DatasetDeIdentLevel(db.Model):  # type: ignore
             "type": self.type,
         }
 
+    def to_dict_validation(self):
+        return {
+            "type": self.type,
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            if (
+                value is None
+                or (isinstance(value, str) and value.strip() == "")
+                or (isinstance(value, list) and len(value) == 0)
+            ):
+                invalid_keys.append(
+                    {
+                        "metadata_header": "de-identification",
+                        "name": key,
+                        "route": "data-management",
+                    }
+                )
+        return invalid_keys
+
     @staticmethod
     def from_data(dataset, data: dict):
         dataset_de_ident_level = DatasetDeIdentLevel(dataset)

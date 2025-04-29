@@ -294,6 +294,85 @@ def test_delete_dataset_from_study(clients):
     assert editor_response.status_code == 204
 
 
+def test_get_version_metadata_validation(clients):
+    """
+    Given a Flask application configured for testing
+    WHEN the /study/{study_id}/dataset/{dataset_id}/metadata-validation
+    endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the design metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id  # type: ignore
+
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata-validation",
+    )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata-validation"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata-validation"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata-validation"
+    )
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 403
+
+    data = response.get_json()
+    admin_data = admin_response.get_json()
+    editor_data = editor_response.get_json()
+    metadata = [m for d in data for m in d['metadata']]
+    admin_metadata = [m for d in admin_data for m in d['metadata']]
+    editor_metadata = [m for d in editor_data for m in d['metadata']]
+
+    def count(header):
+        return sum(1 for m in metadata if m['metadata_header'] == header)
+
+    assert count('Eligibility') == 10
+    assert count('Status') == 5
+    assert count('Other') == 1
+    assert count('Design') == 1
+    assert count('Identification') == 1
+    assert count('Team') == 1
+    assert count('Access') == 2
+    assert count('Consent') == 1
+    assert count('De-identification') == 1
+    assert count('Oversight') == 1
+
+    def admin_count(header):
+        return sum(1 for m in admin_metadata if m['metadata_header'] == header)
+    assert admin_count('Eligibility') == 10
+    assert admin_count('Status') == 5
+    assert admin_count('Other') == 1
+    assert admin_count('Design') == 1
+    assert admin_count('Identification') == 1
+    assert admin_count('Team') == 1
+    assert admin_count('Access') == 2
+    assert admin_count('Consent') == 1
+    assert admin_count('De-identification') == 1
+    assert admin_count('Oversight') == 1
+
+    def editor_count(header):
+        return sum(1 for m in editor_metadata if m['metadata_header'] == header)
+
+    assert editor_count('Eligibility') == 10
+    assert editor_count('Status') == 5
+    assert editor_count('Other') == 1
+    assert editor_count('Design') == 1
+    assert editor_count('Identification') == 1
+    assert editor_count('Team') == 1
+    assert editor_count('Access') == 2
+    assert editor_count('Consent') == 1
+    assert editor_count('De-identification') == 1
+    assert editor_count('Oversight') == 1
+
+
 def test_put_dataset_version(clients):
     """
     Given a Flask application configured for testing, study ID, dataset ID and version ID

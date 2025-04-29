@@ -70,6 +70,45 @@ class StudyCentralContact(db.Model):  # type: ignore
             "email_address": self.email_address,
         }
 
+    def to_dict_validation(self):
+        return {
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "affiliation": self.affiliation,
+            "email_address": self.email_address,
+            "identifier": self.identifier,
+            "identifier_scheme": {
+                "value": self.identifier_scheme,
+                "parent": self.identifier,
+            },
+            "affiliation_identifier": self.affiliation_identifier,
+            "affiliation_identifier_scheme": {
+                "value": self.affiliation_identifier_scheme,
+                "parent": self.affiliation_identifier,
+            },
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            if isinstance(value, dict):
+                if value["parent"] is not None and (
+                    not isinstance(value, str) or value.strip() != ""
+                ):
+                    continue  # skip to next loop
+            if (isinstance(value, str) and value.strip() == "") or (
+                isinstance(value, list) and len(value) == 0
+            ):
+                invalid_keys.append(
+                    {
+                        "metadata_header": "central_contact",
+                        "name": key,
+                        "route": "contacts",
+                    }
+                )
+        return invalid_keys
+
     @staticmethod
     def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""
@@ -96,8 +135,3 @@ class StudyCentralContact(db.Model):  # type: ignore
         self.phone_ext = data["phone_ext"]
         self.email_address = data["email_address"]
         self.study.touch()
-
-    def validate(self):
-        """Validates the lead_sponsor_last_name study"""
-        violations: list = []
-        return violations

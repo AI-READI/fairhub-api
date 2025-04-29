@@ -4,6 +4,40 @@ import json
 
 import pytest
 
+def test_get_version_metadata_validation(clients):
+    """
+    Given a Flask application configured for testing
+    WHEN the /study/{study_id}/dataset/{dataset_id}/metadata-validation
+    endpoint is requested (GET)
+    THEN check that the response is valid and retrieves the design metadata
+    """
+    _logged_in_client, _admin_client, _editor_client, _viewer_client = clients
+    study_id = pytest.global_study_id["id"]  # type: ignore
+    dataset_id = pytest.global_dataset_id  # type: ignore
+
+    response = _logged_in_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata-validation",
+    )
+    admin_response = _admin_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata-validation"
+    )
+    editor_response = _editor_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata-validation"
+    )
+    viewer_response = _viewer_client.get(
+        f"/study/{study_id}/dataset/{dataset_id}/metadata-validation"
+    )
+
+    assert response.status_code == 200
+    assert admin_response.status_code == 200
+    assert editor_response.status_code == 200
+    assert viewer_response.status_code == 403
+
+    assert response.get_json() == []
+    assert admin_response.get_json() == []
+    assert editor_response.get_json() == []
+
+    # assert response_data["title"] == "Dataset Version 2.0"
 
 # ------------------- VERSION ADD ------------------- #
 def test_post_dataset_version(clients):

@@ -52,6 +52,29 @@ class DatasetContributor(db.Model):  # type: ignore
             "creator": self.creator,
         }
 
+    def to_dict_validation(self):
+        return {
+            "first_name": self.given_name,
+            "last_name": self.family_name,
+            "name_type": self.name_type,
+            "name_identifier": self.name_identifier,
+            "name_identifier_scheme": self.name_identifier_scheme,
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            if (
+                value is None
+                or (isinstance(value, str) and value.strip() == "")
+                or (isinstance(value, list) and len(value) == 0)
+            ):
+                invalid_keys.append(
+                    {"metadata_header": "contributors", "name": key, "route": "team"}
+                )
+        return invalid_keys
+
     @staticmethod
     def from_data(dataset, data: dict):
         dataset_contributor = DatasetContributor(dataset)

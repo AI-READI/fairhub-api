@@ -93,6 +93,82 @@ class StudySponsors(db.Model):  # type: ignore
             "lead_sponsor_name": self.lead_sponsor_name,
         }
 
+    def to_dict_validation(self):
+        return {
+            # sponsor
+            "sponsor": {
+                "responsible_party_investigator_first_name": self.responsible_party_investigator_first_name,
+                "responsible_party_investigator_last_name": self.responsible_party_investigator_last_name,
+                "responsible_party_investigator_title": self.responsible_party_investigator_title,
+                "responsible_party_investigator_affiliation_name": self.responsible_party_investigator_affiliation_name,
+                "responsible_party_investigator_identifier_value": self.responsible_party_investigator_identifier_value,
+                "responsible_party_investigator_identifier_scheme": self.responsible_party_investigator_identifier_scheme,  # noqa E501
+                "lead_sponsor_name": self.lead_sponsor_name,
+                "lead_sponsor_identifier": self.lead_sponsor_identifier,
+                "lead_sponsor_identifier_scheme": self.lead_sponsor_identifier_scheme,
+            },
+            "responsible_party_type": self.responsible_party_type,
+            "investigator": {
+                "responsible_party_investigator_affiliation_identifier_scheme": self.responsible_party_investigator_affiliation_identifier_scheme,  # noqa E501
+                "responsible_party_investigator_identifier_value": self.responsible_party_investigator_identifier_value,
+                "responsible_party_investigator_identifier_scheme": self.responsible_party_investigator_identifier_scheme,  # noqa E501
+                "lead_sponsor_name": self.lead_sponsor_name,
+                "lead_sponsor_identifier": self.lead_sponsor_identifier,
+                "lead_sponsor_identifier_scheme": self.lead_sponsor_identifier_scheme,
+            },
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+
+        sponsor_fields = data.get("sponsor", {})
+        investigator_fields = data.get("investigator", {})
+
+        if self.responsible_party_type is None or (
+            isinstance(self.responsible_party_type, str) and self.responsible_party_type.strip() == ""
+        ):
+            invalid_keys.append(
+                {
+                    "metadata_header": "team",
+                    "name": "responsible_party_type",
+                    "route": "team",
+                }
+            )
+
+        if self.responsible_party_type:
+            if self.responsible_party_type.lower() == "sponsor":
+                for key, value in sponsor_fields.items():
+                    if (
+                        value is None
+                        or (isinstance(value, str) and value.strip() == "")
+                        or (isinstance(value, list) and len(value) == 0)
+                    ):
+                        invalid_keys.append(
+                            {
+                                "metadata_header": "sponsors",
+                                "name": key,
+                                "route": "team",
+                            }
+                        )
+
+            elif self.responsible_party_type.lower() == "investigator":
+                for key, value in investigator_fields.items():
+                    if (
+                        value is None
+                        or (isinstance(value, str) and value.strip() == "")
+                        or (isinstance(value, list) and len(value) == 0)
+                    ):
+                        invalid_keys.append(
+                            {
+                                "metadata_header": "sponsors",
+                                "name": key,
+                                "route": "team",
+                            }
+                        )
+
+        return invalid_keys
+
     @staticmethod
     def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""
@@ -140,8 +216,3 @@ class StudySponsors(db.Model):  # type: ignore
         self.lead_sponsor_identifier_scheme_uri = data[
             "lead_sponsor_identifier_scheme_uri"
         ]
-
-    def validate(self):
-        """Validates the lead_sponsor_last_name study"""
-        violations: list = []
-        return violations

@@ -83,6 +83,75 @@ class StudyDesign(db.Model):  # type: ignore
             "is_patient_registry": self.is_patient_registry,
         }
 
+    def to_dict_validation(self):
+        return {
+            # observational_
+            "observational": {
+                "is_patient_registry": self.is_patient_registry,
+                "design_observational_model_list": self.design_observational_model_list,
+                "design_time_perspective_list": self.design_time_perspective_list,
+                "bio_spec_retention": self.bio_spec_retention,
+                "bio_spec_description": self.bio_spec_description,
+                "enrollment_count": self.enrollment_count,
+                "enrollment_type": self.enrollment_type,
+            },
+            "study_type": self.study_type,
+            "interventional": {
+                "design_allocation": self.design_allocation,
+                "design_intervention_model": self.design_intervention_model,
+                "design_primary_purpose": self.design_primary_purpose,
+                "design_masking": self.design_masking,
+                "design_who_masked_list": self.design_who_masked_list,
+                "phase_list": self.phase_list,
+                "enrollment_count": self.enrollment_count,
+                "enrollment_type": self.enrollment_type,
+                "number_arms": self.number_arms,
+            },
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        observational_fields = data.get("observational", {})
+        interventional_fields = data.get("interventional", {})
+        if self.study_type is None or (
+            isinstance(self.study_type, str) and self.study_type.strip() == ""
+        ):
+            invalid_keys.append(
+                {"metadata_header": "design", "name": "study_type", "route": "design"}
+            )
+        if self.study_type:
+            if self.study_type.lower() == "observational":
+                for key, value in observational_fields.items():
+                    if (
+                        value is None
+                        or (isinstance(value, str) and value.strip() == "")
+                        or (isinstance(value, list) and len(value) == 0)
+                    ):
+                        invalid_keys.append(
+                            {
+                                "metadata_header": "design",
+                                "name": key,
+                                "route": "design",
+                            }
+                        )
+
+            elif self.study_type.lower() == "interventional":
+                for key, value in interventional_fields.items():
+                    if (
+                        value is None
+                        or (isinstance(value, str) and value.strip() == "")
+                        or (isinstance(value, list) and len(value) == 0)
+                    ):
+                        invalid_keys.append(
+                            {
+                                "metadata_header": "design",
+                                "name": key,
+                                "route": "design",
+                            }
+                        )
+        return invalid_keys
+
     @staticmethod
     def from_data(study: Study, data: dict):
         """Creates a new study from a dictionary"""
@@ -114,8 +183,3 @@ class StudyDesign(db.Model):  # type: ignore
         self.target_duration = data["target_duration"]
         self.is_patient_registry = data["is_patient_registry"]
         self.study.touch()
-
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        return violations

@@ -45,6 +45,25 @@ class StudyOversight(db.Model):  # type: ignore
 
         return study_keywords
 
+    def to_dict_validation(self):
+        return {
+            "human_subject_review_status": self.human_subject_review_status,
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            if (
+                value is None
+                or (isinstance(value, str) and value.strip() == "")
+                or (isinstance(value, list) and len(value) == 0)
+            ):
+                invalid_keys.append(
+                    {"metadata_header": "oversight", "name": key, "route": "oversight"}
+                )
+        return invalid_keys
+
     def update(self, data: dict):
         """Updates the study from a dictionary"""
         self.fda_regulated_drug = data["fda_regulated_drug"]
@@ -52,8 +71,3 @@ class StudyOversight(db.Model):  # type: ignore
         self.human_subject_review_status = data["human_subject_review_status"]
         self.has_dmc = data["has_dmc"]
         self.study.touch()
-
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        return violations

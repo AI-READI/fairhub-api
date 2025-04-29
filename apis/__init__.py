@@ -21,7 +21,7 @@ from .file import api as file_api
 from .participant import api as participants_api
 from .redcap import api as redcap
 from .study import api as study_api
-from .study_metadata.study_arm import api as arm
+from .study_metadata.study_arms import api as arms
 from .study_metadata.study_central_contact import api as central_contact
 from .study_metadata.study_description import api as study_description
 from .study_metadata.study_design import api as design
@@ -58,7 +58,7 @@ __all__ = [
     "general_information",
     "participants_api",
     "study_api",
-    "arm",
+    "arms",
     "central_contact",
     "design",
     "eligibility",

@@ -1,4 +1,5 @@
 import datetime
+import itertools
 import uuid
 
 from flask import g
@@ -230,6 +231,39 @@ class Study(db.Model):  # type: ignore
             ],
         }
 
+    def to_dict_study_metadata_validation(self):
+        # self.study_contact: Iterable = []
+        # primary = [
+        #     i.to_dict_metadata()
+        #     for i in self.study_identification  # type: ignore
+        #     if not i.secondary
+        # ]
+        props = [
+            *self.study_arm,
+            *self.study_central_contact,
+            self.study_design,
+            self.study_eligibility,
+            *self.study_identification,
+            *self.study_intervention,
+            *self.study_location,
+            *self.study_overall_official,
+            self.study_sponsors,
+            *self.study_collaborators,
+            self.study_status,
+            self.study_oversight,
+            *self.study_conditions,
+            *self.study_keywords,
+        ]
+
+        error_field_list = list(itertools.chain(*[prop.validate() for prop in props]))
+        if self.study_design.study_type == "Observational":
+            error_field_list.append(
+                {"metadata_header": "arms", "name": "type", "route": "arms"}
+            )
+        for i in error_field_list:
+            i["metadata_header"] = i["metadata_header"].capitalize()
+        return error_field_list
+
     @staticmethod
     def from_data(data: dict):
         """Creates a new study from a dictionary"""
@@ -249,15 +283,6 @@ class Study(db.Model):  # type: ignore
         self.image = data["image"]
         self.short_description = data["short_description"]
         self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
-
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        # if self.description.trim() == "":
-        #     violations.push("A description is required")
-        # if self.keywords.length < 1:
-        #     violations.push("At least one keyword must be specified")
-        return violations
 
     def touch(self):
         self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()

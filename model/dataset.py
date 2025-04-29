@@ -1,4 +1,5 @@
 import datetime
+import itertools
 import uuid
 from datetime import timezone
 
@@ -172,6 +173,45 @@ class Dataset(db.Model):  # type: ignore
                 i.to_dict_metadata() for i in self.dataset_title  # type: ignore
             ],
         }
+
+    def to_dict_dataset_metadata_validation(self):
+        props = [
+            self.dataset_other,
+            *self.dataset_description,
+            *self.dataset_subject,
+            self.dataset_managing_organization,
+            self.dataset_access,
+            self.dataset_consent,
+            self.dataset_de_ident_level,
+            *self.dataset_date,
+            *self.dataset_funder,
+            *self.dataset_alternate_identifier,
+            *self.dataset_related_identifier,
+            *self.dataset_title,
+            *self.dataset_rights,
+            *self.dataset_contributors,
+        ]
+
+        error_field_list = list(itertools.chain(*[prop.validate() for prop in props]))
+        if not self.dataset_title:
+            error_field_list.append(
+                {
+                    "metadata_header": "title",
+                    "name": "title",
+                    "route": "general-information",
+                }
+            )
+        if not self.dataset_description:
+            error_field_list.append(
+                {
+                    "metadata_header": "description",
+                    "name": "description",
+                    "route": "general-information",
+                }
+            )
+        for i in error_field_list:
+            i["metadata_header"] = i["metadata_header"].capitalize()
+        return error_field_list
 
     def last_published(self):
         return (

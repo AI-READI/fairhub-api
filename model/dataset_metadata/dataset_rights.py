@@ -46,6 +46,25 @@ class DatasetRights(db.Model):  # type: ignore
             "identifier": self.identifier,
         }
 
+    def to_dict_validation(self):
+        return {
+            "rights": self.rights,
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            if (
+                value is None
+                or (isinstance(value, str) and value.strip() == "")
+                or (isinstance(value, list) and len(value) == 0)
+            ):
+                invalid_keys.append(
+                    {"metadata_header": "rights", "name": key, "route": "access-rights"}
+                )
+        return invalid_keys
+
     @staticmethod
     def from_data(dataset, data: dict):
         dataset_rights = DatasetRights(dataset)

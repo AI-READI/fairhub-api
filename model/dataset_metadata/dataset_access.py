@@ -36,6 +36,20 @@ class DatasetAccess(db.Model):  # type: ignore
             "description": self.description,
         }
 
+    def validate(self):
+        data = self.to_dict_metadata()
+        invalid_keys = []
+        for key, value in data.items():
+            if (
+                value is None
+                or (isinstance(value, str) and value.strip() == "")
+                or (isinstance(value, list) and len(value) == 0)
+            ):
+                invalid_keys.append(
+                    {"metadata_header": "access", "name": key, "route": "access-rights"}
+                )
+        return invalid_keys
+
     @staticmethod
     def from_data(dataset: Dataset, data: dict):
         dataset_access = DatasetAccess(dataset)

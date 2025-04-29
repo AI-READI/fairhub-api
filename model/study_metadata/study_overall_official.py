@@ -79,6 +79,47 @@ class StudyOverallOfficial(db.Model):  # type: ignore
 
         return study_overall_official
 
+    def to_dict_validation(self):
+        return {
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "affiliation": self.affiliation,
+            "role": self.role,
+            "identifier": self.identifier,
+            "identifier_scheme": {
+                "value": self.identifier_scheme,
+                "parent": self.identifier,
+            },
+            "affiliation_identifier": self.affiliation_identifier,
+            "affiliation_identifier_scheme": {
+                "value": self.affiliation_identifier_scheme,
+                "parent": self.affiliation_identifier,
+            },
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            if isinstance(value, dict):
+                if value["parent"] is not None and (
+                    not isinstance(value, str) or value.strip() != ""
+                ):
+                    continue  # skip to next loop
+            if (
+                value is None
+                or (isinstance(value, str) and value.strip() == "")
+                or (isinstance(value, list) and len(value) == 0)
+            ):
+                invalid_keys.append(
+                    {
+                        "metadata_header": "overall-official",
+                        "name": key,
+                        "route": "officials",
+                    }
+                )
+        return invalid_keys
+
     def update(self, data: dict):
         """Updates the study from a dictionary"""
         self.first_name = data["first_name"]
@@ -95,8 +136,3 @@ class StudyOverallOfficial(db.Model):  # type: ignore
         ]
         self.role = data["role"]
         self.study.touch()
-
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        return violations

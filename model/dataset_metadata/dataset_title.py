@@ -37,6 +37,30 @@ class DatasetTitle(db.Model):  # type: ignore
             "type": self.type,
         }
 
+    def to_dict_validation(self):
+        return {
+            "title": self.title,
+            "type": self.type,
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            if (
+                value is None
+                or (isinstance(value, str) and value.strip() == "")
+                or (isinstance(value, list) and len(value) == 0)
+            ):
+                invalid_keys.append(
+                    {
+                        "metadata_header": "titles",
+                        "name": key,
+                        "route": "general-information",
+                    }
+                )
+        return invalid_keys
+
     @staticmethod
     def from_data(dataset, data: dict):
         dataset_title = DatasetTitle(dataset)

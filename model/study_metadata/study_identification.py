@@ -49,6 +49,40 @@ class StudyIdentification(db.Model):  # type: ignore
             "id": self.id,
         }
 
+    def to_dict_validation(self):
+        return {
+            "secondary": self.secondary,
+            "identifier": self.identifier,
+            "identifier_type": self.identifier_type,
+            "identifier_domain": {
+                "value": self.identifier_domain,
+                "parent": self.identifier_type,
+            },
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            if isinstance(value, dict):
+                if (
+                    value["parent"] == "EudraCT Number"
+                    or value["parent"] == "NIH Grant Number"
+                ):
+                    continue  # skip to next loop
+            # if isinstance(data[key], bool) and key:
+            if (isinstance(value, str) and value.strip() == "") or (
+                isinstance(value, list) and len(value) == 0
+            ):
+                invalid_keys.append(
+                    {
+                        "metadata_header": "identification",
+                        "name": key,
+                        "route": "description",
+                    }
+                )
+        return invalid_keys
+
     @staticmethod
     def from_data(study: Study, data: dict, secondary):
         """Creates a new study from a dictionary"""
@@ -64,8 +98,3 @@ class StudyIdentification(db.Model):  # type: ignore
         self.identifier_domain = data["identifier_domain"]
         self.identifier_link = data["identifier_link"]
         self.study.touch()
-
-    def validate(self):
-        """Validates the lead_sponsor_last_name study"""
-        violations: list = []
-        return violations

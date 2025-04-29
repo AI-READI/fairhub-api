@@ -51,6 +51,28 @@ class DatasetFunder(db.Model):  # type: ignore
         dataset_funder.update(data)
         return dataset_funder
 
+    def to_dict_validation(self):
+        return {
+            "name": self.name,
+            "identifier": self.identifier,
+            "identifier_type": self.identifier_type,
+            "award_number": self.award_number,
+        }
+
+    def validate(self):
+        data = self.to_dict_validation()
+        invalid_keys = []
+        for key, value in data.items():
+            if (
+                value is None
+                or (isinstance(value, str) and value.strip() == "")
+                or (isinstance(value, list) and len(value) == 0)
+            ):
+                invalid_keys.append(
+                    {"metadata_header": "funder", "name": key, "route": "team"}
+                )
+        return invalid_keys
+
     def update(self, data: dict):
         self.name = data["name"]
         self.identifier = data["identifier"]
