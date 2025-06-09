@@ -17,6 +17,8 @@ from .dataset_metadata.dataset_subject import DatasetSubject
 from .dataset_metadata.dataset_title import DatasetTitle
 from .db import db
 from .email_verification import EmailVerification
+from .file import FileStructure
+from .folder import FolderStructure
 from .invited_study_contributor import StudyInvitedContributor
 from .notification import Notification
 from .participant import Participant
@@ -94,6 +96,8 @@ __all__ = [
     "StudyRedcap",
     "StudyDashboard",
     "StudyStatus",
+    "FileStructure",
+    "FolderStructure",
     "Identifiers",
     "Arm",
     "StudyInvitedContributor",
