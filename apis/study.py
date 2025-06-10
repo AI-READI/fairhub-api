@@ -1,9 +1,11 @@
 """APIs for study operations""" ""
 from typing import Any, Union
-
+import os
 from flask import Response, g, request
 from flask_restx import Namespace, Resource, fields, reqparse
 from jsonschema import ValidationError, validate
+import importlib
+from azure.storage.filedatalake import FileSystemClient
 
 import model
 
@@ -70,13 +72,32 @@ class Studies(Resource):
                 "image": {"type": "string"},
             },
         }
-
         try:
             validate(request.json, schema)
         except ValidationError as e:
             return e.message, 400
 
         data: Union[Any, dict] = request.json
+
+        if os.environ.get("FLASK_ENV") == "testing":
+            config_module_name = "pytest_config"
+        else:
+            config_module_name = "config"
+
+        config_module = importlib.import_module(config_module_name)
+
+        if os.environ.get("FLASK_ENV") == "testing":
+            # If testing, use the 'TestConfig' class for accessing 'secret'
+            config = config_module.TestConfig
+        else:
+            # If not testing, directly use the 'config' module
+            config = config_module
+
+        container = config.CONTAINER
+        file_system_client = FileSystemClient.from_connection_string(
+            config.AZURE_STORAGE_CONNECTION_STRING,
+            file_system_name=container,
+        )
 
         add_study = model.Study.from_data(data)
         model.db.session.add(add_study)
@@ -88,6 +109,8 @@ class Studies(Resource):
         model.db.session.add(study_contributor)
 
         model.db.session.commit()
+
+        file_system_client.create_directory(f"AI-READI/test-files/{study_id}")
 
         return study_.to_dict(), 201
 
