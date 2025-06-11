@@ -99,6 +99,9 @@ class Files(Resource):
     @api.response(404, "Path not found")
     def get(self, study_id):  # pylint: disable=unused-argument
         """Returns a flat list of files and folders for a given path"""
+        study = model.Study.query.get(study_id)
+        if not study:
+            return "Study not found", 404
         args = self.parser.parse_args()
         relative_path = args.get("path", "")
         relative_path = relative_path.lstrip("/\\")
