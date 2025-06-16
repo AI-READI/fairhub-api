@@ -1,12 +1,4 @@
-import datetime
-import random
-import uuid
-from datetime import timezone
-
-from .db import db
-
-
-class FileStructure():  # type: ignore
+class FileStructure:  # type: ignore
     def __init__(self, name, content_length, updated_on, is_directory):
         self.name = name
         self.size = content_length
