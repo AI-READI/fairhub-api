@@ -4,17 +4,21 @@ import importlib
 import os
 
 from azure.storage.filedatalake import FileSystemClient
-import model
 from flask_restx import Namespace, Resource, reqparse
-from flask import Response
+
+import model
 
 api = Namespace("File", description="File operations", path="/")
 
+
 class FileException(Exception):
     pass
+
+
 @api.errorhandler(FileException)
 def handle_file_exception(error):
     return {"message": str(error)}, 404
+
 
 # @api.route("/study/<study_id>/files1")
 # class Files(Resource):
@@ -28,7 +32,6 @@ def handle_file_exception(error):
 #     @api.response(400, "Validation Error")
 #     def get(self, study_id):  # pylint: disable=unused-argument
 #         """Return a list of all files for a study"""
-#         # todo: anticipating that each study will have a folder in the storage account
 #         # with the same name as the study id.
 #
 #         # Determine the appropriate configuration module based on the testing context
@@ -44,7 +47,7 @@ def handle_file_exception(error):
 #         else:
 #             # If not testing, directly use the 'config' module
 #             config = config_module
-#         if not config.AZURE_STORAGE_CONNECTION_STRING or config.CONTAINER:
+#         if not config.AZURE_STORAGE_CONNECTION_STRING and not config.CONTAINER:
 #             return "azure connection string is missing", 404
 #         def get_file_tree():
 #             container = config.CONTAINER
@@ -90,10 +93,18 @@ class Files(Resource):
     """Files for a study"""
 
     parser = reqparse.RequestParser()
-    parser.add_argument("path", type=str, required=False, location="args", default="",
-                        help="The folder path to list. Defaults to the study root.")
+    parser.add_argument(
+        "path",
+        type=str,
+        required=False,
+        location="args",
+        default="",
+        help="The folder path to list. Defaults to the study root.",
+    )
 
-    @api.doc(description="Return a flat list of files and folders for a given path within a study.")
+    @api.doc(
+        description="Return a flat list of files and folders for a given path within a study."
+    )
     @api.param("path", "The folder path on the file system to explore.")
     @api.response(200, "Success")
     @api.response(400, "Validation Error or Invalid Path")
@@ -120,7 +131,8 @@ class Files(Resource):
         else:
             # If not testing, directly use the 'config' module
             config = config_module
-        if not config.AZURE_STORAGE_CONNECTION_STRING or config.CONTAINER:
+
+        if not config.AZURE_STORAGE_CONNECTION_STRING and not config.CONTAINER:
             return "azure connection string is missing", 404
         # --- Path Sanitization ---
         base_dir = os.path.normpath(f"AI-READI/test-files/{study_id}")
@@ -144,7 +156,9 @@ class Files(Resource):
         # The response is a simple list of items in the directory
         directory_contents = []
 
-        for child_path in file_system_client.get_paths(path=source_path, recursive=False):
+        for child_path in file_system_client.get_paths(
+            path=source_path, recursive=False
+        ):
             if child_path.is_directory:
                 item = model.FolderStructure(
                     name=os.path.basename(child_path.name),
@@ -160,6 +174,7 @@ class Files(Resource):
                     updated_on=child_path.last_modified,
                     is_directory=False,
                 )
+
             directory_contents.append(item.to_dict())
 
         return directory_contents, 200
