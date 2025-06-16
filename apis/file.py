@@ -2,6 +2,7 @@
 
 import importlib
 import os
+import typing
 
 from azure.storage.filedatalake import FileSystemClient
 from flask_restx import Namespace, Resource, reqparse
@@ -159,6 +160,8 @@ class Files(Resource):
         for child_path in file_system_client.get_paths(
             path=source_path, recursive=False
         ):
+            item: typing.Union[model.FolderStructure, model.FileStructure]
+
             if child_path.is_directory:
                 item = model.FolderStructure(
                     name=os.path.basename(child_path.name),
