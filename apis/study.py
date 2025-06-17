@@ -1,15 +1,12 @@
 """APIs for study operations""" ""
-import importlib
-import os
 from typing import Any, Union
-
+import os
 from azure.storage.filedatalake import FileSystemClient
 from flask import Response, g, request
 from flask_restx import Namespace, Resource, fields, reqparse
 from jsonschema import ValidationError, validate
-
+import config
 import model
-
 from .authentication import is_granted
 
 api = Namespace("Study", description="Study operations", path="/")
@@ -79,27 +76,6 @@ class Studies(Resource):
             return e.message, 400
 
         data: Union[Any, dict] = request.json
-
-        if os.environ.get("FLASK_ENV") == "testing":
-            config_module_name = "pytest_config"
-        else:
-            config_module_name = "config"
-
-        config_module = importlib.import_module(config_module_name)
-
-        if os.environ.get("FLASK_ENV") == "testing":
-            # If testing, use the 'TestConfig' class for accessing 'secret'
-            config = config_module.TestConfig
-        else:
-            # If not testing, directly use the 'config' module
-            config = config_module
-
-        container = config.CONTAINER
-        file_system_client = FileSystemClient.from_connection_string(
-            config.AZURE_STORAGE_CONNECTION_STRING,
-            file_system_name=container,
-        )
-
         add_study = model.Study.from_data(data)
         model.db.session.add(add_study)
 
@@ -110,8 +86,14 @@ class Studies(Resource):
         model.db.session.add(study_contributor)
 
         model.db.session.commit()
+        if os.environ.get("FLASK_ENV") != "testing":
+            container = config.CONTAINER
 
-        file_system_client.create_directory(f"AI-READI/test-files/{study_id}")
+            file_system_client = FileSystemClient.from_connection_string(
+                config.AZURE_STORAGE_CONNECTION_STRING,
+                file_system_name=container,
+            )
+            file_system_client.create_directory(f"AI-READI/test-files/{study_id}")
 
         return study_.to_dict(), 201
 
