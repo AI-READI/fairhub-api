@@ -313,19 +313,40 @@ azure-core = ">=1.31.0"
 
 [[package]]
 name = "azure-storage-blob"
-version = "12.24.1"
+version = "12.25.1"
 description = "Microsoft Azure Blob Storage Client Library for Python"
 category = "main"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "azure_storage_blob-12.24.1-py3-none-any.whl", hash = "sha256:77fb823fdbac7f3c11f7d86a5892e2f85e161e8440a7489babe2195bf248f09e"},
-    {file = "azure_storage_blob-12.24.1.tar.gz", hash = "sha256:052b2a1ea41725ba12e2f4f17be85a54df1129e13ea0321f5a2fcc851cbf47d4"},
+    {file = "azure_storage_blob-12.25.1-py3-none-any.whl", hash = "sha256:1f337aab12e918ec3f1b638baada97550673911c4ceed892acc8e4e891b74167"},
+    {file = "azure_storage_blob-12.25.1.tar.gz", hash = "sha256:4f294ddc9bc47909ac66b8934bd26b50d2000278b10ad82cc109764fdc6e0e3b"},
 ]
 
 [package.dependencies]
 azure-core = ">=1.30.0"
 cryptography = ">=2.1.4"
+isodate = ">=0.6.1"
+typing-extensions = ">=4.6.0"
+
+[package.extras]
+aio = ["azure-core[aio] (>=1.30.0)"]
+
+[[package]]
+name = "azure-storage-file-datalake"
+version = "12.20.0"
+description = "Microsoft Azure File DataLake Storage Client Library for Python"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "azure_storage_file_datalake-12.20.0-py3-none-any.whl", hash = "sha256:d32af627ccf7f8523ac4520a4004291b8ca340d7c607545366e1b08822afa01b"},
+    {file = "azure_storage_file_datalake-12.20.0.tar.gz", hash = "sha256:8d6932b75470de935998755d980a3296412d8ff2a11631c1d99267ae65f11f03"},
+]
+
+[package.dependencies]
+azure-core = ">=1.30.0"
+azure-storage-blob = ">=12.25.1"
 isodate = ">=0.6.1"
 typing-extensions = ">=4.6.0"
 
@@ -4484,4 +4505,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "6e0584b39354841ea870ef44b3b8c27ffde8cb292d8a1dad071340ab5625682b"
+content-hash = "cf4657c4a05782f8af6e317d9a2c13b8a58ddfb461dbcd85b15c7b202f9c52a7"
