@@ -48,7 +48,7 @@ def handle_file_exception(error):
 #         else:
 #             # If not testing, directly use the 'config' module
 #             config = config_module
-#         if not config.AZURE_STORAGE_CONNECTION_STRING and not config.CONTAINER:
+#         if not config.AZURE_STORAGE_CONNECTION_STRING and not config.AZURE_CONTAINER:
 #             return "azure connection string is missing", 404
 #         def get_file_tree():
 #             container = config.CONTAINER
@@ -133,7 +133,7 @@ class Files(Resource):
             # If not testing, directly use the 'config' module
             config = config_module
 
-        if not config.AZURE_STORAGE_CONNECTION_STRING and not config.CONTAINER:
+        if not config.AZURE_STORAGE_CONNECTION_STRING and not config.AZURE_CONTAINER:
             return "azure connection string is missing", 404
         # --- Path Sanitization ---
         base_dir = os.path.normpath(f"AI-READI/test-files/{study_id}")
@@ -145,7 +145,7 @@ class Files(Resource):
         # --- Azure Client and Directory Listing ---
         file_system_client = FileSystemClient.from_connection_string(
             config.AZURE_STORAGE_CONNECTION_STRING,
-            file_system_name=config.CONTAINER,
+            file_system_name=config.AZURE_CONTAINER,
         )
 
         directory_client = file_system_client.get_directory_client(source_path)

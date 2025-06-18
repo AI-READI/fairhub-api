@@ -87,7 +87,7 @@ class Studies(Resource):
 
         model.db.session.commit()
         if os.environ.get("FLASK_ENV") != "testing":
-            container = config.CONTAINER
+            container = config.AZURE_CONTAINER
 
             file_system_client = FileSystemClient.from_connection_string(
                 config.AZURE_STORAGE_CONNECTION_STRING,
