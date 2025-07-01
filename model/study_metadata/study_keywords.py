@@ -67,7 +67,7 @@ class StudyKeywords(db.Model):  # type: ignore
         self.keyword_uri = data["keyword_uri"]
         self.study.touch()
 
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        return violations
+    def updating_from_integration(self, data: dict, is_overwrite):
+        """it updates a StudyIntervention from a dictionary"""
+        if is_overwrite:
+            self.name = data.get("conditionsModule", {}).get("keywords", [])

@@ -7,7 +7,7 @@ import model
 from apis import exception
 
 from .db import db
-
+import re
 
 class StudyException(Exception):
     pass
@@ -249,6 +249,35 @@ class Study(db.Model):  # type: ignore
         self.image = data["image"]
         self.short_description = data["short_description"]
         self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
+
+    def import_clinical_trials(self, data: dict, is_overwrite: bool):
+        """Updates the study from a dictionary"""
+        # update identification
+        identifier = None
+
+        identifiers= [
+            i
+            for i in self.study_identification
+            if re.match(r"^NCT\d{8}$", i.identifier)
+        ]
+
+        if len(identifiers) == 0:
+            identifier = model.StudyIdentification(self, True)
+            self.study_identification.append(identifier)
+        else:
+            identifier = identifiers[0]
+
+        status = None
+        status_array= [i for i in self.study_status]
+        if len(status_array) == 0:
+            status = model.StudyStatus(self, True)
+            self.study_status.append(status)
+        else:
+            status = status_array[0]
+
+        identifier.updating_from_integration(data)
+        self.sponsor.updating_from_integration(data)
+        model.db.session.add()
 
     def validate(self):
         """Validates the study"""
