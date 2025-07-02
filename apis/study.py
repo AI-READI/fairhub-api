@@ -88,12 +88,12 @@ class Studies(Resource):
         model.db.session.commit()
         if os.environ.get("FLASK_ENV") != "testing":
             container = config.AZURE_CONTAINER
-
-            file_system_client = FileSystemClient.from_connection_string(
-                config.AZURE_STORAGE_CONNECTION_STRING,
-                file_system_name=container,
-            )
-            file_system_client.create_directory(f"AI-READI/test-files/{study_id}")
+            if config.AZURE_STORAGE_CONNECTION_STRING and config.AZURE_CONTAINER:
+                file_system_client = FileSystemClient.from_connection_string(
+                    config.AZURE_STORAGE_CONNECTION_STRING,
+                    file_system_name=container,
+                )
+                file_system_client.create_directory(f"AI-READI/test-files/{study_id}")
 
         return study_.to_dict(), 201
 
