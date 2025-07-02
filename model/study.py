@@ -282,18 +282,6 @@ class Study(db.Model):  # type: ignore
 
             intervention.updating_from_integration(intervention_dict, True)
 
-        print(data.get("armsInterventionsModule", {}).get("interventions", []), "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
-
-
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        # if self.description.trim() == "":
-        #     violations.push("A description is required")
-        # if self.keywords.length < 1:
-        #     violations.push("At least one keyword must be specified")
-        return violations
-
     def touch(self):
         self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
 

@@ -125,7 +125,6 @@ class Studies(Resource):
             clinical_data = response.json()
             study_.import_from_clinical_data(clinical_data["protocolSection"], is_overwrite=True)
 
-            print("Status code:")
             print("Response JSON:", response.json())
 
         except requests.exceptions.RequestException as e:
