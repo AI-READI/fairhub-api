@@ -4,11 +4,13 @@ import os
 from azure.storage.filedatalake import FileSystemClient
 from flask import Response, g, request
 from flask_restx import Namespace, Resource, fields, reqparse
-from jsonschema import ValidationError, validate
+from jsonschema import FormatChecker, ValidationError, validate
+
 import config
 import model
 from .authentication import is_granted
-
+import requests
+import  re
 api = Namespace("Study", description="Study operations", path="/")
 
 
@@ -68,15 +70,33 @@ class Studies(Resource):
                 "title": {"type": "string", "minLength": 1, "maxLength": 300},
                 "short_description": {"type": "string", "maxLength": 300},
                 "image": {"type": "string"},
+                "clinical_id": {"type": ["string", "null"]},
             },
         }
-        try:
-            validate(request.json, schema)
-        except ValidationError as e:
-            return e.message, 400
 
         data: Union[Any, dict] = request.json
         add_study = model.Study.from_data(data)
+
+        def validate_clinical_trial_identifier(instance):
+            identifier_ = instance
+
+            # Check if the identifier is exactly 11 characters long
+            if len(identifier_) != 11:
+                raise ValidationError("Identifier must be exactly 11 characters long")
+
+            # Check if it starts with 'NCT' followed by 8 digits
+            if not re.fullmatch(r"NCT\d{8}", identifier_):
+                raise ValidationError("Identifier must start with 'NCT' followed by 8 digits")
+
+            return True
+        format_checker = FormatChecker()
+        format_checker.checks("clinical_id")(validate_clinical_trial_identifier)
+
+        try:
+            validate(instance=data, schema=schema, format_checker=format_checker)
+        except ValidationError as e:
+            return e.message, 400
+
         model.db.session.add(add_study)
 
         study_id = add_study.id
@@ -85,15 +105,35 @@ class Studies(Resource):
         study_contributor = model.StudyContributor.from_data(study_, g.user, "owner")
         model.db.session.add(study_contributor)
 
-        model.db.session.commit()
-        if os.environ.get("FLASK_ENV") != "testing":
-            container = config.AZURE_CONTAINER
+        if config.AZURE_STORAGE_CONNECTION_STRING and config.AZURE_CONTAINER:
+            if os.environ.get("FLASK_ENV") != "testing":
+                container = config.AZURE_CONTAINER
 
-            file_system_client = FileSystemClient.from_connection_string(
-                config.AZURE_STORAGE_CONNECTION_STRING,
-                file_system_name=container,
-            )
-            file_system_client.create_directory(f"AI-READI/test-files/{study_id}")
+                file_system_client = FileSystemClient.from_connection_string(
+                    config.AZURE_STORAGE_CONNECTION_STRING,
+                    file_system_name=container,
+                )
+                file_system_client.create_directory(f"AI-READI/test-files/{study_id}")
+        identifier = data["clinical_id"]
+        try:
+            url = f"https://classic.clinicaltrials.gov/api/v2/studies/{identifier}"
+            # AI-READI id-NCT06002048
+            assert url is not None and isinstance(url, str), "URL must be a non-empty string"
+
+            response = requests.get(url)
+            response.raise_for_status()  # Raises HTTPError if status != 200
+            clinical_data = response.json()
+            study_.import_from_clinical_data(clinical_data["protocolSection"], is_overwrite=True)
+
+            print("Status code:")
+            print("Response JSON:", response.json())
+
+        except requests.exceptions.RequestException as e:
+            print(f"Request error: {e}")
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+
+        model.db.session.commit()
 
         return study_.to_dict(), 201
 
@@ -127,6 +167,8 @@ class StudyResource(Resource):
                 "title": {"type": "string", "minLength": 1},
                 "image": {"type": "string", "minLength": 1},
                 "short_description": {"type": "string", "maxLength": 300},
+                "is_overwrite": {"type": "boolean"},
+                "clinical_id": {"type": ["string", "null"]},
             },
         }
 
@@ -136,11 +178,33 @@ class StudyResource(Resource):
             return e.message, 400
 
         update_study = model.Study.query.get(study_id)
+        data: Union[Any, dict] = request.json
 
         if not is_granted("update_study", update_study):
             return "Access denied, you can not modify", 403
+        identifier= "".join(
+            i.identifier
+            for i in update_study.study_identification
+            if re.match(r"^NCT\d{8}$", i.identifier) and not i.secondary
+        )
+        if identifier:
+            try:
+                url = f"https://classic.clinicaltrials.gov/api/v2/studies/{identifier}"
+                # AI-READI id-NCT06002048
+                assert url is not None and isinstance(url, str), "URL must be a non-empty string"
 
-        update_study.update(request.json)
+                response = requests.get(url)
+                response.raise_for_status()  # Raises HTTPError if status != 200
+                clinical_data = response.json()
+                update_study.import_from_clinical_data(clinical_data["protocolSection"], is_overwrite=data["is_overwrite"])
+
+            except requests.exceptions.RequestException as e:
+                print(f"Request error: {e}")
+            except Exception as e:
+                print(f"Unexpected error: {e}")
+
+        update_study.update(data)
+
         model.db.session.commit()
 
         return update_study.to_dict(), 200

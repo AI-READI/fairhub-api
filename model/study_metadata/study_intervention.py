@@ -70,5 +70,7 @@ class StudyIntervention(db.Model):  # type: ignore
     def updating_from_integration(self, data: dict, is_overwrite):
         """it updates a StudyIntervention from a dictionary"""
         if is_overwrite:
-            self.name = [i.get("name", "") for i in data.get("armsInterventionsModule", {}).get("interventions", [])]
-            self.type = [i.get("type", "") for i in data.get("armsInterventionsModule", {}).get("interventions", [])]
+            self.name = data.get("name", "")
+            self.type = data.get("type", "").replace("_", " ").title()
+            self.description = data.get("description", "")
+            self.other_name_list = ""

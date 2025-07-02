@@ -70,5 +70,4 @@ class StudyIdentification(db.Model):  # type: ignore
         if is_overwrite:
             self.identifier_type = "Other Identifier"
             self.identifier_domain = "clinicaltrials.gov"
-        self.identifier = data["identificationModule"]["nctId"]
-
+            self.identifier = data["identificationModule"]["nctId"]

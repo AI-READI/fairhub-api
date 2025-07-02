@@ -250,34 +250,40 @@ class Study(db.Model):  # type: ignore
         self.short_description = data["short_description"]
         self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
 
-    def import_clinical_trials(self, data: dict, is_overwrite: bool):
+    def import_from_clinical_data(self, data, is_overwrite: bool):
         """Updates the study from a dictionary"""
-        # update identification
         identifier = None
-
         identifiers= [
             i
             for i in self.study_identification
             if re.match(r"^NCT\d{8}$", i.identifier)
         ]
-
-        if len(identifiers) == 0:
-            identifier = model.StudyIdentification(self, True)
+        if not identifiers:
+            identifier = model.StudyIdentification(self, False)
             self.study_identification.append(identifier)
+            model.db.session.add(identifier)
         else:
             identifier = identifiers[0]
 
-        status = None
-        status_array= [i for i in self.study_status]
-        if len(status_array) == 0:
-            status = model.StudyStatus(self, True)
-            self.study_status.append(status)
-        else:
-            status = status_array[0]
+        identifier.updating_from_integration(data, True)
 
-        identifier.updating_from_integration(data)
-        self.sponsor.updating_from_integration(data)
-        model.db.session.add()
+        interventions_data = data.get("armsInterventionsModule", {}).get("interventions", [])
+        for intervention_dict in interventions_data:
+            intervention_array = [
+                i for i in self.study_intervention
+                if i.name == intervention_dict.get("name") and i.description == intervention_dict.get("description")
+            ]
+            if len(intervention_array) == 0:
+                intervention = model.StudyIntervention(self)
+                self.study_intervention.append(intervention)
+                model.db.session.add(intervention)  # add new instance immediately
+            else:
+                intervention = intervention_array[0]
+
+            intervention.updating_from_integration(intervention_dict, True)
+
+        print(data.get("armsInterventionsModule", {}).get("interventions", []), "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk")
+
 
     def validate(self):
         """Validates the study"""
