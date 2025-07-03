@@ -110,6 +110,15 @@ class Studies(Resource):
         study_contributor = model.StudyContributor.from_data(study_, g.user, "owner")
         model.db.session.add(study_contributor)
 
+        model.db.session.commit()
+        if os.environ.get("FLASK_ENV") != "testing":
+            container = config.AZURE_CONTAINER
+            if config.AZURE_STORAGE_CONNECTION_STRING and config.AZURE_CONTAINER:
+                file_system_client = FileSystemClient.from_connection_string(
+                    config.AZURE_STORAGE_CONNECTION_STRING,
+                    file_system_name=container,
+                )
+                file_system_client.create_directory(f"AI-READI/test-files/{study_id}")
         if config.AZURE_STORAGE_CONNECTION_STRING and config.AZURE_CONTAINER:
             if os.environ.get("FLASK_ENV") != "testing":
                 container = config.AZURE_CONTAINER
@@ -169,7 +178,7 @@ class StudyResource(Resource):
         # Schema validation
         schema = {
             "type": "object",
-            "required": ["title", "short_description"],
+            "required": ["title", "short_description", "is_overwrite"],
             "additionalProperties": False,
             "properties": {
                 "title": {"type": "string", "minLength": 1},
