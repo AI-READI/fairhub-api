@@ -78,9 +78,12 @@ class Studies(Resource):
 
         data: Union[Any, dict] = request.json
         add_study = model.Study.from_data(data)
+        identifier = data["clinical_id"]
 
         def validate_clinical_trial_identifier(instance):
             identifier_ = instance
+            if not identifier_:
+                return True
 
             # Check if the identifier is exactly 11 characters long
             if len(identifier_) != 11:
@@ -112,6 +115,7 @@ class Studies(Resource):
 
         model.db.session.commit()
         if os.environ.get("FLASK_ENV") != "testing":
+            # TODO finish study testing integration
             container = config.AZURE_CONTAINER
             if config.AZURE_STORAGE_CONNECTION_STRING and config.AZURE_CONTAINER:
                 file_system_client = FileSystemClient.from_connection_string(
@@ -119,36 +123,25 @@ class Studies(Resource):
                     file_system_name=container,
                 )
                 file_system_client.create_directory(f"AI-READI/test-files/{study_id}")
-        if config.AZURE_STORAGE_CONNECTION_STRING and config.AZURE_CONTAINER:
-            if os.environ.get("FLASK_ENV") != "testing":
-                container = config.AZURE_CONTAINER
+            if identifier:
+                try:
+                    url = f"https://classic.clinicaltrials.gov/api/v2/studies/{identifier}"
+                    assert url is not None and isinstance(
+                        url, str
+                    ), "URL must be a non-empty string"
 
-                file_system_client = FileSystemClient.from_connection_string(
-                    config.AZURE_STORAGE_CONNECTION_STRING,
-                    file_system_name=container,
-                )
-                file_system_client.create_directory(f"AI-READI/test-files/{study_id}")
-        identifier = data["clinical_id"]
-        if identifier:
-            try:
-                url = f"https://classic.clinicaltrials.gov/api/v2/studies/{identifier}"
-                # AI-READI id-NCT06002048
-                assert url is not None and isinstance(
-                    url, str
-                ), "URL must be a non-empty string"
+                    response = requests.get(url, timeout=10)
+                    response.raise_for_status()  # Raises HTTPError if status != 200
+                    clinical_data = response.json()
+                    study_.update_identification_id(clinical_data["protocolSection"])
 
-                response = requests.get(url, timeout=10)
-                response.raise_for_status()  # Raises HTTPError if status != 200
-                clinical_data = response.json()
-                study_.update_identification_id(clinical_data["protocolSection"])
+                    study_.import_from_clinical_data(clinical_data["protocolSection"])
+                    print("Response JSON")
 
-                study_.import_from_clinical_data(clinical_data["protocolSection"])
-                print("Response JSON")
-
-            except requests.exceptions.RequestException as e:
-                print(f"Request error: {e}")
-            except Exception as e:
-                print(f"Unexpected error: {e}")
+                except requests.exceptions.RequestException as e:
+                    print(f"Request error: {e}")
+                except Exception as e:
+                    print(f"Unexpected error: {e}")
 
         model.db.session.commit()
 
