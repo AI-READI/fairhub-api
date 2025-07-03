@@ -1,4 +1,5 @@
 import datetime
+import re
 import uuid
 
 from flask import g
@@ -7,7 +8,7 @@ import model
 from apis import exception
 
 from .db import db
-import re
+
 
 class StudyException(Exception):
     pass
@@ -25,7 +26,6 @@ class Study(db.Model):  # type: ignore
         self.study_design = model.StudyDesign(self)
         self.study_eligibility = model.StudyEligibility(self)
         self.study_description = model.StudyDescription(self)
-        self.study_identification.append(model.StudyIdentification(self, False))
         self.study_other = model.StudyOther(self)
         self.study_oversight = model.StudyOversight(self)
 
@@ -242,45 +242,104 @@ class Study(db.Model):  # type: ignore
         """Updates the study from a dictionary"""
         if not data["title"]:
             raise exception.ValidationException("title is required")
-        if not data["image"]:
-            raise exception.ValidationException("image is required")
 
         self.title = data["title"]
-        self.image = data["image"]
         self.short_description = data["short_description"]
         self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
 
-    def import_from_clinical_data(self, data, is_overwrite: bool):
-        """Updates the study from a dictionary"""
-        identifier = None
-        identifiers= [
+    def update_identification_id(self, data):
+        clinical_id = None
+        identifiers = [
             i
             for i in self.study_identification
             if re.match(r"^NCT\d{8}$", i.identifier)
         ]
         if not identifiers:
-            identifier = model.StudyIdentification(self, False)
-            self.study_identification.append(identifier)
-            model.db.session.add(identifier)
+            clinical_id = model.StudyIdentification(self, False)
+            self.study_identification.append(clinical_id)
+            model.db.session.add(clinical_id)
         else:
-            identifier = identifiers[0]
+            clinical_id = identifiers[0]
 
-        identifier.updating_from_integration(data, True)
+        clinical_id.updating_from_integration(data)
 
-        interventions_data = data.get("armsInterventionsModule", {}).get("interventions", [])
+    def import_from_clinical_data(self, data):
+        """Updates the study from a dictionary"""
+
+        self.study_description.updating_from_integration(data)
+        self.study_status.updating_from_integration(data)
+        self.study_eligibility.updating_from_integration(data)
+        self.study_sponsors.updating_from_integration(data)
+        self.study_design.updating_from_integration(data)
+        self.study_oversight.updating_from_integration(data)
+
+        interventions_data = data.get("armsInterventionsModule", {}).get(
+            "interventions", []
+        )
+        # Loop through an array and delete each object
+        for intervention in self.study_intervention:
+            model.db.session.delete(intervention)
+
         for intervention_dict in interventions_data:
-            intervention_array = [
-                i for i in self.study_intervention
-                if i.name == intervention_dict.get("name") and i.description == intervention_dict.get("description")
-            ]
-            if len(intervention_array) == 0:
-                intervention = model.StudyIntervention(self)
-                self.study_intervention.append(intervention)
-                model.db.session.add(intervention)  # add new instance immediately
-            else:
-                intervention = intervention_array[0]
+            # Make the new intervention
+            intervention = model.StudyIntervention(self)
+            # Put data from dict into it
+            intervention.updating_from_integration(intervention_dict)
+            # Add to a database
+            self.study_intervention.append(intervention)
 
-            intervention.updating_from_integration(intervention_dict, True)
+
+        collaborators_data = data.get("sponsorCollaboratorsModule", {}).get("collaborators", [])
+        # Loop through an array and delete each object
+        for collaborator in self.study_collaborators:
+            model.db.session.delete(collaborator)
+
+        for collaborator_dict in collaborators_data:
+            # Make the new intervention
+            collaborator = model.StudyCollaborators(self)
+            # Put data from dict into it
+            collaborator.updating_from_integration(collaborator_dict)
+            # Add to a database
+            self.study_collaborators.append(collaborator)
+
+        arms_data = data.get("armsInterventionsModule", {}).get("armGroups", [])
+        # Loop through an array and delete each object
+        for arm in self.study_arm:
+            model.db.session.delete(arm)
+
+        for arm_dict in arms_data:
+            # Make the new intervention
+            arm = model.StudyArm(self)
+            # Put data from dict into it
+            arm.updating_from_integration(arm_dict)
+            # Add to a database
+            self.study_arm.append(arm)
+
+        overall_official_data = data.get("contactsLocationsModule", {}).get("overallOfficials", [])
+        # Loop through an array and delete each object
+        for oo in self.study_overall_official:
+            model.db.session.delete(oo)
+
+        for oo_dict in overall_official_data:
+            # Make the new intervention
+            o_o = model.StudyOverallOfficial(self)
+            # Put data from dict into it
+            o_o.updating_from_integration(oo_dict)
+            # Add to a database
+            self.study_overall_official.append(o_o)
+
+        location_data = data.get("contactsLocationsModule", {}).get("locations", [])
+        # Loop through an array and delete each object
+        for location in self.study_location:
+            model.db.session.delete(location)
+
+        for location_dict in location_data:
+            # Make the new intervention
+            location = model.StudyLocation(self)
+            # Put data from dict into it
+            location.updating_from_integration(location_dict)
+            # Add to a database
+            self.study_location.append(location)
 
     def touch(self):
         self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()

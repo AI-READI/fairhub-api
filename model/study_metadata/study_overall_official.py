@@ -97,8 +97,18 @@ class StudyOverallOfficial(db.Model):  # type: ignore
         self.study.touch()
 
     def updating_from_integration(self, data: dict):
-        """it updates a StudyIntervention from a dictionary"""
-        self.first_name = data.get("name", "")
-        self.last_name = data.get("type", "").replace("_", " ").title()
-        self.description = data.get("description", "")
-        self.other_name_list = ""
+        """it updates a StudyOverallOfficial from a dictionary"""
+        parts = data.get("name", "").strip().split()
+        self.first_name, self.last_name = (parts[0], parts[1] if len(parts) > 1 else "") if parts else ("", "")
+
+        self.affiliation = data.get("affiliation", "")
+        self.role = data.get("role", "")
+        self.role = data.get("role", "").replace("_", " ").title()
+
+        self.degree = ""
+        self.identifier = ""
+        self.identifier_scheme = ""
+        self.identifier_scheme_uri = ""
+        self.affiliation_identifier = ""
+        self.affiliation_identifier_scheme = ""
+        self.affiliation_identifier_scheme_uri = ""

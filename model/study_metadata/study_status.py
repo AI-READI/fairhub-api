@@ -71,7 +71,8 @@ class StudyStatus(db.Model):  # type: ignore
 
     def updating_from_integration(self, data: dict):
         """It updates a StudyDescription from a dictionary"""
-        self.overall_status = data.get("statusModule", {}).get("overallStatus", "").capitalize()
+        self.overall_status = data.get("statusModule", {}).get("overallStatus", "").replace("_", " ").title().replace(
+            " ", "")
         s_d = data.get("statusModule", {}).get("startDateStruct", {}).get("date")
         self.start_date = datetime.strptime(s_d, "%Y-%m-%d") if s_d else None
 

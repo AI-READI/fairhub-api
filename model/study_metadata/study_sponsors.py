@@ -143,9 +143,10 @@ class StudySponsors(db.Model):  # type: ignore
 
     def updating_from_integration(self, data: dict):
         """it updates a StudySponsors from a dictionary"""
-        self.responsible_party_type = data.get(
-            "sponsorCollaboratorsModule", {}
-        ).get("responsibleParty", {}).get("type", "").capitalize()
+        self.responsible_party_type = (
+            data.get("sponsorCollaboratorsModule", {}).get("responsibleParty", {})
+            .get("type", "").replace("_", " ").title()
+        )
         party = data.get("sponsorCollaboratorsModule", {}).get("responsibleParty", {})
         full_name = party.get("investigatorFullName", "").split(maxsplit=1)
         self.responsible_party_investigator_first_name = full_name[0]\

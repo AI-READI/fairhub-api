@@ -66,8 +66,7 @@ class StudyCollaborators(db.Model):  # type: ignore
 
     def updating_from_integration(self, data: dict):
         """it updates a StudyCollaborators from a dictionary"""
-        collaborators = data.get("sponsorCollaboratorsModule", {}).get("collaborators", [])
-        self.name = collaborators[0].get("name", "") if collaborators else ""
+        self.name = data.get("name", "")
         self.identifier = ""
         self.scheme = ""
         self.scheme_uri = ""

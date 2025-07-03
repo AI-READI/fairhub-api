@@ -68,6 +68,7 @@ class StudyArm(db.Model):  # type: ignore
 
     def updating_from_integration(self, data: dict):
         """It updates a StudyIdentification from a dictionary"""
-        arm_groups = data.get("armsInterventionsModule", {}).get("armGroups", [])
-        self.label = arm_groups[0].get("label", "") if arm_groups else ""
-        self.description = arm_groups[0].get("description", "") if arm_groups else ""
+        self.label = data.get("label", "")
+        self.description = data.get("description", "")
+        self.type = ""
+        self.intervention_list = []

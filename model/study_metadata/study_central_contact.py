@@ -99,8 +99,7 @@ class StudyCentralContact(db.Model):  # type: ignore
 
     def updating_from_integration(self, data: dict):
         """it updates a StudyCollaborators from a dictionary"""
-        self.name = data.get("sponsorCollaboratorsModule", {}).get("collaborators", []).get(
-            "name", "")
+        self.name = data.get("name", "")
         self.identifier = ""
         self.scheme = ""
         self.scheme_uri = ""

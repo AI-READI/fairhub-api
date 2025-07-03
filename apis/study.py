@@ -1,6 +1,9 @@
 """APIs for study operations""" ""
-from typing import Any, Union
 import os
+import re
+from typing import Any, Union
+
+import requests
 from azure.storage.filedatalake import FileSystemClient
 from flask import Response, g, request
 from flask_restx import Namespace, Resource, fields, reqparse
@@ -8,9 +11,9 @@ from jsonschema import FormatChecker, ValidationError, validate
 
 import config
 import model
+
 from .authentication import is_granted
-import requests
-import  re
+
 api = Namespace("Study", description="Study operations", path="/")
 
 
@@ -18,7 +21,6 @@ study_model = api.model(
     "Study",
     {
         "title": fields.String(required=True, default=""),
-        "image": fields.String(required=True, default=""),
     },
 )
 
@@ -86,9 +88,12 @@ class Studies(Resource):
 
             # Check if it starts with 'NCT' followed by 8 digits
             if not re.fullmatch(r"NCT\d{8}", identifier_):
-                raise ValidationError("Identifier must start with 'NCT' followed by 8 digits")
+                raise ValidationError(
+                    "Identifier must start with 'NCT' followed by 8 digits"
+                )
 
             return True
+
         format_checker = FormatChecker()
         format_checker.checks("clinical_id")(validate_clinical_trial_identifier)
 
@@ -115,22 +120,28 @@ class Studies(Resource):
                 )
                 file_system_client.create_directory(f"AI-READI/test-files/{study_id}")
         identifier = data["clinical_id"]
-        try:
-            url = f"https://classic.clinicaltrials.gov/api/v2/studies/{identifier}"
-            # AI-READI id-NCT06002048
-            assert url is not None and isinstance(url, str), "URL must be a non-empty string"
+        if identifier:
+            try:
+                url = f"https://classic.clinicaltrials.gov/api/v2/studies/{identifier}"
+                # AI-READI id-NCT06002048
+                assert url is not None and isinstance(
+                    url, str
+                ), "URL must be a non-empty string"
 
-            response = requests.get(url)
-            response.raise_for_status()  # Raises HTTPError if status != 200
-            clinical_data = response.json()
-            study_.import_from_clinical_data(clinical_data["protocolSection"], is_overwrite=True)
+                response = requests.get(url, timeout=10)
+                response.raise_for_status()  # Raises HTTPError if status != 200
+                clinical_data = response.json()
+                study_.update_identification_id(clinical_data["protocolSection"])
 
-            print("Response JSON:", response.json())
+                study_.import_from_clinical_data(
+                    clinical_data["protocolSection"]
+                )
+                print("Response JSON")
 
-        except requests.exceptions.RequestException as e:
-            print(f"Request error: {e}")
-        except Exception as e:
-            print(f"Unexpected error: {e}")
+            except requests.exceptions.RequestException as e:
+                print(f"Request error: {e}")
+            except Exception as e:
+                print(f"Unexpected error: {e}")
 
         model.db.session.commit()
 
@@ -160,11 +171,10 @@ class StudyResource(Resource):
         # Schema validation
         schema = {
             "type": "object",
-            "required": ["title", "image", "short_description"],
+            "required": ["title", "short_description"],
             "additionalProperties": False,
             "properties": {
                 "title": {"type": "string", "minLength": 1},
-                "image": {"type": "string", "minLength": 1},
                 "short_description": {"type": "string", "maxLength": 300},
                 "is_overwrite": {"type": "boolean"},
                 "clinical_id": {"type": ["string", "null"]},
@@ -178,24 +188,28 @@ class StudyResource(Resource):
 
         update_study = model.Study.query.get(study_id)
         data: Union[Any, dict] = request.json
-
         if not is_granted("update_study", update_study):
             return "Access denied, you can not modify", 403
-        identifier= "".join(
-            i.identifier
-            for i in update_study.study_identification
-            if re.match(r"^NCT\d{8}$", i.identifier) and not i.secondary
-        )
+
+        identifier = data["clinical_id"].strip()
+        is_overwrite = data["is_overwrite"]
+
         if identifier:
             try:
                 url = f"https://classic.clinicaltrials.gov/api/v2/studies/{identifier}"
                 # AI-READI id-NCT06002048
-                assert url is not None and isinstance(url, str), "URL must be a non-empty string"
+                assert url is not None and isinstance(
+                    url, str
+                ), "URL must be a non-empty string"
 
-                response = requests.get(url)
+                response = requests.get(url, timeout=10)
                 response.raise_for_status()  # Raises HTTPError if status != 200
                 clinical_data = response.json()
-                update_study.import_from_clinical_data(clinical_data["protocolSection"], is_overwrite=data["is_overwrite"])
+                update_study.update_identification_id(clinical_data["protocolSection"])
+                if is_overwrite:
+                    update_study.import_from_clinical_data(
+                        clinical_data["protocolSection"]
+                    )
 
             except requests.exceptions.RequestException as e:
                 print(f"Request error: {e}")
