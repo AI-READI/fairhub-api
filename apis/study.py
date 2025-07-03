@@ -133,9 +133,7 @@ class Studies(Resource):
                 clinical_data = response.json()
                 study_.update_identification_id(clinical_data["protocolSection"])
 
-                study_.import_from_clinical_data(
-                    clinical_data["protocolSection"]
-                )
+                study_.import_from_clinical_data(clinical_data["protocolSection"])
                 print("Response JSON")
 
             except requests.exceptions.RequestException as e:

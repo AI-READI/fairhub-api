@@ -2,7 +2,7 @@ from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 
 from model import Study
-import re
+
 from ..db import db
 
 

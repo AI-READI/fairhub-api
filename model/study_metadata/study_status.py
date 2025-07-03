@@ -1,7 +1,8 @@
+from datetime import datetime
+
 from model import Study
 
 from ..db import db
-from datetime import datetime
 
 
 class StudyStatus(db.Model):  # type: ignore
@@ -71,14 +72,27 @@ class StudyStatus(db.Model):  # type: ignore
 
     def updating_from_integration(self, data: dict):
         """It updates a StudyDescription from a dictionary"""
-        self.overall_status = data.get("statusModule", {}).get("overallStatus", "").replace("_", " ").title().replace(
-            " ", "")
+        self.overall_status = (
+            data.get("statusModule", {})
+            .get("overallStatus", "")
+            .replace("_", " ")
+            .title()
+            .replace(" ", "")
+        )
         s_d = data.get("statusModule", {}).get("startDateStruct", {}).get("date")
         self.start_date = datetime.strptime(s_d, "%Y-%m-%d") if s_d else None
 
         c_d = data.get("statusModule", {}).get("completionDateStruct", {}).get("date")
         self.completion_date = datetime.strptime(c_d, "%Y-%m-%d") if c_d else None
-        self.start_date_type = data.get("statusModule", {}).get(
-            "startDateStruct", {}).get("type", "").capitalize()
-        self.completion_date_type = data.get("statusModule", {}).get(
-            "completionDateStruct", {}).get("type", "").capitalize()
+        self.start_date_type = (
+            data.get("statusModule", {})
+            .get("startDateStruct", {})
+            .get("type", "")
+            .capitalize()
+        )
+        self.completion_date_type = (
+            data.get("statusModule", {})
+            .get("completionDateStruct", {})
+            .get("type", "")
+            .capitalize()
+        )

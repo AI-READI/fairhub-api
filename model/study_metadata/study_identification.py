@@ -69,6 +69,4 @@ class StudyIdentification(db.Model):  # type: ignore
         """It updates a StudyIdentification from a dictionary"""
         self.identifier_type = "Other Identifier"
         self.identifier_domain = "clinicaltrials.gov"
-        self.identifier = (
-            data.get("identificationModule", {}).get("nctId", "").strip()
-        )
+        self.identifier = data.get("identificationModule", {}).get("nctId", "").strip()

@@ -52,9 +52,7 @@ class StudyDescription(db.Model):  # type: ignore
 
     def updating_from_integration(self, data: dict):
         """It updates a StudyDescription from a dictionary"""
-        self.brief_summary = data.get("descriptionModule", {}).get(
-            "briefSummary", ""
-        )
+        self.brief_summary = data.get("descriptionModule", {}).get("briefSummary", "")
         self.detailed_description = data.get("descriptionModule", {}).get(
             "detailedDescription", ""
         )

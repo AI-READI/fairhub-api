@@ -144,21 +144,30 @@ class StudySponsors(db.Model):  # type: ignore
     def updating_from_integration(self, data: dict):
         """it updates a StudySponsors from a dictionary"""
         self.responsible_party_type = (
-            data.get("sponsorCollaboratorsModule", {}).get("responsibleParty", {})
-            .get("type", "").replace("_", " ").title()
+            data.get("sponsorCollaboratorsModule", {})
+            .get("responsibleParty", {})
+            .get("type", "")
+            .replace("_", " ")
+            .title()
         )
         party = data.get("sponsorCollaboratorsModule", {}).get("responsibleParty", {})
         full_name = party.get("investigatorFullName", "").split(maxsplit=1)
-        self.responsible_party_investigator_first_name = full_name[0]\
-            if full_name else ""
-        self.responsible_party_investigator_last_name = full_name[1] \
-            if len(full_name) > 1 else ""
-        self.responsible_party_investigator_affiliation_name =\
+        self.responsible_party_investigator_first_name = (
+            full_name[0] if full_name else ""
+        )
+        self.responsible_party_investigator_last_name = (
+            full_name[1] if len(full_name) > 1 else ""
+        )
+        self.responsible_party_investigator_affiliation_name = (
             party.get("investigatorAffiliation", "").title().capitalize()
-        self.responsible_party_investigator_affiliation_name = data.get(
-            "sponsorCollaboratorsModule", {}
-        ).get("responsibleParty", {}).get("investigatorAffiliation", "")
-        self.lead_sponsor_name = data.get(
-            "sponsorCollaboratorsModule", {}
-        ).get("leadSponsor", {}).get("name", "")
-
+        )
+        self.responsible_party_investigator_affiliation_name = (
+            data.get("sponsorCollaboratorsModule", {})
+            .get("responsibleParty", {})
+            .get("investigatorAffiliation", "")
+        )
+        self.lead_sponsor_name = (
+            data.get("sponsorCollaboratorsModule", {})
+            .get("leadSponsor", {})
+            .get("name", "")
+        )

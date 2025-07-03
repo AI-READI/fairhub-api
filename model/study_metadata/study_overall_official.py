@@ -99,7 +99,9 @@ class StudyOverallOfficial(db.Model):  # type: ignore
     def updating_from_integration(self, data: dict):
         """it updates a StudyOverallOfficial from a dictionary"""
         parts = data.get("name", "").strip().split()
-        self.first_name, self.last_name = (parts[0], parts[1] if len(parts) > 1 else "") if parts else ("", "")
+        self.first_name, self.last_name = (
+            (parts[0], parts[1] if len(parts) > 1 else "") if parts else ("", "")
+        )
 
         self.affiliation = data.get("affiliation", "")
         self.role = data.get("role", "")

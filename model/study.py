@@ -288,8 +288,9 @@ class Study(db.Model):  # type: ignore
             # Add to a database
             self.study_intervention.append(intervention)
 
-
-        collaborators_data = data.get("sponsorCollaboratorsModule", {}).get("collaborators", [])
+        collaborators_data = data.get("sponsorCollaboratorsModule", {}).get(
+            "collaborators", []
+        )
         # Loop through an array and delete each object
         for collaborator in self.study_collaborators:
             model.db.session.delete(collaborator)
@@ -315,7 +316,9 @@ class Study(db.Model):  # type: ignore
             # Add to a database
             self.study_arm.append(arm)
 
-        overall_official_data = data.get("contactsLocationsModule", {}).get("overallOfficials", [])
+        overall_official_data = data.get("contactsLocationsModule", {}).get(
+            "overallOfficials", []
+        )
         # Loop through an array and delete each object
         for oo in self.study_overall_official:
             model.db.session.delete(oo)
