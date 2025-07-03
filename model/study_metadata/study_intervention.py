@@ -67,10 +67,9 @@ class StudyIntervention(db.Model):  # type: ignore
         self.other_name_list = data["other_name_list"]
         self.study.touch()
 
-    def updating_from_integration(self, data: dict, is_overwrite):
+    def updating_from_integration(self, data: dict):
         """it updates a StudyIntervention from a dictionary"""
-        if is_overwrite:
-            self.name = data.get("name", "")
-            self.type = data.get("type", "").replace("_", " ").title()
-            self.description = data.get("description", "")
-            self.other_name_list = ""
+        self.name = data.get("name", "")
+        self.type = data.get("type", "").replace("_", " ").title()
+        self.description = data.get("description", "")
+        self.other_name_list = ""

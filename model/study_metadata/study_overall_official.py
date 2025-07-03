@@ -96,7 +96,9 @@ class StudyOverallOfficial(db.Model):  # type: ignore
         self.role = data["role"]
         self.study.touch()
 
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        return violations
+    def updating_from_integration(self, data: dict):
+        """it updates a StudyIntervention from a dictionary"""
+        self.first_name = data.get("name", "")
+        self.last_name = data.get("type", "").replace("_", " ").title()
+        self.description = data.get("description", "")
+        self.other_name_list = ""

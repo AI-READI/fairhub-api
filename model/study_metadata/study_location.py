@@ -75,11 +75,11 @@ class StudyLocation(db.Model):  # type: ignore
         self.country = data["country"]
         self.study.touch()
 
-    def updating_from_integration(self, data: dict, is_overwrite):
+    def updating_from_integration(self, data: dict):
         """it updates a StudyIntervention from a dictionary"""
-        if is_overwrite:
-            self.facility = data.get("facility", "")
-            self.city = data.get("city", "")
-            self.state = data.get("state", "")
-            self.zip = data.get("zip", "")
-            self.country = data.get("country", "")
+        self.facility = data.get("facility", "")
+        self.city = data.get("city", "")
+        self.state = data.get("state", "")
+        self.zip = data.get("zip", "")
+        self.country = data.get("country", "")
+        self.status = ""

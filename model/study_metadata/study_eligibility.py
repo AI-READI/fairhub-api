@@ -2,7 +2,7 @@ from sqlalchemy import String
 from sqlalchemy.dialects.postgresql import ARRAY
 
 from model import Study
-
+import re
 from ..db import db
 
 
@@ -99,7 +99,16 @@ class StudyEligibility(db.Model):  # type: ignore
         self.sampling_method = data["sampling_method"]
         self.study.touch()
 
-    def validate(self):
-        """Validates the lead_sponsor_last_name study"""
-        violations: list = []
-        return violations
+    def updating_from_integration(self, data: dict):
+        """It updates a StudyDesign from a dictionary"""
+        eligibility = data.get("eligibilityModule", {})
+        self.sex = eligibility.get("sex", "").capitalize()
+        val = eligibility.get("healthyVolunteers", "false")
+        self.healthy_volunteers = "Yes" if str(val).lower() == "true" else "No"
+        self.study_population = eligibility.get("studyPopulation", "")
+        raw = eligibility.get("samplingMethod", "")
+        self.sampling_method = raw.replace("_", "-", 1).replace("_", " ").title()
+        min_age = eligibility.get("minimumAge", "").split()
+        max_age = eligibility.get("maximumAge", "").split()
+        self.minimum_age_value, self.minimum_age_unit = (min_age + ["", ""])[:2]
+        self.maximum_age_value, self.maximum_age_unit = (max_age + ["", ""])[:2]

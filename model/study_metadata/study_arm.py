@@ -66,7 +66,8 @@ class StudyArm(db.Model):  # type: ignore
         self.intervention_list = data["intervention_list"]
         self.study.touch()
 
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        return violations
+    def updating_from_integration(self, data: dict):
+        """It updates a StudyIdentification from a dictionary"""
+        arm_groups = data.get("armsInterventionsModule", {}).get("armGroups", [])
+        self.label = arm_groups[0].get("label", "") if arm_groups else ""
+        self.description = arm_groups[0].get("description", "") if arm_groups else ""

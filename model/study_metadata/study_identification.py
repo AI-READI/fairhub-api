@@ -65,9 +65,10 @@ class StudyIdentification(db.Model):  # type: ignore
         self.identifier_link = data["identifier_link"]
         self.study.touch()
 
-    def updating_from_integration(self, data: dict, is_overwrite):
-        """it updates a StudyIdentification from a dictionary"""
-        if is_overwrite:
-            self.identifier_type = "Other Identifier"
-            self.identifier_domain = "clinicaltrials.gov"
-            self.identifier = data["identificationModule"]["nctId"]
+    def updating_from_integration(self, data: dict):
+        """It updates a StudyIdentification from a dictionary"""
+        self.identifier_type = "Other Identifier"
+        self.identifier_domain = "clinicaltrials.gov"
+        self.identifier = (
+            data.get("identificationModule", {}).get("nctId", "").strip()
+        )

@@ -67,7 +67,10 @@ class StudyKeywords(db.Model):  # type: ignore
         self.keyword_uri = data["keyword_uri"]
         self.study.touch()
 
-    def updating_from_integration(self, data: dict, is_overwrite):
+    def updating_from_integration(self, data: dict):
         """it updates a StudyIntervention from a dictionary"""
-        if is_overwrite:
-            self.name = data.get("conditionsModule", {}).get("keywords", [])
+        self.name = data.get("conditionsModule", {}).get("keywords", [])
+        self.classification_code = ""
+        self.scheme = ""
+        self.scheme_uri = ""
+        self.keyword_uri = ""
