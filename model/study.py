@@ -1,5 +1,6 @@
 import datetime
 import re
+from typing import cast
 import uuid
 
 from flask import g
@@ -250,8 +251,7 @@ class Study(db.Model):  # type: ignore
     def update_identification_id(self, data):
         clinical_id = None
         identifiers = [
-            i
-            for i in self.study_identification
+            i for i in cast(list, self.study_identification)
             if re.match(r"^NCT\d{8}$", i.identifier)
         ]
         if not identifiers:
@@ -261,7 +261,8 @@ class Study(db.Model):  # type: ignore
         else:
             clinical_id = identifiers[0]
 
-        clinical_id.updating_from_integration(data)
+        if clinical_id is not None:
+            clinical_id.updating_from_integration(data)
 
     def import_from_clinical_data(self, data):
         """Updates the study from a dictionary"""
@@ -277,7 +278,7 @@ class Study(db.Model):  # type: ignore
             "interventions", []
         )
         # Loop through an array and delete each object
-        for intervention in self.study_intervention:
+        for intervention in cast(list, self.study_intervention):
             model.db.session.delete(intervention)
 
         for intervention_dict in interventions_data:
@@ -292,7 +293,7 @@ class Study(db.Model):  # type: ignore
             "collaborators", []
         )
         # Loop through an array and delete each object
-        for collaborator in self.study_collaborators:
+        for collaborator in cast(list, self.study_collaborators):
             model.db.session.delete(collaborator)
 
         for collaborator_dict in collaborators_data:
@@ -305,7 +306,7 @@ class Study(db.Model):  # type: ignore
 
         arms_data = data.get("armsInterventionsModule", {}).get("armGroups", [])
         # Loop through an array and delete each object
-        for arm in self.study_arm:
+        for arm in cast(list, self.study_arm):
             model.db.session.delete(arm)
 
         for arm_dict in arms_data:
@@ -320,7 +321,7 @@ class Study(db.Model):  # type: ignore
             "overallOfficials", []
         )
         # Loop through an array and delete each object
-        for oo in self.study_overall_official:
+        for oo in cast(list, self.study_overall_official):
             model.db.session.delete(oo)
 
         for oo_dict in overall_official_data:
@@ -333,7 +334,7 @@ class Study(db.Model):  # type: ignore
 
         location_data = data.get("contactsLocationsModule", {}).get("locations", [])
         # Loop through an array and delete each object
-        for location in self.study_location:
+        for location in cast(list, self.study_location):
             model.db.session.delete(location)
 
         for location_dict in location_data:
