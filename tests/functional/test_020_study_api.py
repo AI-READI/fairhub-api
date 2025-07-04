@@ -18,6 +18,7 @@ def test_post_study(_logged_in_client):
             "title": "Study Title",
             "image": "https://api.dicebear.com/6.x/adventurer/svg",
             "short_description": "short_description",
+            "clinical_id": "NCT06002048",
         },
     )
 
@@ -98,17 +99,16 @@ def test_update_study(clients):
         f"/study/{study_id}",
         json={
             "title": "Study Title Updated",
-            "image": pytest.global_study_id["image"],  # type: ignore
             "short_description": pytest.global_study_id["short_description"],  # type: ignore
+            "clinical_id": "NCT06002048",
+            "is_overwrite": False,
         },
     )
-
     assert response.status_code == 200
     response_data = json.loads(response.data)
     pytest.global_study_id = response_data
 
     assert response_data["title"] == "Study Title Updated"
-    assert response_data["image"] == pytest.global_study_id["image"]  # type: ignore
     assert response_data["short_description"] == pytest.global_study_id["short_description"]  # type: ignore
     assert response_data["id"] == pytest.global_study_id["id"]  # type: ignore
 
@@ -116,8 +116,10 @@ def test_update_study(clients):
         f"/study/{study_id}",
         json={
             "title": "Admin Study Title",
-            "image": pytest.global_study_id["image"],  # type: ignore
             "short_description": pytest.global_study_id["short_description"],  # type: ignore
+            "clinical_id": "NCT06002048",
+            "is_overwrite": False,
+
         },
     )
 
@@ -127,15 +129,15 @@ def test_update_study(clients):
 
     assert admin_response_data["title"] == "Admin Study Title"
     assert admin_response_data["short_description"] == pytest.global_study_id["short_description"]  # type: ignore
-    assert admin_response_data["image"] == pytest.global_study_id["image"]  # type: ignore
     assert admin_response_data["id"] == pytest.global_study_id["id"]  # type: ignore
 
     editor_response = _editor_client.put(
         f"/study/{study_id}",
         json={
             "title": "Editor Study Title",
-            "image": pytest.global_study_id["image"],  # type: ignore
             "short_description": pytest.global_study_id["short_description"],  # type: ignore
+            "clinical_id": "NCT06002048",
+            "is_overwrite": False,
         },
     )
 
@@ -144,7 +146,6 @@ def test_update_study(clients):
     pytest.global_study_id = editor_response_data
 
     assert editor_response_data["title"] == "Editor Study Title"
-    assert editor_response_data["image"] == pytest.global_study_id["image"]  # type: ignore
     assert editor_response_data["short_description"] == pytest.global_study_id["short_description"]  # type: ignore
     assert editor_response_data["id"] == pytest.global_study_id["id"]  # type: ignore
 
@@ -152,8 +153,9 @@ def test_update_study(clients):
         f"/study/{study_id}",
         json={
             "title": "Viewer Study Title",
-            "image": pytest.global_study_id["image"],  # type: ignore
             "short_description": pytest.global_study_id["short_description"],  # type: ignore
+            "clinical_id": "NCT06002048",
+            "is_overwrite": False,
         },
     )
 
@@ -224,9 +226,9 @@ def test_delete_studies_created(clients):
             "title": "Delete Me",
             "image": "https://api.dicebear.com/6.x/adventurer/svg",
             "short_description": "short_description",
+            "clinical_id": "NCT06002048",
         },
     )
-
     assert response.status_code == 201
     response_data = json.loads(response.data)
     study_id = response_data["id"]

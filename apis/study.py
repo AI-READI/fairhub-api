@@ -113,7 +113,6 @@ class Studies(Resource):
         study_contributor = model.StudyContributor.from_data(study_, g.user, "owner")
         model.db.session.add(study_contributor)
 
-        model.db.session.commit()
         if os.environ.get("FLASK_ENV") != "testing":
             # TODO finish study testing integration
             container = config.AZURE_CONTAINER

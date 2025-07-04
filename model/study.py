@@ -246,7 +246,8 @@ class Study(db.Model):  # type: ignore
 
         self.title = data["title"]
         self.short_description = data["short_description"]
-        self.image = data["image"] if data["image"] in data else ""
+        if "image" in data and data["image"]:
+            self.image = data["image"]
         self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
 
     def update_identification_id(self, data):
