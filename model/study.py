@@ -276,7 +276,7 @@ class Study(db.Model):  # type: ignore
         self.study_sponsors.updating_from_integration(data)
         self.study_design.updating_from_integration(data)
         self.study_oversight.updating_from_integration(data)
-
+        self.title = data.get("identificationModule", {}).get("officialTitle", "")
         interventions_data = data.get("armsInterventionsModule", {}).get(
             "interventions", []
         )
@@ -291,6 +291,22 @@ class Study(db.Model):  # type: ignore
             intervention.updating_from_integration(intervention_dict)
             # Add to a database
             self.study_intervention.append(intervention)
+
+        keywords_data = data.get("conditionsModule", {}).get("keywords", [])
+        for k in cast(list, self.study_keywords):
+            model.db.session.delete(k)
+        for k_dict in keywords_data:
+            keywords = model.StudyKeywords(self)
+            keywords.updating_from_integration(k_dict)
+            self.study_keywords.append(keywords)
+
+        conditions_data = data.get("conditionsModule", {}).get("conditions", [])
+        for c in cast(list, self.study_conditions):
+            model.db.session.delete(c)
+        for conditions_dict in conditions_data:
+            conditions = model.StudyConditions(self)
+            conditions.updating_from_integration(conditions_dict)
+            self.study_conditions.append(conditions)
 
         collaborators_data = data.get("sponsorCollaboratorsModule", {}).get(
             "collaborators", []

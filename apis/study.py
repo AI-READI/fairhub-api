@@ -193,6 +193,8 @@ class StudyResource(Resource):
         identifier = data["clinical_id"].strip()
         is_overwrite = data["is_overwrite"]
 
+        update_study.update(data)
+
         if identifier:
             try:
                 url = f"https://classic.clinicaltrials.gov/api/v2/studies/{identifier}"
@@ -214,8 +216,6 @@ class StudyResource(Resource):
                 print(f"Request error: {e}")
             except Exception as e:
                 print(f"Unexpected error: {e}")
-
-        update_study.update(data)
 
         model.db.session.commit()
 

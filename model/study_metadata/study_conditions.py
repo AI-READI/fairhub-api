@@ -69,4 +69,8 @@ class StudyConditions(db.Model):  # type: ignore
 
     def updating_from_integration(self, data: dict):
         """It updates a StudyConditions from a dictionary"""
-        self.name = data.get("conditionsModule", {}).get("conditions", "")
+        self.name = data
+        self.classification_code = ""
+        self.scheme = ""
+        self.scheme_uri = ""
+        self.condition_uri = ""

@@ -72,12 +72,24 @@ class StudyStatus(db.Model):  # type: ignore
 
     def updating_from_integration(self, data: dict):
         """It updates a StudyDescription from a dictionary"""
+        status_map = {
+            "WITHDRAWN": "Withdrawn",
+            "RECRUITING": "Recruiting",
+            "ACTIVE_NOT_RECRUITING": "Active, not recruiting",
+            "NOT_YET_RECRUITING": "Not yet recruiting",
+            "SUSPENDED": "Suspended",
+            "ENROLLING_BY_INVITATION": "Enrolling by invitation",
+            "COMPLETED": "Completed",
+            "TERMINATED": "Terminated",
+        }
+        raw_status = data.get("statusModule", {}).get("overallStatus", "")
+        self.overall_status = status_map.get(raw_status, "")
+
         self.overall_status = (
             data.get("statusModule", {})
             .get("overallStatus", "")
             .replace("_", " ")
             .title()
-            .replace(" ", "")
         )
         s_d = data.get("statusModule", {}).get("startDateStruct", {}).get("date")
         self.start_date = datetime.strptime(s_d, "%Y-%m-%d") if s_d else None

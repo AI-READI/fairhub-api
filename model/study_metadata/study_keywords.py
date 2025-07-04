@@ -69,7 +69,7 @@ class StudyKeywords(db.Model):  # type: ignore
 
     def updating_from_integration(self, data: dict):
         """it updates a StudyIntervention from a dictionary"""
-        self.name = data.get("conditionsModule", {}).get("keywords", [])
+        self.name = data
         self.classification_code = ""
         self.scheme = ""
         self.scheme_uri = ""
