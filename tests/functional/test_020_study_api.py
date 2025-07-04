@@ -119,7 +119,6 @@ def test_update_study(clients):
             "short_description": pytest.global_study_id["short_description"],  # type: ignore
             "clinical_id": "NCT06002048",
             "is_overwrite": False,
-
         },
     )
 

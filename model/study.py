@@ -1,7 +1,7 @@
 import datetime
 import re
-from typing import cast
 import uuid
+from typing import cast
 
 from flask import g
 
@@ -253,7 +253,8 @@ class Study(db.Model):  # type: ignore
     def update_identification_id(self, data):
         clinical_id = None
         identifiers = [
-            i for i in cast(list, self.study_identification)
+            i
+            for i in cast(list, self.study_identification)
             if re.match(r"^NCT\d{8}$", i.identifier)
         ]
         if not identifiers:
