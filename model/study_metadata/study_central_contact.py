@@ -98,7 +98,7 @@ class StudyCentralContact(db.Model):  # type: ignore
         self.study.touch()
 
     def updating_from_integration(self, data: dict):
-        """it updates a StudyCollaborators from a dictionary"""
+        """it updates a StudyCentralContact from a dictionary"""
         self.name = data.get("name", "")
         self.identifier = ""
         self.scheme = ""

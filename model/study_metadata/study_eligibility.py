@@ -100,7 +100,7 @@ class StudyEligibility(db.Model):  # type: ignore
         self.study.touch()
 
     def updating_from_integration(self, data: dict):
-        """It updates a StudyDesign from a dictionary"""
+        """It updates a StudyEligibility from a dictionary"""
         eligibility = data.get("eligibilityModule", {})
         self.sex = eligibility.get("sex", "").capitalize()
         val = eligibility.get("healthyVolunteers", "false")

@@ -76,7 +76,7 @@ class StudyLocation(db.Model):  # type: ignore
         self.study.touch()
 
     def updating_from_integration(self, data: dict):
-        """it updates a StudyIntervention from a dictionary"""
+        """it updates a StudyLocation from a dictionary"""
         self.facility = data.get("facility", "")
         self.city = data.get("city", "")
         self.state = data.get("state", "")

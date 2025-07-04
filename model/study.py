@@ -316,11 +316,8 @@ class Study(db.Model):  # type: ignore
             model.db.session.delete(collaborator)
 
         for collaborator_dict in collaborators_data:
-            # Make the new intervention
             collaborator = model.StudyCollaborators(self)
-            # Put data from dict into it
             collaborator.updating_from_integration(collaborator_dict)
-            # Add to a database
             self.study_collaborators.append(collaborator)
 
         arms_data = data.get("armsInterventionsModule", {}).get("armGroups", [])
@@ -329,11 +326,8 @@ class Study(db.Model):  # type: ignore
             model.db.session.delete(arm)
 
         for arm_dict in arms_data:
-            # Make the new intervention
             arm = model.StudyArm(self)
-            # Put data from dict into it
             arm.updating_from_integration(arm_dict)
-            # Add to a database
             self.study_arm.append(arm)
 
         overall_official_data = data.get("contactsLocationsModule", {}).get(
@@ -344,7 +338,6 @@ class Study(db.Model):  # type: ignore
             model.db.session.delete(oo)
 
         for oo_dict in overall_official_data:
-            # Make the new intervention
             o_o = model.StudyOverallOfficial(self)
             # Put data from dict into it
             o_o.updating_from_integration(oo_dict)
@@ -357,7 +350,6 @@ class Study(db.Model):  # type: ignore
             model.db.session.delete(location)
 
         for location_dict in location_data:
-            # Make the new intervention
             location = model.StudyLocation(self)
             # Put data from dict into it
             location.updating_from_integration(location_dict)

@@ -71,7 +71,7 @@ class StudyStatus(db.Model):  # type: ignore
         self.study.touch()
 
     def updating_from_integration(self, data: dict):
-        """It updates a StudyDescription from a dictionary"""
+        """It updates a StudyStatus from a dictionary"""
         status_map = {
             "WITHDRAWN": "Withdrawn",
             "RECRUITING": "Recruiting",

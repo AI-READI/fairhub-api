@@ -67,7 +67,7 @@ class StudyArm(db.Model):  # type: ignore
         self.study.touch()
 
     def updating_from_integration(self, data: dict):
-        """It updates a StudyIdentification from a dictionary"""
+        """It updates a StudyArm from a dictionary"""
         self.label = data.get("label", "")
         self.description = data.get("description", "")
         self.type = ""

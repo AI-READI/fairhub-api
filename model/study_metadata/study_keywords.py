@@ -68,7 +68,7 @@ class StudyKeywords(db.Model):  # type: ignore
         self.study.touch()
 
     def updating_from_integration(self, data: dict):
-        """it updates a StudyIntervention from a dictionary"""
+        """it updates a StudyKeywords from a dictionary"""
         self.name = data
         self.classification_code = ""
         self.scheme = ""
