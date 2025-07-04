@@ -7,7 +7,7 @@ import requests
 from azure.storage.filedatalake import FileSystemClient
 from flask import Response, g, request
 from flask_restx import Namespace, Resource, fields, reqparse
-from jsonschema import FormatChecker, ValidationError, validate
+from jsonschema import ValidationError, validate
 
 import config
 import model
@@ -57,7 +57,7 @@ class Studies(Resource):
 
         return [s.to_dict() for s in studies], 200
 
-    @api.expect(study_model)
+    # @api.expect(study_model)
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
     def post(self):
@@ -80,28 +80,8 @@ class Studies(Resource):
         add_study = model.Study.from_data(data)
         identifier = data["clinical_id"]
 
-        def validate_clinical_trial_identifier(instance):
-            identifier_ = instance
-            if not identifier_:
-                return True
-
-            # Check if the identifier is exactly 11 characters long
-            if len(identifier_) != 11:
-                raise ValidationError("Identifier must be exactly 11 characters long")
-
-            # Check if it starts with 'NCT' followed by 8 digits
-            if not re.fullmatch(r"NCT\d{8}", identifier_):
-                raise ValidationError(
-                    "Identifier must start with 'NCT' followed by 8 digits"
-                )
-
-            return True
-
-        format_checker = FormatChecker()
-        format_checker.checks("clinical_id")(validate_clinical_trial_identifier)
-
         try:
-            validate(instance=data, schema=schema, format_checker=format_checker)
+            validate(instance=data, schema=schema)
         except ValidationError as e:
             return e.message, 400
 
@@ -122,26 +102,48 @@ class Studies(Resource):
                     file_system_name=container,
                 )
                 file_system_client.create_directory(f"AI-READI/test-files/{study_id}")
-            if identifier:
-                try:
-                    url = f"https://classic.clinicaltrials.gov/api/v2/studies/{identifier}"
-                    assert url is not None and isinstance(
-                        url, str
-                    ), "URL must be a non-empty string"
+            try:
+                if not identifier or not isinstance(identifier, str):
+                    raise ValueError("Identifier must be a non-empty string.")
 
-                    response = requests.get(url, timeout=10)
-                    response.raise_for_status()  # Raises HTTPError if status != 200
-                    clinical_data = response.json()
-                    study_.update_identification_id(clinical_data["protocolSection"])
+                if not re.match(r"^NCT\d{8}$", identifier):
+                    raise ValueError("Identifier must be in the format 'NCT########'.")
 
-                    study_.import_from_clinical_data(clinical_data["protocolSection"])
-                    print("Response JSON")
+                url = f"https://classic.clinicaltrials.gov/api/v2/studies/{identifier}"
+                # AI-READI id-NCT06002048
 
-                except requests.exceptions.RequestException as e:
-                    print(f"Request error: {e}")
-                except Exception as e:
-                    print(f"Unexpected error: {e}")
+                response = requests.get(url, timeout=10)
+                if response.status_code == 404:
+                    return {
+                        "error": "No clinical study was found with the provided identifier",
+                        "status_code": 404,
+                        "message": f"No study found for identifier '{identifier}'."
+                    }, 404
 
+                if response.status_code != 200:
+                    return {
+                        "error": "Failed to fetch clinical trial data",
+                        "status_code": response.status_code,
+                        "message": f"ClinicalTrials.gov returned status {response.status_code}."
+                    }, response.status_code
+
+                clinical_data = response.json()
+                study_.update_identification_id(clinical_data["protocolSection"])
+                study_.import_from_clinical_data(
+                    clinical_data["protocolSection"]
+                )
+            except requests.exceptions.RequestException as e:
+                return {
+                    "error": "Failed to connect to ClinicalTrials.gov API",
+                    "status_code": 503,
+                    "message": str(e)
+                }, 503
+            except Exception as e:
+                return {
+                    "error": "Unexpected server error",
+                    "status_code": 500,
+                    "message": str(e)
+                }, 500
         model.db.session.commit()
 
         return study_.to_dict(), 201
@@ -197,25 +199,47 @@ class StudyResource(Resource):
 
         if identifier:
             try:
+                if not identifier or not isinstance(identifier, str):
+                    raise ValueError("Identifier must be a non-empty string.")
+
+                if not re.match(r"^NCT\d{8}$", identifier):
+                    raise ValueError("Identifier must be in the format 'NCT########'.")
+
                 url = f"https://classic.clinicaltrials.gov/api/v2/studies/{identifier}"
-                # AI-READI id-NCT06002048
-                assert url is not None and isinstance(
-                    url, str
-                ), "URL must be a non-empty string"
 
                 response = requests.get(url, timeout=10)
-                response.raise_for_status()  # Raises HTTPError if status != 200
+                if response.status_code == 404:
+                    return {
+                        "error": "No clinical study was found with the provided identifier",
+                        "status_code": 404,
+                        "message": f"No study found for identifier '{identifier}'."
+                    }, 404
+
+                if response.status_code != 200:
+                    return {
+                        "error": "Failed to fetch clinical trial data",
+                        "status_code": response.status_code,
+                        "message": f"ClinicalTrials.gov returned status {response.status_code}."
+                    }, response.status_code
+
                 clinical_data = response.json()
                 update_study.update_identification_id(clinical_data["protocolSection"])
                 if is_overwrite:
                     update_study.import_from_clinical_data(
                         clinical_data["protocolSection"]
                     )
-
             except requests.exceptions.RequestException as e:
-                print(f"Request error: {e}")
+                return {
+                    "error": "Failed to connect to ClinicalTrials.gov API",
+                    "status_code": 503,
+                    "message": str(e)
+                }, 503
             except Exception as e:
-                print(f"Unexpected error: {e}")
+                return {
+                    "error": "Unexpected server error",
+                    "status_code": 500,
+                    "message": str(e)
+                }, 500
 
         model.db.session.commit()
 
