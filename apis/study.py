@@ -78,7 +78,7 @@ class Studies(Resource):
 
         data: Union[Any, dict] = request.json
         add_study = model.Study.from_data(data)
-        identifier = data["clinical_id"]
+        identifier = data.get("clinical_id")
 
         try:
             validate(instance=data, schema=schema)
@@ -103,35 +103,31 @@ class Studies(Resource):
                 )
                 file_system_client.create_directory(f"AI-READI/test-files/{study_id}")
             try:
-                if not identifier or not isinstance(identifier, str):
-                    raise ValueError("Identifier must be a non-empty string.")
+                if isinstance(identifier, str) and re.match(r"^NCT\d{8}$", identifier.strip()):
 
-                if not re.match(r"^NCT\d{8}$", identifier):
-                    raise ValueError("Identifier must be in the format 'NCT########'.")
+                    url = f"https://classic.clinicaltrials.gov/api/v2/studies/{identifier}"
+                    # AI-READI id-NCT06002048
 
-                url = f"https://classic.clinicaltrials.gov/api/v2/studies/{identifier}"
-                # AI-READI id-NCT06002048
+                    response = requests.get(url, timeout=10)
+                    if response.status_code == 404:
+                        return {
+                            "error": "No clinical study was found with the provided identifier",
+                            "status_code": 404,
+                            "message": f"No study found for identifier '{identifier}'."
+                        }, 404
 
-                response = requests.get(url, timeout=10)
-                if response.status_code == 404:
-                    return {
-                        "error": "No clinical study was found with the provided identifier",
-                        "status_code": 404,
-                        "message": f"No study found for identifier '{identifier}'."
-                    }, 404
+                    if response.status_code != 200:
+                        return {
+                            "error": "Failed to fetch clinical trial data",
+                            "status_code": response.status_code,
+                            "message": f"ClinicalTrials.gov returned status {response.status_code}."
+                        }, response.status_code
 
-                if response.status_code != 200:
-                    return {
-                        "error": "Failed to fetch clinical trial data",
-                        "status_code": response.status_code,
-                        "message": f"ClinicalTrials.gov returned status {response.status_code}."
-                    }, response.status_code
-
-                clinical_data = response.json()
-                study_.update_identification_id(clinical_data["protocolSection"])
-                study_.import_from_clinical_data(
-                    clinical_data["protocolSection"]
-                )
+                    clinical_data = response.json()
+                    study_.update_identification_id(clinical_data["protocolSection"])
+                    study_.import_from_clinical_data(
+                        clinical_data["protocolSection"]
+                    )
             except requests.exceptions.RequestException as e:
                 return {
                     "error": "Failed to connect to ClinicalTrials.gov API",
