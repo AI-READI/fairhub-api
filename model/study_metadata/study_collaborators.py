@@ -64,7 +64,9 @@ class StudyCollaborators(db.Model):  # type: ignore
         self.scheme_uri = data["identifier_scheme_uri"]
         self.study.touch()
 
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        return violations
+    def updating_from_integration(self, data: dict):
+        """it updates a StudyCollaborators from a dictionary"""
+        self.name = data.get("name", "")
+        self.identifier = ""
+        self.scheme = ""
+        self.scheme_uri = ""

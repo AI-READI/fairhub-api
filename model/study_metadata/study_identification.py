@@ -65,7 +65,8 @@ class StudyIdentification(db.Model):  # type: ignore
         self.identifier_link = data["identifier_link"]
         self.study.touch()
 
-    def validate(self):
-        """Validates the lead_sponsor_last_name study"""
-        violations: list = []
-        return violations
+    def updating_from_integration(self, data: dict):
+        """It updates a StudyIdentification from a dictionary"""
+        self.identifier_type = "Other Identifier"
+        self.identifier_domain = "clinicaltrials.gov"
+        self.identifier = data.get("identificationModule", {}).get("nctId", "").strip()

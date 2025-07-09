@@ -67,7 +67,10 @@ class StudyConditions(db.Model):  # type: ignore
         self.condition_uri = data["condition_uri"]
         self.study.touch()
 
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        return violations
+    def updating_from_integration(self, data: dict):
+        """It updates a StudyConditions from a dictionary"""
+        self.name = data
+        self.classification_code = ""
+        self.scheme = ""
+        self.scheme_uri = ""
+        self.condition_uri = ""

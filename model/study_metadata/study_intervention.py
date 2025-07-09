@@ -67,7 +67,9 @@ class StudyIntervention(db.Model):  # type: ignore
         self.other_name_list = data["other_name_list"]
         self.study.touch()
 
-    def validate(self):
-        """Validates the lead_sponsor_last_name study"""
-        violations: list = []
-        return violations
+    def updating_from_integration(self, data: dict):
+        """it updates a StudyIntervention from a dictionary"""
+        self.name = data.get("name", "")
+        self.type = data.get("type", "").replace("_", " ").title()
+        self.description = data.get("description", "")
+        self.other_name_list = ""

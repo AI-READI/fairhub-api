@@ -1,5 +1,7 @@
 import datetime
+import re
 import uuid
+from typing import cast
 
 from flask import g
 
@@ -25,7 +27,6 @@ class Study(db.Model):  # type: ignore
         self.study_design = model.StudyDesign(self)
         self.study_eligibility = model.StudyEligibility(self)
         self.study_description = model.StudyDescription(self)
-        self.study_identification.append(model.StudyIdentification(self, False))
         self.study_other = model.StudyOther(self)
         self.study_oversight = model.StudyOversight(self)
 
@@ -242,22 +243,118 @@ class Study(db.Model):  # type: ignore
         """Updates the study from a dictionary"""
         if not data["title"]:
             raise exception.ValidationException("title is required")
-        if not data["image"]:
-            raise exception.ValidationException("image is required")
 
         self.title = data["title"]
-        self.image = data["image"]
         self.short_description = data["short_description"]
+        if "image" in data and data["image"]:
+            self.image = data["image"]
         self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
 
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        # if self.description.trim() == "":
-        #     violations.push("A description is required")
-        # if self.keywords.length < 1:
-        #     violations.push("At least one keyword must be specified")
-        return violations
+    def update_identification_id(self, data):
+        clinical_id = None
+        identifiers = [
+            i
+            for i in cast(list, self.study_identification)
+            if re.match(r"^NCT\d{8}$", i.identifier)
+        ]
+        if not identifiers:
+            clinical_id = model.StudyIdentification(self, False)
+            self.study_identification.append(clinical_id)
+            model.db.session.add(clinical_id)
+        else:
+            clinical_id = identifiers[0]
+
+        if clinical_id is not None:
+            clinical_id.updating_from_integration(data)
+
+    def import_from_clinical_data(self, data):
+        """Updates the study from a dictionary"""
+
+        self.study_description.updating_from_integration(data)
+        self.study_status.updating_from_integration(data)
+        self.study_eligibility.updating_from_integration(data)
+        self.study_sponsors.updating_from_integration(data)
+        self.study_design.updating_from_integration(data)
+        self.study_oversight.updating_from_integration(data)
+        self.title = data.get("identificationModule", {}).get("officialTitle", "")
+        interventions_data = data.get("armsInterventionsModule", {}).get(
+            "interventions", []
+        )
+        # Loop through an array and delete each object
+        for intervention in cast(list, self.study_intervention):
+            model.db.session.delete(intervention)
+
+        for intervention_dict in interventions_data:
+            # Make the new intervention
+            intervention = model.StudyIntervention(self)
+            # Put data from dict into it
+            intervention.updating_from_integration(intervention_dict)
+            # Add to a database
+            self.study_intervention.append(intervention)
+
+        keywords_data = data.get("conditionsModule", {}).get("keywords", [])
+        for k in cast(list, self.study_keywords):
+            model.db.session.delete(k)
+        for k_dict in keywords_data:
+            keywords = model.StudyKeywords(self)
+            keywords.updating_from_integration(k_dict)
+            self.study_keywords.append(keywords)
+
+        conditions_data = data.get("conditionsModule", {}).get("conditions", [])
+        for c in cast(list, self.study_conditions):
+            model.db.session.delete(c)
+        for conditions_dict in conditions_data:
+            conditions = model.StudyConditions(self)
+            conditions.updating_from_integration(conditions_dict)
+            self.study_conditions.append(conditions)
+
+        collaborators_data = data.get("sponsorCollaboratorsModule", {}).get(
+            "collaborators", []
+        )
+        # Loop through an array and delete each object
+        for collaborator in cast(list, self.study_collaborators):
+            model.db.session.delete(collaborator)
+
+        for collaborator_dict in collaborators_data:
+            collaborator = model.StudyCollaborators(self)
+            collaborator.updating_from_integration(collaborator_dict)
+            self.study_collaborators.append(collaborator)
+
+        arms_data = data.get("armsInterventionsModule", {}).get("armGroups", [])
+        # Loop through an array and delete each object
+        for arm in cast(list, self.study_arm):
+            model.db.session.delete(arm)
+
+        for arm_dict in arms_data:
+            arm = model.StudyArm(self)
+            arm.updating_from_integration(arm_dict)
+            self.study_arm.append(arm)
+
+        overall_official_data = data.get("contactsLocationsModule", {}).get(
+            "overallOfficials", []
+        )
+        # Loop through an array and delete each object
+        for oo in cast(list, self.study_overall_official):
+            model.db.session.delete(oo)
+
+        for oo_dict in overall_official_data:
+            o_o = model.StudyOverallOfficial(self)
+            # Put data from dict into it
+            o_o.updating_from_integration(oo_dict)
+            # Add to a database
+            self.study_overall_official.append(o_o)
+
+        location_data = data.get("contactsLocationsModule", {}).get("locations", [])
+        # Loop through an array and delete each object
+        for location in cast(list, self.study_location):
+            model.db.session.delete(location)
+
+        for location_dict in location_data:
+            location = model.StudyLocation(self)
+            # Put data from dict into it
+            location.updating_from_integration(location_dict)
+            # Add to a database
+            self.study_location.append(location)
 
     def touch(self):
         self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()

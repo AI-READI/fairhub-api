@@ -97,7 +97,9 @@ class StudyCentralContact(db.Model):  # type: ignore
         self.email_address = data["email_address"]
         self.study.touch()
 
-    def validate(self):
-        """Validates the lead_sponsor_last_name study"""
-        violations: list = []
-        return violations
+    def updating_from_integration(self, data: dict):
+        """it updates a StudyCentralContact from a dictionary"""
+        self.name = data.get("name", "")
+        self.identifier = ""
+        self.scheme = ""
+        self.scheme_uri = ""
