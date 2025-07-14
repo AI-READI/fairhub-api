@@ -5,22 +5,22 @@ import typing
 from flask import request
 from flask_restx import Resource, fields
 from jsonschema import ValidationError, validate
+from flask_restx import marshal
 
 import model
 from apis.study_metadata_namespace import api
 
 from ..authentication import is_granted
 
-study_status = api.model(
+study_status_model = api.model(
     "StudyStatus",
     {
-        "id": fields.String(required=True),
-        "overall_status": fields.String(required=True),
+        "overall_status": fields.String(required=False),
         "why_stopped": fields.String(required=True),
-        "start_date": fields.String(required=True),
-        "start_date_type": fields.String(required=True),
-        "completion_date": fields.String(required=True),
-        "completion_date_type": fields.String(required=True),
+        "start_date": fields.String(required=False),
+        "start_date_type": fields.String(required=False),
+        "completion_date": fields.String(required=False),
+        "completion_date_type": fields.String(required=False),
     },
 )
 
@@ -33,7 +33,7 @@ class StudyStatusResource(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
     # @api.param("id", "The study identifier")
-    @api.marshal_with(study_status)
+    @api.marshal_with(study_status_model)
     def get(self, study_id: int):
         """Get study status metadata"""
         study_ = model.Study.query.get(study_id)
@@ -44,7 +44,6 @@ class StudyStatusResource(Resource):
 
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(study_status)
     def put(self, study_id: int):
         """Update study status metadata"""
         # Schema validation
@@ -55,7 +54,6 @@ class StudyStatusResource(Resource):
                 "start_date",
                 "start_date_type",
                 "overall_status",
-                "why_stopped",
                 "completion_date",
                 "completion_date_type",
             ],
@@ -95,20 +93,20 @@ class StudyStatusResource(Resource):
             return e.message, 400
 
         data: typing.Union[typing.Any, dict] = request.json
-        if data["overall_status"] in ["Completed", "Terminated", "Suspended"]:
-            if "why_stopped" not in data or not data["why_stopped"]:
-                return (
-                    f"why_stopped is required for overall_status: {data['overall_status']}",
-                    400,
-                )
-
         study_obj = model.Study.query.get(study_id)
         if not is_granted("study_metadata", study_obj):
             return "Access denied, you can not modify study", 403
+        if data.get("overall_status") in ["Completed", "Terminated", "Suspended"]:
+            why_stopped = data.get("why_stopped", "")
+            if not why_stopped or not why_stopped.strip():
+                return {
+                    "message": f"why_stopped is required for overall_status: {data['overall_status']}"
+                }, 400
         study = model.Study.query.get(study_id)
 
         study.study_status.update(request.json)
 
         model.db.session.commit()
 
-        return study.study_status.to_dict(), 200
+        result = marshal(study.study_status.to_dict(), study_status_model)
+        return result, 200
