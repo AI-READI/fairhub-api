@@ -3,9 +3,8 @@
 import typing
 
 from flask import request
-from flask_restx import Resource, fields
+from flask_restx import Resource, fields, marshal
 from jsonschema import ValidationError, validate
-from flask_restx import marshal
 
 import model
 from apis.study_metadata_namespace import api

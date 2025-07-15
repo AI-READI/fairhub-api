@@ -92,18 +92,36 @@ class StudyStatus(db.Model):  # type: ignore
             .title()
         )
         s_d = data.get("statusModule", {}).get("startDateStruct", {}).get("date")
-        self.start_date = datetime.strptime(s_d, "%Y-%m-%d") if s_d else None
+        self.start_date = (
+            datetime.strptime(s_d, "%Y-%m-%d") if s_d and len(s_d) == 10 else None
+        )
 
         c_d = data.get("statusModule", {}).get("completionDateStruct", {}).get("date")
-        self.completion_date = datetime.strptime(c_d, "%Y-%m-%d") if c_d else None
+        self.completion_date = (
+            datetime.strptime(c_d, "%Y-%m-%d") if c_d and len(c_d) == 10 else None
+        )
+
         self.start_date_type = (
-            data.get("statusModule", {})
+            "Anticipated"
+            if data.get("statusModule", {})
+            .get("startDateStruct", {})
+            .get("type", "")
+            .lower()
+            == "estimated"
+            else data.get("statusModule", {})
             .get("startDateStruct", {})
             .get("type", "")
             .capitalize()
         )
+
         self.completion_date_type = (
-            data.get("statusModule", {})
+            "Anticipated"
+            if data.get("statusModule", {})
+            .get("completionDateStruct", {})
+            .get("type", "")
+            .lower()
+            == "estimated"
+            else data.get("statusModule", {})
             .get("completionDateStruct", {})
             .get("type", "")
             .capitalize()

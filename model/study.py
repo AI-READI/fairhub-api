@@ -43,120 +43,120 @@ class Study(db.Model):  # type: ignore
     dataset = db.relationship(
         "Dataset",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_contributors = db.relationship(
         "StudyContributor",
         back_populates="study",
         lazy="dynamic",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     participants = db.relationship(
         "Participant",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     invited_contributors = db.relationship(
         "StudyInvitedContributor",
         back_populates="study",
         lazy="dynamic",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_arm = db.relationship(
         "StudyArm",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_sponsors = db.relationship(
         "StudySponsors",
         uselist=False,
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_central_contact = db.relationship(
         "StudyCentralContact",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_description = db.relationship(
         "StudyDescription",
         uselist=False,
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_design = db.relationship(
         "StudyDesign",
         uselist=False,
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_eligibility = db.relationship(
         "StudyEligibility",
         uselist=False,
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_identification = db.relationship(
         "StudyIdentification",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     # NOTE: Has not been tested
     study_redcap = db.relationship(
-        "StudyRedcap", back_populates="study", cascade="all, delete"
+        "StudyRedcap", back_populates="study", cascade="all, delete-orphan"
     )
     # NOTE: Has not been tested
     study_dashboard = db.relationship(
-        "StudyDashboard", back_populates="study", cascade="all, delete"
+        "StudyDashboard", back_populates="study", cascade="all, delete-orphan"
     )
     study_intervention = db.relationship(
         "StudyIntervention",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
 
     study_location = db.relationship(
         "StudyLocation",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_other = db.relationship(
         "StudyOther",
         uselist=False,
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_keywords = db.relationship(
         "StudyKeywords",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_conditions = db.relationship(
         "StudyConditions",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_collaborators = db.relationship(
         "StudyCollaborators",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_oversight = db.relationship(
         "StudyOversight",
         uselist=False,
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_overall_official = db.relationship(
         "StudyOverallOfficial",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_status = db.relationship(
         "StudyStatus",
         uselist=False,
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
 
     def to_dict(self):
@@ -280,29 +280,21 @@ class Study(db.Model):  # type: ignore
         interventions_data = data.get("armsInterventionsModule", {}).get(
             "interventions", []
         )
-        # Loop through an array and delete each object
-        for intervention in cast(list, self.study_intervention):
-            model.db.session.delete(intervention)
-
+        self.study_intervention.clear()
         for intervention_dict in interventions_data:
-            # Make the new intervention
             intervention = model.StudyIntervention(self)
-            # Put data from dict into it
             intervention.updating_from_integration(intervention_dict)
-            # Add to a database
             self.study_intervention.append(intervention)
 
         keywords_data = data.get("conditionsModule", {}).get("keywords", [])
-        for k in cast(list, self.study_keywords):
-            model.db.session.delete(k)
+        self.study_keywords.clear()
         for k_dict in keywords_data:
             keywords = model.StudyKeywords(self)
             keywords.updating_from_integration(k_dict)
             self.study_keywords.append(keywords)
 
         conditions_data = data.get("conditionsModule", {}).get("conditions", [])
-        for c in cast(list, self.study_conditions):
-            model.db.session.delete(c)
+        self.study_conditions.clear()
         for conditions_dict in conditions_data:
             conditions = model.StudyConditions(self)
             conditions.updating_from_integration(conditions_dict)
@@ -311,9 +303,7 @@ class Study(db.Model):  # type: ignore
         collaborators_data = data.get("sponsorCollaboratorsModule", {}).get(
             "collaborators", []
         )
-        # Loop through an array and delete each object
-        for collaborator in cast(list, self.study_collaborators):
-            model.db.session.delete(collaborator)
+        self.study_collaborators.clear()
 
         for collaborator_dict in collaborators_data:
             collaborator = model.StudyCollaborators(self)
@@ -321,9 +311,7 @@ class Study(db.Model):  # type: ignore
             self.study_collaborators.append(collaborator)
 
         arms_data = data.get("armsInterventionsModule", {}).get("armGroups", [])
-        # Loop through an array and delete each object
-        for arm in cast(list, self.study_arm):
-            model.db.session.delete(arm)
+        self.study_arm.clear()
 
         for arm_dict in arms_data:
             arm = model.StudyArm(self)
@@ -333,27 +321,18 @@ class Study(db.Model):  # type: ignore
         overall_official_data = data.get("contactsLocationsModule", {}).get(
             "overallOfficials", []
         )
-        # Loop through an array and delete each object
-        for oo in cast(list, self.study_overall_official):
-            model.db.session.delete(oo)
+        self.study_overall_official.clear()
 
         for oo_dict in overall_official_data:
             o_o = model.StudyOverallOfficial(self)
-            # Put data from dict into it
             o_o.updating_from_integration(oo_dict)
-            # Add to a database
             self.study_overall_official.append(o_o)
 
         location_data = data.get("contactsLocationsModule", {}).get("locations", [])
-        # Loop through an array and delete each object
-        for location in cast(list, self.study_location):
-            model.db.session.delete(location)
-
+        self.study_location.clear()
         for location_dict in location_data:
             location = model.StudyLocation(self)
-            # Put data from dict into it
             location.updating_from_integration(location_dict)
-            # Add to a database
             self.study_location.append(location)
 
     def touch(self):
