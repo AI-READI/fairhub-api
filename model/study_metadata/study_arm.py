@@ -70,5 +70,9 @@ class StudyArm(db.Model):  # type: ignore
         """It updates a StudyArm from a dictionary"""
         self.label = data.get("label", "")
         self.description = data.get("description", "")
-        self.type = ""
+        # self.type = ""
         self.intervention_list = []
+        self.type = (data.get("type") or "").replace("_", " ").title()
+        self.intervention_list = [
+            i.replace("_", " ").title() for i in data.get("interventionNames", [])
+        ]

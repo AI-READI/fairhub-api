@@ -124,12 +124,16 @@ class StudyDesign(db.Model):  # type: ignore
         self.design_time_perspective_list = data.get("designModule", {}).get(
             "timePerspective", ""
         )
-        self.phase_list = data.get("designModule", {}).get("phases", "")
+        self.phase_list = data.get("designModule", {}).get("phases", [])
+        self.phase_list = [
+            i.lower().replace("phase", "Phase ") for i in self.phase_list
+        ]
         self.design_allocation = (
             data.get("designModule", {})
             .get("designInfo", {})
             .get("allocation", "")
-            .capitalize()
+            .replace("_", "-")
+            .title()
         )
         self.design_primary_purpose = (
             data.get("designModule", {})
@@ -149,11 +153,31 @@ class StudyDesign(db.Model):  # type: ignore
             .get("maskingInfo", {})
             .get("masking", "")
         )
-        self.design_masking = "None (Open Label)" if val == "NONE" else val
+        self.design_masking = (
+            val
+            if val == "N/A"
+            else "None (Open Label)"
+            if val == "NONE"
+            else "Blinded (no details)"
+            if val.lower().startswith("blind")
+            else val.capitalize()
+        )
+
+        self.design_who_masked_list = (
+            data.get("designModule", {})
+            .get("designInfo", {})
+            .get("maskingInfo", {})
+            .get("whoMasked", [])
+        )
+        self.design_who_masked_list = [
+            i.replace("_", " ").title() for i in self.design_who_masked_list
+        ]
 
         self.enrollment_count = (
             data.get("designModule", {}).get("enrollmentInfo", {}).get("count", "")
         )
         self.enrollment_type = (
             data.get("designModule", {}).get("enrollmentInfo", {}).get("type", "")
-        )
+        ).capitalize()
+        if self.enrollment_type == "Estimated":
+            self.enrollment_type = "Anticipated"

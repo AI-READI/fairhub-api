@@ -103,8 +103,9 @@ class Studies(Resource):
                 )
                 file_system_client.create_directory(f"AI-READI/test-files/{study_id}")
             try:
-                if isinstance(identifier, str) and re.match(r"^NCT\d{8}$", identifier.strip()):
-
+                if isinstance(identifier, str) and re.match(
+                    r"^NCT\d{8}$", identifier.strip()
+                ):
                     url = f"https://classic.clinicaltrials.gov/api/v2/studies/{identifier}"
                     # AI-READI id-NCT06002048
 
@@ -113,32 +114,30 @@ class Studies(Resource):
                         return {
                             "error": "No clinical study was found with the provided identifier",
                             "status_code": 404,
-                            "message": f"No study found for identifier '{identifier}'."
+                            "message": f"No study found for identifier '{identifier}'.",
                         }, 404
 
                     if response.status_code != 200:
                         return {
                             "error": "Failed to fetch clinical trial data",
                             "status_code": response.status_code,
-                            "message": f"ClinicalTrials.gov returned status {response.status_code}."
+                            "message": f"ClinicalTrials.gov returned status {response.status_code}.",
                         }, response.status_code
 
                     clinical_data = response.json()
                     study_.update_identification_id(clinical_data["protocolSection"])
-                    study_.import_from_clinical_data(
-                        clinical_data["protocolSection"]
-                    )
+                    study_.import_from_clinical_data(clinical_data["protocolSection"])
             except requests.exceptions.RequestException as e:
                 return {
                     "error": "Failed to connect to ClinicalTrials.gov API",
                     "status_code": 503,
-                    "message": str(e)
+                    "message": str(e),
                 }, 503
             except Exception as e:
                 return {
                     "error": "Unexpected server error",
                     "status_code": 500,
-                    "message": str(e)
+                    "message": str(e),
                 }, 500
         model.db.session.commit()
 
@@ -208,14 +207,14 @@ class StudyResource(Resource):
                     return {
                         "error": "No clinical study was found with the provided identifier",
                         "status_code": 404,
-                        "message": f"No study found for identifier '{identifier}'."
+                        "message": f"No study found for identifier '{identifier}'.",
                     }, 404
 
                 if response.status_code != 200:
                     return {
                         "error": "Failed to fetch clinical trial data",
                         "status_code": response.status_code,
-                        "message": f"ClinicalTrials.gov returned status {response.status_code}."
+                        "message": f"ClinicalTrials.gov returned status {response.status_code}.",
                     }, response.status_code
 
                 clinical_data = response.json()
@@ -228,13 +227,13 @@ class StudyResource(Resource):
                 return {
                     "error": "Failed to connect to ClinicalTrials.gov API",
                     "status_code": 503,
-                    "message": str(e)
+                    "message": str(e),
                 }, 503
             except Exception as e:
                 return {
                     "error": "Unexpected server error",
                     "status_code": 500,
-                    "message": str(e)
+                    "message": str(e),
                 }, 500
 
         model.db.session.commit()
