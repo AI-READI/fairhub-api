@@ -42,7 +42,7 @@ dataset = api.model(
 class DatasetList(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(dataset)
+    # @api.marshal_with(dataset)
     @api.doc("view datasets")
     def get(self, study_id):
         study = model.Study.query.get(study_id)
