@@ -82,7 +82,7 @@ pycap = "^2.6.0"
 azure-storage-blob = "^12.19.1"
 azure-communication-email = "^1.0.0"
 azure-storage-file-datalake = "^12.20.0"
-polars = "1.35.2"
+polars = { version = "^1.35", extras = ["lazy"] }
 
 [tool.poetry.group.dev.dependencies]
 
