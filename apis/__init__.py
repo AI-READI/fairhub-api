@@ -27,12 +27,11 @@ from .study_metadata.study_description import api as study_description
 from .study_metadata.study_design import api as design
 from .study_metadata.study_eligibility import api as eligibility
 from .study_metadata.study_intervention import api as intervention
-
 from .study_metadata.study_location import api as location
 from .study_metadata.study_overall_official import api as overall_official
 from .study_metadata.study_oversight import api as oversight
-from .study_metadata.study_team import api as sponsors
 from .study_metadata.study_status import api as status
+from .study_metadata.study_team import api as sponsors
 from .user import api as user
 from .utils import api as utils
 

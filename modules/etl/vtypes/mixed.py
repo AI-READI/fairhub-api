@@ -9,8 +9,6 @@ from .timeseries import (
     DoubleContinuousTimeseries,
 )
 from .compound import Compound
-import pandas as pd
-
 
 class Mixed(ComplexVType):
     def __init__(self) -> None:

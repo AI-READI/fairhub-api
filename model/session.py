@@ -1,5 +1,4 @@
 from . import User
-
 from .db import db
 
 
