@@ -1,5 +1,4 @@
 from .vtype import SimpleVType
-import pandas as pd
 from datetime import datetime
 
 
@@ -12,7 +11,7 @@ class SingleTimeseries(SimpleVType):
                 ("group", str),
                 ("x", datetime),
             ],
-            pd._libs.tslibs.nattype.NaTType,
+            str,
         )
 
 
@@ -26,7 +25,7 @@ class DoubleDiscreteTimeseries(SimpleVType):
                 ("x", str),
                 ("y", int),
             ],
-            pd._libs.tslibs.nattype.NaTType,
+            str,
         )
 
 
@@ -40,7 +39,7 @@ class DoubleContinuousTimeseries(SimpleVType):
                 ("x", str),
                 ("y", float),
             ],
-            pd._libs.tslibs.nattype.NaTType,
+            str,
         )
 
 

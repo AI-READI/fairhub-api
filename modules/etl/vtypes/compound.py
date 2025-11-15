@@ -8,8 +8,6 @@ from .timeseries import (
     DoubleContinuousTimeseries,
 )
 from typing import Tuple, List, Dict, Callable, Any
-import pandas as pd
-
 
 class Compound(ComplexVType):
     def __init__(self) -> None:

@@ -1,81 +1,88 @@
-from typing import Any, Callable, Union, List, Dict, Tuple
-from datetime import datetime
-import pandas as pd
+from typing import Any, Callable, List, Dict, Tuple, Type, Union
+import polars as pl
+
+# A property on a SimpleVType: ("value", int), ("filterby", str), etc.
+VTypeProp = Tuple[str, Callable[..., Any]]
+
+# A child vtype class included inside ComplexVType
+VTypeClass = Type["BaseVType"]
+
+# ComplexVType may accept either real props (VTypeProp)
+# or child vtype classes (VTypeClass)
+PropsList = List[Union[VTypeProp, VTypeClass]]
 
 
-class SimpleVType(object):
+class BaseVType:
     def __init__(
         self,
         name: str,
-        props: List[Tuple[str, Callable]],
-        missing_value: Callable,
+        props: PropsList,
+        missing_value: Callable[..., Any],
     ) -> None:
         self.name = name
         self.props = props
         self.missing_value = missing_value
-        # References
         self.validation_errors: List[str] = []
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.__dict__}"
 
-    def isvalid(self, df: pd.DataFrame, accessors: Dict[str, Dict[str, str]]) -> bool:
-        columns = df.columns
-        for pname, ptype in self.props:
-            if pname in accessors.keys():
-                column = accessors[pname]["field"]
-                if column not in columns:
-                    self.validation_errors.append(
-                        f"VType {self.name.title()} pd.DataFrame argument (df) is missing column defined in accessors argument, {column}"
-                    )
-                    return False
-                else:
-                    continue
-            else:
-                self.validation_errors.append(
-                    f"VType {self.name.title()} accessors argument is missing required property, {pname}"
-                )
-                return False
-        return True
-
-
-class ComplexVType(object):
-    def __init__(
+    def _validate_single_accessor(
         self,
-        name: str,
-        props: List[Any],
-        missing_value: Callable,
-    ) -> None:
-        self.name = name
-        self.props = props
-        self.missing_value = missing_value
-        # References
-        self.validation_errors: List[str] = []
-
-    def __str__(self):
-        return f"{self.__dict__}"
-
-    def isvalid(
-        self, df: pd.DataFrame, accessorsList: List[Dict[str, Dict[str, str]]]
+        df_cols: set,
+        accessors: Dict[str, Dict[str, str]]
     ) -> bool:
+        ok = True
+        vname = self.name.title()
+
+        for item in self.props:
+            # ComplexVType entries may be classes, skip them
+            if not isinstance(item, tuple):
+                continue
+
+            pname, _ = item
+
+            field_info = accessors.get(pname)
+            if not field_info:
+                self.validation_errors.append(
+                    f"VType {vname} accessors argument is missing required property, {pname}"
+                )
+                ok = False
+                continue
+
+            column = field_info["field"]
+            if column not in df_cols:
+                self.validation_errors.append(
+                    f"VType {vname} pl.DataFrame argument (df) is missing column "
+                    f"defined in accessors argument, {column}"
+                )
+                ok = False
+
+        return ok
+
+
+class SimpleVType(BaseVType):
+    def isvalid(
+        self,
+        df: pl.DataFrame,
+        accessors: Dict[str, Dict[str, str]]
+    ) -> bool:
+        return self._validate_single_accessor(set(df.columns), accessors)
+
+
+class ComplexVType(BaseVType):
+    def isvalid(
+        self,
+        df: pl.DataFrame,
+        accessors_list: List[Dict[str, Dict[str, str]]]
+    ) -> bool:
+        df_cols = set(df.columns)
         valid = True
-        columns = df.columns
-        for accessors in accessorsList:
-            for pname, ptype in self.props:
-                if pname in accessors.keys():
-                    column = accessors[pname]["field"]
-                    if column not in columns:
-                        self.validation_errors.append(
-                            f"VType {self.name.title()} pd.DataFrame argument (df) is missing column defined in accessors argument, {column}"
-                        )
-                        valid = False
-                    else:
-                        continue
-                else:
-                    self.validation_errors.append(
-                        f"VType {self.name.title()} accessors argument is missing required property, {pname}"
-                    )
-                    valid = False
+
+        for accessors in accessors_list:
+            if not self._validate_single_accessor(df_cols, accessors):
+                valid = False
+
         return valid
 
 
