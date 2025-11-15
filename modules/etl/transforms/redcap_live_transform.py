@@ -142,6 +142,7 @@ class RedcapLiveTransform(object):
 
         # Load REDCap Project Metadata
         self.metadata: Any = self.project.export_metadata()
+        self.logger.info(f"API Request to metadata received metadata with length: {len(self.metadata)}")
 
         self.logger.info(f"Retrieving Live REDCap reports")
         for report_config in self.reports_configs:
@@ -152,6 +153,7 @@ class RedcapLiveTransform(object):
 
             # PyCap returns a list of dicts by default.
             report_data: Any = self.project.export_report(**report_kwdargs)
+            self.logger.info(f"API Request to report {report_key} received data with length: {len(report_data)}")
 
             # Convert to Polars ensuring all columns are input as UTF8 Strings
             if not report_data:
