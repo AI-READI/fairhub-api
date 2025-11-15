@@ -9,10 +9,9 @@ from jsonschema import ValidationError, validate
 import caching
 import model
 from modules.etl import ModuleTransform, RedcapLiveTransform, RedcapReleaseTransform
-from modules.etl.config import (
+from modules.etl.config import (  # redcapReleaseTransformConfig,
     moduleTransformConfigs,
     redcapLiveTransformConfig,
-    redcapReleaseTransformConfig,
 )
 
 from .authentication import is_granted
@@ -653,8 +652,6 @@ class RedcapProjectDashboardPublic(Resource):
         """Get REDCap project dashboard"""
         model.db.session.flush()
         study = model.db.session.query(model.Study).get(study_id)
-        # if not is_granted("view", study):
-        #     return "Access denied, you can not view this dashboard", 403
 
         # Get Dashboard
         redcap_project_dashboards_query = model.StudyDashboard.query.filter_by(
