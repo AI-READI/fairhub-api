@@ -120,7 +120,7 @@ class RedcapReleaseTransform(object):
             "raw_or_label": "raw",
             "raw_or_label_headers": "raw",
             "export_checkbox_labels": False,
-            "csv_delimiter": ",",
+            "csv_delimiter": "|",
         }
 
         self.project: Any = None
@@ -230,7 +230,7 @@ class RedcapReleaseTransform(object):
                 # Load DataFrame
                 df = pl.read_csv(
                     report_buffer,
-                    separator=",",
+                    separator="|",
                     infer_schema_length=0
                 )
                 # Convert all columns to Utf8
