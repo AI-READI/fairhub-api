@@ -4,11 +4,14 @@ EXPOSE 5000
 
 WORKDIR /app
 
-ENV POLARS_REQUIRE_BIN=1
 ENV POETRY_VERSION=1.3.2
 
 RUN apk update
 RUN apk add --no-cache gcc libffi-dev musl-dev postgresql-dev
+
+# Install Rust
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+ENV PATH="/root/.cargo/bin:${PATH}"
 
 RUN pip install "poetry==$POETRY_VERSION"
 
