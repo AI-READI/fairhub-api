@@ -9,7 +9,8 @@ WORKDIR /app
 
 # Environment
 ENV POETRY_VERSION=1.3.2
-ENV PIP_ONLY_BINARY=:all: # Force pip to use pre-built wheels
+# Note: Force pip to use pre-built wheels
+ENV PIP_ONLY_BINARY=:all:
 
 # Install system dependencies for building Python packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
