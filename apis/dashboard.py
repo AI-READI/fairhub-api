@@ -482,6 +482,13 @@ class RedcapProjectDashboard(Resource):
             redcap_project_dashboard,
             live=True,
         )
+        # transformConfig = redcapReleaseTransformConfig
+        # redcap_project_dashboard = execute_transform(
+        #     transformConfig,
+        #     redcap_project_view,
+        #     redcap_project_dashboard,
+        #     live=False,
+        # )
 
         # Create Dashboard Redis Cache
         caching.cache.set(
@@ -686,12 +693,12 @@ class RedcapProjectDashboardPublic(Resource):
         #
 
         # Finalize ETL Config
-        transformConfig = redcapReleaseTransformConfig
+        transformConfig = redcapLiveTransformConfig
         redcap_project_dashboard = execute_transform(
             transformConfig,
             redcap_project_view,
             redcap_project_dashboard,
-            live=False,
+            live=True,
         )
 
         # Create Dashboard Redis Cache
