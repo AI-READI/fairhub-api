@@ -73,7 +73,7 @@ class RedcapReleaseTransform(object):
 
         # Configure Logging
         logging.basicConfig(**self.logging_config)
-        self.logger = logging.getLogger("RedcapTransform")
+        self.logger = logging.getLogger("RedcapTransform:Release")
 
         #
         # REDCap Parsing Variables
@@ -125,6 +125,7 @@ class RedcapReleaseTransform(object):
 
         self.project: Any = None
         self.reports: Dict[str, Any] = {}
+        self.merged: pl.DataFrame = pl.DataFrame([])
 
     def run (self):
 
@@ -226,13 +227,14 @@ class RedcapReleaseTransform(object):
             if not report_buffer:
                 df = pl.DataFrame([])
             else:
-                # Calculate schema to force Utf8 to prevent type inference issues on ragged data
+                # Load DataFrame
                 df = pl.read_csv(
                     report_buffer,
                     separator=",",
-                    infer_schema_length=0, # Helps with performance/consistency
-                    schema_overrides={'*': pl.Utf8}
+                    infer_schema_length=0
                 )
+                # Convert all columns to Utf8
+                df = df.select([pl.col(c).cast(pl.Utf8) for c in df.columns])
 
 
             self.logger.info(f"Successfully loaded report into Polars DataFrame with shape {df.shape}")

@@ -73,7 +73,7 @@ class RedcapLiveTransform(object):
 
         # Configure Logging
         logging.basicConfig(**self.logging_config)
-        self.logger = logging.getLogger("RedcapTransform")
+        self.logger = logging.getLogger("RedcapTransform:Live")
 
         #
         # REDCap Parsing Variables
@@ -125,6 +125,7 @@ class RedcapLiveTransform(object):
 
         self.project: Any = None
         self.reports: Dict[str, Any] = {}
+        self.merged: pl.DataFrame = pl.DataFrame([])
 
     def run(self):
         """
