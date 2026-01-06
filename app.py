@@ -118,31 +118,31 @@ def create_app(config_module=None, loglevel="INFO"):
 
     # CORS(app, resources={r"/*": {"origins": "*", "send_wildcard": True}})
 
-    @app.cli.command("create-schema")
-    def create_schema():
-        """Create the database schema."""
-        engine = model.db.session.get_bind()
-        metadata = MetaData()
-        metadata.reflect(bind=engine)
-        table_names = [table.name for table in metadata.tables.values()]
-        if len(table_names) == 0:
-            with engine.begin():
-                model.db.create_all()
-
-    @app.cli.command("cycle-schema")
-    def cycle_schema():
-        """Destroy then re-create the database schema."""
-        # If DB is Azure, Skip
-        if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
-            return
-        engine = model.db.session.get_bind()
-        metadata = MetaData()
-        metadata.reflect(bind=engine)
-        table_names = [table.name for table in metadata.tables.values()]
-        if len(table_names) == 0:
-            with engine.begin():
-                model.db.drop_all()
-                model.db.create_all()
+    # @app.cli.command("create-schema")
+    # def create_schema():
+    #     """Create the database schema."""
+    #     engine = model.db.session.get_bind()
+    #     metadata = MetaData()
+    #     metadata.reflect(bind=engine)
+    #     table_names = [table.name for table in metadata.tables.values()]
+    #     if len(table_names) == 0:
+    #         with engine.begin():
+    #             model.db.create_all()
+    #
+    # @app.cli.command("cycle-schema")
+    # def cycle_schema():
+    #     """Destroy then re-create the database schema."""
+    #     # If DB is Azure, Skip
+    #     if config.FAIRHUB_DATABASE_URL.find("azure") > -1:
+    #         return
+    #     engine = model.db.session.get_bind()
+    #     metadata = MetaData()
+    #     metadata.reflect(bind=engine)
+    #     table_names = [table.name for table in metadata.tables.values()]
+    #     if len(table_names) == 0:
+    #         with engine.begin():
+    #             model.db.drop_all()
+    #             model.db.create_all()
 
     @app.cli.command("list-schemas")
     def list_schemas():
@@ -298,17 +298,6 @@ def create_app(config_module=None, loglevel="INFO"):
     @app.errorhandler(ValidationException)
     def validation_exception_handler(error):
         return error.args[0], 422
-
-    with app.app_context():
-        engine = model.db.session.get_bind()
-        metadata = MetaData()
-        metadata.reflect(bind=engine)
-        table_names = [table.name for table in metadata.tables.values()]
-
-        # The alembic table is created by default, so we need to check for more than 1 table
-        if len(table_names) <= 1:
-            with engine.begin():
-                model.db.create_all()
 
     return app
 
