@@ -13,7 +13,7 @@ from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from flask_mailman import Mail
 from growthbook import GrowthBook
-from sqlalchemy import MetaData, inspect, text
+from sqlalchemy import inspect, text
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.schema import DropTable
 from waitress import serve
