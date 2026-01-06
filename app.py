@@ -13,7 +13,7 @@ from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from flask_mailman import Mail
 from growthbook import GrowthBook
-from sqlalchemy import inspect, text
+from sqlalchemy import MetaData, inspect, text
 from sqlalchemy.ext.compiler import compiles
 from sqlalchemy.schema import DropTable
 from waitress import serve
@@ -299,16 +299,17 @@ def create_app(config_module=None, loglevel="INFO"):
     def validation_exception_handler(error):
         return error.args[0], 422
 
-    # with app.app_context():
-    #     engine = model.db.session.get_bind()
-    #     metadata = MetaData()
-    #     metadata.reflect(bind=engine)
-    #     table_names = [table.name for table in metadata.tables.values()]
-    #
-    #     # The alembic table is created by default, so we need to check for more than 1 table
-    #     if len(table_names) <= 1:
-    #         with engine.begin():
-    #             model.db.create_all()
+    if os.environ.get("FLASK_ENV") == "testing":
+        with app.app_context():
+            engine = model.db.session.get_bind()
+            metadata = MetaData()
+            metadata.reflect(bind=engine)
+            table_names = [table.name for table in metadata.tables.values()]
+
+            # The alembic table is created by default, so we need to check for more than 1 table
+            if len(table_names) <= 1:
+                with engine.begin():
+                    model.db.create_all()
 
     return app
 
