@@ -440,6 +440,7 @@ def authorization():
         r"^/auth.*",
         r"^/docs",
         r"^/echo",
+        r"^/chat",
         r"^/swaggerui.*",
         r"^/swagger.json",
         r"^/utils.*",

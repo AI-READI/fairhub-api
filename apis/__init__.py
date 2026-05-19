@@ -6,6 +6,7 @@ from apis.dataset_metadata_namespace import api as dataset_metadata_namespace
 from apis.study_metadata_namespace import api as study_metadata_namespace
 
 from .authentication import api as authentication
+from .chat import api as chat
 from .contributor import api as contributors_api
 from .dashboard import api as dashboard
 from .dataset import api as dataset_api
@@ -42,6 +43,7 @@ api = Api(
 )
 
 __all__ = [
+    "chat",
     "dataset_metadata_namespace",
     "study_metadata_namespace",
     "authentication",
@@ -94,6 +96,7 @@ class HelloEverynyan(Resource):
 
 
 api.add_namespace(study_api)
+api.add_namespace(chat)
 api.add_namespace(file_api)
 api.add_namespace(dataset_api)
 api.add_namespace(participants_api)
