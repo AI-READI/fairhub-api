@@ -6,11 +6,10 @@ from collections import defaultdict, deque
 from threading import Lock
 from typing import Any
 
-from flask_restx import Namespace, Resource
-from flask import request, jsonify
 from dotenv import load_dotenv
+from flask import jsonify, request
+from flask_restx import Namespace, Resource
 from openai import AzureOpenAI
-from openai.types.chat import ChatCompletionMessageParam
 
 load_dotenv()
 
@@ -81,24 +80,23 @@ class ChatBox(Resource):
         ]
 
         extra_body: dict[str, Any] = {
-            "data_sources": [{
-            "type": "azure_search",
-            "parameters": {
-                "endpoint": f"{search_endpoint}",
-                "index_name": f"{index_name}",
-                "semantic_configuration": "default",
-                "query_type": "semantic",
-                "fields_mapping": {},
-                "in_scope": True,
-                "filter": None,
-                "strictness": 3,
-                "top_n_documents": 5,
-                "authentication": {
-                    "type": "api_key",
-                    "key": f"{search_key}"
+            "data_sources": [
+                {
+                    "type": "azure_search",
+                    "parameters": {
+                        "endpoint": f"{search_endpoint}",
+                        "index_name": f"{index_name}",
+                        "semantic_configuration": "default",
+                        "query_type": "semantic",
+                        "fields_mapping": {},
+                        "in_scope": True,
+                        "filter": None,
+                        "strictness": 3,
+                        "top_n_documents": 5,
+                        "authentication": {"type": "api_key", "key": f"{search_key}"},
+                    },
                 }
-            }
-        }]
+            ]
         }
 
         try:
@@ -112,7 +110,7 @@ class ChatBox(Resource):
                 frequency_penalty=0,
                 presence_penalty=0,
                 stop=None,
-                extra_body=extra_body
+                extra_body=extra_body,
             )
             answer = completion.choices[0].message.content
 
