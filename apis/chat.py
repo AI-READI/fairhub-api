@@ -6,11 +6,11 @@ from openai import AzureOpenAI
 
 import os
 
+import time
 from collections import defaultdict, deque
 from threading import Lock
-import time
 
-requests_log = defaultdict(deque)
+requests_log: defaultdict[str, deque[float]] = defaultdict(deque)
 rate_lock = Lock()
 
 
