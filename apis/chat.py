@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource
 from flask import request, jsonify
 from dotenv import load_dotenv
+from openai.types.chat import ChatCompletionMessageParam
 
 from openai import AzureOpenAI
 
@@ -29,13 +30,13 @@ def is_rate_limited(ip, limit=15, window=60):
 
 
 # Key auth
-endpoint = os.getenv("ENDPOINT_URL")
-deployment = os.getenv("DEPLOYMENT_NAME")
-search_endpoint = os.getenv("SEARCH_ENDPOINT")
-search_key = os.getenv("SEARCH_KEY")
-search_index = os.getenv("SEARCH_INDEX_NAME")
-subscription_key = os.getenv("AZURE_OPENAI_API_KEY")
-index_name = os.getenv("INDEX_NAME")
+endpoint = os.environ["ENDPOINT_URL"]
+deployment = os.environ["DEPLOYMENT_NAME"]
+search_endpoint = os.environ["SEARCH_ENDPOINT"]
+search_key = os.environ["SEARCH_KEY"]
+search_index = os.environ["SEARCH_INDEX_NAME"]
+subscription_key = os.environ["AZURE_OPENAI_API_KEY"]
+index_name = os.environ["INDEX_NAME"]
 
 # Key auth Initialize Azure OpenAI client
 client = AzureOpenAI(
@@ -73,16 +74,11 @@ class ChatBox(Resource):
                     If you are not confident the context contains the correct answer,
                      say: "Not found in the provided pages"."""
 
-        messages = [
-            {
-                "role": "system",
-                "content": prompt,
-            },
-            {
-                "role": "user",
-                "content": question,
-            }
+        messages: list[ChatCompletionMessageParam] = [
+            {"role": "system", "content": prompt},
+            {"role": "user", "content": question},
         ]
+
         try:
             completion = client.chat.completions.create(
                 model=deployment,
@@ -90,10 +86,10 @@ class ChatBox(Resource):
                 max_tokens=450,
                 temperature=0.3,
                 top_p=1.0,
+                stream=False,
                 frequency_penalty=0,
                 presence_penalty=0,
                 stop=None,
-                stream=False,
                 extra_body={
                     "data_sources": [{
                         "type": "azure_search",
