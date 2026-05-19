@@ -13,6 +13,7 @@ import time
 requests_log = defaultdict(deque)
 rate_lock = Lock()
 
+
 def is_rate_limited(ip, limit=15, window=60):
     now = time.time()
     with rate_lock:
@@ -23,6 +24,7 @@ def is_rate_limited(ip, limit=15, window=60):
             return True
         q.append(now)
         return False
+
 
 # Key auth
 endpoint = os.getenv("ENDPOINT_URL")
@@ -40,11 +42,12 @@ client = AzureOpenAI(
     api_version="2025-01-01-preview",
 )
 
+
 api = Namespace("Chat", description="Aireadi chatbox", path="/")
 
-
 load_dotenv()
-# key auth
+
+
 @api.route("/chat")
 class ChatBox(Resource):
     @api.response(201, "Success")
@@ -65,8 +68,10 @@ class ChatBox(Resource):
             return jsonify({"error": "'question' too long"}), 400
 
         prompt = """You are answering questions about the AI-READI dataset using documentation.
-                    Read the context carefully and answer the question. When you find something, only answer the direct answer, do not say "According to the documentation,"
-                    If you are not confident the context contains the correct answer, say: "Not found in the provided pages"."""
+                    Read the context carefully and answer the question. When you find something,
+                     only answer the direct answer, do not say "According to the documentation,"
+                    If you are not confident the context contains the correct answer,
+                     say: "Not found in the provided pages"."""
 
         messages = [
             {
@@ -121,4 +126,3 @@ class ChatBox(Resource):
             return jsonify({"error": "Internal server error"}), 500
 
         return jsonify({"answer": answer})
-
