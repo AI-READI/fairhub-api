@@ -76,7 +76,7 @@ class ChatBox(Resource):
                     If you are not confident the context contains the correct answer,
                      say: "Not found in the provided pages"."""
 
-        messages: list[ChatCompletionMessageParam] = [
+        messages= [
             {"role": "system", "content": prompt},
             {"role": "user", "content": question},
         ]
@@ -100,11 +100,10 @@ class ChatBox(Resource):
                 }
             ]
         }
-
         try:
             completion = client.chat.completions.create(
                 model=deployment,
-                messages=messages,
+                messages=messages,  # type: ignore[arg-type]
                 max_tokens=450,
                 temperature=0.3,
                 top_p=1.0,
