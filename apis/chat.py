@@ -10,6 +10,8 @@ from dotenv import load_dotenv
 from flask import jsonify, request
 from flask_restx import Namespace, Resource
 from openai import AzureOpenAI
+from openai.types.chat import ChatCompletionMessageParam
+from openai.types.chat import ChatCompletion
 
 load_dotenv()
 
@@ -74,7 +76,7 @@ class ChatBox(Resource):
                     If you are not confident the context contains the correct answer,
                      say: "Not found in the provided pages"."""
 
-        messages = [
+        messages: list[ChatCompletionMessageParam] = [
             {"role": "system", "content": prompt},
             {"role": "user", "content": question},
         ]
@@ -112,6 +114,8 @@ class ChatBox(Resource):
                 stop=None,
                 extra_body=extra_body,
             )
+            assert isinstance(completion, ChatCompletion)
+
             answer = completion.choices[0].message.content
 
         except Exception as e:
