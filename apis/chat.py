@@ -10,6 +10,8 @@ import time
 from collections import defaultdict, deque
 from threading import Lock
 
+load_dotenv()
+
 requests_log: defaultdict[str, deque[float]] = defaultdict(deque)
 rate_lock = Lock()
 
@@ -44,8 +46,6 @@ client = AzureOpenAI(
 
 
 api = Namespace("Chat", description="Aireadi chatbox", path="/")
-
-load_dotenv()
 
 
 @api.route("/chat")
