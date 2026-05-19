@@ -1,15 +1,16 @@
-from flask_restx import Namespace, Resource
-from flask import request, jsonify
-from dotenv import load_dotenv
-from openai.types.chat import ChatCompletionMessageParam
-
-from openai import AzureOpenAI
+"""Chat API endpoint."""
 
 import os
-
 import time
 from collections import defaultdict, deque
 from threading import Lock
+from typing import Any
+
+from flask_restx import Namespace, Resource
+from flask import request, jsonify
+from dotenv import load_dotenv
+from openai import AzureOpenAI
+from openai.types.chat import ChatCompletionMessageParam
 
 load_dotenv()
 
@@ -74,10 +75,31 @@ class ChatBox(Resource):
                     If you are not confident the context contains the correct answer,
                      say: "Not found in the provided pages"."""
 
-        messages: list[ChatCompletionMessageParam] = [
+        messages = [
             {"role": "system", "content": prompt},
             {"role": "user", "content": question},
         ]
+
+        extra_body: dict[str, Any] = {
+            "data_sources": [{
+            "type": "azure_search",
+            "parameters": {
+                "endpoint": f"{search_endpoint}",
+                "index_name": f"{index_name}",
+                "semantic_configuration": "default",
+                "query_type": "semantic",
+                "fields_mapping": {},
+                "in_scope": True,
+                "filter": None,
+                "strictness": 3,
+                "top_n_documents": 5,
+                "authentication": {
+                    "type": "api_key",
+                    "key": f"{search_key}"
+                }
+            }
+        }]
+        }
 
         try:
             completion = client.chat.completions.create(
@@ -90,26 +112,7 @@ class ChatBox(Resource):
                 frequency_penalty=0,
                 presence_penalty=0,
                 stop=None,
-                extra_body={
-                    "data_sources": [{
-                        "type": "azure_search",
-                        "parameters": {
-                            "endpoint": f"{search_endpoint}",
-                            "index_name": f"{index_name}",
-                            "semantic_configuration": "default",
-                            "query_type": "semantic",
-                            "fields_mapping": {},
-                            "in_scope": True,
-                            "filter": None,
-                            "strictness": 3,
-                            "top_n_documents": 5,
-                            "authentication": {
-                                "type": "api_key",
-                                "key": f"{search_key}"
-                            }
-                        }
-                    }]
-                }
+                extra_body=extra_body
             )
             answer = completion.choices[0].message.content
 
