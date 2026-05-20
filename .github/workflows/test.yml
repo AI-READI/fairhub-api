@@ -15,12 +15,12 @@ jobs:
       FAIRHUB_SECRET: mXrkOHXXQoMAhCOTZOV93QlncmeTwEZFPxTP1TXGiOFabE0KmuZgHWvTOLgjbv3S
       FAIRHUB_GROWTHBOOK_CLIENT_KEY: ${{ secrets.FAIRHUB_GROWTHBOOK_CLIENT_KEY }}
 
-      SEARCH_KEY: ${{ secrets.SEARCH_KEY }}
-      SEARCH_INDEX_NAME: ${{ secrets.SEARCH_INDEX_NAME }}
-      AZURE_OPENAI_API_KEY: ${{ secrets.AZURE_OPENAI_API_KEY }}
-      SEARCH_ENDPOINT: ${{ secrets.SEARCH_ENDPOINT }}
-      ENDPOINT_URL: ${{ secrets.ENDPOINT_URL }}
-      INDEX_NAME: ${{ secrets.INDEX_NAME }}
+      SEARCH_KEY: mXrkOHXXQoMAhCOTZOV93QlncmeTwEZFPxTP1TXGiOFabE0KmuZgHWvTOLgjbv3S
+      SEARCH_INDEX_NAME: test-search-key
+      AZURE_OPENAI_API_KEY: test-search-index
+      SEARCH_ENDPOINT: test-azure-key
+      ENDPOINT_URL: https://test-search.com
+      INDEX_NAME: https://test-endpoint.com
 
     steps:
       - uses: actions/checkout@v2
