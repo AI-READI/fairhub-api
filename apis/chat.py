@@ -32,7 +32,7 @@ def is_rate_limited(ip, limit=15, window=60):
 
 # Key auth
 endpoint = os.environ["ENDPOINT_URL"]
-deployment = os.environ["DEPLOYMENT_NAME"]
+deployment = "gpt-4o-mini"
 search_endpoint = os.environ["SEARCH_ENDPOINT"]
 search_key = os.environ["SEARCH_KEY"]
 search_index = os.environ["SEARCH_INDEX_NAME"]
