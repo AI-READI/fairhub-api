@@ -4,7 +4,6 @@ import time
 from collections import defaultdict, deque
 from threading import Lock
 from typing import Any
-import config
 
 from dotenv import load_dotenv
 from flask import jsonify, request
@@ -12,21 +11,24 @@ from flask_restx import Namespace, Resource
 from openai import AzureOpenAI
 from openai.types.chat import ChatCompletion
 
+import config
+
 load_dotenv()
 
 requests_log: defaultdict[str, deque[float]] = defaultdict(deque)
 rate_lock = Lock()
 
 
-def is_rate_limited(ip, limit=15, window=60):
+def is_rate_limited(ip_address, limit=15, window=60):
+    """ rate limit """
     now = time.time()
     with rate_lock:
-        q = requests_log[ip]
-        while q and q[0] < now - window:
-            q.popleft()
-        if len(q) >= limit:
+        query = requests_log[ip_address]
+        while query and query[0] < now - window:
+            query.popleft()
+        if len(query) >= limit:
             return True
-        q.append(now)
+        query.append(now)
         return False
 
 
@@ -34,7 +36,7 @@ api = Namespace("Chat", description="Aireadi chatbox", path="/")
 
 # Key auth
 endpoint = config.ENDPOINT_URL
-deployment = "gpt-4o-mini"
+DEPLOYMENT = "gpt-4o-mini"
 search_endpoint = config.SEARCH_ENDPOINT
 search_key = config.SEARCH_KEY
 search_index = config.SEARCH_INDEX_NAME
@@ -51,11 +53,15 @@ client = AzureOpenAI(
 
 @api.route("/chat")
 class ChatBox(Resource):
+    """ chat endpoint """
+
     @api.response(201, "Success")
     @api.response(400, "Validation Error")
-    def post(self):
-        ip = request.remote_addr
-        if is_rate_limited(ip):
+    def post(self):  # pylint: disable=too-many-return-statements
+        """Process chat request and return AI response."""
+
+        ip_address = request.remote_addr
+        if is_rate_limited(ip_address):
             return jsonify({"error": "Too many requests"}), 429
 
         data = request.get_json(silent=True)
@@ -100,7 +106,7 @@ class ChatBox(Resource):
         }
         try:
             completion = client.chat.completions.create(
-                model=deployment,
+                model=DEPLOYMENT,
                 messages=messages,  # type: ignore[arg-type]
                 max_tokens=450,
                 temperature=0.3,
@@ -115,9 +121,9 @@ class ChatBox(Resource):
 
             answer = completion.choices[0].message.content
 
-        except Exception as e:
+        except Exception as error:  # pylint: disable=broad-exception-caught
             print("Completion failed")
-            msg = str(e).lower()
+            msg = str(error).lower()
             if "rate limit" in msg or "429" in msg:
                 return jsonify({"error": "Service busy"}), 429
 
