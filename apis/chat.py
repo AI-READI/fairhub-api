@@ -1,10 +1,10 @@
 """Chat API endpoint."""
 
-import os
 import time
 from collections import defaultdict, deque
 from threading import Lock
 from typing import Any
+import config
 
 from dotenv import load_dotenv
 from flask import jsonify, request
@@ -30,14 +30,16 @@ def is_rate_limited(ip, limit=15, window=60):
         return False
 
 
+api = Namespace("Chat", description="Aireadi chatbox", path="/")
+
 # Key auth
-endpoint = os.environ["ENDPOINT_URL"]
+endpoint = config.ENDPOINT_URL
 deployment = "gpt-4o-mini"
-search_endpoint = os.environ["SEARCH_ENDPOINT"]
-search_key = os.environ["SEARCH_KEY"]
-search_index = os.environ["SEARCH_INDEX_NAME"]
-subscription_key = os.environ["AZURE_OPENAI_API_KEY"]
-index_name = os.environ["INDEX_NAME"]
+search_endpoint = config.SEARCH_ENDPOINT
+search_key = config.SEARCH_KEY
+search_index = config.SEARCH_INDEX_NAME
+subscription_key = config.AZURE_OPENAI_API_KEY
+index_name = config.INDEX_NAME
 
 # Key auth Initialize Azure OpenAI client
 client = AzureOpenAI(
@@ -45,9 +47,6 @@ client = AzureOpenAI(
     api_key=subscription_key,
     api_version="2025-01-01-preview",
 )
-
-
-api = Namespace("Chat", description="Aireadi chatbox", path="/")
 
 
 @api.route("/chat")
