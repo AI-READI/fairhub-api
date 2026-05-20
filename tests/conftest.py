@@ -10,12 +10,20 @@ from dotenv import load_dotenv
 from app import create_app
 from model.db import db
 from pytest_config import TestConfig
+import config
 
 # Load environment variables from .env
 load_dotenv(".env")
 
 # Set the FLASK_ENV environment variable to "testing"
 os.environ["FLASK_ENV"] = "testing"
+
+config.SEARCH_KEY = "test-search-key"
+config.SEARCH_INDEX_NAME = "test-search-index"
+config.AZURE_OPENAI_API_KEY = "test-azure-key"
+config.SEARCH_ENDPOINT = "https://test-search.com"
+config.ENDPOINT_URL = "https://test-endpoint.com"
+config.INDEX_NAME = "test-index"
 
 # Set global variable for study ID
 # Study variables for main client
