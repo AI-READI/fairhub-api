@@ -4,6 +4,7 @@ import time
 from collections import defaultdict, deque
 from threading import Lock
 from typing import Any
+
 from dotenv import load_dotenv
 from flask import jsonify, request
 from flask_restx import Namespace, Resource
@@ -19,7 +20,7 @@ rate_lock = Lock()
 
 
 def is_rate_limited(ip_address, limit=15, window=60):
-    """ rate limit """
+    """rate limit"""
     now = time.time()
     with rate_lock:
         query = requests_log[ip_address]
@@ -77,7 +78,7 @@ BLOCKED_PHRASES = [
 
 @api.route("/chat")
 class ChatBox(Resource):
-    """ chat endpoint """
+    """chat endpoint"""
 
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
@@ -105,14 +106,16 @@ class ChatBox(Resource):
         # Check for two-word injection patterns
         for word1, word2 in BLOCKED_PATTERNS:
             if word1 in q and word2 in q:
-                return {"answer": "I can only help with AI-READI dataset questions."
-                        }, 200
+                return {
+                    "answer": "I can only help with AI-READI dataset questions."
+                }, 200
 
         # Check for single blocked phrases
         for phrase in BLOCKED_PHRASES:
             if phrase in q:
-                return { "answer": "I can only help with AI-READI dataset questions."
-                         }, 200
+                return {
+                    "answer": "I can only help with AI-READI dataset questions."
+                }, 200
 
         prompt = """You are answering questions about the AI-READI dataset using documentation.
                     Read the context carefully and answer the question. When you find something,
