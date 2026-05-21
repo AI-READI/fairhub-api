@@ -4,7 +4,6 @@ import time
 from collections import defaultdict, deque
 from threading import Lock
 from typing import Any
-
 from dotenv import load_dotenv
 from flask import jsonify, request
 from flask_restx import Namespace, Resource
@@ -50,16 +49,40 @@ client = AzureOpenAI(
     api_version="2025-01-01-preview",
 )
 
+BLOCKED_PATTERNS = [
+    ("ignore", "previous"),
+    ("ignore", "prior"),
+    ("ignore", "above"),
+    ("forget", "instruction"),
+    ("forget", "you are"),
+    ("forget", "your role"),
+    ("disregard", "previous"),
+    ("disregard", "instruction"),
+    ("reveal", "prompt"),
+    ("reveal", "instruction"),
+    ("show me your", "prompt"),
+    ("show me your", "instruction"),
+]
+
+BLOCKED_PHRASES = [
+    "system prompt",
+    "jailbreak",
+    "dan mode",
+    "developer mode",
+    "pretend you are",
+    "act as a",
+    "you are now",
+]
+
 
 @api.route("/chat")
 class ChatBox(Resource):
     """ chat endpoint """
 
-    @api.response(201, "Success")
+    @api.response(200, "Success")
     @api.response(400, "Validation Error")
     def post(self):  # pylint: disable=too-many-return-statements
         """Process chat request and return AI response."""
-
         ip_address = request.remote_addr
         if is_rate_limited(ip_address):
             return jsonify({"error": "Too many requests"}), 429
@@ -67,12 +90,29 @@ class ChatBox(Resource):
         data = request.get_json(silent=True)
         if not data or not isinstance(data, dict):
             return jsonify({"error": "Body must be JSON"}), 400
+
         question = data.get("question")
+
         if not question or not isinstance(question, str) or not question.strip():
             return jsonify({"error": "'question' is required"}), 400
+
         question = question.strip()
         if len(question) > 1200:
             return jsonify({"error": "'question' too long"}), 400
+
+        q = question.lower()
+
+        # Check for two-word injection patterns
+        for word1, word2 in BLOCKED_PATTERNS:
+            if word1 in q and word2 in q:
+                return {"answer": "I can only help with AI-READI dataset questions."
+                        }, 200
+
+        # Check for single blocked phrases
+        for phrase in BLOCKED_PHRASES:
+            if phrase in q:
+                return { "answer": "I can only help with AI-READI dataset questions."
+                         }, 200
 
         prompt = """You are answering questions about the AI-READI dataset using documentation.
                     Read the context carefully and answer the question. When you find something,
@@ -126,7 +166,6 @@ class ChatBox(Resource):
             msg = str(error).lower()
             if "rate limit" in msg or "429" in msg:
                 return jsonify({"error": "Service busy"}), 429
-
             return jsonify({"error": "Internal server error"}), 500
 
-        return jsonify({"answer": answer})
+        return {"answer": answer}, 200
