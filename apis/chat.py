@@ -1,12 +1,13 @@
 """Chat API endpoint."""
 
+import re
 import time
 from collections import defaultdict, deque
 from threading import Lock
 from typing import Any
 
 from dotenv import load_dotenv
-from flask import jsonify, request
+from flask import request
 from flask_restx import Namespace, Resource
 from openai import AzureOpenAI
 from openai.types.chat import ChatCompletion
@@ -86,20 +87,20 @@ class ChatBox(Resource):
         """Process chat request and return AI response."""
         ip_address = request.remote_addr
         if is_rate_limited(ip_address):
-            return jsonify({"error": "Too many requests"}), 429
+            return {"error": "Too many requests"}, 429
 
         data = request.get_json(silent=True)
         if not data or not isinstance(data, dict):
-            return jsonify({"error": "Body must be JSON"}), 400
+            return {"error": "Body must be JSON"}, 400
 
         question = data.get("question")
 
         if not question or not isinstance(question, str) or not question.strip():
-            return jsonify({"error": "'question' is required"}), 400
+            return {"error": "'question' is required"}, 400
 
         question = question.strip()
         if len(question) > 1200:
-            return jsonify({"error": "'question' too long"}), 400
+            return {"error": "'question' too long"}, 400
 
         q = question.lower()
 
@@ -107,21 +108,23 @@ class ChatBox(Resource):
         for word1, word2 in BLOCKED_PATTERNS:
             if word1 in q and word2 in q:
                 return {
-                    "answer": "I can only help with AI-READI dataset questions."
+                    "answer": "I can only help with AI-READI dataset-related questions."
                 }, 200
 
         # Check for single blocked phrases
         for phrase in BLOCKED_PHRASES:
             if phrase in q:
                 return {
-                    "answer": "I can only help with AI-READI dataset questions."
+                    "answer": "I can only help with AI-READI dataset-related questions."
                 }, 200
 
-        prompt = """You are answering questions about the AI-READI dataset using documentation.
-                    Read the context carefully and answer the question. When you find something,
-                     only answer the direct answer, do not say "According to the documentation,"
-                    If you are not confident the context contains the correct answer,
-                     say: "Not found in the provided pages"."""
+        prompt = (
+            "You are answering questions about the AI-READI dataset using documentation."
+            "Read the context carefully and answer the question. When you find something,"
+            "only answer the direct answer, do not say 'According to the documentation',"
+            "If you are not confident the context contains the correct answer,"
+            "say: 'Not found in the provided pages'."
+        )
 
         messages = [
             {"role": "system", "content": prompt},
@@ -163,12 +166,17 @@ class ChatBox(Resource):
             assert isinstance(completion, ChatCompletion)
 
             answer = completion.choices[0].message.content
+            answer = re.sub(r"\s*\[doc\d*\]", "", answer).strip()
 
         except Exception as error:  # pylint: disable=broad-exception-caught
             print("Completion failed")
             msg = str(error).lower()
+            if "content_filter" in msg or "content filter" in msg:
+                return {
+                    "error": "I can only help with AI-READI dataset-related questions."
+                }, 400
             if "rate limit" in msg or "429" in msg:
-                return jsonify({"error": "Service busy"}), 429
-            return jsonify({"error": "Internal server error"}), 500
+                return {"error": "Service busy"}, 429
+            return {"error": "Internal server error"}, 500
 
         return {"answer": answer}, 200
