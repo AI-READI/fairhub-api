@@ -165,12 +165,14 @@ class ChatBox(Resource):
             )
             assert isinstance(completion, ChatCompletion)
 
-            answer = completion.choices[0].message.content
+            answer = completion.choices[0].message.content or ""
             answer = re.sub(r"\s*\[doc\d*\]", "", answer).strip()
 
         except Exception as error:  # pylint: disable=broad-exception-caught
             print("Completion failed")
             msg = str(error).lower()
+            if not answer:
+                return {"error": "Unable to generate a response."}, 500
             if "content_filter" in msg or "content filter" in msg:
                 return {
                     "error": "I can only help with AI-READI dataset-related questions."
