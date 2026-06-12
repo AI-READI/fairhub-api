@@ -55,6 +55,7 @@ class StudyDesignResource(Resource):
 
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
+    @api.marshal_with(study_design)
     def put(self, study_id: int):
         """Update study design metadata"""
         # Schema validation

@@ -1,11 +1,11 @@
 # Library Modules
 from typing import Any, Callable, Union, List, Dict, Tuple
 from datetime import datetime
-import logging, re, copy
+import logging, copy, os
 import modules.etl.vtypes as vtypes
 
 # Third-Party Modules
-import pandas as pd
+import polars as pl
 
 
 class ModuleTransform(object):
@@ -14,9 +14,6 @@ class ModuleTransform(object):
         config: Dict[str, Any],
         logging_config: Dict[str, str] = {},
     ) -> None:
-        #
-        # Logging
-        #
 
         # Logging Config Checks
         self.logging_config = (
@@ -56,22 +53,21 @@ class ModuleTransform(object):
             raise ValueError(
                 f"ModuleTransform argument transforms in config must be a list or dict type"
             )
-        elif len(self.transforms) < 1:
+        if len(self.transforms) < 1:
             self.valid = False
             raise ValueError(
                 f"ModuleTransform instantiation missing transforms in config argument"
             )
-        else:
-            # Transform attribute is there and has one of the correct types (list, dict)
-            pass
 
         # Normalize Transforms to List Type, Check Validity, and Warn on Missing Attributes
+        valid = True
         for indexed_transform in enumerate(self.transforms):
-            self.valid = True if self._transformIsValid(indexed_transform) else False
-        if self.strict and not self.valid:
-            raise ValueError(
-                f"{self.key}:Missing properties in transforms argument, see log at {self.logging_config['filename']} for details"
-            )
+            if self.strict and not self._transformIsValid(indexed_transform):
+                valid = False
+                raise ValueError(
+                    f"{self.key}:Missing properties in transforms argument, see log at {self.logging_config['filename']} for details"
+                )
+        self.valid = valid
 
         self.logger.info(f"{self.key}:Initialized")
 
@@ -161,40 +157,37 @@ class ModuleTransform(object):
 
         return pvalue
 
-    def simpleTransform(self, df: pd.DataFrame) -> object:
+    def simpleTransform(self, df: pl.DataFrame) -> object:
         """
-        Performs a pd.DataFrame.groupby transform. The
-        df is first subset to the relevant fields. A
-        groupby function is then applied to the subset
-        to create a multi-index (hierarchy) by the
-        groups. An aggregate function is then applied
-        to the non-grouped column (e.g. count, sum).
-
-        One transform for one VType. A single
-        visualization is then rendered to a single
-        visualization module.
+        Performs a group_by transform. The df is first subset to the
+        relevant fields. A group_by function is then applied to the
+        subset.
         """
         self.transformed = []
         transform: Dict[str, Any] = (
             self.transforms.pop()
-        )  # simple transforms have only one transform object
+        ) # simple transforms have only one transform object
         name, vtype, methods, accessors = (
             transform["name"],
             getattr(vtypes, transform["vtype"])(),
             transform["methods"],
             transform["accessors"],
         )
+
         if vtype.isvalid(df, accessors):
-            temp = df[
-                list(set(accessor["field"] for key, accessor in accessors.items()))
-            ]
+
+            # Select and Group
+            cols_to_select = list(set(accessor["field"] for key, accessor in accessors.items()))
+            temp = df.select(cols_to_select)
             for method in methods:
                 groups, value, func = method["groups"], method["value"], method["func"]
-                grouped = temp.groupby(groups, as_index=False)
-                temp = getattr(grouped, func)()
-            transformed = temp
+                temp = temp.group_by(groups).agg(
+                    getattr(pl.all().exclude(groups), func)()
+                )
 
-            for record in transformed.to_dict("records"):
+            # Row-wise Transformation
+            transformed = temp
+            for record in transformed.to_dicts():
                 record = {
                     key: self._setValueType(vtype, name, record, key, accessors)
                     for key, accessor in accessors.items()
@@ -211,20 +204,10 @@ class ModuleTransform(object):
 
         return self
 
-    def compoundTransform(self, df: pd.DataFrame) -> object:
+    def compoundTransform(self, df: pl.DataFrame) -> object:
         """
-        For each transform, performs a pd.DataFrame.groupby
-        transform. The df is first subset to the relevant
-        fields. A groupby function is then applied to the
-        subset to create a multi-index (hierarchy) by the
-        groups. An aggregate function is then applied to the
-        non-grouped column (e.g. count, sum).
-
-        All transforms are combined into a single flat
-        transform. Transforms must be identical VType,
-        (e.g. [transformA, transformB, ...]). A single
-        (aggregated) visualization is then rendered to
-        a single visualization module.
+        For each transform, performs a group_by transform.
+        All transforms are combined into a single flat transform list.
         """
         self.transformed = []
 
@@ -236,20 +219,23 @@ class ModuleTransform(object):
                 transform["accessors"],
             )
             if vtype.isvalid(df, accessors):
-                temp = df[
-                    list(set(accessor["field"] for key, accessor in accessors.items()))
-                ]
+
+                # Select and Group
+                cols_to_select = list(set(accessor["field"] for key, accessor in accessors.items()))
+                temp = df.select(cols_to_select)
                 for method in methods:
                     groups, value, func = (
                         method["groups"],
                         method["value"],
                         method["func"],
                     )
-                    grouped = temp.groupby(groups, as_index=False)
-                    temp = getattr(grouped, func)()
-                transformed = temp
+                    temp = temp.group_by(groups).agg(
+                        getattr(pl.all().exclude(groups), func)()
+                    )
 
-                for record in transformed.to_dict("records"):
+                # Row-wise Transformation
+                transformed = temp
+                for record in transformed.to_dicts():
                     record = {
                         key: self._setValueType(vtype, name, record, key, accessors)
                         for key, accessor in accessors.items()
@@ -266,20 +252,10 @@ class ModuleTransform(object):
 
         return self
 
-    def mixedTransform(self, df: pd.DataFrame) -> object:
+    def mixedTransform(self, df: pl.DataFrame) -> object:
         """
-        For each transform, performs a pd.DataFrame.groupby
-        transform. The df is first subset to the relevant
-        fields. A groupby function is then applied to the
-        subset to create a multi-index (hierarchy) by the
-        groups. An aggregate function is then applied to the
-        non-grouped column (e.g. count, sum).
-
-        Transforms are kept distinct and inserted into a
-        dictionary, e.g. {nameA: transformA, nameB: transformB,
-        ...}. Transforms can be heterogenous VTypes.
-        Multiple visualizations are then rendered in the same
-        visualization module.
+        For each transform, performs a group_by transform.
+        Transforms are kept distinct and inserted into a dictionary by name.
         """
         self.transformed = {}
         for transform in self.transforms:
@@ -290,21 +266,24 @@ class ModuleTransform(object):
                 transform["accessors"],
             )
             if vtype.isvalid(df, accessors):
-                temp = df[
-                    list(set(accessor["field"] for key, accessor in accessors.items()))
-                ]
+
+                # Select and Group
+                cols_to_select = list(set(accessor["field"] for key, accessor in accessors.items()))
+                temp = df.select(cols_to_select)
                 for method in methods:
                     groups, value, func = (
                         method["groups"],
                         method["value"],
                         method["func"],
                     )
-                    grouped = temp.groupby(groups, as_index=False)
-                    temp = getattr(grouped, func)()
-                transformed = temp
+                    temp = temp.group_by(groups).agg(
+                        getattr(pl.all().exclude(groups), func)()
+                    )
 
+                # Row-wise Transformation
+                transformed = temp
                 subtransform = []
-                for record in transformed.to_dict("records"):
+                for record in transformed.to_dicts():
                     record = {
                         key: self._setValueType(vtype, name, record, key, accessors)
                         for key, accessor in accessors.items()

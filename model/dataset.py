@@ -128,6 +128,7 @@ class Dataset(db.Model):  # type: ignore
                 i.description if i.type == "Abstract" else None
                 for i in self.dataset_description  # type: ignore
             ][0],
+            "updated_on": self.updated_on,
         }
 
     def to_dict_dataset_metadata(self):

@@ -75,7 +75,11 @@ class StudyLocation(db.Model):  # type: ignore
         self.country = data["country"]
         self.study.touch()
 
-    def validate(self):
-        """Validates the lead_sponsor_last_name study"""
-        violations: list = []
-        return violations
+    def updating_from_integration(self, data: dict):
+        """it updates a StudyLocation from a dictionary"""
+        self.facility = data.get("facility", "")
+        self.city = data.get("city", "")
+        self.state = data.get("state", "")
+        self.zip = data.get("zip", "")
+        self.country = data.get("country", "")
+        self.status = ""

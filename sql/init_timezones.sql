@@ -438,24 +438,24 @@ INSERT INTO "dataset_title" ("id", "title", "type", "dataset_id") VALUES
 	('02937b58-268d-486d-ad63-55a79b39ea9c', 'title', 'na', '00000000-0000-0000-0000-000000000001');
 /*!40000 ALTER TABLE "dataset_title" ENABLE KEYS */;
 
--- Dumping structure for table public.invited_study_contributor
-CREATE TABLE IF NOT EXISTS "invited_study_contributor" (
+-- Dumping structure for table public.invite
+CREATE TABLE IF NOT EXISTS "invite" (
 	"email_address" VARCHAR NOT NULL,
 	"permission" VARCHAR NOT NULL,
 	"study_id" CHAR(36) NOT NULL,
 	"invited_on" BIGINT NOT NULL,
 	PRIMARY KEY ("email_address", "study_id"),
-	CONSTRAINT "invited_study_contributor_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
+	CONSTRAINT "invite_study_id_fkey" FOREIGN KEY ("study_id") REFERENCES "study" ("id") ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
--- Dumping data for table public.invited_study_contributor: -1 rows
-/*!40000 ALTER TABLE "invited_study_contributor" DISABLE KEYS */;
-INSERT INTO "invited_study_contributor" ("email_address", "permission", "study_id", "invited_on") VALUES
+-- Dumping data for table public.invite: -1 rows
+/*!40000 ALTER TABLE "invite" DISABLE KEYS */;
+INSERT INTO "invite" ("email_address", "permission", "study_id", "invited_on") VALUES
 	('Aliya_Herman@yahoo.com', 'editor', '00000000-0000-0000-0000-000000000001', 1693805470),
 	('Anastacio50@hotmail.com', 'viewer', '00000000-0000-0000-0000-000000000001', 1693805470),
 	('Edward0@gmail.com', 'viewer', '00000000-0000-0000-0000-000000000001', 1693805470),
 	('Jailyn17@gmail.com', 'viewer', '00000000-0000-0000-0000-000000000002', 1693805470);
-/*!40000 ALTER TABLE "invited_study_contributor" ENABLE KEYS */;
+/*!40000 ALTER TABLE "invite" ENABLE KEYS */;
 
 -- Dumping structure for table public.participant
 CREATE TABLE IF NOT EXISTS "participant" (

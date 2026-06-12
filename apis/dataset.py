@@ -31,8 +31,7 @@ dataset = api.model(
         "id": fields.String(required=True),
         "updated_on": fields.String(required=True),
         "created_at": fields.String(required=True),
-        "dataset_versions": fields.Nested(dataset_versions_model, required=True),
-        "latest_version": fields.String(required=True),
+        "latest_version": fields.Boolean(required=True),
         "title": fields.String(required=True),
         "description": fields.String(required=True),
     },
@@ -43,7 +42,7 @@ dataset = api.model(
 class DatasetList(Resource):
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    @api.marshal_with(dataset)
+    # @api.marshal_with(dataset)
     @api.doc("view datasets")
     def get(self, study_id):
         study = model.Study.query.get(study_id)

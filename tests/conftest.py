@@ -10,12 +10,20 @@ from dotenv import load_dotenv
 from app import create_app
 from model.db import db
 from pytest_config import TestConfig
+import config
 
 # Load environment variables from .env
 load_dotenv(".env")
 
 # Set the FLASK_ENV environment variable to "testing"
 os.environ["FLASK_ENV"] = "testing"
+
+config.SEARCH_KEY = "test-search-key"
+config.SEARCH_INDEX_NAME = "test-search-index"
+config.AZURE_OPENAI_API_KEY = "test-azure-key"
+config.SEARCH_ENDPOINT = "https://test-search.com"
+config.ENDPOINT_URL = "https://test-endpoint.com"
+config.INDEX_NAME = "test-index"
 
 # Set global variable for study ID
 # Study variables for main client
@@ -109,6 +117,9 @@ pytest.global_editor_token = ""
 pytest.global_viewer_token = ""
 
 
+pytest.global_reset_token = ""
+
+
 # Create the flask app for testing
 @pytest.fixture(scope="session")
 def flask_app():
@@ -150,8 +161,24 @@ def _create_user(_test_client):
                 "code": "",
             },
         )
-
         assert response.status_code == 201
+
+
+# @pytest.fixture()
+# def _verified_client(flask_app):
+#     """Verify the user for testing."""
+#
+#     with flask_app.test_client() as _test_client:
+#         response = _test_client.post(
+#             "/auth/email-verification/confirm",
+#             json={
+#                 "email": "test@fairhub.io",
+#                 "token": 1234567,
+#             },
+#         )
+#         assert response.status_code == 201
+#         response.close()
+#         yield _test_client
 
 
 # Fixture to sign in the user for module testing
@@ -186,7 +213,6 @@ def _test_invite_study_contributor(_logged_in_client):
 
     assert response.status_code == 201
     response_data = json.loads(response.data)
-
     pytest.global_editor_token = response_data["token"]
 
     response = _logged_in_client.post(
@@ -255,8 +281,43 @@ def _create_viewer_user(flask_app):
                     "code": pytest.global_viewer_token,
                 },
             )
-
             assert response.status_code == 201
+
+
+# @pytest.fixture(scope="session")
+# def _user_verification_for_testing(flask_app):
+#     """Create a viewer user for testing."""
+#     with flask_app.test_client() as _test_client:
+#         with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
+#             a_response = _test_client.post(
+#                 "/auth/email-verification/confirm",
+#                 json={
+#                     "email": "admin@fairhub.io",
+#                     "token": 1234567,
+#                 },
+#             )
+#
+#             assert a_response.status_code == 201
+#
+#             e_response = _test_client.post(
+#                 "/auth/email-verification/confirm",
+#                 json={
+#                     "email": "editor@fairhub.io",
+#                     "token": 1234567,
+#                 },
+#             )
+#
+#             assert e_response.status_code == 201
+#
+#             v_response = _test_client.post(
+#                 "/auth/email-verification/confirm",
+#                 json={
+#                     "email": "viewer@fairhub.io",
+#                     "token": 1234567,
+#                 },
+#             )
+#
+#             assert v_response.status_code == 201
 
 
 @pytest.fixture(scope="session")
@@ -269,6 +330,7 @@ def clients(flask_app):
     _admin_client = flask_app.test_client()
     _editor_client = flask_app.test_client()
     _viewer_client = flask_app.test_client()
+    # _test_client = flask_app.test_client()
 
     with unittest.mock.patch("pytest_config.TestConfig", TestConfig):
         response = _logged_in_client.post(
@@ -280,32 +342,38 @@ def clients(flask_app):
         )
         assert response.status_code == 200
 
-        response = _admin_client.post(
+        a_response = _admin_client.post(
             "/auth/login",
             json={
                 "email_address": "admin@fairhub.io",
                 "password": "Testingyeshello11!",
             },
         )
-        assert response.status_code == 200
+        assert a_response.status_code == 200
 
-        response = _editor_client.post(
+        e_response = _editor_client.post(
             "/auth/login",
             json={
                 "email_address": "editor@fairhub.io",
                 "password": "Testingyeshello11!",
             },
         )
-        assert response.status_code == 200
+        assert e_response.status_code == 200
 
-        response = _viewer_client.post(
+        v_response = _viewer_client.post(
             "/auth/login",
             json={
                 "email_address": "viewer@fairhub.io",
                 "password": "Testingyeshello11!",
             },
         )
-        assert response.status_code == 200
+        assert v_response.status_code == 200
+
+    meta = db.metadata
+    for table in reversed(meta.sorted_tables):
+        if table.name == "session":
+            session_entries = db.session.execute(table.select()).fetchall()
+            assert len(session_entries) == 5
 
     yield _logged_in_client, _admin_client, _editor_client, _viewer_client
 

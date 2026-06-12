@@ -53,7 +53,18 @@ class StudyOversight(db.Model):  # type: ignore
         self.has_dmc = data["has_dmc"]
         self.study.touch()
 
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        return violations
+    def updating_from_integration(self, data: dict):
+        """It updates a StudyOversight from a dictionary"""
+        self.has_dmc = (
+            "Yes" if (data.get("oversightModule", {}).get("oversightHasDmc")) else "No"
+        )
+        self.fda_regulated_drug = (
+            "Yes"
+            if (data.get("oversightModule", {}).get("isFdaRegulatedDrug"))
+            else "No"
+        )
+        self.fda_regulated_device = (
+            "Yes"
+            if (data.get("oversightModule", {}).get("isFdaRegulatedDevice"))
+            else "No"
+        )

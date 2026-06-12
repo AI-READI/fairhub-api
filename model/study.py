@@ -1,5 +1,7 @@
 import datetime
+import re
 import uuid
+from typing import cast
 
 from flask import g
 
@@ -25,7 +27,6 @@ class Study(db.Model):  # type: ignore
         self.study_design = model.StudyDesign(self)
         self.study_eligibility = model.StudyEligibility(self)
         self.study_description = model.StudyDescription(self)
-        self.study_identification.append(model.StudyIdentification(self, False))
         self.study_other = model.StudyOther(self)
         self.study_oversight = model.StudyOversight(self)
 
@@ -34,7 +35,7 @@ class Study(db.Model):  # type: ignore
 
     title = db.Column(db.String(300), nullable=False)
     image = db.Column(db.String, nullable=False)
-    acronym = db.Column(db.String(14), nullable=False)
+    short_description = db.Column(db.String(300), nullable=False)
 
     created_at = db.Column(db.BigInteger, nullable=False)
     updated_on = db.Column(db.BigInteger, nullable=False)
@@ -42,120 +43,120 @@ class Study(db.Model):  # type: ignore
     dataset = db.relationship(
         "Dataset",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_contributors = db.relationship(
         "StudyContributor",
         back_populates="study",
         lazy="dynamic",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     participants = db.relationship(
         "Participant",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     invited_contributors = db.relationship(
         "StudyInvitedContributor",
         back_populates="study",
         lazy="dynamic",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_arm = db.relationship(
         "StudyArm",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_sponsors = db.relationship(
         "StudySponsors",
         uselist=False,
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_central_contact = db.relationship(
         "StudyCentralContact",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_description = db.relationship(
         "StudyDescription",
         uselist=False,
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_design = db.relationship(
         "StudyDesign",
         uselist=False,
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_eligibility = db.relationship(
         "StudyEligibility",
         uselist=False,
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_identification = db.relationship(
         "StudyIdentification",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     # NOTE: Has not been tested
     study_redcap = db.relationship(
-        "StudyRedcap", back_populates="study", cascade="all, delete"
+        "StudyRedcap", back_populates="study", cascade="all, delete-orphan"
     )
     # NOTE: Has not been tested
     study_dashboard = db.relationship(
-        "StudyDashboard", back_populates="study", cascade="all, delete"
+        "StudyDashboard", back_populates="study", cascade="all, delete-orphan"
     )
     study_intervention = db.relationship(
         "StudyIntervention",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
 
     study_location = db.relationship(
         "StudyLocation",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_other = db.relationship(
         "StudyOther",
         uselist=False,
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_keywords = db.relationship(
         "StudyKeywords",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_conditions = db.relationship(
         "StudyConditions",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_collaborators = db.relationship(
         "StudyCollaborators",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_oversight = db.relationship(
         "StudyOversight",
         uselist=False,
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_overall_official = db.relationship(
         "StudyOverallOfficial",
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
     study_status = db.relationship(
         "StudyStatus",
         uselist=False,
         back_populates="study",
-        cascade="all, delete",
+        cascade="all, delete-orphan",
     )
 
     def to_dict(self):
@@ -170,7 +171,7 @@ class Study(db.Model):  # type: ignore
         return {
             "id": self.id,
             "title": self.title,
-            "acronym": self.acronym,
+            "short_description": self.short_description,
             "image": self.image,
             "created_at": self.created_at,
             "updated_on": self.updated_on,
@@ -179,7 +180,9 @@ class Study(db.Model):  # type: ignore
                 self.study_description.brief_summary if self.study_description else None
             ),
             "owner": owner.to_dict()["id"] if owner else None,
-            "role": contributor_permission.to_dict()["role"],
+            "role": contributor_permission.to_dict()["role"]
+            if contributor_permission
+            else None,
         }
 
     def to_dict_study_metadata(self):
@@ -240,22 +243,97 @@ class Study(db.Model):  # type: ignore
         """Updates the study from a dictionary"""
         if not data["title"]:
             raise exception.ValidationException("title is required")
-        if not data["image"]:
-            raise exception.ValidationException("image is required")
 
         self.title = data["title"]
-        self.image = data["image"]
-        self.acronym = data["acronym"]
+        self.short_description = data["short_description"]
+        if "image" in data and data["image"]:
+            self.image = data["image"]
         self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()
 
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        # if self.description.trim() == "":
-        #     violations.push("A description is required")
-        # if self.keywords.length < 1:
-        #     violations.push("At least one keyword must be specified")
-        return violations
+    def update_identification_id(self, data):
+        clinical_id = None
+        identifiers = [
+            i
+            for i in cast(list, self.study_identification)
+            if re.match(r"^NCT\d{8}$", i.identifier)
+        ]
+        if not identifiers:
+            clinical_id = model.StudyIdentification(self, False)
+            self.study_identification.append(clinical_id)
+            model.db.session.add(clinical_id)
+        else:
+            clinical_id = identifiers[0]
+
+        if clinical_id is not None:
+            clinical_id.updating_from_integration(data)
+
+    def import_from_clinical_data(self, data):
+        """Updates the study from a dictionary"""
+
+        self.study_description.updating_from_integration(data)
+        self.study_status.updating_from_integration(data)
+        self.study_eligibility.updating_from_integration(data)
+        self.study_sponsors.updating_from_integration(data)
+        self.study_design.updating_from_integration(data)
+        self.study_oversight.updating_from_integration(data)
+        self.title = data.get("identificationModule", {}).get("officialTitle", "")
+        interventions_data = data.get("armsInterventionsModule", {}).get(
+            "interventions", []
+        )
+        self.study_intervention.clear()
+        for intervention_dict in interventions_data:
+            intervention = model.StudyIntervention(self)
+            intervention.updating_from_integration(intervention_dict)
+            self.study_intervention.append(intervention)
+
+        keywords_data = data.get("conditionsModule", {}).get("keywords", [])
+        self.study_keywords.clear()
+        for k_dict in keywords_data:
+            keywords = model.StudyKeywords(self)
+            keywords.updating_from_integration(k_dict)
+            self.study_keywords.append(keywords)
+
+        conditions_data = data.get("conditionsModule", {}).get("conditions", [])
+        self.study_conditions.clear()
+        for conditions_dict in conditions_data:
+            conditions = model.StudyConditions(self)
+            conditions.updating_from_integration(conditions_dict)
+            self.study_conditions.append(conditions)
+
+        collaborators_data = data.get("sponsorCollaboratorsModule", {}).get(
+            "collaborators", []
+        )
+        self.study_collaborators.clear()
+
+        for collaborator_dict in collaborators_data:
+            collaborator = model.StudyCollaborators(self)
+            collaborator.updating_from_integration(collaborator_dict)
+            self.study_collaborators.append(collaborator)
+
+        arms_data = data.get("armsInterventionsModule", {}).get("armGroups", [])
+        self.study_arm.clear()
+
+        for arm_dict in arms_data:
+            arm = model.StudyArm(self)
+            arm.updating_from_integration(arm_dict)
+            self.study_arm.append(arm)
+
+        overall_official_data = data.get("contactsLocationsModule", {}).get(
+            "overallOfficials", []
+        )
+        self.study_overall_official.clear()
+
+        for oo_dict in overall_official_data:
+            o_o = model.StudyOverallOfficial(self)
+            o_o.updating_from_integration(oo_dict)
+            self.study_overall_official.append(o_o)
+
+        location_data = data.get("contactsLocationsModule", {}).get("locations", [])
+        self.study_location.clear()
+        for location_dict in location_data:
+            location = model.StudyLocation(self)
+            location.updating_from_integration(location_dict)
+            self.study_location.append(location)
 
     def touch(self):
         self.updated_on = datetime.datetime.now(datetime.timezone.utc).timestamp()

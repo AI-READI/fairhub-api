@@ -66,7 +66,13 @@ class StudyArm(db.Model):  # type: ignore
         self.intervention_list = data["intervention_list"]
         self.study.touch()
 
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        return violations
+    def updating_from_integration(self, data: dict):
+        """It updates a StudyArm from a dictionary"""
+        self.label = data.get("label", "")
+        self.description = data.get("description", "")
+        # self.type = ""
+        self.intervention_list = []
+        self.type = (data.get("type") or "").replace("_", " ").title()
+        self.intervention_list = [
+            i.replace("_", " ").title() for i in data.get("interventionNames", [])
+        ]

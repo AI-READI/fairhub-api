@@ -14,11 +14,10 @@ from ..authentication import is_granted
 study_other = api.model(
     "StudyOversight",
     {
-        "id": fields.String(required=True),
-        "oversight_has_dmc": fields.Boolean(required=True),
-        "conditions": fields.String(required=True),
-        "keywords": fields.String(required=True),
-        "size": fields.String(required=True),
+        "has_dmc": fields.String(required=True),
+        "fda_regulated_drug": fields.String(required=True),
+        "fda_regulated_device": fields.String(required=True),
+        "human_subject_review_status": fields.String(required=True),
     },
 )
 
@@ -30,7 +29,7 @@ class StudyOversightResource(Resource):
     @api.doc("oversight")
     @api.response(200, "Success")
     @api.response(400, "Validation Error")
-    # @api.marshal_with(study_other)
+    @api.marshal_with(study_other)
     def get(self, study_id: int):
         """Get study oversight metadata"""
         study_ = model.Study.query.get(study_id)
@@ -38,6 +37,9 @@ class StudyOversightResource(Resource):
         study_oversight_has_dmc = study_.study_oversight
         return study_oversight_has_dmc.to_dict(), 200
 
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    @api.marshal_with(study_other)
     def put(self, study_id: int):
         """Update study oversight metadata"""
         # Schema validation

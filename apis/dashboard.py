@@ -9,10 +9,9 @@ from jsonschema import ValidationError, validate
 import caching
 import model
 from modules.etl import ModuleTransform, RedcapLiveTransform, RedcapReleaseTransform
-from modules.etl.config import (
+from modules.etl.config import (  # redcapReleaseTransformConfig,
     moduleTransformConfigs,
     redcapLiveTransformConfig,
-    redcapReleaseTransformConfig,
 )
 
 from .authentication import is_granted
@@ -211,6 +210,75 @@ redcap_project_dashboard_connector_model = api.model(
 )
 
 
+def execute_transform(
+    transformConfig: Dict[str, Any],
+    redcap_project_view: Dict[str, Any],
+    redcap_project_dashboard: Dict[str, Any],
+    live: bool = False,
+) -> Dict[str, Any]:
+    # Set report_ids for ETL
+    report_keys = []
+    for report in redcap_project_dashboard["reports"]:
+        for i, report_config in enumerate(transformConfig["reports"]):
+            if (
+                len(report["report_id"]) > 0
+                and report["report_key"] == report_config["key"]
+            ):
+                report_keys.append(report["report_key"])
+                transformConfig["reports"][i]["kwdargs"]["report_id"] = report[
+                    "report_id"
+                ]
+
+    # Remove Unused Reports
+    transformConfig["reports"] = [
+        report for report in transformConfig["reports"] if report["key"] in report_keys
+    ]
+
+    # Set Post Transform Merge
+    index_columns, post_transform_merges = transformConfig["post_transform_merge"]
+    transformConfig["post_transform_merge"] = (
+        index_columns,
+        [
+            (report_key, transform_kwdargs)
+            for report_key, transform_kwdargs in post_transform_merges
+            if report_key in report_keys
+        ],
+    )
+
+    # Execute REDCap Data Transform
+    if not live:
+        redcap_etl_config = transformConfig
+        redcapTransform = RedcapReleaseTransform(redcap_etl_config).run()
+    else:
+        transformConfig["redcap_api_url"] = redcap_project_view["api_url"]
+        transformConfig["redcap_api_key"] = redcap_project_view["api_key"]
+        redcap_etl_config = transformConfig
+        redcapTransform = RedcapLiveTransform(redcap_etl_config).run()
+
+    # Execute Dashboard Module Transforms
+    for dashboard_module in redcap_project_dashboard["modules"]:
+        if dashboard_module["selected"]:
+            mergedTransform = redcapTransform.merged
+            transform, module_etl_config = moduleTransformConfigs[
+                dashboard_module["id"]
+            ]
+            moduleTransform = ModuleTransform(module_etl_config)
+            transformed = getattr(moduleTransform, transform)(
+                mergedTransform
+            ).transformed
+            dashboard_module["visualizations"] = {
+                "id": dashboard_module["id"],
+                "data": transformed,
+            }
+        else:
+            dashboard_module["visualizations"] = {
+                "id": dashboard_module["id"],
+                "data": [],
+            }
+
+    return redcap_project_dashboard
+
+
 @api.route("/study/<study_id>/dashboard")
 class RedcapProjectDashboards(Resource):
     @api.doc("Get all study dashboards")
@@ -387,13 +455,6 @@ class RedcapProjectDashboard(Resource):
         if not is_granted("view", study):
             return "Access denied, you can not view this dashboard", 403
 
-        # Retrieve Dashboard Redis Cache if Available
-        # cached_redcap_project_dashboard = caching.cache.get(
-        #     f"$study_id#{study_id}$dashboard_id#{dashboard_id}"
-        # )
-        # if cached_redcap_project_dashboard is not None:
-        #     return cached_redcap_project_dashboard, 201
-
         # Get Base Transform Config for ETL - Live
         transformConfig = redcapLiveTransformConfig
 
@@ -412,66 +473,21 @@ class RedcapProjectDashboard(Resource):
         )
         redcap_project_view: Dict[str, Any] = redcap_project_view_query.to_dict()
 
-        # Set report_ids for ETL
-        report_keys = []
-        for report in redcap_project_dashboard["reports"]:
-            for i, report_config in enumerate(transformConfig["reports"]):
-                if (
-                    len(report["report_id"]) > 0
-                    and report["report_key"] == report_config["key"]
-                ):
-                    report_keys.append(report["report_key"])
-                    transformConfig["reports"][i]["kwdargs"]["report_id"] = report[
-                        "report_id"
-                    ]
-
-        # Remove Unused Reports
-        transformConfig["reports"] = [
-            report
-            for report in redcapLiveTransformConfig["reports"]
-            if report["key"] in report_keys
-        ]
-
-        # Set Post Transform Merge
-        index_columns, post_transform_merges = transformConfig["post_transform_merge"]
-        transformConfig["post_transform_merge"] = (
-            index_columns,
-            [
-                (report_key, transform_kwdargs)
-                for report_key, transform_kwdargs in post_transform_merges
-                if report_key in report_keys
-            ],
-        )
-
-        # Set REDCap API Config
-        transformConfig["redcap_api_url"] = redcap_project_view["api_url"]
-        transformConfig["redcap_api_key"] = redcap_project_view["api_key"]
-
         # Finalize ETL Config
-        redcap_etl_config = transformConfig
-
-        redcapTransform = RedcapLiveTransform(redcap_etl_config)
-
-        # Execute Dashboard Module Transforms
-        for dashboard_module in redcap_project_dashboard["modules"]:
-            if dashboard_module["selected"]:
-                mergedTransform = redcapTransform.merged
-                transform, module_etl_config = moduleTransformConfigs[
-                    dashboard_module["id"]
-                ]
-                moduleTransform = ModuleTransform(module_etl_config)
-                transformed = getattr(moduleTransform, transform)(
-                    mergedTransform
-                ).transformed
-                dashboard_module["visualizations"] = {
-                    "id": dashboard_module["id"],
-                    "data": transformed,
-                }
-            else:
-                dashboard_module["visualizations"] = {
-                    "id": dashboard_module["id"],
-                    "data": [],
-                }
+        transformConfig = redcapLiveTransformConfig
+        redcap_project_dashboard = execute_transform(
+            transformConfig,
+            redcap_project_view,
+            redcap_project_dashboard,
+            live=True,
+        )
+        # transformConfig = redcapReleaseTransformConfig
+        # redcap_project_dashboard = execute_transform(
+        #     transformConfig,
+        #     redcap_project_view,
+        #     redcap_project_dashboard,
+        #     live=False,
+        # )
 
         # Create Dashboard Redis Cache
         caching.cache.set(
@@ -636,8 +652,6 @@ class RedcapProjectDashboardPublic(Resource):
         """Get REDCap project dashboard"""
         model.db.session.flush()
         study = model.db.session.query(model.Study).get(study_id)
-        # if not is_granted("view", study):
-        #     return "Access denied, you can not view this dashboard", 403
 
         # Get Dashboard
         redcap_project_dashboards_query = model.StudyDashboard.query.filter_by(
@@ -657,7 +671,14 @@ class RedcapProjectDashboardPublic(Resource):
         # Public Dashboard ID
         dashboard_id = redcap_project_dashboard["id"]
 
-        # Retrieve Dashboard Redis Cache if Available
+        # Get REDCap Project
+        redcap_id = redcap_project_dashboard["redcap_id"]
+        redcap_project_view_query: Any = model.db.session.query(model.StudyRedcap).get(
+            redcap_id
+        )
+        redcap_project_view: Dict[str, Any] = redcap_project_view_query.to_dict()
+
+        # # Retrieve Dashboard Redis Cache if Available
         # cached_redcap_project_dashboard = caching.cache.get(
         #     f"$study_id#{study_id}$dashboard_id#{dashboard_id}#public"
         # )
@@ -668,66 +689,14 @@ class RedcapProjectDashboardPublic(Resource):
         # No Cache, Do ETL
         #
 
-        # Get Base Transform Config for ETL - Release
-        transformConfig = redcapReleaseTransformConfig
-
-        # Set report_ids for ETL
-        report_keys = []
-        for report in redcap_project_dashboard["reports"]:
-            for i, report_config in enumerate(transformConfig["reports"]):
-                if (
-                    len(report["report_id"]) > 0
-                    and report["report_key"] == report_config["key"]
-                ):
-                    report_keys.append(report["report_key"])
-                    transformConfig["reports"][i]["kwdargs"]["report_id"] = report[
-                        "report_id"
-                    ]
-
-        # Remove Unused Reports
-        transformConfig["reports"] = [
-            report
-            for report in redcapLiveTransformConfig["reports"]
-            if report["key"] in report_keys
-        ]
-
-        # Set Post Transform Merge
-        index_columns, post_transform_merges = transformConfig["post_transform_merge"]
-        transformConfig["post_transform_merge"] = (
-            index_columns,
-            [
-                (report_key, transform_kwdargs)
-                for report_key, transform_kwdargs in post_transform_merges
-                if report_key in report_keys
-            ],
-        )
-
         # Finalize ETL Config
-        redcap_etl_config = transformConfig
-
-        # Execute REDCap Release ETL
-        redcapTransform = RedcapReleaseTransform(redcap_etl_config)
-
-        # Execute Dashboard Module Transforms
-        for dashboard_module in redcap_project_dashboard["modules"]:
-            if dashboard_module["selected"]:
-                mergedTransform = redcapTransform.merged
-                transform, module_etl_config = moduleTransformConfigs[
-                    dashboard_module["id"]
-                ]
-                moduleTransform = ModuleTransform(module_etl_config)
-                transformed = getattr(moduleTransform, transform)(
-                    mergedTransform
-                ).transformed
-                dashboard_module["visualizations"] = {
-                    "id": dashboard_module["id"],
-                    "data": transformed,
-                }
-            else:
-                dashboard_module["visualizations"] = {
-                    "id": dashboard_module["id"],
-                    "data": [],
-                }
+        transformConfig = redcapLiveTransformConfig
+        redcap_project_dashboard = execute_transform(
+            transformConfig,
+            redcap_project_view,
+            redcap_project_dashboard,
+            live=True,
+        )
 
         # Create Dashboard Redis Cache
         caching.cache.set(

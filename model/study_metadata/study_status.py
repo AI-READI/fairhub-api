@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from model import Study
 
 from ..db import db
@@ -68,7 +70,59 @@ class StudyStatus(db.Model):  # type: ignore
         self.completion_date_type = data["completion_date_type"]
         self.study.touch()
 
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        return violations
+    def updating_from_integration(self, data: dict):
+        """It updates a StudyStatus from a dictionary"""
+        status_map = {
+            "WITHDRAWN": "Withdrawn",
+            "RECRUITING": "Recruiting",
+            "ACTIVE_NOT_RECRUITING": "Active, not recruiting",
+            "NOT_YET_RECRUITING": "Not yet recruiting",
+            "SUSPENDED": "Suspended",
+            "ENROLLING_BY_INVITATION": "Enrolling by invitation",
+            "COMPLETED": "Completed",
+            "TERMINATED": "Terminated",
+        }
+        raw_status = data.get("statusModule", {}).get("overallStatus", "")
+        self.overall_status = status_map.get(raw_status, "")
+
+        self.overall_status = (
+            data.get("statusModule", {})
+            .get("overallStatus", "")
+            .replace("_", " ")
+            .title()
+        )
+        s_d = data.get("statusModule", {}).get("startDateStruct", {}).get("date")
+        self.start_date = (
+            datetime.strptime(s_d, "%Y-%m-%d") if s_d and len(s_d) == 10 else None
+        )
+
+        c_d = data.get("statusModule", {}).get("completionDateStruct", {}).get("date")
+        self.completion_date = (
+            datetime.strptime(c_d, "%Y-%m-%d") if c_d and len(c_d) == 10 else None
+        )
+
+        self.start_date_type = (
+            "Anticipated"
+            if data.get("statusModule", {})
+            .get("startDateStruct", {})
+            .get("type", "")
+            .lower()
+            == "estimated"
+            else data.get("statusModule", {})
+            .get("startDateStruct", {})
+            .get("type", "")
+            .capitalize()
+        )
+
+        self.completion_date_type = (
+            "Anticipated"
+            if data.get("statusModule", {})
+            .get("completionDateStruct", {})
+            .get("type", "")
+            .lower()
+            == "estimated"
+            else data.get("statusModule", {})
+            .get("completionDateStruct", {})
+            .get("type", "")
+            .capitalize()
+        )

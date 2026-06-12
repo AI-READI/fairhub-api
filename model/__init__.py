@@ -1,5 +1,5 @@
-from model.dataset_metadata.dataset_contributor import DatasetContributor
-from model.dataset_metadata.dataset_related_identifier import DatasetRelatedIdentifier
+from .dataset_metadata.dataset_contributor import DatasetContributor
+from .dataset_metadata.dataset_related_identifier import DatasetRelatedIdentifier
 
 from .dataset import Dataset
 from .dataset_metadata.dataset_access import DatasetAccess
@@ -17,6 +17,8 @@ from .dataset_metadata.dataset_subject import DatasetSubject
 from .dataset_metadata.dataset_title import DatasetTitle
 from .db import db
 from .email_verification import EmailVerification
+from .file import FileStructure
+from .folder import FolderStructure
 from .invited_study_contributor import StudyInvitedContributor
 from .notification import Notification
 from .participant import Participant
@@ -48,6 +50,7 @@ from .token_blacklist import TokenBlacklist
 from .user import User
 from .user_details import UserDetails
 from .version import Version
+from .session import Session
 from .version_readme import VersionReadme
 
 __all__ = [
@@ -93,6 +96,8 @@ __all__ = [
     "StudyRedcap",
     "StudyDashboard",
     "StudyStatus",
+    "FileStructure",
+    "FolderStructure",
     "Identifiers",
     "Arm",
     "StudyInvitedContributor",
@@ -102,4 +107,5 @@ __all__ = [
     "UserDetails",
     "Notification",
     "VersionReadme",
+    "Session",
 ]

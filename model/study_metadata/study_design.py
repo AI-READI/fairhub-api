@@ -115,7 +115,69 @@ class StudyDesign(db.Model):  # type: ignore
         self.is_patient_registry = data["is_patient_registry"]
         self.study.touch()
 
-    def validate(self):
-        """Validates the study"""
-        violations: list = []
-        return violations
+    def updating_from_integration(self, data: dict):
+        """It updates a StudyDesign from a dictionary"""
+        self.study_type = data.get("designModule", {}).get("studyType", "").capitalize()
+        self.design_observational_model_list = data.get("designModule", {}).get(
+            "observationalModel", ""
+        )
+        self.design_time_perspective_list = data.get("designModule", {}).get(
+            "timePerspective", ""
+        )
+        self.phase_list = data.get("designModule", {}).get("phases", [])
+        self.phase_list = [
+            i.lower().replace("phase", "Phase ") for i in self.phase_list
+        ]
+        self.design_allocation = (
+            data.get("designModule", {})
+            .get("designInfo", {})
+            .get("allocation", "")
+            .replace("_", "-")
+            .title()
+        )
+        self.design_primary_purpose = (
+            data.get("designModule", {})
+            .get("designInfo", {})
+            .get("primaryPurpose", "")
+            .capitalize()
+        )
+        self.design_intervention_model = (
+            data.get("designModule", {})
+            .get("designInfo", {})
+            .get("interventionModel", "")
+            .capitalize()
+        )
+        val = (
+            data.get("designModule", {})
+            .get("designInfo", {})
+            .get("maskingInfo", {})
+            .get("masking", "")
+        )
+        self.design_masking = (
+            val
+            if val == "N/A"
+            else "None (Open Label)"
+            if val == "NONE"
+            else "Blinded (no details)"
+            if val.lower().startswith("blind")
+            else val.capitalize()
+        )
+
+        self.design_who_masked_list = (
+            data.get("designModule", {})
+            .get("designInfo", {})
+            .get("maskingInfo", {})
+            .get("whoMasked", [])
+        )
+        self.design_who_masked_list = [
+            i.replace("_", " ").title() for i in self.design_who_masked_list
+        ]
+
+        self.enrollment_count = (
+            data.get("designModule", {}).get("enrollmentInfo", {}).get("count", "")
+        )
+        self.enrollment_type = (
+            data.get("designModule", {}).get("enrollmentInfo", {}).get("type", "")
+        ).capitalize()
+        if self.enrollment_type == "Estimated":
+            self.enrollment_type = "Anticipated"

@@ -6,17 +6,24 @@ import datetime
 import importlib
 import os
 import re
+import time
 import uuid
 from datetime import timezone
 from typing import Any, Union
 
 import jwt
 from email_validator import EmailNotValidError, validate_email
-from flask import g, make_response, request
+from flask import g, make_response, request, Response
 from flask_restx import Namespace, Resource, fields
 from jsonschema import FormatChecker, ValidationError, validate
 
 import model
+
+# from modules.invitation import reset_password, forgot_password
+
+# from modules.invitation import (
+#     send_email_verification,
+# )
 
 api = Namespace("Authentication", description="Authentication paths", path="/")
 
@@ -66,6 +73,7 @@ class SignUpUser(Resource):
                 "bpatel@fairhub.io",
                 "sanjay@fairhub.io",
                 "aydan@fairhub.io",
+                "cordier@ohsu.edu",
             ]
 
             if data["email_address"] not in bypassed_emails:
@@ -147,17 +155,101 @@ class SignUpUser(Resource):
         ).one_or_none()
         if user:
             return "This email address is already in use", 409
+        new_user = model.User.from_data(data)
+        verification = model.EmailVerification(new_user)
+        new_user.email_verified = False
+
+        # '''enable once email verification is on'''
+        # if os.environ.get("FLASK_ENV") == "testing":
+        #     verification.token = 1234567
+
+        model.db.session.add(new_user)
+        model.db.session.add(verification)
+
+        new_user.email_verified = True
+
+        # '''When /confirm endpoint will be enabled, this logic will be moved there
+        #      since users can not be a study contributor without email verification
+        #      set to true, and this can happen only there'''
         invitations = model.StudyInvitedContributor.query.filter_by(
             email_address=data["email_address"]
         ).all()
-
-        new_user = model.User.from_data(data)
         for invite in invitations:
             invite.study.add_user_to_study(new_user, invite.permission)
             model.db.session.delete(invite)
-        model.db.session.add(new_user)
         model.db.session.commit()
+        # """When the email verification functionality fully enabled these
+        #  lines will be commented out and email will not be verified without email verification."""
+        # if os.environ.get("FLASK_ENV") != "testing":
+        #     if new_user.email_address in bypassed_emails:
+        #         new_user.email_verified = True
+
+        # if g.gb.is_on("email-verification"):
+        #     if os.environ.get("FLASK_ENV") != "testing":
+        #         if new_user.email_address not in bypassed_emails:
+        #             send_email_verification(new_user.email_address, verification.token)
+
         return f"Hi, {new_user.email_address}, you have successfully signed up", 201
+
+
+# @api.route("/auth/email-verification/confirm")
+# class EmailVerification(Resource):
+#     @api.response(200, "Success")
+#     @api.response(400, "Validation Error")
+#     # @api.marshal_with(contributors_model)
+#     def post(self):
+#         data: Union[Any, dict] = request.json
+#         if "token" not in data or "email" not in data:
+#             return "email or token are required", 422
+#         user = model.User.query.filter_by(email_address=data["email"]).one_or_none()
+#         if not user:
+#             return "user not found", 404
+#         if user.email_verified:
+#             return "user already verified", 422
+#         if os.environ.get("FLASK_ENV") != "testing":
+#             if not user.verify_token(data["token"]):
+#                 return "Token invalid or expired", 422
+#         user.email_verified = True
+#
+#         model.db.session.commit()
+#         return "Email verified", 201
+#
+
+# @api.route("/auth/email-verification/resend")
+# class GenerateVerification(Resource):
+#     @api.response(200, "Success")
+#     @api.response(400, "Validation Error")
+#     # @api.marshal_with(contributors_model)
+#     def post(self):
+#         data: Union[Any, dict] = request.json
+#         user = model.User.query.filter_by(email_address=data["email"]).one_or_none()
+#         if not user:
+#             return "user not found", 404
+#         if user.email_verified:
+#             return "user already verified", 422
+#
+#         # user.email_verified = True
+#         # token = user.generate_token()
+#
+#         # if g.gb.is_on("email-verification"):
+#         #     if os.environ.get("FLASK_ENV") != "testing":
+#         #         send_email_verification(user.email_address, token)
+#
+#         model.db.session.commit()
+#         return "Your email is verified", 201
+
+
+@api.route("/auth/email-verification/check")
+class GenerateVerificationCheck(Resource):
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    # @api.marshal_with(contributors_model)
+    def post(self):
+        data: Union[Any, dict] = request.json
+        user = model.User.query.filter_by(email_address=data["email"]).one_or_none()
+        if not user:
+            return {"message": "User not found"}, 404
+        return {"isVerified": user.email_verified}, 200
 
 
 @api.route("/auth/login")
@@ -172,7 +264,6 @@ class Login(Resource):
         """logs in user and handles few authentication errors.
         Also, it sets token for logged user along with expiration date"""
         data: Union[Any, dict] = request.json
-
         email_address = data["email_address"]
 
         def validate_is_valid_email(instance):
@@ -206,10 +297,19 @@ class Login(Resource):
             validate(instance=data, schema=schema, format_checker=format_checker)
         except ValidationError as e:
             return e.message, 400
-
         user = model.User.query.filter_by(email_address=email_address).one_or_none()
         if not user:
             return "Invalid credentials", 401
+        if os.environ.get("FLASK_ENV") != "testing":
+            bypassed_emails = [
+                "test@fairhub.io",
+                "bpatel@fairhub.io",
+                "sanjay@fairhub.io",
+                "aydan@fairhub.io",
+                "cordier@ohsu.edu",
+            ]
+            if email_address in bypassed_emails:
+                user.email_verified = True
 
         validate_pass = user.check_password(data["password"])
 
@@ -232,24 +332,55 @@ class Login(Resource):
             # If not testing, directly use the 'config' module
             config = config_module
 
+        expired_in = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
+            minutes=180
+        )
+        jti = str(uuid.uuid4())
         encoded_jwt_code = jwt.encode(
             {
                 "user": user.id,
-                "exp": datetime.datetime.now(timezone.utc)
-                + datetime.timedelta(minutes=180),  # noqa: W503
-                "jti": str(uuid.uuid4()),
+                "exp": expired_in,
+                "jti": jti,
             },  # noqa: W503
             config.FAIRHUB_SECRET,
             algorithm="HS256",
         )
-
         resp = make_response(user.to_dict())
 
+        if not user.email_verified:
+            return resp
         resp.set_cookie(
             "token", encoded_jwt_code, secure=True, httponly=True, samesite="None"
         )
-        resp.status_code = 200
+        # if g.gb.is_on("email-verification"):
+        #     if os.environ.get("FLASK_ENV") != "testing":
+        #         if not check_trusted_device():
+        #             title = "you logged in"
+        #             device_ip = request.remote_addr
+        #             notification_type = "info"
+        #             target = ""
+        #             read = False
+        #             send_notification = model.Notification.from_data(
+        #                 user,
+        #                 {
+        #                     "title": title,
+        #                     "message": device_ip,
+        #                     "type": notification_type,
+        #                     "target": target,
+        #                     "read": read,
+        #                 },
+        #             )
+        #             model.db.session.add(send_notification)
+        #             model.db.session.commit()
+        #             signin_notification(user, device_ip)
+        #         add_user_to_device_list(resp, user)
+        #     resp.status_code = 200
 
+        g.token = jti
+        added_session = model.Session.from_data(jti, expired_in.timestamp(), user)
+
+        model.db.session.add(added_session)
+        model.db.session.commit()
         return resp
 
 
@@ -257,7 +388,7 @@ def authentication():
     """it authenticates users to a study, sets access and refresh token.
     In addition, it handles error handling of expired token and non existed users"""
     g.user = None
-
+    g.token = None
     if "token" not in request.cookies:
         return
     token: str = (
@@ -285,7 +416,20 @@ def authentication():
     token_blacklist = model.TokenBlacklist.query.get(decoded["jti"])
     if token_blacklist:
         return
+    # decode user
     user = model.User.query.get(decoded["user"])
+    # decode session
+    session = model.Session.query.get(decoded["jti"])
+    if not session:
+        g.user = None
+        g.token = None
+        return
+
+    if session.expires_at < time.time():
+        g.user = None
+        g.token = None
+        return
+    g.token = decoded["jti"]
     g.user = user
 
 
@@ -296,6 +440,8 @@ def authorization():
         r"^/auth.*",
         r"^/docs",
         r"^/echo",
+        r"^/chat",
+        r"^/health",
         r"^/swaggerui.*",
         r"^/swagger.json",
         r"^/utils.*",
@@ -306,7 +452,10 @@ def authorization():
         if bool(re.search(route_pattern, request.path)):
             return
     if g.user:
-        return
+        if os.environ.get("FLASK_ENV") == "testing":
+            return
+        if g.user.email_verified:
+            return
     raise UnauthenticatedException("Access denied", 403)
 
 
@@ -317,6 +466,9 @@ def is_granted(permission: str, study=None):
     ).first()
     if not contributor:
         return False
+    if os.environ.get("FLASK_ENV") != "testing":
+        if not g.user.email_verified:
+            return False
     role = {
         "owner": [
             "owner",
@@ -396,6 +548,7 @@ class Logout(Resource):
     @api.response(400, "Validation Error")
     def post(self):
         """simply logges out user from the system"""
+
         resp = make_response()
         resp.set_cookie(
             "token",
@@ -406,6 +559,14 @@ class Logout(Resource):
             expires=datetime.datetime.now(timezone.utc),
         )
         resp.status_code = 204
+
+        if g.user and g.token:
+            remove_session = model.Session.query.filter(
+                model.Session.id == g.token
+            ).first()
+            if remove_session:
+                model.db.session.delete(remove_session)
+                model.db.session.commit()
         return resp
 
 
@@ -472,20 +633,219 @@ class UserPasswordEndpoint(Resource):
 
         data: Union[Any, dict] = request.json
         user = model.User.query.get(g.user.id)
+
         user.set_password(data["new_password"])
+
         model.db.session.commit()
+        session_logout()
         return "Password updated successfully", 200
 
 
-# @api.route("/auth/current-users")
-# class CurrentUsers(Resource):
-#     """function is used to see all logged users in
-#     the system. For now, it is used for testing purposes"""
+def session_logout():
+    if g.user and g.token:
+        remove_sessions = model.Session.query.filter(
+            model.Session.user_id == g.user.id
+        ).all()
 
-#     @api.response(200, "Success")
-#     @api.response(400, "Validation Error")
-#     def get(self):
-#         """returns all logged users in the system"""
-#         if not g.user:
-#             return None
-#         return g.user.to_dict()
+        for session in remove_sessions:
+            model.db.session.delete(session)
+            model.db.session.commit()
+        # return "Sessions are removed successfully", 200
+
+
+@api.route("/auth/forgot-password")
+class ForgotPassword(Resource):
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    def post(self):
+        """function is used to  reset password in case users forget"""
+
+        if os.environ.get("FLASK_ENV") == "testing":
+            config_module_name = "pytest_config"
+        else:
+            config_module_name = "config"
+
+        config_module = importlib.import_module(config_module_name)
+
+        if os.environ.get("FLASK_ENV") == "testing":
+            # If testing, use the 'TestConfig' class for accessing 'secret'
+            config = config_module.TestConfig
+        else:
+            # If not testing, directly use the 'config' module
+            config = config_module
+
+        def validate_is_valid_email(instance):
+            email_address = instance
+            try:
+                validate_email(email_address)
+                return True
+            except EmailNotValidError as e:
+                raise ValidationError("Invalid email address format") from e
+
+        # Schema validation
+        schema = {
+            "type": "object",
+            "required": ["email_address"],
+            "additionalProperties": False,
+            "properties": {
+                "email_address": {"type": "string", "format": "valid_email"}
+            },
+        }
+
+        format_checker = FormatChecker()
+        format_checker.checks("valid_email")(validate_is_valid_email)
+
+        try:
+            validate(
+                instance=request.json, schema=schema, format_checker=format_checker
+            )
+        except ValidationError as e:
+            return e.message, 400
+
+        data: Union[Any, dict] = request.json
+        email_address: str = data["email_address"]
+
+        user = model.User.query.filter(
+            model.User.email_address == email_address
+        ).first()
+
+        if not user:
+            raise ValidationError("User associated with this email does not exist")
+
+        expired_in = get_now() + datetime.timedelta(minutes=5)
+        jti = str(uuid.uuid4())
+        reset_token = jwt.encode(
+            {
+                "user": user.id,
+                "exp": expired_in,
+                "jti": jti,
+                "email": email_address,
+            },  # noqa: W503
+            config.FAIRHUB_SECRET,
+            algorithm="HS256",
+        )
+        # email_address = email_address if user else ""
+        # first_name = user.user_details.first_name if user else ""
+        # last_name = user.user_details.last_name if user else ""
+
+        # if g.gb.is_on("email-verification"):
+        #     if os.environ.get("FLASK_ENV") != "testing":
+        #         forgot_password(email_address, first_name, last_name, reset_token)
+        user.update_password_reset(reset_token)
+        model.db.session.commit()
+
+        response = make_response("email is sent successfully", 200)
+        if os.environ.get("FLASK_ENV") == "testing":
+            response.headers.add("X-Token", reset_token)
+        return response
+
+
+@api.route("/auth/reset-password")
+class ResetPassword(Resource):
+    @api.response(200, "Success")
+    @api.response(400, "Validation Error")
+    def post(self):
+        """function is used to  reset password in case users forget"""
+        if os.environ.get("FLASK_ENV") == "testing":
+            config_module_name = "pytest_config"
+        else:
+            config_module_name = "config"
+
+        config_module = importlib.import_module(config_module_name)
+
+        if os.environ.get("FLASK_ENV") == "testing":
+            # If testing, use the 'TestConfig' class for accessing 'secret'
+            config = config_module.TestConfig
+        else:
+            # If not testing, directly use the 'config' module
+            config = config_module
+
+        data: Union[Any, dict] = request.json
+
+        try:
+            decoded = jwt.decode(
+                data["token"], config.FAIRHUB_SECRET, algorithms=["HS256"]
+            )
+        except (jwt.ExpiredSignatureError, jwt.DecodeError, jwt.InvalidSignatureError):
+            return Response(status=401)
+        user = model.User.query.filter(
+            model.User.email_address == decoded["email"]
+        ).first()
+        if not user:
+            raise ValidationError("Email doesnt exist")
+
+        if data["token"] != user.password_reset_token:
+            return "Invalid token", 400
+
+        validate_pass = user.check_password(data["new_password"])
+        if validate_pass:
+            return "old and new password can not be same. Please select a new one", 422
+
+        def confirm_new_password(instance):
+            new_password = data["new_password"]
+            confirm_password = instance
+
+            if new_password != confirm_password:
+                raise ValidationError("New password and confirm password do not match")
+
+            return True
+
+        schema = {
+            "type": "object",
+            "required": ["new_password", "confirm_password", "token"],
+            "additionalProperties": False,
+            "properties": {
+                "new_password": {"type": "string", "minLength": 1},
+                "token": {"type": "string", "minLength": 1},
+                "confirm_password": {
+                    "type": "string",
+                    "minLength": 1,
+                    "format": "password confirmation",
+                },
+            },
+        }
+        format_checker = FormatChecker()
+
+        # format_checker.checks("current password")(validate_current_password)
+        format_checker.checks("password confirmation")(confirm_new_password)
+
+        try:
+            validate(
+                instance=request.json, schema=schema, format_checker=format_checker
+            )
+        except ValidationError as e:
+            return e.message, 400
+
+        user.set_password(data["new_password"])
+        model.db.session.commit()
+
+        user.update_password_reset(None)
+        model.db.session.commit()
+
+        # email_address = user.email_address if user else ""
+        # first_name = user.user_details.first_name if user else ""
+        # last_name = user.user_details.last_name if user else ""
+        # if os.environ.get("FLASK_ENV") != "testing":
+        #     if g.gb.is_on("email-verification"):
+        #         if user:
+        #             reset_password(
+        #                 email_address,
+        #                 first_name,
+        #                 last_name,
+        #             )
+
+        return "Password reset successfully", 200
+
+
+frozen_date: Union[datetime.datetime, None] = None
+
+
+def set_now(now: Union[datetime.datetime, None]) -> None:
+    global frozen_date
+    frozen_date = now
+
+
+def get_now() -> datetime.datetime:
+    if frozen_date:
+        return frozen_date
+    return datetime.datetime.now(datetime.timezone.utc)

@@ -15,6 +15,13 @@ jobs:
       FAIRHUB_SECRET: mXrkOHXXQoMAhCOTZOV93QlncmeTwEZFPxTP1TXGiOFabE0KmuZgHWvTOLgjbv3S
       FAIRHUB_GROWTHBOOK_CLIENT_KEY: ${{ secrets.FAIRHUB_GROWTHBOOK_CLIENT_KEY }}
 
+      SEARCH_KEY: mXrkOHXXQoMAhCOTZOV93QlncmeTwEZFPxTP1TXGiOFabE0KmuZgHWvTOLgjbv3S
+      SEARCH_INDEX_NAME: test-search-key
+      AZURE_OPENAI_API_KEY: test-search-index
+      SEARCH_ENDPOINT: test-azure-key
+      ENDPOINT_URL: https://test-search.com
+      INDEX_NAME: https://test-endpoint.com
+
     steps:
       - uses: actions/checkout@v2
 
@@ -29,9 +36,9 @@ jobs:
       - uses: Gr1N/setup-poetry@v8
 
       - name: Install dependencies
-        run: poetry install
+        run: poetry install --no-root
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v4
         with:
           path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
