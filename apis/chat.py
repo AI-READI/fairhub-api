@@ -199,3 +199,9 @@ class ChatBox(Resource):
                     yield "Sorry, something went wrong."
 
         return Response(stream_with_context(generate()), mimetype="text/plain")
+
+
+@api.route("/health")
+class Health(Resource):
+    def get(self):
+        return {"status": "ok"}, 200
