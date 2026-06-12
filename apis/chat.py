@@ -7,10 +7,9 @@ from threading import Lock
 from typing import Any
 
 from dotenv import load_dotenv
-from flask import request
+from flask import Response, request, stream_with_context
 from flask_restx import Namespace, Resource
 from openai import AzureOpenAI
-from openai.types.chat import ChatCompletion
 
 import config
 
@@ -107,16 +106,17 @@ class ChatBox(Resource):
         # Check for two-word injection patterns
         for word1, word2 in BLOCKED_PATTERNS:
             if word1 in q and word2 in q:
-                return {
-                    "answer": "I can only help with AI-READI dataset-related questions."
-                }, 200
-
+                return Response(
+                    "I can only help with AI-READI dataset-related questions.",
+                    mimetype="text/plain",
+                )
         # Check for single blocked phrases
         for phrase in BLOCKED_PHRASES:
             if phrase in q:
-                return {
-                    "answer": "I can only help with AI-READI dataset-related questions."
-                }, 200
+                return Response(
+                    "I can only help with AI-READI dataset-related questions.",
+                    mimetype="text/plain",
+                )
 
         prompt = (
             "You are answering questions about the AI-READI dataset using documentation."
@@ -150,35 +150,52 @@ class ChatBox(Resource):
                 }
             ]
         }
-        try:
-            completion = client.chat.completions.create(
-                model=DEPLOYMENT,
-                messages=messages,  # type: ignore[arg-type]
-                max_tokens=450,
-                temperature=0.3,
-                top_p=1.0,
-                stream=False,
-                frequency_penalty=0,
-                presence_penalty=0,
-                stop=None,
-                extra_body=extra_body,
-            )
-            assert isinstance(completion, ChatCompletion)
 
-            answer = completion.choices[0].message.content or ""
-            answer = re.sub(r"\s*\[doc\d*\]", "", answer).strip()
+        def generate():
+            streaming = None
+            try:
 
-        except Exception as error:  # pylint: disable=broad-exception-caught
-            print("Completion failed")
-            msg = str(error).lower()
-            if not answer:
-                return {"error": "Unable to generate a response."}, 500
-            if "content_filter" in msg or "content filter" in msg:
-                return {
-                    "error": "I can only help with AI-READI dataset-related questions."
-                }, 400
-            if "rate limit" in msg or "429" in msg:
-                return {"error": "Service busy"}, 429
-            return {"error": "Internal server error"}, 500
+                streaming = client.chat.completions.create(
+                    model=DEPLOYMENT,
+                    messages=messages,  # type: ignore[arg-type]
+                    max_tokens=450,
+                    temperature=0.3,
+                    top_p=1.0,
+                    stream=True,
+                    frequency_penalty=0,
+                    presence_penalty=0,
+                    stop=None,
+                    extra_body=extra_body,
+                )
+                # assert isinstance(streaming, ChatCompletion)
 
-        return {"answer": answer}, 200
+                buffer = ""
+                for chunk in streaming:   # pylint: disable=not-an-iterable
+                    if not (chunk.choices and chunk.choices[0].delta.content):  # type: ignore[union-attr]
+                        continue
+                    buffer += chunk.choices[0].delta.content  # type: ignore[union-attr]
+                    cut = buffer.rfind("[")
+                    if cut == -1:
+                        yield re.sub(r"\s*\[doc\d*\]", "", buffer)
+                        buffer = ""
+                    else:
+                        yield re.sub(r"\s*\[doc\d*\]", "", buffer[:cut])
+                        buffer = buffer[cut:]
+                if buffer:
+                    yield re.sub(r"\s*\[doc\d*\]", "", buffer)
+
+            except GeneratorExit:
+                if streaming is not None:
+                    streaming.close()  # type: ignore[union-attr]
+                raise
+            except Exception as error:  # pylint: disable=broad-exception-caught
+                print("Completion failed...")
+                msg = str(error).lower()
+                if "content_filter" in msg or "content filter" in msg:
+                    yield "I can only help with AI-READI dataset-related questions."
+                elif "rate limit" in msg or "429" in msg:
+                    yield "Service busy, please try again"
+                else:
+                    yield "Sorry, something went wrong."
+
+        return Response(stream_with_context(generate()), mimetype="text/plain")
